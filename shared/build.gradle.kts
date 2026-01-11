@@ -1,17 +1,13 @@
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
-  id("com.android.kotlin.multiplatform.library")
+  alias(libs.plugins.android.library)
   alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.compose.multiplatform)
 }
 
 kotlin {
-  androidLibrary {
-    namespace = "space.be1ski.memos.shared"
-    compileSdk = 36
-    minSdk = 31
-  }
+  androidTarget()
   jvm("desktop")
   iosX64()
   iosArm64()
@@ -56,5 +52,13 @@ kotlin {
     val iosX64Main by getting { dependsOn(iosMain) }
     val iosArm64Main by getting { dependsOn(iosMain) }
     val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
+  }
+}
+
+android {
+  namespace = "space.be1ski.memos.shared"
+  compileSdk = 36
+  defaultConfig {
+    minSdk = 31
   }
 }
