@@ -20,7 +20,6 @@ actual fun createHttpClient(): HttpClient {
       )
     }
     install(Logging) {
-      logger = Logger.SIMPLE
       level = LogLevel.INFO
     }
   }
