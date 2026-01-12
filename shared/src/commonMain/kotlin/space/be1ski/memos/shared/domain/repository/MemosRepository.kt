@@ -9,5 +9,5 @@ interface MemosRepository {
   /**
    * Returns all memos from the server using paginated requests.
    */
-  suspend fun listMemos(baseUrl: String, token: String, pageSize: Int): List<Memo>
+  suspend fun listMemos(): List<Memo>
 }

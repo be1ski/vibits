@@ -3,27 +3,41 @@ package space.be1ski.memos.shared.presentation.state
 import space.be1ski.memos.shared.domain.model.Memo
 
 /**
- * Immutable UI state for the Memos screen.
+ * UI state for the memos screen.
  */
-data class MemosUiState(
-  /**
-   * Base URL for the Memos server.
-   */
-  val baseUrl: String = "",
-  /**
-   * Access token for API requests.
-   */
-  val token: String = "",
-  /**
-   * True while data is loading.
-   */
-  val isLoading: Boolean = false,
-  /**
-   * User-facing error message, if any.
-   */
-  val errorMessage: String? = null,
+sealed class MemosUiState {
   /**
    * Loaded memos.
    */
-  val memos: List<Memo> = emptyList()
-)
+  abstract val memos: List<Memo>
+
+  /**
+   * True while data is loading.
+   */
+  abstract val isLoading: Boolean
+
+  /**
+   * User-facing error message, if any.
+   */
+  abstract val errorMessage: String?
+
+  /**
+   * State used when credentials are missing or being edited.
+   */
+  data class CredentialsInput(
+    val baseUrl: String = "",
+    val token: String = "",
+    override val memos: List<Memo> = emptyList(),
+    override val isLoading: Boolean = false,
+    override val errorMessage: String? = null
+  ) : MemosUiState()
+
+  /**
+   * State used when credentials are already stored.
+   */
+  data class Ready(
+    override val memos: List<Memo> = emptyList(),
+    override val isLoading: Boolean = false,
+    override val errorMessage: String? = null
+  ) : MemosUiState()
+}

@@ -27,9 +27,7 @@ class MemosViewModel(
    * Snapshot of UI state for Compose.
    */
   var uiState by mutableStateOf(
-    loadCredentialsUseCase().let { creds ->
-      MemosUiState(baseUrl = creds.baseUrl, token = creds.token)
-    }
+    initialState(loadCredentialsUseCase)
   )
     private set
 
@@ -37,39 +35,92 @@ class MemosViewModel(
    * Updates the base URL input.
    */
   fun updateBaseUrl(value: String) {
-    uiState = uiState.copy(baseUrl = value, errorMessage = null)
+    val state = uiState
+    if (state is MemosUiState.CredentialsInput) {
+      uiState = state.copy(baseUrl = value, errorMessage = null)
+    }
   }
 
   /**
    * Updates the token input.
    */
   fun updateToken(value: String) {
-    uiState = uiState.copy(token = value, errorMessage = null)
+    val state = uiState
+    if (state is MemosUiState.CredentialsInput) {
+      uiState = state.copy(token = value, errorMessage = null)
+    }
+  }
+
+  /**
+   * Opens credentials editor with stored values.
+   */
+  fun editCredentials() {
+    val memos = uiState.memos
+    val creds = loadCredentialsUseCase()
+    uiState = MemosUiState.CredentialsInput(
+      baseUrl = creds.baseUrl,
+      token = creds.token,
+      memos = memos
+    )
   }
 
   /**
    * Loads memos and persists credentials on success.
    */
   fun loadMemos() {
-    val baseUrl = uiState.baseUrl.trim()
-    val token = uiState.token.trim()
-    if (baseUrl.isBlank() || token.isBlank()) {
-      uiState = uiState.copy(errorMessage = "Base URL and token are required.")
-      return
+    val currentState = uiState
+    val baseUrl = if (currentState is MemosUiState.CredentialsInput) {
+      currentState.baseUrl.trim()
+    } else {
+      ""
+    }
+    val token = if (currentState is MemosUiState.CredentialsInput) {
+      currentState.token.trim()
+    } else {
+      ""
     }
 
-    uiState = uiState.copy(isLoading = true, errorMessage = null)
+    if (currentState is MemosUiState.CredentialsInput) {
+      if (baseUrl.isBlank() || token.isBlank()) {
+        uiState = currentState.copy(errorMessage = "Base URL and token are required.")
+        return
+      }
+      saveCredentialsUseCase(Credentials(baseUrl = baseUrl, token = token))
+      uiState = currentState.copy(isLoading = true, errorMessage = null)
+    } else {
+      val stored = loadCredentialsUseCase()
+      if (stored.baseUrl.isBlank() || stored.token.isBlank()) {
+        uiState = MemosUiState.CredentialsInput(
+          baseUrl = stored.baseUrl,
+          token = stored.token,
+          memos = currentState.memos,
+          errorMessage = "Base URL and token are required."
+        )
+        return
+      }
+      uiState = (currentState as MemosUiState.Ready).copy(isLoading = true, errorMessage = null)
+    }
+
     scope.launch {
       try {
-        val memos = loadMemosUseCase(baseUrl, token)
-        saveCredentialsUseCase(Credentials(baseUrl = baseUrl, token = token))
-        uiState = uiState.copy(isLoading = false, memos = memos)
+        val memos = loadMemosUseCase()
+        uiState = MemosUiState.Ready(memos = memos)
       } catch (error: Exception) {
-        uiState = uiState.copy(
-          isLoading = false,
-          errorMessage = error.message ?: "Failed to load memos."
-        )
+        val message = error.message ?: "Failed to load memos."
+        uiState = when (val state = uiState) {
+          is MemosUiState.CredentialsInput -> state.copy(isLoading = false, errorMessage = message)
+          is MemosUiState.Ready -> state.copy(isLoading = false, errorMessage = message)
+        }
       }
+    }
+  }
+
+  private fun initialState(loadCredentialsUseCase: LoadCredentialsUseCase): MemosUiState {
+    val creds = loadCredentialsUseCase()
+    return if (creds.baseUrl.isBlank() || creds.token.isBlank()) {
+      MemosUiState.CredentialsInput(baseUrl = creds.baseUrl, token = creds.token)
+    } else {
+      MemosUiState.Ready()
     }
   }
 }

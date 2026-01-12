@@ -4,14 +4,17 @@ import space.be1ski.memos.shared.data.mapper.MemoMapper
 import space.be1ski.memos.shared.data.remote.MemosApi
 import space.be1ski.memos.shared.data.remote.MemosPagination
 import space.be1ski.memos.shared.domain.model.Memo
+import space.be1ski.memos.shared.domain.repository.CredentialsRepository
 import space.be1ski.memos.shared.domain.repository.MemosRepository
+import space.be1ski.memos.shared.domain.config.MemosDefaults
 
 /**
  * Repository implementation that loads memos from the network.
  */
 class MemosRepositoryImpl(
   private val memosApi: MemosApi,
-  private val memoMapper: MemoMapper
+  private val memoMapper: MemoMapper,
+  private val credentialsRepository: CredentialsRepository
 ) : MemosRepository {
   /**
    * Loads memos from the server using paginated API calls.
@@ -21,7 +24,13 @@ class MemosRepositoryImpl(
    * @param pageSize Page size for each request.
    * @return Full list of memos collected across pages.
    */
-  override suspend fun listMemos(baseUrl: String, token: String, pageSize: Int): List<Memo> {
+  override suspend fun listMemos(): List<Memo> {
+    val credentials = credentialsRepository.load()
+    val baseUrl = credentials.baseUrl.trim()
+    val token = credentials.token.trim()
+    if (baseUrl.isBlank() || token.isBlank()) {
+      throw IllegalStateException("Base URL and token are required.")
+    }
     val allMemos = mutableListOf<Memo>()
     val seenTokens = mutableSetOf<String>()
     var nextPageToken: String? = null
@@ -31,7 +40,7 @@ class MemosRepositoryImpl(
       val response = memosApi.listMemos(
         baseUrl = baseUrl,
         token = token,
-        pageSize = pageSize,
+        pageSize = MemosDefaults.DEFAULT_PAGE_SIZE,
         pageToken = nextPageToken
       )
       allMemos += memoMapper.toDomainList(response.memos)

@@ -29,7 +29,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +45,7 @@ import space.be1ski.memos.shared.presentation.components.ContributionGrid
 import space.be1ski.memos.shared.presentation.components.WeeklyBarChart
 import space.be1ski.memos.shared.presentation.components.availableYears
 import space.be1ski.memos.shared.presentation.components.rememberActivityWeekData
+import space.be1ski.memos.shared.presentation.state.MemosUiState
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 
 /** Root shared UI for the app. */
@@ -59,15 +59,9 @@ fun MemosApp() {
   val years = remember(uiState.memos) { availableYears(uiState.memos, timeZone, currentYear) }
   var selectedTab by remember { mutableStateOf(0) }
   var activityRange by remember { mutableStateOf<ActivityRange>(ActivityRange.LastYear) }
-  var showCredentialsForm by remember {
-    mutableStateOf(uiState.baseUrl.isBlank() || uiState.token.isBlank())
-  }
-
-  LaunchedEffect(uiState.baseUrl, uiState.token) {
-    if (uiState.baseUrl.isNotBlank() && uiState.token.isNotBlank()) {
-      showCredentialsForm = false
-    }
-  }
+  val memos = uiState.memos
+  val isLoading = uiState.isLoading
+  val errorMessage = uiState.errorMessage
 
   MaterialTheme {
     Scaffold(
@@ -82,24 +76,27 @@ fun MemosApp() {
           .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
       ) {
-        if (showCredentialsForm) {
-          TextField(
-            value = uiState.baseUrl,
-            onValueChange = viewModel::updateBaseUrl,
-            label = { Text("Base URL") },
-            placeholder = { Text("https://memos.example.com") },
-            modifier = Modifier.fillMaxWidth()
-          )
-          TextField(
-            value = uiState.token,
-            onValueChange = viewModel::updateToken,
-            label = { Text("Access token") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
-          )
-        } else {
-          TextButton(onClick = { showCredentialsForm = true }) {
-            Text("Edit credentials")
+        when (val state = uiState) {
+          is MemosUiState.CredentialsInput -> {
+            TextField(
+              value = state.baseUrl,
+              onValueChange = viewModel::updateBaseUrl,
+              label = { Text("Base URL") },
+              placeholder = { Text("https://memos.example.com") },
+              modifier = Modifier.fillMaxWidth()
+            )
+            TextField(
+              value = state.token,
+              onValueChange = viewModel::updateToken,
+              label = { Text("Access token") },
+              visualTransformation = PasswordVisualTransformation(),
+              modifier = Modifier.fillMaxWidth()
+            )
+          }
+          is MemosUiState.Ready -> {
+            TextButton(onClick = viewModel::editCredentials) {
+              Text("Edit credentials")
+            }
           }
         }
         Row(
@@ -109,11 +106,11 @@ fun MemosApp() {
           Button(onClick = viewModel::loadMemos) {
             Text("Load memos")
           }
-          if (uiState.isLoading) {
+          if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.size(20.dp))
           }
-          if (uiState.errorMessage != null) {
-            Text(uiState.errorMessage, color = MaterialTheme.colorScheme.error)
+          if (errorMessage != null) {
+            Text(errorMessage, color = MaterialTheme.colorScheme.error)
           }
         }
         PrimaryTabRow(selectedTabIndex = selectedTab) {
@@ -130,12 +127,12 @@ fun MemosApp() {
         }
         when (selectedTab) {
           0 -> ProfileScreen(
-            memos = uiState.memos,
+            memos = memos,
             years = years,
             range = activityRange,
             onRangeChange = { activityRange = it }
           )
-          1 -> PostsScreen(memos = uiState.memos)
+          1 -> PostsScreen(memos = memos)
         }
       }
     }

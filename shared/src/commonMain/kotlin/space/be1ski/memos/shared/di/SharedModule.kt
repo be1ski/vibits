@@ -23,8 +23,8 @@ fun sharedModule(): Module = module {
   single { CredentialsStore() }
   single { MemoMapper() }
   single { MemosApi(get()) }
-  single<MemosRepository> { MemosRepositoryImpl(get(), get()) }
   single<CredentialsRepository> { CredentialsRepositoryImpl(get()) }
+  single<MemosRepository> { MemosRepositoryImpl(get(), get(), get()) }
   factory { LoadMemosUseCase(get()) }
   factory { LoadCredentialsUseCase(get()) }
   factory { SaveCredentialsUseCase(get()) }
