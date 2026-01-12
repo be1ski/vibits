@@ -36,14 +36,20 @@ fun PostsScreen(
   range: ActivityRange,
   onRangeChange: (ActivityRange) -> Unit,
   isRefreshing: Boolean = false,
-  onRefresh: () -> Unit = {}
+  onRefresh: () -> Unit = {},
+  enablePullRefresh: Boolean = true
 ) {
   val timeZone = TimeZone.currentSystemDefault()
   val pullRefreshState = rememberPullRefreshState(isRefreshing, onRefresh)
+  val containerModifier = if (enablePullRefresh) {
+    Modifier.pullRefresh(pullRefreshState)
+  } else {
+    Modifier
+  }
   Box(
     modifier = Modifier
       .fillMaxSize()
-      .pullRefresh(pullRefreshState)
+      .then(containerModifier)
   ) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
       item {
@@ -82,11 +88,13 @@ fun PostsScreen(
         }
       }
     }
-    PullRefreshIndicator(
-      refreshing = isRefreshing,
-      state = pullRefreshState,
-      modifier = Modifier.align(Alignment.TopCenter)
-    )
+    if (enablePullRefresh) {
+      PullRefreshIndicator(
+        refreshing = isRefreshing,
+        state = pullRefreshState,
+        modifier = Modifier.align(Alignment.TopCenter)
+      )
+    }
   }
 }
 

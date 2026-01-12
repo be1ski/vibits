@@ -44,12 +44,14 @@ import space.be1ski.memos.shared.presentation.components.ActivityWeek
 import space.be1ski.memos.shared.presentation.components.ContributionDay
 import space.be1ski.memos.shared.presentation.components.ContributionGrid
 import space.be1ski.memos.shared.presentation.components.DailyMemoInfo
+import space.be1ski.memos.shared.presentation.components.HabitConfig
 import space.be1ski.memos.shared.presentation.components.buildHabitStatuses
 import space.be1ski.memos.shared.presentation.components.activityWeekDataForHabit
+import space.be1ski.memos.shared.presentation.components.habitsConfigForDate
 import space.be1ski.memos.shared.presentation.components.findDailyMemoForDate
 import space.be1ski.memos.shared.presentation.components.WeeklyBarChart
 import space.be1ski.memos.shared.presentation.components.rememberActivityWeekData
-import space.be1ski.memos.shared.presentation.components.rememberHabitsConfig
+import space.be1ski.memos.shared.presentation.components.rememberHabitsConfigTimeline
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 
 /**
@@ -72,22 +74,26 @@ fun StatsScreen(
   enablePullRefresh: Boolean = true
 ) {
   var habitsEditorDay by remember { mutableStateOf<ContributionDay?>(null) }
+  var habitsEditorConfig by remember { mutableStateOf<List<HabitConfig>>(emptyList()) }
   var habitsEditorSelections by remember { mutableStateOf<Map<String, Boolean>>(emptyMap()) }
   var habitsEditorExisting by remember { mutableStateOf<DailyMemoInfo?>(null) }
   var habitsEditorError by remember { mutableStateOf<String?>(null) }
   var showEmptyDeleteConfirm by remember { mutableStateOf(false) }
-  val habitsConfig = rememberHabitsConfig(memos)
+  val habitsConfigTimeline = rememberHabitsConfigTimeline(memos)
+  val currentHabitsConfig = remember(habitsConfigTimeline) { habitsConfigTimeline.lastOrNull()?.habits ?: emptyList() }
   var showHabitsConfig by remember { mutableStateOf(false) }
   var habitsConfigText by remember { mutableStateOf("") }
   var showHabitDetails by remember { mutableStateOf(false) }
   val timeZone = remember { TimeZone.currentSystemDefault() }
-  val habitsConfigMemo = remember(memos, timeZone) { findHabitsConfigMemo(memos) }
   val today = remember { currentLocalDate() }
   val todayMemo = remember(memos, timeZone, today) { findDailyMemoForDate(memos, timeZone, today) }
-  val todayDay = remember(habitsConfig, todayMemo, today) {
+  val todayConfig = remember(habitsConfigTimeline, today) {
+    habitsConfigForDate(habitsConfigTimeline, today)?.habits.orEmpty()
+  }
+  val todayDay = remember(todayConfig, todayMemo, today) {
     buildHabitDay(
       date = today,
-      habitsConfig = habitsConfig,
+      habitsConfig = todayConfig,
       dailyMemo = todayMemo
     )
   }
@@ -112,7 +118,9 @@ fun StatsScreen(
   } else {
     Modifier
   }
-  val currentConfigText = remember(habitsConfig) { habitsConfig.joinToString("\n") { "${it.label} | ${it.tag}" } }
+  val currentConfigText = remember(currentHabitsConfig) {
+    currentHabitsConfig.joinToString("\n") { "${it.label} | ${it.tag}" }
+  }
 
   LaunchedEffect(weekData.weeks) {
     if (selectedDate == null && activeSelectionId == null) {
@@ -158,14 +166,7 @@ fun StatsScreen(
           onConfigChange = { habitsConfigText = it },
           onSave = {
             val content = buildHabitsConfigContent(habitsConfigText)
-            val existing = habitsConfigMemo?.let { memo ->
-              DailyMemoInfo(name = memo.name, content = memo.content)
-            }
-            if (existing != null) {
-              onEditDailyMemo(existing, content)
-            } else {
-              onCreateDailyMemo(content)
-            }
+            onCreateDailyMemo(content)
           }
         )
       }
@@ -192,21 +193,23 @@ fun StatsScreen(
         onEditRequested = { day ->
           habitsEditorDay = day
           habitsEditorExisting = day.dailyMemo
-          habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+          habitsEditorConfig = habitsConfigForDate(habitsConfigTimeline, day.date)?.habits.orEmpty()
+          habitsEditorSelections = buildHabitsEditorSelections(day, habitsEditorConfig)
         },
-          onCreateRequested = { day ->
-            habitsEditorDay = day
-            habitsEditorExisting = day.dailyMemo
-            habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
-            habitsEditorError = null
-          },
+        onCreateRequested = { day ->
+          habitsEditorDay = day
+          habitsEditorExisting = day.dailyMemo
+          habitsEditorConfig = habitsConfigForDate(habitsConfigTimeline, day.date)?.habits.orEmpty()
+          habitsEditorSelections = buildHabitsEditorSelections(day, habitsEditorConfig)
+          habitsEditorError = null
+        },
         isActiveSelection = activeSelectionId == "main",
         scrollState = chartScrollState,
         showWeekdayLegend = showWeekdayLegend,
         compactHeight = range is ActivityRange.Last90Days
       )
 
-      if (collapseHabits && habitsConfig.isNotEmpty()) {
+      if (collapseHabits && currentHabitsConfig.isNotEmpty()) {
         OutlinedButton(
           onClick = { showHabitDetails = !showHabitDetails },
           modifier = Modifier.fillMaxWidth()
@@ -229,8 +232,8 @@ fun StatsScreen(
         )
       }
 
-      if (activityMode == ActivityMode.Habits && habitsConfig.isNotEmpty() && (!collapseHabits || showHabitDetails)) {
-        habitsConfig.forEach { habit ->
+      if (activityMode == ActivityMode.Habits && currentHabitsConfig.isNotEmpty() && (!collapseHabits || showHabitDetails)) {
+        currentHabitsConfig.forEach { habit ->
           HabitActivitySection(
             habit = habit,
             baseWeekData = weekData,
@@ -244,15 +247,17 @@ fun StatsScreen(
               activeSelectionId = null
             },
             onEditRequested = { day ->
-            habitsEditorDay = day
-            habitsEditorExisting = day.dailyMemo
-            habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
-            habitsEditorError = null
-          },
+              habitsEditorDay = day
+              habitsEditorExisting = day.dailyMemo
+              habitsEditorConfig = habitsConfigForDate(habitsConfigTimeline, day.date)?.habits.orEmpty()
+              habitsEditorSelections = buildHabitsEditorSelections(day, habitsEditorConfig)
+              habitsEditorError = null
+            },
             onCreateRequested = { day ->
               habitsEditorDay = day
               habitsEditorExisting = day.dailyMemo
-              habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+              habitsEditorConfig = habitsConfigForDate(habitsConfigTimeline, day.date)?.habits.orEmpty()
+              habitsEditorSelections = buildHabitsEditorSelections(day, habitsEditorConfig)
             },
             isActiveSelection = activeSelectionId == "habit:${habit.tag}",
             showWeekdayLegend = showWeekdayLegend,
@@ -262,13 +267,14 @@ fun StatsScreen(
       }
     }
 
-    if (activityMode == ActivityMode.Habits && habitsConfig.isNotEmpty()) {
+    if (activityMode == ActivityMode.Habits && todayConfig.isNotEmpty()) {
       FloatingActionButton(
         onClick = {
           val day = todayDay ?: return@FloatingActionButton
           habitsEditorDay = day
           habitsEditorExisting = day.dailyMemo
-          habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+          habitsEditorConfig = todayConfig
+          habitsEditorSelections = buildHabitsEditorSelections(day, habitsEditorConfig)
           habitsEditorError = null
         },
         modifier = Modifier
@@ -300,10 +306,10 @@ fun StatsScreen(
       title = { Text(if (isEditing) "Update day" else "Create day") },
       text = {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-      if (habitsConfig.isNotEmpty()) {
-        habitsConfig.forEach { habit ->
-          val tag = habit.tag
-          val done = habitsEditorSelections[tag] == true
+          if (habitsEditorConfig.isNotEmpty()) {
+            habitsEditorConfig.forEach { habit ->
+              val tag = habit.tag
+              val done = habitsEditorSelections[tag] == true
               Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(
                   checked = done,
@@ -311,11 +317,11 @@ fun StatsScreen(
                     habitsEditorSelections = habitsEditorSelections.toMutableMap().also { it[tag] = checked }
                   }
                 )
-            Text(habit.label, style = MaterialTheme.typography.bodySmall)
-          }
-        }
-      } else {
-        habitsEditorSelections.forEach { (tag, done) ->
+                Text(habit.label, style = MaterialTheme.typography.bodySmall)
+              }
+            }
+          } else {
+            habitsEditorSelections.forEach { (tag, done) ->
               Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(
                   checked = done,
@@ -323,48 +329,48 @@ fun StatsScreen(
                     habitsEditorSelections = habitsEditorSelections.toMutableMap().also { it[tag] = checked }
                   }
                 )
-            Text(tag, style = MaterialTheme.typography.bodySmall)
+                Text(tag, style = MaterialTheme.typography.bodySmall)
+              }
+            }
           }
         }
-      }
-      habitsEditorError?.let { message ->
-        Text(message, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
-      }
-    }
-  },
-  confirmButton = {
-    Button(
-      onClick = {
-        val hasSelection = habitsEditorSelections.values.any { it }
-        if (!hasSelection) {
-          if (habitsEditorExisting != null) {
-            showEmptyDeleteConfirm = true
-          } else {
-            habitsEditorError = "Select at least one habit."
-          }
-          return@Button
+        habitsEditorError?.let { message ->
+          Text(message, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
         }
-        val day = habitsEditorDay
-        if (day != null) {
-          val content = buildDailyContent(day.date, habitsConfig, habitsEditorSelections)
-          val existing = habitsEditorExisting
-          if (existing != null) {
-            onEditDailyMemo(existing, content)
-          } else {
-            onCreateDailyMemo(content)
+      },
+      confirmButton = {
+        Button(
+          onClick = {
+            val hasSelection = habitsEditorSelections.values.any { it }
+            if (!hasSelection) {
+              if (habitsEditorExisting != null) {
+                showEmptyDeleteConfirm = true
+              } else {
+                habitsEditorError = "Select at least one habit."
+              }
+              return@Button
+            }
+            val day = habitsEditorDay
+            if (day != null) {
+              val content = buildDailyContent(day.date, habitsEditorConfig, habitsEditorSelections)
+              val existing = habitsEditorExisting
+              if (existing != null) {
+                onEditDailyMemo(existing, content)
+              } else {
+                onCreateDailyMemo(content)
+              }
+            }
+            selectedDate = null
+            selectedWeek = null
+            activeSelectionId = null
+            habitsEditorDay = null
+            habitsEditorExisting = null
+            habitsEditorError = null
           }
+        ) {
+          Text(if (isEditing) "Update" else "Create")
         }
-        selectedDate = null
-        selectedWeek = null
-        activeSelectionId = null
-        habitsEditorDay = null
-        habitsEditorExisting = null
-        habitsEditorError = null
-      }
-    ) {
-      Text(if (isEditing) "Update" else "Create")
-    }
-  },
+      },
       dismissButton = {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
           if (isEditing) {
@@ -546,7 +552,7 @@ private fun ActivityRangeSelector(
 
 private fun buildHabitsEditorSelections(
   day: ContributionDay,
-  habitsConfig: List<space.be1ski.memos.shared.presentation.components.HabitConfig>
+  habitsConfig: List<HabitConfig>
 ): Map<String, Boolean> {
   return if (habitsConfig.isNotEmpty()) {
     habitsConfig.associate { habit ->
@@ -568,7 +574,7 @@ private fun findDayByDate(
 
 private fun buildDailyContent(
   date: LocalDate,
-  habitsConfig: List<space.be1ski.memos.shared.presentation.components.HabitConfig>,
+  habitsConfig: List<HabitConfig>,
   selections: Map<String, Boolean>
 ): String {
   return buildString {
@@ -576,19 +582,10 @@ private fun buildDailyContent(
     habitsConfig.forEach { habit ->
       val done = selections[habit.tag] == true
       if (done) {
-        append("- [x] ").append(habit.tag).append('\n')
+        append(habit.tag).append('\n')
       }
     }
   }
-}
-
-private fun findHabitsConfigMemo(memos: List<Memo>): Memo? {
-  return memos.filter { memo ->
-    memo.content.contains("#habits/config") || memo.content.contains("#habits_config")
-  }
-    .maxByOrNull { memo ->
-      memo.updateTime?.toEpochMilliseconds() ?: memo.createTime?.toEpochMilliseconds() ?: 0L
-    }
 }
 
 private fun buildHabitsConfigContent(rawText: String): String {
@@ -605,7 +602,7 @@ private fun buildHabitsConfigContent(rawText: String): String {
   }
 }
 
-private fun parseHabitConfigLine(line: String): space.be1ski.memos.shared.presentation.components.HabitConfig? {
+private fun parseHabitConfigLine(line: String): HabitConfig? {
   val parts = line.split("|", limit = 2).map { it.trim() }.filter { it.isNotBlank() }
   if (parts.isEmpty()) {
     return null
@@ -620,7 +617,7 @@ private fun parseHabitConfigLine(line: String): space.be1ski.memos.shared.presen
     val tag = normalizeHabitTag(parts[1])
     label to tag
   }
-  return space.be1ski.memos.shared.presentation.components.HabitConfig(tag = tagRaw, label = label)
+  return HabitConfig(tag = tagRaw, label = label)
 }
 
 private fun normalizeHabitTag(raw: String): String {
@@ -635,7 +632,7 @@ private fun labelFromTag(tag: String): String {
 
 private fun buildHabitDay(
   date: LocalDate,
-  habitsConfig: List<space.be1ski.memos.shared.presentation.components.HabitConfig>,
+  habitsConfig: List<HabitConfig>,
   dailyMemo: DailyMemoInfo?
 ): ContributionDay? {
   if (habitsConfig.isEmpty()) {

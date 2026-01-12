@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -14,6 +16,8 @@ import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,6 +35,7 @@ import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.availableYears
 import space.be1ski.memos.shared.presentation.state.MemosUiState
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
+import space.be1ski.memos.shared.presentation.util.isDesktop
 
 /** Root shared UI for the app. */
 @Composable
@@ -84,15 +89,22 @@ fun MemosApp() {
           verticalAlignment = Alignment.CenterVertically
         ) {
           Text("Memos", style = MaterialTheme.typography.headlineSmall)
-          TextButton(
-            onClick = {
-              viewModel.editCredentials()
-              showCredentialsDialog = true
-              credentialsInitialized = false
-              credentialsDismissed = false
+          Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+            if (isDesktop) {
+              IconButton(onClick = { viewModel.loadMemos() }) {
+                Icon(imageVector = Icons.Filled.Refresh, contentDescription = "Refresh")
+              }
             }
-          ) {
-            Text("Settings")
+            TextButton(
+              onClick = {
+                viewModel.editCredentials()
+                showCredentialsDialog = true
+                credentialsInitialized = false
+                credentialsDismissed = false
+              }
+            ) {
+              Text("Settings")
+            }
           }
         }
         if (errorMessage != null) {
@@ -128,7 +140,8 @@ fun MemosApp() {
             },
             useVerticalScroll = true,
             isRefreshing = isLoading,
-            onRefresh = { viewModel.loadMemos() }
+            onRefresh = { viewModel.loadMemos() },
+            enablePullRefresh = !isDesktop
           )
           1 -> PostsScreen(
             memos = memos,
@@ -136,7 +149,8 @@ fun MemosApp() {
             range = activityRange,
             onRangeChange = { activityRange = it },
             isRefreshing = isLoading,
-            onRefresh = { viewModel.loadMemos() }
+            onRefresh = { viewModel.loadMemos() },
+            enablePullRefresh = !isDesktop
           )
         }
       }

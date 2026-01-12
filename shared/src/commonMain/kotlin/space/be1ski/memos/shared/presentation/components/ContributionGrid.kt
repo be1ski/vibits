@@ -331,12 +331,12 @@ fun rememberActivityWeekData(
 
 @Composable
 /**
- * Memoized builder for habits config tags.
+ * Memoized builder for habits config timeline.
  */
-fun rememberHabitsConfig(memos: List<Memo>): List<HabitConfig> {
+fun rememberHabitsConfigTimeline(memos: List<Memo>): List<HabitsConfigEntry> {
   val timeZone = remember { TimeZone.currentSystemDefault() }
   return remember(memos, timeZone) {
-    extractHabitsConfig(memos, timeZone)
+    extractHabitsConfigEntries(memos, timeZone)
   }
 }
 
@@ -404,6 +404,18 @@ data class HabitConfig(
   val tag: String,
   /** User-friendly label. */
   val label: String
+)
+
+/**
+ * Configuration entry with its effective date.
+ */
+data class HabitsConfigEntry(
+  /** Date when config was created. */
+  val date: LocalDate,
+  /** Habits declared in the config. */
+  val habits: List<HabitConfig>,
+  /** Source memo. */
+  val memo: Memo
 )
 
 /**
@@ -488,17 +500,15 @@ private fun buildActivityWeekData(
   today: LocalDate
 ): ActivityWeekData {
   val bounds = rangeBounds(range, today)
-  val habits = if (mode == ActivityMode.Habits) extractHabitsConfig(memos, timeZone) else emptyList()
-  val dailyMemos = extractDailyMemos(memos, timeZone)
-  val useHabits = mode == ActivityMode.Habits && habits.isNotEmpty()
-  val totalHabits = habits.size
-  val counts = if (mode == ActivityMode.Posts || !useHabits) {
-    extractDailyPostCounts(memos, timeZone, bounds)
+  val configTimeline = if (mode == ActivityMode.Habits) {
+    extractHabitsConfigEntries(memos, timeZone)
   } else {
-    emptyMap()
+    emptyList()
   }
+  val dailyMemos = extractDailyMemos(memos, timeZone)
+  val counts = if (mode == ActivityMode.Posts) extractDailyPostCounts(memos, timeZone, bounds) else emptyMap()
   if (mode == ActivityMode.Habits) {
-    println("Habits debug: habits=${habits.size}, dailyMemos=${dailyMemos.size}, useHabits=$useHabits")
+    println("Habits debug: configs=${configTimeline.size}, dailyMemos=${dailyMemos.size}")
   }
 
   var start = bounds.start
@@ -512,37 +522,38 @@ private fun buildActivityWeekData(
     val days = (0..6).map { offset ->
       val date = cursor.plus(DatePeriod(days = offset))
       val dailyMemo = dailyMemos[date]
-      val habitStatuses = if (useHabits) {
-        buildHabitStatuses(dailyMemo?.content, habits)
+      val configForDay = if (mode == ActivityMode.Habits) {
+        habitsConfigForDate(configTimeline, date)
+      } else {
+        null
+      }
+      val habitsForDay = configForDay?.habits.orEmpty()
+      val useHabitsForDay = mode == ActivityMode.Habits && habitsForDay.isNotEmpty()
+      val habitStatuses = if (useHabitsForDay) {
+        buildHabitStatuses(dailyMemo?.content, habitsForDay)
       } else {
         emptyList()
       }
-      val memoHabitTags = if (useHabits) {
+      val memoHabitTags = if (useHabitsForDay) {
         extractHabitTagsFromContent(dailyMemo?.content)
       } else {
         emptySet()
       }
-      val configTags = if (useHabits) habits.map { it.tag }.toSet() else emptySet()
-      val memoRelevantTags = if (configTags.isNotEmpty()) {
-        memoHabitTags.intersect(configTags)
-      } else {
-        memoHabitTags
-      }
-      val completed = if (useHabits) {
-        if (memoHabitTags.isNotEmpty()) {
-          memoRelevantTags.size
-        } else {
-          habitStatuses.count { it.done }
-        }
-      } else {
+      val configTags = if (useHabitsForDay) habitsForDay.map { it.tag }.toSet() else emptySet()
+      val memoRelevantTags = if (configTags.isNotEmpty()) memoHabitTags.intersect(configTags) else memoHabitTags
+      val completed = if (useHabitsForDay) {
+        if (memoHabitTags.isNotEmpty()) memoRelevantTags.size else habitStatuses.count { it.done }
+      } else if (mode == ActivityMode.Posts) {
         counts[date] ?: 0
+      } else {
+        0
       }
-      val totalHabitsForDay = if (useHabits) {
+      val totalHabitsForDay = if (useHabitsForDay) {
         if (configTags.isNotEmpty()) configTags.size else memoHabitTags.size
       } else {
         0
       }
-      val ratio = if (useHabits && totalHabitsForDay > 0) {
+      val ratio = if (mode == ActivityMode.Habits && totalHabitsForDay > 0) {
         completed.toFloat() / totalHabitsForDay.toFloat()
       } else {
         0f
@@ -550,7 +561,7 @@ private fun buildActivityWeekData(
       ContributionDay(
         date = date,
         count = completed,
-        totalHabits = if (useHabits) totalHabitsForDay else 0,
+        totalHabits = if (mode == ActivityMode.Habits) totalHabitsForDay else 0,
         completionRatio = ratio.coerceIn(0f, 1f),
         habitStatuses = habitStatuses,
         dailyMemo = dailyMemo,
@@ -685,22 +696,32 @@ fun availableYears(
   return years.toList().sortedDescending()
 }
 
-private fun extractHabitsConfig(memos: List<Memo>, timeZone: TimeZone): List<HabitConfig> {
+/**
+ * Finds the latest config entry strictly before the provided [date].
+ */
+fun habitsConfigForDate(entries: List<HabitsConfigEntry>, date: LocalDate): HabitsConfigEntry? {
+  return entries.lastOrNull { it.date < date }
+}
+
+private fun extractHabitsConfigEntries(memos: List<Memo>, timeZone: TimeZone): List<HabitsConfigEntry> {
   val tagged = memos.filter { memo ->
     memo.content.contains("#habits/config") || memo.content.contains("#habits_config")
   }
-  val sorted = tagged.sortedByDescending { memo ->
-    parseMemoDate(memo, timeZone) ?: LocalDate(1970, 1, 1)
+  val entries = tagged.mapNotNull { memo ->
+    val instant = memo.createTime ?: memo.updateTime ?: return@mapNotNull null
+    val date = instant.toLocalDateTime(timeZone).date
+    val lines = memo.content.lineSequence()
+      .map { it.trim() }
+      .filter { it.isNotBlank() }
+      .filterNot { it.startsWith("#habits/config") || it.startsWith("#habits_config") }
+    val habits = lines.mapNotNull { line -> parseHabitConfigLine(line) }
+      .distinctBy { it.tag }
+      .toList()
+    HabitsConfigEntry(date = date, habits = habits, memo = memo) to instant
   }
-  val config = sorted.firstOrNull() ?: return emptyList()
-  val lines = config.content.lineSequence()
-    .map { it.trim() }
-    .filter { it.isNotBlank() }
-    .filterNot { it.startsWith("#habits/config") || it.startsWith("#habits_config") }
-  return lines.mapNotNull { line ->
-    parseHabitConfigLine(line)
-  }.distinctBy { it.tag }
-    .toList()
+  return entries
+    .sortedBy { it.second.toEpochMilliseconds() }
+    .map { it.first }
 }
 
 /**
