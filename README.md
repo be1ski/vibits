@@ -23,6 +23,29 @@ Cross-platform client for Memos built with Kotlin Multiplatform and Compose Mult
 └── app/ (legacy Android-only module)
 ```
 
+## Key files
+
+### shared
+
+- `shared/src/commonMain/kotlin/space/be1ski/memos/shared/ui/MemosApp.kt` - shared UI root
+- `shared/src/commonMain/kotlin/space/be1ski/memos/shared/ui/MemosViewModel.kt` - state and actions
+- `shared/src/commonMain/kotlin/space/be1ski/memos/shared/data/MemosRepository.kt` - API access with pagination
+- `shared/src/commonMain/kotlin/space/be1ski/memos/shared/ui/components/ContributionGrid.kt` - activity charts
+- `shared/src/commonMain/kotlin/space/be1ski/memos/shared/di/SharedModule.kt` - DI wiring
+
+### androidApp
+
+- `androidApp/src/main/kotlin/space/be1ski/memos/android/MainActivity.kt` - Android entry activity
+- `androidApp/src/main/kotlin/space/be1ski/memos/android/MemosApplication.kt` - app initialization
+
+### desktopApp
+
+- `desktopApp/src/desktopMain/kotlin/space/be1ski/memos/desktop/DesktopMain.kt` - desktop entry point
+
+### app (legacy)
+
+- `app/src/main/java/space/be1ski/memos/MainActivity.kt` - legacy activity template
+
 ## Quick start
 
 ### Desktop
