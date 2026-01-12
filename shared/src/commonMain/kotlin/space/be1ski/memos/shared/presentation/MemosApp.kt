@@ -119,7 +119,12 @@ fun MemosApp() {
           Tab(
             selected = selectedTab == 1,
             onClick = { selectedTab = 1 },
-            text = { Text("Posts") }
+            text = { Text("Stats") }
+          )
+          Tab(
+            selected = selectedTab == 2,
+            onClick = { selectedTab = 2 },
+            text = { Text("Feed") }
           )
         }
         when (selectedTab) {
@@ -139,15 +144,16 @@ fun MemosApp() {
               viewModel.createDailyMemo(content)
             },
             useVerticalScroll = true,
-            isRefreshing = isLoading,
-            onRefresh = { viewModel.loadMemos() },
-            enablePullRefresh = !isDesktop
+            enablePullRefresh = false
           )
           1 -> PostsScreen(
             memos = memos,
             years = years,
             range = activityRange,
-            onRangeChange = { activityRange = it },
+            onRangeChange = { activityRange = it }
+          )
+          2 -> FeedScreen(
+            memos = memos,
             isRefreshing = isLoading,
             onRefresh = { viewModel.loadMemos() },
             enablePullRefresh = !isDesktop
