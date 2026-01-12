@@ -49,6 +49,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import kotlin.math.max
 import kotlin.time.Instant as KtInstant
 import space.be1ski.memos.shared.domain.model.Memo
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
@@ -521,9 +522,15 @@ private fun buildActivityWeekData(
       } else {
         emptySet()
       }
+      val configTags = if (useHabits) habits.map { it.tag }.toSet() else emptySet()
+      val memoRelevantTags = if (configTags.isNotEmpty()) {
+        memoHabitTags.intersect(configTags)
+      } else {
+        memoHabitTags
+      }
       val completed = if (useHabits) {
         if (memoHabitTags.isNotEmpty()) {
-          extractCompletedHabits(dailyMemo?.content ?: "", memoHabitTags).size
+          memoRelevantTags.size
         } else {
           habitStatuses.count { it.done }
         }
@@ -531,7 +538,7 @@ private fun buildActivityWeekData(
         counts[date] ?: 0
       }
       val totalHabitsForDay = if (useHabits) {
-        if (memoHabitTags.isNotEmpty()) memoHabitTags.size else totalHabits
+        if (configTags.isNotEmpty()) configTags.size else memoHabitTags.size
       } else {
         0
       }
@@ -806,16 +813,25 @@ internal fun buildHabitStatuses(content: String?, habits: List<HabitConfig>): Li
 }
 
 private fun extractCompletedHabits(content: String, habits: Set<String>): Set<String> {
+  val done = mutableSetOf<String>()
   val lines = content.lineSequence()
   val checkboxRegex = Regex("^\\s*[-*]\\s*\\[(x|X)\\]\\s+(.+)$")
-  val done = mutableSetOf<String>()
+  var sawCheckbox = false
   lines.forEach { line ->
-    val match = checkboxRegex.find(line) ?: return@forEach
-    val trailing = match.groupValues[2]
-    val habitTag = habits.firstOrNull { tag -> trailing.contains(tag) }
-    if (habitTag != null) {
-      done.add(habitTag)
+    val match = checkboxRegex.find(line)
+    if (match != null) {
+      sawCheckbox = true
+      val trailing = match.groupValues[2]
+      val habitTag = habits.firstOrNull { tag -> trailing.contains(tag) }
+      if (habitTag != null) {
+        done.add(habitTag)
+      }
+      return@forEach
     }
+  }
+  if (!sawCheckbox) {
+    val tags = extractHabitTagsFromContent(content)
+    done.addAll(tags.intersect(habits))
   }
   return done
 }
