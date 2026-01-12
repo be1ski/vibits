@@ -7,7 +7,6 @@ Cross-platform client for Memos built with Kotlin Multiplatform and Compose Mult
 - `shared/` - KMP shared code: networking, models, UI, DI, and platform abstractions.
 - `androidApp/` - Android app wrapper for shared UI.
 - `desktopApp/` - Desktop app wrapper for shared UI.
-- `app/` - Legacy Android-only module (kept for reference; not wired into builds).
 
 ## Structure overview
 

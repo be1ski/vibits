@@ -14,8 +14,6 @@ UI is built with Compose Multiplatform and shared across desktop and Android.
   - Android entry point for shared UI
 - `desktopApp/`
   - Desktop entry point for shared UI
-- `app/`
-  - Legacy Android-only app template (not used in current builds)
 
 ## Data flow
 

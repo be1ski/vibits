@@ -21,7 +21,6 @@ If a step cannot be completed, document why and what is needed to proceed.
 - `shared/` - Kotlin Multiplatform shared code
 - `androidApp/` - Android app wrapper
 - `desktopApp/` - Desktop app wrapper
-- `app/` - legacy Android-only app (not in the current build)
 
 ## Documentation expectations
 
