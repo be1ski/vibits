@@ -7,6 +7,9 @@ import platform.Foundation.NSCalendarUnitMonth
 import platform.Foundation.NSCalendarUnitYear
 import platform.Foundation.NSDate
 
+/**
+ * iOS implementation using NSCalendar.
+ */
 actual fun currentLocalDate(): LocalDate {
   val calendar = NSCalendar.currentCalendar
   val components = calendar.components(

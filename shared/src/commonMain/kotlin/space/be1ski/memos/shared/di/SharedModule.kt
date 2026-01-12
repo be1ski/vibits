@@ -7,6 +7,9 @@ import space.be1ski.memos.shared.data.MemosRepository
 import space.be1ski.memos.shared.network.createHttpClient
 import space.be1ski.memos.shared.ui.MemosViewModel
 
+/**
+ * Koin module that wires shared dependencies.
+ */
 fun sharedModule(): Module = module {
   single { createHttpClient() }
   single { CredentialsStore() }

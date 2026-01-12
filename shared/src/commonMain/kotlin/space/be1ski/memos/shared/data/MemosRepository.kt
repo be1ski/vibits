@@ -11,9 +11,20 @@ import space.be1ski.memos.shared.config.MAX_PAGES
 import space.be1ski.memos.shared.model.ListMemosResponse
 import space.be1ski.memos.shared.model.Memo
 
+/**
+ * Repository for loading memos from the API.
+ */
 class MemosRepository(
   private val httpClient: HttpClient
 ) {
+  /**
+   * Loads memos from the server using paginated API calls.
+   *
+   * @param baseUrl Base URL for Memos server.
+   * @param token Access token.
+   * @param pageSize Page size for each request.
+   * @return Full list of memos collected across pages.
+   */
   suspend fun listMemos(baseUrl: String, token: String, pageSize: Int = DEFAULT_PAGE_SIZE): List<Memo> {
     val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
     val allMemos = mutableListOf<Memo>()

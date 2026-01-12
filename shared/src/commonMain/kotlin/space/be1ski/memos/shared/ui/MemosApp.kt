@@ -48,6 +48,7 @@ import space.be1ski.memos.shared.ui.components.WeeklyBarChart
 import space.be1ski.memos.shared.ui.components.availableYears
 import space.be1ski.memos.shared.ui.components.rememberActivityWeekData
 
+/** Root shared UI for the app. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MemosApp() {
@@ -141,6 +142,9 @@ fun MemosApp() {
   }
 }
 
+/**
+ * Profile tab with activity charts.
+ */
 @Composable
 private fun ProfileScreen(
   memos: List<Memo>,
@@ -180,6 +184,9 @@ private fun ProfileScreen(
   }
 }
 
+/**
+ * Selects activity range (last 12 months or specific year).
+ */
 @Composable
 private fun ActivityRangeSelector(
   years: List<Int>,
@@ -219,6 +226,9 @@ private fun ActivityRangeSelector(
   }
 }
 
+/**
+ * Posts tab with memo list.
+ */
 @Composable
 private fun PostsScreen(
   memos: List<Memo>

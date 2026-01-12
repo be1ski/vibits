@@ -13,7 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import space.be1ski.memos.ui.theme.MemosTheme
 
+/**
+ * Legacy Android-only activity (module not in current build).
+ */
 class MainActivity : ComponentActivity() {
+  /**
+   * Sets up a placeholder Compose UI.
+   */
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
@@ -30,6 +36,7 @@ class MainActivity : ComponentActivity() {
   }
 }
 
+/** Simple greeting composable used in the legacy module. */
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
   Text(
@@ -38,6 +45,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
   )
 }
 
+/** Preview for the legacy greeting. */
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {

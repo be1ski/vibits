@@ -24,8 +24,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import kotlinx.datetime.DatePeriod
@@ -40,6 +43,9 @@ import space.be1ski.memos.shared.config.currentLocalDate
 import space.be1ski.memos.shared.model.Memo
 
 @Composable
+/**
+ * Renders GitHub-style daily activity grid for the provided [weekData].
+ */
 fun ContributionGrid(
   weekData: ActivityWeekData,
   selectedDay: ContributionDay?,
@@ -47,7 +53,7 @@ fun ContributionGrid(
   scrollState: ScrollState,
   modifier: Modifier = Modifier
 ) {
-  var showTooltip by remember { mutableStateOf(false) }
+  var tooltip by remember { mutableStateOf<DayTooltip?>(null) }
   Column(modifier = modifier) {
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
       val columns = weekData.weeks.size.coerceAtLeast(1)
@@ -73,9 +79,9 @@ fun ContributionGrid(
                   enabled = day.inRange,
                   size = layout.columnSize,
                   isSelected = selectedDay?.date == day.date,
-                  onClick = {
+                  onClick = { offset ->
                     onDaySelected(day)
-                    showTooltip = true
+                    tooltip = DayTooltip(day, offset)
                   }
                 )
               }
@@ -85,15 +91,19 @@ fun ContributionGrid(
       }
     }
     LegendRow(maxCount = weekData.maxDaily)
-    if (showTooltip && selectedDay != null) {
-      Popup(onDismissRequest = { showTooltip = false }) {
+    tooltip?.let { current ->
+      Popup(
+        alignment = Alignment.TopStart,
+        offset = current.offset,
+        onDismissRequest = { tooltip = null }
+      ) {
         Column(
           modifier = Modifier
             .background(MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.small)
             .padding(horizontal = 8.dp, vertical = 6.dp)
         ) {
           Text(
-            "${selectedDay.date}: ${selectedDay.count} posts",
+            "${current.day.date}: ${current.day.count} posts",
             style = MaterialTheme.typography.labelMedium
           )
         }
@@ -103,6 +113,9 @@ fun ContributionGrid(
 }
 
 @Composable
+/**
+ * Renders weekly activity bars for the provided [weekData].
+ */
 fun WeeklyBarChart(
   weekData: ActivityWeekData,
   selectedWeek: ActivityWeek?,
@@ -110,7 +123,7 @@ fun WeeklyBarChart(
   scrollState: ScrollState,
   modifier: Modifier = Modifier
 ) {
-  var showTooltip by remember { mutableStateOf(false) }
+  var tooltip by remember { mutableStateOf<WeekTooltip?>(null) }
   Column(modifier = modifier) {
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
       val columns = weekData.weeks.size.coerceAtLeast(1)
@@ -135,24 +148,28 @@ fun WeeklyBarChart(
               maxCount = weekData.maxWeekly,
               width = layout.columnSize,
               isSelected = selectedWeek?.startDate == week.startDate,
-              onClick = {
+              onClick = { offset ->
                 onWeekSelected(week)
-                showTooltip = true
+                tooltip = WeekTooltip(week, offset)
               }
             )
           }
         }
       }
     }
-    if (showTooltip && selectedWeek != null) {
-      Popup(onDismissRequest = { showTooltip = false }) {
+    tooltip?.let { current ->
+      Popup(
+        alignment = Alignment.TopStart,
+        offset = current.offset,
+        onDismissRequest = { tooltip = null }
+      ) {
         Column(
           modifier = Modifier
             .background(MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.small)
             .padding(horizontal = 8.dp, vertical = 6.dp)
         ) {
           Text(
-            "${selectedWeek.startDate} - ${selectedWeek.startDate.plus(DatePeriod(days = 6))}",
+            "${current.week.startDate} - ${current.week.startDate.plus(DatePeriod(days = 6))}",
             style = MaterialTheme.typography.labelMedium
           )
         }
@@ -162,6 +179,9 @@ fun WeeklyBarChart(
 }
 
 @Composable
+/**
+ * Memoized builder for [ActivityWeekData].
+ */
 fun rememberActivityWeekData(
   memos: List<Memo>,
   range: ActivityRange
@@ -173,35 +193,78 @@ fun rememberActivityWeekData(
   }
 }
 
+/**
+ * Per-day activity entry.
+ */
 data class ContributionDay(
+  /** Calendar date for the entry. */
   val date: LocalDate,
+  /** Number of memos for the day. */
   val count: Int,
+  /** True if the day is within the requested range. */
   val inRange: Boolean
 )
 
+/**
+ * Aggregated week data with daily breakdown.
+ */
 data class ActivityWeek(
+  /** Start date of the week (Monday). */
   val startDate: LocalDate,
+  /** Daily breakdown for the week. */
   val days: List<ContributionDay>,
+  /** Sum of all posts in the week. */
   val weeklyCount: Int
 )
 
+/**
+ * Fully prepared dataset for activity charts.
+ */
 data class ActivityWeekData(
+  /** Ordered list of week entries. */
   val weeks: List<ActivityWeek>,
+  /** Maximum posts for a single day in range. */
   val maxDaily: Int,
+  /** Maximum posts in a week in range. */
   val maxWeekly: Int
 )
 
+/**
+ * Inclusive bounds for an activity range.
+ */
 private data class RangeBounds(
   val start: LocalDate,
   val end: LocalDate
 )
 
+/**
+ * Tooltip payload for a selected day.
+ */
+private data class DayTooltip(
+  val day: ContributionDay,
+  val offset: IntOffset
+)
+
+/**
+ * Tooltip payload for a selected week.
+ */
+private data class WeekTooltip(
+  val week: ActivityWeek,
+  val offset: IntOffset
+)
+
+/**
+ * Resolved sizing parameters for chart layout.
+ */
 private data class ChartLayout(
   val columnSize: Dp,
   val contentWidth: Dp,
   val useScroll: Boolean
 )
 
+/**
+ * Calculates layout sizes for a fixed number of columns.
+ */
 private fun calculateLayout(
   maxWidth: Dp,
   columns: Int,
@@ -217,6 +280,9 @@ private fun calculateLayout(
   return ChartLayout(columnSize = columnSize, contentWidth = contentWidth, useScroll = useScroll)
 }
 
+/**
+ * Builds the chart dataset for a given [range].
+ */
 private fun buildActivityWeekData(
   memos: List<Memo>,
   timeZone: TimeZone,
@@ -259,6 +325,9 @@ private fun buildActivityWeekData(
   return ActivityWeekData(weeks = weeks, maxDaily = maxDaily, maxWeekly = maxWeekly)
 }
 
+/**
+ * Resolves the calendar bounds for the given [range].
+ */
 private fun rangeBounds(range: ActivityRange, today: LocalDate): RangeBounds {
   return when (range) {
     is ActivityRange.LastYear -> RangeBounds(
@@ -272,6 +341,9 @@ private fun rangeBounds(range: ActivityRange, today: LocalDate): RangeBounds {
   }
 }
 
+/**
+ * Renders an individual activity cell.
+ */
 @Composable
 private fun ContributionCell(
   day: ContributionDay,
@@ -279,8 +351,9 @@ private fun ContributionCell(
   enabled: Boolean,
   size: Dp,
   isSelected: Boolean,
-  onClick: (() -> Unit)?
+  onClick: ((IntOffset) -> Unit)?
 ) {
+  var coordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
   val color = when {
     !enabled -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
     day.count == 0 -> Color(0xFFE2E8F0)
@@ -305,10 +378,16 @@ private fun ContributionCell(
     modifier = Modifier
       .size(size)
       .background(color = selectedColor, shape = MaterialTheme.shapes.extraSmall)
+      .onGloballyPositioned { coordinates = it }
       .then(
         if (onClick != null && enabled) {
           Modifier.clickable {
-            onClick()
+            val coords = coordinates
+            if (coords != null) {
+              val position = coords.positionInRoot()
+              val offset = IntOffset(position.x.toInt(), (position.y + coords.size.height).toInt())
+              onClick(offset)
+            }
           }
         } else {
           Modifier
@@ -317,6 +396,9 @@ private fun ContributionCell(
   )
 }
 
+/**
+ * Renders the legend row under the grid.
+ */
 @Composable
 private fun LegendRow(maxCount: Int) {
   Row(
@@ -332,6 +414,9 @@ private fun LegendRow(maxCount: Int) {
   }
 }
 
+/**
+ * Renders a fixed-size legend cell.
+ */
 @Composable
 private fun LegendCell(count: Int, maxCount: Int) {
   ContributionCell(
@@ -344,6 +429,9 @@ private fun LegendCell(count: Int, maxCount: Int) {
   )
 }
 
+/**
+ * Computes available years from memo timestamps.
+ */
 fun availableYears(
   memos: List<Memo>,
   timeZone: TimeZone,
@@ -360,11 +448,19 @@ fun availableYears(
   return years.toList().sortedDescending()
 }
 
+/**
+ * Range selection for activity charts.
+ */
 sealed class ActivityRange {
+  /** Rolling 12-month range. */
   data object LastYear : ActivityRange()
+  /** Fixed calendar year. */
   data class Year(val year: Int) : ActivityRange()
 }
 
+/**
+ * Attempts to parse a memo timestamp into [LocalDate].
+ */
 private fun parseMemoDate(memo: Memo, timeZone: TimeZone): LocalDate? {
   val candidates = listOfNotNull(memo.createTime, memo.updateTime)
   for (value in candidates) {
@@ -383,14 +479,18 @@ private fun parseMemoDate(memo: Memo, timeZone: TimeZone): LocalDate? {
   return null
 }
 
+/**
+ * Renders a weekly activity bar.
+ */
 @Composable
 private fun WeeklyBar(
   count: Int,
   maxCount: Int,
   width: Dp,
   isSelected: Boolean,
-  onClick: () -> Unit
+  onClick: (IntOffset) -> Unit
 ) {
+  var coordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
   val maxHeight = 72.dp
   val height = if (maxCount <= 0) 4.dp else (maxHeight.value * (count.toFloat() / maxCount.toFloat())).dp
   val color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
@@ -404,7 +504,15 @@ private fun WeeklyBar(
         .width(width)
         .height(height.coerceAtLeast(4.dp))
         .background(color, shape = MaterialTheme.shapes.extraSmall)
-        .clickable(onClick = onClick)
+        .onGloballyPositioned { coordinates = it }
+        .clickable {
+          val coords = coordinates
+          if (coords != null) {
+            val position = coords.positionInRoot()
+            val offset = IntOffset(position.x.toInt(), (position.y + coords.size.height).toInt())
+            onClick(offset)
+          }
+        }
     )
   }
 }

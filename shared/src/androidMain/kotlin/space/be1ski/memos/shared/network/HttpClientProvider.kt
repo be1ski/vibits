@@ -10,6 +10,9 @@ import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
+/**
+ * Android-specific HTTP client configuration.
+ */
 actual fun createHttpClient(): HttpClient {
   return HttpClient(OkHttp) {
     install(ContentNegotiation) {

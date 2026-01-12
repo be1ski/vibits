@@ -2,9 +2,15 @@ package space.be1ski.memos.shared.config
 
 import android.content.Context
 
+/**
+ * Android implementation backed by SharedPreferences.
+ */
 actual class CredentialsStore {
   private val prefsName = "memos_prefs"
 
+  /**
+   * Loads credentials or returns empty values when not available.
+   */
   actual fun load(): LocalCredentials {
     if (!AndroidContextHolder.isReady()) {
       return LocalCredentials(baseUrl = "", token = "")
@@ -15,6 +21,9 @@ actual class CredentialsStore {
     return LocalCredentials(baseUrl = baseUrl, token = token)
   }
 
+  /**
+   * Saves credentials to SharedPreferences.
+   */
   actual fun save(credentials: LocalCredentials) {
     if (!AndroidContextHolder.isReady()) {
       return

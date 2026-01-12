@@ -12,12 +12,18 @@ import space.be1ski.memos.shared.config.LocalCredentials
 import space.be1ski.memos.shared.data.MemosRepository
 import space.be1ski.memos.shared.ui.state.MemosUiState
 
+/**
+ * ViewModel that drives memo loading and UI state updates.
+ */
 class MemosViewModel(
   private val repository: MemosRepository,
   private val credentialsStore: CredentialsStore
 ) {
   private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
+  /**
+   * Snapshot of UI state for Compose.
+   */
   var uiState by mutableStateOf(
     credentialsStore.load().let { creds ->
       MemosUiState(baseUrl = creds.baseUrl, token = creds.token)
@@ -25,14 +31,23 @@ class MemosViewModel(
   )
     private set
 
+  /**
+   * Updates the base URL input.
+   */
   fun updateBaseUrl(value: String) {
     uiState = uiState.copy(baseUrl = value, errorMessage = null)
   }
 
+  /**
+   * Updates the token input.
+   */
   fun updateToken(value: String) {
     uiState = uiState.copy(token = value, errorMessage = null)
   }
 
+  /**
+   * Loads memos and persists credentials on success.
+   */
   fun loadMemos() {
     val baseUrl = uiState.baseUrl.trim()
     val token = uiState.token.trim()

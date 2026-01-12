@@ -10,6 +10,9 @@ import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
+/**
+ * iOS-specific HTTP client configuration.
+ */
 actual fun createHttpClient(): HttpClient {
   return HttpClient(Darwin) {
     install(ContentNegotiation) {

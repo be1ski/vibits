@@ -10,6 +10,9 @@ import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
+/**
+ * Desktop-specific HTTP client configuration.
+ */
 actual fun createHttpClient(): HttpClient {
   return HttpClient(CIO) {
     install(ContentNegotiation) {

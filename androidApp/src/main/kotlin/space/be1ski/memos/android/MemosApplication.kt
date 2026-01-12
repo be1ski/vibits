@@ -6,7 +6,13 @@ import org.koin.core.context.startKoin
 import space.be1ski.memos.shared.config.AndroidContextHolder
 import space.be1ski.memos.shared.di.sharedModule
 
+/**
+ * Android Application that initializes shared DI and context.
+ */
 class MemosApplication : Application() {
+  /**
+   * Initializes Koin and shared Android context holder.
+   */
   override fun onCreate() {
     super.onCreate()
     AndroidContextHolder.set(this)

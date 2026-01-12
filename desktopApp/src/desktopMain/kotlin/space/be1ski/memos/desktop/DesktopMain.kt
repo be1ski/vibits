@@ -8,6 +8,9 @@ import org.koin.core.context.startKoin
 import space.be1ski.memos.shared.di.sharedModule
 import space.be1ski.memos.shared.ui.MemosApp
 
+/**
+ * Desktop entry point that starts Koin and opens the main window.
+ */
 fun main() = application {
   startKoin {
     modules(sharedModule())
