@@ -700,7 +700,7 @@ fun availableYears(
  * Finds the latest config entry strictly before the provided [date].
  */
 fun habitsConfigForDate(entries: List<HabitsConfigEntry>, date: LocalDate): HabitsConfigEntry? {
-  return entries.lastOrNull { it.date < date }
+  return entries.lastOrNull { it.date <= date }
 }
 
 private fun extractHabitsConfigEntries(memos: List<Memo>, timeZone: TimeZone): List<HabitsConfigEntry> {
