@@ -195,6 +195,7 @@ fun StatsScreen(
       } else {
         ContributionGrid(
           weekData = weekData,
+          range = range,
           selectedDay = if (activeSelectionId == "main") selectedDay else null,
           selectedWeekStart = if (activityMode == ActivityMode.Posts) selectedWeek?.startDate else null,
           onDaySelected = { day ->
@@ -227,7 +228,8 @@ fun StatsScreen(
           isActiveSelection = activeSelectionId == "main",
           scrollState = chartScrollState,
           showWeekdayLegend = showWeekdayLegend,
-          compactHeight = useCompactHeight
+          compactHeight = useCompactHeight,
+          showTimeline = true
         )
       }
 
@@ -285,7 +287,8 @@ fun StatsScreen(
             },
             isActiveSelection = activeSelectionId == "habit:${habit.tag}",
             showWeekdayLegend = showWeekdayLegend,
-            compactHeight = useCompactHeight
+            compactHeight = useCompactHeight,
+            range = range
           )
         }
       }
@@ -492,7 +495,8 @@ private fun HabitActivitySection(
   onCreateRequested: (ContributionDay) -> Unit,
   isActiveSelection: Boolean,
   showWeekdayLegend: Boolean,
-  compactHeight: Boolean
+  compactHeight: Boolean,
+  range: ActivityRange
 ) {
   val habitWeekData = remember(baseWeekData, habit) {
     activityWeekDataForHabit(baseWeekData, habit)
@@ -504,20 +508,21 @@ private fun HabitActivitySection(
 
   Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 12.dp)) {
     Text(habit.label, style = MaterialTheme.typography.titleSmall)
-    ContributionGrid(
-      weekData = habitWeekData,
-      selectedDay = selectedDay,
-      selectedWeekStart = null,
-      onDaySelected = onDaySelected,
-      onClearSelection = onClearSelection,
-      onEditRequested = onEditRequested,
-      onCreateRequested = onCreateRequested,
-      isActiveSelection = isActiveSelection,
-      scrollState = chartScrollState,
-      showWeekdayLegend = showWeekdayLegend,
-      compactHeight = compactHeight
-    )
-  }
+  ContributionGrid(
+    weekData = habitWeekData,
+    range = range,
+    selectedDay = selectedDay,
+    selectedWeekStart = null,
+    onDaySelected = onDaySelected,
+    onClearSelection = onClearSelection,
+    onEditRequested = onEditRequested,
+    onCreateRequested = onCreateRequested,
+    isActiveSelection = isActiveSelection,
+    scrollState = chartScrollState,
+    showWeekdayLegend = showWeekdayLegend,
+    compactHeight = compactHeight
+  )
+}
 }
 
 @Composable
@@ -570,6 +575,14 @@ private fun LastSevenDaysMatrix(
                 .size(cellSize)
                 .background(cellColor, shape = MaterialTheme.shapes.extraSmall)
             )
+          }
+        }
+      }
+      Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
+        Spacer(modifier = Modifier.width(labelWidth))
+        days.forEach { day ->
+          Box(modifier = Modifier.size(cellSize), contentAlignment = Alignment.Center) {
+            Text(day.date.day.toString(), style = MaterialTheme.typography.labelSmall)
           }
         }
       }

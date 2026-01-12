@@ -45,6 +45,7 @@ import androidx.compose.ui.window.PopupPositionProvider
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
@@ -68,6 +69,7 @@ internal object ChartDimens {
  */
 fun ContributionGrid(
   weekData: ActivityWeekData,
+  range: ActivityRange,
   selectedDay: ContributionDay?,
   selectedWeekStart: LocalDate?,
   onDaySelected: (ContributionDay) -> Unit,
@@ -78,6 +80,7 @@ fun ContributionGrid(
   scrollState: ScrollState,
   showWeekdayLegend: Boolean = false,
   compactHeight: Boolean = false,
+  showTimeline: Boolean = false,
   modifier: Modifier = Modifier
 ) {
   var tooltip by remember { mutableStateOf<DayTooltip?>(null) }
@@ -111,47 +114,64 @@ fun ContributionGrid(
       val legendSpacing = if (showWeekdayLegend) spacing else 0.dp
       val availableWidth = (maxWidth - legendWidth - legendSpacing).coerceAtLeast(0.dp)
       val layout = calculateLayout(availableWidth, columns, minColumnSize = minCell, spacing = spacing)
+      val timelineLabels = remember(weekData.weeks, range) {
+        if (showTimeline) buildTimelineLabels(weekData.weeks, range) else emptyList()
+      }
 
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(spacing)
-      ) {
-        if (showWeekdayLegend) {
-          DayOfWeekLegend(
-            cellSize = layout.columnSize,
-            spacing = spacing
-          )
-        }
+      Column(verticalArrangement = Arrangement.spacedBy(spacing)) {
         Row(
-          modifier = Modifier
-            .width(layout.contentWidth)
-            .then(if (layout.useScroll) Modifier.horizontalScroll(scrollState) else Modifier),
+          modifier = Modifier.fillMaxWidth(),
           horizontalArrangement = Arrangement.spacedBy(spacing)
         ) {
-          weekData.weeks.forEach { week ->
-            val isWeekSelected = selectedWeekStart == week.startDate
-            Column(verticalArrangement = Arrangement.spacedBy(spacing)) {
-              week.days.forEach { day ->
-                ContributionCell(
-                  day = day,
-                  maxCount = weekData.maxDaily,
-                  enabled = day.inRange,
-                  size = layout.columnSize,
-                  isSelected = selectedDay?.date == day.date,
-                  isHovered = hoveredDate == day.date,
-                  isWeekSelected = isWeekSelected,
-                  onClick = { offset ->
-                    onDaySelected(day)
-                    tooltip = DayTooltip(day, offset)
-                    suppressClear = true
-                  },
-                  onHoverChange = { hovering ->
-                    hoveredDate = if (hovering) day.date else hoveredDate?.takeIf { it != day.date }
-                  }
-                )
+          if (showWeekdayLegend) {
+            DayOfWeekLegend(
+              cellSize = layout.columnSize,
+              spacing = spacing
+            )
+          }
+          Row(
+            modifier = Modifier
+              .width(layout.contentWidth)
+              .then(if (layout.useScroll) Modifier.horizontalScroll(scrollState) else Modifier),
+            horizontalArrangement = Arrangement.spacedBy(spacing)
+          ) {
+            weekData.weeks.forEach { week ->
+              val isWeekSelected = selectedWeekStart == week.startDate
+              Column(verticalArrangement = Arrangement.spacedBy(spacing)) {
+                week.days.forEach { day ->
+                  ContributionCell(
+                    day = day,
+                    maxCount = weekData.maxDaily,
+                    enabled = day.inRange,
+                    size = layout.columnSize,
+                    isSelected = selectedDay?.date == day.date,
+                    isHovered = hoveredDate == day.date,
+                    isWeekSelected = isWeekSelected,
+                    onClick = { offset ->
+                      onDaySelected(day)
+                      tooltip = DayTooltip(day, offset)
+                      suppressClear = true
+                    },
+                    onHoverChange = { hovering ->
+                      hoveredDate = if (hovering) day.date else hoveredDate?.takeIf { it != day.date }
+                    }
+                  )
+                }
               }
             }
           }
+        }
+        if (showTimeline) {
+          TimelineRow(
+            labels = timelineLabels,
+            cellSize = layout.columnSize,
+            contentWidth = layout.contentWidth,
+            spacing = spacing,
+            legendWidth = legendWidth,
+            legendSpacing = legendSpacing,
+            useScroll = layout.useScroll,
+            scrollState = scrollState
+          )
         }
       }
     }
@@ -253,6 +273,90 @@ private fun DayOfWeekLegend(
       }
     }
   }
+}
+
+@Composable
+private fun TimelineRow(
+  labels: List<String>,
+  cellSize: Dp,
+  contentWidth: Dp,
+  spacing: Dp,
+  legendWidth: Dp,
+  legendSpacing: Dp,
+  useScroll: Boolean,
+  scrollState: ScrollState
+) {
+  Row(
+    modifier = Modifier.fillMaxWidth(),
+    horizontalArrangement = Arrangement.spacedBy(spacing)
+  ) {
+    if (legendWidth > 0.dp) {
+      Spacer(modifier = Modifier.width(legendWidth + legendSpacing))
+    }
+    Row(
+      modifier = Modifier
+        .width(contentWidth)
+        .then(if (useScroll) Modifier.horizontalScroll(scrollState) else Modifier),
+      horizontalArrangement = Arrangement.spacedBy(spacing),
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      labels.forEach { label ->
+        Box(
+          modifier = Modifier.size(cellSize),
+          contentAlignment = Alignment.Center
+        ) {
+          if (label.isNotBlank()) {
+            Text(
+              label,
+              style = MaterialTheme.typography.labelSmall,
+              color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+          }
+        }
+      }
+    }
+  }
+}
+
+private fun buildTimelineLabels(weeks: List<ActivityWeek>, range: ActivityRange): List<String> {
+  if (weeks.isEmpty()) {
+    return emptyList()
+  }
+  return weeks.mapIndexed { index, week ->
+    val start = week.startDate
+    when (range) {
+      is ActivityRange.Last7Days -> start.dayOfWeek.name.take(1)
+      is ActivityRange.Last6Months,
+      is ActivityRange.Last90Days -> {
+        val prev = weeks.getOrNull(index - 1)?.startDate
+        if (prev == null || prev.month != start.month || prev.year != start.year) {
+          monthInitial(start.month)
+        } else {
+          ""
+        }
+      }
+      is ActivityRange.LastYear,
+      is ActivityRange.Year -> {
+        if (isQuarterStart(start)) {
+          quarterOf(start.month).toString()
+        } else {
+          ""
+        }
+      }
+    }
+  }
+}
+
+private fun monthInitial(month: Month): String {
+  return month.name.take(1)
+}
+
+private fun isQuarterStart(date: LocalDate): Boolean {
+  return date.day <= 7 && date.month in setOf(Month.JANUARY, Month.APRIL, Month.JULY, Month.OCTOBER)
+}
+
+private fun quarterOf(month: Month): Int {
+  return month.ordinal / 3 + 1
 }
 
 @Composable
