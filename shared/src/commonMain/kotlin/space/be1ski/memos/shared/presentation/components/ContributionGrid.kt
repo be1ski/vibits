@@ -106,10 +106,12 @@ fun ContributionGrid(
             .background(MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.small)
             .padding(horizontal = 8.dp, vertical = 6.dp)
         ) {
-          Text(
-            "${current.day.date}: ${current.day.count} posts",
-            style = MaterialTheme.typography.labelMedium
-          )
+          val tooltipText = if (current.day.totalHabits > 0) {
+            "${current.day.date}: ${current.day.count}/${current.day.totalHabits} habits"
+          } else {
+            "${current.day.date}: ${current.day.count} posts"
+          }
+          Text(tooltipText, style = MaterialTheme.typography.labelMedium)
         }
       }
     }
@@ -203,8 +205,12 @@ fun rememberActivityWeekData(
 data class ContributionDay(
   /** Calendar date for the entry. */
   val date: LocalDate,
-  /** Number of memos for the day. */
+  /** Number of completed habits (or posts when habits are unavailable). */
   val count: Int,
+  /** Total habits configured for the day. */
+  val totalHabits: Int,
+  /** Completion ratio in range [0..1]. */
+  val completionRatio: Float,
   /** True if the day is within the requested range. */
   val inRange: Boolean
 )
@@ -294,14 +300,11 @@ private fun buildActivityWeekData(
   today: LocalDate
 ): ActivityWeekData {
   val bounds = rangeBounds(range, today)
-  val counts = mutableMapOf<LocalDate, Int>()
-  memos.forEach { memo ->
-    val date = parseMemoDate(memo, timeZone) ?: return@forEach
-    if (date < bounds.start || date > bounds.end) {
-      return@forEach
-    }
-    counts[date] = (counts[date] ?: 0) + 1
-  }
+  val habits = extractHabitsConfig(memos, timeZone)
+  val habitCounts = extractDailyHabitCounts(memos, habits, timeZone)
+  val useHabits = habits.isNotEmpty()
+  val totalHabits = habits.size
+  val counts = if (useHabits) habitCounts else extractDailyPostCounts(memos, timeZone, bounds)
 
   var start = bounds.start
   while (start.dayOfWeek != DayOfWeek.MONDAY) {
@@ -313,9 +316,17 @@ private fun buildActivityWeekData(
   while (cursor <= bounds.end) {
     val days = (0..6).map { offset ->
       val date = cursor.plus(DatePeriod(days = offset))
+      val completed = counts[date] ?: 0
+      val ratio = if (useHabits && totalHabits > 0) {
+        completed.toFloat() / totalHabits.toFloat()
+      } else {
+        0f
+      }
       ContributionDay(
         date = date,
-        count = counts[date] ?: 0,
+        count = completed,
+        totalHabits = if (useHabits) totalHabits else 0,
+        completionRatio = ratio.coerceIn(0f, 1f),
         inRange = date >= bounds.start && date <= bounds.end
       )
     }
@@ -364,11 +375,16 @@ private fun ContributionCell(
   var coordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
   val color = when {
     !enabled -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-    day.count == 0 -> Color(0xFFE2E8F0)
-    maxCount <= 1 -> Color(0xFFBFE3C0)
     else -> {
-      val ratio = day.count.toFloat() / maxCount.toFloat()
+      val ratio = if (day.totalHabits > 0) {
+        day.completionRatio
+      } else if (maxCount > 0) {
+        day.count.toFloat() / maxCount.toFloat()
+      } else {
+        0f
+      }
       when {
+        ratio <= 0f -> Color(0xFFE2E8F0)
         ratio <= 0.25f -> Color(0xFFBFE3C0)
         ratio <= 0.5f -> Color(0xFF7ACB8D)
         ratio <= 0.75f -> Color(0xFF34A853)
@@ -435,7 +451,7 @@ private fun LegendRow(maxCount: Int) {
 @Composable
 private fun LegendCell(count: Int, maxCount: Int) {
   ContributionCell(
-    day = ContributionDay(LocalDate(1970, 1, 1), count, true),
+    day = ContributionDay(LocalDate(1970, 1, 1), count, 0, 0f, true),
     maxCount = maxCount,
     enabled = true,
     size = 12.dp,
@@ -462,6 +478,71 @@ fun availableYears(
     years.add(fallbackYear)
   }
   return years.toList().sortedDescending()
+}
+
+private fun extractHabitsConfig(memos: List<Memo>, timeZone: TimeZone): List<String> {
+  val tagged = memos.filter { memo ->
+    memo.content.contains("#habits_config")
+  }
+  val sorted = tagged.sortedByDescending { memo ->
+    parseMemoDate(memo, timeZone) ?: LocalDate(1970, 1, 1)
+  }
+  val config = sorted.firstOrNull() ?: return emptyList()
+  return Regex("#habit/[^\\s]+")
+    .findAll(config.content)
+    .map { it.value }
+    .distinct()
+    .toList()
+}
+
+private fun extractDailyHabitCounts(
+  memos: List<Memo>,
+  habits: List<String>,
+  timeZone: TimeZone
+): Map<LocalDate, Int> {
+  if (habits.isEmpty()) {
+    return emptyMap()
+  }
+  val habitSet = habits.toSet()
+  val dailyMemos = memos.filter { memo -> memo.content.contains("#daily") }
+  val counts = mutableMapOf<LocalDate, Int>()
+  dailyMemos.forEach { memo ->
+    val date = parseMemoDate(memo, timeZone) ?: return@forEach
+    val done = countCompletedHabits(memo.content, habitSet)
+    counts[date] = maxOf(counts[date] ?: 0, done)
+  }
+  return counts
+}
+
+private fun countCompletedHabits(content: String, habits: Set<String>): Int {
+  val lines = content.lineSequence()
+  val checkboxRegex = Regex("^\\s*[-*]\\s*\\[(x|X)\\]\\s+(.+)$")
+  val done = mutableSetOf<String>()
+  lines.forEach { line ->
+    val match = checkboxRegex.find(line) ?: return@forEach
+    val trailing = match.groupValues[2]
+    val habitTag = habits.firstOrNull { tag -> trailing.contains(tag) }
+    if (habitTag != null) {
+      done.add(habitTag)
+    }
+  }
+  return done.size
+}
+
+private fun extractDailyPostCounts(
+  memos: List<Memo>,
+  timeZone: TimeZone,
+  bounds: RangeBounds
+): Map<LocalDate, Int> {
+  val counts = mutableMapOf<LocalDate, Int>()
+  memos.forEach { memo ->
+    val date = parseMemoDate(memo, timeZone) ?: return@forEach
+    if (date < bounds.start || date > bounds.end) {
+      return@forEach
+    }
+    counts[date] = (counts[date] ?: 0) + 1
+  }
+  return counts
 }
 
 /**
