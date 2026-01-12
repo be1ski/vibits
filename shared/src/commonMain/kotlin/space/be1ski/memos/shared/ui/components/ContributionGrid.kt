@@ -97,7 +97,7 @@ private fun buildWeeks(
 ): List<List<ContributionDay>> {
   val counts = mutableMapOf<LocalDate, Int>()
   memos.forEach { memo ->
-    val date = memo.createTime?.let { parseMemoDate(it, timeZone) }
+    val date = parseMemoDate(memo, timeZone)
     if (date != null && date >= rangeStart && date <= rangeEnd) {
       counts[date] = (counts[date] ?: 0) + 1
     }
@@ -174,9 +174,7 @@ fun availableYears(
   fallbackYear: Int = currentLocalDate().year
 ): List<Int> {
   val years = memos.mapNotNull { memo ->
-    memo.createTime
-      ?.let { parseMemoDate(it, timeZone) }
-      ?.year
+    parseMemoDate(memo, timeZone)?.year
   }.toMutableSet()
   if (years.isEmpty()) {
     years.add(fallbackYear)
@@ -191,14 +189,20 @@ sealed class ActivityRange {
   data class Year(val year: Int) : ActivityRange()
 }
 
-private fun parseMemoDate(value: String, timeZone: TimeZone): LocalDate? {
-  val trimmed = value.trim()
-  val instant = runCatching { Instant.parse(trimmed) }.getOrNull()
-    ?: runCatching { Instant.parse("${trimmed}Z") }.getOrNull()
-    ?: runCatching {
-      val number = trimmed.toLong()
-      val millis = if (trimmed.length > 10) number else number * 1000
-      Instant.fromEpochMilliseconds(millis)
-    }.getOrNull()
-  return instant?.toLocalDateTime(timeZone)?.date
+private fun parseMemoDate(memo: Memo, timeZone: TimeZone): LocalDate? {
+  val candidates = listOfNotNull(memo.createTime, memo.updateTime)
+  for (value in candidates) {
+    val trimmed = value.trim()
+    val instant = runCatching { Instant.parse(trimmed) }.getOrNull()
+      ?: runCatching { Instant.parse("${trimmed}Z") }.getOrNull()
+      ?: runCatching {
+        val number = trimmed.toLong()
+        val millis = if (trimmed.length > 10) number else number * 1000
+        Instant.fromEpochMilliseconds(millis)
+      }.getOrNull()
+    if (instant != null) {
+      return instant.toLocalDateTime(timeZone).date
+    }
+  }
+  return null
 }

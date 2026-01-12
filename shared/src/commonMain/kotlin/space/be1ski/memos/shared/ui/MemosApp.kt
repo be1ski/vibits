@@ -197,7 +197,13 @@ private fun PostsScreen(
       Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(12.dp)) {
           Text(memo.content)
-          if (!memo.updateTime.isNullOrBlank()) {
+          if (!memo.createTime.isNullOrBlank()) {
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+              memo.createTime,
+              style = MaterialTheme.typography.labelSmall
+            )
+          } else if (!memo.updateTime.isNullOrBlank()) {
             Spacer(modifier = Modifier.height(6.dp))
             Text(
               memo.updateTime,

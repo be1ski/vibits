@@ -12,12 +12,32 @@ import space.be1ski.memos.shared.model.Memo
 class MemosRepository(
   private val httpClient: HttpClient
 ) {
-  suspend fun listMemos(baseUrl: String, token: String, limit: Int = 20): List<Memo> {
+  suspend fun listMemos(baseUrl: String, token: String, pageSize: Int = 200): List<Memo> {
     val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
-    val response: ListMemosResponse = httpClient.get("$normalizedBaseUrl/api/v1/memos") {
-      header(HttpHeaders.Authorization, "Bearer $token")
-      parameter("limit", limit)
-    }.body()
-    return response.memos
+    val allMemos = mutableListOf<Memo>()
+    val seenTokens = mutableSetOf<String>()
+    var nextPageToken: String? = null
+    var pages = 0
+
+    do {
+      val response: ListMemosResponse = httpClient.get("$normalizedBaseUrl/api/v1/memos") {
+        header(HttpHeaders.Authorization, "Bearer $token")
+        parameter("pageSize", pageSize)
+        parameter("limit", pageSize)
+        if (!nextPageToken.isNullOrBlank()) {
+          parameter("pageToken", nextPageToken)
+        }
+      }.body()
+      allMemos += response.memos
+      nextPageToken = response.nextPageToken?.takeIf { it.isNotBlank() }
+      if (nextPageToken != null) {
+        if (!seenTokens.add(nextPageToken!!)) {
+          break
+        }
+      }
+      pages += 1
+    } while (nextPageToken != null && pages < 100 && allMemos.isNotEmpty())
+
+    return allMemos
   }
 }

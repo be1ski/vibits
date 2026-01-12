@@ -7,17 +7,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import space.be1ski.memos.shared.config.loadLocalCredentials
+import space.be1ski.memos.shared.config.CredentialsStore
+import space.be1ski.memos.shared.config.LocalCredentials
 import space.be1ski.memos.shared.data.MemosRepository
 import space.be1ski.memos.shared.ui.state.MemosUiState
 
 class MemosViewModel(
-  private val repository: MemosRepository
+  private val repository: MemosRepository,
+  private val credentialsStore: CredentialsStore
 ) {
   private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
   var uiState by mutableStateOf(
-    loadLocalCredentials().let { creds ->
+    credentialsStore.load().let { creds ->
       MemosUiState(baseUrl = creds.baseUrl, token = creds.token)
     }
   )
@@ -43,6 +45,7 @@ class MemosViewModel(
     scope.launch {
       try {
         val memos = repository.listMemos(baseUrl, token)
+        credentialsStore.save(LocalCredentials(baseUrl = baseUrl, token = token))
         uiState = uiState.copy(isLoading = false, memos = memos)
       } catch (error: Exception) {
         uiState = uiState.copy(

@@ -5,4 +5,7 @@ data class LocalCredentials(
   val token: String
 )
 
-expect fun loadLocalCredentials(): LocalCredentials
+expect class CredentialsStore() {
+  fun load(): LocalCredentials
+  fun save(credentials: LocalCredentials)
+}

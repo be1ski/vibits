@@ -13,5 +13,6 @@ data class Memo(
 
 @Serializable
 data class ListMemosResponse(
-  val memos: List<Memo> = emptyList()
+  val memos: List<Memo> = emptyList(),
+  @SerialName("nextPageToken") val nextPageToken: String? = null
 )
