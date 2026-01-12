@@ -45,13 +45,14 @@ fun MemosApp() {
   val currentYear = remember { currentLocalDate().year }
   val years = remember(uiState.memos) { availableYears(uiState.memos, timeZone, currentYear) }
   var selectedTab by remember { mutableStateOf(0) }
-  var activityRange by remember { mutableStateOf<ActivityRange>(ActivityRange.LastYear) }
+  var activityRange by remember { mutableStateOf<ActivityRange>(ActivityRange.Last30Days) }
   val memos = uiState.memos
   val isLoading = uiState.isLoading
   val errorMessage = uiState.errorMessage
   var autoLoaded by remember { mutableStateOf(false) }
   var showCredentialsDialog by remember { mutableStateOf(false) }
   var credentialsInitialized by remember { mutableStateOf(false) }
+  var credentialsDismissed by remember { mutableStateOf(false) }
   var editBaseUrl by remember { mutableStateOf("") }
   var editToken by remember { mutableStateOf("") }
 
@@ -62,10 +63,13 @@ fun MemosApp() {
     }
   }
 
-  LaunchedEffect(uiState, showCredentialsDialog) {
-    if (uiState is MemosUiState.CredentialsInput && !showCredentialsDialog) {
+  LaunchedEffect(uiState, showCredentialsDialog, credentialsDismissed) {
+    if (uiState is MemosUiState.CredentialsInput && !showCredentialsDialog && !credentialsDismissed) {
       showCredentialsDialog = true
       credentialsInitialized = false
+    }
+    if (uiState is MemosUiState.Ready) {
+      credentialsDismissed = false
     }
   }
 
@@ -80,6 +84,7 @@ fun MemosApp() {
                 viewModel.editCredentials()
                 showCredentialsDialog = true
                 credentialsInitialized = false
+                credentialsDismissed = false
               }
             ) {
               Text("Settings")
@@ -140,6 +145,7 @@ fun MemosApp() {
       onDismissRequest = {
         showCredentialsDialog = false
         credentialsInitialized = false
+        credentialsDismissed = true
       },
       title = { Text("Settings") },
       text = {
@@ -169,6 +175,7 @@ fun MemosApp() {
             autoLoaded = true
             showCredentialsDialog = false
             credentialsInitialized = false
+            credentialsDismissed = false
           }
         ) {
           Text("Save")
@@ -179,6 +186,7 @@ fun MemosApp() {
           onClick = {
             showCredentialsDialog = false
             credentialsInitialized = false
+            credentialsDismissed = true
           }
         ) {
           Text("Cancel")

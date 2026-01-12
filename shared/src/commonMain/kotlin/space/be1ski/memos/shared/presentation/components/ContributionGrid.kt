@@ -437,6 +437,18 @@ private fun buildActivityWeekData(
  */
 private fun rangeBounds(range: ActivityRange, today: LocalDate): RangeBounds {
   return when (range) {
+    is ActivityRange.Last30Days -> RangeBounds(
+      start = today.minus(DatePeriod(days = 29)),
+      end = today
+    )
+    is ActivityRange.Last90Days -> RangeBounds(
+      start = today.minus(DatePeriod(days = 89)),
+      end = today
+    )
+    is ActivityRange.Last6Months -> RangeBounds(
+      start = today.minus(DatePeriod(months = 6)),
+      end = today
+    )
     is ActivityRange.LastYear -> RangeBounds(
       start = today.minus(DatePeriod(days = 364)),
       end = today
@@ -482,14 +494,14 @@ private fun ContributionCell(
     }
   }
   val selectedColor = if (isSelected) {
-    MaterialTheme.colorScheme.primary.copy(alpha = 0.9f)
+    MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.9f)
   } else {
     color
   }
 
   val borderColor = when {
-    isSelected -> MaterialTheme.colorScheme.primary
-    isWeekSelected -> MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+    isSelected -> MaterialTheme.colorScheme.outline
+    isWeekSelected -> MaterialTheme.colorScheme.outlineVariant
     else -> Color.Transparent
   }
 
@@ -641,7 +653,15 @@ private fun extractDailyMemos(
   return latestByDate.mapValues { it.value.info }
 }
 
-private fun buildHabitStatuses(content: String?, habits: List<String>): List<HabitStatus> {
+internal fun findDailyMemoForDate(
+  memos: List<Memo>,
+  timeZone: TimeZone,
+  date: LocalDate
+): DailyMemoInfo? {
+  return extractDailyMemos(memos, timeZone)[date]
+}
+
+internal fun buildHabitStatuses(content: String?, habits: List<String>): List<HabitStatus> {
   if (habits.isEmpty()) {
     return emptyList()
   }
@@ -695,6 +715,12 @@ private fun extractDailyPostCounts(
  * Range selection for activity charts.
  */
 sealed class ActivityRange {
+  /** Rolling 30-day range. */
+  data object Last30Days : ActivityRange()
+  /** Rolling 90-day range. */
+  data object Last90Days : ActivityRange()
+  /** Rolling 6-month range. */
+  data object Last6Months : ActivityRange()
   /** Rolling 12-month range. */
   data object LastYear : ActivityRange()
   /** Fixed calendar year. */
@@ -745,7 +771,7 @@ private fun WeeklyBar(
   var coordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
   val maxHeight = 72.dp
   val height = if (maxCount <= 0) 4.dp else (maxHeight.value * (count.toFloat() / maxCount.toFloat())).dp
-  val color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
+  val color = if (isSelected) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.outlineVariant
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Bottom,
