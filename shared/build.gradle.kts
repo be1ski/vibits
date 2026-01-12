@@ -1,13 +1,17 @@
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
-  alias(libs.plugins.android.library)
+  alias(libs.plugins.android.kotlin.multiplatform.library)
   alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.compose.multiplatform)
 }
 
 kotlin {
-  androidTarget()
+  androidLibrary {
+    namespace = "space.be1ski.memos.shared"
+    compileSdk = 36
+    minSdk = 31
+  }
   jvm("desktop")
   iosX64()
   iosArm64()
@@ -56,10 +60,8 @@ kotlin {
   }
 }
 
-android {
-  namespace = "space.be1ski.memos.shared"
-  compileSdk = 36
-  defaultConfig {
-    minSdk = 31
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
+  compilerOptions {
+    freeCompilerArgs.add("-Xexpect-actual-classes")
   }
 }
