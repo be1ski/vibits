@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -43,6 +44,7 @@ import org.koin.compose.koinInject
 import space.be1ski.memos.shared.domain.model.Memo
 import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.ActivityMode
+import space.be1ski.memos.shared.presentation.components.ContributionDay
 import space.be1ski.memos.shared.presentation.components.ContributionGrid
 import space.be1ski.memos.shared.presentation.components.DailyMemoInfo
 import space.be1ski.memos.shared.presentation.components.WeeklyBarChart
@@ -136,6 +138,9 @@ fun MemosApp() {
             onRangeChange = { activityRange = it },
             onEditDailyMemo = { memo, content ->
               viewModel.updateDailyMemo(memo.name, content)
+            },
+            onCreateDailyMemo = { content ->
+              viewModel.createDailyMemo(content)
             }
           )
           1 -> PostsScreen(memos = memos)
@@ -154,11 +159,14 @@ private fun StatsScreen(
   years: List<Int>,
   range: ActivityRange,
   onRangeChange: (ActivityRange) -> Unit,
-  onEditDailyMemo: (DailyMemoInfo, String) -> Unit
+  onEditDailyMemo: (DailyMemoInfo, String) -> Unit,
+  onCreateDailyMemo: (String) -> Unit
 ) {
   var activityMode by remember { mutableStateOf(ActivityMode.Habits) }
   var editingMemo by remember { mutableStateOf<DailyMemoInfo?>(null) }
   var editingContent by remember { mutableStateOf("") }
+  var creatingDay by remember { mutableStateOf<ContributionDay?>(null) }
+  var creatingSelections by remember { mutableStateOf<Map<String, Boolean>>(emptyMap()) }
 
   Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
     Row(
@@ -206,6 +214,10 @@ private fun StatsScreen(
         editingMemo = memo
         editingContent = memo.content
       },
+      onCreateRequested = { day ->
+        creatingDay = day
+        creatingSelections = day.habitStatuses.associate { it.tag to it.done }
+      },
       scrollState = chartScrollState
     )
     WeeklyBarChart(
@@ -247,6 +259,53 @@ private fun StatsScreen(
       },
       dismissButton = {
         TextButton(onClick = { editingMemo = null }) {
+          Text("Cancel")
+        }
+      }
+    )
+  }
+
+  if (creatingDay != null) {
+    AlertDialog(
+      onDismissRequest = { creatingDay = null },
+      title = { Text("Create day") },
+      text = {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+          creatingSelections.forEach { (tag, done) ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+              Checkbox(
+                checked = done,
+                onCheckedChange = { checked ->
+                  creatingSelections = creatingSelections.toMutableMap().also { it[tag] = checked }
+                }
+              )
+              Text(tag, style = MaterialTheme.typography.bodySmall)
+            }
+          }
+        }
+      },
+      confirmButton = {
+        Button(
+          onClick = {
+            val day = creatingDay
+            if (day != null) {
+              val content = buildString {
+                append("#daily ${day.date}\n\n")
+                creatingSelections.forEach { (tag, done) ->
+                  val mark = if (done) "x" else " "
+                  append("- [").append(mark).append("] ").append(tag).append('\n')
+                }
+              }
+              onCreateDailyMemo(content)
+            }
+            creatingDay = null
+          }
+        ) {
+          Text("Create")
+        }
+      },
+      dismissButton = {
+        TextButton(onClick = { creatingDay = null }) {
           Text("Cancel")
         }
       }

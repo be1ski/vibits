@@ -74,4 +74,22 @@ class MemosRepositoryImpl(
     )
     return memoMapper.toDomain(dto)
   }
+
+  /**
+   * Creates a new memo in the API.
+   */
+  override suspend fun createMemo(content: String): Memo {
+    val credentials = credentialsRepository.load()
+    val baseUrl = credentials.baseUrl.trim()
+    val token = credentials.token.trim()
+    if (baseUrl.isBlank() || token.isBlank()) {
+      throw IllegalStateException("Base URL and token are required.")
+    }
+    val dto = memosApi.createMemo(
+      baseUrl = baseUrl,
+      token = token,
+      content = content
+    )
+    return memoMapper.toDomain(dto)
+  }
 }

@@ -13,6 +13,7 @@ import space.be1ski.memos.shared.domain.repository.MemosRepository
 import space.be1ski.memos.shared.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadMemosUseCase
 import space.be1ski.memos.shared.domain.usecase.SaveCredentialsUseCase
+import space.be1ski.memos.shared.domain.usecase.CreateMemoUseCase
 import space.be1ski.memos.shared.domain.usecase.UpdateMemoUseCase
 import space.be1ski.memos.shared.presentation.MemosViewModel
 
@@ -29,6 +30,7 @@ fun sharedModule(): Module = module {
   factory { LoadMemosUseCase(get()) }
   factory { LoadCredentialsUseCase(get()) }
   factory { SaveCredentialsUseCase(get()) }
+  factory { CreateMemoUseCase(get()) }
   factory { UpdateMemoUseCase(get()) }
-  factory { MemosViewModel(get(), get(), get(), get()) }
+  factory { MemosViewModel(get(), get(), get(), get(), get()) }
 }

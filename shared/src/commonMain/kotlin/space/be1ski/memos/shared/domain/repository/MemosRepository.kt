@@ -15,4 +15,9 @@ interface MemosRepository {
    * Updates memo content and returns the updated memo.
    */
   suspend fun updateMemo(name: String, content: String): Memo
+
+  /**
+   * Creates a new memo and returns it.
+   */
+  suspend fun createMemo(content: String): Memo
 }

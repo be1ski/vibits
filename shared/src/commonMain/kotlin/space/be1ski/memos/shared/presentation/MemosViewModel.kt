@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import space.be1ski.memos.shared.domain.model.Credentials
+import space.be1ski.memos.shared.domain.usecase.CreateMemoUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadMemosUseCase
 import space.be1ski.memos.shared.domain.usecase.SaveCredentialsUseCase
@@ -21,7 +22,8 @@ class MemosViewModel(
   private val loadMemosUseCase: LoadMemosUseCase,
   private val loadCredentialsUseCase: LoadCredentialsUseCase,
   private val saveCredentialsUseCase: SaveCredentialsUseCase,
-  private val updateMemoUseCase: UpdateMemoUseCase
+  private val updateMemoUseCase: UpdateMemoUseCase,
+  private val createMemoUseCase: CreateMemoUseCase
 ) {
   private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
@@ -134,6 +136,26 @@ class MemosViewModel(
         }
       } catch (error: Exception) {
         val message = error.message ?: "Failed to update memo."
+        setLoading(false, message)
+      }
+    }
+  }
+
+  /**
+   * Creates a new daily memo.
+   */
+  fun createDailyMemo(content: String) {
+    setLoading(true)
+    scope.launch {
+      try {
+        val created = createMemoUseCase(content)
+        val updatedMemos = uiState.memos + created
+        uiState = when (val state = uiState) {
+          is MemosUiState.CredentialsInput -> state.copy(isLoading = false, memos = updatedMemos)
+          is MemosUiState.Ready -> state.copy(isLoading = false, memos = updatedMemos)
+        }
+      } catch (error: Exception) {
+        val message = error.message ?: "Failed to create memo."
         setLoading(false, message)
       }
     }

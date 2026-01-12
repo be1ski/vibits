@@ -54,6 +54,7 @@ fun ContributionGrid(
   selectedWeekStart: LocalDate?,
   onDaySelected: (ContributionDay) -> Unit,
   onEditRequested: (DailyMemoInfo) -> Unit,
+  onCreateRequested: (ContributionDay) -> Unit,
   scrollState: ScrollState,
   modifier: Modifier = Modifier
 ) {
@@ -126,6 +127,12 @@ fun ContributionGrid(
           current.day.dailyMemo?.let { memo ->
             TextButton(onClick = { onEditRequested(memo) }) {
               Text("Edit day")
+            }
+          } ?: run {
+            if (current.day.totalHabits > 0 && current.day.inRange) {
+              TextButton(onClick = { onCreateRequested(current.day) }) {
+                Text("Create day")
+              }
             }
           }
         }
