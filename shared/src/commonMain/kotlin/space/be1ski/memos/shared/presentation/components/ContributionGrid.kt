@@ -828,6 +828,7 @@ private fun extractHabitTagsFromContent(content: String?): Set<String> {
   return Regex("#habits/[^\\s]+")
     .findAll(content)
     .map { it.value }
+    .filterNot { it.equals("#habits/daily", ignoreCase = true) || it.startsWith("#habits/daily") }
     .toSet()
 }
 
