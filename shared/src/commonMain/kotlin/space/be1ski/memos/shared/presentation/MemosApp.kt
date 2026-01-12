@@ -41,6 +41,7 @@ import kotlinx.datetime.TimeZone
 import org.koin.compose.koinInject
 import space.be1ski.memos.shared.domain.model.Memo
 import space.be1ski.memos.shared.presentation.components.ActivityRange
+import space.be1ski.memos.shared.presentation.components.ActivityMode
 import space.be1ski.memos.shared.presentation.components.ContributionGrid
 import space.be1ski.memos.shared.presentation.components.WeeklyBarChart
 import space.be1ski.memos.shared.presentation.components.availableYears
@@ -150,6 +151,7 @@ private fun StatsScreen(
   onRangeChange: (ActivityRange) -> Unit
 ) {
   Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    var activityMode by remember { mutableStateOf(ActivityMode.Habits) }
     Row(
       modifier = Modifier.fillMaxWidth(),
       verticalAlignment = Alignment.CenterVertically,
@@ -162,9 +164,24 @@ private fun StatsScreen(
         onRangeChange = onRangeChange
       )
     }
-    val weekData = rememberActivityWeekData(memos, range)
-    var selectedWeek by remember(weekData.weeks) { mutableStateOf(weekData.weeks.lastOrNull()) }
-    var selectedDay by remember(weekData.weeks) { mutableStateOf(weekData.weeks.lastOrNull()?.days?.lastOrNull()) }
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+      val habitsSelected = activityMode == ActivityMode.Habits
+      OutlinedButton(
+        onClick = { activityMode = ActivityMode.Habits },
+        enabled = !habitsSelected
+      ) {
+        Text("Habits")
+      }
+      OutlinedButton(
+        onClick = { activityMode = ActivityMode.Posts },
+        enabled = habitsSelected
+      ) {
+        Text("Posts")
+      }
+    }
+    val weekData = rememberActivityWeekData(memos, range, activityMode)
+    var selectedWeek by remember(weekData.weeks, activityMode) { mutableStateOf(weekData.weeks.lastOrNull()) }
+    var selectedDay by remember(weekData.weeks, activityMode) { mutableStateOf(weekData.weeks.lastOrNull()?.days?.lastOrNull()) }
     val chartScrollState = rememberScrollState()
     ContributionGrid(
       weekData = weekData,

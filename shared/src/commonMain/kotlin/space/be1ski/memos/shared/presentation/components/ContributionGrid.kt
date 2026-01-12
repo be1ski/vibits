@@ -190,12 +190,13 @@ fun WeeklyBarChart(
  */
 fun rememberActivityWeekData(
   memos: List<Memo>,
-  range: ActivityRange
+  range: ActivityRange,
+  mode: ActivityMode
 ): ActivityWeekData {
   val timeZone = remember { TimeZone.currentSystemDefault() }
   val today = remember { currentLocalDate() }
-  return remember(memos, range, today) {
-    buildActivityWeekData(memos, timeZone, range, today)
+  return remember(memos, range, mode, today) {
+    buildActivityWeekData(memos, timeZone, range, mode, today)
   }
 }
 
@@ -238,6 +239,16 @@ data class ActivityWeekData(
   /** Maximum posts in a week in range. */
   val maxWeekly: Int
 )
+
+/**
+ * Activity visualization modes.
+ */
+enum class ActivityMode {
+  /** Habit completion based on #daily + #habits_config. */
+  Habits,
+  /** Raw post count per day. */
+  Posts
+}
 
 /**
  * Inclusive bounds for an activity range.
@@ -297,14 +308,19 @@ private fun buildActivityWeekData(
   memos: List<Memo>,
   timeZone: TimeZone,
   range: ActivityRange,
+  mode: ActivityMode,
   today: LocalDate
 ): ActivityWeekData {
   val bounds = rangeBounds(range, today)
-  val habits = extractHabitsConfig(memos, timeZone)
-  val habitCounts = extractDailyHabitCounts(memos, habits, timeZone)
-  val useHabits = habits.isNotEmpty()
+  val habits = if (mode == ActivityMode.Habits) extractHabitsConfig(memos, timeZone) else emptyList()
+  val habitCounts = if (mode == ActivityMode.Habits) extractDailyHabitCounts(memos, habits, timeZone) else emptyMap()
+  val useHabits = mode == ActivityMode.Habits && habits.isNotEmpty()
   val totalHabits = habits.size
-  val counts = if (useHabits) habitCounts else extractDailyPostCounts(memos, timeZone, bounds)
+  val counts = if (mode == ActivityMode.Posts || !useHabits) {
+    extractDailyPostCounts(memos, timeZone, bounds)
+  } else {
+    habitCounts
+  }
 
   var start = bounds.start
   while (start.dayOfWeek != DayOfWeek.MONDAY) {
