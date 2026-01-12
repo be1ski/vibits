@@ -21,17 +21,29 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import kotlinx.datetime.TimeZone
 import org.koin.compose.koinInject
+import space.be1ski.memos.shared.config.currentLocalDate
+import space.be1ski.memos.shared.ui.components.ContributionGrid
+import space.be1ski.memos.shared.ui.components.availableYears
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MemosApp() {
   val viewModel: MemosViewModel = koinInject()
   val uiState = viewModel.uiState
+  val timeZone = remember { TimeZone.currentSystemDefault() }
+  val currentYear = remember { currentLocalDate().year }
+  val years = remember(uiState.memos) { availableYears(uiState.memos, timeZone, currentYear) }
+  var selectedYear by remember { mutableStateOf(currentYear) }
 
   MaterialTheme {
     Scaffold(
@@ -74,6 +86,14 @@ fun MemosApp() {
             Text(uiState.errorMessage, color = MaterialTheme.colorScheme.error)
           }
         }
+        if (uiState.memos.isNotEmpty()) {
+          ContributionGrid(
+            memos = uiState.memos,
+            selectedYear = selectedYear,
+            availableYears = years,
+            onYearSelected = { selectedYear = it }
+          )
+        }
         LazyColumn(
           modifier = Modifier.fillMaxSize(),
           verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -85,7 +105,7 @@ fun MemosApp() {
                 if (!memo.updateTime.isNullOrBlank()) {
                   Spacer(modifier = Modifier.height(6.dp))
                   Text(
-                    memo.updateTime ?: "",
+                    memo.updateTime,
                     style = MaterialTheme.typography.labelSmall
                   )
                 }
