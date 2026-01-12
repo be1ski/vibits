@@ -11,6 +11,7 @@ import space.be1ski.memos.shared.domain.model.Credentials
 import space.be1ski.memos.shared.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadMemosUseCase
 import space.be1ski.memos.shared.domain.usecase.SaveCredentialsUseCase
+import space.be1ski.memos.shared.domain.usecase.UpdateMemoUseCase
 import space.be1ski.memos.shared.presentation.state.MemosUiState
 
 /**
@@ -19,7 +20,8 @@ import space.be1ski.memos.shared.presentation.state.MemosUiState
 class MemosViewModel(
   private val loadMemosUseCase: LoadMemosUseCase,
   private val loadCredentialsUseCase: LoadCredentialsUseCase,
-  private val saveCredentialsUseCase: SaveCredentialsUseCase
+  private val saveCredentialsUseCase: SaveCredentialsUseCase,
+  private val updateMemoUseCase: UpdateMemoUseCase
 ) {
   private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
@@ -115,12 +117,41 @@ class MemosViewModel(
     }
   }
 
+  /**
+   * Updates a daily memo content.
+   */
+  fun updateDailyMemo(name: String, content: String) {
+    setLoading(true)
+    scope.launch {
+      try {
+        val updated = updateMemoUseCase(name, content)
+        val updatedMemos = uiState.memos.map { memo ->
+          if (memo.name == updated.name) updated else memo
+        }
+        uiState = when (val state = uiState) {
+          is MemosUiState.CredentialsInput -> state.copy(isLoading = false, memos = updatedMemos)
+          is MemosUiState.Ready -> state.copy(isLoading = false, memos = updatedMemos)
+        }
+      } catch (error: Exception) {
+        val message = error.message ?: "Failed to update memo."
+        setLoading(false, message)
+      }
+    }
+  }
+
   private fun initialState(loadCredentialsUseCase: LoadCredentialsUseCase): MemosUiState {
     val creds = loadCredentialsUseCase()
     return if (creds.baseUrl.isBlank() || creds.token.isBlank()) {
       MemosUiState.CredentialsInput(baseUrl = creds.baseUrl, token = creds.token)
     } else {
       MemosUiState.Ready()
+    }
+  }
+
+  private fun setLoading(isLoading: Boolean, errorMessage: String? = null) {
+    uiState = when (val state = uiState) {
+      is MemosUiState.CredentialsInput -> state.copy(isLoading = isLoading, errorMessage = errorMessage)
+      is MemosUiState.Ready -> state.copy(isLoading = isLoading, errorMessage = errorMessage)
     }
   }
 }

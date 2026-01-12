@@ -55,4 +55,23 @@ class MemosRepositoryImpl(
 
     return allMemos
   }
+
+  /**
+   * Updates memo content in the API.
+   */
+  override suspend fun updateMemo(name: String, content: String): Memo {
+    val credentials = credentialsRepository.load()
+    val baseUrl = credentials.baseUrl.trim()
+    val token = credentials.token.trim()
+    if (baseUrl.isBlank() || token.isBlank()) {
+      throw IllegalStateException("Base URL and token are required.")
+    }
+    val dto = memosApi.updateMemo(
+      baseUrl = baseUrl,
+      token = token,
+      name = name,
+      content = content
+    )
+    return memoMapper.toDomain(dto)
+  }
 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -43,6 +44,7 @@ import space.be1ski.memos.shared.domain.model.Memo
 import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.ActivityMode
 import space.be1ski.memos.shared.presentation.components.ContributionGrid
+import space.be1ski.memos.shared.presentation.components.DailyMemoInfo
 import space.be1ski.memos.shared.presentation.components.WeeklyBarChart
 import space.be1ski.memos.shared.presentation.components.availableYears
 import space.be1ski.memos.shared.presentation.components.rememberActivityWeekData
@@ -131,7 +133,10 @@ fun MemosApp() {
             memos = memos,
             years = years,
             range = activityRange,
-            onRangeChange = { activityRange = it }
+            onRangeChange = { activityRange = it },
+            onEditDailyMemo = { memo, content ->
+              viewModel.updateDailyMemo(memo.name, content)
+            }
           )
           1 -> PostsScreen(memos = memos)
         }
@@ -148,10 +153,14 @@ private fun StatsScreen(
   memos: List<Memo>,
   years: List<Int>,
   range: ActivityRange,
-  onRangeChange: (ActivityRange) -> Unit
+  onRangeChange: (ActivityRange) -> Unit,
+  onEditDailyMemo: (DailyMemoInfo, String) -> Unit
 ) {
+  var activityMode by remember { mutableStateOf(ActivityMode.Habits) }
+  var editingMemo by remember { mutableStateOf<DailyMemoInfo?>(null) }
+  var editingContent by remember { mutableStateOf("") }
+
   Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-    var activityMode by remember { mutableStateOf(ActivityMode.Habits) }
     Row(
       modifier = Modifier.fillMaxWidth(),
       verticalAlignment = Alignment.CenterVertically,
@@ -193,6 +202,10 @@ private fun StatsScreen(
           week.days.any { it.date == day.date }
         } ?: selectedWeek
       },
+      onEditRequested = { memo ->
+        editingMemo = memo
+        editingContent = memo.content
+      },
       scrollState = chartScrollState
     )
     WeeklyBarChart(
@@ -205,6 +218,38 @@ private fun StatsScreen(
         }
       },
       scrollState = chartScrollState
+    )
+  }
+
+  if (editingMemo != null) {
+    AlertDialog(
+      onDismissRequest = { editingMemo = null },
+      title = { Text("Edit day") },
+      text = {
+        TextField(
+          value = editingContent,
+          onValueChange = { editingContent = it },
+          modifier = Modifier.fillMaxWidth()
+        )
+      },
+      confirmButton = {
+        Button(
+          onClick = {
+            val memo = editingMemo
+            if (memo != null) {
+              onEditDailyMemo(memo, editingContent)
+            }
+            editingMemo = null
+          }
+        ) {
+          Text("Save")
+        }
+      },
+      dismissButton = {
+        TextButton(onClick = { editingMemo = null }) {
+          Text("Cancel")
+        }
+      }
     )
   }
 }

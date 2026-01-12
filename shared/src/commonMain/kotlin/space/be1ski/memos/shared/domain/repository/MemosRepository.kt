@@ -10,4 +10,9 @@ interface MemosRepository {
    * Returns all memos from the server using paginated requests.
    */
   suspend fun listMemos(): List<Memo>
+
+  /**
+   * Updates memo content and returns the updated memo.
+   */
+  suspend fun updateMemo(name: String, content: String): Memo
 }

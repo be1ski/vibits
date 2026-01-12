@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,6 +53,7 @@ fun ContributionGrid(
   selectedDay: ContributionDay?,
   selectedWeekStart: LocalDate?,
   onDaySelected: (ContributionDay) -> Unit,
+  onEditRequested: (DailyMemoInfo) -> Unit,
   scrollState: ScrollState,
   modifier: Modifier = Modifier
 ) {
@@ -112,6 +114,20 @@ fun ContributionGrid(
             "${current.day.date}: ${current.day.count} posts"
           }
           Text(tooltipText, style = MaterialTheme.typography.labelMedium)
+          if (current.day.totalHabits > 0) {
+            Column(modifier = Modifier.padding(top = 6.dp)) {
+              current.day.habitStatuses.forEach { status ->
+                val color = if (status.done) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                val prefix = if (status.done) "\u2713 " else "\u2022 "
+                Text("$prefix${status.tag}", color = color, style = MaterialTheme.typography.labelSmall)
+              }
+            }
+          }
+          current.day.dailyMemo?.let { memo ->
+            TextButton(onClick = { onEditRequested(memo) }) {
+              Text("Edit day")
+            }
+          }
         }
       }
     }
@@ -212,6 +228,10 @@ data class ContributionDay(
   val totalHabits: Int,
   /** Completion ratio in range [0..1]. */
   val completionRatio: Float,
+  /** Parsed habit status list for the day. */
+  val habitStatuses: List<HabitStatus>,
+  /** Daily memo information when available. */
+  val dailyMemo: DailyMemoInfo?,
   /** True if the day is within the requested range. */
   val inRange: Boolean
 )
@@ -238,6 +258,26 @@ data class ActivityWeekData(
   val maxDaily: Int,
   /** Maximum posts in a week in range. */
   val maxWeekly: Int
+)
+
+/**
+ * Habit completion status for a single habit tag.
+ */
+data class HabitStatus(
+  /** Habit tag, e.g. #habit/зарядка. */
+  val tag: String,
+  /** True when the habit is marked completed in a daily memo. */
+  val done: Boolean
+)
+
+/**
+ * Daily memo metadata for editing.
+ */
+data class DailyMemoInfo(
+  /** Memo resource name. */
+  val name: String,
+  /** Memo content. */
+  val content: String
 )
 
 /**
@@ -313,13 +353,13 @@ private fun buildActivityWeekData(
 ): ActivityWeekData {
   val bounds = rangeBounds(range, today)
   val habits = if (mode == ActivityMode.Habits) extractHabitsConfig(memos, timeZone) else emptyList()
-  val habitCounts = if (mode == ActivityMode.Habits) extractDailyHabitCounts(memos, habits, timeZone) else emptyMap()
+  val dailyMemos = extractDailyMemos(memos, timeZone)
   val useHabits = mode == ActivityMode.Habits && habits.isNotEmpty()
   val totalHabits = habits.size
   val counts = if (mode == ActivityMode.Posts || !useHabits) {
     extractDailyPostCounts(memos, timeZone, bounds)
   } else {
-    habitCounts
+    emptyMap()
   }
 
   var start = bounds.start
@@ -332,7 +372,17 @@ private fun buildActivityWeekData(
   while (cursor <= bounds.end) {
     val days = (0..6).map { offset ->
       val date = cursor.plus(DatePeriod(days = offset))
-      val completed = counts[date] ?: 0
+      val dailyMemo = dailyMemos[date]
+      val habitStatuses = if (useHabits) {
+        buildHabitStatuses(dailyMemo?.content, habits)
+      } else {
+        emptyList()
+      }
+      val completed = if (useHabits) {
+        habitStatuses.count { it.done }
+      } else {
+        counts[date] ?: 0
+      }
       val ratio = if (useHabits && totalHabits > 0) {
         completed.toFloat() / totalHabits.toFloat()
       } else {
@@ -343,6 +393,8 @@ private fun buildActivityWeekData(
         count = completed,
         totalHabits = if (useHabits) totalHabits else 0,
         completionRatio = ratio.coerceIn(0f, 1f),
+        habitStatuses = habitStatuses,
+        dailyMemo = dailyMemo,
         inRange = date >= bounds.start && date <= bounds.end
       )
     }
@@ -467,7 +519,7 @@ private fun LegendRow(maxCount: Int) {
 @Composable
 private fun LegendCell(count: Int, maxCount: Int) {
   ContributionCell(
-    day = ContributionDay(LocalDate(1970, 1, 1), count, 0, 0f, true),
+    day = ContributionDay(LocalDate(1970, 1, 1), count, 0, 0f, emptyList(), null, true),
     maxCount = maxCount,
     enabled = true,
     size = 12.dp,
@@ -511,26 +563,39 @@ private fun extractHabitsConfig(memos: List<Memo>, timeZone: TimeZone): List<Str
     .toList()
 }
 
-private fun extractDailyHabitCounts(
+private fun extractDailyMemos(
   memos: List<Memo>,
-  habits: List<String>,
   timeZone: TimeZone
-): Map<LocalDate, Int> {
-  if (habits.isEmpty()) {
-    return emptyMap()
-  }
-  val habitSet = habits.toSet()
+): Map<LocalDate, DailyMemoInfo> {
   val dailyMemos = memos.filter { memo -> memo.content.contains("#daily") }
-  val counts = mutableMapOf<LocalDate, Int>()
+  val latestByDate = mutableMapOf<LocalDate, DailyMemoRecord>()
   dailyMemos.forEach { memo ->
     val date = parseMemoDate(memo, timeZone) ?: return@forEach
-    val done = countCompletedHabits(memo.content, habitSet)
-    counts[date] = maxOf(counts[date] ?: 0, done)
+    val instant = parseMemoInstant(memo) ?: return@forEach
+    val record = DailyMemoRecord(
+      info = DailyMemoInfo(name = memo.name, content = memo.content),
+      sortKey = instant.toEpochMilliseconds()
+    )
+    val current = latestByDate[date]
+    if (current == null || record.sortKey > current.sortKey) {
+      latestByDate[date] = record
+    }
   }
-  return counts
+  return latestByDate.mapValues { it.value.info }
 }
 
-private fun countCompletedHabits(content: String, habits: Set<String>): Int {
+private fun buildHabitStatuses(content: String?, habits: List<String>): List<HabitStatus> {
+  if (habits.isEmpty()) {
+    return emptyList()
+  }
+  if (content.isNullOrBlank()) {
+    return habits.map { HabitStatus(tag = it, done = false) }
+  }
+  val done = extractCompletedHabits(content, habits.toSet())
+  return habits.map { HabitStatus(tag = it, done = done.contains(it)) }
+}
+
+private fun extractCompletedHabits(content: String, habits: Set<String>): Set<String> {
   val lines = content.lineSequence()
   val checkboxRegex = Regex("^\\s*[-*]\\s*\\[(x|X)\\]\\s+(.+)$")
   val done = mutableSetOf<String>()
@@ -542,7 +607,7 @@ private fun countCompletedHabits(content: String, habits: Set<String>): Int {
       done.add(habitTag)
     }
   }
-  return done.size
+  return done
 }
 
 private fun extractDailyPostCounts(
@@ -575,7 +640,11 @@ sealed class ActivityRange {
  * Attempts to parse a memo timestamp into [LocalDate].
  */
 private fun parseMemoDate(memo: Memo, timeZone: TimeZone): LocalDate? {
-  val candidates = listOfNotNull(memo.createTime, memo.updateTime)
+  return parseMemoInstant(memo)?.toLocalDateTime(timeZone)?.date
+}
+
+private fun parseMemoInstant(memo: Memo): Instant? {
+  val candidates = listOfNotNull(memo.updateTime, memo.createTime)
   for (value in candidates) {
     val trimmed = value.trim()
     val instant = runCatching { Instant.parse(trimmed) }.getOrNull()
@@ -586,11 +655,16 @@ private fun parseMemoDate(memo: Memo, timeZone: TimeZone): LocalDate? {
         Instant.fromEpochMilliseconds(millis)
       }.getOrNull()
     if (instant != null) {
-      return instant.toLocalDateTime(timeZone).date
+      return instant
     }
   }
   return null
 }
+
+private data class DailyMemoRecord(
+  val info: DailyMemoInfo,
+  val sortKey: Long
+)
 
 /**
  * Renders a weekly activity bar.
