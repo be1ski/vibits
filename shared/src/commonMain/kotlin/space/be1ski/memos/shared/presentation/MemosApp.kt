@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -21,6 +19,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,11 +49,43 @@ fun MemosApp() {
   val memos = uiState.memos
   val isLoading = uiState.isLoading
   val errorMessage = uiState.errorMessage
+  var autoLoaded by remember { mutableStateOf(false) }
+  var showCredentialsDialog by remember { mutableStateOf(false) }
+  var credentialsInitialized by remember { mutableStateOf(false) }
+  var editBaseUrl by remember { mutableStateOf("") }
+  var editToken by remember { mutableStateOf("") }
+
+  LaunchedEffect(uiState, autoLoaded) {
+    if (uiState is MemosUiState.Ready && !autoLoaded && !isLoading) {
+      autoLoaded = true
+      viewModel.loadMemos()
+    }
+  }
+
+  LaunchedEffect(uiState, showCredentialsDialog) {
+    if (uiState is MemosUiState.CredentialsInput && !showCredentialsDialog) {
+      showCredentialsDialog = true
+      credentialsInitialized = false
+    }
+  }
 
   MaterialTheme {
     Scaffold(
       topBar = {
-        TopAppBar(title = { Text("Memos") })
+        TopAppBar(
+          title = { Text("Memos") },
+          actions = {
+            TextButton(
+              onClick = {
+                viewModel.editCredentials()
+                showCredentialsDialog = true
+                credentialsInitialized = false
+              }
+            ) {
+              Text("Settings")
+            }
+          }
+        )
       }
     ) { padding ->
       Column(
@@ -64,42 +95,8 @@ fun MemosApp() {
           .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
       ) {
-        when (val state = uiState) {
-          is MemosUiState.CredentialsInput -> {
-            TextField(
-              value = state.baseUrl,
-              onValueChange = viewModel::updateBaseUrl,
-              label = { Text("Base URL") },
-              placeholder = { Text("https://memos.example.com") },
-              modifier = Modifier.fillMaxWidth()
-            )
-            TextField(
-              value = state.token,
-              onValueChange = viewModel::updateToken,
-              label = { Text("Access token") },
-              visualTransformation = PasswordVisualTransformation(),
-              modifier = Modifier.fillMaxWidth()
-            )
-          }
-          is MemosUiState.Ready -> {
-            TextButton(onClick = viewModel::editCredentials) {
-              Text("Edit credentials")
-            }
-          }
-        }
-        Row(
-          verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-          Button(onClick = viewModel::loadMemos) {
-            Text("Load memos")
-          }
-          if (isLoading) {
-            CircularProgressIndicator(modifier = Modifier.size(20.dp))
-          }
-          if (errorMessage != null) {
-            Text(errorMessage, color = MaterialTheme.colorScheme.error)
-          }
+        if (errorMessage != null) {
+          Text(errorMessage, color = MaterialTheme.colorScheme.error)
         }
         PrimaryTabRow(selectedTabIndex = selectedTab) {
           Tab(
@@ -130,5 +127,63 @@ fun MemosApp() {
         }
       }
     }
+  }
+
+  if (showCredentialsDialog) {
+    val state = uiState
+    if (!credentialsInitialized && state is MemosUiState.CredentialsInput) {
+      editBaseUrl = state.baseUrl
+      editToken = state.token
+      credentialsInitialized = true
+    }
+    androidx.compose.material3.AlertDialog(
+      onDismissRequest = {
+        showCredentialsDialog = false
+        credentialsInitialized = false
+      },
+      title = { Text("Settings") },
+      text = {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+          TextField(
+            value = editBaseUrl,
+            onValueChange = { editBaseUrl = it },
+            label = { Text("Base URL") },
+            placeholder = { Text("https://memos.example.com") },
+            modifier = Modifier.fillMaxWidth()
+          )
+          TextField(
+            value = editToken,
+            onValueChange = { editToken = it },
+            label = { Text("Access token") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth()
+          )
+        }
+      },
+      confirmButton = {
+        Button(
+          onClick = {
+            viewModel.updateBaseUrl(editBaseUrl)
+            viewModel.updateToken(editToken)
+            viewModel.loadMemos()
+            autoLoaded = true
+            showCredentialsDialog = false
+            credentialsInitialized = false
+          }
+        ) {
+          Text("Save")
+        }
+      },
+      dismissButton = {
+        TextButton(
+          onClick = {
+            showCredentialsDialog = false
+            credentialsInitialized = false
+          }
+        ) {
+          Text("Cancel")
+        }
+      }
+    )
   }
 }

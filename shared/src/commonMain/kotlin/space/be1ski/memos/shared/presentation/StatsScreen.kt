@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -56,7 +58,10 @@ fun StatsScreen(
   val habitsConfig = rememberHabitsConfig(memos)
   var showHabitsConfig by remember { mutableStateOf(false) }
 
-  Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+  Column(
+    verticalArrangement = Arrangement.spacedBy(12.dp),
+    modifier = Modifier.verticalScroll(rememberScrollState())
+  ) {
     Row(
       modifier = Modifier.fillMaxWidth(),
       verticalAlignment = Alignment.CenterVertically,
