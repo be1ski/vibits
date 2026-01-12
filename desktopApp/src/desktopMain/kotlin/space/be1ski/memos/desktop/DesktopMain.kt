@@ -6,7 +6,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import org.koin.core.context.startKoin
 import space.be1ski.memos.shared.di.sharedModule
-import space.be1ski.memos.shared.ui.MemosApp
+import space.be1ski.memos.shared.presentation.MemosApp
 
 /**
  * Desktop entry point that starts Koin and opens the main window.
