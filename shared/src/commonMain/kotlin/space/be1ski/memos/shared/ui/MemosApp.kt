@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -25,9 +25,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,7 +44,9 @@ import space.be1ski.memos.shared.config.currentLocalDate
 import space.be1ski.memos.shared.model.Memo
 import space.be1ski.memos.shared.ui.components.ActivityRange
 import space.be1ski.memos.shared.ui.components.ContributionGrid
+import space.be1ski.memos.shared.ui.components.WeeklyBarChart
 import space.be1ski.memos.shared.ui.components.availableYears
+import space.be1ski.memos.shared.ui.components.rememberActivityWeekData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,6 +58,15 @@ fun MemosApp() {
   val years = remember(uiState.memos) { availableYears(uiState.memos, timeZone, currentYear) }
   var selectedTab by remember { mutableStateOf(0) }
   var activityRange by remember { mutableStateOf<ActivityRange>(ActivityRange.LastYear) }
+  var showCredentialsForm by remember {
+    mutableStateOf(uiState.baseUrl.isBlank() || uiState.token.isBlank())
+  }
+
+  LaunchedEffect(uiState.baseUrl, uiState.token) {
+    if (uiState.baseUrl.isNotBlank() && uiState.token.isNotBlank()) {
+      showCredentialsForm = false
+    }
+  }
 
   MaterialTheme {
     Scaffold(
@@ -68,20 +81,26 @@ fun MemosApp() {
           .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
       ) {
-        TextField(
-          value = uiState.baseUrl,
-          onValueChange = viewModel::updateBaseUrl,
-          label = { Text("Base URL") },
-          placeholder = { Text("https://memos.example.com") },
-          modifier = Modifier.fillMaxWidth()
-        )
-        TextField(
-          value = uiState.token,
-          onValueChange = viewModel::updateToken,
-          label = { Text("Access token") },
-          visualTransformation = PasswordVisualTransformation(),
-          modifier = Modifier.fillMaxWidth()
-        )
+        if (showCredentialsForm) {
+          TextField(
+            value = uiState.baseUrl,
+            onValueChange = viewModel::updateBaseUrl,
+            label = { Text("Base URL") },
+            placeholder = { Text("https://memos.example.com") },
+            modifier = Modifier.fillMaxWidth()
+          )
+          TextField(
+            value = uiState.token,
+            onValueChange = viewModel::updateToken,
+            label = { Text("Access token") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth()
+          )
+        } else {
+          TextButton(onClick = { showCredentialsForm = true }) {
+            Text("Edit credentials")
+          }
+        }
         Row(
           verticalAlignment = Alignment.CenterVertically,
           horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -142,7 +161,22 @@ private fun ProfileScreen(
         onRangeChange = onRangeChange
       )
     }
-    ContributionGrid(memos = memos, range = range)
+    val weekData = rememberActivityWeekData(memos, range)
+    var selectedWeek by remember(weekData.weeks) { mutableStateOf(weekData.weeks.lastOrNull()) }
+    var selectedDay by remember(weekData.weeks) { mutableStateOf(weekData.weeks.lastOrNull()?.days?.lastOrNull()) }
+    val chartScrollState = rememberScrollState()
+    ContributionGrid(
+      weekData = weekData,
+      selectedDay = selectedDay,
+      onDaySelected = { selectedDay = it },
+      scrollState = chartScrollState
+    )
+    WeeklyBarChart(
+      weekData = weekData,
+      selectedWeek = selectedWeek,
+      onWeekSelected = { selectedWeek = it },
+      scrollState = chartScrollState
+    )
   }
 }
 
