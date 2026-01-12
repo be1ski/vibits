@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
@@ -552,7 +553,7 @@ private fun ContributionCell(
     }
   }
   val selectedColor = if (isSelected || isHovered) {
-    MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.9f)
+    lerp(color, MaterialTheme.colorScheme.onSurface, 0.15f)
   } else {
     color
   }

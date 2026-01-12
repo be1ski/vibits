@@ -118,7 +118,7 @@ fun StatsScreen(
       Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
         if (activityMode == ActivityMode.Habits) {
           TextButton(onClick = { showHabitsConfig = !showHabitsConfig }) {
-            Text("Settings")
+            Text("Habits config")
           }
         }
         ActivityRangeSelector(
