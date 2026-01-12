@@ -182,7 +182,7 @@ fun ContributionGrid(
               current.day.habitStatuses.forEach { status ->
                 val color = if (status.done) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                 val prefix = if (status.done) "\u2713 " else "\u2022 "
-                Text("$prefix${status.tag}", color = color, style = MaterialTheme.typography.labelSmall)
+                Text("$prefix${status.label}", color = color, style = MaterialTheme.typography.labelSmall)
               }
             }
           }
@@ -331,7 +331,7 @@ fun rememberActivityWeekData(
 /**
  * Memoized builder for habits config tags.
  */
-fun rememberHabitsConfig(memos: List<Memo>): List<String> {
+fun rememberHabitsConfig(memos: List<Memo>): List<HabitConfig> {
   val timeZone = remember { TimeZone.currentSystemDefault() }
   return remember(memos, timeZone) {
     extractHabitsConfig(memos, timeZone)
@@ -388,8 +388,20 @@ data class ActivityWeekData(
 data class HabitStatus(
   /** Habit tag, e.g. #habit/зарядка. */
   val tag: String,
+  /** Habit label for display. */
+  val label: String,
   /** True when the habit is marked completed in a daily memo. */
   val done: Boolean
+)
+
+/**
+ * Habit configuration entry.
+ */
+data class HabitConfig(
+  /** Habit tag, e.g. #habit/зарядка. */
+  val tag: String,
+  /** User-friendly label. */
+  val label: String
 )
 
 /**
@@ -503,20 +515,34 @@ private fun buildActivityWeekData(
       } else {
         emptyList()
       }
+      val memoHabitTags = if (useHabits) {
+        extractHabitTagsFromContent(dailyMemo?.content)
+      } else {
+        emptySet()
+      }
       val completed = if (useHabits) {
-        habitStatuses.count { it.done }
+        if (memoHabitTags.isNotEmpty()) {
+          extractCompletedHabits(dailyMemo?.content ?: "", memoHabitTags).size
+        } else {
+          habitStatuses.count { it.done }
+        }
       } else {
         counts[date] ?: 0
       }
-      val ratio = if (useHabits && totalHabits > 0) {
-        completed.toFloat() / totalHabits.toFloat()
+      val totalHabitsForDay = if (useHabits) {
+        if (memoHabitTags.isNotEmpty()) memoHabitTags.size else totalHabits
+      } else {
+        0
+      }
+      val ratio = if (useHabits && totalHabitsForDay > 0) {
+        completed.toFloat() / totalHabitsForDay.toFloat()
       } else {
         0f
       }
       ContributionDay(
         date = date,
         count = completed,
-        totalHabits = if (useHabits) totalHabits else 0,
+        totalHabits = if (useHabits) totalHabitsForDay else 0,
         completionRatio = ratio.coerceIn(0f, 1f),
         habitStatuses = habitStatuses,
         dailyMemo = dailyMemo,
@@ -653,7 +679,7 @@ fun availableYears(
   return years.toList().sortedDescending()
 }
 
-private fun extractHabitsConfig(memos: List<Memo>, timeZone: TimeZone): List<String> {
+private fun extractHabitsConfig(memos: List<Memo>, timeZone: TimeZone): List<HabitConfig> {
   val tagged = memos.filter { memo ->
     memo.content.contains("#habits_config")
   }
@@ -661,10 +687,13 @@ private fun extractHabitsConfig(memos: List<Memo>, timeZone: TimeZone): List<Str
     parseMemoDate(memo, timeZone) ?: LocalDate(1970, 1, 1)
   }
   val config = sorted.firstOrNull() ?: return emptyList()
-  return Regex("#habit/[^\\s]+")
-    .findAll(config.content)
-    .map { it.value }
-    .distinct()
+  val lines = config.content.lineSequence()
+    .map { it.trim() }
+    .filter { it.isNotBlank() }
+    .filterNot { it.startsWith("#habits_config") }
+  return lines.mapNotNull { line ->
+    parseHabitConfigLine(line)
+  }.distinctBy { it.tag }
     .toList()
 }
 
@@ -681,17 +710,17 @@ fun lastSevenDays(weekData: ActivityWeekData): List<ContributionDay> {
  */
 fun activityWeekDataForHabit(
   weekData: ActivityWeekData,
-  habitTag: String
+  habit: HabitConfig
 ): ActivityWeekData {
   val weeks = weekData.weeks.map { week ->
     val days = week.days.map { day ->
-      val done = day.habitStatuses.firstOrNull { it.tag == habitTag }?.done == true
+      val done = day.habitStatuses.firstOrNull { it.tag == habit.tag }?.done == true
       val count = if (done) 1 else 0
       day.copy(
         count = count,
         totalHabits = 1,
         completionRatio = if (done) 1f else 0f,
-        habitStatuses = listOf(HabitStatus(tag = habitTag, done = done))
+        habitStatuses = listOf(HabitStatus(tag = habit.tag, label = habit.label, done = done))
       )
     }
     week.copy(
@@ -733,15 +762,46 @@ internal fun findDailyMemoForDate(
   return extractDailyMemos(memos, timeZone)[date]
 }
 
-internal fun buildHabitStatuses(content: String?, habits: List<String>): List<HabitStatus> {
+private fun parseHabitConfigLine(line: String): HabitConfig? {
+  val parts = line.split("|", limit = 2).map { it.trim() }.filter { it.isNotBlank() }
+  if (parts.isEmpty()) {
+    return null
+  }
+  val (label, tagRaw) = if (parts.size == 1) {
+    val raw = parts.first()
+    val tag = normalizeHabitTag(raw)
+    val label = if (raw.startsWith("#habit/")) labelFromTag(tag) else raw
+    label to tag
+  } else {
+    val label = parts[0]
+    val tag = normalizeHabitTag(parts[1])
+    label to tag
+  }
+  return HabitConfig(tag = tagRaw, label = label)
+}
+
+private fun normalizeHabitTag(raw: String): String {
+  val trimmed = raw.trim()
+  val withoutPrefix = trimmed.removePrefix("#habit/")
+  val sanitized = withoutPrefix.replace("\\s+".toRegex(), "_")
+  return "#habit/$sanitized"
+}
+
+private fun labelFromTag(tag: String): String {
+  return tag.removePrefix("#habit/").replace('_', ' ')
+}
+
+internal fun buildHabitStatuses(content: String?, habits: List<HabitConfig>): List<HabitStatus> {
   if (habits.isEmpty()) {
     return emptyList()
   }
   if (content.isNullOrBlank()) {
-    return habits.map { HabitStatus(tag = it, done = false) }
+    return habits.map { habit -> HabitStatus(tag = habit.tag, label = habit.label, done = false) }
   }
-  val done = extractCompletedHabits(content, habits.toSet())
-  return habits.map { HabitStatus(tag = it, done = done.contains(it)) }
+  val done = extractCompletedHabits(content, habits.map { it.tag }.toSet())
+  return habits.map { habit ->
+    HabitStatus(tag = habit.tag, label = habit.label, done = done.contains(habit.tag))
+  }
 }
 
 private fun extractCompletedHabits(content: String, habits: Set<String>): Set<String> {
@@ -757,6 +817,16 @@ private fun extractCompletedHabits(content: String, habits: Set<String>): Set<St
     }
   }
   return done
+}
+
+private fun extractHabitTagsFromContent(content: String?): Set<String> {
+  if (content.isNullOrBlank()) {
+    return emptySet()
+  }
+  return Regex("#habit/[^\\s]+")
+    .findAll(content)
+    .map { it.value }
+    .toSet()
 }
 
 private fun parseDailyDateFromContent(content: String): LocalDate? {
