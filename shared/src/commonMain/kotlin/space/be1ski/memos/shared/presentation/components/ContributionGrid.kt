@@ -741,13 +741,18 @@ fun activityWeekDataForHabit(
 ): ActivityWeekData {
   val weeks = weekData.weeks.map { week ->
     val days = week.days.map { day ->
-      val done = day.habitStatuses.firstOrNull { it.tag == habit.tag }?.done == true
-      val count = if (done) 1 else 0
+      val hasConfig = day.totalHabits > 0
+      val done = if (hasConfig) day.habitStatuses.firstOrNull { it.tag == habit.tag }?.done == true else false
+      val count = if (hasConfig && done) 1 else 0
       day.copy(
         count = count,
-        totalHabits = 1,
-        completionRatio = if (done) 1f else 0f,
-        habitStatuses = listOf(HabitStatus(tag = habit.tag, label = habit.label, done = done))
+        totalHabits = if (hasConfig) 1 else 0,
+        completionRatio = if (hasConfig && done) 1f else 0f,
+        habitStatuses = if (hasConfig) {
+          listOf(HabitStatus(tag = habit.tag, label = habit.label, done = done))
+        } else {
+          emptyList()
+        }
       )
     }
     week.copy(

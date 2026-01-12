@@ -19,7 +19,7 @@ fun main() = application {
   Window(
     onCloseRequest = ::exitApplication,
     title = "Memos",
-    state = rememberWindowState(width = 960.dp, height = 720.dp)
+    state = rememberWindowState(width = 720.dp, height = 960.dp)
   ) {
     MemosApp()
   }
