@@ -97,6 +97,7 @@ fun StatsScreen(
   } else {
     Modifier
   }
+  var activeSelectionId by remember { mutableStateOf<String?>(null) }
 
   Box(
     modifier = Modifier
@@ -141,15 +142,21 @@ fun StatsScreen(
 
       ContributionGrid(
         weekData = weekData,
-        selectedDay = selectedDay,
+        selectedDay = if (activeSelectionId == "main") selectedDay else null,
         selectedWeekStart = if (activityMode == ActivityMode.Posts) selectedWeek?.startDate else null,
         onDaySelected = { day ->
           selectedDate = day.date
+          activeSelectionId = "main"
           if (activityMode == ActivityMode.Posts) {
             selectedWeek = weekData.weeks.firstOrNull { week ->
               week.days.any { it.date == day.date }
             }
           }
+        },
+        onClearSelection = {
+          selectedDate = null
+          selectedWeek = null
+          activeSelectionId = null
         },
         onEditRequested = { day ->
           habitsEditorDay = day
@@ -161,6 +168,7 @@ fun StatsScreen(
           habitsEditorExisting = day.dailyMemo
           habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
         },
+        isActiveSelection = activeSelectionId == "main",
         scrollState = chartScrollState,
         showWeekdayLegend = showWeekdayLegend,
         compactHeight = range is ActivityRange.Last90Days
@@ -194,18 +202,26 @@ fun StatsScreen(
           HabitActivitySection(
             label = habit,
             baseWeekData = weekData,
-            selectedDate = selectedDate,
-            onDaySelected = { day -> selectedDate = day.date },
-            onEditRequested = { day ->
-              habitsEditorDay = day
-              habitsEditorExisting = day.dailyMemo
-              habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+            selectedDate = if (activeSelectionId == "habit:$habit") selectedDate else null,
+            onDaySelected = { day ->
+              selectedDate = day.date
+              activeSelectionId = "habit:$habit"
             },
-            onCreateRequested = { day ->
-              habitsEditorDay = day
-              habitsEditorExisting = day.dailyMemo
-              habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
-            },
+          onClearSelection = {
+            selectedDate = null
+            activeSelectionId = null
+          },
+          onEditRequested = { day ->
+            habitsEditorDay = day
+            habitsEditorExisting = day.dailyMemo
+            habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+          },
+          onCreateRequested = { day ->
+            habitsEditorDay = day
+            habitsEditorExisting = day.dailyMemo
+            habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+          },
+            isActiveSelection = activeSelectionId == "habit:$habit",
             showWeekdayLegend = showWeekdayLegend,
             compactHeight = range is ActivityRange.Last90Days
           )
@@ -338,8 +354,10 @@ private fun HabitActivitySection(
   baseWeekData: space.be1ski.memos.shared.presentation.components.ActivityWeekData,
   selectedDate: kotlinx.datetime.LocalDate?,
   onDaySelected: (ContributionDay) -> Unit,
+  onClearSelection: () -> Unit,
   onEditRequested: (ContributionDay) -> Unit,
   onCreateRequested: (ContributionDay) -> Unit,
+  isActiveSelection: Boolean,
   showWeekdayLegend: Boolean,
   compactHeight: Boolean
 ) {
@@ -358,8 +376,10 @@ private fun HabitActivitySection(
       selectedDay = selectedDay,
       selectedWeekStart = null,
       onDaySelected = onDaySelected,
+      onClearSelection = onClearSelection,
       onEditRequested = onEditRequested,
       onCreateRequested = onCreateRequested,
+      isActiveSelection = isActiveSelection,
       scrollState = chartScrollState,
       showWeekdayLegend = showWeekdayLegend,
       compactHeight = compactHeight

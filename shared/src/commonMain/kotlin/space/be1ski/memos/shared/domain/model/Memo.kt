@@ -13,11 +13,11 @@ data class Memo(
    */
   val content: String = "",
   /**
-   * ISO timestamp when memo was created.
+   * Timestamp when memo was created.
    */
-  val createTime: String? = null,
+  val createTime: kotlin.time.Instant? = null,
   /**
-   * ISO timestamp when memo was last updated.
+   * Timestamp when memo was last updated.
    */
-  val updateTime: String? = null
+  val updateTime: kotlin.time.Instant? = null
 )
