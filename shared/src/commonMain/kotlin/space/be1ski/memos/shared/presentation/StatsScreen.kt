@@ -1,12 +1,17 @@
 package space.be1ski.memos.shared.presentation
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -34,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -43,12 +49,15 @@ import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.ActivityWeek
 import space.be1ski.memos.shared.presentation.components.ContributionDay
 import space.be1ski.memos.shared.presentation.components.ContributionGrid
+import space.be1ski.memos.shared.presentation.components.ChartDimens
+import space.be1ski.memos.shared.presentation.components.calculateLayout
 import space.be1ski.memos.shared.presentation.components.DailyMemoInfo
 import space.be1ski.memos.shared.presentation.components.HabitConfig
 import space.be1ski.memos.shared.presentation.components.buildHabitStatuses
 import space.be1ski.memos.shared.presentation.components.activityWeekDataForHabit
 import space.be1ski.memos.shared.presentation.components.habitsConfigForDate
 import space.be1ski.memos.shared.presentation.components.findDailyMemoForDate
+import space.be1ski.memos.shared.presentation.components.lastSevenDays
 import space.be1ski.memos.shared.presentation.components.WeeklyBarChart
 import space.be1ski.memos.shared.presentation.components.rememberActivityWeekData
 import space.be1ski.memos.shared.presentation.components.rememberHabitsConfigTimeline
@@ -99,9 +108,12 @@ fun StatsScreen(
     )
   }
   val weekData = rememberActivityWeekData(memos, range, activityMode)
-  val showWeekdayLegend = range is ActivityRange.Last90Days
+  val showWeekdayLegend = range is ActivityRange.Last90Days || range is ActivityRange.Last7Days
   val useCompactHeight = range is ActivityRange.Last90Days && !isDesktop
   val collapseHabits = activityMode == ActivityMode.Habits && range is ActivityRange.Last90Days
+  val showLast7DaysMatrix = activityMode == ActivityMode.Habits &&
+    range is ActivityRange.Last7Days &&
+    currentHabitsConfig.isNotEmpty()
   var selectedWeek by remember { mutableStateOf<ActivityWeek?>(null) }
   var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
   var activeSelectionId by remember { mutableStateOf<String?>(null) }
@@ -174,42 +186,50 @@ fun StatsScreen(
       }
       val chartScrollState = rememberScrollState()
 
-      ContributionGrid(
-        weekData = weekData,
-        selectedDay = if (activeSelectionId == "main") selectedDay else null,
-        selectedWeekStart = if (activityMode == ActivityMode.Posts) selectedWeek?.startDate else null,
-        onDaySelected = { day ->
-          selectedDate = day.date
-          activeSelectionId = "main"
-          if (activityMode == ActivityMode.Posts) {
-            selectedWeek = weekData.weeks.firstOrNull { week ->
-              week.days.any { it.date == day.date }
+      if (showLast7DaysMatrix) {
+        LastSevenDaysMatrix(
+          days = lastSevenDays(weekData),
+          habits = currentHabitsConfig,
+          compactHeight = useCompactHeight
+        )
+      } else {
+        ContributionGrid(
+          weekData = weekData,
+          selectedDay = if (activeSelectionId == "main") selectedDay else null,
+          selectedWeekStart = if (activityMode == ActivityMode.Posts) selectedWeek?.startDate else null,
+          onDaySelected = { day ->
+            selectedDate = day.date
+            activeSelectionId = "main"
+            if (activityMode == ActivityMode.Posts) {
+              selectedWeek = weekData.weeks.firstOrNull { week ->
+                week.days.any { it.date == day.date }
+              }
             }
-          }
-        },
-        onClearSelection = {
-          selectedDate = null
-          selectedWeek = null
-          activeSelectionId = null
-        },
-        onEditRequested = { day ->
-          habitsEditorDay = day
-          habitsEditorExisting = day.dailyMemo
-          habitsEditorConfig = habitsConfigForDate(habitsConfigTimeline, day.date)?.habits.orEmpty()
-          habitsEditorSelections = buildHabitsEditorSelections(day, habitsEditorConfig)
-        },
-        onCreateRequested = { day ->
-          habitsEditorDay = day
-          habitsEditorExisting = day.dailyMemo
-          habitsEditorConfig = habitsConfigForDate(habitsConfigTimeline, day.date)?.habits.orEmpty()
-          habitsEditorSelections = buildHabitsEditorSelections(day, habitsEditorConfig)
-          habitsEditorError = null
-        },
-        isActiveSelection = activeSelectionId == "main",
-        scrollState = chartScrollState,
-        showWeekdayLegend = showWeekdayLegend,
-        compactHeight = useCompactHeight
-      )
+          },
+          onClearSelection = {
+            selectedDate = null
+            selectedWeek = null
+            activeSelectionId = null
+          },
+          onEditRequested = { day ->
+            habitsEditorDay = day
+            habitsEditorExisting = day.dailyMemo
+            habitsEditorConfig = habitsConfigForDate(habitsConfigTimeline, day.date)?.habits.orEmpty()
+            habitsEditorSelections = buildHabitsEditorSelections(day, habitsEditorConfig)
+          },
+          onCreateRequested = { day ->
+            habitsEditorDay = day
+            habitsEditorExisting = day.dailyMemo
+            habitsEditorConfig = habitsConfigForDate(habitsConfigTimeline, day.date)?.habits.orEmpty()
+            habitsEditorSelections = buildHabitsEditorSelections(day, habitsEditorConfig)
+            habitsEditorError = null
+          },
+          isActiveSelection = activeSelectionId == "main",
+          scrollState = chartScrollState,
+          showWeekdayLegend = showWeekdayLegend,
+          compactHeight = useCompactHeight
+        )
+      }
 
       if (collapseHabits && currentHabitsConfig.isNotEmpty()) {
         OutlinedButton(
@@ -236,7 +256,7 @@ fun StatsScreen(
         )
       }
 
-      if (activityMode == ActivityMode.Habits && currentHabitsConfig.isNotEmpty() && (!collapseHabits || showHabitDetails)) {
+      if (!showLast7DaysMatrix && activityMode == ActivityMode.Habits && currentHabitsConfig.isNotEmpty() && (!collapseHabits || showHabitDetails)) {
         currentHabitsConfig.forEach { habit ->
           HabitActivitySection(
             habit = habit,
@@ -269,6 +289,7 @@ fun StatsScreen(
           )
         }
       }
+
     }
 
     if (activityMode == ActivityMode.Habits && todayConfig.isNotEmpty()) {
@@ -499,6 +520,63 @@ private fun HabitActivitySection(
   }
 }
 
+@Composable
+private fun LastSevenDaysMatrix(
+  days: List<ContributionDay>,
+  habits: List<HabitConfig>,
+  compactHeight: Boolean
+) {
+  if (days.isEmpty() || habits.isEmpty()) {
+    return
+  }
+  BoxWithConstraints {
+    val labelWidth = 160.dp
+    val spacing = ChartDimens.spacing(compactHeight)
+    val availableWidth = (maxWidth - labelWidth - spacing).coerceAtLeast(0.dp)
+    val layout = calculateLayout(
+      maxWidth = availableWidth,
+      columns = days.size.coerceAtLeast(1),
+      minColumnSize = ChartDimens.minCell(compactHeight),
+      spacing = spacing
+    )
+    val cellSize = layout.columnSize
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+      Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
+        Spacer(modifier = Modifier.width(labelWidth))
+        days.forEach { day ->
+          Box(modifier = Modifier.size(cellSize), contentAlignment = Alignment.Center) {
+            Text(
+              day.date.dayOfWeek.name.take(2),
+              style = MaterialTheme.typography.labelSmall
+            )
+          }
+        }
+      }
+      habits.forEach { habit ->
+        Row(
+          horizontalArrangement = Arrangement.spacedBy(spacing),
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          Text(habit.label, style = MaterialTheme.typography.bodySmall, modifier = Modifier.width(labelWidth))
+          days.forEach { day ->
+            val done = day.habitStatuses.firstOrNull { status -> status.tag == habit.tag }?.done == true
+            val cellColor = if (done) {
+              Color(0xFF0B7D3E)
+            } else {
+              Color(0xFFE2E8F0)
+            }
+            Box(
+              modifier = Modifier
+                .size(cellSize)
+                .background(cellColor, shape = MaterialTheme.shapes.extraSmall)
+            )
+          }
+        }
+      }
+    }
+  }
+}
+
 /**
  * Selects activity range (last 12 months or specific year).
  */
@@ -510,6 +588,7 @@ private fun ActivityRangeSelector(
 ) {
   var expanded by remember { mutableStateOf(false) }
   val label = when (selectedRange) {
+    is ActivityRange.Last7Days -> "Last 7 days"
     is ActivityRange.Last90Days -> "Last 90 days"
     is ActivityRange.Last6Months -> "Last 6 months"
     is ActivityRange.LastYear -> "Last year"
@@ -520,6 +599,13 @@ private fun ActivityRangeSelector(
       Text(label)
     }
     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+      DropdownMenuItem(
+        text = { Text("Last 7 days") },
+        onClick = {
+          onRangeChange(ActivityRange.Last7Days)
+          expanded = false
+        }
+      )
       DropdownMenuItem(
         text = { Text("Last 90 days") },
         onClick = {

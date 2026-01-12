@@ -54,7 +54,7 @@ import kotlin.time.Instant as KtInstant
 import space.be1ski.memos.shared.domain.model.Memo
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 
-private object ChartDimens {
+internal object ChartDimens {
   val legendWidth = 26.dp
 
   fun spacing(compact: Boolean): Dp = if (compact) 1.dp else 2.dp
@@ -482,7 +482,7 @@ private data class WeekTooltip(
 /**
  * Resolved sizing parameters for chart layout.
  */
-private data class ChartLayout(
+internal data class ChartLayout(
   val columnSize: Dp,
   val contentWidth: Dp,
   val useScroll: Boolean
@@ -491,7 +491,7 @@ private data class ChartLayout(
 /**
  * Calculates layout sizes for a fixed number of columns.
  */
-private fun calculateLayout(
+internal fun calculateLayout(
   maxWidth: Dp,
   columns: Int,
   minColumnSize: Dp,
@@ -603,6 +603,10 @@ private fun buildActivityWeekData(
  */
 private fun rangeBounds(range: ActivityRange, today: LocalDate): RangeBounds {
   return when (range) {
+    is ActivityRange.Last7Days -> RangeBounds(
+      start = today.minus(DatePeriod(days = 6)),
+      end = today
+    )
     is ActivityRange.Last90Days -> RangeBounds(
       start = today.minus(DatePeriod(days = 89)),
       end = today
@@ -918,6 +922,8 @@ private fun extractDailyPostCounts(
  * Range selection for activity charts.
  */
 sealed class ActivityRange {
+  /** Rolling 7-day range. */
+  data object Last7Days : ActivityRange()
   /** Rolling 90-day range. */
   data object Last90Days : ActivityRange()
   /** Rolling 6-month range. */
