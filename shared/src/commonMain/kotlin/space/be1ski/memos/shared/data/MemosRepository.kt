@@ -6,13 +6,15 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.http.HttpHeaders
+import space.be1ski.memos.shared.config.DEFAULT_PAGE_SIZE
+import space.be1ski.memos.shared.config.MAX_PAGES
 import space.be1ski.memos.shared.model.ListMemosResponse
 import space.be1ski.memos.shared.model.Memo
 
 class MemosRepository(
   private val httpClient: HttpClient
 ) {
-  suspend fun listMemos(baseUrl: String, token: String, pageSize: Int = 200): List<Memo> {
+  suspend fun listMemos(baseUrl: String, token: String, pageSize: Int = DEFAULT_PAGE_SIZE): List<Memo> {
     val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
     val allMemos = mutableListOf<Memo>()
     val seenTokens = mutableSetOf<String>()
@@ -30,13 +32,13 @@ class MemosRepository(
       }.body()
       allMemos += response.memos
       nextPageToken = response.nextPageToken?.takeIf { it.isNotBlank() }
-      if (nextPageToken != null) {
-        if (!seenTokens.add(nextPageToken!!)) {
-          break
+      nextPageToken?.let { tokenValue ->
+        if (!seenTokens.add(tokenValue)) {
+          nextPageToken = null
         }
       }
       pages += 1
-    } while (nextPageToken != null && pages < 100 && allMemos.isNotEmpty())
+    } while (nextPageToken != null && pages < MAX_PAGES && allMemos.isNotEmpty())
 
     return allMemos
   }
