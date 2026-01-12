@@ -12,16 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,35 +34,31 @@ import space.be1ski.memos.shared.model.Memo
 @Composable
 fun ContributionGrid(
   memos: List<Memo>,
-  selectedYear: Int,
-  availableYears: List<Int>,
-  onYearSelected: (Int) -> Unit,
+  range: ActivityRange,
   modifier: Modifier = Modifier
 ) {
   val timeZone = remember { TimeZone.currentSystemDefault() }
-  val rangeStart = remember(selectedYear) { LocalDate(selectedYear, 1, 1) }
-  val rangeEnd = remember(selectedYear) {
-    LocalDate(selectedYear + 1, 1, 1).minus(DatePeriod(days = 1))
+  val today = remember { currentLocalDate() }
+  val rangeStart = remember(range, today) {
+    when (range) {
+      is ActivityRange.LastYear -> today.minus(DatePeriod(days = 364))
+      is ActivityRange.Year -> LocalDate(range.year, 1, 1)
+    }
+  }
+  val rangeEnd = remember(range, today) {
+    when (range) {
+      is ActivityRange.LastYear -> today
+      is ActivityRange.Year -> LocalDate(range.year + 1, 1, 1).minus(DatePeriod(days = 1))
+    }
   }
 
-  val weeks = remember(memos, selectedYear) {
+  val weeks = remember(memos, range, today) {
     buildWeeks(memos, timeZone, rangeStart, rangeEnd)
   }
   val maxCount = remember(weeks) { weeks.maxOfOrNull { week -> week.maxOfOrNull { it.count } ?: 0 } ?: 0 }
 
   Column(modifier = modifier) {
-    Row(
-      modifier = Modifier.fillMaxWidth(),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-      Text("Posting activity", style = MaterialTheme.typography.titleMedium)
-      YearSelector(
-        selectedYear = selectedYear,
-        availableYears = availableYears,
-        onYearSelected = onYearSelected
-      )
-    }
+    Text("Posting activity", style = MaterialTheme.typography.titleMedium)
     Spacer(modifier = Modifier.height(8.dp))
     Row(
       modifier = Modifier
@@ -107,10 +97,7 @@ private fun buildWeeks(
 ): List<List<ContributionDay>> {
   val counts = mutableMapOf<LocalDate, Int>()
   memos.forEach { memo ->
-    val date = memo.createTime
-      ?.let { runCatching { Instant.parse(it) }.getOrNull() }
-      ?.toLocalDateTime(timeZone)
-      ?.date
+    val date = memo.createTime?.let { parseMemoDate(it, timeZone) }
     if (date != null && date >= rangeStart && date <= rangeEnd) {
       counts[date] = (counts[date] ?: 0) + 1
     }
@@ -181,29 +168,6 @@ private fun LegendRow(maxCount: Int) {
   }
 }
 
-@Composable
-private fun YearSelector(
-  selectedYear: Int,
-  availableYears: List<Int>,
-  onYearSelected: (Int) -> Unit
-) {
-  var expanded by remember { mutableStateOf(false) }
-  OutlinedButton(onClick = { expanded = true }) {
-    Text(selectedYear.toString())
-  }
-  DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-    availableYears.forEach { year ->
-      DropdownMenuItem(
-        text = { Text(year.toString()) },
-        onClick = {
-          expanded = false
-          onYearSelected(year)
-        }
-      )
-    }
-  }
-}
-
 fun availableYears(
   memos: List<Memo>,
   timeZone: TimeZone,
@@ -211,9 +175,7 @@ fun availableYears(
 ): List<Int> {
   val years = memos.mapNotNull { memo ->
     memo.createTime
-      ?.let { runCatching { Instant.parse(it) }.getOrNull() }
-      ?.toLocalDateTime(timeZone)
-      ?.date
+      ?.let { parseMemoDate(it, timeZone) }
       ?.year
   }.toMutableSet()
   if (years.isEmpty()) {
@@ -222,4 +184,21 @@ fun availableYears(
     years.add(fallbackYear)
   }
   return years.toList().sortedDescending()
+}
+
+sealed class ActivityRange {
+  data object LastYear : ActivityRange()
+  data class Year(val year: Int) : ActivityRange()
+}
+
+private fun parseMemoDate(value: String, timeZone: TimeZone): LocalDate? {
+  val trimmed = value.trim()
+  val instant = runCatching { Instant.parse(trimmed) }.getOrNull()
+    ?: runCatching { Instant.parse("${trimmed}Z") }.getOrNull()
+    ?: runCatching {
+      val number = trimmed.toLong()
+      val millis = if (trimmed.length > 10) number else number * 1000
+      Instant.fromEpochMilliseconds(millis)
+    }.getOrNull()
+  return instant?.toLocalDateTime(timeZone)?.date
 }
