@@ -21,7 +21,11 @@ actual fun createHttpClient(): HttpClient {
       )
     }
     install(Logging) {
-      logger = Logger { message -> println("HTTP | $message") }
+      logger = object : Logger {
+        override fun log(message: String) {
+          println("HTTP | $message")
+        }
+      }
       level = LogLevel.ALL
       sanitizeHeader { it == HttpHeaders.Authorization }
     }
