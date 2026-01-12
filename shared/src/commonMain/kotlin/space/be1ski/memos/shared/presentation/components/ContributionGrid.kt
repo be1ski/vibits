@@ -62,12 +62,16 @@ fun ContributionGrid(
   modifier: Modifier = Modifier
 ) {
   var tooltip by remember { mutableStateOf<DayTooltip?>(null) }
+  var hoveredDate by remember { mutableStateOf<LocalDate?>(null) }
   Column(modifier = modifier) {
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
       val columns = weekData.weeks.size.coerceAtLeast(1)
       val spacing = if (compactHeight) 1.dp else 2.dp
       val minCell = if (compactHeight) 7.dp else 10.dp
-      val layout = calculateLayout(maxWidth, columns, minColumnSize = minCell, spacing = spacing)
+      val legendWidth = if (showWeekdayLegend) 26.dp else 0.dp
+      val legendSpacing = if (showWeekdayLegend) spacing else 0.dp
+      val availableWidth = (maxWidth - legendWidth - legendSpacing).coerceAtLeast(0.dp)
+      val layout = calculateLayout(availableWidth, columns, minColumnSize = minCell, spacing = spacing)
 
       Row(
         modifier = Modifier.fillMaxWidth(),
@@ -95,10 +99,15 @@ fun ContributionGrid(
                   enabled = day.inRange,
                   size = layout.columnSize,
                   isSelected = selectedDay?.date == day.date,
+                  isHovered = hoveredDate == day.date,
                   isWeekSelected = isWeekSelected,
                   onClick = { offset ->
                     onDaySelected(day)
                     tooltip = DayTooltip(day, offset)
+                    hoveredDate = day.date
+                  },
+                  onHoverChange = { hovering ->
+                    hoveredDate = if (hovering) day.date else hoveredDate?.takeIf { it != day.date }
                   }
                 )
               }
@@ -268,7 +277,7 @@ fun rememberActivityWeekData(
   mode: ActivityMode
 ): ActivityWeekData {
   val timeZone = remember { TimeZone.currentSystemDefault() }
-  val today = remember { currentLocalDate() }
+  val today = currentLocalDate()
   return remember(memos, range, mode, today) {
     buildActivityWeekData(memos, timeZone, range, mode, today)
   }
@@ -517,8 +526,10 @@ private fun ContributionCell(
   enabled: Boolean,
   size: Dp,
   isSelected: Boolean,
+  isHovered: Boolean,
   isWeekSelected: Boolean,
-  onClick: ((IntOffset) -> Unit)?
+  onClick: ((IntOffset) -> Unit)?,
+  onHoverChange: ((Boolean) -> Unit)?
 ) {
   var coordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
   val color = when {
@@ -540,7 +551,7 @@ private fun ContributionCell(
       }
     }
   }
-  val selectedColor = if (isSelected) {
+  val selectedColor = if (isSelected || isHovered) {
     MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.9f)
   } else {
     color
@@ -548,6 +559,7 @@ private fun ContributionCell(
 
   val borderColor = when {
     isSelected -> MaterialTheme.colorScheme.outline
+    isHovered -> MaterialTheme.colorScheme.outlineVariant
     isWeekSelected -> MaterialTheme.colorScheme.outlineVariant
     else -> Color.Transparent
   }
@@ -558,6 +570,13 @@ private fun ContributionCell(
       .background(color = selectedColor, shape = MaterialTheme.shapes.extraSmall)
       .border(width = 1.dp, color = borderColor, shape = MaterialTheme.shapes.extraSmall)
       .onGloballyPositioned { coordinates = it }
+      .then(
+        if (onHoverChange != null) {
+          Modifier.hoverAware(onHoverChange)
+        } else {
+          Modifier
+        }
+      )
       .then(
         if (onClick != null && enabled) {
           Modifier.clickable {

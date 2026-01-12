@@ -3,12 +3,9 @@ package space.be1ski.memos.shared.presentation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -29,6 +26,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.TimeZone
 import org.koin.compose.koinInject
+import space.be1ski.memos.shared.presentation.components.ActivityMode
 import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.availableYears
 import space.be1ski.memos.shared.presentation.state.MemosUiState
@@ -76,7 +74,6 @@ fun MemosApp() {
       Column(
         modifier = Modifier
           .padding(padding)
-          .windowInsetsPadding(WindowInsets.statusBars)
           .padding(16.dp)
           .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -105,7 +102,7 @@ fun MemosApp() {
           Tab(
             selected = selectedTab == 0,
             onClick = { selectedTab = 0 },
-            text = { Text("Stats") }
+            text = { Text("Habits") }
           )
           Tab(
             selected = selectedTab == 1,
@@ -118,15 +115,26 @@ fun MemosApp() {
             memos = memos,
             years = years,
             range = activityRange,
+            activityMode = ActivityMode.Habits,
             onRangeChange = { activityRange = it },
             onEditDailyMemo = { memo, content ->
               viewModel.updateDailyMemo(memo.name, content)
             },
             onCreateDailyMemo = { content ->
               viewModel.createDailyMemo(content)
-            }
+            },
+            useVerticalScroll = true,
+            isRefreshing = isLoading,
+            onRefresh = { viewModel.loadMemos() }
           )
-          1 -> PostsScreen(memos = memos)
+          1 -> PostsScreen(
+            memos = memos,
+            years = years,
+            range = activityRange,
+            onRangeChange = { activityRange = it },
+            isRefreshing = isLoading,
+            onRefresh = { viewModel.loadMemos() }
+          )
         }
       }
     }

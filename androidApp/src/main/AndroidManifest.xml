@@ -3,6 +3,7 @@
     android:name=".MemosApplication"
     android:allowBackup="true"
     android:label="Memos"
+    android:theme="@style/Theme.Memos"
     android:supportsRtl="true">
     <activity
       android:name=".MainActivity"

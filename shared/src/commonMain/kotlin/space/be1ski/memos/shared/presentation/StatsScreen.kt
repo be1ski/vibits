@@ -1,17 +1,26 @@
 package space.be1ski.memos.shared.presentation
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -45,16 +54,21 @@ import space.be1ski.memos.shared.presentation.time.currentLocalDate
 /**
  * Stats tab with activity charts.
  */
+@OptIn(androidx.compose.material.ExperimentalMaterialApi::class)
 @Composable
 fun StatsScreen(
   memos: List<Memo>,
   years: List<Int>,
   range: ActivityRange,
+  activityMode: ActivityMode,
   onRangeChange: (ActivityRange) -> Unit,
   onEditDailyMemo: (DailyMemoInfo, String) -> Unit,
-  onCreateDailyMemo: (String) -> Unit
+  onCreateDailyMemo: (String) -> Unit,
+  useVerticalScroll: Boolean = true,
+  isRefreshing: Boolean = false,
+  onRefresh: () -> Unit = {},
+  enablePullRefresh: Boolean = true
 ) {
-  var activityMode by remember { mutableStateOf(ActivityMode.Habits) }
   var editingMemo by remember { mutableStateOf<DailyMemoInfo?>(null) }
   var editingContent by remember { mutableStateOf("") }
   var habitsEditorDay by remember { mutableStateOf<ContributionDay?>(null) }
@@ -74,10 +88,27 @@ fun StatsScreen(
     )
   }
 
-  Column(
-    verticalArrangement = Arrangement.spacedBy(12.dp),
-    modifier = Modifier.verticalScroll(rememberScrollState())
+  val columnModifier = if (useVerticalScroll) {
+    Modifier.verticalScroll(rememberScrollState())
+  } else {
+    Modifier
+  }
+  val pullRefreshState = rememberPullRefreshState(isRefreshing, onRefresh)
+  val containerModifier = if (enablePullRefresh) {
+    Modifier.pullRefresh(pullRefreshState)
+  } else {
+    Modifier
+  }
+
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .then(containerModifier)
   ) {
+    Column(
+      verticalArrangement = Arrangement.spacedBy(12.dp),
+      modifier = columnModifier
+    ) {
     Row(
       modifier = Modifier.fillMaxWidth(),
       verticalAlignment = Alignment.CenterVertically,
@@ -100,39 +131,11 @@ fun StatsScreen(
     if (activityMode == ActivityMode.Habits && showHabitsConfig) {
       HabitsConfigCard(habitsConfig = habitsConfig)
     }
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-      val habitsSelected = activityMode == ActivityMode.Habits
-      OutlinedButton(
-        onClick = { activityMode = ActivityMode.Habits },
-        enabled = !habitsSelected
-      ) {
-        Text("Habits")
-      }
-      OutlinedButton(
-        onClick = { activityMode = ActivityMode.Posts },
-        enabled = habitsSelected
-      ) {
-        Text("Posts")
-      }
-    }
-    if (activityMode == ActivityMode.Habits && habitsConfig.isNotEmpty()) {
-      Button(
-        onClick = {
-          val day = todayDay ?: return@Button
-          habitsEditorDay = day
-          habitsEditorExisting = day.dailyMemo
-          habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
-        },
-        modifier = Modifier.fillMaxWidth()
-      ) {
-        Text("Track today's habits")
-      }
-    }
     val weekData = rememberActivityWeekData(memos, range, activityMode)
     val showWeekdayLegend = range is ActivityRange.Last90Days
     val collapseHabits = activityMode == ActivityMode.Habits && range is ActivityRange.Last90Days
-    var selectedWeek by remember(weekData.weeks, activityMode) { mutableStateOf<ActivityWeek?>(null) }
-    var selectedDate by remember(weekData.weeks, activityMode) { mutableStateOf(weekData.weeks.lastOrNull()?.days?.lastOrNull()?.date) }
+    var selectedWeek by remember(weekData.weeks) { mutableStateOf<ActivityWeek?>(null) }
+    var selectedDate by remember(weekData.weeks) { mutableStateOf(weekData.weeks.lastOrNull()?.days?.lastOrNull()?.date) }
     val selectedDay = remember(weekData.weeks, selectedDate) {
       selectedDate?.let { date -> findDayByDate(weekData, date) }
     }
@@ -207,6 +210,33 @@ fun StatsScreen(
           compactHeight = range is ActivityRange.Last90Days
         )
       }
+    }
+    }
+
+    if (activityMode == ActivityMode.Habits && habitsConfig.isNotEmpty()) {
+      FloatingActionButton(
+        onClick = {
+          val day = todayDay ?: return@FloatingActionButton
+          habitsEditorDay = day
+          habitsEditorExisting = day.dailyMemo
+          habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+        },
+        modifier = Modifier
+          .align(Alignment.BottomEnd)
+          .padding(16.dp)
+      ) {
+        Icon(
+          imageVector = Icons.Filled.CheckCircle,
+          contentDescription = "Track today"
+        )
+      }
+    }
+    if (enablePullRefresh) {
+      PullRefreshIndicator(
+        refreshing = isRefreshing,
+        state = pullRefreshState,
+        modifier = Modifier.align(Alignment.TopCenter)
+      )
     }
   }
 
