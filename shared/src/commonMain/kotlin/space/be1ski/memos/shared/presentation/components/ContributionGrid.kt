@@ -592,6 +592,34 @@ fun lastSevenDays(weekData: ActivityWeekData): List<ContributionDay> {
   return days.takeLast(7)
 }
 
+/**
+ * Derives a week dataset for a single habit tag.
+ */
+fun activityWeekDataForHabit(
+  weekData: ActivityWeekData,
+  habitTag: String
+): ActivityWeekData {
+  val weeks = weekData.weeks.map { week ->
+    val days = week.days.map { day ->
+      val done = day.habitStatuses.firstOrNull { it.tag == habitTag }?.done == true
+      val count = if (done) 1 else 0
+      day.copy(
+        count = count,
+        totalHabits = 1,
+        completionRatio = if (done) 1f else 0f,
+        habitStatuses = listOf(HabitStatus(tag = habitTag, done = done))
+      )
+    }
+    week.copy(
+      days = days,
+      weeklyCount = days.sumOf { it.count }
+    )
+  }
+  val maxDaily = weeks.maxOfOrNull { week -> week.days.maxOfOrNull { it.count } ?: 0 } ?: 0
+  val maxWeekly = weeks.maxOfOrNull { it.weeklyCount } ?: 0
+  return ActivityWeekData(weeks = weeks, maxDaily = maxDaily, maxWeekly = maxWeekly)
+}
+
 private fun extractDailyMemos(
   memos: List<Memo>,
   timeZone: TimeZone
