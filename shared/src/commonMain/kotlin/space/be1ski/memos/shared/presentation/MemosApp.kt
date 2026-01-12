@@ -2,15 +2,18 @@ package space.be1ski.memos.shared.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
@@ -18,6 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Surface
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.TimeZone
@@ -187,17 +192,13 @@ private fun StatsScreen(
       )
     }
     if (activityMode == ActivityMode.Habits) {
-      Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
-        Column(
-          modifier = Modifier.padding(12.dp),
-          verticalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-          Text("Habits config", style = MaterialTheme.typography.titleSmall)
-          if (habitsConfig.isEmpty()) {
-            Text("No #habits_config found", style = MaterialTheme.typography.bodySmall)
-          } else {
+      SectionCard(title = "Habits") {
+        if (habitsConfig.isEmpty()) {
+          Text("No #habits_config found", style = MaterialTheme.typography.bodySmall)
+        } else {
+          FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             habitsConfig.forEach { habit ->
-              Text(habit, style = MaterialTheme.typography.bodySmall)
+              HabitChip(label = habit)
             }
           }
         }
@@ -222,7 +223,9 @@ private fun StatsScreen(
     var selectedWeek by remember(weekData.weeks, activityMode) { mutableStateOf<ActivityWeek?>(null) }
     var selectedDay by remember(weekData.weeks, activityMode) { mutableStateOf(weekData.weeks.lastOrNull()?.days?.lastOrNull()) }
     val chartScrollState = rememberScrollState()
-    LastSevenDaysCard(days = lastSevenDays(weekData), mode = activityMode)
+    SectionCard(title = "Last 7 days") {
+      LastSevenDaysCard(days = lastSevenDays(weekData), mode = activityMode)
+    }
     ContributionGrid(
       weekData = weekData,
       selectedDay = selectedDay,
@@ -353,32 +356,72 @@ private fun LastSevenDaysCard(
     0.0
   }
 
-  Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
+  if (mode == ActivityMode.Habits && totalHabits > 0) {
+    Text("Full days: $fullDays/7 · Avg: ${(avgRatio * 100).toInt()}%", style = MaterialTheme.typography.bodySmall)
+  } else {
+    Text("Active days: $fullDays/7", style = MaterialTheme.typography.bodySmall)
+  }
+  Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
+    days.forEach { day ->
+      val label = day.date.day.toString()
+      val ratio = if (mode == ActivityMode.Habits && day.totalHabits > 0) {
+        day.completionRatio
+      } else {
+        if (day.count > 0) 1f else 0f
+      }
+      Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(
+          modifier = Modifier
+            .size(12.dp)
+            .background(activityColorForRatio(ratio), shape = MaterialTheme.shapes.extraSmall)
+        )
+        Text(label, style = MaterialTheme.typography.labelSmall)
+      }
+    }
+  }
+}
+
+@Composable
+private fun SectionCard(
+  title: String,
+  content: @Composable ColumnScope.() -> Unit
+) {
+  Card(
+    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+  ) {
     Column(
       modifier = Modifier.padding(12.dp),
       verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-      Text("Last 7 days", style = MaterialTheme.typography.titleSmall)
-      if (mode == ActivityMode.Habits && totalHabits > 0) {
-        Text("Full days: $fullDays/7 · Avg: ${(avgRatio * 100).toInt()}%", style = MaterialTheme.typography.bodySmall)
-      } else {
-        Text("Active days: $fullDays/7", style = MaterialTheme.typography.bodySmall)
-      }
-      Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        days.forEach { day ->
-          val label = day.date.day.toString()
-          val text = if (mode == ActivityMode.Habits && day.totalHabits > 0) {
-            "${day.count}/${day.totalHabits}"
-          } else {
-            day.count.toString()
-          }
-          Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(label, style = MaterialTheme.typography.labelSmall)
-            Text(text, style = MaterialTheme.typography.labelSmall)
-          }
-        }
-      }
+      Text(title, style = MaterialTheme.typography.titleSmall)
+      content()
     }
+  }
+}
+
+@Composable
+private fun HabitChip(label: String) {
+  Surface(
+    color = MaterialTheme.colorScheme.surface,
+    contentColor = MaterialTheme.colorScheme.onSurface,
+    shape = MaterialTheme.shapes.extraLarge
+  ) {
+    Text(
+      label,
+      modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+      style = MaterialTheme.typography.labelSmall
+    )
+  }
+}
+
+private fun activityColorForRatio(ratio: Float): Color {
+  return when {
+    ratio <= 0f -> Color(0xFFE2E8F0)
+    ratio <= 0.25f -> Color(0xFFBFE3C0)
+    ratio <= 0.5f -> Color(0xFF7ACB8D)
+    ratio <= 0.75f -> Color(0xFF34A853)
+    else -> Color(0xFF0B7D3E)
   }
 }
 
