@@ -361,6 +361,9 @@ private fun buildActivityWeekData(
   } else {
     emptyMap()
   }
+  if (mode == ActivityMode.Habits) {
+    println("Habits debug: habits=${habits.size}, dailyMemos=${dailyMemos.size}, useHabits=$useHabits")
+  }
 
   var start = bounds.start
   while (start.dayOfWeek != DayOfWeek.MONDAY) {
@@ -538,7 +541,7 @@ fun availableYears(
   fallbackYear: Int = currentLocalDate().year
 ): List<Int> {
   val years = memos.mapNotNull { memo ->
-    parseMemoDate(memo, timeZone)?.year
+    parseDailyDateFromContent(memo.content)?.year ?: parseMemoDate(memo, timeZone)?.year
   }.toMutableSet()
   if (years.isEmpty()) {
     years.add(fallbackYear)
@@ -570,7 +573,7 @@ private fun extractDailyMemos(
   val dailyMemos = memos.filter { memo -> memo.content.contains("#daily") }
   val latestByDate = mutableMapOf<LocalDate, DailyMemoRecord>()
   dailyMemos.forEach { memo ->
-    val date = parseMemoDate(memo, timeZone) ?: return@forEach
+    val date = parseDailyDateFromContent(memo.content) ?: parseMemoDate(memo, timeZone) ?: return@forEach
     val instant = parseMemoInstant(memo) ?: return@forEach
     val record = DailyMemoRecord(
       info = DailyMemoInfo(name = memo.name, content = memo.content),
@@ -608,6 +611,14 @@ private fun extractCompletedHabits(content: String, habits: Set<String>): Set<St
     }
   }
   return done
+}
+
+private fun parseDailyDateFromContent(content: String): LocalDate? {
+  if (!content.contains("#daily")) {
+    return null
+  }
+  val match = Regex("\\b(\\d{4}-\\d{2}-\\d{2})\\b").find(content) ?: return null
+  return runCatching { LocalDate.parse(match.groupValues[1]) }.getOrNull()
 }
 
 private fun extractDailyPostCounts(
