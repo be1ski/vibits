@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -612,12 +613,10 @@ private fun ContributionCell(
       } else {
         0f
       }
-      when {
-        ratio <= 0f -> Color(0xFFE2E8F0)
-        ratio <= 0.25f -> Color(0xFFBFE3C0)
-        ratio <= 0.5f -> Color(0xFF7ACB8D)
-        ratio <= 0.75f -> Color(0xFF34A853)
-        else -> Color(0xFF0B7D3E)
+      if (ratio <= 0f) {
+        Color(0xFFE2E8F0)
+      } else {
+        lerp(Color(0xFFCFEED6), Color(0xFF0B7D3E), ratio.coerceIn(0f, 1f))
       }
     }
   }

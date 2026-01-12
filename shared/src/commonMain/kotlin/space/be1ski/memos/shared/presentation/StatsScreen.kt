@@ -74,6 +74,8 @@ fun StatsScreen(
   var habitsEditorDay by remember { mutableStateOf<ContributionDay?>(null) }
   var habitsEditorSelections by remember { mutableStateOf<Map<String, Boolean>>(emptyMap()) }
   var habitsEditorExisting by remember { mutableStateOf<DailyMemoInfo?>(null) }
+  var habitsEditorError by remember { mutableStateOf<String?>(null) }
+  var showEmptyDeleteConfirm by remember { mutableStateOf(false) }
   val habitsConfig = rememberHabitsConfig(memos)
   var showHabitsConfig by remember { mutableStateOf(false) }
   var habitsConfigText by remember { mutableStateOf("") }
@@ -192,11 +194,12 @@ fun StatsScreen(
           habitsEditorExisting = day.dailyMemo
           habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
         },
-        onCreateRequested = { day ->
-          habitsEditorDay = day
-          habitsEditorExisting = day.dailyMemo
-          habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
-        },
+          onCreateRequested = { day ->
+            habitsEditorDay = day
+            habitsEditorExisting = day.dailyMemo
+            habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+            habitsEditorError = null
+          },
         isActiveSelection = activeSelectionId == "main",
         scrollState = chartScrollState,
         showWeekdayLegend = showWeekdayLegend,
@@ -241,10 +244,11 @@ fun StatsScreen(
               activeSelectionId = null
             },
             onEditRequested = { day ->
-              habitsEditorDay = day
-              habitsEditorExisting = day.dailyMemo
-              habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
-            },
+            habitsEditorDay = day
+            habitsEditorExisting = day.dailyMemo
+            habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+            habitsEditorError = null
+          },
             onCreateRequested = { day ->
               habitsEditorDay = day
               habitsEditorExisting = day.dailyMemo
@@ -265,6 +269,7 @@ fun StatsScreen(
           habitsEditorDay = day
           habitsEditorExisting = day.dailyMemo
           habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+          habitsEditorError = null
         },
         modifier = Modifier
           .align(Alignment.BottomEnd)
@@ -295,10 +300,10 @@ fun StatsScreen(
       title = { Text(if (isEditing) "Update day" else "Create day") },
       text = {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-          if (habitsConfig.isNotEmpty()) {
-            habitsConfig.forEach { habit ->
-              val tag = habit.tag
-              val done = habitsEditorSelections[tag] == true
+      if (habitsConfig.isNotEmpty()) {
+        habitsConfig.forEach { habit ->
+          val tag = habit.tag
+          val done = habitsEditorSelections[tag] == true
               Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(
                   checked = done,
@@ -306,31 +311,43 @@ fun StatsScreen(
                     habitsEditorSelections = habitsEditorSelections.toMutableMap().also { it[tag] = checked }
                   }
                 )
-                Text(habit.label, style = MaterialTheme.typography.bodySmall)
-              }
-            }
-          } else {
-            habitsEditorSelections.forEach { (tag, done) ->
-              Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(
-                  checked = done,
-                  onCheckedChange = { checked ->
-                    habitsEditorSelections = habitsEditorSelections.toMutableMap().also { it[tag] = checked }
-                  }
-                )
-                Text(tag, style = MaterialTheme.typography.bodySmall)
-              }
-            }
+            Text(habit.label, style = MaterialTheme.typography.bodySmall)
           }
         }
-      },
-      confirmButton = {
-        Button(
-          onClick = {
-            val day = habitsEditorDay
-            if (day != null) {
-              val content = buildDailyContent(day.date, habitsConfig, habitsEditorSelections)
-              val existing = habitsEditorExisting
+      } else {
+        habitsEditorSelections.forEach { (tag, done) ->
+              Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(
+                  checked = done,
+                  onCheckedChange = { checked ->
+                    habitsEditorSelections = habitsEditorSelections.toMutableMap().also { it[tag] = checked }
+                  }
+                )
+            Text(tag, style = MaterialTheme.typography.bodySmall)
+          }
+        }
+      }
+      habitsEditorError?.let { message ->
+        Text(message, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+      }
+    }
+  },
+  confirmButton = {
+    Button(
+      onClick = {
+        val hasSelection = habitsEditorSelections.values.any { it }
+        if (!hasSelection) {
+          if (habitsEditorExisting != null) {
+            showEmptyDeleteConfirm = true
+          } else {
+            habitsEditorError = "Select at least one habit."
+          }
+          return@Button
+        }
+        val day = habitsEditorDay
+        if (day != null) {
+          val content = buildDailyContent(day.date, habitsConfig, habitsEditorSelections)
+          val existing = habitsEditorExisting
           if (existing != null) {
             onEditDailyMemo(existing, content)
           } else {
@@ -342,11 +359,12 @@ fun StatsScreen(
         activeSelectionId = null
         habitsEditorDay = null
         habitsEditorExisting = null
+        habitsEditorError = null
       }
     ) {
       Text(if (isEditing) "Update" else "Create")
-        }
-      },
+    }
+  },
       dismissButton = {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
           if (isEditing) {
@@ -360,6 +378,7 @@ fun StatsScreen(
               activeSelectionId = null
               habitsEditorDay = null
               habitsEditorExisting = null
+              habitsEditorError = null
             }) {
               Text("Delete")
             }
@@ -367,9 +386,42 @@ fun StatsScreen(
           TextButton(onClick = {
             habitsEditorDay = null
             habitsEditorExisting = null
+            habitsEditorError = null
           }) {
             Text("Cancel")
           }
+        }
+      }
+    )
+  }
+
+  if (showEmptyDeleteConfirm) {
+    AlertDialog(
+      onDismissRequest = { showEmptyDeleteConfirm = false },
+      title = { Text("Delete day?") },
+      text = { Text("No habits selected. The daily entry will be deleted.") },
+      confirmButton = {
+        Button(
+          onClick = {
+            val existing = habitsEditorExisting
+            if (existing != null) {
+              onDeleteDailyMemo(existing)
+            }
+            selectedDate = null
+            selectedWeek = null
+            activeSelectionId = null
+            habitsEditorDay = null
+            habitsEditorExisting = null
+            habitsEditorError = null
+            showEmptyDeleteConfirm = false
+          }
+        ) {
+          Text("Delete")
+        }
+      },
+      dismissButton = {
+        TextButton(onClick = { showEmptyDeleteConfirm = false }) {
+          Text("Cancel")
         }
       }
     )
