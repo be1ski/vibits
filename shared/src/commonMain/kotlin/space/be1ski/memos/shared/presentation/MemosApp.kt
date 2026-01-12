@@ -3,13 +3,13 @@ package space.be1ski.memos.shared.presentation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -17,7 +17,6 @@ import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,7 +35,6 @@ import space.be1ski.memos.shared.presentation.state.MemosUiState
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 
 /** Root shared UI for the app. */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MemosApp() {
   val viewModel: MemosViewModel = koinInject()
@@ -45,7 +43,7 @@ fun MemosApp() {
   val currentYear = remember { currentLocalDate().year }
   val years = remember(uiState.memos) { availableYears(uiState.memos, timeZone, currentYear) }
   var selectedTab by remember { mutableStateOf(0) }
-  var activityRange by remember { mutableStateOf<ActivityRange>(ActivityRange.Last30Days) }
+  var activityRange by remember { mutableStateOf<ActivityRange>(ActivityRange.Last90Days) }
   val memos = uiState.memos
   val isLoading = uiState.isLoading
   val errorMessage = uiState.errorMessage
@@ -74,32 +72,32 @@ fun MemosApp() {
   }
 
   MaterialTheme {
-    Scaffold(
-      topBar = {
-        TopAppBar(
-          title = { Text("Memos") },
-          actions = {
-            TextButton(
-              onClick = {
-                viewModel.editCredentials()
-                showCredentialsDialog = true
-                credentialsInitialized = false
-                credentialsDismissed = false
-              }
-            ) {
-              Text("Settings")
-            }
-          }
-        )
-      }
-    ) { padding ->
+    Scaffold { padding ->
       Column(
         modifier = Modifier
           .padding(padding)
+          .windowInsetsPadding(WindowInsets.statusBars)
           .padding(16.dp)
           .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
       ) {
+        Row(
+          modifier = Modifier.fillMaxWidth(),
+          horizontalArrangement = Arrangement.SpaceBetween,
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          Text("Memos", style = MaterialTheme.typography.headlineSmall)
+          TextButton(
+            onClick = {
+              viewModel.editCredentials()
+              showCredentialsDialog = true
+              credentialsInitialized = false
+              credentialsDismissed = false
+            }
+          ) {
+            Text("Settings")
+          }
+        }
         if (errorMessage != null) {
           Text(errorMessage, color = MaterialTheme.colorScheme.error)
         }

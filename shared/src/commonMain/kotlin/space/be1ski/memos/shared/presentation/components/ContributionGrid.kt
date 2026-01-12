@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,23 +57,32 @@ fun ContributionGrid(
   onEditRequested: (DailyMemoInfo) -> Unit,
   onCreateRequested: (ContributionDay) -> Unit,
   scrollState: ScrollState,
+  showWeekdayLegend: Boolean = false,
+  compactHeight: Boolean = false,
   modifier: Modifier = Modifier
 ) {
   var tooltip by remember { mutableStateOf<DayTooltip?>(null) }
   Column(modifier = modifier) {
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
       val columns = weekData.weeks.size.coerceAtLeast(1)
-      val spacing = 2.dp
-      val layout = calculateLayout(maxWidth, columns, minColumnSize = 10.dp, spacing = spacing)
+      val spacing = if (compactHeight) 1.dp else 2.dp
+      val minCell = if (compactHeight) 7.dp else 10.dp
+      val layout = calculateLayout(maxWidth, columns, minColumnSize = minCell, spacing = spacing)
 
       Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .then(if (layout.useScroll) Modifier.horizontalScroll(scrollState) else Modifier),
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(spacing)
       ) {
+        if (showWeekdayLegend) {
+          DayOfWeekLegend(
+            cellSize = layout.columnSize,
+            spacing = spacing
+          )
+        }
         Row(
-          modifier = Modifier.width(layout.contentWidth),
+          modifier = Modifier
+            .width(layout.contentWidth)
+            .then(if (layout.useScroll) Modifier.horizontalScroll(scrollState) else Modifier),
           horizontalArrangement = Arrangement.spacedBy(spacing)
         ) {
           weekData.weeks.forEach { week ->
@@ -97,7 +107,6 @@ fun ContributionGrid(
         }
       }
     }
-    LegendRow(maxCount = weekData.maxDaily)
     tooltip?.let { current ->
       Popup(
         alignment = Alignment.TopStart,
@@ -135,6 +144,48 @@ fun ContributionGrid(
               }
             }
           }
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun DayOfWeekLegend(
+  cellSize: Dp,
+  spacing: Dp
+) {
+  val labelWidth = 26.dp
+  val order = listOf(
+    DayOfWeek.MONDAY,
+    DayOfWeek.TUESDAY,
+    DayOfWeek.WEDNESDAY,
+    DayOfWeek.THURSDAY,
+    DayOfWeek.FRIDAY,
+    DayOfWeek.SATURDAY,
+    DayOfWeek.SUNDAY
+  )
+  Column(
+    verticalArrangement = Arrangement.spacedBy(spacing),
+    modifier = Modifier.width(labelWidth)
+  ) {
+    order.forEach { day ->
+      Box(
+        modifier = Modifier.height(cellSize),
+        contentAlignment = Alignment.CenterStart
+      ) {
+        val label = when (day) {
+          DayOfWeek.MONDAY -> "Mon"
+          DayOfWeek.WEDNESDAY -> "Wed"
+          DayOfWeek.FRIDAY -> "Fri"
+          else -> null
+        }
+        if (label != null) {
+          Text(
+            label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+          )
         }
       }
     }
@@ -437,10 +488,6 @@ private fun buildActivityWeekData(
  */
 private fun rangeBounds(range: ActivityRange, today: LocalDate): RangeBounds {
   return when (range) {
-    is ActivityRange.Last30Days -> RangeBounds(
-      start = today.minus(DatePeriod(days = 29)),
-      end = today
-    )
     is ActivityRange.Last90Days -> RangeBounds(
       start = today.minus(DatePeriod(days = 89)),
       end = today
@@ -525,40 +572,6 @@ private fun ContributionCell(
           Modifier
         }
       )
-  )
-}
-
-/**
- * Renders the legend row under the grid.
- */
-@Composable
-private fun LegendRow(maxCount: Int) {
-  Row(
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(6.dp)
-  ) {
-    Text("Less", style = MaterialTheme.typography.labelSmall)
-    LegendCell(count = 0, maxCount = maxCount)
-    LegendCell(count = 1, maxCount = maxCount)
-    LegendCell(count = (maxCount * 0.5f).toInt().coerceAtLeast(1), maxCount = maxCount)
-    LegendCell(count = maxCount.coerceAtLeast(1), maxCount = maxCount.coerceAtLeast(1))
-    Text("More", style = MaterialTheme.typography.labelSmall)
-  }
-}
-
-/**
- * Renders a fixed-size legend cell.
- */
-@Composable
-private fun LegendCell(count: Int, maxCount: Int) {
-  ContributionCell(
-    day = ContributionDay(LocalDate(1970, 1, 1), count, 0, 0f, emptyList(), null, true),
-    maxCount = maxCount,
-    enabled = true,
-    size = 12.dp,
-    isSelected = false,
-    isWeekSelected = false,
-    onClick = null
   )
 }
 
@@ -715,8 +728,6 @@ private fun extractDailyPostCounts(
  * Range selection for activity charts.
  */
 sealed class ActivityRange {
-  /** Rolling 30-day range. */
-  data object Last30Days : ActivityRange()
   /** Rolling 90-day range. */
   data object Last90Days : ActivityRange()
   /** Rolling 6-month range. */

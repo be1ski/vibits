@@ -62,6 +62,7 @@ fun StatsScreen(
   var habitsEditorExisting by remember { mutableStateOf<DailyMemoInfo?>(null) }
   val habitsConfig = rememberHabitsConfig(memos)
   var showHabitsConfig by remember { mutableStateOf(false) }
+  var showHabitDetails by remember { mutableStateOf(false) }
   val timeZone = remember { TimeZone.currentSystemDefault() }
   val today = remember { currentLocalDate() }
   val todayMemo = remember(memos, timeZone, today) { findDailyMemoForDate(memos, timeZone, today) }
@@ -128,6 +129,8 @@ fun StatsScreen(
       }
     }
     val weekData = rememberActivityWeekData(memos, range, activityMode)
+    val showWeekdayLegend = range is ActivityRange.Last90Days
+    val collapseHabits = activityMode == ActivityMode.Habits && range is ActivityRange.Last90Days
     var selectedWeek by remember(weekData.weeks, activityMode) { mutableStateOf<ActivityWeek?>(null) }
     var selectedDate by remember(weekData.weeks, activityMode) { mutableStateOf(weekData.weeks.lastOrNull()?.days?.lastOrNull()?.date) }
     val selectedDay = remember(weekData.weeks, selectedDate) {
@@ -156,8 +159,19 @@ fun StatsScreen(
         habitsEditorExisting = day.dailyMemo
         habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
       },
-      scrollState = chartScrollState
+      scrollState = chartScrollState,
+      showWeekdayLegend = showWeekdayLegend,
+      compactHeight = range is ActivityRange.Last90Days
     )
+
+    if (collapseHabits && habitsConfig.isNotEmpty()) {
+      OutlinedButton(
+        onClick = { showHabitDetails = !showHabitDetails },
+        modifier = Modifier.fillMaxWidth()
+      ) {
+        Text(if (showHabitDetails) "Hide habit details" else "Show habit details")
+      }
+    }
 
     if (activityMode == ActivityMode.Posts) {
       WeeklyBarChart(
@@ -173,7 +187,7 @@ fun StatsScreen(
     )
     }
 
-    if (activityMode == ActivityMode.Habits && habitsConfig.isNotEmpty()) {
+    if (activityMode == ActivityMode.Habits && habitsConfig.isNotEmpty() && (!collapseHabits || showHabitDetails)) {
       habitsConfig.forEach { habit ->
         HabitActivitySection(
           label = habit,
@@ -188,7 +202,9 @@ fun StatsScreen(
             habitsEditorDay = day
             habitsEditorExisting = day.dailyMemo
             habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
-          }
+          },
+          showWeekdayLegend = showWeekdayLegend,
+          compactHeight = range is ActivityRange.Last90Days
         )
       }
     }
@@ -311,7 +327,9 @@ private fun HabitActivitySection(
   selectedDate: kotlinx.datetime.LocalDate?,
   onDaySelected: (ContributionDay) -> Unit,
   onEditRequested: (DailyMemoInfo) -> Unit,
-  onCreateRequested: (ContributionDay) -> Unit
+  onCreateRequested: (ContributionDay) -> Unit,
+  showWeekdayLegend: Boolean,
+  compactHeight: Boolean
 ) {
   val habitWeekData = remember(baseWeekData, label) {
     activityWeekDataForHabit(baseWeekData, label)
@@ -330,7 +348,9 @@ private fun HabitActivitySection(
       onDaySelected = onDaySelected,
       onEditRequested = onEditRequested,
       onCreateRequested = onCreateRequested,
-      scrollState = chartScrollState
+      scrollState = chartScrollState,
+      showWeekdayLegend = showWeekdayLegend,
+      compactHeight = compactHeight
     )
   }
 }
@@ -346,7 +366,6 @@ private fun ActivityRangeSelector(
 ) {
   var expanded by remember { mutableStateOf(false) }
   val label = when (selectedRange) {
-    is ActivityRange.Last30Days -> "Last 30 days"
     is ActivityRange.Last90Days -> "Last 90 days"
     is ActivityRange.Last6Months -> "Last 6 months"
     is ActivityRange.LastYear -> "Last year"
@@ -357,13 +376,6 @@ private fun ActivityRangeSelector(
       Text(label)
     }
     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-      DropdownMenuItem(
-        text = { Text("Last 30 days") },
-        onClick = {
-          onRangeChange(ActivityRange.Last30Days)
-          expanded = false
-        }
-      )
       DropdownMenuItem(
         text = { Text("Last 90 days") },
         onClick = {
