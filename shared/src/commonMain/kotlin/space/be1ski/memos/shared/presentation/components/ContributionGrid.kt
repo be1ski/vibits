@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,22 +28,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.unit.IntRect
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupPositionProvider
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DayOfWeek
-import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant as KtInstant
 import space.be1ski.memos.shared.domain.model.Memo
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 
@@ -57,6 +63,8 @@ fun ContributionGrid(
   onDaySelected: (ContributionDay) -> Unit,
   onEditRequested: (ContributionDay) -> Unit,
   onCreateRequested: (ContributionDay) -> Unit,
+  onClearSelection: () -> Unit,
+  isActiveSelection: Boolean = true,
   scrollState: ScrollState,
   showWeekdayLegend: Boolean = false,
   compactHeight: Boolean = false,
@@ -64,8 +72,28 @@ fun ContributionGrid(
 ) {
   var tooltip by remember { mutableStateOf<DayTooltip?>(null) }
   var hoveredDate by remember { mutableStateOf<LocalDate?>(null) }
+  var suppressClear by remember { mutableStateOf(false) }
+  if (!isActiveSelection && tooltip != null) {
+    tooltip = null
+  }
   Column(modifier = modifier) {
-    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+    BoxWithConstraints(
+      modifier = Modifier
+        .fillMaxWidth()
+        .pointerInput(Unit) {
+          detectTapGestures(
+            onTap = {
+              if (suppressClear) {
+                suppressClear = false
+                return@detectTapGestures
+              }
+              tooltip = null
+              hoveredDate = null
+              onClearSelection()
+            }
+          )
+        }
+    ) {
       val columns = weekData.weeks.size.coerceAtLeast(1)
       val spacing = if (compactHeight) 1.dp else 2.dp
       val minCell = if (compactHeight) 7.dp else 10.dp
@@ -105,7 +133,7 @@ fun ContributionGrid(
                   onClick = { offset ->
                     onDaySelected(day)
                     tooltip = DayTooltip(day, offset)
-                    hoveredDate = day.date
+                    suppressClear = true
                   },
                   onHoverChange = { hovering ->
                     hoveredDate = if (hovering) day.date else hoveredDate?.takeIf { it != day.date }
@@ -118,9 +146,24 @@ fun ContributionGrid(
       }
     }
     tooltip?.let { current ->
+      val positionProvider = remember(current.offset) {
+        object : PopupPositionProvider {
+          override fun calculatePosition(
+            anchorBounds: IntRect,
+            windowSize: IntSize,
+            layoutDirection: LayoutDirection,
+            popupContentSize: IntSize
+          ): IntOffset {
+            val maxX = (windowSize.width - popupContentSize.width).coerceAtLeast(0)
+            val maxY = (windowSize.height - popupContentSize.height).coerceAtLeast(0)
+            val x = current.offset.x.coerceIn(0, maxX)
+            val y = current.offset.y.coerceIn(0, maxY)
+            return IntOffset(x, y)
+          }
+        }
+      }
       Popup(
-        alignment = Alignment.TopStart,
-        offset = current.offset,
+        popupPositionProvider = positionProvider,
         onDismissRequest = { tooltip = null }
       ) {
         Column(
@@ -128,11 +171,11 @@ fun ContributionGrid(
             .background(MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.small)
             .padding(horizontal = 8.dp, vertical = 6.dp)
         ) {
-          val tooltipText = if (current.day.totalHabits > 0) {
-            "${current.day.date}: ${current.day.count}/${current.day.totalHabits} habits"
-          } else {
-            "${current.day.date}: ${current.day.count} posts"
-          }
+    val tooltipText = if (current.day.totalHabits > 0) {
+      "${current.day.date}: ${current.day.count}/${current.day.totalHabits} habits"
+    } else {
+      "${current.day.date}: ${current.day.count} posts"
+    }
           Text(tooltipText, style = MaterialTheme.typography.labelMedium)
           if (current.day.totalHabits > 0) {
             Column(modifier = Modifier.padding(top = 6.dp)) {
@@ -552,11 +595,7 @@ private fun ContributionCell(
       }
     }
   }
-  val selectedColor = if (isSelected || isHovered) {
-    lerp(color, MaterialTheme.colorScheme.onSurface, 0.15f)
-  } else {
-    color
-  }
+  val selectedColor = color
 
   val borderColor = when {
     isSelected -> MaterialTheme.colorScheme.outline
@@ -583,7 +622,7 @@ private fun ContributionCell(
           Modifier.clickable {
             val coords = coordinates
             if (coords != null) {
-              val position = coords.positionInRoot()
+              val position = coords.positionInWindow()
               val offset = IntOffset(position.x.toInt(), (position.y + coords.size.height).toInt())
               onClick(offset)
             }
@@ -762,25 +801,12 @@ sealed class ActivityRange {
  * Attempts to parse a memo timestamp into [LocalDate].
  */
 private fun parseMemoDate(memo: Memo, timeZone: TimeZone): LocalDate? {
-  return parseMemoInstant(memo)?.toLocalDateTime(timeZone)?.date
+  val instant = parseMemoInstant(memo) ?: return null
+  return instant.toLocalDateTime(timeZone).date
 }
 
-private fun parseMemoInstant(memo: Memo): Instant? {
-  val candidates = listOfNotNull(memo.updateTime, memo.createTime)
-  for (value in candidates) {
-    val trimmed = value.trim()
-    val instant = runCatching { Instant.parse(trimmed) }.getOrNull()
-      ?: runCatching { Instant.parse("${trimmed}Z") }.getOrNull()
-      ?: runCatching {
-        val number = trimmed.toLong()
-        val millis = if (trimmed.length > 10) number else number * 1000
-        Instant.fromEpochMilliseconds(millis)
-      }.getOrNull()
-    if (instant != null) {
-      return instant
-    }
-  }
-  return null
+private fun parseMemoInstant(memo: Memo): KtInstant? {
+  return memo.updateTime ?: memo.createTime
 }
 
 private data class DailyMemoRecord(
@@ -817,7 +843,7 @@ private fun WeeklyBar(
         .clickable {
           val coords = coordinates
           if (coords != null) {
-            val position = coords.positionInRoot()
+            val position = coords.positionInWindow()
             val offset = IntOffset(position.x.toInt(), (position.y + coords.size.height).toInt())
             onClick(offset)
           }
