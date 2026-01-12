@@ -26,7 +26,7 @@ actual fun createHttpClient(): HttpClient {
           println("HTTP | $message")
         }
       }
-      level = LogLevel.ALL
+      level = LogLevel.INFO
       sanitizeHeader { it == HttpHeaders.Authorization }
     }
   }
