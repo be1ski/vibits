@@ -54,6 +54,14 @@ import kotlin.time.Instant as KtInstant
 import space.be1ski.memos.shared.domain.model.Memo
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 
+private object ChartDimens {
+  val legendWidth = 26.dp
+
+  fun spacing(compact: Boolean): Dp = if (compact) 1.dp else 2.dp
+
+  fun minCell(compact: Boolean): Dp = if (compact) 7.dp else 10.dp
+}
+
 @Composable
 /**
  * Renders GitHub-style daily activity grid for the provided [weekData].
@@ -94,12 +102,12 @@ fun ContributionGrid(
               onClearSelection()
             }
           )
-        }
+      }
     ) {
       val columns = weekData.weeks.size.coerceAtLeast(1)
-      val spacing = if (compactHeight) 1.dp else 2.dp
-      val minCell = if (compactHeight) 7.dp else 10.dp
-      val legendWidth = if (showWeekdayLegend) 26.dp else 0.dp
+      val spacing = ChartDimens.spacing(compactHeight)
+      val minCell = ChartDimens.minCell(compactHeight)
+      val legendWidth = if (showWeekdayLegend) ChartDimens.legendWidth else 0.dp
       val legendSpacing = if (showWeekdayLegend) spacing else 0.dp
       val availableWidth = (maxWidth - legendWidth - legendSpacing).coerceAtLeast(0.dp)
       val layout = calculateLayout(availableWidth, columns, minColumnSize = minCell, spacing = spacing)
@@ -256,24 +264,33 @@ fun WeeklyBarChart(
   selectedWeek: ActivityWeek?,
   onWeekSelected: (ActivityWeek) -> Unit,
   scrollState: ScrollState,
+  showWeekdayLegend: Boolean = false,
+  compactHeight: Boolean = false,
   modifier: Modifier = Modifier
 ) {
   var tooltip by remember { mutableStateOf<WeekTooltip?>(null) }
   Column(modifier = modifier) {
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
       val columns = weekData.weeks.size.coerceAtLeast(1)
-      val spacing = 2.dp
-      val layout = calculateLayout(maxWidth, columns, minColumnSize = 10.dp, spacing = spacing)
+      val spacing = ChartDimens.spacing(compactHeight)
+      val legendWidth = if (showWeekdayLegend) ChartDimens.legendWidth else 0.dp
+      val legendSpacing = if (showWeekdayLegend) spacing else 0.dp
+      val availableWidth = (maxWidth - legendWidth - legendSpacing).coerceAtLeast(0.dp)
+      val layout = calculateLayout(availableWidth, columns, minColumnSize = ChartDimens.minCell(compactHeight), spacing = spacing)
 
       Row(
         modifier = Modifier
-          .fillMaxWidth()
-          .then(if (layout.useScroll) Modifier.horizontalScroll(scrollState) else Modifier),
+          .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(spacing),
         verticalAlignment = Alignment.Bottom
       ) {
+        if (showWeekdayLegend) {
+          Spacer(modifier = Modifier.width(legendWidth + legendSpacing))
+        }
         Row(
-          modifier = Modifier.width(layout.contentWidth),
+          modifier = Modifier
+            .width(layout.contentWidth)
+            .then(if (layout.useScroll) Modifier.horizontalScroll(scrollState) else Modifier),
           horizontalArrangement = Arrangement.spacedBy(spacing),
           verticalAlignment = Alignment.Bottom
         ) {

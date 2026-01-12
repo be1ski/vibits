@@ -53,6 +53,7 @@ import space.be1ski.memos.shared.presentation.components.WeeklyBarChart
 import space.be1ski.memos.shared.presentation.components.rememberActivityWeekData
 import space.be1ski.memos.shared.presentation.components.rememberHabitsConfigTimeline
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
+import space.be1ski.memos.shared.presentation.util.isDesktop
 
 /**
  * Stats tab with activity charts.
@@ -99,6 +100,7 @@ fun StatsScreen(
   }
   val weekData = rememberActivityWeekData(memos, range, activityMode)
   val showWeekdayLegend = range is ActivityRange.Last90Days
+  val useCompactHeight = range is ActivityRange.Last90Days && !isDesktop
   val collapseHabits = activityMode == ActivityMode.Habits && range is ActivityRange.Last90Days
   var selectedWeek by remember { mutableStateOf<ActivityWeek?>(null) }
   var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
@@ -206,7 +208,7 @@ fun StatsScreen(
         isActiveSelection = activeSelectionId == "main",
         scrollState = chartScrollState,
         showWeekdayLegend = showWeekdayLegend,
-        compactHeight = range is ActivityRange.Last90Days
+        compactHeight = useCompactHeight
       )
 
       if (collapseHabits && currentHabitsConfig.isNotEmpty()) {
@@ -228,7 +230,9 @@ fun StatsScreen(
               week.days.any { it.date == date }
             }
           },
-          scrollState = chartScrollState
+          scrollState = chartScrollState,
+          showWeekdayLegend = showWeekdayLegend,
+          compactHeight = useCompactHeight
         )
       }
 
@@ -261,7 +265,7 @@ fun StatsScreen(
             },
             isActiveSelection = activeSelectionId == "habit:${habit.tag}",
             showWeekdayLegend = showWeekdayLegend,
-            compactHeight = range is ActivityRange.Last90Days
+            compactHeight = useCompactHeight
           )
         }
       }
