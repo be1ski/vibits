@@ -38,7 +38,6 @@ import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
-import kotlinx.datetime.number
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import space.be1ski.memos.shared.domain.model.Memo
@@ -185,69 +184,6 @@ fun WeeklyBarChart(
 
 @Composable
 /**
- * Renders monthly activity bars for the provided [monthData].
- */
-fun MonthlyBarChart(
-  monthData: ActivityMonthData,
-  selectedMonthStart: LocalDate?,
-  onMonthSelected: (ActivityMonth) -> Unit,
-  modifier: Modifier = Modifier
-) {
-  var tooltip by remember { mutableStateOf<MonthTooltip?>(null) }
-  Column(modifier = modifier) {
-    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-      val columns = monthData.months.size.coerceAtLeast(1)
-      val spacing = 6.dp
-      val layout = calculateLayout(maxWidth, columns, minColumnSize = 20.dp, spacing = spacing)
-
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(spacing),
-        verticalAlignment = Alignment.Bottom
-      ) {
-        Row(
-          modifier = Modifier.width(layout.contentWidth),
-          horizontalArrangement = Arrangement.spacedBy(spacing),
-          verticalAlignment = Alignment.Bottom
-        ) {
-          monthData.months.forEach { month ->
-            MonthlyBar(
-              month = month,
-              maxCount = monthData.maxMonthly,
-              width = layout.columnSize,
-              isSelected = selectedMonthStart == month.startDate,
-              onClick = { offset ->
-                onMonthSelected(month)
-                tooltip = MonthTooltip(month, offset)
-              }
-            )
-          }
-        }
-      }
-    }
-    tooltip?.let { current ->
-      Popup(
-        alignment = Alignment.TopStart,
-        offset = current.offset,
-        onDismissRequest = { tooltip = null }
-      ) {
-        Column(
-          modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.small)
-            .padding(horizontal = 8.dp, vertical = 6.dp)
-        ) {
-          Text(
-            "${current.month.startDate} - ${current.month.endDate}: ${current.month.count} posts",
-            style = MaterialTheme.typography.labelMedium
-          )
-        }
-      }
-    }
-  }
-}
-
-@Composable
-/**
  * Memoized builder for [ActivityWeekData].
  */
 fun rememberActivityWeekData(
@@ -258,16 +194,6 @@ fun rememberActivityWeekData(
   val today = remember { currentLocalDate() }
   return remember(memos, range, today) {
     buildActivityWeekData(memos, timeZone, range, today)
-  }
-}
-
-@Composable
-/**
- * Memoized builder for [ActivityMonthData] based on week entries.
- */
-fun rememberActivityMonthData(weekData: ActivityWeekData): ActivityMonthData {
-  return remember(weekData) {
-    buildActivityMonthData(weekData)
   }
 }
 
@@ -308,28 +234,6 @@ data class ActivityWeekData(
 )
 
 /**
- * Aggregated month data.
- */
-data class ActivityMonth(
-  /** First day of the month. */
-  val startDate: LocalDate,
-  /** Last day of the month. */
-  val endDate: LocalDate,
-  /** Total posts within the month. */
-  val count: Int
-)
-
-/**
- * Fully prepared dataset for monthly charts.
- */
-data class ActivityMonthData(
-  /** Ordered list of month entries. */
-  val months: List<ActivityMonth>,
-  /** Maximum posts in a month in range. */
-  val maxMonthly: Int
-)
-
-/**
  * Inclusive bounds for an activity range.
  */
 private data class RangeBounds(
@@ -350,14 +254,6 @@ private data class DayTooltip(
  */
 private data class WeekTooltip(
   val week: ActivityWeek,
-  val offset: IntOffset
-)
-
-/**
- * Tooltip payload for a selected month.
- */
-private data class MonthTooltip(
-  val month: ActivityMonth,
   val offset: IntOffset
 )
 
@@ -436,32 +332,6 @@ private fun buildActivityWeekData(
 /**
  * Builds the monthly dataset from weekly entries.
  */
-private fun buildActivityMonthData(weekData: ActivityWeekData): ActivityMonthData {
-  val counts = mutableMapOf<MonthKey, Int>()
-  weekData.weeks.flatMap { it.days }.forEach { day ->
-    if (!day.inRange) {
-      return@forEach
-    }
-    val key = MonthKey(day.date.year, day.date.month.number)
-    counts[key] = (counts[key] ?: 0) + day.count
-  }
-
-  val months = counts.keys
-    .sortedWith(compareBy({ it.year }, { it.month }))
-    .map { key ->
-      val start = LocalDate(key.year, key.month, 1)
-      val end = start.plus(DatePeriod(months = 1)).minus(DatePeriod(days = 1))
-      ActivityMonth(
-        startDate = start,
-        endDate = end,
-        count = counts[key] ?: 0
-      )
-    }
-
-  val maxMonthly = months.maxOfOrNull { it.count } ?: 0
-  return ActivityMonthData(months = months, maxMonthly = maxMonthly)
-}
-
 /**
  * Resolves the calendar bounds for the given [range].
  */
@@ -477,14 +347,6 @@ private fun rangeBounds(range: ActivityRange, today: LocalDate): RangeBounds {
     )
   }
 }
-
-/**
- * Month key used for grouping entries.
- */
-private data class MonthKey(
-  val year: Int,
-  val month: Int
-)
 
 /**
  * Renders an individual activity cell.
@@ -668,66 +530,5 @@ private fun WeeklyBar(
           }
         }
     )
-  }
-}
-
-/**
- * Renders a monthly activity bar with a month label.
- */
-@Composable
-private fun MonthlyBar(
-  month: ActivityMonth,
-  maxCount: Int,
-  width: Dp,
-  isSelected: Boolean,
-  onClick: (IntOffset) -> Unit
-) {
-  var coordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
-  val maxHeight = 64.dp
-  val height = if (maxCount <= 0) 4.dp else (maxHeight.value * (month.count.toFloat() / maxCount.toFloat())).dp
-  val color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary.copy(alpha = 0.75f)
-  Column(
-    horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.Bottom,
-    modifier = Modifier.height(maxHeight + 16.dp)
-  ) {
-    Spacer(
-      modifier = Modifier
-        .width(width)
-        .height(height.coerceAtLeast(4.dp))
-        .background(color, shape = MaterialTheme.shapes.extraSmall)
-        .onGloballyPositioned { coordinates = it }
-        .clickable {
-          val coords = coordinates
-          if (coords != null) {
-            val position = coords.positionInRoot()
-            val offset = IntOffset(position.x.toInt(), (position.y + coords.size.height).toInt())
-            onClick(offset)
-          }
-        }
-    )
-    Text(
-      monthLabel(month.startDate.month.number),
-      style = MaterialTheme.typography.labelSmall,
-      modifier = Modifier.padding(top = 4.dp)
-    )
-  }
-}
-
-private fun monthLabel(month: Int): String {
-  return when (month) {
-    1 -> "Jan"
-    2 -> "Feb"
-    3 -> "Mar"
-    4 -> "Apr"
-    5 -> "May"
-    6 -> "Jun"
-    7 -> "Jul"
-    8 -> "Aug"
-    9 -> "Sep"
-    10 -> "Oct"
-    11 -> "Nov"
-    12 -> "Dec"
-    else -> month.toString()
   }
 }

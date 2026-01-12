@@ -37,17 +37,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import org.koin.compose.koinInject
 import space.be1ski.memos.shared.domain.model.Memo
 import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.ContributionGrid
-import space.be1ski.memos.shared.presentation.components.MonthlyBarChart
 import space.be1ski.memos.shared.presentation.components.WeeklyBarChart
 import space.be1ski.memos.shared.presentation.components.availableYears
 import space.be1ski.memos.shared.presentation.components.rememberActivityWeekData
-import space.be1ski.memos.shared.presentation.components.rememberActivityMonthData
 import space.be1ski.memos.shared.presentation.state.MemosUiState
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 
@@ -166,14 +163,8 @@ private fun StatsScreen(
       )
     }
     val weekData = rememberActivityWeekData(memos, range)
-    val monthData = rememberActivityMonthData(weekData)
     var selectedWeek by remember(weekData.weeks) { mutableStateOf(weekData.weeks.lastOrNull()) }
     var selectedDay by remember(weekData.weeks) { mutableStateOf(weekData.weeks.lastOrNull()?.days?.lastOrNull()) }
-    val selectedMonthStart = selectedDay?.date?.let { date ->
-      LocalDate(date.year, date.month, 1)
-    } ?: selectedWeek?.startDate?.let { date ->
-      LocalDate(date.year, date.month, 1)
-    }
     val chartScrollState = rememberScrollState()
     ContributionGrid(
       weekData = weekData,
@@ -197,19 +188,6 @@ private fun StatsScreen(
         }
       },
       scrollState = chartScrollState
-    )
-    MonthlyBarChart(
-      monthData = monthData,
-      selectedMonthStart = selectedMonthStart,
-      onMonthSelected = { month ->
-        val monthDate = month.startDate
-        selectedWeek = weekData.weeks.firstOrNull { week ->
-          week.days.any { it.date.year == monthDate.year && it.date.month == monthDate.month }
-        } ?: selectedWeek
-        selectedDay = selectedDay?.takeIf { day ->
-          day.date.year == monthDate.year && day.date.month == monthDate.month
-        }
-      }
     )
   }
 }
