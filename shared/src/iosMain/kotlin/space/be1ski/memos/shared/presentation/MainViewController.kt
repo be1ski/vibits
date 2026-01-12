@@ -1,0 +1,13 @@
+package space.be1ski.memos.shared.presentation
+
+import androidx.compose.ui.window.ComposeUIViewController
+import platform.UIKit.UIViewController
+import space.be1ski.memos.shared.di.initKoin
+
+/**
+ * Entry point for embedding Compose UI into an iOS host.
+ */
+fun MainViewController(): UIViewController {
+  initKoin()
+  return ComposeUIViewController { MemosApp() }
+}

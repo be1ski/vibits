@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.android.kotlin.multiplatform.library)
@@ -13,9 +16,20 @@ kotlin {
     minSdk = 31
   }
   jvm("desktop")
-  iosX64()
-  iosArm64()
-  iosSimulatorArm64()
+  val iosX64Target = iosX64()
+  val iosArm64Target = iosArm64()
+  val iosSimulatorArm64Target = iosSimulatorArm64()
+
+  val xcframework = XCFramework()
+  listOf(iosX64Target, iosArm64Target, iosSimulatorArm64Target).forEach { target ->
+    target.binaries.framework {
+      baseName = "shared"
+      if (buildType == NativeBuildType.RELEASE) {
+        freeCompilerArgs += listOf("-Xdisable-phases=Devirtualization")
+      }
+      xcframework.add(this)
+    }
+  }
 
   sourceSets {
     val commonMain by getting {
