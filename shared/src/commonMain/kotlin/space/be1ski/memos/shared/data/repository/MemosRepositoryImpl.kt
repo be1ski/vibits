@@ -92,4 +92,21 @@ class MemosRepositoryImpl(
     )
     return memoMapper.toDomain(dto)
   }
+
+  /**
+   * Deletes a memo in the API.
+   */
+  override suspend fun deleteMemo(name: String) {
+    val credentials = credentialsRepository.load()
+    val baseUrl = credentials.baseUrl.trim()
+    val token = credentials.token.trim()
+    if (baseUrl.isBlank() || token.isBlank()) {
+      throw IllegalStateException("Base URL and token are required.")
+    }
+    memosApi.deleteMemo(
+      baseUrl = baseUrl,
+      token = token,
+      name = name
+    )
+  }
 }

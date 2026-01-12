@@ -9,6 +9,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import space.be1ski.memos.shared.domain.model.Credentials
 import space.be1ski.memos.shared.domain.usecase.CreateMemoUseCase
+import space.be1ski.memos.shared.domain.usecase.DeleteMemoUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadMemosUseCase
 import space.be1ski.memos.shared.domain.usecase.SaveCredentialsUseCase
@@ -23,7 +24,8 @@ class MemosViewModel(
   private val loadCredentialsUseCase: LoadCredentialsUseCase,
   private val saveCredentialsUseCase: SaveCredentialsUseCase,
   private val updateMemoUseCase: UpdateMemoUseCase,
-  private val createMemoUseCase: CreateMemoUseCase
+  private val createMemoUseCase: CreateMemoUseCase,
+  private val deleteMemoUseCase: DeleteMemoUseCase
 ) {
   private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
@@ -156,6 +158,26 @@ class MemosViewModel(
         }
       } catch (error: Exception) {
         val message = error.message ?: "Failed to create memo."
+        setLoading(false, message)
+      }
+    }
+  }
+
+  /**
+   * Deletes a memo by name.
+   */
+  fun deleteDailyMemo(name: String) {
+    setLoading(true)
+    scope.launch {
+      try {
+        deleteMemoUseCase(name)
+        val updatedMemos = uiState.memos.filterNot { memo -> memo.name == name }
+        uiState = when (val state = uiState) {
+          is MemosUiState.CredentialsInput -> state.copy(isLoading = false, memos = updatedMemos)
+          is MemosUiState.Ready -> state.copy(isLoading = false, memos = updatedMemos)
+        }
+      } catch (error: Exception) {
+        val message = error.message ?: "Failed to delete memo."
         setLoading(false, message)
       }
     }

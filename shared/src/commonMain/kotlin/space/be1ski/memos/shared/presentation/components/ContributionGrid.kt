@@ -55,7 +55,7 @@ fun ContributionGrid(
   selectedDay: ContributionDay?,
   selectedWeekStart: LocalDate?,
   onDaySelected: (ContributionDay) -> Unit,
-  onEditRequested: (DailyMemoInfo) -> Unit,
+  onEditRequested: (ContributionDay) -> Unit,
   onCreateRequested: (ContributionDay) -> Unit,
   scrollState: ScrollState,
   showWeekdayLegend: Boolean = false,
@@ -143,8 +143,8 @@ fun ContributionGrid(
               }
             }
           }
-          current.day.dailyMemo?.let { memo ->
-            TextButton(onClick = { onEditRequested(memo) }) {
+          current.day.dailyMemo?.let {
+            TextButton(onClick = { onEditRequested(current.day) }) {
               Text("Edit day")
             }
           } ?: run {

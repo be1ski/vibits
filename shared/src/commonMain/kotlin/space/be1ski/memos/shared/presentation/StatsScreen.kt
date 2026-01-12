@@ -25,7 +25,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,14 +62,13 @@ fun StatsScreen(
   activityMode: ActivityMode,
   onRangeChange: (ActivityRange) -> Unit,
   onEditDailyMemo: (DailyMemoInfo, String) -> Unit,
+  onDeleteDailyMemo: (DailyMemoInfo) -> Unit,
   onCreateDailyMemo: (String) -> Unit,
   useVerticalScroll: Boolean = true,
   isRefreshing: Boolean = false,
   onRefresh: () -> Unit = {},
   enablePullRefresh: Boolean = true
 ) {
-  var editingMemo by remember { mutableStateOf<DailyMemoInfo?>(null) }
-  var editingContent by remember { mutableStateOf("") }
   var habitsEditorDay by remember { mutableStateOf<ContributionDay?>(null) }
   var habitsEditorSelections by remember { mutableStateOf<Map<String, Boolean>>(emptyMap()) }
   var habitsEditorExisting by remember { mutableStateOf<DailyMemoInfo?>(null) }
@@ -109,108 +107,110 @@ fun StatsScreen(
       verticalArrangement = Arrangement.spacedBy(12.dp),
       modifier = columnModifier
     ) {
-    Row(
-      modifier = Modifier.fillMaxWidth(),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-      Text("Activity", style = MaterialTheme.typography.titleMedium)
-      Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-        if (activityMode == ActivityMode.Habits) {
-          TextButton(onClick = { showHabitsConfig = !showHabitsConfig }) {
-            Text("Habits config")
-          }
-        }
-        ActivityRangeSelector(
-          years = years,
-          selectedRange = range,
-          onRangeChange = onRangeChange
-        )
-      }
-    }
-    if (activityMode == ActivityMode.Habits && showHabitsConfig) {
-      HabitsConfigCard(habitsConfig = habitsConfig)
-    }
-    val weekData = rememberActivityWeekData(memos, range, activityMode)
-    val showWeekdayLegend = range is ActivityRange.Last90Days
-    val collapseHabits = activityMode == ActivityMode.Habits && range is ActivityRange.Last90Days
-    var selectedWeek by remember(weekData.weeks) { mutableStateOf<ActivityWeek?>(null) }
-    var selectedDate by remember(weekData.weeks) { mutableStateOf(weekData.weeks.lastOrNull()?.days?.lastOrNull()?.date) }
-    val selectedDay = remember(weekData.weeks, selectedDate) {
-      selectedDate?.let { date -> findDayByDate(weekData, date) }
-    }
-    val chartScrollState = rememberScrollState()
-
-    ContributionGrid(
-      weekData = weekData,
-      selectedDay = selectedDay,
-      selectedWeekStart = if (activityMode == ActivityMode.Posts) selectedWeek?.startDate else null,
-      onDaySelected = { day ->
-        selectedDate = day.date
-        if (activityMode == ActivityMode.Posts) {
-          selectedWeek = weekData.weeks.firstOrNull { week ->
-            week.days.any { it.date == day.date }
-          }
-        }
-      },
-      onEditRequested = { memo ->
-        editingMemo = memo
-        editingContent = memo.content
-      },
-      onCreateRequested = { day ->
-        habitsEditorDay = day
-        habitsEditorExisting = day.dailyMemo
-        habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
-      },
-      scrollState = chartScrollState,
-      showWeekdayLegend = showWeekdayLegend,
-      compactHeight = range is ActivityRange.Last90Days
-    )
-
-    if (collapseHabits && habitsConfig.isNotEmpty()) {
-      OutlinedButton(
-        onClick = { showHabitDetails = !showHabitDetails },
-        modifier = Modifier.fillMaxWidth()
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
       ) {
-        Text(if (showHabitDetails) "Hide habit details" else "Show habit details")
-      }
-    }
-
-    if (activityMode == ActivityMode.Posts) {
-      WeeklyBarChart(
-        weekData = weekData,
-        selectedWeek = selectedWeek,
-        onWeekSelected = { week ->
-          selectedWeek = if (selectedWeek?.startDate == week.startDate) null else week
-        selectedDate = selectedDate?.takeIf { date ->
-          week.days.any { it.date == date }
+        Text("Activity", style = MaterialTheme.typography.titleMedium)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+          if (activityMode == ActivityMode.Habits) {
+            TextButton(onClick = { showHabitsConfig = !showHabitsConfig }) {
+              Text("Habits config")
+            }
+          }
+          ActivityRangeSelector(
+            years = years,
+            selectedRange = range,
+            onRangeChange = onRangeChange
+          )
         }
-      },
-      scrollState = chartScrollState
-    )
-    }
+      }
+      if (activityMode == ActivityMode.Habits && showHabitsConfig) {
+        HabitsConfigCard(habitsConfig = habitsConfig)
+      }
+      val weekData = rememberActivityWeekData(memos, range, activityMode)
+      val showWeekdayLegend = range is ActivityRange.Last90Days
+      val collapseHabits = activityMode == ActivityMode.Habits && range is ActivityRange.Last90Days
+      var selectedWeek by remember(weekData.weeks) { mutableStateOf<ActivityWeek?>(null) }
+      var selectedDate by remember(weekData.weeks) { mutableStateOf(weekData.weeks.lastOrNull()?.days?.lastOrNull()?.date) }
+      val selectedDay = remember(weekData.weeks, selectedDate) {
+        selectedDate?.let { date -> findDayByDate(weekData, date) }
+      }
+      val chartScrollState = rememberScrollState()
 
-    if (activityMode == ActivityMode.Habits && habitsConfig.isNotEmpty() && (!collapseHabits || showHabitDetails)) {
-      habitsConfig.forEach { habit ->
-        HabitActivitySection(
-          label = habit,
-          baseWeekData = weekData,
-          selectedDate = selectedDate,
-          onDaySelected = { day -> selectedDate = day.date },
-          onEditRequested = { memo ->
-            editingMemo = memo
-            editingContent = memo.content
+      ContributionGrid(
+        weekData = weekData,
+        selectedDay = selectedDay,
+        selectedWeekStart = if (activityMode == ActivityMode.Posts) selectedWeek?.startDate else null,
+        onDaySelected = { day ->
+          selectedDate = day.date
+          if (activityMode == ActivityMode.Posts) {
+            selectedWeek = weekData.weeks.firstOrNull { week ->
+              week.days.any { it.date == day.date }
+            }
+          }
+        },
+        onEditRequested = { day ->
+          habitsEditorDay = day
+          habitsEditorExisting = day.dailyMemo
+          habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+        },
+        onCreateRequested = { day ->
+          habitsEditorDay = day
+          habitsEditorExisting = day.dailyMemo
+          habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+        },
+        scrollState = chartScrollState,
+        showWeekdayLegend = showWeekdayLegend,
+        compactHeight = range is ActivityRange.Last90Days
+      )
+
+      if (collapseHabits && habitsConfig.isNotEmpty()) {
+        OutlinedButton(
+          onClick = { showHabitDetails = !showHabitDetails },
+          modifier = Modifier.fillMaxWidth()
+        ) {
+          Text(if (showHabitDetails) "Hide habit details" else "Show habit details")
+        }
+      }
+
+      if (activityMode == ActivityMode.Posts) {
+        WeeklyBarChart(
+          weekData = weekData,
+          selectedWeek = selectedWeek,
+          onWeekSelected = { week ->
+            selectedWeek = if (selectedWeek?.startDate == week.startDate) null else week
+            selectedDate = selectedDate?.takeIf { date ->
+              week.days.any { it.date == date }
+            }
           },
-          onCreateRequested = { day ->
-            habitsEditorDay = day
-            habitsEditorExisting = day.dailyMemo
-            habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
-          },
-          showWeekdayLegend = showWeekdayLegend,
-          compactHeight = range is ActivityRange.Last90Days
+          scrollState = chartScrollState
         )
       }
-    }
+
+      if (activityMode == ActivityMode.Habits && habitsConfig.isNotEmpty() && (!collapseHabits || showHabitDetails)) {
+        habitsConfig.forEach { habit ->
+          HabitActivitySection(
+            label = habit,
+            baseWeekData = weekData,
+            selectedDate = selectedDate,
+            onDaySelected = { day -> selectedDate = day.date },
+            onEditRequested = { day ->
+              habitsEditorDay = day
+              habitsEditorExisting = day.dailyMemo
+              habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+            },
+            onCreateRequested = { day ->
+              habitsEditorDay = day
+              habitsEditorExisting = day.dailyMemo
+              habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+            },
+            showWeekdayLegend = showWeekdayLegend,
+            compactHeight = range is ActivityRange.Last90Days
+          )
+        }
+      }
     }
 
     if (activityMode == ActivityMode.Habits && habitsConfig.isNotEmpty()) {
@@ -238,38 +238,6 @@ fun StatsScreen(
         modifier = Modifier.align(Alignment.TopCenter)
       )
     }
-  }
-
-  if (editingMemo != null) {
-    AlertDialog(
-      onDismissRequest = { editingMemo = null },
-      title = { Text("Edit day") },
-      text = {
-        TextField(
-          value = editingContent,
-          onValueChange = { editingContent = it },
-          modifier = Modifier.fillMaxWidth()
-        )
-      },
-      confirmButton = {
-        Button(
-          onClick = {
-            val memo = editingMemo
-            if (memo != null) {
-              onEditDailyMemo(memo, editingContent)
-            }
-            editingMemo = null
-          }
-        ) {
-          Text("Save")
-        }
-      },
-      dismissButton = {
-        TextButton(onClick = { editingMemo = null }) {
-          Text("Cancel")
-        }
-      }
-    )
   }
 
   if (habitsEditorDay != null) {
@@ -325,11 +293,25 @@ fun StatsScreen(
         }
       },
       dismissButton = {
-        TextButton(onClick = {
-          habitsEditorDay = null
-          habitsEditorExisting = null
-        }) {
-          Text("Cancel")
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+          if (isEditing) {
+            TextButton(onClick = {
+              val existing = habitsEditorExisting
+              if (existing != null) {
+                onDeleteDailyMemo(existing)
+              }
+              habitsEditorDay = null
+              habitsEditorExisting = null
+            }) {
+              Text("Delete")
+            }
+          }
+          TextButton(onClick = {
+            habitsEditorDay = null
+            habitsEditorExisting = null
+          }) {
+            Text("Cancel")
+          }
         }
       }
     )
@@ -356,7 +338,7 @@ private fun HabitActivitySection(
   baseWeekData: space.be1ski.memos.shared.presentation.components.ActivityWeekData,
   selectedDate: kotlinx.datetime.LocalDate?,
   onDaySelected: (ContributionDay) -> Unit,
-  onEditRequested: (DailyMemoInfo) -> Unit,
+  onEditRequested: (ContributionDay) -> Unit,
   onCreateRequested: (ContributionDay) -> Unit,
   showWeekdayLegend: Boolean,
   compactHeight: Boolean

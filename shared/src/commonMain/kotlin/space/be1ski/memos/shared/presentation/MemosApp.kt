@@ -120,6 +120,9 @@ fun MemosApp() {
             onEditDailyMemo = { memo, content ->
               viewModel.updateDailyMemo(memo.name, content)
             },
+            onDeleteDailyMemo = { memo ->
+              viewModel.deleteDailyMemo(memo.name)
+            },
             onCreateDailyMemo = { content ->
               viewModel.createDailyMemo(content)
             },

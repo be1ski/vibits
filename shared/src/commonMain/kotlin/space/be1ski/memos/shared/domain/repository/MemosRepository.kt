@@ -20,4 +20,9 @@ interface MemosRepository {
    * Creates a new memo and returns it.
    */
   suspend fun createMemo(content: String): Memo
+
+  /**
+   * Deletes a memo by name.
+   */
+  suspend fun deleteMemo(name: String)
 }

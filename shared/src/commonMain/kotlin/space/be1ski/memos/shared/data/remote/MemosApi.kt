@@ -2,6 +2,7 @@ package space.be1ski.memos.shared.data.remote
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.patch
 import io.ktor.client.request.post
@@ -74,5 +75,19 @@ class MemosApi(
       contentType(ContentType.Application.Json)
       setBody(CreateMemoRequestDto(content = content))
     }.body()
+  }
+
+  /**
+   * Deletes a memo by name.
+   */
+  suspend fun deleteMemo(
+    baseUrl: String,
+    token: String,
+    name: String
+  ) {
+    val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
+    httpClient.delete("$normalizedBaseUrl/api/v1/$name") {
+      header(HttpHeaders.Authorization, "Bearer $token")
+    }
   }
 }

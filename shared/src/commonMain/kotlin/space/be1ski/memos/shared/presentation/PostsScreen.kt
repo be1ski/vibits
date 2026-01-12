@@ -50,6 +50,7 @@ fun PostsScreen(
           activityMode = ActivityMode.Posts,
           onRangeChange = onRangeChange,
           onEditDailyMemo = { _, _ -> },
+          onDeleteDailyMemo = {},
           onCreateDailyMemo = {},
           useVerticalScroll = false,
           isRefreshing = isRefreshing,
