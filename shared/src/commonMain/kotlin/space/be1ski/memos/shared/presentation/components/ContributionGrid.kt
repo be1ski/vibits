@@ -386,7 +386,7 @@ data class ActivityWeekData(
  * Habit completion status for a single habit tag.
  */
 data class HabitStatus(
-  /** Habit tag, e.g. #habit/зарядка. */
+  /** Habit tag, e.g. #habits/зарядка. */
   val tag: String,
   /** Habit label for display. */
   val label: String,
@@ -398,7 +398,7 @@ data class HabitStatus(
  * Habit configuration entry.
  */
 data class HabitConfig(
-  /** Habit tag, e.g. #habit/зарядка. */
+  /** Habit tag, e.g. #habits/зарядка. */
   val tag: String,
   /** User-friendly label. */
   val label: String
@@ -418,7 +418,7 @@ data class DailyMemoInfo(
  * Activity visualization modes.
  */
 enum class ActivityMode {
-  /** Habit completion based on #daily + #habits_config. */
+  /** Habit completion based on #habits/daily + #habits/config. */
   Habits,
   /** Raw post count per day. */
   Posts
@@ -681,7 +681,7 @@ fun availableYears(
 
 private fun extractHabitsConfig(memos: List<Memo>, timeZone: TimeZone): List<HabitConfig> {
   val tagged = memos.filter { memo ->
-    memo.content.contains("#habits_config")
+    memo.content.contains("#habits/config") || memo.content.contains("#habits_config")
   }
   val sorted = tagged.sortedByDescending { memo ->
     parseMemoDate(memo, timeZone) ?: LocalDate(1970, 1, 1)
@@ -690,7 +690,7 @@ private fun extractHabitsConfig(memos: List<Memo>, timeZone: TimeZone): List<Hab
   val lines = config.content.lineSequence()
     .map { it.trim() }
     .filter { it.isNotBlank() }
-    .filterNot { it.startsWith("#habits_config") }
+    .filterNot { it.startsWith("#habits/config") || it.startsWith("#habits_config") }
   return lines.mapNotNull { line ->
     parseHabitConfigLine(line)
   }.distinctBy { it.tag }
@@ -737,7 +737,9 @@ private fun extractDailyMemos(
   memos: List<Memo>,
   timeZone: TimeZone
 ): Map<LocalDate, DailyMemoInfo> {
-  val dailyMemos = memos.filter { memo -> memo.content.contains("#daily") }
+  val dailyMemos = memos.filter { memo ->
+    memo.content.contains("#habits/daily") || memo.content.contains("#daily")
+  }
   val latestByDate = mutableMapOf<LocalDate, DailyMemoRecord>()
   dailyMemos.forEach { memo ->
     val date = parseDailyDateFromContent(memo.content) ?: parseMemoDate(memo, timeZone) ?: return@forEach
@@ -770,7 +772,7 @@ private fun parseHabitConfigLine(line: String): HabitConfig? {
   val (label, tagRaw) = if (parts.size == 1) {
     val raw = parts.first()
     val tag = normalizeHabitTag(raw)
-    val label = if (raw.startsWith("#habit/")) labelFromTag(tag) else raw
+    val label = if (raw.startsWith("#habits/") || raw.startsWith("#habit/")) labelFromTag(tag) else raw
     label to tag
   } else {
     val label = parts[0]
@@ -782,13 +784,13 @@ private fun parseHabitConfigLine(line: String): HabitConfig? {
 
 private fun normalizeHabitTag(raw: String): String {
   val trimmed = raw.trim()
-  val withoutPrefix = trimmed.removePrefix("#habit/")
+  val withoutPrefix = trimmed.removePrefix("#habits/").removePrefix("#habit/")
   val sanitized = withoutPrefix.replace("\\s+".toRegex(), "_")
-  return "#habit/$sanitized"
+  return "#habits/$sanitized"
 }
 
 private fun labelFromTag(tag: String): String {
-  return tag.removePrefix("#habit/").replace('_', ' ')
+  return tag.removePrefix("#habits/").removePrefix("#habit/").replace('_', ' ')
 }
 
 internal fun buildHabitStatuses(content: String?, habits: List<HabitConfig>): List<HabitStatus> {
@@ -823,14 +825,14 @@ private fun extractHabitTagsFromContent(content: String?): Set<String> {
   if (content.isNullOrBlank()) {
     return emptySet()
   }
-  return Regex("#habit/[^\\s]+")
+  return Regex("#habits/[^\\s]+")
     .findAll(content)
     .map { it.value }
     .toSet()
 }
 
 private fun parseDailyDateFromContent(content: String): LocalDate? {
-  if (!content.contains("#daily")) {
+  if (!content.contains("#habits/daily") && !content.contains("#daily")) {
     return null
   }
   val match = Regex("\\b(\\d{4}-\\d{2}-\\d{2})\\b").find(content) ?: return null

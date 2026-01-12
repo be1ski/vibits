@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -88,6 +89,15 @@ fun StatsScreen(
       dailyMemo = todayMemo
     )
   }
+  val weekData = rememberActivityWeekData(memos, range, activityMode)
+  val showWeekdayLegend = range is ActivityRange.Last90Days
+  val collapseHabits = activityMode == ActivityMode.Habits && range is ActivityRange.Last90Days
+  var selectedWeek by remember { mutableStateOf<ActivityWeek?>(null) }
+  var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+  var activeSelectionId by remember { mutableStateOf<String?>(null) }
+  val selectedDay = remember(weekData.weeks, selectedDate) {
+    selectedDate?.let { date -> findDayByDate(weekData, date) }
+  }
 
   val columnModifier = if (useVerticalScroll) {
     Modifier.verticalScroll(rememberScrollState())
@@ -100,8 +110,13 @@ fun StatsScreen(
   } else {
     Modifier
   }
-  var activeSelectionId by remember { mutableStateOf<String?>(null) }
   val currentConfigText = remember(habitsConfig) { habitsConfig.joinToString("\n") { "${it.label} | ${it.tag}" } }
+
+  LaunchedEffect(weekData.weeks) {
+    if (selectedDate == null && activeSelectionId == null) {
+      selectedDate = weekData.weeks.lastOrNull()?.days?.lastOrNull()?.date
+    }
+  }
 
   if (showHabitsConfig && habitsConfigText.isBlank()) {
     habitsConfigText = currentConfigText
@@ -151,14 +166,6 @@ fun StatsScreen(
             }
           }
         )
-      }
-      val weekData = rememberActivityWeekData(memos, range, activityMode)
-      val showWeekdayLegend = range is ActivityRange.Last90Days
-      val collapseHabits = activityMode == ActivityMode.Habits && range is ActivityRange.Last90Days
-      var selectedWeek by remember(weekData.weeks) { mutableStateOf<ActivityWeek?>(null) }
-      var selectedDate by remember(weekData.weeks) { mutableStateOf(weekData.weeks.lastOrNull()?.days?.lastOrNull()?.date) }
-      val selectedDay = remember(weekData.weeks, selectedDate) {
-        selectedDate?.let { date -> findDayByDate(weekData, date) }
       }
       val chartScrollState = rememberScrollState()
 
@@ -233,16 +240,16 @@ fun StatsScreen(
               selectedDate = null
               activeSelectionId = null
             },
-          onEditRequested = { day ->
-            habitsEditorDay = day
-            habitsEditorExisting = day.dailyMemo
-            habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
-          },
-          onCreateRequested = { day ->
-            habitsEditorDay = day
-            habitsEditorExisting = day.dailyMemo
-            habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
-          },
+            onEditRequested = { day ->
+              habitsEditorDay = day
+              habitsEditorExisting = day.dailyMemo
+              habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+            },
+            onCreateRequested = { day ->
+              habitsEditorDay = day
+              habitsEditorExisting = day.dailyMemo
+              habitsEditorSelections = buildHabitsEditorSelections(day, habitsConfig)
+            },
             isActiveSelection = activeSelectionId == "habit:${habit.tag}",
             showWeekdayLegend = showWeekdayLegend,
             compactHeight = range is ActivityRange.Last90Days
@@ -288,15 +295,6 @@ fun StatsScreen(
       title = { Text(if (isEditing) "Update day" else "Create day") },
       text = {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-          val allChecked = habitsEditorSelections.values.all { it }
-          TextButton(
-            onClick = {
-              val mark = !allChecked
-              habitsEditorSelections = habitsEditorSelections.mapValues { mark }
-            }
-          ) {
-            Text(if (allChecked) "Clear all" else "Check all")
-          }
           if (habitsConfig.isNotEmpty()) {
             habitsConfig.forEach { habit ->
               val tag = habit.tag
@@ -333,17 +331,20 @@ fun StatsScreen(
             if (day != null) {
               val content = buildDailyContent(day.date, habitsConfig, habitsEditorSelections)
               val existing = habitsEditorExisting
-              if (existing != null) {
-                onEditDailyMemo(existing, content)
-              } else {
-                onCreateDailyMemo(content)
-              }
-            }
-            habitsEditorDay = null
-            habitsEditorExisting = null
+          if (existing != null) {
+            onEditDailyMemo(existing, content)
+          } else {
+            onCreateDailyMemo(content)
           }
-        ) {
-          Text(if (isEditing) "Update" else "Create")
+        }
+        selectedDate = null
+        selectedWeek = null
+        activeSelectionId = null
+        habitsEditorDay = null
+        habitsEditorExisting = null
+      }
+    ) {
+      Text(if (isEditing) "Update" else "Create")
         }
       },
       dismissButton = {
@@ -354,6 +355,9 @@ fun StatsScreen(
               if (existing != null) {
                 onDeleteDailyMemo(existing)
               }
+              selectedDate = null
+              selectedWeek = null
+              activeSelectionId = null
               habitsEditorDay = null
               habitsEditorExisting = null
             }) {
@@ -384,7 +388,7 @@ private fun HabitsConfigCard(
       value = habitsConfigText,
       onValueChange = onConfigChange,
       modifier = Modifier.fillMaxWidth(),
-      placeholder = { Text("#habit/зарядка\n#habit/сон") }
+      placeholder = { Text("Гимнастика | #habits/gym\nЧтение | #habits/reading") }
     )
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
       Button(onClick = onSave) {
@@ -516,17 +520,20 @@ private fun buildDailyContent(
   selections: Map<String, Boolean>
 ): String {
   return buildString {
-    append("#daily ").append(date).append("\n\n")
+    append("#habits/daily ").append(date).append("\n\n")
     habitsConfig.forEach { habit ->
       val done = selections[habit.tag] == true
-      val mark = if (done) "x" else " "
-      append("- [").append(mark).append("] ").append(habit.tag).append('\n')
+      if (done) {
+        append("- [x] ").append(habit.tag).append('\n')
+      }
     }
   }
 }
 
 private fun findHabitsConfigMemo(memos: List<Memo>): Memo? {
-  return memos.filter { memo -> memo.content.contains("#habits_config") }
+  return memos.filter { memo ->
+    memo.content.contains("#habits/config") || memo.content.contains("#habits_config")
+  }
     .maxByOrNull { memo ->
       memo.updateTime?.toEpochMilliseconds() ?: memo.createTime?.toEpochMilliseconds() ?: 0L
     }
@@ -539,7 +546,7 @@ private fun buildHabitsConfigContent(rawText: String): String {
     .mapNotNull { parseHabitConfigLine(it) }
     .toList()
   return buildString {
-    append("#habits_config\n\n")
+    append("#habits/config\n\n")
     entries.forEach { entry ->
       append(entry.label).append(" | ").append(entry.tag).append('\n')
     }
@@ -554,7 +561,7 @@ private fun parseHabitConfigLine(line: String): space.be1ski.memos.shared.presen
   val (label, tagRaw) = if (parts.size == 1) {
     val raw = parts.first()
     val tag = normalizeHabitTag(raw)
-    val label = if (raw.startsWith("#habit/")) labelFromTag(tag) else raw
+    val label = if (raw.startsWith("#habits/") || raw.startsWith("#habit/")) labelFromTag(tag) else raw
     label to tag
   } else {
     val label = parts[0]
@@ -565,13 +572,13 @@ private fun parseHabitConfigLine(line: String): space.be1ski.memos.shared.presen
 }
 
 private fun normalizeHabitTag(raw: String): String {
-  val trimmed = raw.trim().removePrefix("#habit/")
+  val trimmed = raw.trim().removePrefix("#habits/").removePrefix("#habit/")
   val sanitized = trimmed.replace("\\s+".toRegex(), "_")
-  return "#habit/$sanitized"
+  return "#habits/$sanitized"
 }
 
 private fun labelFromTag(tag: String): String {
-  return tag.removePrefix("#habit/").replace('_', ' ')
+  return tag.removePrefix("#habits/").removePrefix("#habit/").replace('_', ' ')
 }
 
 private fun buildHabitDay(
