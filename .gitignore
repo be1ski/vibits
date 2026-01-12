@@ -13,3 +13,4 @@ local.properties
 *.hprof
 *.log
 *.keystore
+kotlin-js-store/

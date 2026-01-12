@@ -16,6 +16,9 @@ kotlin {
     minSdk = 31
   }
   jvm("desktop")
+  wasmJs {
+    browser()
+  }
   val iosX64Target = iosX64()
   val iosArm64Target = iosArm64()
   val iosSimulatorArm64Target = iosSimulatorArm64()
@@ -73,6 +76,11 @@ kotlin {
     val iosX64Main by getting { dependsOn(iosMain) }
     val iosArm64Main by getting { dependsOn(iosMain) }
     val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
+    val wasmJsMain by getting {
+      dependencies {
+        implementation(libs.ktor.client.js)
+      }
+    }
   }
 }
 

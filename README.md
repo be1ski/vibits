@@ -7,6 +7,8 @@ Cross-platform client for Memos built with Kotlin Multiplatform and Compose Mult
 - `shared/` - KMP shared code: networking, models, UI, DI, and platform abstractions.
 - `androidApp/` - Android app wrapper for shared UI.
 - `desktopApp/` - Desktop app wrapper for shared UI.
+- `iosApp/` - iOS app wrapper that hosts the shared UI via XCFramework.
+- `webApp/` - Web entry point for the shared UI (Wasm).
 
 ## Structure overview
 
@@ -19,6 +21,8 @@ Cross-platform client for Memos built with Kotlin Multiplatform and Compose Mult
 │   └── src/iosMain/kotlin/... (iOS specifics)
 ├── androidApp/ (Android entry)
 ├── desktopApp/ (Desktop entry)
+├── iosApp/ (iOS entry)
+├── webApp/ (Web entry)
 ```
 
 ## Quick start
@@ -34,3 +38,17 @@ Cross-platform client for Memos built with Kotlin Multiplatform and Compose Mult
 ```bash
 ./gradlew :androidApp:installDebug
 ```
+
+### Web
+
+```bash
+./gradlew :webApp:wasmJsBrowserDevelopmentRun
+```
+
+### iOS
+
+```bash
+./gradlew :shared:assembleSharedDebugXCFramework
+```
+
+Then add `shared/build/XCFrameworks/debug/shared.xcframework` to the Xcode target and run from Xcode.
