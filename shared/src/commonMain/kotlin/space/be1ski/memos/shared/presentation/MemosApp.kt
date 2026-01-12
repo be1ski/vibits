@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -44,12 +45,15 @@ import org.koin.compose.koinInject
 import space.be1ski.memos.shared.domain.model.Memo
 import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.ActivityMode
+import space.be1ski.memos.shared.presentation.components.ActivityWeek
 import space.be1ski.memos.shared.presentation.components.ContributionDay
 import space.be1ski.memos.shared.presentation.components.ContributionGrid
 import space.be1ski.memos.shared.presentation.components.DailyMemoInfo
 import space.be1ski.memos.shared.presentation.components.WeeklyBarChart
 import space.be1ski.memos.shared.presentation.components.availableYears
+import space.be1ski.memos.shared.presentation.components.lastSevenDays
 import space.be1ski.memos.shared.presentation.components.rememberActivityWeekData
+import space.be1ski.memos.shared.presentation.components.rememberHabitsConfig
 import space.be1ski.memos.shared.presentation.state.MemosUiState
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 
@@ -167,6 +171,7 @@ private fun StatsScreen(
   var editingContent by remember { mutableStateOf("") }
   var creatingDay by remember { mutableStateOf<ContributionDay?>(null) }
   var creatingSelections by remember { mutableStateOf<Map<String, Boolean>>(emptyMap()) }
+  val habitsConfig = rememberHabitsConfig(memos)
 
   Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
     Row(
@@ -180,6 +185,23 @@ private fun StatsScreen(
         selectedRange = range,
         onRangeChange = onRangeChange
       )
+    }
+    if (activityMode == ActivityMode.Habits) {
+      Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
+        Column(
+          modifier = Modifier.padding(12.dp),
+          verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+          Text("Habits config", style = MaterialTheme.typography.titleSmall)
+          if (habitsConfig.isEmpty()) {
+            Text("No #habits_config found", style = MaterialTheme.typography.bodySmall)
+          } else {
+            habitsConfig.forEach { habit ->
+              Text(habit, style = MaterialTheme.typography.bodySmall)
+            }
+          }
+        }
+      }
     }
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
       val habitsSelected = activityMode == ActivityMode.Habits
@@ -197,18 +219,16 @@ private fun StatsScreen(
       }
     }
     val weekData = rememberActivityWeekData(memos, range, activityMode)
-    var selectedWeek by remember(weekData.weeks, activityMode) { mutableStateOf(weekData.weeks.lastOrNull()) }
+    var selectedWeek by remember(weekData.weeks, activityMode) { mutableStateOf<ActivityWeek?>(null) }
     var selectedDay by remember(weekData.weeks, activityMode) { mutableStateOf(weekData.weeks.lastOrNull()?.days?.lastOrNull()) }
     val chartScrollState = rememberScrollState()
+    LastSevenDaysCard(days = lastSevenDays(weekData), mode = activityMode)
     ContributionGrid(
       weekData = weekData,
       selectedDay = selectedDay,
       selectedWeekStart = selectedWeek?.startDate,
       onDaySelected = { day ->
         selectedDay = day
-        selectedWeek = weekData.weeks.firstOrNull { week ->
-          week.days.any { it.date == day.date }
-        } ?: selectedWeek
       },
       onEditRequested = { memo ->
         editingMemo = memo
@@ -224,7 +244,7 @@ private fun StatsScreen(
       weekData = weekData,
       selectedWeek = selectedWeek,
       onWeekSelected = { week ->
-        selectedWeek = week
+        selectedWeek = if (selectedWeek?.startDate == week.startDate) null else week
         selectedDay = selectedDay?.takeIf { day ->
           week.days.any { it.date == day.date }
         }
@@ -310,6 +330,55 @@ private fun StatsScreen(
         }
       }
     )
+  }
+}
+
+@Composable
+private fun LastSevenDaysCard(
+  days: List<ContributionDay>,
+  mode: ActivityMode
+) {
+  if (days.isEmpty()) {
+    return
+  }
+  val totalHabits = days.maxOfOrNull { it.totalHabits } ?: 0
+  val fullDays = if (mode == ActivityMode.Habits && totalHabits > 0) {
+    days.count { it.count >= totalHabits }
+  } else {
+    days.count { it.count > 0 }
+  }
+  val avgRatio = if (mode == ActivityMode.Habits && totalHabits > 0) {
+    days.sumOf { it.completionRatio.toDouble() } / days.size.toDouble()
+  } else {
+    0.0
+  }
+
+  Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
+    Column(
+      modifier = Modifier.padding(12.dp),
+      verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+      Text("Last 7 days", style = MaterialTheme.typography.titleSmall)
+      if (mode == ActivityMode.Habits && totalHabits > 0) {
+        Text("Full days: $fullDays/7 · Avg: ${(avgRatio * 100).toInt()}%", style = MaterialTheme.typography.bodySmall)
+      } else {
+        Text("Active days: $fullDays/7", style = MaterialTheme.typography.bodySmall)
+      }
+      Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        days.forEach { day ->
+          val label = day.date.day.toString()
+          val text = if (mode == ActivityMode.Habits && day.totalHabits > 0) {
+            "${day.count}/${day.totalHabits}"
+          } else {
+            day.count.toString()
+          }
+          Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(label, style = MaterialTheme.typography.labelSmall)
+            Text(text, style = MaterialTheme.typography.labelSmall)
+          }
+        }
+      }
+    }
   }
 }
 

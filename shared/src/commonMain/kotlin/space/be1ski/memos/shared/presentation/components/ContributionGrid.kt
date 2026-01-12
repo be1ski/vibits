@@ -223,6 +223,17 @@ fun rememberActivityWeekData(
   }
 }
 
+@Composable
+/**
+ * Memoized builder for habits config tags.
+ */
+fun rememberHabitsConfig(memos: List<Memo>): List<String> {
+  val timeZone = remember { TimeZone.currentSystemDefault() }
+  return remember(memos, timeZone) {
+    extractHabitsConfig(memos, timeZone)
+  }
+}
+
 /**
  * Per-day activity entry.
  */
@@ -571,6 +582,14 @@ private fun extractHabitsConfig(memos: List<Memo>, timeZone: TimeZone): List<Str
     .map { it.value }
     .distinct()
     .toList()
+}
+
+/**
+ * Returns the last 7 in-range days, newest last.
+ */
+fun lastSevenDays(weekData: ActivityWeekData): List<ContributionDay> {
+  val days = weekData.weeks.flatMap { it.days }.filter { it.inRange }
+  return days.takeLast(7)
 }
 
 private fun extractDailyMemos(
