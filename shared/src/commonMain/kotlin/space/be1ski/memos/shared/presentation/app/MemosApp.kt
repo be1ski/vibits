@@ -10,11 +10,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Tab
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,6 +56,7 @@ fun MemosApp() {
 
   MemosAppContent(uiState, appState, viewModel, years)
   CredentialsDialog(uiState, appState, viewModel)
+  MemoCreateDialog(appState, viewModel)
 }
 @Composable
 private fun SyncAutoLoad(
@@ -88,7 +94,20 @@ private fun MemosAppContent(
   years: List<Int>
 ) {
   MaterialTheme {
-    Scaffold { padding ->
+    Scaffold(
+      floatingActionButton = {
+        if (memosFabModeForTab(appState.selectedTab) == MemosFabMode.Memo) {
+          FloatingActionButton(
+            onClick = { appState.showCreateMemoDialog = true }
+          ) {
+            Icon(
+              imageVector = Icons.Filled.Edit,
+              contentDescription = "Create memo"
+            )
+          }
+        }
+      }
+    ) { padding ->
       Column(
         modifier = Modifier
           .padding(padding)
@@ -175,7 +194,7 @@ private fun MemosTabContent(
         onRangeChange = { appState.activityRange = it },
         onEditDailyMemo = { memo, content -> viewModel.updateDailyMemo(memo.name, content) },
         onDeleteDailyMemo = { memo -> viewModel.deleteDailyMemo(memo.name) },
-        onCreateDailyMemo = { content -> viewModel.createDailyMemo(content) }
+        onCreateDailyMemo = { content -> viewModel.createMemo(content) }
       )
     )
     1 -> PostsScreen(
@@ -191,4 +210,49 @@ private fun MemosTabContent(
       enablePullRefresh = !isDesktop
     )
   }
+}
+
+@Composable
+private fun MemoCreateDialog(appState: MemosAppUiState, viewModel: MemosViewModel) {
+  if (!appState.showCreateMemoDialog) {
+    return
+  }
+  AlertDialog(
+    onDismissRequest = {
+      appState.showCreateMemoDialog = false
+      appState.createMemoContent = ""
+    },
+    title = { Text("New memo") },
+    text = {
+      TextField(
+        value = appState.createMemoContent,
+        onValueChange = { appState.createMemoContent = it },
+        placeholder = { Text("Write a memo...") },
+        modifier = Modifier.fillMaxWidth()
+      )
+    },
+    confirmButton = {
+      val content = appState.createMemoContent.trim()
+      Button(
+        onClick = {
+          viewModel.createMemo(content)
+          appState.showCreateMemoDialog = false
+          appState.createMemoContent = ""
+        },
+        enabled = content.isNotBlank()
+      ) {
+        Text("Create")
+      }
+    },
+    dismissButton = {
+      TextButton(
+        onClick = {
+          appState.showCreateMemoDialog = false
+          appState.createMemoContent = ""
+        }
+      ) {
+        Text("Cancel")
+      }
+    }
+  )
 }

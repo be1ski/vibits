@@ -153,7 +153,7 @@ class MemosViewModelTest {
     advanceUntilIdle()
     assertTrue(viewModel.uiState.memos.any { it.content == "Updated" })
 
-    viewModel.createDailyMemo("Created")
+    viewModel.createMemo("Created")
     advanceUntilIdle()
     assertTrue(viewModel.uiState.memos.any { it.name == "memos/2" })
 

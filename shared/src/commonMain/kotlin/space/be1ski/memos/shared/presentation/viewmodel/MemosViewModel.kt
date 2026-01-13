@@ -169,9 +169,9 @@ class MemosViewModel(
   }
 
   /**
-   * Creates a new daily memo.
+   * Creates a new memo.
    */
-  fun createDailyMemo(content: String) {
+  fun createMemo(content: String) {
     setLoading(true)
     scope.launch {
       runCatching { createMemoUseCase(content) }

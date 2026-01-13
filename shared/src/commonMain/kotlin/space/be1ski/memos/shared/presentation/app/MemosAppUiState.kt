@@ -14,4 +14,6 @@ internal class MemosAppUiState {
   var credentialsDismissed by mutableStateOf(false)
   var editBaseUrl by mutableStateOf("")
   var editToken by mutableStateOf("")
+  var showCreateMemoDialog by mutableStateOf(false)
+  var createMemoContent by mutableStateOf("")
 }
