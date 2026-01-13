@@ -7,13 +7,13 @@ import space.be1ski.memos.shared.domain.model.memo.Memo
 /**
  * Desktop memo cache backed by Room.
  */
-actual class MemoCache {
+actual open class MemoCache {
   private val database: MemoDatabase by lazy { createDatabase() }
 
-  actual suspend fun readMemos(): List<Memo> =
+  actual open suspend fun readMemos(): List<Memo> =
     database.memoDao().loadAll().map(MemoEntityMapper::toDomain)
 
-  actual suspend fun replaceMemos(memos: List<Memo>) {
+  actual open suspend fun replaceMemos(memos: List<Memo>) {
     val dao = database.memoDao()
     dao.clearAll()
     if (memos.isNotEmpty()) {
@@ -21,11 +21,11 @@ actual class MemoCache {
     }
   }
 
-  actual suspend fun upsertMemo(memo: Memo) {
+  actual open suspend fun upsertMemo(memo: Memo) {
     database.memoDao().upsert(MemoEntityMapper.toEntity(memo))
   }
 
-  actual suspend fun deleteMemo(name: String) {
+  actual open suspend fun deleteMemo(name: String) {
     database.memoDao().deleteByName(name)
   }
 

@@ -43,6 +43,7 @@ koin-compose = { group = "io.insert-koin", name = "koin-compose", version.ref = 
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "datetime" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
@@ -51,6 +52,7 @@ ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref =
 ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
 ktor-client-js = { group = "io.ktor", name = "ktor-client-js", version.ref = "ktor" }
 ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktor" }
 ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 material-components = { group = "com.google.android.material", name = "material", version.ref = "material" }

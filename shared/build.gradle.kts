@@ -1,3 +1,4 @@
+import org.gradle.testing.jacoco.tasks.JacocoReport
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
@@ -8,6 +9,7 @@ plugins {
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.compose.multiplatform)
   alias(libs.plugins.ksp)
+  jacoco
 }
 
 kotlin {
@@ -62,7 +64,13 @@ kotlin {
         implementation(libs.androidx.room.runtime)
       }
     }
-    val commonTest by getting
+    val commonTest by getting {
+      dependencies {
+        implementation(kotlin("test"))
+        implementation(libs.ktor.client.mock)
+        implementation(libs.kotlinx.coroutines.test)
+      }
+    }
     val androidMain by getting {
       dependsOn(roomMain)
       dependencies {
@@ -107,5 +115,19 @@ dependencies {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
   compilerOptions {
     freeCompilerArgs.add("-Xexpect-actual-classes")
+  }
+}
+
+tasks.register<JacocoReport>("jacocoDesktopTestReport") {
+  dependsOn("desktopTest")
+  executionData.setFrom(fileTree(layout.buildDirectory).include("jacoco/desktopTest.exec"))
+  classDirectories.setFrom(fileTree(layout.buildDirectory.dir("classes/kotlin/desktop")) {
+    exclude("**/BuildConfig.*")
+  })
+  sourceDirectories.setFrom(files("src/commonMain/kotlin", "src/desktopMain/kotlin"))
+  reports {
+    html.required.set(true)
+    xml.required.set(true)
+    csv.required.set(false)
   }
 }

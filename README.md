@@ -60,3 +60,32 @@ Output: `desktopApp/build/compose/binaries/main/dmg/Memos-1.0.0.dmg`
 ```
 
 Then add `shared/build/XCFrameworks/debug/shared.xcframework` to the Xcode target and run from Xcode.
+
+## Testing and TDD
+
+We follow TDD for business logic and aim for high coverage (100% when practical).
+
+- Unit tests live in `shared/src/commonTest`.
+- Test names use backticks with `when ... then ...` phrasing and follow `given/when/then`.
+- Run unit tests with:
+  ```bash
+  ./gradlew :shared:desktopTest
+  ```
+- Generate a coverage report (JVM/desktop target):
+  ```bash
+  ./gradlew :shared:jacocoDesktopTestReport
+  ```
+  Output: `shared/build/reports/jacoco/jacocoDesktopTestReport/html/index.html`
+- Before every commit: run all tests, generate coverage, and update the coverage numbers below.
+
+## Dependencies
+
+- Keep Gradle dependencies and `gradle/libs.versions.toml` entries alphabetically sorted within each block.
+
+## Coverage
+
+Last updated: 2026-01-13
+Desktop (Jacoco):
+- Instructions: 23%
+- Branches: 12%
+- Lines: 844/2,703 (31%)

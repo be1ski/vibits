@@ -24,13 +24,18 @@ Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if a
 - Naming: PascalCase types, camelCase functions/vars, UPPER_SNAKE_CASE constants.
 - Avoid `!!`; keep composables small and focused.
 - Add KDoc to public types/functions.
+- Keep Gradle dependencies and `gradle/libs.versions.toml` entries alphabetically sorted within each block.
 
 ## Testing Guidelines
 
-No enforced test suite yet. If adding tests, place them under:
+We follow TDD for business logic and aim for high coverage (100% when practical).
 
-- `shared/src/commonTest` for shared KMP tests.
-- `androidApp/src/test` or `androidApp/src/androidTest` for Android.
+- Unit tests live in `shared/src/commonTest` for shared KMP logic.
+- Android-specific tests belong under `androidApp/src/test` or `androidApp/src/androidTest`.
+- Test names use backticks with `when ... then ...` phrasing; structure tests with `given/when/then`.
+- Run shared unit tests with `./gradlew :shared:desktopTest`.
+- Coverage reports come from `./gradlew :shared:jacocoDesktopTestReport`.
+- Before every commit: run all tests, generate coverage, and update the coverage numbers in `README.md`.
 
 ## Commit & Pull Request Guidelines
 
