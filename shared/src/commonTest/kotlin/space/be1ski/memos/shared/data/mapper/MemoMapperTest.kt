@@ -73,4 +73,18 @@ class MemoMapperTest {
 
     assertNull(memo.createTime)
   }
+
+  @Test
+  fun `when mapping list then preserves order and size`() {
+    val dtos = listOf(
+      MemoDto(name = "memos/1", content = "First"),
+      MemoDto(name = "memos/2", content = "Second")
+    )
+
+    val memos = mapper.toDomainList(dtos)
+
+    assertEquals(2, memos.size)
+    assertEquals("memos/1", memos.first().name)
+    assertEquals("memos/2", memos.last().name)
+  }
 }

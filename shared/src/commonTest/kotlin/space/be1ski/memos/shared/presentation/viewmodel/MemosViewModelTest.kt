@@ -183,6 +183,31 @@ class MemosViewModelTest {
     assertFalse(state.isLoading)
   }
 
+  @Test
+  fun `when editCredentials then populates stored values`() = runTest {
+    val repository = FakeMemosRepository()
+    repository.listMemosResult = Result.success(
+      listOf(Memo(name = "memos/1", content = "Existing"))
+    )
+    val credentials = Credentials(baseUrl = "https://example.com", token = "token")
+    val viewModel = buildViewModel(
+      credentials = credentials,
+      memosRepository = repository,
+      credentialsRepository = FakeCredentialsRepository(credentials)
+    )
+
+    viewModel.loadMemos()
+    advanceUntilIdle()
+
+    viewModel.editCredentials()
+
+    val state = viewModel.uiState
+    assertIs<MemosUiState.CredentialsInput>(state)
+    assertEquals("https://example.com", state.baseUrl)
+    assertEquals("token", state.token)
+    assertEquals(1, state.memos.size)
+  }
+
   private fun buildViewModel(
     credentials: Credentials,
     cachedMemos: List<Memo> = emptyList(),
