@@ -7,6 +7,7 @@ plugins {
   alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.compose.multiplatform)
+  alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -54,23 +55,33 @@ kotlin {
         implementation(libs.koin.compose)
       }
     }
+    val roomMain by creating {
+      dependsOn(commonMain)
+      dependencies {
+        implementation(libs.androidx.room.runtime)
+      }
+    }
     val commonTest by getting
     val androidMain by getting {
+      dependsOn(roomMain)
       dependencies {
         implementation(libs.ktor.client.okhttp)
         implementation(libs.koin.android)
       }
     }
     val desktopMain by getting {
+      dependsOn(roomMain)
       dependencies {
         implementation(libs.ktor.client.cio)
         implementation(libs.kotlinx.coroutines.swing)
+        implementation(libs.androidx.sqlite.bundled)
       }
     }
     val iosMain by creating {
-      dependsOn(commonMain)
+      dependsOn(roomMain)
       dependencies {
         implementation(libs.ktor.client.darwin)
+        implementation(libs.androidx.sqlite.bundled)
       }
     }
     val iosX64Main by getting { dependsOn(iosMain) }
@@ -82,6 +93,14 @@ kotlin {
       }
     }
   }
+}
+
+dependencies {
+  add("kspAndroid", libs.androidx.room.compiler)
+  add("kspDesktop", libs.androidx.room.compiler)
+  add("kspIosX64", libs.androidx.room.compiler)
+  add("kspIosArm64", libs.androidx.room.compiler)
+  add("kspIosSimulatorArm64", libs.androidx.room.compiler)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {

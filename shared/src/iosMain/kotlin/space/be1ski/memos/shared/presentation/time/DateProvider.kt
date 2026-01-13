@@ -1,6 +1,7 @@
 package space.be1ski.memos.shared.presentation.time
 
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 import platform.Foundation.NSCalendar
 import platform.Foundation.NSCalendarUnitDay
 import platform.Foundation.NSCalendarUnitMonth
@@ -13,9 +14,11 @@ actual fun currentLocalDate(): LocalDate {
     NSCalendarUnitYear or NSCalendarUnitMonth or NSCalendarUnitDay,
     fromDate = NSDate()
   )
+  val monthIndex = (components.month.toInt() - 1).coerceIn(0, 11)
+  val month = Month.values()[monthIndex]
   return LocalDate(
     year = components.year.toInt(),
-    monthNumber = components.month.toInt(),
-    dayOfMonth = components.day.toInt()
+    month = month,
+    day = components.day.toInt()
   )
 }

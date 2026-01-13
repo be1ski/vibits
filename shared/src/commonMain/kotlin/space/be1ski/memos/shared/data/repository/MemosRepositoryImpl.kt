@@ -3,18 +3,20 @@ package space.be1ski.memos.shared.data.repository
 import space.be1ski.memos.shared.data.mapper.MemoMapper
 import space.be1ski.memos.shared.data.remote.MemosApi
 import space.be1ski.memos.shared.data.remote.MemosPagination
+import space.be1ski.memos.shared.data.local.MemoCache
 import space.be1ski.memos.shared.domain.model.memo.Memo
 import space.be1ski.memos.shared.domain.repository.CredentialsRepository
 import space.be1ski.memos.shared.domain.repository.MemosRepository
 import space.be1ski.memos.shared.domain.config.MemosDefaults
 
 /**
- * Repository implementation that loads memos from the network.
+ * Repository implementation that loads memos from the network and caches them locally.
  */
 class MemosRepositoryImpl(
   private val memosApi: MemosApi,
   private val memoMapper: MemoMapper,
-  private val credentialsRepository: CredentialsRepository
+  private val credentialsRepository: CredentialsRepository,
+  private val memoCache: MemoCache
 ) : MemosRepository {
   /**
    * Loads memos from the server using stored credentials and paginated API calls.
@@ -46,8 +48,14 @@ class MemosRepositoryImpl(
       pages += 1
     } while (nextPageToken != null && pages < MemosPagination.MAX_PAGES && allMemos.isNotEmpty())
 
+    runCatching { memoCache.replaceMemos(allMemos) }
     return allMemos
   }
+
+  /**
+   * Loads cached memos from local storage.
+   */
+  override suspend fun cachedMemos(): List<Memo> = memoCache.readMemos()
 
   /**
    * Updates memo content in the API.
@@ -63,7 +71,9 @@ class MemosRepositoryImpl(
       name = name,
       content = content
     )
-    return memoMapper.toDomain(dto)
+    val updated = memoMapper.toDomain(dto)
+    runCatching { memoCache.upsertMemo(updated) }
+    return updated
   }
 
   /**
@@ -79,7 +89,9 @@ class MemosRepositoryImpl(
       token = token,
       content = content
     )
-    return memoMapper.toDomain(dto)
+    val created = memoMapper.toDomain(dto)
+    runCatching { memoCache.upsertMemo(created) }
+    return created
   }
 
   /**
@@ -95,5 +107,6 @@ class MemosRepositoryImpl(
       token = token,
       name = name
     )
+    runCatching { memoCache.deleteMemo(name) }
   }
 }

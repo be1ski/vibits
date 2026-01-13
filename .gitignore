@@ -14,3 +14,7 @@ local.properties
 *.log
 *.keystore
 kotlin-js-store/
+*.db
+*.db.lck
+*.db-shm
+*.db-wal

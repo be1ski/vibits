@@ -12,6 +12,11 @@ interface MemosRepository {
   suspend fun listMemos(): List<Memo>
 
   /**
+   * Returns cached memos stored locally.
+   */
+  suspend fun cachedMemos(): List<Memo>
+
+  /**
    * Updates memo content and returns the updated memo.
    */
   suspend fun updateMemo(name: String, content: String): Memo

@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import space.be1ski.memos.shared.domain.model.auth.Credentials
 import space.be1ski.memos.shared.domain.usecase.CreateMemoUseCase
 import space.be1ski.memos.shared.domain.usecase.DeleteMemoUseCase
+import space.be1ski.memos.shared.domain.usecase.LoadCachedMemosUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadMemosUseCase
 import space.be1ski.memos.shared.domain.usecase.SaveCredentialsUseCase
@@ -22,6 +23,7 @@ import space.be1ski.memos.shared.presentation.state.MemosUiState
  */
 class MemosViewModel(
   private val loadMemosUseCase: LoadMemosUseCase,
+  private val loadCachedMemosUseCase: LoadCachedMemosUseCase,
   private val loadCredentialsUseCase: LoadCredentialsUseCase,
   private val saveCredentialsUseCase: SaveCredentialsUseCase,
   private val updateMemoUseCase: UpdateMemoUseCase,
@@ -29,6 +31,10 @@ class MemosViewModel(
   private val deleteMemoUseCase: DeleteMemoUseCase
 ) {
   private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+
+  init {
+    preloadCachedMemos()
+  }
 
   /**
    * Snapshot of UI state for Compose.
@@ -109,6 +115,13 @@ class MemosViewModel(
     }
 
     scope.launch {
+      val cached = runCatching { loadCachedMemosUseCase() }.getOrNull().orEmpty()
+      if (cached.isNotEmpty()) {
+        uiState = when (val state = uiState) {
+          is MemosUiState.CredentialsInput -> state.copy(memos = cached, isLoading = true)
+          is MemosUiState.Ready -> state.copy(memos = cached, isLoading = true)
+        }
+      }
       runCatching { loadMemosUseCase() }
         .onSuccess { memos -> uiState = MemosUiState.Ready(memos = memos) }
         .onFailure { error ->
@@ -196,6 +209,22 @@ class MemosViewModel(
       MemosUiState.CredentialsInput(baseUrl = creds.baseUrl, token = creds.token)
     } else {
       MemosUiState.Ready()
+    }
+  }
+
+  private fun preloadCachedMemos() {
+    val creds = loadCredentialsUseCase()
+    if (creds.baseUrl.isBlank() || creds.token.isBlank()) {
+      return
+    }
+    scope.launch {
+      val cached = runCatching { loadCachedMemosUseCase() }.getOrNull().orEmpty()
+      if (cached.isNotEmpty()) {
+        uiState = when (val state = uiState) {
+          is MemosUiState.CredentialsInput -> state.copy(memos = cached)
+          is MemosUiState.Ready -> state.copy(memos = cached)
+        }
+      }
     }
   }
 
