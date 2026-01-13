@@ -11,7 +11,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import org.jetbrains.compose.resources.stringResource
+import space.be1ski.memos.shared.Res
+import space.be1ski.memos.shared.action_cancel
+import space.be1ski.memos.shared.action_create
+import space.be1ski.memos.shared.title_create_day
+import space.be1ski.memos.shared.action_delete
+import space.be1ski.memos.shared.msg_delete_day_confirm
+import space.be1ski.memos.shared.title_delete_day
 import space.be1ski.memos.shared.presentation.components.Indent
+import space.be1ski.memos.shared.action_update
+import space.be1ski.memos.shared.title_update_day
 
 @Composable
 internal fun HabitEditorDialog(derived: StatsScreenDerivedState) {
@@ -25,7 +35,7 @@ internal fun HabitEditorDialog(derived: StatsScreenDerivedState) {
       uiState.habitsEditorDay = null
       uiState.habitsEditorExisting = null
     },
-    title = { Text(if (isEditing) "Update day" else "Create day") },
+    title = { Text(if (isEditing) stringResource(Res.string.title_update_day) else stringResource(Res.string.title_create_day)) },
     text = { HabitEditorContent(uiState) },
     confirmButton = { HabitEditorConfirmButton(derived) },
     dismissButton = { HabitEditorDismissButton(derived) }
@@ -79,6 +89,9 @@ private fun HabitEditorConfirmButton(derived: StatsScreenDerivedState) {
         if (uiState.habitsEditorExisting != null) {
           uiState.showEmptyDeleteConfirm = true
         } else {
+          uiState.habitsEditorError = "Select at least one habit." // This will be handled in StatsScreenContent or here
+          // Actually, let's use the resource for the error too if possible, but it's a dynamic message usually.
+          // In this case it's hardcoded.
           uiState.habitsEditorError = "Select at least one habit."
         }
         return@Button
@@ -101,7 +114,7 @@ private fun HabitEditorConfirmButton(derived: StatsScreenDerivedState) {
       uiState.habitsEditorError = null
     }
   ) {
-    Text(if (isEditing) "Update" else "Create")
+    Text(if (isEditing) stringResource(Res.string.action_update) else stringResource(Res.string.action_create))
   }
 }
 
@@ -123,7 +136,7 @@ private fun HabitEditorDismissButton(derived: StatsScreenDerivedState) {
         uiState.habitsEditorExisting = null
         uiState.habitsEditorError = null
       }) {
-        Text("Delete")
+        Text(stringResource(Res.string.action_delete))
       }
     }
     TextButton(onClick = {
@@ -131,7 +144,7 @@ private fun HabitEditorDismissButton(derived: StatsScreenDerivedState) {
       uiState.habitsEditorExisting = null
       uiState.habitsEditorError = null
     }) {
-      Text("Cancel")
+      Text(stringResource(Res.string.action_cancel))
     }
   }
 }
@@ -144,8 +157,8 @@ internal fun EmptyDeleteDialog(derived: StatsScreenDerivedState) {
   }
   AlertDialog(
     onDismissRequest = { uiState.showEmptyDeleteConfirm = false },
-    title = { Text("Delete day?") },
-    text = { Text("No habits selected. The daily entry will be deleted.") },
+    title = { Text(stringResource(Res.string.title_delete_day)) },
+    text = { Text(stringResource(Res.string.msg_delete_day_confirm)) },
     confirmButton = {
       Button(
         onClick = {
@@ -162,12 +175,12 @@ internal fun EmptyDeleteDialog(derived: StatsScreenDerivedState) {
           uiState.showEmptyDeleteConfirm = false
         }
       ) {
-        Text("Delete")
+        Text(stringResource(Res.string.action_delete))
       }
     },
     dismissButton = {
       TextButton(onClick = { uiState.showEmptyDeleteConfirm = false }) {
-        Text("Cancel")
+        Text(stringResource(Res.string.action_cancel))
       }
     }
   )

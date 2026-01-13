@@ -17,6 +17,11 @@ kotlin {
     namespace = "space.be1ski.memos.shared"
     compileSdk = 36
     minSdk = 31
+
+    // Enable Android resources support for Compose Multiplatform resources
+    androidResources {
+      enable = true
+    }
   }
   jvm("desktop")
   @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
@@ -47,6 +52,7 @@ kotlin {
         implementation(compose.materialIconsExtended)
         implementation(compose.runtime)
         implementation(compose.ui)
+        implementation(compose.components.resources)
         implementation(libs.koin.compose)
         implementation(libs.koin.core)
         implementation(libs.ktor.client.content.negotiation)
@@ -102,6 +108,10 @@ kotlin {
       }
     }
   }
+}
+
+compose.resources {
+  packageOfResClass = "space.be1ski.memos.shared"
 }
 
 dependencies {

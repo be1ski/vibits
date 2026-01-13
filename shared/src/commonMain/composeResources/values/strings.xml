@@ -1,0 +1,77 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_cancel">Cancel</string>
+    <string name="action_configure_habits">Configure habits</string>
+    <string name="action_create">Create</string>
+    <string name="action_create_memo">Create memo</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_hide_details">Hide habit details</string>
+    <string name="action_next">Next</string>
+    <string name="action_previous">Previous</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_save">Save</string>
+    <string name="action_show_details">Show habit details</string>
+    <string name="action_track">Track</string>
+    <string name="action_track_today">Track today</string>
+    <string name="action_update">Update</string>
+
+    <!-- App -->
+    <string name="app_name">Memos</string>
+
+    <!-- Days of week -->
+    <string name="day_fri">Fri</string>
+    <string name="day_mon">Mon</string>
+    <string name="day_wed">Wed</string>
+
+    <!-- Format strings -->
+    <string name="format_credentials">Credentials: %1$s</string>
+    <string name="format_environment">Environment: %1$s</string>
+    <string name="format_habits_progress">%1$d of %2$d habits done</string>
+    <string name="format_memos_db">Memos DB: %1$s</string>
+    <string name="format_tooltip_habits">%1$s: %2$d/%3$d habits</string>
+    <string name="format_tooltip_posts">%1$s: %2$d posts</string>
+
+    <!-- Hints -->
+    <string name="hint_add_habits_config">Add a habits config memo to start tracking.</string>
+    <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habits_config">Gymnastics | #habits/gym\nReading | #habits/reading</string>
+    <string name="hint_write_memo">Write a memo...</string>
+
+    <!-- Labels -->
+    <string name="label_access_token">Access token</string>
+    <string name="label_activity">Activity</string>
+    <string name="label_base_url">Base URL</string>
+    <string name="label_demo_mode">Demo mode</string>
+    <string name="label_habits_config">Habits config</string>
+    <string name="label_storage">Storage</string>
+    <string name="label_today">Today</string>
+
+    <!-- Messages -->
+    <string name="msg_delete_day_confirm">No habits selected. The daily entry will be deleted.</string>
+    <string name="msg_no_habits_yet">No habits configured yet.</string>
+    <string name="msg_select_habit">Select at least one habit.</string>
+
+    <!-- Navigation -->
+    <string name="nav_feed">Feed</string>
+    <string name="nav_habits">Habits</string>
+    <string name="nav_posts">Posts</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Privacy -->
+    <string name="privacy_hidden_content">Hidden content</string>
+    <string name="privacy_hidden_habit">Hidden habit</string>
+
+    <!-- Time periods -->
+    <string name="time_months">Months</string>
+    <string name="time_quarters">Quarters</string>
+    <string name="time_weeks">Weeks</string>
+    <string name="time_years">Years</string>
+
+    <!-- Titles -->
+    <string name="title_create_day">Create day</string>
+    <string name="title_delete_day">Delete day?</string>
+    <string name="title_edit_day">Edit day</string>
+    <string name="title_edit_memo">Edit memo</string>
+    <string name="title_new_memo">New memo</string>
+    <string name="title_update_day">Update day</string>
+</resources>

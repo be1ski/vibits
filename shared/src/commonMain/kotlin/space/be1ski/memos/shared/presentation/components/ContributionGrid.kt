@@ -4,6 +4,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -33,18 +33,25 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
-import androidx.compose.ui.unit.IntRect
-import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntRect
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
-import space.be1ski.memos.shared.presentation.components.DEMO_PLACEHOLDER_HABIT
-import space.be1ski.memos.shared.presentation.components.obfuscateIfNeeded
+import org.jetbrains.compose.resources.stringResource
+import space.be1ski.memos.shared.Res
+import space.be1ski.memos.shared.title_create_day
+import space.be1ski.memos.shared.title_edit_day
+import space.be1ski.memos.shared.day_fri
+import space.be1ski.memos.shared.format_tooltip_habits
+import space.be1ski.memos.shared.day_mon
+import space.be1ski.memos.shared.format_tooltip_posts
+import space.be1ski.memos.shared.day_wed
 
 internal object ChartDimens {
   val legendWidth = LEGEND_WIDTH_DP.dp
@@ -59,10 +66,13 @@ private const val COMPACT_SPACING_DP = 1
 private const val REGULAR_SPACING_DP = 2
 private const val COMPACT_CELL_DP = 7
 private const val REGULAR_CELL_DP = 10
+
 @Suppress("MagicNumber")
 private val INACTIVE_CELL_COLOR = Color(0xFFE2E8F0)
+
 @Suppress("MagicNumber")
 private val HABIT_START_COLOR = Color(0xFFCFEED6)
+
 @Suppress("MagicNumber")
 private val HABIT_END_COLOR = Color(0xFF0B7D3E)
 
@@ -120,7 +130,7 @@ private fun ContributionGridLayout(
             callbacks.onClearSelection()
           }
         )
-    }
+      }
   ) {
     val columns = state.weekData.weeks.size.coerceAtLeast(1)
     val spacing = ChartDimens.spacing(state.compactHeight)
@@ -265,9 +275,9 @@ private fun ContributionGridTooltip(
         .padding(horizontal = 8.dp, vertical = 6.dp)
     ) {
       val tooltipText = if (tooltip.day.totalHabits > 0) {
-        "${tooltip.day.date}: ${tooltip.day.count}/${tooltip.day.totalHabits} habits"
+        stringResource(Res.string.format_tooltip_habits, tooltip.day.date, tooltip.day.count, tooltip.day.totalHabits)
       } else {
-        "${tooltip.day.date}: ${tooltip.day.count} posts"
+        stringResource(Res.string.format_tooltip_posts, tooltip.day.date, tooltip.day.count)
       }
       Text(tooltipText, style = MaterialTheme.typography.labelMedium)
       if (tooltip.day.totalHabits > 0) {
@@ -286,12 +296,12 @@ private fun ContributionGridTooltip(
       }
       tooltip.day.dailyMemo?.let {
         TextButton(onClick = { callbacks.onEditRequested(tooltip.day) }) {
-          Text("Edit day")
+          Text(stringResource(Res.string.title_edit_day))
         }
       } ?: run {
         if (tooltip.day.totalHabits > 0 && tooltip.day.inRange) {
           TextButton(onClick = { callbacks.onCreateRequested(tooltip.day) }) {
-            Text("Create day")
+            Text(stringResource(Res.string.title_create_day))
           }
         }
       }
@@ -328,9 +338,9 @@ private fun DayOfWeekLegend(
           day.name.take(3).lowercase().replaceFirstChar { it.uppercase() }
         } else {
           when (day) {
-            DayOfWeek.MONDAY -> "Mon"
-            DayOfWeek.WEDNESDAY -> "Wed"
-            DayOfWeek.FRIDAY -> "Fri"
+            DayOfWeek.MONDAY -> stringResource(Res.string.day_mon)
+            DayOfWeek.WEDNESDAY -> stringResource(Res.string.day_wed)
+            DayOfWeek.FRIDAY -> stringResource(Res.string.day_fri)
             else -> null
           }
         }
@@ -474,8 +484,7 @@ private fun ContributionCell(
         } else {
           Modifier
         }
-      )
-  ,
+      ),
     contentAlignment = Alignment.Center
   ) {
     if (state.showDayNumber) {

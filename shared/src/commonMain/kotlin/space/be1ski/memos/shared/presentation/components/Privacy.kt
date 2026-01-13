@@ -1,6 +1,5 @@
 package space.be1ski.memos.shared.presentation.components
 
-internal const val DEMO_MODE_LABEL = "Demo mode"
 internal const val DEMO_PLACEHOLDER_CONTENT = "Hidden content"
 internal const val DEMO_PLACEHOLDER_HABIT = "Hidden habit"
 

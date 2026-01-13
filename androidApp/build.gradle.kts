@@ -6,9 +6,7 @@ plugins {
 
 android {
   namespace = "space.be1ski.memos.android"
-  compileSdk {
-    version = release(36)
-  }
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "space.be1ski.memos.android"

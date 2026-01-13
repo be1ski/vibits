@@ -1,8 +1,8 @@
 package space.be1ski.memos.shared.presentation.app
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
@@ -18,10 +18,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.Month as CalendarMonth
 import kotlinx.datetime.plus
+import org.jetbrains.compose.resources.stringResource
+import space.be1ski.memos.shared.Res
+import space.be1ski.memos.shared.time_months
+import space.be1ski.memos.shared.action_next
 import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.Indent
+import space.be1ski.memos.shared.action_previous
+import space.be1ski.memos.shared.time_quarters
+import space.be1ski.memos.shared.time_weeks
+import space.be1ski.memos.shared.time_years
+import kotlinx.datetime.Month as CalendarMonth
 
 @Composable
 internal fun TimeRangeControls(
@@ -37,22 +45,22 @@ internal fun TimeRangeControls(
       Tab(
         selected = selectedTab == TimeRangeTab.Weeks,
         onClick = { onTabChange(TimeRangeTab.Weeks) },
-        text = { Text("Weeks") }
+        text = { Text(stringResource(Res.string.time_weeks)) }
       )
       Tab(
         selected = selectedTab == TimeRangeTab.Months,
         onClick = { onTabChange(TimeRangeTab.Months) },
-        text = { Text("Months") }
+        text = { Text(stringResource(Res.string.time_months)) }
       )
       Tab(
         selected = selectedTab == TimeRangeTab.Quarters,
         onClick = { onTabChange(TimeRangeTab.Quarters) },
-        text = { Text("Quarters") }
+        text = { Text(stringResource(Res.string.time_quarters)) }
       )
       Tab(
         selected = selectedTab == TimeRangeTab.Years,
         onClick = { onTabChange(TimeRangeTab.Years) },
-        text = { Text("Years") }
+        text = { Text(stringResource(Res.string.time_years)) }
       )
     }
     TimeRangeNavigator(
@@ -83,7 +91,7 @@ private fun TimeRangeNavigator(
       enabled = canGoBack,
       modifier = Modifier.align(Alignment.CenterStart)
     ) {
-      Icon(imageVector = Icons.Filled.ChevronLeft, contentDescription = "Previous")
+      Icon(imageVector = Icons.Filled.ChevronLeft, contentDescription = stringResource(Res.string.action_previous))
     }
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
       Text(label, style = MaterialTheme.typography.titleSmall)
@@ -93,7 +101,7 @@ private fun TimeRangeNavigator(
       enabled = canGoForward,
       modifier = Modifier.align(Alignment.CenterEnd)
     ) {
-      Icon(imageVector = Icons.Filled.ChevronRight, contentDescription = "Next")
+      Icon(imageVector = Icons.Filled.ChevronRight, contentDescription = stringResource(Res.string.action_next))
     }
   }
 }

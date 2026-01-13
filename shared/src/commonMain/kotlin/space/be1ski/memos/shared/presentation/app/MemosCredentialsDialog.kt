@@ -14,10 +14,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import space.be1ski.memos.shared.Res
+import space.be1ski.memos.shared.label_access_token
+import space.be1ski.memos.shared.label_base_url
+import space.be1ski.memos.shared.hint_base_url
+import space.be1ski.memos.shared.action_cancel
+import space.be1ski.memos.shared.format_credentials
+import space.be1ski.memos.shared.label_demo_mode
 import space.be1ski.memos.shared.domain.model.storage.StorageInfo
-import space.be1ski.memos.shared.presentation.components.DEMO_MODE_LABEL
+import space.be1ski.memos.shared.format_environment
+import space.be1ski.memos.shared.format_memos_db
 import space.be1ski.memos.shared.presentation.state.MemosUiState
 import space.be1ski.memos.shared.presentation.viewmodel.MemosViewModel
+import space.be1ski.memos.shared.action_save
+import space.be1ski.memos.shared.nav_settings
+import space.be1ski.memos.shared.label_storage
 
 @Composable
 internal fun CredentialsDialog(
@@ -39,7 +51,7 @@ internal fun CredentialsDialog(
       appState.credentialsInitialized = false
       appState.credentialsDismissed = true
     },
-    title = { Text("Settings") },
+    title = { Text(stringResource(Res.string.nav_settings)) },
     text = { CredentialsDialogContent(appState, viewModel.storageInfo) },
     confirmButton = { CredentialsDialogConfirmButton(appState, viewModel) },
     dismissButton = { CredentialsDialogDismissButton(appState) }
@@ -55,14 +67,14 @@ private fun CredentialsDialogContent(
     TextField(
       value = appState.editBaseUrl,
       onValueChange = { appState.editBaseUrl = it },
-      label = { Text("Base URL") },
-      placeholder = { Text("https://memos.example.com") },
+      label = { Text(stringResource(Res.string.label_base_url)) },
+      placeholder = { Text(stringResource(Res.string.hint_base_url)) },
       modifier = Modifier.fillMaxWidth()
     )
     TextField(
       value = appState.editToken,
       onValueChange = { appState.editToken = it },
-      label = { Text("Access token") },
+      label = { Text(stringResource(Res.string.label_access_token)) },
       visualTransformation = PasswordVisualTransformation(),
       modifier = Modifier.fillMaxWidth()
     )
@@ -71,7 +83,7 @@ private fun CredentialsDialogContent(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.SpaceBetween
     ) {
-      Text(DEMO_MODE_LABEL)
+      Text(stringResource(Res.string.label_demo_mode))
       Switch(
         checked = appState.demoMode,
         onCheckedChange = { appState.demoMode = it }
@@ -84,10 +96,10 @@ private fun CredentialsDialogContent(
 @Composable
 private fun StorageInfoSection(storageInfo: StorageInfo) {
   Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-    Text("Storage")
-    Text("Environment: ${storageInfo.environment}")
-    Text("Credentials: ${storageInfo.credentialsStore}")
-    Text("Memos DB: ${storageInfo.memosDatabase}")
+    Text(stringResource(Res.string.label_storage))
+    Text(stringResource(Res.string.format_environment, storageInfo.environment))
+    Text(stringResource(Res.string.format_credentials, storageInfo.credentialsStore))
+    Text(stringResource(Res.string.format_memos_db, storageInfo.memosDatabase))
   }
 }
 
@@ -106,7 +118,7 @@ private fun CredentialsDialogConfirmButton(
       appState.credentialsDismissed = true
     }
   ) {
-    Text("Save")
+    Text(stringResource(Res.string.action_save))
   }
 }
 
@@ -119,6 +131,6 @@ private fun CredentialsDialogDismissButton(appState: MemosAppUiState) {
       appState.credentialsDismissed = true
     }
   ) {
-    Text("Cancel")
+    Text(stringResource(Res.string.action_cancel))
   }
 }

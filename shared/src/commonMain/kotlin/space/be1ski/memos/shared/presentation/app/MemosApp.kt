@@ -6,24 +6,24 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -31,12 +31,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import space.be1ski.memos.shared.Res
+import space.be1ski.memos.shared.app_name
+import space.be1ski.memos.shared.action_cancel
+import space.be1ski.memos.shared.action_create
+import space.be1ski.memos.shared.action_create_memo
+import space.be1ski.memos.shared.domain.model.memo.Memo
+import space.be1ski.memos.shared.title_edit_memo
+import space.be1ski.memos.shared.nav_feed
+import space.be1ski.memos.shared.nav_habits
+import space.be1ski.memos.shared.title_new_memo
+import space.be1ski.memos.shared.nav_posts
 import space.be1ski.memos.shared.presentation.components.ActivityMode
 import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.Indent
 import space.be1ski.memos.shared.presentation.components.earliestMemoDate
-import space.be1ski.memos.shared.domain.model.memo.Memo
+import space.be1ski.memos.shared.presentation.components.startOfWeek
 import space.be1ski.memos.shared.presentation.screen.FeedScreen
 import space.be1ski.memos.shared.presentation.screen.PostsScreen
 import space.be1ski.memos.shared.presentation.screen.StatsScreen
@@ -46,7 +58,10 @@ import space.be1ski.memos.shared.presentation.state.MemosUiState
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 import space.be1ski.memos.shared.presentation.util.isDesktop
 import space.be1ski.memos.shared.presentation.viewmodel.MemosViewModel
-import space.be1ski.memos.shared.presentation.components.startOfWeek
+import space.be1ski.memos.shared.action_refresh
+import space.be1ski.memos.shared.action_save
+import space.be1ski.memos.shared.nav_settings
+import space.be1ski.memos.shared.hint_write_memo
 
 /** Root shared UI for the app. */
 @Composable
@@ -63,6 +78,7 @@ fun MemosApp() {
   MemoCreateDialog(appState, viewModel)
   MemoEditDialog(appState, viewModel)
 }
+
 @Composable
 private fun SyncAutoLoad(
   uiState: MemosUiState,
@@ -76,6 +92,7 @@ private fun SyncAutoLoad(
     }
   }
 }
+
 @Composable
 private fun SyncCredentialsDialog(
   uiState: MemosUiState,
@@ -91,6 +108,7 @@ private fun SyncCredentialsDialog(
     }
   }
 }
+
 @Composable
 private fun MemosAppContent(
   uiState: MemosUiState,
@@ -106,7 +124,7 @@ private fun MemosAppContent(
           ) {
             Icon(
               imageVector = Icons.Filled.Edit,
-              contentDescription = "Create memo"
+              contentDescription = stringResource(Res.string.action_create_memo)
             )
           }
         }
@@ -146,6 +164,7 @@ private fun MemosAppContent(
     }
   }
 }
+
 @Composable
 private fun MemosHeader(appState: MemosAppUiState, viewModel: MemosViewModel) {
   Row(
@@ -153,11 +172,11 @@ private fun MemosHeader(appState: MemosAppUiState, viewModel: MemosViewModel) {
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically
   ) {
-    Text("Memos", style = MaterialTheme.typography.headlineSmall)
+    Text(stringResource(Res.string.app_name), style = MaterialTheme.typography.headlineSmall)
     Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs), verticalAlignment = Alignment.CenterVertically) {
       if (isDesktop) {
         IconButton(onClick = { viewModel.loadMemos() }) {
-          Icon(imageVector = Icons.Filled.Refresh, contentDescription = "Refresh")
+          Icon(imageVector = Icons.Filled.Refresh, contentDescription = stringResource(Res.string.action_refresh))
         }
       }
       TextButton(
@@ -168,7 +187,7 @@ private fun MemosHeader(appState: MemosAppUiState, viewModel: MemosViewModel) {
           appState.credentialsDismissed = false
         }
       ) {
-        Text("Settings")
+        Text(stringResource(Res.string.nav_settings))
       }
     }
   }
@@ -180,23 +199,29 @@ private fun MemosBottomNavigation(appState: MemosAppUiState) {
     NavigationBarItem(
       selected = appState.selectedScreen == MemosScreen.Habits,
       onClick = { appState.selectedScreen = MemosScreen.Habits },
-      icon = { Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "Habits") },
-      label = { Text("Habits") }
+      icon = { Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = stringResource(Res.string.nav_habits)) },
+      label = { Text(stringResource(Res.string.nav_habits)) }
     )
     NavigationBarItem(
       selected = appState.selectedScreen == MemosScreen.Stats,
       onClick = { appState.selectedScreen = MemosScreen.Stats },
-      icon = { Icon(imageVector = Icons.Filled.Description, contentDescription = "Posts") },
-      label = { Text("Posts") }
+      icon = { Icon(imageVector = Icons.Filled.Description, contentDescription = stringResource(Res.string.nav_posts)) },
+      label = { Text(stringResource(Res.string.nav_posts)) }
     )
     NavigationBarItem(
       selected = appState.selectedScreen == MemosScreen.Feed,
       onClick = { appState.selectedScreen = MemosScreen.Feed },
-      icon = { Icon(imageVector = Icons.AutoMirrored.Filled.List, contentDescription = "Feed") },
-      label = { Text("Feed") }
+      icon = {
+        Icon(
+          imageVector = Icons.AutoMirrored.Filled.List,
+          contentDescription = stringResource(Res.string.nav_feed)
+        )
+      },
+      label = { Text(stringResource(Res.string.nav_feed)) }
     )
   }
 }
+
 @Composable
 private fun MemosTabContent(
   uiState: MemosUiState,
@@ -299,12 +324,12 @@ private fun MemoCreateDialog(appState: MemosAppUiState, viewModel: MemosViewMode
       appState.showCreateMemoDialog = false
       appState.createMemoContent = ""
     },
-    title = { Text("New memo") },
+    title = { Text(stringResource(Res.string.title_new_memo)) },
     text = {
       TextField(
         value = appState.createMemoContent,
         onValueChange = { appState.createMemoContent = it },
-        placeholder = { Text("Write a memo...") },
+        placeholder = { Text(stringResource(Res.string.hint_write_memo)) },
         modifier = Modifier.fillMaxWidth()
       )
     },
@@ -318,7 +343,7 @@ private fun MemoCreateDialog(appState: MemosAppUiState, viewModel: MemosViewMode
         },
         enabled = content.isNotBlank()
       ) {
-        Text("Create")
+        Text(stringResource(Res.string.action_create))
       }
     },
     dismissButton = {
@@ -328,7 +353,7 @@ private fun MemoCreateDialog(appState: MemosAppUiState, viewModel: MemosViewMode
           appState.createMemoContent = ""
         }
       ) {
-        Text("Cancel")
+        Text(stringResource(Res.string.action_cancel))
       }
     }
   )
@@ -342,7 +367,7 @@ private fun MemoEditDialog(appState: MemosAppUiState, viewModel: MemosViewModel)
   val memo = appState.editMemoTarget ?: return
   AlertDialog(
     onDismissRequest = { clearMemoEdit(appState) },
-    title = { Text("Edit memo") },
+    title = { Text(stringResource(Res.string.title_edit_memo)) },
     text = {
       TextField(
         value = appState.editMemoContent,
@@ -359,12 +384,12 @@ private fun MemoEditDialog(appState: MemosAppUiState, viewModel: MemosViewModel)
         },
         enabled = content.isNotBlank()
       ) {
-        Text("Save")
+        Text(stringResource(Res.string.action_save))
       }
     },
     dismissButton = {
       TextButton(onClick = { clearMemoEdit(appState) }) {
-        Text("Cancel")
+        Text(stringResource(Res.string.action_cancel))
       }
     }
   )

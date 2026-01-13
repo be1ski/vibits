@@ -1,0 +1,77 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_cancel">Отмена</string>
+    <string name="action_configure_habits">Настроить привычки</string>
+    <string name="action_create">Создать</string>
+    <string name="action_create_memo">Создать заметку</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_hide_details">Скрыть детали</string>
+    <string name="action_next">Вперед</string>
+    <string name="action_previous">Назад</string>
+    <string name="action_refresh">Обновить</string>
+    <string name="action_save">Сохранить</string>
+    <string name="action_show_details">Показать детали</string>
+    <string name="action_track">Отметить</string>
+    <string name="action_track_today">Отметить сегодня</string>
+    <string name="action_update">Обновить</string>
+
+    <!-- App -->
+    <string name="app_name">Memos</string>
+
+    <!-- Days of week -->
+    <string name="day_fri">Пт</string>
+    <string name="day_mon">Пн</string>
+    <string name="day_wed">Ср</string>
+
+    <!-- Format strings -->
+    <string name="format_credentials">Креденшелы: %1$s</string>
+    <string name="format_environment">Окружение: %1$s</string>
+    <string name="format_habits_progress">Выполнено привычек: %1$d из %2$d</string>
+    <string name="format_memos_db">Memos DB: %1$s</string>
+    <string name="format_tooltip_habits">%1$s: привычек %2$d/%3$d</string>
+    <string name="format_tooltip_posts">%1$s: постов %2$d</string>
+
+    <!-- Hints -->
+    <string name="hint_add_habits_config">Добавьте заметку с конфигурацией привычек, чтобы начать отслеживание.</string>
+    <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habits_config">Гимнастика | #habits/gym\nЧтение | #habits/reading</string>
+    <string name="hint_write_memo">Напишите заметку...</string>
+
+    <!-- Labels -->
+    <string name="label_access_token">Токен доступа</string>
+    <string name="label_activity">Активность</string>
+    <string name="label_base_url">Base URL</string>
+    <string name="label_demo_mode">Демо-режим</string>
+    <string name="label_habits_config">Конфигурация привычек</string>
+    <string name="label_storage">Хранилище</string>
+    <string name="label_today">Сегодня</string>
+
+    <!-- Messages -->
+    <string name="msg_delete_day_confirm">Привычки не выбраны. Запись за этот день будет удалена.</string>
+    <string name="msg_no_habits_yet">Привычки еще не настроены.</string>
+    <string name="msg_select_habit">Выберите хотя бы одну привычку.</string>
+
+    <!-- Navigation -->
+    <string name="nav_feed">Лента</string>
+    <string name="nav_habits">Привычки</string>
+    <string name="nav_posts">Посты</string>
+    <string name="nav_settings">Настройки</string>
+
+    <!-- Privacy -->
+    <string name="privacy_hidden_content">Скрытое содержимое</string>
+    <string name="privacy_hidden_habit">Скрытая привычка</string>
+
+    <!-- Time periods -->
+    <string name="time_months">Месяцы</string>
+    <string name="time_quarters">Кварталы</string>
+    <string name="time_weeks">Недели</string>
+    <string name="time_years">Годы</string>
+
+    <!-- Titles -->
+    <string name="title_create_day">Создать день</string>
+    <string name="title_delete_day">Удалить день?</string>
+    <string name="title_edit_day">Изменить день</string>
+    <string name="title_edit_memo">Редактировать заметку</string>
+    <string name="title_new_memo">Новая заметка</string>
+    <string name="title_update_day">Обновить день</string>
+</resources>

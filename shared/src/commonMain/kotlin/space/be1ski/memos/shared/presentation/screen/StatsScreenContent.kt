@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddTask
 import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -27,8 +29,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddTask
+import org.jetbrains.compose.resources.stringResource
+import space.be1ski.memos.shared.Res
+import space.be1ski.memos.shared.*
 import space.be1ski.memos.shared.presentation.components.ActivityMode
 import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.ContributionDay
@@ -37,7 +40,6 @@ import space.be1ski.memos.shared.presentation.components.ContributionGridCallbac
 import space.be1ski.memos.shared.presentation.components.ContributionGridState
 import space.be1ski.memos.shared.presentation.components.HabitConfig
 import space.be1ski.memos.shared.presentation.components.Indent
-import space.be1ski.memos.shared.presentation.components.DEMO_PLACEHOLDER_HABIT
 import space.be1ski.memos.shared.presentation.components.calculateLayout
 import space.be1ski.memos.shared.presentation.components.habitsConfigForDate
 import space.be1ski.memos.shared.presentation.components.obfuscateIfNeeded
@@ -56,11 +58,11 @@ internal fun StatsHeaderRow(derived: StatsScreenDerivedState) {
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.SpaceBetween
   ) {
-    Text("Activity", style = MaterialTheme.typography.titleMedium)
+    Text(stringResource(Res.string.label_activity), style = MaterialTheme.typography.titleMedium)
     Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs), verticalAlignment = Alignment.CenterVertically) {
       if (state.activityMode == ActivityMode.Habits) {
         TextButton(onClick = { uiState.showHabitsConfig = !uiState.showHabitsConfig }) {
-          Text("Habits config")
+          Text(stringResource(Res.string.label_habits_config))
         }
       }
     }
@@ -96,13 +98,13 @@ internal fun StatsHabitsEmptyState(derived: StatsScreenDerivedState) {
       modifier = Modifier.padding(Indent.s),
       verticalArrangement = Arrangement.spacedBy(Indent.xs)
     ) {
-      Text("No habits configured yet.", style = MaterialTheme.typography.titleSmall)
+      Text(stringResource(Res.string.msg_no_habits_yet), style = MaterialTheme.typography.titleSmall)
       Text(
-        "Add a habits config memo to start tracking.",
+        stringResource(Res.string.hint_add_habits_config),
         style = MaterialTheme.typography.bodySmall
       )
       Button(onClick = { uiState.showHabitsConfig = true }) {
-        Text("Configure habits")
+        Text(stringResource(Res.string.action_configure_habits))
       }
     }
   }
@@ -128,11 +130,14 @@ internal fun StatsTodaySection(derived: StatsScreenDerivedState) {
         verticalAlignment = Alignment.CenterVertically
       ) {
         Column(verticalArrangement = Arrangement.spacedBy(Indent.x5s)) {
-          Text("Today", style = MaterialTheme.typography.titleSmall)
-          Text("$doneCount of $totalCount habits done", style = MaterialTheme.typography.bodySmall)
+          Text(stringResource(Res.string.label_today), style = MaterialTheme.typography.titleSmall)
+          Text(
+            stringResource(Res.string.format_habits_progress, doneCount, totalCount),
+            style = MaterialTheme.typography.bodySmall
+          )
         }
         Button(onClick = { openTodayHabitEditor(derived) }) {
-          Text("Track")
+          Text(stringResource(Res.string.action_track))
         }
       }
     }
@@ -211,7 +216,7 @@ internal fun StatsHabitDetailsToggle(derived: StatsScreenDerivedState) {
     onClick = { uiState.showHabitDetails = !uiState.showHabitDetails },
     modifier = Modifier.fillMaxWidth()
   ) {
-    Text(if (uiState.showHabitDetails) "Hide habit details" else "Show habit details")
+    Text(if (uiState.showHabitDetails) stringResource(Res.string.action_hide_details) else stringResource(Res.string.action_show_details))
   }
 }
 
@@ -250,7 +255,7 @@ internal fun StatsHabitSections(derived: StatsScreenDerivedState) {
     HabitActivitySection(
       state = HabitActivitySectionState(
         habit = habit.copy(
-          label = obfuscateIfNeeded(habit.label, derived.state.demoMode, DEMO_PLACEHOLDER_HABIT)
+          label = obfuscateIfNeeded(habit.label, derived.state.demoMode, "Hidden habit")
         ),
         baseWeekData = derived.weekData,
         selectedDate = if (uiState.activeSelectionId == "habit:${habit.tag}") uiState.selectedDate else null,
@@ -299,7 +304,7 @@ internal fun BoxScope.StatsFloatingAction(derived: StatsScreenDerivedState) {
   ) {
     Icon(
       imageVector = Icons.Filled.AddTask,
-      contentDescription = "Track today"
+      contentDescription = stringResource(Res.string.action_track_today)
     )
   }
 }
@@ -311,16 +316,16 @@ private fun HabitsConfigCard(
   onSave: () -> Unit
 ) {
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs), modifier = Modifier.padding(Indent.xs)) {
-    Text("Habits config", style = MaterialTheme.typography.titleSmall)
+    Text(stringResource(Res.string.label_habits_config), style = MaterialTheme.typography.titleSmall)
     TextField(
       value = habitsConfigText,
       onValueChange = onConfigChange,
       modifier = Modifier.fillMaxWidth(),
-      placeholder = { Text("Гимнастика | #habits/gym\nЧтение | #habits/reading") }
+      placeholder = { Text(stringResource(Res.string.hint_habits_config)) }
     )
     Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs)) {
       Button(onClick = onSave) {
-        Text("Save")
+        Text(stringResource(Res.string.action_save))
       }
     }
   }
@@ -411,7 +416,7 @@ private fun LastSevenDaysMatrix(
           horizontalArrangement = Arrangement.spacedBy(spacing),
           verticalAlignment = Alignment.CenterVertically
         ) {
-          val label = obfuscateIfNeeded(habit.label, demoMode, DEMO_PLACEHOLDER_HABIT)
+          val label = obfuscateIfNeeded(habit.label, demoMode, "Hidden habit")
           Text(label, style = MaterialTheme.typography.bodySmall, modifier = Modifier.width(labelWidth))
           days.forEach { day ->
             val done = day.habitStatuses.firstOrNull { status -> status.tag == habit.tag }?.done == true
