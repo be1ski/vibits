@@ -149,7 +149,7 @@ class MemosViewModelTest {
     viewModel.loadMemos()
     advanceUntilIdle()
 
-    viewModel.updateDailyMemo("memos/1", "Updated")
+    viewModel.updateMemo("memos/1", "Updated")
     advanceUntilIdle()
     assertTrue(viewModel.uiState.memos.any { it.content == "Updated" })
 
@@ -175,7 +175,7 @@ class MemosViewModelTest {
     viewModel.loadMemos()
     advanceUntilIdle()
 
-    viewModel.updateDailyMemo("memos/1", "Updated")
+    viewModel.updateMemo("memos/1", "Updated")
     advanceUntilIdle()
 
     val state = viewModel.uiState

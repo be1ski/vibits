@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.clickable
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -31,7 +32,8 @@ fun FeedScreen(
   memos: List<Memo>,
   isRefreshing: Boolean = false,
   onRefresh: () -> Unit = {},
-  enablePullRefresh: Boolean = true
+  enablePullRefresh: Boolean = true,
+  onMemoClick: (Memo) -> Unit = {}
 ) {
   val timeZone = TimeZone.currentSystemDefault()
   val pullRefreshState = rememberPullRefreshState(isRefreshing, onRefresh)
@@ -47,7 +49,11 @@ fun FeedScreen(
   ) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(Indent.s)) {
       items(memos) { memo ->
-        Card(modifier = Modifier.fillMaxWidth()) {
+        Card(
+          modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onMemoClick(memo) }
+        ) {
           Column(
             modifier = Modifier.padding(Indent.s),
             verticalArrangement = Arrangement.spacedBy(Indent.x2s)

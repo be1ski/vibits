@@ -31,6 +31,7 @@ import org.koin.compose.koinInject
 import space.be1ski.memos.shared.presentation.components.ActivityMode
 import space.be1ski.memos.shared.presentation.components.Indent
 import space.be1ski.memos.shared.presentation.components.availableYears
+import space.be1ski.memos.shared.domain.model.memo.Memo
 import space.be1ski.memos.shared.presentation.screen.FeedScreen
 import space.be1ski.memos.shared.presentation.screen.PostsScreen
 import space.be1ski.memos.shared.presentation.screen.StatsScreen
@@ -57,6 +58,7 @@ fun MemosApp() {
   MemosAppContent(uiState, appState, viewModel, years)
   CredentialsDialog(uiState, appState, viewModel)
   MemoCreateDialog(appState, viewModel)
+  MemoEditDialog(appState, viewModel)
 }
 @Composable
 private fun SyncAutoLoad(
@@ -192,7 +194,7 @@ private fun MemosTabContent(
       ),
       actions = StatsScreenActions(
         onRangeChange = { appState.activityRange = it },
-        onEditDailyMemo = { memo, content -> viewModel.updateDailyMemo(memo.name, content) },
+        onEditDailyMemo = { memo, content -> viewModel.updateMemo(memo.name, content) },
         onDeleteDailyMemo = { memo -> viewModel.deleteDailyMemo(memo.name) },
         onCreateDailyMemo = { content -> viewModel.createMemo(content) }
       )
@@ -207,7 +209,8 @@ private fun MemosTabContent(
       memos = memos,
       isRefreshing = uiState.isLoading,
       onRefresh = { viewModel.loadMemos() },
-      enablePullRefresh = !isDesktop
+      enablePullRefresh = !isDesktop,
+      onMemoClick = { memo -> beginEditMemo(appState, memo) }
     )
   }
 }
@@ -255,4 +258,52 @@ private fun MemoCreateDialog(appState: MemosAppUiState, viewModel: MemosViewMode
       }
     }
   )
+}
+
+@Composable
+private fun MemoEditDialog(appState: MemosAppUiState, viewModel: MemosViewModel) {
+  if (!appState.showEditMemoDialog) {
+    return
+  }
+  val memo = appState.editMemoTarget ?: return
+  AlertDialog(
+    onDismissRequest = { clearMemoEdit(appState) },
+    title = { Text("Edit memo") },
+    text = {
+      TextField(
+        value = appState.editMemoContent,
+        onValueChange = { appState.editMemoContent = it },
+        modifier = Modifier.fillMaxWidth()
+      )
+    },
+    confirmButton = {
+      val content = appState.editMemoContent.trim()
+      Button(
+        onClick = {
+          viewModel.updateMemo(memo.name, content)
+          clearMemoEdit(appState)
+        },
+        enabled = content.isNotBlank()
+      ) {
+        Text("Save")
+      }
+    },
+    dismissButton = {
+      TextButton(onClick = { clearMemoEdit(appState) }) {
+        Text("Cancel")
+      }
+    }
+  )
+}
+
+private fun beginEditMemo(appState: MemosAppUiState, memo: Memo) {
+  appState.editMemoTarget = memo
+  appState.editMemoContent = memo.content
+  appState.showEditMemoDialog = true
+}
+
+private fun clearMemoEdit(appState: MemosAppUiState) {
+  appState.showEditMemoDialog = false
+  appState.editMemoTarget = null
+  appState.editMemoContent = ""
 }

@@ -145,9 +145,9 @@ class MemosViewModel(
   }
 
   /**
-   * Updates a daily memo content.
+   * Updates a memo content.
    */
-  fun updateDailyMemo(name: String, content: String) {
+  fun updateMemo(name: String, content: String) {
     setLoading(true)
     scope.launch {
       runCatching { updateMemoUseCase(name, content) }
