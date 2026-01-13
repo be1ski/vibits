@@ -27,7 +27,6 @@ import space.be1ski.memos.shared.test.FakeMemoCache
 class MemosRepositoryImplTest {
   @Test
   fun `when listMemos called then paginates and caches results`() {
-    // given
     val calls = mutableListOf<String?>()
     runRepositoryTest(
       handler = { request ->
@@ -53,10 +52,8 @@ class MemosRepositoryImplTest {
         memoCache = cache
       )
 
-      // when
       val result = repository.listMemos()
 
-      // then
       assertEquals(2, result.size)
       assertEquals(listOf(null, "next"), calls)
       assertEquals(1, cache.replaceCalls)
@@ -68,7 +65,6 @@ class MemosRepositoryImplTest {
   fun `when cachedMemos called then reads from cache`() = runRepositoryTest(
     handler = { respond("") }
   ) { client ->
-    // given
     val cache = FakeMemoCache(
       memos = listOf(Memo(name = "memos/1", content = "Cached", createTime = Instant.parse("2024-01-01T00:00:00Z")))
     )
@@ -79,10 +75,8 @@ class MemosRepositoryImplTest {
       memoCache = cache
     )
 
-    // when
     val result = repository.cachedMemos()
 
-    // then
     assertEquals(1, result.size)
     assertEquals("Cached", result.first().content)
   }
@@ -100,7 +94,6 @@ class MemosRepositoryImplTest {
       }
     }
   ) { client ->
-    // given
     val cache = FakeMemoCache()
     val repository = MemosRepositoryImpl(
       memosApi = MemosApi(client),
@@ -109,10 +102,8 @@ class MemosRepositoryImplTest {
       memoCache = cache
     )
 
-    // when
     val updated = repository.updateMemo("memos/1", "Updated")
 
-    // then
     assertEquals("Updated", updated.content)
     assertNotNull(cache.upserted)
     assertEquals("Updated", cache.upserted?.content)
@@ -131,7 +122,6 @@ class MemosRepositoryImplTest {
       }
     }
   ) { client ->
-    // given
     val cache = FakeMemoCache()
     val repository = MemosRepositoryImpl(
       memosApi = MemosApi(client),
@@ -140,10 +130,8 @@ class MemosRepositoryImplTest {
       memoCache = cache
     )
 
-    // when
     val created = repository.createMemo("Created")
 
-    // then
     assertEquals("Created", created.content)
     assertNotNull(cache.upserted)
     assertEquals("Created", cache.upserted?.content)
@@ -155,7 +143,6 @@ class MemosRepositoryImplTest {
       if (request.method == HttpMethod.Delete) respond("") else respond("")
     }
   ) { client ->
-    // given
     val cache = FakeMemoCache()
     val repository = MemosRepositoryImpl(
       memosApi = MemosApi(client),
@@ -164,10 +151,8 @@ class MemosRepositoryImplTest {
       memoCache = cache
     )
 
-    // when
     repository.deleteMemo("memos/3")
 
-    // then
     assertEquals("memos/3", cache.deletedName)
   }
 
@@ -175,7 +160,6 @@ class MemosRepositoryImplTest {
   fun `when listMemos without credentials then throws`() = runRepositoryTest(
     handler = { respond("") }
   ) { client ->
-    // given
     val repository = MemosRepositoryImpl(
       memosApi = MemosApi(client),
       memoMapper = MemoMapper(),
@@ -183,7 +167,6 @@ class MemosRepositoryImplTest {
       memoCache = FakeMemoCache()
     )
 
-    // when/then
     assertFailsWith<IllegalStateException> { repository.listMemos() }
   }
 

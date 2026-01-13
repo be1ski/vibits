@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 class MemosPaginationTest {
   @Test
   fun `when pagination guard then max pages is stable`() {
-    // when/then
     assertEquals(100, MemosPagination.MAX_PAGES)
   }
 }

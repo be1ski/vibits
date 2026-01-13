@@ -46,16 +46,13 @@ class MemosViewModelTest {
 
   @Test
   fun `when credentials missing then initial state asks for input`() = runTest {
-    // given
     val viewModel = buildViewModel(Credentials(baseUrl = "", token = ""))
 
-    // when/then
     assertIs<MemosUiState.CredentialsInput>(viewModel.uiState)
   }
 
   @Test
   fun `when cached memos exist then preload shows them`() = runTest {
-    // given
     val cached = listOf(
       Memo(name = "memos/1", content = "Cached", createTime = Instant.parse("2024-01-01T00:00:00Z"))
     )
@@ -64,10 +61,8 @@ class MemosViewModelTest {
       cachedMemos = cached
     )
 
-    // when
     advanceUntilIdle()
 
-    // then
     val state = viewModel.uiState
     assertIs<MemosUiState.Ready>(state)
     assertEquals(cached, state.memos)
@@ -75,13 +70,10 @@ class MemosViewModelTest {
 
   @Test
   fun `when loadMemos with blank credentials then shows error`() = runTest {
-    // given
     val viewModel = buildViewModel(Credentials(baseUrl = "", token = ""))
 
-    // when
     viewModel.loadMemos()
 
-    // then
     val state = viewModel.uiState
     assertIs<MemosUiState.CredentialsInput>(state)
     assertEquals("Base URL and token are required.", state.errorMessage)
@@ -89,7 +81,6 @@ class MemosViewModelTest {
 
   @Test
   fun `when loadMemos succeeds then updates state and saves credentials`() = runTest {
-    // given
     val repository = FakeMemosRepository()
     val credentialsRepository = FakeCredentialsRepository(Credentials(baseUrl = "", token = ""))
     repository.cachedMemosResult = listOf(
@@ -107,13 +98,11 @@ class MemosViewModelTest {
       credentialsRepository = credentialsRepository
     )
 
-    // when
     viewModel.updateBaseUrl("https://example.com")
     viewModel.updateToken("token")
     viewModel.loadMemos()
     advanceUntilIdle()
 
-    // then
     val state = viewModel.uiState
     assertIs<MemosUiState.Ready>(state)
     assertEquals(2, state.memos.size)
@@ -124,7 +113,6 @@ class MemosViewModelTest {
 
   @Test
   fun `when loadMemos fails then keeps error`() = runTest {
-    // given
     val repository = FakeMemosRepository()
     repository.listMemosResult = Result.failure(IllegalStateException("Boom"))
     val viewModel = buildViewModel(
@@ -132,11 +120,9 @@ class MemosViewModelTest {
       memosRepository = repository
     )
 
-    // when
     viewModel.loadMemos()
     advanceUntilIdle()
 
-    // then
     val state = viewModel.uiState
     assertIs<MemosUiState.Ready>(state)
     assertEquals("Boom", state.errorMessage)
@@ -145,7 +131,6 @@ class MemosViewModelTest {
 
   @Test
   fun `when update create delete then state reflects changes`() = runTest {
-    // given
     val repository = FakeMemosRepository()
     repository.listMemosResult = Result.success(
       listOf(Memo(name = "memos/1", content = "Old", createTime = Instant.parse("2024-01-01T00:00:00Z")))
@@ -161,31 +146,24 @@ class MemosViewModelTest {
       memosRepository = repository
     )
 
-    // when
     viewModel.loadMemos()
     advanceUntilIdle()
 
     viewModel.updateDailyMemo("memos/1", "Updated")
     advanceUntilIdle()
-    // then
     assertTrue(viewModel.uiState.memos.any { it.content == "Updated" })
 
-    // when
     viewModel.createDailyMemo("Created")
     advanceUntilIdle()
-    // then
     assertTrue(viewModel.uiState.memos.any { it.name == "memos/2" })
 
-    // when
     viewModel.deleteDailyMemo("memos/1")
     advanceUntilIdle()
-    // then
     assertFalse(viewModel.uiState.memos.any { it.name == "memos/1" })
   }
 
   @Test
   fun `when update memo fails then shows error`() = runTest {
-    // given
     val repository = FakeMemosRepository()
     repository.listMemosResult = Result.success(emptyList())
     repository.updateMemoResult = Result.failure(IllegalStateException("Update failed"))
@@ -194,14 +172,12 @@ class MemosViewModelTest {
       memosRepository = repository
     )
 
-    // when
     viewModel.loadMemos()
     advanceUntilIdle()
 
     viewModel.updateDailyMemo("memos/1", "Updated")
     advanceUntilIdle()
 
-    // then
     val state = viewModel.uiState
     assertEquals("Update failed", state.errorMessage)
     assertFalse(state.isLoading)

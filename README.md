@@ -86,6 +86,6 @@ We follow TDD for business logic and aim for high coverage (100% when practical)
 
 Last updated: 2026-01-13
 Desktop (Jacoco):
-- Instructions: 23%
-- Branches: 12%
-- Lines: 844/2,703 (31%)
+- Instructions: 22%
+- Branches: 11%
+- Lines: 768/2,646 (29%)

@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 class MemosDefaultsTest {
   @Test
   fun `when defaults then page size is 200`() {
-    // when/then
     assertEquals(200, MemosDefaults.DEFAULT_PAGE_SIZE)
   }
 }

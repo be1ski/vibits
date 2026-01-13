@@ -21,7 +21,6 @@ import kotlinx.coroutines.test.runTest
 class MemosApiTest {
   @Test
   fun `when listMemos then sends auth and pagination`() = runTest {
-    // given
     val client = clientWithHandler { request ->
       assertEquals(HttpMethod.Get, request.method)
       assertEquals("Bearer token", request.headers[HttpHeaders.Authorization])
@@ -36,7 +35,6 @@ class MemosApiTest {
     }
 
     val api = MemosApi(client)
-    // when/then
     api.listMemos(
       baseUrl = " https://example.com/ ",
       token = "token",
@@ -47,7 +45,6 @@ class MemosApiTest {
 
   @Test
   fun `when listMemos without pageToken then omits it`() = runTest {
-    // given
     val client = clientWithHandler { request ->
       assertEquals(null, request.url.parameters["pageToken"])
       respond(
@@ -57,7 +54,6 @@ class MemosApiTest {
     }
 
     val api = MemosApi(client)
-    // when/then
     api.listMemos(
       baseUrl = "https://example.com",
       token = "token",
@@ -68,7 +64,6 @@ class MemosApiTest {
 
   @Test
   fun `when updateMemo then sends patch with body`() = runTest {
-    // given
     val client = clientWithHandler { request ->
       assertEquals(HttpMethod.Patch, request.method)
       assertEquals("Bearer token", request.headers[HttpHeaders.Authorization])
@@ -81,7 +76,6 @@ class MemosApiTest {
     }
 
     val api = MemosApi(client)
-    // when/then
     api.updateMemo(
       baseUrl = "https://example.com/",
       token = "token",
@@ -92,7 +86,6 @@ class MemosApiTest {
 
   @Test
   fun `when createMemo then sends post with body`() = runTest {
-    // given
     val client = clientWithHandler { request ->
       assertEquals(HttpMethod.Post, request.method)
       assertEquals("Bearer token", request.headers[HttpHeaders.Authorization])
@@ -104,7 +97,6 @@ class MemosApiTest {
     }
 
     val api = MemosApi(client)
-    // when/then
     api.createMemo(
       baseUrl = "https://example.com",
       token = "token",
@@ -114,7 +106,6 @@ class MemosApiTest {
 
   @Test
   fun `when deleteMemo then sends delete`() = runTest {
-    // given
     val client = clientWithHandler { request ->
       assertEquals(HttpMethod.Delete, request.method)
       assertEquals("Bearer token", request.headers[HttpHeaders.Authorization])
@@ -122,7 +113,6 @@ class MemosApiTest {
     }
 
     val api = MemosApi(client)
-    // when/then
     api.deleteMemo(
       baseUrl = "https://example.com",
       token = "token",
