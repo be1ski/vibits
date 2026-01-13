@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import space.be1ski.memos.shared.domain.model.storage.StorageInfo
 import space.be1ski.memos.shared.presentation.state.MemosUiState
 import space.be1ski.memos.shared.presentation.viewmodel.MemosViewModel
 
@@ -35,14 +36,17 @@ internal fun CredentialsDialog(
       appState.credentialsDismissed = true
     },
     title = { Text("Settings") },
-    text = { CredentialsDialogContent(appState) },
+    text = { CredentialsDialogContent(appState, viewModel.storageInfo) },
     confirmButton = { CredentialsDialogConfirmButton(appState, viewModel) },
     dismissButton = { CredentialsDialogDismissButton(appState) }
   )
 }
 
 @Composable
-private fun CredentialsDialogContent(appState: MemosAppUiState) {
+private fun CredentialsDialogContent(
+  appState: MemosAppUiState,
+  storageInfo: StorageInfo
+) {
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
     TextField(
       value = appState.editBaseUrl,
@@ -58,6 +62,17 @@ private fun CredentialsDialogContent(appState: MemosAppUiState) {
       visualTransformation = PasswordVisualTransformation(),
       modifier = Modifier.fillMaxWidth()
     )
+    StorageInfoSection(storageInfo)
+  }
+}
+
+@Composable
+private fun StorageInfoSection(storageInfo: StorageInfo) {
+  Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Text("Storage")
+    Text("Environment: ${storageInfo.environment}")
+    Text("Credentials: ${storageInfo.credentialsStore}")
+    Text("Memos DB: ${storageInfo.memosDatabase}")
   }
 }
 

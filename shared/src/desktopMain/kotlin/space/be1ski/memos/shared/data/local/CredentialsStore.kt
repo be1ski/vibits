@@ -6,7 +6,7 @@ import java.util.prefs.Preferences
  * Desktop implementation backed by Preferences API.
  */
 actual class CredentialsStore {
-  private val prefs = Preferences.userRoot().node("space.be1ski.memos")
+  private val prefs = Preferences.userRoot().node(DesktopStoragePaths.preferencesNode())
 
   /**
    * Loads credentials or returns empty values when not available.

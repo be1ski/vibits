@@ -14,6 +14,7 @@ import space.be1ski.memos.shared.domain.usecase.DeleteMemoUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadCachedMemosUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadMemosUseCase
+import space.be1ski.memos.shared.domain.usecase.LoadStorageInfoUseCase
 import space.be1ski.memos.shared.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.memos.shared.domain.usecase.UpdateMemoUseCase
 import space.be1ski.memos.shared.presentation.state.MemosUiState
@@ -25,6 +26,7 @@ class MemosViewModel(
   private val loadMemosUseCase: LoadMemosUseCase,
   private val loadCachedMemosUseCase: LoadCachedMemosUseCase,
   private val loadCredentialsUseCase: LoadCredentialsUseCase,
+  private val loadStorageInfoUseCase: LoadStorageInfoUseCase,
   private val saveCredentialsUseCase: SaveCredentialsUseCase,
   private val updateMemoUseCase: UpdateMemoUseCase,
   private val createMemoUseCase: CreateMemoUseCase,
@@ -43,6 +45,11 @@ class MemosViewModel(
     initialState(loadCredentialsUseCase)
   )
     private set
+
+  /**
+   * Storage details for diagnostics.
+   */
+  val storageInfo = loadStorageInfoUseCase()
 
   /**
    * Updates the base URL input.

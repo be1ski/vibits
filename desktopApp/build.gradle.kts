@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.JavaExec
+
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.compose.multiplatform)
@@ -27,5 +29,11 @@ compose.desktop {
       packageName = "Memos"
       packageVersion = "1.0.0"
     }
+  }
+}
+
+tasks.matching { it.name == "run" || it.name == "desktopRun" }.configureEach {
+  doFirst {
+    (this as? JavaExec)?.systemProperty("memos.env", "dev")
   }
 }

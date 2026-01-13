@@ -4,6 +4,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import space.be1ski.memos.shared.data.local.CredentialsStore
 import space.be1ski.memos.shared.data.local.MemoCache
+import space.be1ski.memos.shared.data.local.StorageInfoProvider
 import space.be1ski.memos.shared.data.mapper.MemoMapper
 import space.be1ski.memos.shared.data.remote.MemosApi
 import space.be1ski.memos.shared.data.remote.createHttpClient
@@ -14,6 +15,7 @@ import space.be1ski.memos.shared.domain.repository.MemosRepository
 import space.be1ski.memos.shared.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadCachedMemosUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadMemosUseCase
+import space.be1ski.memos.shared.domain.usecase.LoadStorageInfoUseCase
 import space.be1ski.memos.shared.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.memos.shared.domain.usecase.CreateMemoUseCase
 import space.be1ski.memos.shared.domain.usecase.DeleteMemoUseCase
@@ -27,6 +29,7 @@ fun sharedModule(): Module = module {
   single { createHttpClient() }
   single { CredentialsStore() }
   single { MemoCache() }
+  single { StorageInfoProvider() }
   single { MemoMapper() }
   single { MemosApi(get()) }
   single<CredentialsRepository> { CredentialsRepositoryImpl(get()) }
@@ -34,9 +37,10 @@ fun sharedModule(): Module = module {
   factory { LoadCachedMemosUseCase(get()) }
   factory { LoadMemosUseCase(get()) }
   factory { LoadCredentialsUseCase(get()) }
+  factory { LoadStorageInfoUseCase(get()) }
   factory { SaveCredentialsUseCase(get()) }
   factory { CreateMemoUseCase(get()) }
   factory { UpdateMemoUseCase(get()) }
   factory { DeleteMemoUseCase(get()) }
-  factory { MemosViewModel(get(), get(), get(), get(), get(), get(), get()) }
+  factory { MemosViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
 }

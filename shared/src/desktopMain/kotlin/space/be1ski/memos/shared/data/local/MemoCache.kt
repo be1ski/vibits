@@ -31,7 +31,7 @@ actual class MemoCache {
 
   private fun createDatabase(): MemoDatabase =
     Room.databaseBuilder<MemoDatabase>(
-      name = "memos.db",
+      name = DesktopStoragePaths.databasePath(),
       factory = MemoDatabaseConstructor::initialize
     )
       .setDriver(BundledSQLiteDriver())
