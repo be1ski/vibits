@@ -146,6 +146,8 @@ private fun StatsScreenContent(derived: StatsScreenDerivedState) {
       modifier = columnModifier
     ) {
       StatsHeaderRow(derived)
+      StatsHabitsEmptyState(derived)
+      StatsTodaySection(derived)
       StatsHabitsConfigSection(derived)
       StatsMainChart(derived)
       StatsHabitDetailsToggle(derived)

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -83,6 +84,61 @@ internal fun StatsHabitsConfigSection(derived: StatsScreenDerivedState) {
         actions.onCreateDailyMemo(content)
       }
     )
+  }
+}
+
+@Composable
+internal fun StatsHabitsEmptyState(derived: StatsScreenDerivedState) {
+  val state = derived.state
+  val uiState = derived.uiState
+  if (state.activityMode != ActivityMode.Habits || derived.currentHabitsConfig.isNotEmpty()) {
+    return
+  }
+  OutlinedCard(modifier = Modifier.fillMaxWidth()) {
+    Column(
+      modifier = Modifier.padding(Indent.s),
+      verticalArrangement = Arrangement.spacedBy(Indent.xs)
+    ) {
+      Text("No habits configured yet.", style = MaterialTheme.typography.titleSmall)
+      Text(
+        "Add a habits config memo to start tracking.",
+        style = MaterialTheme.typography.bodySmall
+      )
+      Button(onClick = { uiState.showHabitsConfig = true }) {
+        Text("Configure habits")
+      }
+    }
+  }
+}
+
+@Composable
+internal fun StatsTodaySection(derived: StatsScreenDerivedState) {
+  val state = derived.state
+  if (state.activityMode != ActivityMode.Habits || derived.todayConfig.isEmpty()) {
+    return
+  }
+  val todayStatuses = derived.todayDay?.habitStatuses.orEmpty()
+  val doneCount = todayStatuses.count { it.done }
+  val totalCount = todayStatuses.size
+  OutlinedCard(modifier = Modifier.fillMaxWidth()) {
+    Column(
+      modifier = Modifier.padding(Indent.s),
+      verticalArrangement = Arrangement.spacedBy(Indent.xs)
+    ) {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        Column(verticalArrangement = Arrangement.spacedBy(Indent.x5s)) {
+          Text("Today", style = MaterialTheme.typography.titleSmall)
+          Text("$doneCount of $totalCount habits done", style = MaterialTheme.typography.bodySmall)
+        }
+        Button(onClick = { openTodayHabitEditor(derived) }) {
+          Text("Track")
+        }
+      }
+    }
   }
 }
 
@@ -229,19 +285,11 @@ internal fun StatsHabitSections(derived: StatsScreenDerivedState) {
 @Composable
 internal fun BoxScope.StatsFloatingAction(derived: StatsScreenDerivedState) {
   val state = derived.state
-  val uiState = derived.uiState
   if (state.activityMode != ActivityMode.Habits || derived.todayConfig.isEmpty()) {
     return
   }
   FloatingActionButton(
-    onClick = {
-      val day = derived.todayDay ?: return@FloatingActionButton
-      uiState.habitsEditorDay = day
-      uiState.habitsEditorExisting = day.dailyMemo
-      uiState.habitsEditorConfig = derived.todayConfig
-      uiState.habitsEditorSelections = buildHabitsEditorSelections(day, uiState.habitsEditorConfig)
-      uiState.habitsEditorError = null
-    },
+    onClick = { openTodayHabitEditor(derived) },
     modifier = Modifier.align(Alignment.BottomEnd)
   ) {
     Icon(
@@ -271,6 +319,16 @@ private fun HabitsConfigCard(
       }
     }
   }
+}
+
+private fun openTodayHabitEditor(derived: StatsScreenDerivedState) {
+  val uiState = derived.uiState
+  val day = derived.todayDay ?: return
+  uiState.habitsEditorDay = day
+  uiState.habitsEditorExisting = day.dailyMemo
+  uiState.habitsEditorConfig = derived.todayConfig
+  uiState.habitsEditorSelections = buildHabitsEditorSelections(day, uiState.habitsEditorConfig)
+  uiState.habitsEditorError = null
 }
 
 @Composable
