@@ -212,7 +212,8 @@ private fun MemosTabContent(
         range = activityRange,
         activityMode = ActivityMode.Habits,
         useVerticalScroll = true,
-        enablePullRefresh = false
+        enablePullRefresh = false,
+        demoMode = appState.demoMode
       ),
       actions = StatsScreenActions(
         onEditDailyMemo = { memo, content -> viewModel.updateMemo(memo.name, content) },
@@ -222,13 +223,15 @@ private fun MemosTabContent(
     )
     MemosScreen.Stats -> PostsScreen(
       memos = memos,
-      range = activityRange
+      range = activityRange,
+      demoMode = appState.demoMode
     )
     MemosScreen.Feed -> FeedScreen(
       memos = memos,
       isRefreshing = uiState.isLoading,
       onRefresh = { viewModel.loadMemos() },
       enablePullRefresh = !isDesktop,
+      demoMode = appState.demoMode,
       onMemoClick = { memo -> beginEditMemo(appState, memo) }
     )
   }

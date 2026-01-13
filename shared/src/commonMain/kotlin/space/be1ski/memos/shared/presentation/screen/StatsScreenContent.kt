@@ -37,8 +37,10 @@ import space.be1ski.memos.shared.presentation.components.ContributionGridCallbac
 import space.be1ski.memos.shared.presentation.components.ContributionGridState
 import space.be1ski.memos.shared.presentation.components.HabitConfig
 import space.be1ski.memos.shared.presentation.components.Indent
+import space.be1ski.memos.shared.presentation.components.DEMO_PLACEHOLDER_HABIT
 import space.be1ski.memos.shared.presentation.components.calculateLayout
 import space.be1ski.memos.shared.presentation.components.habitsConfigForDate
+import space.be1ski.memos.shared.presentation.components.obfuscateIfNeeded
 import space.be1ski.memos.shared.presentation.components.WeeklyBarChart
 import space.be1ski.memos.shared.presentation.components.WeeklyBarChartState
 import space.be1ski.memos.shared.presentation.components.activityWeekDataForHabit
@@ -146,7 +148,8 @@ internal fun StatsMainChart(derived: StatsScreenDerivedState) {
     LastSevenDaysMatrix(
       days = lastSevenDays(derived.weekData),
       habits = derived.currentHabitsConfig,
-      compactHeight = derived.useCompactHeight
+      compactHeight = derived.useCompactHeight,
+      demoMode = state.demoMode
     )
   } else {
     val showMonthNumbers = state.range is ActivityRange.Month
@@ -191,7 +194,8 @@ internal fun StatsMainChart(derived: StatsScreenDerivedState) {
           uiState.habitsEditorConfig = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
           uiState.habitsEditorSelections = buildHabitsEditorSelections(day, uiState.habitsEditorConfig)
           uiState.habitsEditorError = null
-        }
+        },
+        demoMode = state.demoMode
       )
     )
   }
@@ -245,13 +249,16 @@ internal fun StatsHabitSections(derived: StatsScreenDerivedState) {
   derived.currentHabitsConfig.forEach { habit ->
     HabitActivitySection(
       state = HabitActivitySectionState(
-        habit = habit,
+        habit = habit.copy(
+          label = obfuscateIfNeeded(habit.label, derived.state.demoMode, DEMO_PLACEHOLDER_HABIT)
+        ),
         baseWeekData = derived.weekData,
         selectedDate = if (uiState.activeSelectionId == "habit:${habit.tag}") uiState.selectedDate else null,
         isActiveSelection = uiState.activeSelectionId == "habit:${habit.tag}",
         showWeekdayLegend = derived.showWeekdayLegend,
         compactHeight = derived.useCompactHeight,
-        range = derived.state.range
+        range = derived.state.range,
+        demoMode = derived.state.demoMode
       ),
       actions = HabitActivitySectionActions(
         onDaySelected = { day ->
@@ -359,7 +366,8 @@ private fun HabitActivitySection(
         onDaySelected = actions.onDaySelected,
         onClearSelection = actions.onClearSelection,
         onEditRequested = actions.onEditRequested,
-        onCreateRequested = actions.onCreateRequested
+        onCreateRequested = actions.onCreateRequested,
+        demoMode = state.demoMode
       )
     )
   }
@@ -369,7 +377,8 @@ private fun HabitActivitySection(
 private fun LastSevenDaysMatrix(
   days: List<ContributionDay>,
   habits: List<HabitConfig>,
-  compactHeight: Boolean
+  compactHeight: Boolean,
+  demoMode: Boolean
 ) {
   if (days.isEmpty() || habits.isEmpty()) {
     return
@@ -402,7 +411,8 @@ private fun LastSevenDaysMatrix(
           horizontalArrangement = Arrangement.spacedBy(spacing),
           verticalAlignment = Alignment.CenterVertically
         ) {
-          Text(habit.label, style = MaterialTheme.typography.bodySmall, modifier = Modifier.width(labelWidth))
+          val label = obfuscateIfNeeded(habit.label, demoMode, DEMO_PLACEHOLDER_HABIT)
+          Text(label, style = MaterialTheme.typography.bodySmall, modifier = Modifier.width(labelWidth))
           days.forEach { day ->
             val done = day.habitStatuses.firstOrNull { status -> status.tag == habit.tag }?.done == true
             val cellColor = if (done) HABIT_DONE_COLOR else HABIT_PENDING_COLOR

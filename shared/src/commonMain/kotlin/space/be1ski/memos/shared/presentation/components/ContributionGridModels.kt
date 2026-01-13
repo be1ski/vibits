@@ -32,7 +32,8 @@ data class ContributionGridCallbacks(
   val onDaySelected: (ContributionDay) -> Unit,
   val onEditRequested: (ContributionDay) -> Unit,
   val onCreateRequested: (ContributionDay) -> Unit,
-  val onClearSelection: () -> Unit
+  val onClearSelection: () -> Unit,
+  val demoMode: Boolean = false
 )
 
 /**

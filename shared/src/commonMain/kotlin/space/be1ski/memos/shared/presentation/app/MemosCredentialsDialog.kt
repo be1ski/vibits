@@ -2,16 +2,20 @@ package space.be1ski.memos.shared.presentation.app
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import space.be1ski.memos.shared.domain.model.storage.StorageInfo
+import space.be1ski.memos.shared.presentation.components.DEMO_MODE_LABEL
 import space.be1ski.memos.shared.presentation.state.MemosUiState
 import space.be1ski.memos.shared.presentation.viewmodel.MemosViewModel
 
@@ -62,6 +66,17 @@ private fun CredentialsDialogContent(
       visualTransformation = PasswordVisualTransformation(),
       modifier = Modifier.fillMaxWidth()
     )
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+      Text(DEMO_MODE_LABEL)
+      Switch(
+        checked = appState.demoMode,
+        onCheckedChange = { appState.demoMode = it }
+      )
+    }
     StorageInfoSection(storageInfo)
   }
 }

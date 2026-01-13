@@ -11,7 +11,8 @@ import space.be1ski.memos.shared.presentation.components.ActivityRange
 @Composable
 fun PostsScreen(
   memos: List<Memo>,
-  range: ActivityRange
+  range: ActivityRange,
+  demoMode: Boolean
 ) {
   StatsScreen(
     state = StatsScreenState(
@@ -19,7 +20,8 @@ fun PostsScreen(
       range = range,
       activityMode = ActivityMode.Posts,
       useVerticalScroll = true,
-      enablePullRefresh = false
+      enablePullRefresh = false,
+      demoMode = demoMode
     ),
     actions = StatsScreenActions()
   )

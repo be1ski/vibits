@@ -29,6 +29,7 @@ internal class MemosAppUiState(currentDate: LocalDate) {
   var quarterYear by mutableStateOf(currentDate.year)
   var quarterIndex by mutableStateOf(currentQuarterIndex(currentDate))
   var year by mutableStateOf(currentDate.year)
+  var demoMode by mutableStateOf(false)
   var autoLoaded by mutableStateOf(false)
   var showCredentialsDialog by mutableStateOf(false)
   var credentialsInitialized by mutableStateOf(false)

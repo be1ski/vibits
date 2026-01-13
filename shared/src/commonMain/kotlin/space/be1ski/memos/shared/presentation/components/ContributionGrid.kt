@@ -43,6 +43,8 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
+import space.be1ski.memos.shared.presentation.components.DEMO_PLACEHOLDER_HABIT
+import space.be1ski.memos.shared.presentation.components.obfuscateIfNeeded
 
 internal object ChartDimens {
   val legendWidth = LEGEND_WIDTH_DP.dp
@@ -277,7 +279,8 @@ private fun ContributionGridTooltip(
               MaterialTheme.colorScheme.onSurfaceVariant
             }
             val prefix = if (status.done) "\u2713 " else "\u2022 "
-            Text("$prefix${status.label}", color = color, style = MaterialTheme.typography.labelSmall)
+            val label = obfuscateIfNeeded(status.label, callbacks.demoMode, DEMO_PLACEHOLDER_HABIT)
+            Text("$prefix$label", color = color, style = MaterialTheme.typography.labelSmall)
           }
         }
       }

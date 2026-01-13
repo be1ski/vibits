@@ -24,7 +24,8 @@ data class StatsScreenState(
   val activityMode: ActivityMode,
   val useVerticalScroll: Boolean = true,
   val isRefreshing: Boolean = false,
-  val enablePullRefresh: Boolean = true
+  val enablePullRefresh: Boolean = true,
+  val demoMode: Boolean = false
 )
 
 /**
@@ -44,7 +45,8 @@ internal data class HabitActivitySectionState(
   val isActiveSelection: Boolean,
   val showWeekdayLegend: Boolean,
   val compactHeight: Boolean,
-  val range: ActivityRange
+  val range: ActivityRange,
+  val demoMode: Boolean
 )
 
 internal data class HabitActivitySectionActions(
