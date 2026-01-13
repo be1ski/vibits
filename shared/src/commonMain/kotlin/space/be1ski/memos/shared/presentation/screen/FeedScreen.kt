@@ -1,4 +1,4 @@
-package space.be1ski.memos.shared.presentation
+package space.be1ski.memos.shared.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import space.be1ski.memos.shared.domain.model.Memo
+import space.be1ski.memos.shared.domain.model.memo.Memo
 
 /**
  * Feed tab showing the raw memos list.

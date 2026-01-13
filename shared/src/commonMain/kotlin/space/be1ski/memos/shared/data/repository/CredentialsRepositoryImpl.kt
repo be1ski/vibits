@@ -2,7 +2,7 @@ package space.be1ski.memos.shared.data.repository
 
 import space.be1ski.memos.shared.data.local.CredentialsStore
 import space.be1ski.memos.shared.data.local.LocalCredentials
-import space.be1ski.memos.shared.domain.model.Credentials
+import space.be1ski.memos.shared.domain.model.auth.Credentials
 import space.be1ski.memos.shared.domain.repository.CredentialsRepository
 
 /**

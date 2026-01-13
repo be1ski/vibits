@@ -2,13 +2,7 @@ package space.be1ski.memos.shared.data.local
 
 /** DTO for persisted credentials. */
 data class LocalCredentials(
-  /**
-   * Base URL for the Memos server.
-   */
   val baseUrl: String,
-  /**
-   * Access token for the server.
-   */
   val token: String
 )
 

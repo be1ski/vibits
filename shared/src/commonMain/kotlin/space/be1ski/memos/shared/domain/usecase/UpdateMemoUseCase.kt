@@ -1,6 +1,6 @@
 package space.be1ski.memos.shared.domain.usecase
 
-import space.be1ski.memos.shared.domain.model.Memo
+import space.be1ski.memos.shared.domain.model.memo.Memo
 import space.be1ski.memos.shared.domain.repository.MemosRepository
 
 /**

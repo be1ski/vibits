@@ -1,4 +1,4 @@
-package space.be1ski.memos.shared.presentation
+package space.be1ski.memos.shared.presentation.app
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,9 +33,13 @@ import org.koin.compose.koinInject
 import space.be1ski.memos.shared.presentation.components.ActivityMode
 import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.availableYears
+import space.be1ski.memos.shared.presentation.screen.FeedScreen
+import space.be1ski.memos.shared.presentation.screen.PostsScreen
+import space.be1ski.memos.shared.presentation.screen.StatsScreen
 import space.be1ski.memos.shared.presentation.state.MemosUiState
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 import space.be1ski.memos.shared.presentation.util.isDesktop
+import space.be1ski.memos.shared.presentation.viewmodel.MemosViewModel
 
 /** Root shared UI for the app. */
 @Composable

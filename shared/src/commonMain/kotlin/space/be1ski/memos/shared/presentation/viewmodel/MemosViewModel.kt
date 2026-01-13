@@ -1,4 +1,4 @@
-package space.be1ski.memos.shared.presentation
+package space.be1ski.memos.shared.presentation.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import space.be1ski.memos.shared.domain.model.Credentials
+import space.be1ski.memos.shared.domain.model.auth.Credentials
 import space.be1ski.memos.shared.domain.usecase.CreateMemoUseCase
 import space.be1ski.memos.shared.domain.usecase.DeleteMemoUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadCredentialsUseCase

@@ -1,4 +1,4 @@
-package space.be1ski.memos.shared.presentation
+package space.be1ski.memos.shared.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.background
@@ -43,7 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import space.be1ski.memos.shared.domain.model.Memo
+import space.be1ski.memos.shared.domain.model.memo.Memo
 import space.be1ski.memos.shared.presentation.components.ActivityMode
 import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.ActivityWeek

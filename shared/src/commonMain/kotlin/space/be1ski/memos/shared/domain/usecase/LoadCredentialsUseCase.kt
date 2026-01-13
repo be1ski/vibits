@@ -1,6 +1,6 @@
 package space.be1ski.memos.shared.domain.usecase
 
-import space.be1ski.memos.shared.domain.model.Credentials
+import space.be1ski.memos.shared.domain.model.auth.Credentials
 import space.be1ski.memos.shared.domain.repository.CredentialsRepository
 
 /**

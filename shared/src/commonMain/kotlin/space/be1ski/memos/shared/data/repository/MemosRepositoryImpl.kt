@@ -3,7 +3,7 @@ package space.be1ski.memos.shared.data.repository
 import space.be1ski.memos.shared.data.mapper.MemoMapper
 import space.be1ski.memos.shared.data.remote.MemosApi
 import space.be1ski.memos.shared.data.remote.MemosPagination
-import space.be1ski.memos.shared.domain.model.Memo
+import space.be1ski.memos.shared.domain.model.memo.Memo
 import space.be1ski.memos.shared.domain.repository.CredentialsRepository
 import space.be1ski.memos.shared.domain.repository.MemosRepository
 import space.be1ski.memos.shared.domain.config.MemosDefaults
@@ -17,12 +17,7 @@ class MemosRepositoryImpl(
   private val credentialsRepository: CredentialsRepository
 ) : MemosRepository {
   /**
-   * Loads memos from the server using paginated API calls.
-   *
-   * @param baseUrl Base URL for Memos server.
-   * @param token Access token.
-   * @param pageSize Page size for each request.
-   * @return Full list of memos collected across pages.
+   * Loads memos from the server using stored credentials and paginated API calls.
    */
   override suspend fun listMemos(): List<Memo> {
     val credentials = credentialsRepository.load()

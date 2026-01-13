@@ -16,7 +16,7 @@ import space.be1ski.memos.shared.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.memos.shared.domain.usecase.CreateMemoUseCase
 import space.be1ski.memos.shared.domain.usecase.DeleteMemoUseCase
 import space.be1ski.memos.shared.domain.usecase.UpdateMemoUseCase
-import space.be1ski.memos.shared.presentation.MemosViewModel
+import space.be1ski.memos.shared.presentation.viewmodel.MemosViewModel
 
 /**
  * Koin module that wires shared dependencies.

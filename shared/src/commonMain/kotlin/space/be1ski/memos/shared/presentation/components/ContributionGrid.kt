@@ -52,7 +52,7 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.max
 import kotlin.time.Instant as KtInstant
-import space.be1ski.memos.shared.domain.model.Memo
+import space.be1ski.memos.shared.domain.model.memo.Memo
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 
 internal object ChartDimens {

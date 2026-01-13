@@ -1,6 +1,6 @@
 package space.be1ski.memos.shared.domain.repository
 
-import space.be1ski.memos.shared.domain.model.Credentials
+import space.be1ski.memos.shared.domain.model.auth.Credentials
 
 /**
  * Repository for reading and persisting user credentials.

@@ -2,7 +2,7 @@ package space.be1ski.memos.shared.data.mapper
 
 import kotlin.time.Instant
 import space.be1ski.memos.shared.data.remote.dto.MemoDto
-import space.be1ski.memos.shared.domain.model.Memo
+import space.be1ski.memos.shared.domain.model.memo.Memo
 
 /**
  * Maps network memo DTOs into domain models.
