@@ -33,6 +33,14 @@ Cross-platform client for Memos built with Kotlin Multiplatform and Compose Mult
 ./gradlew :desktopApp:run
 ```
 
+### Desktop (DMG)
+
+```bash
+./gradlew :desktopApp:packageDmg -Dorg.gradle.java.home=$(/usr/libexec/java_home -v 21)
+```
+
+Output: `desktopApp/build/compose/binaries/main/dmg/Memos-1.0.0.dmg`
+
 ### Android
 
 ```bash
