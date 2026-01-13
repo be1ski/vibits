@@ -19,7 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.automirrored.filled.List
@@ -186,8 +186,8 @@ private fun MemosBottomNavigation(appState: MemosAppUiState) {
     NavigationBarItem(
       selected = appState.selectedScreen == MemosScreen.Stats,
       onClick = { appState.selectedScreen = MemosScreen.Stats },
-      icon = { Icon(imageVector = Icons.Filled.BarChart, contentDescription = "Stats") },
-      label = { Text("Stats") }
+      icon = { Icon(imageVector = Icons.Filled.Description, contentDescription = "Posts") },
+      label = { Text("Posts") }
     )
     NavigationBarItem(
       selected = appState.selectedScreen == MemosScreen.Feed,

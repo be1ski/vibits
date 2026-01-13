@@ -47,7 +47,7 @@ internal fun TimeRangeControls(
       Tab(
         selected = selectedTab == TimeRangeTab.Quarters,
         onClick = { onTabChange(TimeRangeTab.Quarters) },
-        text = { Text("Seasons") }
+        text = { Text("Quarters") }
       )
       Tab(
         selected = selectedTab == TimeRangeTab.Years,
@@ -105,7 +105,7 @@ private fun rangeLabel(range: ActivityRange): String {
       "${formatMonthDay(range.startDate)} - ${formatMonthDay(endDate)}"
     }
     is ActivityRange.Month -> "${monthShort(range.month)} ${range.year}"
-    is ActivityRange.Quarter -> "Season ${range.index} ${range.year}"
+    is ActivityRange.Quarter -> "Q${range.index} ${range.year}"
     is ActivityRange.Year -> range.year.toString()
   }
 }
