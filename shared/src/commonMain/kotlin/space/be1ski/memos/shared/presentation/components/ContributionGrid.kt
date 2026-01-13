@@ -427,17 +427,22 @@ private fun ContributionCell(
   val selectedColor = color
 
   val borderColor = when {
-    state.isSelected -> MaterialTheme.colorScheme.outline
+    state.isSelected -> MaterialTheme.colorScheme.primary
     state.isHovered -> MaterialTheme.colorScheme.outlineVariant
     state.isWeekSelected -> MaterialTheme.colorScheme.outlineVariant
     else -> Color.Transparent
+  }
+  val borderWidth = when {
+    state.isSelected -> Indent.x4s
+    state.isHovered || state.isWeekSelected -> Indent.x5s
+    else -> 0.dp
   }
 
   Spacer(
     modifier = Modifier
       .size(state.size)
       .background(color = selectedColor, shape = MaterialTheme.shapes.extraSmall)
-      .border(width = 1.dp, color = borderColor, shape = MaterialTheme.shapes.extraSmall)
+      .border(width = borderWidth, color = borderColor, shape = MaterialTheme.shapes.extraSmall)
       .onGloballyPositioned { coordinates = it }
       .then(
         if (callbacks.onHoverChange != null) {
