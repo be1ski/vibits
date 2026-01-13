@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month as CalendarMonth
 import space.be1ski.memos.shared.domain.model.memo.Memo
 
 /**
@@ -18,8 +19,10 @@ data class ContributionGridState(
   val isActiveSelection: Boolean,
   val scrollState: ScrollState,
   val showWeekdayLegend: Boolean = false,
+  val showAllWeekdayLabels: Boolean = false,
   val compactHeight: Boolean = false,
-  val showTimeline: Boolean = false
+  val showTimeline: Boolean = false,
+  val showDayNumbers: Boolean = false
 )
 
 /**
@@ -146,14 +149,12 @@ enum class ActivityMode {
  * Range selection for activity charts.
  */
 sealed class ActivityRange {
-  /** Rolling 7-day range. */
-  data object Last7Days : ActivityRange()
-  /** Rolling 90-day range. */
-  data object Last90Days : ActivityRange()
-  /** Rolling 6-month range. */
-  data object Last6Months : ActivityRange()
-  /** Rolling 12-month range. */
-  data object LastYear : ActivityRange()
+  /** Fixed calendar week starting on Monday. */
+  data class Week(val startDate: LocalDate) : ActivityRange()
+  /** Fixed calendar month. */
+  data class Month(val year: Int, val month: CalendarMonth) : ActivityRange()
+  /** Fixed calendar quarter. */
+  data class Quarter(val year: Int, val index: Int) : ActivityRange()
   /** Fixed calendar year. */
   data class Year(val year: Int) : ActivityRange()
 }
@@ -165,7 +166,8 @@ internal data class ContributionCellState(
   val size: Dp,
   val isSelected: Boolean,
   val isHovered: Boolean,
-  val isWeekSelected: Boolean
+  val isWeekSelected: Boolean,
+  val showDayNumber: Boolean
 )
 
 internal data class ContributionCellCallbacks(

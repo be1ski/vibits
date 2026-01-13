@@ -71,11 +71,13 @@ private fun rememberStatsScreenDerived(
     )
   }
   val weekData = rememberActivityWeekData(memos, range, activityMode)
-  val showWeekdayLegend = range is ActivityRange.Last90Days || range is ActivityRange.Last7Days
-  val useCompactHeight = range is ActivityRange.Last90Days && !isDesktop
-  val collapseHabits = activityMode == ActivityMode.Habits && range is ActivityRange.Last90Days
+  val showWeekdayLegend = range is ActivityRange.Week ||
+    range is ActivityRange.Month ||
+    range is ActivityRange.Quarter
+  val useCompactHeight = range is ActivityRange.Year && !isDesktop
+  val collapseHabits = activityMode == ActivityMode.Habits && range is ActivityRange.Year
   val showLast7DaysMatrix = activityMode == ActivityMode.Habits &&
-    range is ActivityRange.Last7Days &&
+    range is ActivityRange.Week &&
     currentHabitsConfig.isNotEmpty()
   val showHabitSections = !showLast7DaysMatrix &&
     activityMode == ActivityMode.Habits &&

@@ -5,5 +5,5 @@ internal enum class MemosFabMode {
   Memo
 }
 
-internal fun memosFabModeForTab(selectedTab: Int): MemosFabMode =
-  if (selectedTab == 0) MemosFabMode.Habits else MemosFabMode.Memo
+internal fun memosFabModeForScreen(selectedScreen: MemosScreen): MemosFabMode =
+  if (selectedScreen == MemosScreen.Habits) MemosFabMode.Habits else MemosFabMode.Memo

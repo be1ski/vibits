@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddTask
 import space.be1ski.memos.shared.presentation.components.ActivityMode
+import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.ContributionDay
 import space.be1ski.memos.shared.presentation.components.ContributionGrid
 import space.be1ski.memos.shared.presentation.components.ContributionGridCallbacks
@@ -47,7 +48,6 @@ import space.be1ski.memos.shared.presentation.components.ChartDimens
 @Composable
 internal fun StatsHeaderRow(derived: StatsScreenDerivedState) {
   val state = derived.state
-  val actions = derived.actions
   val uiState = derived.uiState
   Row(
     modifier = Modifier.fillMaxWidth(),
@@ -61,11 +61,6 @@ internal fun StatsHeaderRow(derived: StatsScreenDerivedState) {
           Text("Habits config")
         }
       }
-      ActivityRangeSelector(
-        years = state.years,
-        selectedRange = state.range,
-        onRangeChange = actions.onRangeChange
-      )
     }
   }
 }
@@ -154,6 +149,7 @@ internal fun StatsMainChart(derived: StatsScreenDerivedState) {
       compactHeight = derived.useCompactHeight
     )
   } else {
+    val showMonthNumbers = state.range is ActivityRange.Month
     ContributionGrid(
       state = ContributionGridState(
         weekData = derived.weekData,
@@ -163,8 +159,10 @@ internal fun StatsMainChart(derived: StatsScreenDerivedState) {
         isActiveSelection = uiState.activeSelectionId == "main",
         scrollState = chartScrollState,
         showWeekdayLegend = derived.showWeekdayLegend,
+        showAllWeekdayLabels = showMonthNumbers,
         compactHeight = derived.useCompactHeight,
-        showTimeline = true
+        showTimeline = true,
+        showDayNumbers = showMonthNumbers
       ),
       callbacks = ContributionGridCallbacks(
         onDaySelected = { day ->

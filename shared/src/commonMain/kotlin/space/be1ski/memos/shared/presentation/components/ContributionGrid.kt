@@ -161,7 +161,8 @@ private fun ContributionGridWeeks(
     if (state.showWeekdayLegend) {
       DayOfWeekLegend(
         cellSize = layout.columnSize,
-        spacing = spacing
+        spacing = spacing,
+        showAllLabels = state.showAllWeekdayLabels
       )
     }
     Row(
@@ -182,7 +183,8 @@ private fun ContributionGridWeeks(
                 size = layout.columnSize,
                 isSelected = state.selectedDay?.date == day.date,
                 isHovered = interaction.hoveredDate == day.date,
-                isWeekSelected = isWeekSelected
+                isWeekSelected = isWeekSelected,
+                showDayNumber = state.showDayNumbers
               ),
               callbacks = ContributionCellCallbacks(
                 onClick = { offset ->
@@ -297,7 +299,8 @@ private fun ContributionGridTooltip(
 @Composable
 private fun DayOfWeekLegend(
   cellSize: Dp,
-  spacing: Dp
+  spacing: Dp,
+  showAllLabels: Boolean
 ) {
   val labelWidth = 26.dp
   val order = listOf(
@@ -318,11 +321,15 @@ private fun DayOfWeekLegend(
         modifier = Modifier.height(cellSize),
         contentAlignment = Alignment.CenterStart
       ) {
-        val label = when (day) {
-          DayOfWeek.MONDAY -> "Mon"
-          DayOfWeek.WEDNESDAY -> "Wed"
-          DayOfWeek.FRIDAY -> "Fri"
-          else -> null
+        val label = if (showAllLabels) {
+          day.name.take(3).lowercase().replaceFirstChar { it.uppercase() }
+        } else {
+          when (day) {
+            DayOfWeek.MONDAY -> "Mon"
+            DayOfWeek.WEDNESDAY -> "Wed"
+            DayOfWeek.FRIDAY -> "Fri"
+            else -> null
+          }
         }
         if (label != null) {
           Text(
@@ -438,7 +445,7 @@ private fun ContributionCell(
     else -> 0.dp
   }
 
-  Spacer(
+  Box(
     modifier = Modifier
       .size(state.size)
       .background(color = selectedColor, shape = MaterialTheme.shapes.extraSmall)
@@ -465,5 +472,19 @@ private fun ContributionCell(
           Modifier
         }
       )
-  )
+  ,
+    contentAlignment = Alignment.Center
+  ) {
+    if (state.showDayNumber) {
+      Text(
+        state.day.date.day.toString(),
+        style = MaterialTheme.typography.labelSmall,
+        color = if (state.day.inRange) {
+          MaterialTheme.colorScheme.onSurface
+        } else {
+          MaterialTheme.colorScheme.onSurfaceVariant
+        }
+      )
+    }
+  }
 }

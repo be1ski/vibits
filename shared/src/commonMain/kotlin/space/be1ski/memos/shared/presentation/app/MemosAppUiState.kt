@@ -3,12 +3,32 @@ package space.be1ski.memos.shared.presentation.app
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.domain.model.memo.Memo
+import kotlinx.datetime.LocalDate
+import space.be1ski.memos.shared.presentation.components.startOfWeek
 
-internal class MemosAppUiState {
-  var selectedTab by mutableStateOf(0)
-  var activityRange by mutableStateOf<ActivityRange>(ActivityRange.Last90Days)
+internal enum class MemosScreen {
+  Habits,
+  Stats,
+  Feed
+}
+
+internal enum class TimeRangeTab {
+  Weeks,
+  Months,
+  Quarters,
+  Years
+}
+
+internal class MemosAppUiState(currentDate: LocalDate) {
+  var selectedScreen by mutableStateOf(MemosScreen.Habits)
+  var selectedTimeRangeTab by mutableStateOf(TimeRangeTab.Weeks)
+  var weekStart by mutableStateOf(startOfWeek(currentDate))
+  var monthYear by mutableStateOf(currentDate.year)
+  var month by mutableStateOf(currentDate.month)
+  var quarterYear by mutableStateOf(currentDate.year)
+  var quarterIndex by mutableStateOf(currentQuarterIndex(currentDate))
+  var year by mutableStateOf(currentDate.year)
   var autoLoaded by mutableStateOf(false)
   var showCredentialsDialog by mutableStateOf(false)
   var credentialsInitialized by mutableStateOf(false)
@@ -21,3 +41,10 @@ internal class MemosAppUiState {
   var editMemoContent by mutableStateOf("")
   var editMemoTarget by mutableStateOf<Memo?>(null)
 }
+
+private fun currentQuarterIndex(date: LocalDate): Int {
+  return date.month.ordinal / MONTHS_IN_QUARTER + FIRST_QUARTER_INDEX
+}
+
+private const val MONTHS_IN_QUARTER = 3
+private const val FIRST_QUARTER_INDEX = 1

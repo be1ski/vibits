@@ -2,23 +2,19 @@ package space.be1ski.memos.shared.presentation.components
 
 import kotlinx.datetime.TimeZone
 import space.be1ski.memos.shared.domain.model.memo.Memo
-import space.be1ski.memos.shared.presentation.time.currentLocalDate
 
 private const val LAST_SEVEN_DAYS = 7
 
 /**
- * Computes available years from memo timestamps.
+ * Returns the earliest memo date available in the dataset.
  */
-fun availableYears(
+fun earliestMemoDate(
   memos: List<Memo>,
-  timeZone: TimeZone,
-  fallbackYear: Int = currentLocalDate().year
-): List<Int> {
-  val years = memos.mapNotNull { memo ->
-    parseDailyDateFromContent(memo.content)?.year ?: parseMemoDate(memo, timeZone)?.year
-  }.toMutableSet()
-  years.add(fallbackYear)
-  return years.toList().sortedDescending()
+  timeZone: TimeZone
+): kotlinx.datetime.LocalDate? {
+  return memos.mapNotNull { memo ->
+    parseDailyDateFromContent(memo.content) ?: parseMemoDate(memo, timeZone)
+  }.minOrNull()
 }
 
 /**

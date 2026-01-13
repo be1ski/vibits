@@ -20,7 +20,6 @@ import androidx.compose.runtime.setValue
  */
 data class StatsScreenState(
   val memos: List<Memo>,
-  val years: List<Int>,
   val range: ActivityRange,
   val activityMode: ActivityMode,
   val useVerticalScroll: Boolean = true,
@@ -32,7 +31,6 @@ data class StatsScreenState(
  * Public callbacks for stats screen events.
  */
 data class StatsScreenActions(
-  val onRangeChange: (ActivityRange) -> Unit,
   val onEditDailyMemo: (DailyMemoInfo, String) -> Unit = { _, _ -> },
   val onDeleteDailyMemo: (DailyMemoInfo) -> Unit = {},
   val onCreateDailyMemo: (String) -> Unit = {},

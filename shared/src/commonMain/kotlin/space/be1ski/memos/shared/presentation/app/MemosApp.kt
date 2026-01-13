@@ -13,24 +13,29 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Tab
-import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import org.koin.compose.koinInject
 import space.be1ski.memos.shared.presentation.components.ActivityMode
+import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.Indent
-import space.be1ski.memos.shared.presentation.components.availableYears
+import space.be1ski.memos.shared.presentation.components.earliestMemoDate
 import space.be1ski.memos.shared.domain.model.memo.Memo
 import space.be1ski.memos.shared.presentation.screen.FeedScreen
 import space.be1ski.memos.shared.presentation.screen.PostsScreen
@@ -41,21 +46,19 @@ import space.be1ski.memos.shared.presentation.state.MemosUiState
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 import space.be1ski.memos.shared.presentation.util.isDesktop
 import space.be1ski.memos.shared.presentation.viewmodel.MemosViewModel
+import space.be1ski.memos.shared.presentation.components.startOfWeek
 
 /** Root shared UI for the app. */
 @Composable
 fun MemosApp() {
   val viewModel: MemosViewModel = koinInject()
-  val appState = remember { MemosAppUiState() }
+  val appState = remember { MemosAppUiState(currentLocalDate()) }
   val uiState = viewModel.uiState
-  val timeZone = remember { TimeZone.currentSystemDefault() }
-  val currentYear = remember { currentLocalDate().year }
-  val years = remember(uiState.memos) { availableYears(uiState.memos, timeZone, currentYear) }
 
   SyncAutoLoad(uiState, appState, viewModel)
   SyncCredentialsDialog(uiState, appState)
 
-  MemosAppContent(uiState, appState, viewModel, years)
+  MemosAppContent(uiState, appState, viewModel)
   CredentialsDialog(uiState, appState, viewModel)
   MemoCreateDialog(appState, viewModel)
   MemoEditDialog(appState, viewModel)
@@ -92,13 +95,12 @@ private fun SyncCredentialsDialog(
 private fun MemosAppContent(
   uiState: MemosUiState,
   appState: MemosAppUiState,
-  viewModel: MemosViewModel,
-  years: List<Int>
+  viewModel: MemosViewModel
 ) {
   MaterialTheme {
     Scaffold(
       floatingActionButton = {
-        if (memosFabModeForTab(appState.selectedTab) == MemosFabMode.Memo) {
+        if (memosFabModeForScreen(appState.selectedScreen) == MemosFabMode.Memo) {
           FloatingActionButton(
             onClick = { appState.showCreateMemoDialog = true }
           ) {
@@ -108,8 +110,16 @@ private fun MemosAppContent(
             )
           }
         }
+      },
+      bottomBar = {
+        MemosBottomNavigation(appState)
       }
     ) { padding ->
+      val currentRange = currentRangeForTab(appState.selectedTimeRangeTab, currentLocalDate())
+      val activityRange = activityRangeForState(appState)
+      val timeZone = remember { TimeZone.currentSystemDefault() }
+      val earliestDate = remember(uiState.memos) { earliestMemoDate(uiState.memos, timeZone) }
+      val minRange = minRangeForTab(appState.selectedTimeRangeTab, earliestDate)
       Column(
         modifier = Modifier
           .padding(padding)
@@ -121,8 +131,17 @@ private fun MemosAppContent(
         uiState.errorMessage?.let { message ->
           Text(message, color = MaterialTheme.colorScheme.error)
         }
-        MemosTabs(appState)
-        MemosTabContent(uiState, appState, viewModel, years)
+        if (appState.selectedScreen != MemosScreen.Feed) {
+          TimeRangeControls(
+            selectedTab = appState.selectedTimeRangeTab,
+            selectedRange = activityRange,
+            currentRange = currentRange,
+            minRange = minRange,
+            onTabChange = { appState.selectedTimeRangeTab = it },
+            onRangeChange = { range -> updateTimeRangeState(appState, range) }
+          )
+        }
+        MemosTabContent(uiState, appState, viewModel, activityRange)
       }
     }
   }
@@ -154,23 +173,27 @@ private fun MemosHeader(appState: MemosAppUiState, viewModel: MemosViewModel) {
     }
   }
 }
+
 @Composable
-private fun MemosTabs(appState: MemosAppUiState) {
-  PrimaryTabRow(selectedTabIndex = appState.selectedTab) {
-    Tab(
-      selected = appState.selectedTab == 0,
-      onClick = { appState.selectedTab = 0 },
-      text = { Text("Habits") }
+private fun MemosBottomNavigation(appState: MemosAppUiState) {
+  NavigationBar {
+    NavigationBarItem(
+      selected = appState.selectedScreen == MemosScreen.Habits,
+      onClick = { appState.selectedScreen = MemosScreen.Habits },
+      icon = { Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "Habits") },
+      label = { Text("Habits") }
     )
-    Tab(
-      selected = appState.selectedTab == 1,
-      onClick = { appState.selectedTab = 1 },
-      text = { Text("Stats") }
+    NavigationBarItem(
+      selected = appState.selectedScreen == MemosScreen.Stats,
+      onClick = { appState.selectedScreen = MemosScreen.Stats },
+      icon = { Icon(imageVector = Icons.Filled.BarChart, contentDescription = "Stats") },
+      label = { Text("Stats") }
     )
-    Tab(
-      selected = appState.selectedTab == 2,
-      onClick = { appState.selectedTab = 2 },
-      text = { Text("Feed") }
+    NavigationBarItem(
+      selected = appState.selectedScreen == MemosScreen.Feed,
+      onClick = { appState.selectedScreen = MemosScreen.Feed },
+      icon = { Icon(imageVector = Icons.AutoMirrored.Filled.List, contentDescription = "Feed") },
+      label = { Text("Feed") }
     )
   }
 }
@@ -179,33 +202,29 @@ private fun MemosTabContent(
   uiState: MemosUiState,
   appState: MemosAppUiState,
   viewModel: MemosViewModel,
-  years: List<Int>
+  activityRange: ActivityRange
 ) {
   val memos = uiState.memos
-  when (appState.selectedTab) {
-    0 -> StatsScreen(
+  when (appState.selectedScreen) {
+    MemosScreen.Habits -> StatsScreen(
       state = StatsScreenState(
         memos = memos,
-        years = years,
-        range = appState.activityRange,
+        range = activityRange,
         activityMode = ActivityMode.Habits,
         useVerticalScroll = true,
         enablePullRefresh = false
       ),
       actions = StatsScreenActions(
-        onRangeChange = { appState.activityRange = it },
         onEditDailyMemo = { memo, content -> viewModel.updateMemo(memo.name, content) },
         onDeleteDailyMemo = { memo -> viewModel.deleteDailyMemo(memo.name) },
         onCreateDailyMemo = { content -> viewModel.createMemo(content) }
       )
     )
-    1 -> PostsScreen(
+    MemosScreen.Stats -> PostsScreen(
       memos = memos,
-      years = years,
-      range = appState.activityRange,
-      onRangeChange = { appState.activityRange = it }
+      range = activityRange
     )
-    2 -> FeedScreen(
+    MemosScreen.Feed -> FeedScreen(
       memos = memos,
       isRefreshing = uiState.isLoading,
       onRefresh = { viewModel.loadMemos() },
@@ -214,6 +233,58 @@ private fun MemosTabContent(
     )
   }
 }
+
+private fun activityRangeForState(appState: MemosAppUiState): ActivityRange {
+  return when (appState.selectedTimeRangeTab) {
+    TimeRangeTab.Weeks -> ActivityRange.Week(appState.weekStart)
+    TimeRangeTab.Months -> ActivityRange.Month(appState.monthYear, appState.month)
+    TimeRangeTab.Quarters -> ActivityRange.Quarter(appState.quarterYear, appState.quarterIndex)
+    TimeRangeTab.Years -> ActivityRange.Year(appState.year)
+  }
+}
+
+private fun updateTimeRangeState(appState: MemosAppUiState, range: ActivityRange) {
+  when (range) {
+    is ActivityRange.Week -> appState.weekStart = range.startDate
+    is ActivityRange.Month -> {
+      appState.monthYear = range.year
+      appState.month = range.month
+    }
+    is ActivityRange.Quarter -> {
+      appState.quarterYear = range.year
+      appState.quarterIndex = range.index
+    }
+    is ActivityRange.Year -> appState.year = range.year
+  }
+}
+
+private fun currentRangeForTab(tab: TimeRangeTab, today: LocalDate): ActivityRange {
+  return when (tab) {
+    TimeRangeTab.Weeks -> ActivityRange.Week(startOfWeek(today))
+    TimeRangeTab.Months -> ActivityRange.Month(today.year, today.month)
+    TimeRangeTab.Quarters -> ActivityRange.Quarter(today.year, currentQuarterIndex(today))
+    TimeRangeTab.Years -> ActivityRange.Year(today.year)
+  }
+}
+
+private fun minRangeForTab(tab: TimeRangeTab, earliestDate: LocalDate?): ActivityRange? {
+  if (earliestDate == null) {
+    return null
+  }
+  return when (tab) {
+    TimeRangeTab.Weeks -> ActivityRange.Week(startOfWeek(earliestDate))
+    TimeRangeTab.Months -> ActivityRange.Month(earliestDate.year, earliestDate.month)
+    TimeRangeTab.Quarters -> ActivityRange.Quarter(earliestDate.year, currentQuarterIndex(earliestDate))
+    TimeRangeTab.Years -> ActivityRange.Year(earliestDate.year)
+  }
+}
+
+private fun currentQuarterIndex(date: LocalDate): Int {
+  return date.month.ordinal / MONTHS_IN_QUARTER + FIRST_QUARTER_INDEX
+}
+
+private const val MONTHS_IN_QUARTER = 3
+private const val FIRST_QUARTER_INDEX = 1
 
 @Composable
 private fun MemoCreateDialog(appState: MemosAppUiState, viewModel: MemosViewModel) {

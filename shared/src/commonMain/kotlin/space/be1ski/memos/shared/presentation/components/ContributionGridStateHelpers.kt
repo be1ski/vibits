@@ -3,13 +3,12 @@ package space.be1ski.memos.shared.presentation.components
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 
 private const val WEEK_END_OFFSET = 6
-private const val LAST_90_DAYS_OFFSET = 89
-private const val LAST_6_MONTHS = 6
-private const val LAST_YEAR_OFFSET = 364
-private const val YEAR_START_MONTH = 1
+private const val QUARTERS_IN_YEAR = 4
 private const val YEAR_START_DAY = 1
 
 internal fun startOfWeek(date: LocalDate): LocalDate {
@@ -39,30 +38,39 @@ internal fun buildDayData(context: DayDataContext): ContributionDay {
   )
 }
 
-internal fun rangeBounds(range: ActivityRange, today: LocalDate): RangeBounds {
+internal fun rangeBounds(range: ActivityRange): RangeBounds {
   return when (range) {
-    is ActivityRange.Last7Days -> RangeBounds(
-      start = today.minus(DatePeriod(days = WEEK_END_OFFSET)),
-      end = today
+    is ActivityRange.Week -> RangeBounds(
+      start = range.startDate,
+      end = range.startDate.plus(DatePeriod(days = WEEK_END_OFFSET))
     )
-    is ActivityRange.Last90Days -> RangeBounds(
-      start = today.minus(DatePeriod(days = LAST_90_DAYS_OFFSET)),
-      end = today
+    is ActivityRange.Month -> RangeBounds(
+      start = LocalDate(range.year, range.month, 1),
+      end = LocalDate(range.year, range.month, 1)
+        .plus(DatePeriod(months = 1))
+        .minus(DatePeriod(days = 1))
     )
-    is ActivityRange.Last6Months -> RangeBounds(
-      start = today.minus(DatePeriod(months = LAST_6_MONTHS)),
-      end = today
-    )
-    is ActivityRange.LastYear -> RangeBounds(
-      start = today.minus(DatePeriod(days = LAST_YEAR_OFFSET)),
-      end = today
-    )
+    is ActivityRange.Quarter -> {
+      val quarterStartMonth = quarterStartMonth(range.index)
+      RangeBounds(
+        start = LocalDate(range.year, quarterStartMonth, 1),
+        end = LocalDate(range.year, quarterStartMonth, 1)
+          .plus(DatePeriod(months = MONTHS_IN_QUARTER))
+          .minus(DatePeriod(days = 1))
+      )
+    }
     is ActivityRange.Year -> RangeBounds(
-      start = LocalDate(range.year, YEAR_START_MONTH, YEAR_START_DAY),
-      end = LocalDate(range.year + 1, YEAR_START_MONTH, YEAR_START_DAY)
+      start = LocalDate(range.year, Month.JANUARY, YEAR_START_DAY),
+      end = LocalDate(range.year + 1, Month.JANUARY, YEAR_START_DAY)
         .minus(DatePeriod(days = 1))
     )
   }
+}
+
+internal fun quarterStartMonth(index: Int): Month {
+  val safeIndex = index.coerceIn(FIRST_QUARTER_INDEX, QUARTERS_IN_YEAR)
+  val monthIndex = (safeIndex - FIRST_QUARTER_INDEX) * MONTHS_IN_QUARTER
+  return Month.entries[monthIndex]
 }
 
 private fun habitsForDay(context: DayDataContext): List<HabitConfig> {

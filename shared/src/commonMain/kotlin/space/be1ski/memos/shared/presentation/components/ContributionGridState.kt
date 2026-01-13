@@ -45,7 +45,7 @@ fun rememberActivityWeekData(
   val timeZone = remember { TimeZone.currentSystemDefault() }
   val today = currentLocalDate()
   return remember(memos, range, mode, today) {
-    buildActivityWeekData(memos, timeZone, range, mode, today)
+    buildActivityWeekData(memos, timeZone, range, mode)
   }
 }
 
@@ -85,10 +85,9 @@ private fun buildActivityWeekData(
   memos: List<Memo>,
   timeZone: TimeZone,
   range: ActivityRange,
-  mode: ActivityMode,
-  today: LocalDate
+  mode: ActivityMode
 ): ActivityWeekData {
-  val bounds = rangeBounds(range, today)
+  val bounds = rangeBounds(range)
   val configTimeline = if (mode == ActivityMode.Habits) {
     extractHabitsConfigEntries(memos, timeZone)
   } else {
