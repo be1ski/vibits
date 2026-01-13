@@ -22,5 +22,10 @@ kotlin {
 compose.desktop {
   application {
     mainClass = "space.be1ski.memos.desktop.DesktopMainKt"
+    nativeDistributions {
+      targetFormats(org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg)
+      packageName = "Memos"
+      packageVersion = "1.0.0"
+    }
   }
 }
