@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import space.be1ski.memos.shared.domain.model.auth.Credentials
+import space.be1ski.memos.shared.domain.model.memo.Memo
 import space.be1ski.memos.shared.domain.usecase.CreateMemoUseCase
 import space.be1ski.memos.shared.domain.usecase.DeleteMemoUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadCachedMemosUseCase
@@ -123,14 +124,15 @@ class MemosViewModel(
 
     scope.launch {
       val cached = runCatching { loadCachedMemosUseCase() }.getOrNull().orEmpty()
-      if (cached.isNotEmpty()) {
+      if (cached.isNotEmpty() && uiState.memos.isEmpty()) {
+        val sortedCached = sortedMemos(cached)
         uiState = when (val state = uiState) {
-          is MemosUiState.CredentialsInput -> state.copy(memos = cached, isLoading = true)
-          is MemosUiState.Ready -> state.copy(memos = cached, isLoading = true)
+          is MemosUiState.CredentialsInput -> state.copy(memos = sortedCached, isLoading = true)
+          is MemosUiState.Ready -> state.copy(memos = sortedCached, isLoading = true)
         }
       }
       runCatching { loadMemosUseCase() }
-        .onSuccess { memos -> uiState = MemosUiState.Ready(memos = memos) }
+        .onSuccess { memos -> uiState = MemosUiState.Ready(memos = sortedMemos(memos)) }
         .onFailure { error ->
           if (error is CancellationException) throw error
           val message = error.message ?: "Failed to load memos."
@@ -150,9 +152,9 @@ class MemosViewModel(
     scope.launch {
       runCatching { updateMemoUseCase(name, content) }
         .onSuccess { updated ->
-          val updatedMemos = uiState.memos.map { memo ->
+          val updatedMemos = sortedMemos(uiState.memos.map { memo ->
             if (memo.name == updated.name) updated else memo
-          }
+          })
           uiState = when (val state = uiState) {
             is MemosUiState.CredentialsInput -> state.copy(isLoading = false, memos = updatedMemos)
             is MemosUiState.Ready -> state.copy(isLoading = false, memos = updatedMemos)
@@ -174,7 +176,7 @@ class MemosViewModel(
     scope.launch {
       runCatching { createMemoUseCase(content) }
         .onSuccess { created ->
-          val updatedMemos = uiState.memos + created
+          val updatedMemos = sortedMemos(uiState.memos + created)
           uiState = when (val state = uiState) {
             is MemosUiState.CredentialsInput -> state.copy(isLoading = false, memos = updatedMemos)
             is MemosUiState.Ready -> state.copy(isLoading = false, memos = updatedMemos)
@@ -196,7 +198,7 @@ class MemosViewModel(
     scope.launch {
       runCatching { deleteMemoUseCase(name) }
         .onSuccess {
-          val updatedMemos = uiState.memos.filterNot { memo -> memo.name == name }
+          val updatedMemos = sortedMemos(uiState.memos.filterNot { memo -> memo.name == name })
           uiState = when (val state = uiState) {
             is MemosUiState.CredentialsInput -> state.copy(isLoading = false, memos = updatedMemos)
             is MemosUiState.Ready -> state.copy(isLoading = false, memos = updatedMemos)
@@ -226,14 +228,23 @@ class MemosViewModel(
     }
     scope.launch {
       val cached = runCatching { loadCachedMemosUseCase() }.getOrNull().orEmpty()
-      if (cached.isNotEmpty()) {
+      if (cached.isNotEmpty() && uiState.memos.isEmpty()) {
+        val sortedCached = sortedMemos(cached)
         uiState = when (val state = uiState) {
-          is MemosUiState.CredentialsInput -> state.copy(memos = cached)
-          is MemosUiState.Ready -> state.copy(memos = cached)
+          is MemosUiState.CredentialsInput -> state.copy(memos = sortedCached)
+          is MemosUiState.Ready -> state.copy(memos = sortedCached)
         }
       }
     }
   }
+
+  private fun sortedMemos(memos: List<Memo>): List<Memo> =
+    memos.sortedByDescending(::memoTimestamp)
+
+  private fun memoTimestamp(memo: Memo): Long =
+    memo.updateTime?.toEpochMilliseconds()
+      ?: memo.createTime?.toEpochMilliseconds()
+      ?: Long.MIN_VALUE
 
   private fun setLoading(isLoading: Boolean, errorMessage: String? = null) {
     uiState = when (val state = uiState) {
