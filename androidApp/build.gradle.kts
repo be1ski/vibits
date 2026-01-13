@@ -34,16 +34,16 @@ android {
 }
 
 dependencies {
-  implementation(project(":shared"))
-  implementation(libs.androidx.core.ktx)
-  implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.androidx.activity.compose)
-  implementation(platform(libs.androidx.compose.bom))
+  implementation(libs.androidx.compose.material3)
   implementation(libs.androidx.compose.ui)
   implementation(libs.androidx.compose.ui.graphics)
   implementation(libs.androidx.compose.ui.tooling.preview)
-  implementation(libs.androidx.compose.material3)
-  implementation(libs.material.components)
+  implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.koin.android)
+  implementation(libs.material.components)
+  implementation(platform(libs.androidx.compose.bom))
+  implementation(project(":shared"))
   debugImplementation(libs.androidx.compose.ui.tooling)
 }

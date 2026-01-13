@@ -10,10 +10,10 @@ kotlin {
   sourceSets {
     val desktopMain by getting {
       dependencies {
-        implementation(project(":shared"))
         implementation(compose.desktop.currentOs)
         implementation(libs.koin.core)
         implementation(libs.kotlinx.coroutines.swing)
+        implementation(project(":shared"))
       }
     }
   }

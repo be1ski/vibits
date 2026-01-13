@@ -5,6 +5,7 @@ plugins {
 }
 
 kotlin {
+  @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
   wasmJs {
     browser {
       commonWebpackConfig {
@@ -17,12 +18,12 @@ kotlin {
   sourceSets {
     val wasmJsMain by getting {
       dependencies {
-        implementation(project(":shared"))
-        implementation(compose.runtime)
         implementation(compose.foundation)
         implementation(compose.material3)
+        implementation(compose.runtime)
         implementation(compose.ui)
         implementation(libs.koin.core)
+        implementation(project(":shared"))
       }
     }
   }

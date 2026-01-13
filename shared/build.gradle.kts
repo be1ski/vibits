@@ -17,6 +17,7 @@ kotlin {
     minSdk = 31
   }
   jvm("desktop")
+  @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
   wasmJs {
     browser()
   }
@@ -38,21 +39,21 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(compose.runtime)
         implementation(compose.foundation)
         implementation(compose.material)
-        implementation(compose.materialIconsExtended)
         implementation(compose.material3)
+        implementation(compose.materialIconsExtended)
+        implementation(compose.runtime)
         implementation(compose.ui)
-        implementation(libs.kotlinx.coroutines.core)
-        implementation(libs.kotlinx.serialization.json)
-        implementation(libs.kotlinx.datetime)
-        implementation(libs.ktor.client.core)
-        implementation(libs.ktor.client.content.negotiation)
-        implementation(libs.ktor.serialization.kotlinx.json)
-        implementation(libs.ktor.client.logging)
-        implementation(libs.koin.core)
         implementation(libs.koin.compose)
+        implementation(libs.koin.core)
+        implementation(libs.ktor.client.content.negotiation)
+        implementation(libs.ktor.client.core)
+        implementation(libs.ktor.client.logging)
+        implementation(libs.ktor.serialization.kotlinx.json)
+        implementation(libs.kotlinx.coroutines.core)
+        implementation(libs.kotlinx.datetime)
+        implementation(libs.kotlinx.serialization.json)
       }
     }
     val roomMain by creating {
@@ -65,23 +66,23 @@ kotlin {
     val androidMain by getting {
       dependsOn(roomMain)
       dependencies {
-        implementation(libs.ktor.client.okhttp)
         implementation(libs.koin.android)
+        implementation(libs.ktor.client.okhttp)
       }
     }
     val desktopMain by getting {
       dependsOn(roomMain)
       dependencies {
+        implementation(libs.androidx.sqlite.bundled)
         implementation(libs.ktor.client.cio)
         implementation(libs.kotlinx.coroutines.swing)
-        implementation(libs.androidx.sqlite.bundled)
       }
     }
     val iosMain by creating {
       dependsOn(roomMain)
       dependencies {
-        implementation(libs.ktor.client.darwin)
         implementation(libs.androidx.sqlite.bundled)
+        implementation(libs.ktor.client.darwin)
       }
     }
     val iosX64Main by getting { dependsOn(iosMain) }
@@ -98,9 +99,9 @@ kotlin {
 dependencies {
   add("kspAndroid", libs.androidx.room.compiler)
   add("kspDesktop", libs.androidx.room.compiler)
-  add("kspIosX64", libs.androidx.room.compiler)
   add("kspIosArm64", libs.androidx.room.compiler)
   add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+  add("kspIosX64", libs.androidx.room.compiler)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
