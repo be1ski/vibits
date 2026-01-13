@@ -26,10 +26,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import kotlinx.datetime.TimeZone
 import org.koin.compose.koinInject
 import space.be1ski.memos.shared.presentation.components.ActivityMode
+import space.be1ski.memos.shared.presentation.components.Indent
 import space.be1ski.memos.shared.presentation.components.availableYears
 import space.be1ski.memos.shared.presentation.screen.FeedScreen
 import space.be1ski.memos.shared.presentation.screen.PostsScreen
@@ -111,9 +111,9 @@ private fun MemosAppContent(
       Column(
         modifier = Modifier
           .padding(padding)
-          .padding(16.dp)
+          .padding(Indent.m)
           .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(Indent.s)
       ) {
         MemosHeader(appState, viewModel)
         uiState.errorMessage?.let { message ->
@@ -133,7 +133,7 @@ private fun MemosHeader(appState: MemosAppUiState, viewModel: MemosViewModel) {
     verticalAlignment = Alignment.CenterVertically
   ) {
     Text("Memos", style = MaterialTheme.typography.headlineSmall)
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs), verticalAlignment = Alignment.CenterVertically) {
       if (isDesktop) {
         IconButton(onClick = { viewModel.loadMemos() }) {
           Icon(imageVector = Icons.Filled.Refresh, contentDescription = "Refresh")

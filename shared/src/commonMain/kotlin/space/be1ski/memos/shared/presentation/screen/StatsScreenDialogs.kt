@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.unit.dp
+import space.be1ski.memos.shared.presentation.components.Indent
 
 @Composable
 internal fun HabitEditorDialog(derived: StatsScreenDerivedState) {
@@ -34,7 +34,7 @@ internal fun HabitEditorDialog(derived: StatsScreenDerivedState) {
 
 @Composable
 private fun HabitEditorContent(uiState: StatsScreenUiState) {
-  Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+  Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
     if (uiState.habitsEditorConfig.isNotEmpty()) {
       uiState.habitsEditorConfig.forEach { habit ->
         val tag = habit.tag
@@ -109,7 +109,7 @@ private fun HabitEditorConfirmButton(derived: StatsScreenDerivedState) {
 private fun HabitEditorDismissButton(derived: StatsScreenDerivedState) {
   val uiState = derived.uiState
   val isEditing = uiState.habitsEditorExisting != null
-  Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+  Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs)) {
     if (isEditing) {
       TextButton(onClick = {
         val existing = uiState.habitsEditorExisting

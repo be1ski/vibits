@@ -16,10 +16,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import kotlinx.datetime.TimeZone
 import space.be1ski.memos.shared.presentation.components.ActivityMode
 import space.be1ski.memos.shared.presentation.components.ActivityRange
+import space.be1ski.memos.shared.presentation.components.Indent
 import space.be1ski.memos.shared.presentation.components.findDailyMemoForDate
 import space.be1ski.memos.shared.presentation.components.habitsConfigForDate
 import space.be1ski.memos.shared.presentation.components.rememberActivityWeekData
@@ -142,7 +142,7 @@ private fun StatsScreenContent(derived: StatsScreenDerivedState) {
       .then(containerModifier)
   ) {
     Column(
-      verticalArrangement = Arrangement.spacedBy(12.dp),
+      verticalArrangement = Arrangement.spacedBy(Indent.s),
       modifier = columnModifier
     ) {
       StatsHeaderRow(derived)

@@ -17,10 +17,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import space.be1ski.memos.shared.domain.model.memo.Memo
+import space.be1ski.memos.shared.presentation.components.Indent
 
 /**
  * Feed tab showing the raw memos list.
@@ -45,12 +45,12 @@ fun FeedScreen(
       .fillMaxSize()
       .then(containerModifier)
   ) {
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(Indent.s)) {
       items(memos) { memo ->
         Card(modifier = Modifier.fillMaxWidth()) {
           Column(
-            modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+            modifier = Modifier.padding(Indent.s),
+            verticalArrangement = Arrangement.spacedBy(Indent.x2s)
           ) {
             val dateLabel = memoDateLabel(memo, timeZone)
             if (dateLabel.isNotBlank()) {

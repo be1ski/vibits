@@ -34,6 +34,7 @@ import space.be1ski.memos.shared.presentation.components.ContributionGrid
 import space.be1ski.memos.shared.presentation.components.ContributionGridCallbacks
 import space.be1ski.memos.shared.presentation.components.ContributionGridState
 import space.be1ski.memos.shared.presentation.components.HabitConfig
+import space.be1ski.memos.shared.presentation.components.Indent
 import space.be1ski.memos.shared.presentation.components.calculateLayout
 import space.be1ski.memos.shared.presentation.components.habitsConfigForDate
 import space.be1ski.memos.shared.presentation.components.WeeklyBarChart
@@ -53,7 +54,7 @@ internal fun StatsHeaderRow(derived: StatsScreenDerivedState) {
     horizontalArrangement = Arrangement.SpaceBetween
   ) {
     Text("Activity", style = MaterialTheme.typography.titleMedium)
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs), verticalAlignment = Alignment.CenterVertically) {
       if (state.activityMode == ActivityMode.Habits) {
         TextButton(onClick = { uiState.showHabitsConfig = !uiState.showHabitsConfig }) {
           Text("Habits config")
@@ -241,9 +242,7 @@ internal fun BoxScope.StatsFloatingAction(derived: StatsScreenDerivedState) {
       uiState.habitsEditorSelections = buildHabitsEditorSelections(day, uiState.habitsEditorConfig)
       uiState.habitsEditorError = null
     },
-    modifier = Modifier
-      .align(Alignment.BottomEnd)
-      .padding(16.dp)
+    modifier = Modifier.align(Alignment.BottomEnd)
   ) {
     Icon(
       imageVector = Icons.Filled.AddTask,
@@ -258,7 +257,7 @@ private fun HabitsConfigCard(
   onConfigChange: (String) -> Unit,
   onSave: () -> Unit
 ) {
-  Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(8.dp)) {
+  Column(verticalArrangement = Arrangement.spacedBy(Indent.xs), modifier = Modifier.padding(Indent.xs)) {
     Text("Habits config", style = MaterialTheme.typography.titleSmall)
     TextField(
       value = habitsConfigText,
@@ -266,7 +265,7 @@ private fun HabitsConfigCard(
       modifier = Modifier.fillMaxWidth(),
       placeholder = { Text("Гимнастика | #habits/gym\nЧтение | #habits/reading") }
     )
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs)) {
       Button(onClick = onSave) {
         Text("Save")
       }
@@ -287,7 +286,7 @@ private fun HabitActivitySection(
   }
   val chartScrollState = rememberScrollState()
 
-  Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 12.dp)) {
+  Column(verticalArrangement = Arrangement.spacedBy(Indent.xs), modifier = Modifier.padding(top = Indent.s)) {
     Text(state.habit.label, style = MaterialTheme.typography.titleSmall)
     ContributionGrid(
       state = ContributionGridState(
@@ -330,7 +329,7 @@ private fun LastSevenDaysMatrix(
       spacing = spacing
     )
     val cellSize = layout.columnSize
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
       Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
         Spacer(modifier = Modifier.width(labelWidth))
         days.forEach { day ->
