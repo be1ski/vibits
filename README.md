@@ -78,10 +78,6 @@ We follow TDD for business logic and aim for high coverage (100% when practical)
   Output: `shared/build/reports/jacoco/jacocoDesktopTestReport/html/index.html`
 - Before every commit: run all tests, generate coverage, and update the coverage numbers below.
 
-## Dependencies
-
-- Keep Gradle dependencies and `gradle/libs.versions.toml` entries alphabetically sorted within each block.
-
 ## Coverage
 
 Last updated: 2026-01-13
