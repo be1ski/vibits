@@ -1,64 +1,27 @@
+@file:OptIn(androidx.compose.material.ExperimentalMaterialApi::class)
+
 package space.be1ski.memos.shared.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddTask
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import space.be1ski.memos.shared.domain.model.memo.Memo
 import space.be1ski.memos.shared.presentation.components.ActivityMode
 import space.be1ski.memos.shared.presentation.components.ActivityRange
-import space.be1ski.memos.shared.presentation.components.ActivityWeek
-import space.be1ski.memos.shared.presentation.components.ContributionDay
-import space.be1ski.memos.shared.presentation.components.ContributionGrid
-import space.be1ski.memos.shared.presentation.components.ChartDimens
-import space.be1ski.memos.shared.presentation.components.calculateLayout
-import space.be1ski.memos.shared.presentation.components.DailyMemoInfo
-import space.be1ski.memos.shared.presentation.components.HabitConfig
-import space.be1ski.memos.shared.presentation.components.buildHabitStatuses
-import space.be1ski.memos.shared.presentation.components.activityWeekDataForHabit
-import space.be1ski.memos.shared.presentation.components.habitsConfigForDate
 import space.be1ski.memos.shared.presentation.components.findDailyMemoForDate
-import space.be1ski.memos.shared.presentation.components.lastSevenDays
-import space.be1ski.memos.shared.presentation.components.WeeklyBarChart
+import space.be1ski.memos.shared.presentation.components.habitsConfigForDate
 import space.be1ski.memos.shared.presentation.components.rememberActivityWeekData
 import space.be1ski.memos.shared.presentation.components.rememberHabitsConfigTimeline
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
@@ -67,36 +30,36 @@ import space.be1ski.memos.shared.presentation.util.isDesktop
 /**
  * Stats tab with activity charts.
  */
-@OptIn(androidx.compose.material.ExperimentalMaterialApi::class)
 @Composable
 fun StatsScreen(
-  memos: List<Memo>,
-  years: List<Int>,
-  range: ActivityRange,
-  activityMode: ActivityMode,
-  onRangeChange: (ActivityRange) -> Unit,
-  onEditDailyMemo: (DailyMemoInfo, String) -> Unit,
-  onDeleteDailyMemo: (DailyMemoInfo) -> Unit,
-  onCreateDailyMemo: (String) -> Unit,
-  useVerticalScroll: Boolean = true,
-  isRefreshing: Boolean = false,
-  onRefresh: () -> Unit = {},
-  enablePullRefresh: Boolean = true
+  state: StatsScreenState,
+  actions: StatsScreenActions
 ) {
-  var habitsEditorDay by remember { mutableStateOf<ContributionDay?>(null) }
-  var habitsEditorConfig by remember { mutableStateOf<List<HabitConfig>>(emptyList()) }
-  var habitsEditorSelections by remember { mutableStateOf<Map<String, Boolean>>(emptyMap()) }
-  var habitsEditorExisting by remember { mutableStateOf<DailyMemoInfo?>(null) }
-  var habitsEditorError by remember { mutableStateOf<String?>(null) }
-  var showEmptyDeleteConfirm by remember { mutableStateOf(false) }
+  val uiState = remember { StatsScreenUiState() }
+  val derived = rememberStatsScreenDerived(state, actions, uiState)
+  SyncStatsScreenState(derived)
+  StatsScreenContent(derived)
+  StatsScreenDialogs(derived)
+}
+
+@Composable
+private fun rememberStatsScreenDerived(
+  state: StatsScreenState,
+  actions: StatsScreenActions,
+  uiState: StatsScreenUiState
+): StatsScreenDerivedState {
+  val memos = state.memos
+  val range = state.range
+  val activityMode = state.activityMode
   val habitsConfigTimeline = rememberHabitsConfigTimeline(memos)
-  val currentHabitsConfig = remember(habitsConfigTimeline) { habitsConfigTimeline.lastOrNull()?.habits ?: emptyList() }
-  var showHabitsConfig by remember { mutableStateOf(false) }
-  var habitsConfigText by remember { mutableStateOf("") }
-  var showHabitDetails by remember { mutableStateOf(false) }
+  val currentHabitsConfig = remember(habitsConfigTimeline) {
+    habitsConfigTimeline.lastOrNull()?.habits ?: emptyList()
+  }
   val timeZone = remember { TimeZone.currentSystemDefault() }
   val today = remember { currentLocalDate() }
-  val todayMemo = remember(memos, timeZone, today) { findDailyMemoForDate(memos, timeZone, today) }
+  val todayMemo = remember(memos, timeZone, today) {
+    findDailyMemoForDate(memos, timeZone, today)
+  }
   val todayConfig = remember(habitsConfigTimeline, today) {
     habitsConfigForDate(habitsConfigTimeline, today)?.habits.orEmpty()
   }
@@ -114,36 +77,63 @@ fun StatsScreen(
   val showLast7DaysMatrix = activityMode == ActivityMode.Habits &&
     range is ActivityRange.Last7Days &&
     currentHabitsConfig.isNotEmpty()
-  var selectedWeek by remember { mutableStateOf<ActivityWeek?>(null) }
-  var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
-  var activeSelectionId by remember { mutableStateOf<String?>(null) }
-  val selectedDay = remember(weekData.weeks, selectedDate) {
-    selectedDate?.let { date -> findDayByDate(weekData, date) }
+  val showHabitSections = !showLast7DaysMatrix &&
+    activityMode == ActivityMode.Habits &&
+    currentHabitsConfig.isNotEmpty() &&
+    (!collapseHabits || uiState.showHabitDetails)
+  val selectedDay = remember(weekData.weeks, uiState.selectedDate) {
+    uiState.selectedDate?.let { date -> findDayByDate(weekData, date) }
   }
+  return StatsScreenDerivedState(
+    state = state,
+    actions = actions,
+    uiState = uiState,
+    habitsConfigTimeline = habitsConfigTimeline,
+    currentHabitsConfig = currentHabitsConfig,
+    weekData = weekData,
+    showWeekdayLegend = showWeekdayLegend,
+    useCompactHeight = useCompactHeight,
+    collapseHabits = collapseHabits,
+    showLast7DaysMatrix = showLast7DaysMatrix,
+    showHabitSections = showHabitSections,
+    selectedDay = selectedDay,
+    todayConfig = todayConfig,
+    todayDay = todayDay,
+    timeZone = timeZone
+  )
+}
 
-  val columnModifier = if (useVerticalScroll) {
+@Composable
+private fun SyncStatsScreenState(derived: StatsScreenDerivedState) {
+  val uiState = derived.uiState
+  val currentConfigText = remember(derived.currentHabitsConfig) {
+    derived.currentHabitsConfig.joinToString("\n") { "${it.label} | ${it.tag}" }
+  }
+  LaunchedEffect(derived.weekData.weeks) {
+    if (uiState.selectedDate == null && uiState.activeSelectionId == null) {
+      uiState.selectedDate = derived.weekData.weeks.lastOrNull()?.days?.lastOrNull()?.date
+    }
+  }
+  if (uiState.showHabitsConfig && uiState.habitsConfigText.isBlank()) {
+    uiState.habitsConfigText = currentConfigText
+  }
+}
+
+@Composable
+private fun StatsScreenContent(derived: StatsScreenDerivedState) {
+  val state = derived.state
+  val actions = derived.actions
+  val uiState = derived.uiState
+  val columnModifier = if (state.useVerticalScroll) {
     Modifier.verticalScroll(rememberScrollState())
   } else {
     Modifier
   }
-  val pullRefreshState = rememberPullRefreshState(isRefreshing, onRefresh)
-  val containerModifier = if (enablePullRefresh) {
+  val pullRefreshState = rememberPullRefreshState(state.isRefreshing, actions.onRefresh)
+  val containerModifier = if (state.enablePullRefresh) {
     Modifier.pullRefresh(pullRefreshState)
   } else {
     Modifier
-  }
-  val currentConfigText = remember(currentHabitsConfig) {
-    currentHabitsConfig.joinToString("\n") { "${it.label} | ${it.tag}" }
-  }
-
-  LaunchedEffect(weekData.weeks) {
-    if (selectedDate == null && activeSelectionId == null) {
-      selectedDate = weekData.weeks.lastOrNull()?.days?.lastOrNull()?.date
-    }
-  }
-
-  if (showHabitsConfig && habitsConfigText.isBlank()) {
-    habitsConfigText = currentConfigText
   }
 
   Box(
@@ -155,603 +145,26 @@ fun StatsScreen(
       verticalArrangement = Arrangement.spacedBy(12.dp),
       modifier = columnModifier
     ) {
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-      ) {
-        Text("Activity", style = MaterialTheme.typography.titleMedium)
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-          if (activityMode == ActivityMode.Habits) {
-            TextButton(onClick = { showHabitsConfig = !showHabitsConfig }) {
-              Text("Habits config")
-            }
-          }
-          ActivityRangeSelector(
-            years = years,
-            selectedRange = range,
-            onRangeChange = onRangeChange
-          )
-        }
-      }
-      if (activityMode == ActivityMode.Habits && showHabitsConfig) {
-        HabitsConfigCard(
-          habitsConfigText = habitsConfigText,
-          onConfigChange = { habitsConfigText = it },
-          onSave = {
-            val content = buildHabitsConfigContent(habitsConfigText)
-            onCreateDailyMemo(content)
-          }
-        )
-      }
-      val chartScrollState = rememberScrollState()
-
-      if (showLast7DaysMatrix) {
-        LastSevenDaysMatrix(
-          days = lastSevenDays(weekData),
-          habits = currentHabitsConfig,
-          compactHeight = useCompactHeight
-        )
-      } else {
-        ContributionGrid(
-          weekData = weekData,
-          range = range,
-          selectedDay = if (activeSelectionId == "main") selectedDay else null,
-          selectedWeekStart = if (activityMode == ActivityMode.Posts) selectedWeek?.startDate else null,
-          onDaySelected = { day ->
-            selectedDate = day.date
-            activeSelectionId = "main"
-            if (activityMode == ActivityMode.Posts) {
-              selectedWeek = weekData.weeks.firstOrNull { week ->
-                week.days.any { it.date == day.date }
-              }
-            }
-          },
-          onClearSelection = {
-            selectedDate = null
-            selectedWeek = null
-            activeSelectionId = null
-          },
-          onEditRequested = { day ->
-            habitsEditorDay = day
-            habitsEditorExisting = day.dailyMemo
-            habitsEditorConfig = habitsConfigForDate(habitsConfigTimeline, day.date)?.habits.orEmpty()
-            habitsEditorSelections = buildHabitsEditorSelections(day, habitsEditorConfig)
-          },
-          onCreateRequested = { day ->
-            habitsEditorDay = day
-            habitsEditorExisting = day.dailyMemo
-            habitsEditorConfig = habitsConfigForDate(habitsConfigTimeline, day.date)?.habits.orEmpty()
-            habitsEditorSelections = buildHabitsEditorSelections(day, habitsEditorConfig)
-            habitsEditorError = null
-          },
-          isActiveSelection = activeSelectionId == "main",
-          scrollState = chartScrollState,
-          showWeekdayLegend = showWeekdayLegend,
-          compactHeight = useCompactHeight,
-          showTimeline = true
-        )
-      }
-
-      if (collapseHabits && currentHabitsConfig.isNotEmpty()) {
-        OutlinedButton(
-          onClick = { showHabitDetails = !showHabitDetails },
-          modifier = Modifier.fillMaxWidth()
-        ) {
-          Text(if (showHabitDetails) "Hide habit details" else "Show habit details")
-        }
-      }
-
-      if (activityMode == ActivityMode.Posts) {
-        WeeklyBarChart(
-          weekData = weekData,
-          selectedWeek = selectedWeek,
-          onWeekSelected = { week ->
-            selectedWeek = if (selectedWeek?.startDate == week.startDate) null else week
-            selectedDate = selectedDate?.takeIf { date ->
-              week.days.any { it.date == date }
-            }
-          },
-          scrollState = chartScrollState,
-          showWeekdayLegend = showWeekdayLegend,
-          compactHeight = useCompactHeight
-        )
-      }
-
-      if (!showLast7DaysMatrix && activityMode == ActivityMode.Habits && currentHabitsConfig.isNotEmpty() && (!collapseHabits || showHabitDetails)) {
-        currentHabitsConfig.forEach { habit ->
-          HabitActivitySection(
-            habit = habit,
-            baseWeekData = weekData,
-            selectedDate = if (activeSelectionId == "habit:${habit.tag}") selectedDate else null,
-            onDaySelected = { day ->
-              selectedDate = day.date
-              activeSelectionId = "habit:${habit.tag}"
-            },
-            onClearSelection = {
-              selectedDate = null
-              activeSelectionId = null
-            },
-            onEditRequested = { day ->
-              habitsEditorDay = day
-              habitsEditorExisting = day.dailyMemo
-              habitsEditorConfig = habitsConfigForDate(habitsConfigTimeline, day.date)?.habits.orEmpty()
-              habitsEditorSelections = buildHabitsEditorSelections(day, habitsEditorConfig)
-              habitsEditorError = null
-            },
-            onCreateRequested = { day ->
-              habitsEditorDay = day
-              habitsEditorExisting = day.dailyMemo
-              habitsEditorConfig = habitsConfigForDate(habitsConfigTimeline, day.date)?.habits.orEmpty()
-              habitsEditorSelections = buildHabitsEditorSelections(day, habitsEditorConfig)
-            },
-            isActiveSelection = activeSelectionId == "habit:${habit.tag}",
-            showWeekdayLegend = showWeekdayLegend,
-            compactHeight = useCompactHeight,
-            range = range
-          )
-        }
-      }
-
+      StatsHeaderRow(derived)
+      StatsHabitsConfigSection(derived)
+      StatsMainChart(derived)
+      StatsHabitDetailsToggle(derived)
+      StatsWeeklyChart(derived)
+      StatsHabitSections(derived)
     }
-
-    if (activityMode == ActivityMode.Habits && todayConfig.isNotEmpty()) {
-      FloatingActionButton(
-        onClick = {
-          val day = todayDay ?: return@FloatingActionButton
-          habitsEditorDay = day
-          habitsEditorExisting = day.dailyMemo
-          habitsEditorConfig = todayConfig
-          habitsEditorSelections = buildHabitsEditorSelections(day, habitsEditorConfig)
-          habitsEditorError = null
-        },
-        modifier = Modifier
-          .align(Alignment.BottomEnd)
-          .padding(16.dp)
-      ) {
-        Icon(
-          imageVector = Icons.Filled.AddTask,
-          contentDescription = "Track today"
-        )
-      }
-    }
-    if (enablePullRefresh) {
+    StatsFloatingAction(derived)
+    if (state.enablePullRefresh) {
       PullRefreshIndicator(
-        refreshing = isRefreshing,
+        refreshing = state.isRefreshing,
         state = pullRefreshState,
         modifier = Modifier.align(Alignment.TopCenter)
       )
     }
   }
-
-  if (habitsEditorDay != null) {
-    val isEditing = habitsEditorExisting != null
-    AlertDialog(
-      onDismissRequest = {
-        habitsEditorDay = null
-        habitsEditorExisting = null
-      },
-      title = { Text(if (isEditing) "Update day" else "Create day") },
-      text = {
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-          if (habitsEditorConfig.isNotEmpty()) {
-            habitsEditorConfig.forEach { habit ->
-              val tag = habit.tag
-              val done = habitsEditorSelections[tag] == true
-              Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(
-                  checked = done,
-                  onCheckedChange = { checked ->
-                    habitsEditorSelections = habitsEditorSelections.toMutableMap().also { it[tag] = checked }
-                  }
-                )
-                Text(habit.label, style = MaterialTheme.typography.bodySmall)
-              }
-            }
-          } else {
-            habitsEditorSelections.forEach { (tag, done) ->
-              Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(
-                  checked = done,
-                  onCheckedChange = { checked ->
-                    habitsEditorSelections = habitsEditorSelections.toMutableMap().also { it[tag] = checked }
-                  }
-                )
-                Text(tag, style = MaterialTheme.typography.bodySmall)
-              }
-            }
-          }
-        }
-        habitsEditorError?.let { message ->
-          Text(message, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
-        }
-      },
-      confirmButton = {
-        Button(
-          onClick = {
-            val hasSelection = habitsEditorSelections.values.any { it }
-            if (!hasSelection) {
-              if (habitsEditorExisting != null) {
-                showEmptyDeleteConfirm = true
-              } else {
-                habitsEditorError = "Select at least one habit."
-              }
-              return@Button
-            }
-            val day = habitsEditorDay
-            if (day != null) {
-              val content = buildDailyContent(day.date, habitsEditorConfig, habitsEditorSelections)
-              val existing = habitsEditorExisting
-              if (existing != null) {
-                onEditDailyMemo(existing, content)
-              } else {
-                onCreateDailyMemo(content)
-              }
-            }
-            selectedDate = null
-            selectedWeek = null
-            activeSelectionId = null
-            habitsEditorDay = null
-            habitsEditorExisting = null
-            habitsEditorError = null
-          }
-        ) {
-          Text(if (isEditing) "Update" else "Create")
-        }
-      },
-      dismissButton = {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-          if (isEditing) {
-            TextButton(onClick = {
-              val existing = habitsEditorExisting
-              if (existing != null) {
-                onDeleteDailyMemo(existing)
-              }
-              selectedDate = null
-              selectedWeek = null
-              activeSelectionId = null
-              habitsEditorDay = null
-              habitsEditorExisting = null
-              habitsEditorError = null
-            }) {
-              Text("Delete")
-            }
-          }
-          TextButton(onClick = {
-            habitsEditorDay = null
-            habitsEditorExisting = null
-            habitsEditorError = null
-          }) {
-            Text("Cancel")
-          }
-        }
-      }
-    )
-  }
-
-  if (showEmptyDeleteConfirm) {
-    AlertDialog(
-      onDismissRequest = { showEmptyDeleteConfirm = false },
-      title = { Text("Delete day?") },
-      text = { Text("No habits selected. The daily entry will be deleted.") },
-      confirmButton = {
-        Button(
-          onClick = {
-            val existing = habitsEditorExisting
-            if (existing != null) {
-              onDeleteDailyMemo(existing)
-            }
-            selectedDate = null
-            selectedWeek = null
-            activeSelectionId = null
-            habitsEditorDay = null
-            habitsEditorExisting = null
-            habitsEditorError = null
-            showEmptyDeleteConfirm = false
-          }
-        ) {
-          Text("Delete")
-        }
-      },
-      dismissButton = {
-        TextButton(onClick = { showEmptyDeleteConfirm = false }) {
-          Text("Cancel")
-        }
-      }
-    )
-  }
 }
 
 @Composable
-private fun HabitsConfigCard(
-  habitsConfigText: String,
-  onConfigChange: (String) -> Unit,
-  onSave: () -> Unit
-) {
-  Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(8.dp)) {
-    Text("Habits config", style = MaterialTheme.typography.titleSmall)
-    TextField(
-      value = habitsConfigText,
-      onValueChange = onConfigChange,
-      modifier = Modifier.fillMaxWidth(),
-      placeholder = { Text("Гимнастика | #habits/gym\nЧтение | #habits/reading") }
-    )
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-      Button(onClick = onSave) {
-        Text("Save")
-      }
-    }
-  }
-}
-
-@Composable
-private fun HabitActivitySection(
-  habit: space.be1ski.memos.shared.presentation.components.HabitConfig,
-  baseWeekData: space.be1ski.memos.shared.presentation.components.ActivityWeekData,
-  selectedDate: kotlinx.datetime.LocalDate?,
-  onDaySelected: (ContributionDay) -> Unit,
-  onClearSelection: () -> Unit,
-  onEditRequested: (ContributionDay) -> Unit,
-  onCreateRequested: (ContributionDay) -> Unit,
-  isActiveSelection: Boolean,
-  showWeekdayLegend: Boolean,
-  compactHeight: Boolean,
-  range: ActivityRange
-) {
-  val habitWeekData = remember(baseWeekData, habit) {
-    activityWeekDataForHabit(baseWeekData, habit)
-  }
-  val selectedDay = remember(habitWeekData.weeks, habit, selectedDate) {
-    selectedDate?.let { date -> findDayByDate(habitWeekData, date) }
-  }
-  val chartScrollState = rememberScrollState()
-
-  Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 12.dp)) {
-    Text(habit.label, style = MaterialTheme.typography.titleSmall)
-  ContributionGrid(
-    weekData = habitWeekData,
-    range = range,
-    selectedDay = selectedDay,
-    selectedWeekStart = null,
-    onDaySelected = onDaySelected,
-    onClearSelection = onClearSelection,
-    onEditRequested = onEditRequested,
-    onCreateRequested = onCreateRequested,
-    isActiveSelection = isActiveSelection,
-    scrollState = chartScrollState,
-    showWeekdayLegend = showWeekdayLegend,
-    compactHeight = compactHeight
-  )
-}
-}
-
-@Composable
-private fun LastSevenDaysMatrix(
-  days: List<ContributionDay>,
-  habits: List<HabitConfig>,
-  compactHeight: Boolean
-) {
-  if (days.isEmpty() || habits.isEmpty()) {
-    return
-  }
-  BoxWithConstraints {
-    val labelWidth = 160.dp
-    val spacing = ChartDimens.spacing(compactHeight)
-    val availableWidth = (maxWidth - labelWidth - spacing).coerceAtLeast(0.dp)
-    val layout = calculateLayout(
-      maxWidth = availableWidth,
-      columns = days.size.coerceAtLeast(1),
-      minColumnSize = ChartDimens.minCell(compactHeight),
-      spacing = spacing
-    )
-    val cellSize = layout.columnSize
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-      Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-        Spacer(modifier = Modifier.width(labelWidth))
-        days.forEach { day ->
-          Box(modifier = Modifier.size(cellSize), contentAlignment = Alignment.Center) {
-            Text(
-              day.date.dayOfWeek.name.take(2),
-              style = MaterialTheme.typography.labelSmall
-            )
-          }
-        }
-      }
-      habits.forEach { habit ->
-        Row(
-          horizontalArrangement = Arrangement.spacedBy(spacing),
-          verticalAlignment = Alignment.CenterVertically
-        ) {
-          Text(habit.label, style = MaterialTheme.typography.bodySmall, modifier = Modifier.width(labelWidth))
-          days.forEach { day ->
-            val done = day.habitStatuses.firstOrNull { status -> status.tag == habit.tag }?.done == true
-            val cellColor = if (done) {
-              Color(0xFF0B7D3E)
-            } else {
-              Color(0xFFE2E8F0)
-            }
-            Box(
-              modifier = Modifier
-                .size(cellSize)
-                .background(cellColor, shape = MaterialTheme.shapes.extraSmall)
-            )
-          }
-        }
-      }
-      Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-        Spacer(modifier = Modifier.width(labelWidth))
-        days.forEach { day ->
-          Box(modifier = Modifier.size(cellSize), contentAlignment = Alignment.Center) {
-            Text(day.date.day.toString(), style = MaterialTheme.typography.labelSmall)
-          }
-        }
-      }
-    }
-  }
-}
-
-/**
- * Selects activity range (last 12 months or specific year).
- */
-@Composable
-private fun ActivityRangeSelector(
-  years: List<Int>,
-  selectedRange: ActivityRange,
-  onRangeChange: (ActivityRange) -> Unit
-) {
-  var expanded by remember { mutableStateOf(false) }
-  val label = when (selectedRange) {
-    is ActivityRange.Last7Days -> "Last 7 days"
-    is ActivityRange.Last90Days -> "Last 90 days"
-    is ActivityRange.Last6Months -> "Last 6 months"
-    is ActivityRange.LastYear -> "Last year"
-    is ActivityRange.Year -> selectedRange.year.toString()
-  }
-  Row(verticalAlignment = Alignment.CenterVertically) {
-    TextButton(onClick = { expanded = true }) {
-      Text(label)
-    }
-    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-      DropdownMenuItem(
-        text = { Text("Last 7 days") },
-        onClick = {
-          onRangeChange(ActivityRange.Last7Days)
-          expanded = false
-        }
-      )
-      DropdownMenuItem(
-        text = { Text("Last 90 days") },
-        onClick = {
-          onRangeChange(ActivityRange.Last90Days)
-          expanded = false
-        }
-      )
-      DropdownMenuItem(
-        text = { Text("Last 6 months") },
-        onClick = {
-          onRangeChange(ActivityRange.Last6Months)
-          expanded = false
-        }
-      )
-      DropdownMenuItem(
-        text = { Text("Last year") },
-        onClick = {
-          onRangeChange(ActivityRange.LastYear)
-          expanded = false
-        }
-      )
-      years.forEach { year ->
-        DropdownMenuItem(
-          text = { Text(year.toString()) },
-          onClick = {
-            onRangeChange(ActivityRange.Year(year))
-            expanded = false
-          }
-        )
-      }
-    }
-  }
-}
-
-private fun buildHabitsEditorSelections(
-  day: ContributionDay,
-  habitsConfig: List<HabitConfig>
-): Map<String, Boolean> {
-  return if (habitsConfig.isNotEmpty()) {
-    habitsConfig.associate { habit ->
-      habit.tag to (day.habitStatuses.firstOrNull { it.tag == habit.tag }?.done == true)
-    }
-  } else {
-    day.habitStatuses.associate { it.tag to it.done }
-  }
-}
-
-private fun findDayByDate(
-  weekData: space.be1ski.memos.shared.presentation.components.ActivityWeekData,
-  date: kotlinx.datetime.LocalDate
-): ContributionDay? {
-  return weekData.weeks.firstNotNullOfOrNull { week ->
-    week.days.firstOrNull { it.date == date }
-  }
-}
-
-private fun buildDailyContent(
-  date: LocalDate,
-  habitsConfig: List<HabitConfig>,
-  selections: Map<String, Boolean>
-): String {
-  return buildString {
-    append("#habits/daily ").append(date).append("\n\n")
-    habitsConfig.forEach { habit ->
-      val done = selections[habit.tag] == true
-      if (done) {
-        append(habit.tag).append('\n')
-      }
-    }
-  }
-}
-
-private fun buildHabitsConfigContent(rawText: String): String {
-  val entries = rawText.lineSequence()
-    .map { it.trim() }
-    .filter { it.isNotBlank() }
-    .mapNotNull { parseHabitConfigLine(it) }
-    .toList()
-  return buildString {
-    append("#habits/config\n\n")
-    entries.forEach { entry ->
-      append(entry.label).append(" | ").append(entry.tag).append('\n')
-    }
-  }
-}
-
-private fun parseHabitConfigLine(line: String): HabitConfig? {
-  val parts = line.split("|", limit = 2).map { it.trim() }.filter { it.isNotBlank() }
-  if (parts.isEmpty()) {
-    return null
-  }
-  val (label, tagRaw) = if (parts.size == 1) {
-    val raw = parts.first()
-    val tag = normalizeHabitTag(raw)
-    val label = if (raw.startsWith("#habits/") || raw.startsWith("#habit/")) labelFromTag(tag) else raw
-    label to tag
-  } else {
-    val label = parts[0]
-    val tag = normalizeHabitTag(parts[1])
-    label to tag
-  }
-  return HabitConfig(tag = tagRaw, label = label)
-}
-
-private fun normalizeHabitTag(raw: String): String {
-  val trimmed = raw.trim().removePrefix("#habits/").removePrefix("#habit/")
-  val sanitized = trimmed.replace("\\s+".toRegex(), "_")
-  return "#habits/$sanitized"
-}
-
-private fun labelFromTag(tag: String): String {
-  return tag.removePrefix("#habits/").removePrefix("#habit/").replace('_', ' ')
-}
-
-private fun buildHabitDay(
-  date: LocalDate,
-  habitsConfig: List<HabitConfig>,
-  dailyMemo: DailyMemoInfo?
-): ContributionDay? {
-  if (habitsConfig.isEmpty()) {
-    return null
-  }
-  val statuses = buildHabitStatuses(dailyMemo?.content, habitsConfig)
-  val completed = statuses.count { it.done }
-  val total = habitsConfig.size
-  val ratio = if (total > 0) completed.toFloat() / total.toFloat() else 0f
-  return ContributionDay(
-    date = date,
-    count = completed,
-    totalHabits = total,
-    completionRatio = ratio.coerceIn(0f, 1f),
-    habitStatuses = statuses,
-    dailyMemo = dailyMemo,
-    inRange = true
-  )
+private fun StatsScreenDialogs(derived: StatsScreenDerivedState) {
+  HabitEditorDialog(derived)
+  EmptyDeleteDialog(derived)
 }

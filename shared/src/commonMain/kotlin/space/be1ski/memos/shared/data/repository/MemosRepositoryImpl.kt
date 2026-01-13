@@ -23,9 +23,7 @@ class MemosRepositoryImpl(
     val credentials = credentialsRepository.load()
     val baseUrl = credentials.baseUrl.trim()
     val token = credentials.token.trim()
-    if (baseUrl.isBlank() || token.isBlank()) {
-      throw IllegalStateException("Base URL and token are required.")
-    }
+    check(baseUrl.isNotBlank() && token.isNotBlank()) { "Base URL and token are required." }
     val allMemos = mutableListOf<Memo>()
     val seenTokens = mutableSetOf<String>()
     var nextPageToken: String? = null
@@ -58,9 +56,7 @@ class MemosRepositoryImpl(
     val credentials = credentialsRepository.load()
     val baseUrl = credentials.baseUrl.trim()
     val token = credentials.token.trim()
-    if (baseUrl.isBlank() || token.isBlank()) {
-      throw IllegalStateException("Base URL and token are required.")
-    }
+    check(baseUrl.isNotBlank() && token.isNotBlank()) { "Base URL and token are required." }
     val dto = memosApi.updateMemo(
       baseUrl = baseUrl,
       token = token,
@@ -77,9 +73,7 @@ class MemosRepositoryImpl(
     val credentials = credentialsRepository.load()
     val baseUrl = credentials.baseUrl.trim()
     val token = credentials.token.trim()
-    if (baseUrl.isBlank() || token.isBlank()) {
-      throw IllegalStateException("Base URL and token are required.")
-    }
+    check(baseUrl.isNotBlank() && token.isNotBlank()) { "Base URL and token are required." }
     val dto = memosApi.createMemo(
       baseUrl = baseUrl,
       token = token,
@@ -95,9 +89,7 @@ class MemosRepositoryImpl(
     val credentials = credentialsRepository.load()
     val baseUrl = credentials.baseUrl.trim()
     val token = credentials.token.trim()
-    if (baseUrl.isBlank() || token.isBlank()) {
-      throw IllegalStateException("Base URL and token are required.")
-    }
+    check(baseUrl.isNotBlank() && token.isNotBlank()) { "Base URL and token are required." }
     memosApi.deleteMemo(
       baseUrl = baseUrl,
       token = token,

@@ -8,6 +8,10 @@ import space.be1ski.memos.shared.domain.model.memo.Memo
  * Maps network memo DTOs into domain models.
  */
 class MemoMapper {
+  private companion object {
+    const val EPOCH_SECONDS_LENGTH = 10
+    const val MILLIS_IN_SECOND = 1000L
+  }
   /**
    * Converts a [MemoDto] into a domain [Memo].
    */
@@ -32,7 +36,7 @@ class MemoMapper {
       ?: runCatching { Instant.parse("${trimmed}Z") }.getOrNull()
       ?: runCatching {
         val number = trimmed.toLong()
-        val millis = if (trimmed.length > 10) number else number * 1000
+        val millis = if (trimmed.length > EPOCH_SECONDS_LENGTH) number else number * MILLIS_IN_SECOND
         Instant.fromEpochMilliseconds(millis)
       }.getOrNull()
   }

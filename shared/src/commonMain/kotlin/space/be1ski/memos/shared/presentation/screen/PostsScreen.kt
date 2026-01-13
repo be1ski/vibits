@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import space.be1ski.memos.shared.domain.model.memo.Memo
 import space.be1ski.memos.shared.presentation.components.ActivityMode
 import space.be1ski.memos.shared.presentation.components.ActivityRange
+import space.be1ski.memos.shared.presentation.screen.StatsScreenActions
+import space.be1ski.memos.shared.presentation.screen.StatsScreenState
 
 /**
  * Posts stats tab showing activity charts.
@@ -16,15 +18,16 @@ fun PostsScreen(
   onRangeChange: (ActivityRange) -> Unit
 ) {
   StatsScreen(
-    memos = memos,
-    years = years,
-    range = range,
-    activityMode = ActivityMode.Posts,
-    onRangeChange = onRangeChange,
-    onEditDailyMemo = { _, _ -> },
-    onDeleteDailyMemo = {},
-    onCreateDailyMemo = {},
-    useVerticalScroll = true,
-    enablePullRefresh = false
+    state = StatsScreenState(
+      memos = memos,
+      years = years,
+      range = range,
+      activityMode = ActivityMode.Posts,
+      useVerticalScroll = true,
+      enablePullRefresh = false
+    ),
+    actions = StatsScreenActions(
+      onRangeChange = onRangeChange
+    )
   )
 }

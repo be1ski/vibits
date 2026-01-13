@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -15,27 +14,23 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.TimeZone
 import org.koin.compose.koinInject
 import space.be1ski.memos.shared.presentation.components.ActivityMode
-import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.availableYears
 import space.be1ski.memos.shared.presentation.screen.FeedScreen
 import space.be1ski.memos.shared.presentation.screen.PostsScreen
 import space.be1ski.memos.shared.presentation.screen.StatsScreen
+import space.be1ski.memos.shared.presentation.screen.StatsScreenActions
+import space.be1ski.memos.shared.presentation.screen.StatsScreenState
 import space.be1ski.memos.shared.presentation.state.MemosUiState
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 import space.be1ski.memos.shared.presentation.util.isDesktop
@@ -45,39 +40,53 @@ import space.be1ski.memos.shared.presentation.viewmodel.MemosViewModel
 @Composable
 fun MemosApp() {
   val viewModel: MemosViewModel = koinInject()
+  val appState = remember { MemosAppUiState() }
   val uiState = viewModel.uiState
   val timeZone = remember { TimeZone.currentSystemDefault() }
   val currentYear = remember { currentLocalDate().year }
   val years = remember(uiState.memos) { availableYears(uiState.memos, timeZone, currentYear) }
-  var selectedTab by remember { mutableStateOf(0) }
-  var activityRange by remember { mutableStateOf<ActivityRange>(ActivityRange.Last90Days) }
-  val memos = uiState.memos
-  val isLoading = uiState.isLoading
-  val errorMessage = uiState.errorMessage
-  var autoLoaded by remember { mutableStateOf(false) }
-  var showCredentialsDialog by remember { mutableStateOf(false) }
-  var credentialsInitialized by remember { mutableStateOf(false) }
-  var credentialsDismissed by remember { mutableStateOf(false) }
-  var editBaseUrl by remember { mutableStateOf("") }
-  var editToken by remember { mutableStateOf("") }
 
-  LaunchedEffect(uiState, autoLoaded) {
-    if (uiState is MemosUiState.Ready && !autoLoaded && !isLoading) {
-      autoLoaded = true
+  SyncAutoLoad(uiState, appState, viewModel)
+  SyncCredentialsDialog(uiState, appState)
+
+  MemosAppContent(uiState, appState, viewModel, years)
+  CredentialsDialog(uiState, appState, viewModel)
+}
+@Composable
+private fun SyncAutoLoad(
+  uiState: MemosUiState,
+  appState: MemosAppUiState,
+  viewModel: MemosViewModel
+) {
+  LaunchedEffect(uiState, appState.autoLoaded) {
+    if (uiState is MemosUiState.Ready && !appState.autoLoaded && !uiState.isLoading) {
+      appState.autoLoaded = true
       viewModel.loadMemos()
     }
   }
-
-  LaunchedEffect(uiState, showCredentialsDialog, credentialsDismissed) {
-    if (uiState is MemosUiState.CredentialsInput && !showCredentialsDialog && !credentialsDismissed) {
-      showCredentialsDialog = true
-      credentialsInitialized = false
+}
+@Composable
+private fun SyncCredentialsDialog(
+  uiState: MemosUiState,
+  appState: MemosAppUiState
+) {
+  LaunchedEffect(uiState, appState.showCredentialsDialog, appState.credentialsDismissed) {
+    if (uiState is MemosUiState.CredentialsInput && !appState.showCredentialsDialog && !appState.credentialsDismissed) {
+      appState.showCredentialsDialog = true
+      appState.credentialsInitialized = false
     }
     if (uiState is MemosUiState.Ready) {
-      credentialsDismissed = false
+      appState.credentialsDismissed = false
     }
   }
-
+}
+@Composable
+private fun MemosAppContent(
+  uiState: MemosUiState,
+  appState: MemosAppUiState,
+  viewModel: MemosViewModel,
+  years: List<Int>
+) {
   MaterialTheme {
     Scaffold { padding ->
       Column(
@@ -87,144 +96,99 @@ fun MemosApp() {
           .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
       ) {
-        Row(
-          modifier = Modifier.fillMaxWidth(),
-          horizontalArrangement = Arrangement.SpaceBetween,
-          verticalAlignment = Alignment.CenterVertically
-        ) {
-          Text("Memos", style = MaterialTheme.typography.headlineSmall)
-          Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-            if (isDesktop) {
-              IconButton(onClick = { viewModel.loadMemos() }) {
-                Icon(imageVector = Icons.Filled.Refresh, contentDescription = "Refresh")
-              }
-            }
-            TextButton(
-              onClick = {
-                viewModel.editCredentials()
-                showCredentialsDialog = true
-                credentialsInitialized = false
-                credentialsDismissed = false
-              }
-            ) {
-              Text("Settings")
-            }
-          }
+        MemosHeader(appState, viewModel)
+        uiState.errorMessage?.let { message ->
+          Text(message, color = MaterialTheme.colorScheme.error)
         }
-        if (errorMessage != null) {
-          Text(errorMessage, color = MaterialTheme.colorScheme.error)
-        }
-        PrimaryTabRow(selectedTabIndex = selectedTab) {
-          Tab(
-            selected = selectedTab == 0,
-            onClick = { selectedTab = 0 },
-            text = { Text("Habits") }
-          )
-          Tab(
-            selected = selectedTab == 1,
-            onClick = { selectedTab = 1 },
-            text = { Text("Stats") }
-          )
-          Tab(
-            selected = selectedTab == 2,
-            onClick = { selectedTab = 2 },
-            text = { Text("Feed") }
-          )
-        }
-        when (selectedTab) {
-          0 -> StatsScreen(
-            memos = memos,
-            years = years,
-            range = activityRange,
-            activityMode = ActivityMode.Habits,
-            onRangeChange = { activityRange = it },
-            onEditDailyMemo = { memo, content ->
-              viewModel.updateDailyMemo(memo.name, content)
-            },
-            onDeleteDailyMemo = { memo ->
-              viewModel.deleteDailyMemo(memo.name)
-            },
-            onCreateDailyMemo = { content ->
-              viewModel.createDailyMemo(content)
-            },
-            useVerticalScroll = true,
-            enablePullRefresh = false
-          )
-          1 -> PostsScreen(
-            memos = memos,
-            years = years,
-            range = activityRange,
-            onRangeChange = { activityRange = it }
-          )
-          2 -> FeedScreen(
-            memos = memos,
-            isRefreshing = isLoading,
-            onRefresh = { viewModel.loadMemos() },
-            enablePullRefresh = !isDesktop
-          )
-        }
+        MemosTabs(appState)
+        MemosTabContent(uiState, appState, viewModel, years)
       }
     }
   }
-
-  if (showCredentialsDialog) {
-    val state = uiState
-    if (!credentialsInitialized && state is MemosUiState.CredentialsInput) {
-      editBaseUrl = state.baseUrl
-      editToken = state.token
-      credentialsInitialized = true
-    }
-    androidx.compose.material3.AlertDialog(
-      onDismissRequest = {
-        showCredentialsDialog = false
-        credentialsInitialized = false
-        credentialsDismissed = true
-      },
-      title = { Text("Settings") },
-      text = {
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-          TextField(
-            value = editBaseUrl,
-            onValueChange = { editBaseUrl = it },
-            label = { Text("Base URL") },
-            placeholder = { Text("https://memos.example.com") },
-            modifier = Modifier.fillMaxWidth()
-          )
-          TextField(
-            value = editToken,
-            onValueChange = { editToken = it },
-            label = { Text("Access token") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
-          )
-        }
-      },
-      confirmButton = {
-        Button(
-          onClick = {
-            viewModel.updateBaseUrl(editBaseUrl)
-            viewModel.updateToken(editToken)
-            viewModel.loadMemos()
-            autoLoaded = true
-            showCredentialsDialog = false
-            credentialsInitialized = false
-            credentialsDismissed = false
-          }
-        ) {
-          Text("Save")
-        }
-      },
-      dismissButton = {
-        TextButton(
-          onClick = {
-            showCredentialsDialog = false
-            credentialsInitialized = false
-            credentialsDismissed = true
-          }
-        ) {
-          Text("Cancel")
+}
+@Composable
+private fun MemosHeader(appState: MemosAppUiState, viewModel: MemosViewModel) {
+  Row(
+    modifier = Modifier.fillMaxWidth(),
+    horizontalArrangement = Arrangement.SpaceBetween,
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    Text("Memos", style = MaterialTheme.typography.headlineSmall)
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+      if (isDesktop) {
+        IconButton(onClick = { viewModel.loadMemos() }) {
+          Icon(imageVector = Icons.Filled.Refresh, contentDescription = "Refresh")
         }
       }
+      TextButton(
+        onClick = {
+          viewModel.editCredentials()
+          appState.showCredentialsDialog = true
+          appState.credentialsInitialized = false
+          appState.credentialsDismissed = false
+        }
+      ) {
+        Text("Settings")
+      }
+    }
+  }
+}
+@Composable
+private fun MemosTabs(appState: MemosAppUiState) {
+  PrimaryTabRow(selectedTabIndex = appState.selectedTab) {
+    Tab(
+      selected = appState.selectedTab == 0,
+      onClick = { appState.selectedTab = 0 },
+      text = { Text("Habits") }
+    )
+    Tab(
+      selected = appState.selectedTab == 1,
+      onClick = { appState.selectedTab = 1 },
+      text = { Text("Stats") }
+    )
+    Tab(
+      selected = appState.selectedTab == 2,
+      onClick = { appState.selectedTab = 2 },
+      text = { Text("Feed") }
+    )
+  }
+}
+@Composable
+private fun MemosTabContent(
+  uiState: MemosUiState,
+  appState: MemosAppUiState,
+  viewModel: MemosViewModel,
+  years: List<Int>
+) {
+  val memos = uiState.memos
+  when (appState.selectedTab) {
+    0 -> StatsScreen(
+      state = StatsScreenState(
+        memos = memos,
+        years = years,
+        range = appState.activityRange,
+        activityMode = ActivityMode.Habits,
+        useVerticalScroll = true,
+        enablePullRefresh = false
+      ),
+      actions = StatsScreenActions(
+        onRangeChange = { appState.activityRange = it },
+        onEditDailyMemo = { memo, content -> viewModel.updateDailyMemo(memo.name, content) },
+        onDeleteDailyMemo = { memo -> viewModel.deleteDailyMemo(memo.name) },
+        onCreateDailyMemo = { content -> viewModel.createDailyMemo(content) }
+      )
+    )
+    1 -> PostsScreen(
+      memos = memos,
+      years = years,
+      range = appState.activityRange,
+      onRangeChange = { appState.activityRange = it }
+    )
+    2 -> FeedScreen(
+      memos = memos,
+      isRefreshing = uiState.isLoading,
+      onRefresh = { viewModel.loadMemos() },
+      enablePullRefresh = !isDesktop
     )
   }
 }

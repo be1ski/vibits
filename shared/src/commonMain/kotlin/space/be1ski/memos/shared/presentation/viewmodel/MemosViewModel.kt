@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
@@ -108,16 +109,16 @@ class MemosViewModel(
     }
 
     scope.launch {
-      try {
-        val memos = loadMemosUseCase()
-        uiState = MemosUiState.Ready(memos = memos)
-      } catch (error: Exception) {
-        val message = error.message ?: "Failed to load memos."
-        uiState = when (val state = uiState) {
-          is MemosUiState.CredentialsInput -> state.copy(isLoading = false, errorMessage = message)
-          is MemosUiState.Ready -> state.copy(isLoading = false, errorMessage = message)
+      runCatching { loadMemosUseCase() }
+        .onSuccess { memos -> uiState = MemosUiState.Ready(memos = memos) }
+        .onFailure { error ->
+          if (error is CancellationException) throw error
+          val message = error.message ?: "Failed to load memos."
+          uiState = when (val state = uiState) {
+            is MemosUiState.CredentialsInput -> state.copy(isLoading = false, errorMessage = message)
+            is MemosUiState.Ready -> state.copy(isLoading = false, errorMessage = message)
+          }
         }
-      }
     }
   }
 
@@ -127,19 +128,21 @@ class MemosViewModel(
   fun updateDailyMemo(name: String, content: String) {
     setLoading(true)
     scope.launch {
-      try {
-        val updated = updateMemoUseCase(name, content)
-        val updatedMemos = uiState.memos.map { memo ->
-          if (memo.name == updated.name) updated else memo
+      runCatching { updateMemoUseCase(name, content) }
+        .onSuccess { updated ->
+          val updatedMemos = uiState.memos.map { memo ->
+            if (memo.name == updated.name) updated else memo
+          }
+          uiState = when (val state = uiState) {
+            is MemosUiState.CredentialsInput -> state.copy(isLoading = false, memos = updatedMemos)
+            is MemosUiState.Ready -> state.copy(isLoading = false, memos = updatedMemos)
+          }
         }
-        uiState = when (val state = uiState) {
-          is MemosUiState.CredentialsInput -> state.copy(isLoading = false, memos = updatedMemos)
-          is MemosUiState.Ready -> state.copy(isLoading = false, memos = updatedMemos)
+        .onFailure { error ->
+          if (error is CancellationException) throw error
+          val message = error.message ?: "Failed to update memo."
+          setLoading(false, message)
         }
-      } catch (error: Exception) {
-        val message = error.message ?: "Failed to update memo."
-        setLoading(false, message)
-      }
     }
   }
 
@@ -149,17 +152,19 @@ class MemosViewModel(
   fun createDailyMemo(content: String) {
     setLoading(true)
     scope.launch {
-      try {
-        val created = createMemoUseCase(content)
-        val updatedMemos = uiState.memos + created
-        uiState = when (val state = uiState) {
-          is MemosUiState.CredentialsInput -> state.copy(isLoading = false, memos = updatedMemos)
-          is MemosUiState.Ready -> state.copy(isLoading = false, memos = updatedMemos)
+      runCatching { createMemoUseCase(content) }
+        .onSuccess { created ->
+          val updatedMemos = uiState.memos + created
+          uiState = when (val state = uiState) {
+            is MemosUiState.CredentialsInput -> state.copy(isLoading = false, memos = updatedMemos)
+            is MemosUiState.Ready -> state.copy(isLoading = false, memos = updatedMemos)
+          }
         }
-      } catch (error: Exception) {
-        val message = error.message ?: "Failed to create memo."
-        setLoading(false, message)
-      }
+        .onFailure { error ->
+          if (error is CancellationException) throw error
+          val message = error.message ?: "Failed to create memo."
+          setLoading(false, message)
+        }
     }
   }
 
@@ -169,17 +174,19 @@ class MemosViewModel(
   fun deleteDailyMemo(name: String) {
     setLoading(true)
     scope.launch {
-      try {
-        deleteMemoUseCase(name)
-        val updatedMemos = uiState.memos.filterNot { memo -> memo.name == name }
-        uiState = when (val state = uiState) {
-          is MemosUiState.CredentialsInput -> state.copy(isLoading = false, memos = updatedMemos)
-          is MemosUiState.Ready -> state.copy(isLoading = false, memos = updatedMemos)
+      runCatching { deleteMemoUseCase(name) }
+        .onSuccess {
+          val updatedMemos = uiState.memos.filterNot { memo -> memo.name == name }
+          uiState = when (val state = uiState) {
+            is MemosUiState.CredentialsInput -> state.copy(isLoading = false, memos = updatedMemos)
+            is MemosUiState.Ready -> state.copy(isLoading = false, memos = updatedMemos)
+          }
         }
-      } catch (error: Exception) {
-        val message = error.message ?: "Failed to delete memo."
-        setLoading(false, message)
-      }
+        .onFailure { error ->
+          if (error is CancellationException) throw error
+          val message = error.message ?: "Failed to delete memo."
+          setLoading(false, message)
+        }
     }
   }
 
