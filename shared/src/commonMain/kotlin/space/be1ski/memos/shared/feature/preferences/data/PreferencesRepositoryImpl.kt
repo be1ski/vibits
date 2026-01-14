@@ -25,10 +25,6 @@ internal class PreferencesRepositoryImpl(
   }
 
   private fun parseTimeRangeTab(value: String): TimeRangeTab {
-    return try {
-      TimeRangeTab.valueOf(value)
-    } catch (e: IllegalArgumentException) {
-      TimeRangeTab.Weeks // Default fallback
-    }
+    return runCatching { TimeRangeTab.valueOf(value) }.getOrDefault(TimeRangeTab.Weeks)
   }
 }
