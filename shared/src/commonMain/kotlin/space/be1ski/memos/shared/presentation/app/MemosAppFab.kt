@@ -1,3 +1,5 @@
+@file:Suppress("MatchingDeclarationName")
+
 package space.be1ski.memos.shared.presentation.app
 
 internal enum class MemosFabMode {

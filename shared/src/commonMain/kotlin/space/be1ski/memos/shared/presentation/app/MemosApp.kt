@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package space.be1ski.memos.shared.presentation.app
 
 import androidx.compose.foundation.layout.Arrangement
@@ -76,6 +78,7 @@ import space.be1ski.memos.shared.domain.usecase.LoadStorageInfoUseCase
 import space.be1ski.memos.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.memos.shared.feature.preferences.domain.usecase.SaveTimeRangeTabUseCase
 import space.be1ski.memos.shared.feature.memos.domain.usecase.UpdateMemoUseCase
+import space.be1ski.memos.shared.presentation.memos.MemosUseCases
 import space.be1ski.memos.shared.action_refresh
 import space.be1ski.memos.shared.action_save
 import space.be1ski.memos.shared.hint_write_memo
@@ -106,17 +109,18 @@ fun MemosApp() {
   }
 
   // MemosFeature
-  val memosFeature = remember {
-    createMemosFeature(
-      loadMemosUseCase = loadMemosUseCase,
-      loadCachedMemosUseCase = loadCachedMemosUseCase,
-      loadCredentialsUseCase = loadCredentialsUseCase,
-      saveCredentialsUseCase = saveCredentialsUseCase,
-      createMemoUseCase = createMemoUseCase,
-      updateMemoUseCase = updateMemoUseCase,
-      deleteMemoUseCase = deleteMemoUseCase
+  val memosUseCases = remember {
+    MemosUseCases(
+      loadMemos = loadMemosUseCase,
+      loadCachedMemos = loadCachedMemosUseCase,
+      loadCredentials = loadCredentialsUseCase,
+      saveCredentials = saveCredentialsUseCase,
+      createMemo = createMemoUseCase,
+      updateMemo = updateMemoUseCase,
+      deleteMemo = deleteMemoUseCase
     )
   }
+  val memosFeature = remember { createMemosFeature(memosUseCases) }
   val scope = rememberCoroutineScope()
   LaunchedEffect(memosFeature) {
     memosFeature.launchIn(scope)
@@ -154,7 +158,11 @@ private fun SyncAutoLoad(
   dispatch: (MemosAction) -> Unit
 ) {
   LaunchedEffect(memosState.credentialsMode, appState.autoLoaded, memosState.isLoading) {
-    if (!memosState.credentialsMode && !appState.autoLoaded && !memosState.isLoading && memosState.hasCredentials) {
+    val shouldAutoLoad = !memosState.credentialsMode &&
+      !appState.autoLoaded &&
+      !memosState.isLoading &&
+      memosState.hasCredentials
+    if (shouldAutoLoad) {
       appState.autoLoaded = true
       dispatch(MemosAction.LoadMemos)
     }
@@ -177,6 +185,7 @@ private fun SyncCredentialsDialog(
   }
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun MemosAppContent(
   memosState: MemosState,
@@ -273,13 +282,23 @@ private fun MemosBottomNavigation(appState: MemosAppUiState) {
     NavigationBarItem(
       selected = appState.selectedScreen == MemosScreen.Habits,
       onClick = { appState.selectedScreen = MemosScreen.Habits },
-      icon = { Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = stringResource(Res.string.nav_habits)) },
+      icon = {
+        Icon(
+          imageVector = Icons.Filled.CheckCircle,
+          contentDescription = stringResource(Res.string.nav_habits)
+        )
+      },
       label = { Text(stringResource(Res.string.nav_habits)) }
     )
     NavigationBarItem(
       selected = appState.selectedScreen == MemosScreen.Stats,
       onClick = { appState.selectedScreen = MemosScreen.Stats },
-      icon = { Icon(imageVector = Icons.Filled.Description, contentDescription = stringResource(Res.string.nav_posts)) },
+      icon = {
+        Icon(
+          imageVector = Icons.Filled.Description,
+          contentDescription = stringResource(Res.string.nav_posts)
+        )
+      },
       label = { Text(stringResource(Res.string.nav_posts)) }
     )
     NavigationBarItem(

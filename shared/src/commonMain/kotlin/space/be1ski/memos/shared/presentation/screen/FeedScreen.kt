@@ -27,6 +27,7 @@ import space.be1ski.memos.shared.core.ui.Indent
 /**
  * Feed tab showing the raw memos list.
  */
+@Suppress("LongParameterList")
 @OptIn(androidx.compose.material.ExperimentalMaterialApi::class)
 @Composable
 fun FeedScreen(

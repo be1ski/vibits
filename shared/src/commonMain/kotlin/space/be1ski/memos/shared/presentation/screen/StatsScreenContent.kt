@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package space.be1ski.memos.shared.presentation.screen
 
 import androidx.compose.foundation.background
@@ -31,7 +33,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.memos.shared.Res
-import space.be1ski.memos.shared.*
+import space.be1ski.memos.shared.action_configure_habits
+import space.be1ski.memos.shared.action_save
+import space.be1ski.memos.shared.action_track
+import space.be1ski.memos.shared.action_track_today
+import space.be1ski.memos.shared.format_habits_progress
+import space.be1ski.memos.shared.hint_add_habits_config
+import space.be1ski.memos.shared.hint_habits_config
+import space.be1ski.memos.shared.label_activity
+import space.be1ski.memos.shared.label_habits_config
+import space.be1ski.memos.shared.label_today
+import space.be1ski.memos.shared.msg_no_habits_yet
 import space.be1ski.memos.shared.core.ui.ActivityMode
 import space.be1ski.memos.shared.core.ui.ActivityRange
 import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeek

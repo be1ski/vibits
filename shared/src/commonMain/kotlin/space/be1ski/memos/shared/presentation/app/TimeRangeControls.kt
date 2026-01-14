@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package space.be1ski.memos.shared.presentation.app
 
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +34,7 @@ import space.be1ski.memos.shared.time_weeks
 import space.be1ski.memos.shared.time_years
 import kotlinx.datetime.Month as CalendarMonth
 
+@Suppress("LongParameterList")
 @Composable
 internal fun TimeRangeControls(
   selectedTab: TimeRangeTab,
@@ -124,7 +127,7 @@ private fun formatMonthDay(date: LocalDate): String {
 }
 
 private fun monthShort(month: CalendarMonth): String {
-  return month.name.take(3).lowercase().replaceFirstChar { it.uppercase() }
+  return month.name.take(MONTH_ABBREV_LENGTH).lowercase().replaceFirstChar { it.uppercase() }
 }
 
 private fun isBeforeRange(selectedRange: ActivityRange, currentRange: ActivityRange): Boolean {
@@ -201,3 +204,4 @@ private fun floorMod(value: Int, divisor: Int): Int {
 private const val DAYS_IN_WEEK = 7
 private const val WEEK_END_OFFSET = 6
 private const val QUARTERS_IN_YEAR = 4
+private const val MONTH_ABBREV_LENGTH = 3

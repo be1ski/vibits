@@ -55,10 +55,24 @@ Tests must stay useful and up-to-date. Follow these rules:
 4. **New features need tests.** Every new public API should have corresponding tests.
 5. **Test behavior, not implementation.** Focus on what code does, not how it does it.
 
+## Linting
+
+**MANDATORY:** Run lints before every commit and fix all issues.
+
+- Run detekt: `./gradlew detekt`
+- All detekt issues must be resolved before committing. Zero tolerance for lint warnings.
+- Use `@Suppress` annotations only when the lint rule doesn't apply (e.g., `LongParameterList` for Composables with many parameters is acceptable).
+- Extract magic numbers to named constants.
+- Replace wildcard imports with explicit imports.
+
 ## Commit & Pull Request Guidelines
 
-- Commit messages follow the current history: imperative, concise, single topic (e.g., “Simplify README”).
+- Commit messages follow the current history: imperative, concise, single topic (e.g., "Simplify README").
 - Use a transparent flow: make changes, run the relevant app command, verify behavior, then commit and push.
+- **Pre-commit checklist:**
+  1. Run tests: `./gradlew :shared:desktopTest`
+  2. Run lints: `./gradlew detekt` — fix all issues
+  3. Verify the app runs: `./gradlew :desktopApp:run`
 - PRs (if used) should include a summary, testing performed, and screenshots for UI changes.
 
 ## Security & Configuration Tips

@@ -345,7 +345,7 @@ private fun DayOfWeekLegend(
         contentAlignment = Alignment.CenterStart
       ) {
         val label = if (showAllLabels) {
-          day.name.take(3).lowercase().replaceFirstChar { it.uppercase() }
+          day.name.take(DAY_ABBREV_LENGTH).lowercase().replaceFirstChar { it.uppercase() }
         } else {
           when (day) {
             DayOfWeek.MONDAY -> stringResource(Res.string.day_mon)
@@ -433,6 +433,7 @@ internal data class ChartLayout(
 /**
  * Renders an individual activity cell.
  */
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable
 private fun ContributionCell(
   state: ContributionCellState,
@@ -512,3 +513,5 @@ private fun ContributionCell(
     }
   }
 }
+
+private const val DAY_ABBREV_LENGTH = 3

@@ -34,7 +34,10 @@ internal fun HabitEditorDialog(derived: StatsScreenDerivedState) {
   }
   AlertDialog(
     onDismissRequest = { dispatch(HabitsAction.CloseEditor) },
-    title = { Text(if (habitsState.isEditing) stringResource(Res.string.title_update_day) else stringResource(Res.string.title_create_day)) },
+    title = {
+      val titleRes = if (habitsState.isEditing) Res.string.title_update_day else Res.string.title_create_day
+      Text(stringResource(titleRes))
+    },
     text = { HabitEditorContent(habitsState, dispatch) },
     confirmButton = { HabitEditorConfirmButton(habitsState, dispatch) },
     dismissButton = { HabitEditorDismissButton(habitsState, dispatch) }
@@ -80,7 +83,8 @@ private fun HabitEditorContent(habitsState: HabitsState, dispatch: (HabitsAction
 @Composable
 private fun HabitEditorConfirmButton(habitsState: HabitsState, dispatch: (HabitsAction) -> Unit) {
   Button(onClick = { dispatch(HabitsAction.ConfirmEditor) }) {
-    Text(if (habitsState.isEditing) stringResource(Res.string.action_update) else stringResource(Res.string.action_create))
+    val actionRes = if (habitsState.isEditing) Res.string.action_update else Res.string.action_create
+    Text(stringResource(actionRes))
   }
 }
 
