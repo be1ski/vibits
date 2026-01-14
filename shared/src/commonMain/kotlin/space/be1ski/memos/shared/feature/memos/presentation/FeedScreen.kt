@@ -84,6 +84,7 @@ fun FeedScreen(
 private fun memoDateLabel(memo: Memo, timeZone: TimeZone): String {
   val instant = memo.updateTime ?: memo.createTime ?: return ""
   val dateTime = instant.toLocalDateTime(timeZone)
-  val time = "%02d:%02d".format(dateTime.hour, dateTime.minute)
-  return "${dateTime.date} $time"
+  val hour = dateTime.hour.toString().padStart(2, '0')
+  val minute = dateTime.minute.toString().padStart(2, '0')
+  return "${dateTime.date} $hour:$minute"
 }
