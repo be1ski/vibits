@@ -157,6 +157,7 @@ internal fun StatsMainChart(derived: StatsScreenDerivedState) {
       demoMode = state.demoMode
     )
   } else {
+    val showTimeline = state.range is ActivityRange.Quarter || state.range is ActivityRange.Year
     ContributionGrid(
       state = ContributionGridState(
         weekData = derived.weekData,
@@ -168,7 +169,7 @@ internal fun StatsMainChart(derived: StatsScreenDerivedState) {
         showWeekdayLegend = derived.showWeekdayLegend,
         showAllWeekdayLabels = true,
         compactHeight = derived.useCompactHeight,
-        showTimeline = true,
+        showTimeline = showTimeline,
         showDayNumbers = false
       ),
       callbacks = ContributionGridCallbacks(
@@ -355,6 +356,7 @@ private fun HabitActivitySection(
 
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs), modifier = Modifier.padding(top = Indent.s)) {
     Text(state.habit.label, style = MaterialTheme.typography.titleSmall)
+    val showTimeline = state.range is ActivityRange.Quarter || state.range is ActivityRange.Year
     ContributionGrid(
       state = ContributionGridState(
         weekData = habitWeekData,
@@ -366,7 +368,7 @@ private fun HabitActivitySection(
         showWeekdayLegend = state.showWeekdayLegend,
         showAllWeekdayLabels = true,
         compactHeight = state.compactHeight,
-        showTimeline = true
+        showTimeline = showTimeline
       ),
       callbacks = ContributionGridCallbacks(
         onDaySelected = actions.onDaySelected,
