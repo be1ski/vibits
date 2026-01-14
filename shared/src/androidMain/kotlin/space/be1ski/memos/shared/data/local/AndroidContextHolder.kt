@@ -1,11 +1,12 @@
 package space.be1ski.memos.shared.data.local
 
+import android.annotation.SuppressLint
 import android.content.Context
 
 /**
  * Holds application context for shared Android code.
  */
-object AndroidContextHolder {
+@SuppressLint("StaticFieldLeak") object AndroidContextHolder {
   lateinit var context: Context
     private set
 
