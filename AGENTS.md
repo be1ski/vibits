@@ -32,12 +32,28 @@ Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if a
 
 We follow TDD for business logic and aim for high coverage (100% when practical).
 
+### Running Tests
+
+- Run shared unit tests: `./gradlew :shared:desktopTest`
+- Run iOS simulator tests: `./gradlew :shared:iosSimulatorArm64Test`
+- Coverage reports: `./gradlew :shared:jacocoDesktopTestReport`
+
+### Test Organization
+
 - Unit tests live in `shared/src/commonTest` for shared KMP logic.
+- Desktop-specific tests in `shared/src/desktopTest`.
 - Android-specific tests belong under `androidApp/src/test` or `androidApp/src/androidTest`.
-- Test names use backticks with `when ... then ...` phrasing; structure tests with `given/when/then`.
-- Run shared unit tests with `./gradlew :shared:desktopTest`.
-- Coverage reports come from `./gradlew :shared:jacocoDesktopTestReport`.
-- Before every commit: run all tests, generate coverage, and update the coverage numbers in `README.md`.
+- Test names use backticks with `when ... then ...` phrasing.
+
+### Avoiding Test Rot
+
+Tests must stay useful and up-to-date. Follow these rules:
+
+1. **Run tests before every commit.** If tests don't compile or pass, fix them before pushing.
+2. **Never test constants.** Tests like `assertEquals(200, PAGE_SIZE)` provide no value — they just duplicate the constant.
+3. **Delete tests when deleting code.** If you remove a function/class, remove its tests too.
+4. **New features need tests.** Every new public API should have corresponding tests.
+5. **Test behavior, not implementation.** Focus on what code does, not how it does it.
 
 ## Commit & Pull Request Guidelines
 
