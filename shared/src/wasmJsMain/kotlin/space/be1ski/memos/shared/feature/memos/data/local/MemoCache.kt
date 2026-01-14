@@ -13,4 +13,6 @@ actual open class MemoCache {
   actual open suspend fun upsertMemo(memo: Memo) = Unit
 
   actual open suspend fun deleteMemo(name: String) = Unit
+
+  actual open suspend fun clear() = Unit
 }

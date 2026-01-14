@@ -24,18 +24,6 @@ fun buildDailyContent(
 }
 
 /**
- * Builds the content for a habits config memo.
- */
-fun buildHabitsConfigContent(rawText: String): String {
-  val entries = rawText.lineSequence()
-    .map { it.trim() }
-    .filter { it.isNotBlank() }
-    .mapNotNull { parseHabitConfigLine(it) }
-    .toList()
-  return buildHabitsConfigContentFromList(entries)
-}
-
-/**
  * Builds the content for a habits config memo from a list of HabitConfig entries.
  */
 fun buildHabitsConfigContentFromList(entries: List<HabitConfig>): String {

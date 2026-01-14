@@ -5,12 +5,12 @@ import androidx.compose.ui.window.ComposeViewport
 import kotlinx.browser.document
 import org.koin.core.context.startKoin
 import space.be1ski.memos.shared.di.sharedModule
-import space.be1ski.memos.shared.app.MemosApp
+import space.be1ski.memos.shared.app.AppRoot
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
   runCatching {
     startKoin { modules(sharedModule()) }
   }
-  ComposeViewport(document.getElementById("root")!!) { MemosApp() }
+  ComposeViewport(document.getElementById("root")!!) { AppRoot() }
 }

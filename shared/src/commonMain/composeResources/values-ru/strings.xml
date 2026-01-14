@@ -41,6 +41,7 @@
     <!-- Labels -->
     <string name="label_access_token">Токен доступа</string>
     <string name="label_activity">Активность</string>
+    <string name="label_app_mode">Режим приложения</string>
     <string name="label_base_url">Base URL</string>
     <string name="label_demo_mode">Демо-режим</string>
     <string name="label_habits_config">Конфигурация привычек</string>
@@ -52,6 +53,14 @@
     <string name="msg_delete_day_confirm">Привычки не выбраны. Запись за этот день будет удалена.</string>
     <string name="msg_no_habits_yet">Привычки еще не настроены.</string>
     <string name="msg_select_habit">Выберите хотя бы одну привычку.</string>
+
+    <!-- Mode selection -->
+    <string name="mode_select_title">Выберите режим</string>
+    <string name="mode_select_subtitle">Как вы хотите использовать приложение?</string>
+    <string name="mode_online_title">Онлайн режим</string>
+    <string name="mode_online_desc">Подключение к серверу Memos для полной синхронизации</string>
+    <string name="mode_offline_title">Офлайн режим</string>
+    <string name="mode_offline_desc">Хранение данных локально без подключения к серверу</string>
 
     <!-- Navigation -->
     <string name="nav_feed">Лента</string>

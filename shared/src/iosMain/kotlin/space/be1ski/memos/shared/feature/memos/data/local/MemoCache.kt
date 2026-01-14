@@ -29,6 +29,10 @@ actual open class MemoCache {
     database.memoDao().deleteByName(name)
   }
 
+  actual open suspend fun clear() {
+    database.memoDao().clearAll()
+  }
+
   private fun createDatabase(): MemoDatabase =
     Room.databaseBuilder<MemoDatabase>(
       name = "memos.db",

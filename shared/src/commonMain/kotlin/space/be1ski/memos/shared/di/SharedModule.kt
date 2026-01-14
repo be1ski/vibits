@@ -25,6 +25,15 @@ import space.be1ski.memos.shared.feature.preferences.domain.usecase.SaveTimeRang
 import space.be1ski.memos.shared.feature.memos.domain.usecase.CreateMemoUseCase
 import space.be1ski.memos.shared.feature.memos.domain.usecase.DeleteMemoUseCase
 import space.be1ski.memos.shared.feature.memos.domain.usecase.UpdateMemoUseCase
+import space.be1ski.memos.shared.feature.mode.data.AppModeStore
+import space.be1ski.memos.shared.feature.mode.data.AppModeRepositoryImpl
+import space.be1ski.memos.shared.feature.mode.domain.repository.AppModeRepository
+import space.be1ski.memos.shared.feature.mode.domain.usecase.LoadAppModeUseCase
+import space.be1ski.memos.shared.feature.mode.domain.usecase.SaveAppModeUseCase
+import space.be1ski.memos.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
+import space.be1ski.memos.shared.feature.memos.data.ModeAwareMemosRepository
+import space.be1ski.memos.shared.feature.memos.data.offline.OfflineMemoStorage
+import space.be1ski.memos.shared.feature.memos.data.offline.OfflineMemosRepository
 
 /**
  * Koin module that wires shared dependencies.
@@ -38,8 +47,14 @@ fun sharedModule(): Module = module {
   single { MemoMapper() }
   single { MemosApi(get()) }
   single<CredentialsRepository> { CredentialsRepositoryImpl(get()) }
-  single<MemosRepository> { MemosRepositoryImpl(get(), get(), get(), get()) }
   single<PreferencesRepository> { PreferencesRepositoryImpl(get()) }
+  single { AppModeStore() }
+  single<AppModeRepository> { AppModeRepositoryImpl(get()) }
+  single { OfflineMemoStorage() }
+  single { MemosRepositoryImpl(get(), get(), get(), get()) }
+  single { OfflineMemosRepository(get()) }
+  single { ModeAwareMemosRepository(get(), get(), get(), get()) }
+  single<MemosRepository> { get<ModeAwareMemosRepository>() }
   factory { LoadCachedMemosUseCase(get()) }
   factory { LoadMemosUseCase(get()) }
   factory { LoadCredentialsUseCase(get()) }
@@ -50,4 +65,7 @@ fun sharedModule(): Module = module {
   factory { CreateMemoUseCase(get()) }
   factory { UpdateMemoUseCase(get()) }
   factory { DeleteMemoUseCase(get()) }
+  factory { LoadAppModeUseCase(get()) }
+  factory { SaveAppModeUseCase(get()) }
+  factory { SwitchAppModeUseCase(get(), get()) }
 }

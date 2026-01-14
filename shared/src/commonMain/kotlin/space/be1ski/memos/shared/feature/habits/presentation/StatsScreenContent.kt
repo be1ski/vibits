@@ -24,11 +24,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,12 +34,10 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.memos.shared.Res
 import space.be1ski.memos.shared.action_configure_habits
-import space.be1ski.memos.shared.action_save
 import space.be1ski.memos.shared.action_track
 import space.be1ski.memos.shared.action_track_today
 import space.be1ski.memos.shared.format_habits_progress
 import space.be1ski.memos.shared.hint_add_habits_config
-import space.be1ski.memos.shared.hint_habits_config
 import space.be1ski.memos.shared.label_activity
 import space.be1ski.memos.shared.label_habits_config
 import space.be1ski.memos.shared.msg_no_habits_yet
@@ -124,20 +119,6 @@ internal fun StatsHeaderRow() {
 }
 
 @Composable
-internal fun StatsHabitsConfigSection(derived: StatsScreenDerivedState) {
-  val state = derived.state
-  val habitsState = derived.habitsState
-  val dispatch = derived.dispatch
-  if (state.activityMode == ActivityMode.Habits && habitsState.showConfigEditor) {
-    HabitsConfigCard(
-      habitsConfigText = habitsState.configText,
-      onConfigChange = { dispatch(HabitsAction.UpdateConfigText(it)) },
-      onSave = { dispatch(HabitsAction.SaveConfig) }
-    )
-  }
-}
-
-@Composable
 internal fun StatsHabitsEmptyState(derived: StatsScreenDerivedState) {
   val state = derived.state
   val dispatch = derived.dispatch
@@ -154,7 +135,7 @@ internal fun StatsHabitsEmptyState(derived: StatsScreenDerivedState) {
         stringResource(Res.string.hint_add_habits_config),
         style = MaterialTheme.typography.bodySmall
       )
-      Button(onClick = { dispatch(HabitsAction.OpenConfigEditor) }) {
+      Button(onClick = { dispatch(HabitsAction.OpenConfigDialog(emptyList())) }) {
         Text(stringResource(Res.string.action_configure_habits))
       }
     }
@@ -306,28 +287,6 @@ internal fun BoxScope.StatsFloatingAction(derived: StatsScreenDerivedState) {
       imageVector = Icons.Filled.AddTask,
       contentDescription = stringResource(Res.string.action_track_today)
     )
-  }
-}
-
-@Composable
-private fun HabitsConfigCard(
-  habitsConfigText: String,
-  onConfigChange: (String) -> Unit,
-  onSave: () -> Unit
-) {
-  Column(verticalArrangement = Arrangement.spacedBy(Indent.xs), modifier = Modifier.padding(Indent.xs)) {
-    Text(stringResource(Res.string.label_habits_config), style = MaterialTheme.typography.titleSmall)
-    TextField(
-      value = habitsConfigText,
-      onValueChange = onConfigChange,
-      modifier = Modifier.fillMaxWidth(),
-      placeholder = { Text(stringResource(Res.string.hint_habits_config)) }
-    )
-    Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs)) {
-      Button(onClick = onSave) {
-        Text(stringResource(Res.string.action_save))
-      }
-    }
   }
 }
 

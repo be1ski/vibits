@@ -85,6 +85,8 @@ import space.be1ski.memos.shared.feature.preferences.domain.usecase.SaveTimeRang
 import space.be1ski.memos.shared.feature.preferences.domain.usecase.TimeRangeScreen
 import space.be1ski.memos.shared.feature.memos.domain.usecase.UpdateMemoUseCase
 import space.be1ski.memos.shared.feature.memos.presentation.MemosUseCases
+import space.be1ski.memos.shared.feature.mode.domain.usecase.LoadAppModeUseCase
+import space.be1ski.memos.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
 import space.be1ski.memos.shared.action_refresh
 import space.be1ski.memos.shared.action_save
 import space.be1ski.memos.shared.hint_write_memo
@@ -103,14 +105,17 @@ fun MemosApp() {
   val createMemoUseCase: CreateMemoUseCase = koinInject()
   val updateMemoUseCase: UpdateMemoUseCase = koinInject()
   val deleteMemoUseCase: DeleteMemoUseCase = koinInject()
+  val loadAppModeUseCase: LoadAppModeUseCase = koinInject()
+  val switchAppModeUseCase: SwitchAppModeUseCase = koinInject()
 
   val initialPrefs = remember { loadPreferencesUseCase() }
+  val initialMode = remember { loadAppModeUseCase() }
   val appState = remember {
     MemosAppUiState(
       currentDate = currentLocalDate(),
       initialHabitsTimeRangeTab = initialPrefs.habitsTimeRangeTab,
       initialPostsTimeRangeTab = initialPrefs.postsTimeRangeTab
-    )
+    ).also { it.appMode = initialMode }
   }
 
   // MemosFeature
@@ -151,7 +156,7 @@ fun MemosApp() {
   SyncCredentialsDialog(memosState, appState)
 
   MemosAppContent(memosState, appState, dispatchMemos, saveTimeRangeTabUseCase, habitsState, habitsFeature::send)
-  CredentialsDialog(memosState, appState, dispatchMemos, storageInfo)
+  CredentialsDialog(memosState, appState, dispatchMemos, storageInfo, switchAppModeUseCase)
   MemoCreateDialog(appState, dispatchMemos)
   MemoEditDialog(appState, dispatchMemos)
 }

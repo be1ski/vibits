@@ -3,7 +3,6 @@ package space.be1ski.memos.shared.feature.habits.presentation
 import space.be1ski.memos.shared.core.elm.Reducer
 import space.be1ski.memos.shared.core.elm.reducer
 import space.be1ski.memos.shared.feature.habits.domain.buildDailyContent
-import space.be1ski.memos.shared.feature.habits.domain.buildHabitsConfigContent
 import space.be1ski.memos.shared.feature.habits.domain.buildHabitsConfigContentFromList
 import space.be1ski.memos.shared.feature.habits.domain.buildHabitsEditorSelections
 import space.be1ski.memos.shared.feature.habits.domain.normalizeHabitTag
@@ -86,24 +85,6 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> = reducer { 
 
     is HabitsAction.CancelDelete -> {
       state { copy(showDeleteConfirm = false) }
-    }
-
-    is HabitsAction.OpenConfigEditor -> {
-      state { copy(showConfigEditor = true) }
-    }
-
-    is HabitsAction.CloseConfigEditor -> {
-      state { copy(showConfigEditor = false, configText = "") }
-    }
-
-    is HabitsAction.UpdateConfigText -> {
-      state { copy(configText = action.text) }
-    }
-
-    is HabitsAction.SaveConfig -> {
-      val content = buildHabitsConfigContent(state.configText)
-      state { copy(isLoading = true) }
-      effect(HabitsEffect.CreateMemo(content))
     }
 
     is HabitsAction.OpenConfigDialog -> {
@@ -196,8 +177,6 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> = reducer { 
           editorSelections = emptyMap(),
           editorExisting = null,
           editorError = null,
-          showConfigEditor = false,
-          configText = "",
           showConfigDialog = false,
           editingHabits = emptyList()
         )

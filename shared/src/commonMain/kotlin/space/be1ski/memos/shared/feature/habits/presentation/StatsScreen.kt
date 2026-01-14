@@ -119,20 +119,12 @@ private fun rememberStatsScreenDerived(
 private fun SyncStatsScreenState(derived: StatsScreenDerivedState) {
   val habitsState = derived.habitsState
   val dispatch = derived.dispatch
-  val currentConfigText = remember(derived.currentHabitsConfig) {
-    derived.currentHabitsConfig.joinToString("\n") { "${it.label} | ${it.tag}" }
-  }
   LaunchedEffect(derived.weekData.weeks) {
     if (habitsState.selectedDate == null && habitsState.activeSelectionId == null) {
       val lastDay = derived.weekData.weeks.lastOrNull()?.days?.lastOrNull()
       if (lastDay != null) {
         dispatch(HabitsAction.SelectDay(lastDay, "main"))
       }
-    }
-  }
-  LaunchedEffect(habitsState.showConfigEditor, currentConfigText) {
-    if (habitsState.showConfigEditor && habitsState.configText.isBlank()) {
-      dispatch(HabitsAction.UpdateConfigText(currentConfigText))
     }
   }
 }
@@ -156,7 +148,6 @@ private fun StatsScreenContent(derived: StatsScreenDerivedState) {
       StatsHeaderRow()
       StatsHabitsEmptyState(derived)
       StatsInfoCard(derived)
-      StatsHabitsConfigSection(derived)
       StatsMainChart(derived)
       StatsWeeklyChart(derived)
       StatsHabitSections(derived)

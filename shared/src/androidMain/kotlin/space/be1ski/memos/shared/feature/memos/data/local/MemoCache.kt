@@ -43,4 +43,9 @@ actual open class MemoCache {
     val dao = daoOrNull() ?: return
     dao.deleteByName(name)
   }
+
+  actual open suspend fun clear() {
+    val dao = daoOrNull() ?: return
+    dao.clearAll()
+  }
 }

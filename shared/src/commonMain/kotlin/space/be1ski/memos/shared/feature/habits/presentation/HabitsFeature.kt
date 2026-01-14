@@ -28,13 +28,7 @@ sealed interface HabitsAction {
   data object ConfirmDelete : HabitsAction
   data object CancelDelete : HabitsAction
 
-  // Config management (legacy text editor)
-  data object OpenConfigEditor : HabitsAction
-  data object CloseConfigEditor : HabitsAction
-  data class UpdateConfigText(val text: String) : HabitsAction
-  data object SaveConfig : HabitsAction
-
-  // Config dialog (new UI)
+  // Config dialog
   data class OpenConfigDialog(val currentConfig: List<HabitConfig>) : HabitsAction
   data object CloseConfigDialog : HabitsAction
   data object AddHabit : HabitsAction
@@ -90,11 +84,7 @@ data class HabitsState(
   // Delete confirmation
   val showDeleteConfirm: Boolean = false,
 
-  // Config editor state (legacy)
-  val showConfigEditor: Boolean = false,
-  val configText: String = "",
-
-  // Config dialog state (new)
+  // Config dialog state
   val showConfigDialog: Boolean = false,
   val editingHabits: List<EditableHabit> = emptyList(),
 

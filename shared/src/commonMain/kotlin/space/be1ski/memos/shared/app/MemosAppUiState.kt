@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import space.be1ski.memos.shared.feature.memos.domain.model.Memo
+import space.be1ski.memos.shared.feature.mode.domain.model.AppMode
 import space.be1ski.memos.shared.feature.preferences.domain.model.TimeRangeTab
 import kotlinx.datetime.LocalDate
 import space.be1ski.memos.shared.feature.habits.presentation.components.quarterIndex
@@ -41,4 +42,5 @@ internal class MemosAppUiState(
   var showEditMemoDialog by mutableStateOf(false)
   var editMemoContent by mutableStateOf("")
   var editMemoTarget by mutableStateOf<Memo?>(null)
+  var appMode by mutableStateOf(AppMode.NotSelected)
 }

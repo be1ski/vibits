@@ -6,7 +6,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import org.koin.core.context.startKoin
 import space.be1ski.memos.shared.di.sharedModule
-import space.be1ski.memos.shared.app.MemosApp
+import space.be1ski.memos.shared.app.AppRoot
 
 fun main() = application {
   startKoin {
@@ -18,6 +18,6 @@ fun main() = application {
     title = "Memos",
     state = rememberWindowState(width = 720.dp, height = 960.dp)
   ) {
-    MemosApp()
+    AppRoot()
   }
 }

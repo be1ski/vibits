@@ -5,7 +5,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.datetime.LocalDate
 import space.be1ski.memos.shared.feature.habits.domain.buildDailyContent
-import space.be1ski.memos.shared.feature.habits.domain.buildHabitsConfigContent
 import space.be1ski.memos.shared.feature.habits.domain.buildHabitsEditorSelections
 import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.memos.shared.feature.habits.domain.model.HabitConfig
@@ -61,44 +60,6 @@ class HabitContentBuilderTest {
 
     assertTrue(result.contains("#habits/exercise"))
     assertTrue(result.contains("#habits/reading"))
-  }
-
-  // buildHabitsConfigContent tests
-
-  @Test
-  fun `when raw text has valid lines then builds config content`() {
-    val rawText = """
-      Exercise | #habits/exercise
-      Reading
-    """.trimIndent()
-
-    val result = buildHabitsConfigContent(rawText)
-
-    assertTrue(result.startsWith("#habits/config"))
-    assertTrue(result.contains("Exercise | #habits/exercise"))
-    assertTrue(result.contains("Reading | #habits/Reading"))
-  }
-
-  @Test
-  fun `when raw text is empty then only has header`() {
-    val result = buildHabitsConfigContent("")
-
-    assertEquals("#habits/config\n\n", result)
-  }
-
-  @Test
-  fun `when raw text has blank lines then skips them`() {
-    val rawText = """
-      Exercise
-
-      Reading
-    """.trimIndent()
-
-    val result = buildHabitsConfigContent(rawText)
-
-    // Should have 2 entries, not 3
-    val lines = result.lines().filter { it.contains("|") }
-    assertEquals(2, lines.size)
   }
 
   // buildHabitsEditorSelections tests

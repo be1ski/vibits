@@ -16,7 +16,7 @@ import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,7 +52,7 @@ internal fun TimeRangeControls(
   onRangeChange: (ActivityRange) -> Unit
 ) {
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
-    PrimaryTabRow(selectedTabIndex = selectedTab.ordinal) {
+    PrimaryScrollableTabRow(selectedTabIndex = selectedTab.ordinal, edgePadding = 0.dp) {
       Tab(
         selected = selectedTab == TimeRangeTab.Weeks,
         onClick = { onTabChange(TimeRangeTab.Weeks) },

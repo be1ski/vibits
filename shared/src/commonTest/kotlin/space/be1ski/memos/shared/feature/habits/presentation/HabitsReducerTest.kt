@@ -204,45 +204,6 @@ class HabitsReducerTest {
     assertTrue(effects.isEmpty())
   }
 
-  // Config editor tests
-
-  @Test
-  fun `when OpenConfigEditor then shows config editor`() {
-    val (newState, _) = habitsReducer(HabitsAction.OpenConfigEditor, HabitsState())
-    assertTrue(newState.showConfigEditor)
-  }
-
-  @Test
-  fun `when CloseConfigEditor then hides and clears text`() {
-    val state = HabitsState(showConfigEditor = true, configText = "some text")
-
-    val (newState, _) = habitsReducer(HabitsAction.CloseConfigEditor, state)
-
-    assertFalse(newState.showConfigEditor)
-    assertEquals("", newState.configText)
-  }
-
-  @Test
-  fun `when UpdateConfigText then updates text`() {
-    val (newState, _) = habitsReducer(
-      HabitsAction.UpdateConfigText("new text"),
-      HabitsState()
-    )
-
-    assertEquals("new text", newState.configText)
-  }
-
-  @Test
-  fun `when SaveConfig then emits CreateMemo effect`() {
-    val state = HabitsState(configText = "Exercise")
-
-    val (newState, effects) = habitsReducer(HabitsAction.SaveConfig, state)
-
-    assertTrue(newState.isLoading)
-    assertEquals(1, effects.size)
-    assertIs<HabitsEffect.CreateMemo>(effects.first())
-  }
-
   // Selection tests
 
   @Test
@@ -291,9 +252,7 @@ class HabitsReducerTest {
     val state = HabitsState(
       isLoading = true,
       editorDay = testDay,
-      editorConfig = testConfig,
-      showConfigEditor = true,
-      configText = "text"
+      editorConfig = testConfig
     )
 
     val (newState, effects) = habitsReducer(
@@ -304,8 +263,6 @@ class HabitsReducerTest {
     assertFalse(newState.isLoading)
     assertNull(newState.editorDay)
     assertTrue(newState.editorConfig.isEmpty())
-    assertFalse(newState.showConfigEditor)
-    assertEquals("", newState.configText)
     assertEquals(1, effects.size)
     assertIs<HabitsEffect.RefreshMemos>(effects.first())
   }
