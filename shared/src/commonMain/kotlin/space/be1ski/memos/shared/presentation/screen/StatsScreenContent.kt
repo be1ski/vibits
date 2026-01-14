@@ -157,7 +157,6 @@ internal fun StatsMainChart(derived: StatsScreenDerivedState) {
       demoMode = state.demoMode
     )
   } else {
-    val showMonthNumbers = state.range is ActivityRange.Month
     ContributionGrid(
       state = ContributionGridState(
         weekData = derived.weekData,
@@ -167,10 +166,10 @@ internal fun StatsMainChart(derived: StatsScreenDerivedState) {
         isActiveSelection = uiState.activeSelectionId == "main",
         scrollState = chartScrollState,
         showWeekdayLegend = derived.showWeekdayLegend,
-        showAllWeekdayLabels = showMonthNumbers,
+        showAllWeekdayLabels = true,
         compactHeight = derived.useCompactHeight,
         showTimeline = true,
-        showDayNumbers = showMonthNumbers
+        showDayNumbers = false
       ),
       callbacks = ContributionGridCallbacks(
         onDaySelected = { day ->
@@ -365,7 +364,9 @@ private fun HabitActivitySection(
         isActiveSelection = state.isActiveSelection,
         scrollState = chartScrollState,
         showWeekdayLegend = state.showWeekdayLegend,
-        compactHeight = state.compactHeight
+        showAllWeekdayLabels = true,
+        compactHeight = state.compactHeight,
+        showTimeline = true
       ),
       callbacks = ContributionGridCallbacks(
         onDaySelected = actions.onDaySelected,
