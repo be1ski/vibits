@@ -48,11 +48,13 @@ import space.be1ski.memos.shared.presentation.components.WeeklyBarChartState
 import space.be1ski.memos.shared.presentation.components.activityWeekDataForHabit
 import space.be1ski.memos.shared.presentation.components.lastSevenDays
 import space.be1ski.memos.shared.presentation.components.ChartDimens
+import space.be1ski.memos.shared.presentation.habits.HabitsAction
 
 @Composable
 internal fun StatsHeaderRow(derived: StatsScreenDerivedState) {
   val state = derived.state
-  val uiState = derived.uiState
+  val habitsState = derived.habitsState
+  val dispatch = derived.dispatch
   Row(
     modifier = Modifier.fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically,
@@ -61,7 +63,13 @@ internal fun StatsHeaderRow(derived: StatsScreenDerivedState) {
     Text(stringResource(Res.string.label_activity), style = MaterialTheme.typography.titleMedium)
     Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs), verticalAlignment = Alignment.CenterVertically) {
       if (state.activityMode == ActivityMode.Habits) {
-        TextButton(onClick = { uiState.showHabitsConfig = !uiState.showHabitsConfig }) {
+        TextButton(onClick = {
+          if (habitsState.showConfigEditor) {
+            dispatch(HabitsAction.CloseConfigEditor)
+          } else {
+            dispatch(HabitsAction.OpenConfigEditor)
+          }
+        }) {
           Text(stringResource(Res.string.label_habits_config))
         }
       }
@@ -72,16 +80,13 @@ internal fun StatsHeaderRow(derived: StatsScreenDerivedState) {
 @Composable
 internal fun StatsHabitsConfigSection(derived: StatsScreenDerivedState) {
   val state = derived.state
-  val actions = derived.actions
-  val uiState = derived.uiState
-  if (state.activityMode == ActivityMode.Habits && uiState.showHabitsConfig) {
+  val habitsState = derived.habitsState
+  val dispatch = derived.dispatch
+  if (state.activityMode == ActivityMode.Habits && habitsState.showConfigEditor) {
     HabitsConfigCard(
-      habitsConfigText = uiState.habitsConfigText,
-      onConfigChange = { uiState.habitsConfigText = it },
-      onSave = {
-        val content = buildHabitsConfigContent(uiState.habitsConfigText)
-        actions.onCreateDailyMemo(content)
-      }
+      habitsConfigText = habitsState.configText,
+      onConfigChange = { dispatch(HabitsAction.UpdateConfigText(it)) },
+      onSave = { dispatch(HabitsAction.SaveConfig) }
     )
   }
 }
@@ -89,7 +94,7 @@ internal fun StatsHabitsConfigSection(derived: StatsScreenDerivedState) {
 @Composable
 internal fun StatsHabitsEmptyState(derived: StatsScreenDerivedState) {
   val state = derived.state
-  val uiState = derived.uiState
+  val dispatch = derived.dispatch
   if (state.activityMode != ActivityMode.Habits || derived.currentHabitsConfig.isNotEmpty()) {
     return
   }
@@ -103,7 +108,7 @@ internal fun StatsHabitsEmptyState(derived: StatsScreenDerivedState) {
         stringResource(Res.string.hint_add_habits_config),
         style = MaterialTheme.typography.bodySmall
       )
-      Button(onClick = { uiState.showHabitsConfig = true }) {
+      Button(onClick = { dispatch(HabitsAction.OpenConfigEditor) }) {
         Text(stringResource(Res.string.action_configure_habits))
       }
     }
@@ -113,6 +118,7 @@ internal fun StatsHabitsEmptyState(derived: StatsScreenDerivedState) {
 @Composable
 internal fun StatsTodaySection(derived: StatsScreenDerivedState) {
   val state = derived.state
+  val dispatch = derived.dispatch
   if (state.activityMode != ActivityMode.Habits || derived.todayConfig.isEmpty()) {
     return
   }
@@ -136,7 +142,10 @@ internal fun StatsTodaySection(derived: StatsScreenDerivedState) {
             style = MaterialTheme.typography.bodySmall
           )
         }
-        Button(onClick = { openTodayHabitEditor(derived) }) {
+        Button(onClick = {
+          val day = derived.todayDay ?: return@Button
+          dispatch(HabitsAction.OpenEditor(day, derived.todayConfig))
+        }) {
           Text(stringResource(Res.string.action_track))
         }
       }
@@ -147,7 +156,8 @@ internal fun StatsTodaySection(derived: StatsScreenDerivedState) {
 @Composable
 internal fun StatsMainChart(derived: StatsScreenDerivedState) {
   val state = derived.state
-  val uiState = derived.uiState
+  val habitsState = derived.habitsState
+  val dispatch = derived.dispatch
   val chartScrollState = rememberScrollState()
   if (derived.showLast7DaysMatrix) {
     LastSevenDaysMatrix(
@@ -162,9 +172,9 @@ internal fun StatsMainChart(derived: StatsScreenDerivedState) {
       state = ContributionGridState(
         weekData = derived.weekData,
         range = state.range,
-        selectedDay = if (uiState.activeSelectionId == "main") derived.selectedDay else null,
-        selectedWeekStart = if (state.activityMode == ActivityMode.Posts) uiState.selectedWeek?.startDate else null,
-        isActiveSelection = uiState.activeSelectionId == "main",
+        selectedDay = if (habitsState.activeSelectionId == "main") derived.selectedDay else null,
+        selectedWeekStart = if (state.activityMode == ActivityMode.Posts) habitsState.selectedWeek?.startDate else null,
+        isActiveSelection = habitsState.activeSelectionId == "main",
         scrollState = chartScrollState,
         showWeekdayLegend = derived.showWeekdayLegend,
         showAllWeekdayLabels = true,
@@ -174,31 +184,24 @@ internal fun StatsMainChart(derived: StatsScreenDerivedState) {
       ),
       callbacks = ContributionGridCallbacks(
         onDaySelected = { day ->
-          uiState.selectedDate = day.date
-          uiState.activeSelectionId = "main"
+          dispatch(HabitsAction.SelectDay(day, "main"))
           if (state.activityMode == ActivityMode.Posts) {
-            uiState.selectedWeek = derived.weekData.weeks.firstOrNull { week ->
+            val week = derived.weekData.weeks.firstOrNull { week ->
               week.days.any { it.date == day.date }
+            }
+            if (week != null) {
+              dispatch(HabitsAction.SelectWeek(week))
             }
           }
         },
-        onClearSelection = {
-          uiState.selectedDate = null
-          uiState.selectedWeek = null
-          uiState.activeSelectionId = null
-        },
+        onClearSelection = { dispatch(HabitsAction.ClearSelection) },
         onEditRequested = { day ->
-          uiState.habitsEditorDay = day
-          uiState.habitsEditorExisting = day.dailyMemo
-          uiState.habitsEditorConfig = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
-          uiState.habitsEditorSelections = buildHabitsEditorSelections(day, uiState.habitsEditorConfig)
+          val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
+          dispatch(HabitsAction.OpenEditor(day, config))
         },
         onCreateRequested = { day ->
-          uiState.habitsEditorDay = day
-          uiState.habitsEditorExisting = day.dailyMemo
-          uiState.habitsEditorConfig = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
-          uiState.habitsEditorSelections = buildHabitsEditorSelections(day, uiState.habitsEditorConfig)
-          uiState.habitsEditorError = null
+          val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
+          dispatch(HabitsAction.OpenEditor(day, config))
         },
         demoMode = state.demoMode
       )
@@ -212,20 +215,22 @@ internal fun StatsWeeklyChart(derived: StatsScreenDerivedState) {
   if (state.activityMode != ActivityMode.Posts) {
     return
   }
-  val uiState = derived.uiState
+  val habitsState = derived.habitsState
+  val dispatch = derived.dispatch
   val chartScrollState = rememberScrollState()
   WeeklyBarChart(
     state = WeeklyBarChartState(
       weekData = derived.weekData,
-      selectedWeek = uiState.selectedWeek,
+      selectedWeek = habitsState.selectedWeek,
       scrollState = chartScrollState,
       showWeekdayLegend = derived.showWeekdayLegend,
       compactHeight = derived.useCompactHeight
     ),
     onWeekSelected = { week ->
-      uiState.selectedWeek = if (uiState.selectedWeek?.startDate == week.startDate) null else week
-      uiState.selectedDate = uiState.selectedDate?.takeIf { date ->
-        week.days.any { it.date == date }
+      if (habitsState.selectedWeek?.startDate == week.startDate) {
+        dispatch(HabitsAction.ClearSelection)
+      } else {
+        dispatch(HabitsAction.SelectWeek(week))
       }
     }
   )
@@ -236,7 +241,8 @@ internal fun StatsHabitSections(derived: StatsScreenDerivedState) {
   if (!derived.showHabitSections) {
     return
   }
-  val uiState = derived.uiState
+  val habitsState = derived.habitsState
+  val dispatch = derived.dispatch
   derived.currentHabitsConfig.forEach { habit ->
     HabitActivitySection(
       state = HabitActivitySectionState(
@@ -244,8 +250,8 @@ internal fun StatsHabitSections(derived: StatsScreenDerivedState) {
           label = obfuscateIfNeeded(habit.label, derived.state.demoMode, "Hidden habit")
         ),
         baseWeekData = derived.weekData,
-        selectedDate = if (uiState.activeSelectionId == "habit:${habit.tag}") uiState.selectedDate else null,
-        isActiveSelection = uiState.activeSelectionId == "habit:${habit.tag}",
+        selectedDate = if (habitsState.activeSelectionId == "habit:${habit.tag}") habitsState.selectedDate else null,
+        isActiveSelection = habitsState.activeSelectionId == "habit:${habit.tag}",
         showWeekdayLegend = derived.showWeekdayLegend,
         compactHeight = derived.useCompactHeight,
         range = derived.state.range,
@@ -253,25 +259,18 @@ internal fun StatsHabitSections(derived: StatsScreenDerivedState) {
       ),
       actions = HabitActivitySectionActions(
         onDaySelected = { day ->
-          uiState.selectedDate = day.date
-          uiState.activeSelectionId = "habit:${habit.tag}"
+          dispatch(HabitsAction.SelectDay(day, "habit:${habit.tag}"))
         },
         onClearSelection = {
-          uiState.selectedDate = null
-          uiState.activeSelectionId = null
+          dispatch(HabitsAction.ClearSelection)
         },
         onEditRequested = { day ->
-          uiState.habitsEditorDay = day
-          uiState.habitsEditorExisting = day.dailyMemo
-          uiState.habitsEditorConfig = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
-          uiState.habitsEditorSelections = buildHabitsEditorSelections(day, uiState.habitsEditorConfig)
-          uiState.habitsEditorError = null
+          val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
+          dispatch(HabitsAction.OpenEditor(day, config))
         },
         onCreateRequested = { day ->
-          uiState.habitsEditorDay = day
-          uiState.habitsEditorExisting = day.dailyMemo
-          uiState.habitsEditorConfig = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
-          uiState.habitsEditorSelections = buildHabitsEditorSelections(day, uiState.habitsEditorConfig)
+          val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
+          dispatch(HabitsAction.OpenEditor(day, config))
         }
       )
     )
@@ -281,11 +280,15 @@ internal fun StatsHabitSections(derived: StatsScreenDerivedState) {
 @Composable
 internal fun BoxScope.StatsFloatingAction(derived: StatsScreenDerivedState) {
   val state = derived.state
+  val dispatch = derived.dispatch
   if (state.activityMode != ActivityMode.Habits || derived.todayConfig.isEmpty()) {
     return
   }
   FloatingActionButton(
-    onClick = { openTodayHabitEditor(derived) },
+    onClick = {
+      val day = derived.todayDay ?: return@FloatingActionButton
+      dispatch(HabitsAction.OpenEditor(day, derived.todayConfig))
+    },
     modifier = Modifier.align(Alignment.BottomEnd)
   ) {
     Icon(
@@ -315,16 +318,6 @@ private fun HabitsConfigCard(
       }
     }
   }
-}
-
-private fun openTodayHabitEditor(derived: StatsScreenDerivedState) {
-  val uiState = derived.uiState
-  val day = derived.todayDay ?: return
-  uiState.habitsEditorDay = day
-  uiState.habitsEditorExisting = day.dailyMemo
-  uiState.habitsEditorConfig = derived.todayConfig
-  uiState.habitsEditorSelections = buildHabitsEditorSelections(day, uiState.habitsEditorConfig)
-  uiState.habitsEditorError = null
 }
 
 @Composable

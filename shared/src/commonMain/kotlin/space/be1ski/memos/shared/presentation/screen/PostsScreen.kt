@@ -22,7 +22,6 @@ fun PostsScreen(
       useVerticalScroll = true,
       enablePullRefresh = false,
       demoMode = demoMode
-    ),
-    actions = StatsScreenActions()
+    )
   )
 }

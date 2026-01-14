@@ -26,7 +26,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDate
@@ -49,11 +52,14 @@ import space.be1ski.memos.shared.presentation.components.ActivityRange
 import space.be1ski.memos.shared.presentation.components.Indent
 import space.be1ski.memos.shared.presentation.components.earliestMemoDate
 import space.be1ski.memos.shared.presentation.components.startOfWeek
+import space.be1ski.memos.shared.presentation.habits.HabitsAction
+import space.be1ski.memos.shared.presentation.habits.HabitsState
+import space.be1ski.memos.shared.presentation.habits.createHabitsFeature
 import space.be1ski.memos.shared.presentation.screen.FeedScreen
 import space.be1ski.memos.shared.presentation.screen.PostsScreen
 import space.be1ski.memos.shared.presentation.screen.StatsScreen
-import space.be1ski.memos.shared.presentation.screen.StatsScreenActions
 import space.be1ski.memos.shared.presentation.screen.StatsScreenState
+import space.be1ski.memos.shared.domain.repository.MemosRepository
 import space.be1ski.memos.shared.presentation.state.MemosUiState
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 import space.be1ski.memos.shared.presentation.util.isDesktop
@@ -72,6 +78,7 @@ fun MemosApp() {
   val viewModel: MemosViewModel = koinInject()
   val loadPreferencesUseCase: LoadPreferencesUseCase = koinInject()
   val saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase = koinInject()
+  val memosRepository: MemosRepository = koinInject()
 
   val initialPrefs = remember { loadPreferencesUseCase() }
   val appState = remember {
@@ -82,10 +89,23 @@ fun MemosApp() {
   }
   val uiState = viewModel.uiState
 
+  // HabitsFeature lives here at the app level
+  val habitsFeature = remember {
+    createHabitsFeature(
+      memosRepository = memosRepository,
+      onRefresh = { viewModel.loadMemos() }
+    )
+  }
+  val scope = rememberCoroutineScope()
+  LaunchedEffect(habitsFeature) {
+    habitsFeature.launchIn(scope)
+  }
+  val habitsState by habitsFeature.state.collectAsState()
+
   SyncAutoLoad(uiState, appState, viewModel)
   SyncCredentialsDialog(uiState, appState)
 
-  MemosAppContent(uiState, appState, viewModel, saveTimeRangeTabUseCase)
+  MemosAppContent(uiState, appState, viewModel, saveTimeRangeTabUseCase, habitsState, habitsFeature::send)
   CredentialsDialog(uiState, appState, viewModel)
   MemoCreateDialog(appState, viewModel)
   MemoEditDialog(appState, viewModel)
@@ -126,7 +146,9 @@ private fun MemosAppContent(
   uiState: MemosUiState,
   appState: MemosAppUiState,
   viewModel: MemosViewModel,
-  saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase
+  saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase,
+  habitsState: HabitsState,
+  onHabitsAction: (HabitsAction) -> Unit
 ) {
   MaterialTheme {
     Scaffold(
@@ -175,7 +197,7 @@ private fun MemosAppContent(
             onRangeChange = { range -> updateTimeRangeState(appState, range) }
           )
         }
-        MemosTabContent(uiState, appState, viewModel, activityRange)
+        MemosTabContent(uiState, appState, activityRange, habitsState, onHabitsAction)
       }
     }
   }
@@ -242,8 +264,9 @@ private fun MemosBottomNavigation(appState: MemosAppUiState) {
 private fun MemosTabContent(
   uiState: MemosUiState,
   appState: MemosAppUiState,
-  viewModel: MemosViewModel,
-  activityRange: ActivityRange
+  activityRange: ActivityRange,
+  habitsState: HabitsState,
+  onHabitsAction: (HabitsAction) -> Unit
 ) {
   val memos = uiState.memos
   when (appState.selectedScreen) {
@@ -256,11 +279,8 @@ private fun MemosTabContent(
         enablePullRefresh = false,
         demoMode = appState.demoMode
       ),
-      actions = StatsScreenActions(
-        onEditDailyMemo = { memo, content -> viewModel.updateMemo(memo.name, content) },
-        onDeleteDailyMemo = { memo -> viewModel.deleteDailyMemo(memo.name) },
-        onCreateDailyMemo = { content -> viewModel.createMemo(content) }
-      )
+      habitsState = habitsState,
+      onHabitsAction = onHabitsAction
     )
     MemosScreen.Stats -> PostsScreen(
       memos = memos,
@@ -270,7 +290,7 @@ private fun MemosTabContent(
     MemosScreen.Feed -> FeedScreen(
       memos = memos,
       isRefreshing = uiState.isLoading,
-      onRefresh = { viewModel.loadMemos() },
+      onRefresh = {},
       enablePullRefresh = !isDesktop,
       demoMode = appState.demoMode,
       onMemoClick = { memo -> beginEditMemo(appState, memo) }
