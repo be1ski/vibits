@@ -3,9 +3,6 @@ package space.be1ski.memos.shared.feature.memos.presentation
 import space.be1ski.memos.shared.core.elm.Feature
 import space.be1ski.memos.shared.core.elm.FeatureImpl
 
-/**
- * Creates a new MemosFeature instance.
- */
 fun createMemosFeature(
   useCases: MemosUseCases,
   initialState: MemosState = MemosState()

@@ -5,9 +5,6 @@ import kotlinx.coroutines.flow.flow
 import space.be1ski.memos.shared.feature.auth.domain.model.Credentials
 import space.be1ski.memos.shared.core.elm.EffectHandler
 
-/**
- * Effect handler for the Memos feature.
- */
 class MemosEffectHandler(
   private val useCases: MemosUseCases
 ) : EffectHandler<MemosEffect, MemosAction> {

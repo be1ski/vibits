@@ -17,15 +17,9 @@ import space.be1ski.memos.shared.feature.memos.data.remote.dto.ListMemosResponse
 import space.be1ski.memos.shared.feature.memos.data.remote.dto.MemoDto
 import space.be1ski.memos.shared.feature.memos.data.remote.dto.UpdateMemoRequestDto
 
-/**
- * Lightweight API client for the Memos service.
- */
 class MemosApi(
   private val httpClient: HttpClient
 ) {
-  /**
-   * Loads a page of memos from the server.
-   */
   suspend fun listMemos(
     baseUrl: String,
     token: String,
@@ -43,9 +37,6 @@ class MemosApi(
     }.body()
   }
 
-  /**
-   * Updates memo content and returns the updated memo.
-   */
   suspend fun updateMemo(
     baseUrl: String,
     token: String,
@@ -61,9 +52,6 @@ class MemosApi(
     }.body()
   }
 
-  /**
-   * Creates a new memo and returns it.
-   */
   suspend fun createMemo(
     baseUrl: String,
     token: String,
@@ -77,9 +65,6 @@ class MemosApi(
     }.body()
   }
 
-  /**
-   * Deletes a memo by name.
-   */
   suspend fun deleteMemo(
     baseUrl: String,
     token: String,

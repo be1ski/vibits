@@ -8,9 +8,6 @@ import space.be1ski.memos.shared.feature.memos.domain.usecase.LoadCachedMemosUse
 import space.be1ski.memos.shared.feature.memos.domain.usecase.LoadMemosUseCase
 import space.be1ski.memos.shared.feature.memos.domain.usecase.UpdateMemoUseCase
 
-/**
- * Container for all use cases required by the Memos feature.
- */
 data class MemosUseCases(
   val loadMemos: LoadMemosUseCase,
   val loadCachedMemos: LoadCachedMemosUseCase,

@@ -86,10 +86,8 @@ import space.be1ski.memos.shared.action_save
 import space.be1ski.memos.shared.hint_write_memo
 import space.be1ski.memos.shared.nav_settings
 
-/** Root shared UI for the app. */
 @Composable
 fun MemosApp() {
-  // Use cases
   val loadPreferencesUseCase: LoadPreferencesUseCase = koinInject()
   val saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase = koinInject()
   val loadStorageInfoUseCase: LoadStorageInfoUseCase = koinInject()
