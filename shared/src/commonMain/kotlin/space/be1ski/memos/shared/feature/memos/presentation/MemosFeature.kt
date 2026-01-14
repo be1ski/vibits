@@ -39,9 +39,11 @@ data class MemosState(
   val errorMessage: String? = null,
   val credentialsMode: Boolean = false,
   val baseUrl: String = "",
-  val token: String = ""
+  val token: String = "",
+  val isOfflineMode: Boolean = false
 ) {
   val hasCredentials: Boolean get() = baseUrl.isNotBlank() && token.isNotBlank()
+  val needsCredentials: Boolean get() = !isOfflineMode && !hasCredentials
 }
 
 /**

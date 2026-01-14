@@ -29,11 +29,13 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> = reducer { acti
 
     // Loading
     is MemosAction.LoadMemos -> {
-      if (!state.hasCredentials) {
+      if (state.needsCredentials) {
         state { copy(credentialsMode = true, errorMessage = "Base URL and token are required.") }
       } else {
         state { copy(isLoading = true, errorMessage = null, credentialsMode = false) }
-        effect(MemosEffect.SaveCredentials(state.baseUrl, state.token))
+        if (!state.isOfflineMode) {
+          effect(MemosEffect.SaveCredentials(state.baseUrl, state.token))
+        }
         effect(MemosEffect.LoadRemoteMemos)
       }
     }

@@ -2,6 +2,10 @@ package space.be1ski.memos.shared.feature.memos.data.local
 
 import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import kotlinx.cinterop.ExperimentalForeignApi
+import platform.Foundation.NSDocumentDirectory
+import platform.Foundation.NSSearchPathForDirectoriesInDomains
+import platform.Foundation.NSUserDomainMask
 import space.be1ski.memos.shared.feature.memos.domain.model.Memo
 
 /**
@@ -33,11 +37,21 @@ actual open class MemoCache {
     database.memoDao().clearAll()
   }
 
-  private fun createDatabase(): MemoDatabase =
-    Room.databaseBuilder<MemoDatabase>(
-      name = "memos.db",
+  @OptIn(ExperimentalForeignApi::class)
+  private fun createDatabase(): MemoDatabase {
+    val dbPath = getDatabasePath()
+    return Room.databaseBuilder<MemoDatabase>(
+      name = dbPath,
       factory = MemoDatabaseConstructor::initialize
     )
       .setDriver(BundledSQLiteDriver())
       .build()
+  }
+
+  @OptIn(ExperimentalForeignApi::class)
+  private fun getDatabasePath(): String {
+    val paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true)
+    val documentsDir = paths.firstOrNull() as? String ?: ""
+    return "$documentsDir/memos.db"
+  }
 }

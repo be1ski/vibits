@@ -85,6 +85,7 @@ import space.be1ski.memos.shared.feature.preferences.domain.usecase.SaveTimeRang
 import space.be1ski.memos.shared.feature.preferences.domain.usecase.TimeRangeScreen
 import space.be1ski.memos.shared.feature.memos.domain.usecase.UpdateMemoUseCase
 import space.be1ski.memos.shared.feature.memos.presentation.MemosUseCases
+import space.be1ski.memos.shared.feature.mode.domain.model.AppMode
 import space.be1ski.memos.shared.feature.mode.domain.usecase.LoadAppModeUseCase
 import space.be1ski.memos.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
 import space.be1ski.memos.shared.action_refresh
@@ -130,7 +131,9 @@ fun MemosApp() {
       deleteMemo = deleteMemoUseCase
     )
   }
-  val memosFeature = remember { createMemosFeature(memosUseCases) }
+  val memosFeature = remember {
+    createMemosFeature(memosUseCases, isOfflineMode = initialMode == AppMode.Offline)
+  }
   val scope = rememberCoroutineScope()
   LaunchedEffect(memosFeature) {
     memosFeature.launchIn(scope)
