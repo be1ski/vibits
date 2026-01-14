@@ -53,6 +53,7 @@ import space.be1ski.memos.shared.core.ui.ActivityMode
 import space.be1ski.memos.shared.core.ui.ActivityRange
 import space.be1ski.memos.shared.core.ui.Indent
 import space.be1ski.memos.shared.feature.habits.presentation.components.earliestMemoDate
+import space.be1ski.memos.shared.feature.habits.presentation.components.quarterIndex
 import space.be1ski.memos.shared.feature.habits.presentation.components.startOfWeek
 import space.be1ski.memos.shared.feature.auth.presentation.CredentialsDialog
 import space.be1ski.memos.shared.feature.habits.presentation.HabitsAction
@@ -382,7 +383,7 @@ private fun currentRangeForTab(tab: TimeRangeTab, today: LocalDate): ActivityRan
   return when (tab) {
     TimeRangeTab.Weeks -> ActivityRange.Week(startOfWeek(today))
     TimeRangeTab.Months -> ActivityRange.Month(today.year, today.month)
-    TimeRangeTab.Quarters -> ActivityRange.Quarter(today.year, currentQuarterIndex(today))
+    TimeRangeTab.Quarters -> ActivityRange.Quarter(today.year, quarterIndex(today))
     TimeRangeTab.Years -> ActivityRange.Year(today.year)
   }
 }
@@ -394,17 +395,10 @@ private fun minRangeForTab(tab: TimeRangeTab, earliestDate: LocalDate?): Activit
   return when (tab) {
     TimeRangeTab.Weeks -> ActivityRange.Week(startOfWeek(earliestDate))
     TimeRangeTab.Months -> ActivityRange.Month(earliestDate.year, earliestDate.month)
-    TimeRangeTab.Quarters -> ActivityRange.Quarter(earliestDate.year, currentQuarterIndex(earliestDate))
+    TimeRangeTab.Quarters -> ActivityRange.Quarter(earliestDate.year, quarterIndex(earliestDate))
     TimeRangeTab.Years -> ActivityRange.Year(earliestDate.year)
   }
 }
-
-private fun currentQuarterIndex(date: LocalDate): Int {
-  return date.month.ordinal / MONTHS_IN_QUARTER + FIRST_QUARTER_INDEX
-}
-
-private const val MONTHS_IN_QUARTER = 3
-private const val FIRST_QUARTER_INDEX = 1
 
 @Composable
 private fun MemoCreateDialog(appState: MemosAppUiState, dispatch: (MemosAction) -> Unit) {

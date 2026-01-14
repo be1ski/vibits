@@ -31,7 +31,7 @@ internal fun buildTimelineLabels(weeks: List<ActivityWeek>, range: ActivityRange
       }
       is ActivityRange.Year -> {
         if (isQuarterStart(start)) {
-          quarterOf(start.month).toString()
+          quarterIndex(start.month).toString()
         } else {
           ""
         }
@@ -49,6 +49,3 @@ private fun isQuarterStart(date: LocalDate): Boolean {
     date.month in setOf(Month.JANUARY, Month.APRIL, Month.JULY, Month.OCTOBER)
 }
 
-private fun quarterOf(month: Month): Int {
-  return month.ordinal / MONTHS_IN_QUARTER + FIRST_QUARTER_INDEX
-}
