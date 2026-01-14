@@ -17,10 +17,12 @@ internal enum class MemosScreen {
 
 internal class MemosAppUiState(
   currentDate: LocalDate,
-  initialTimeRangeTab: TimeRangeTab = TimeRangeTab.Weeks
+  initialHabitsTimeRangeTab: TimeRangeTab = TimeRangeTab.Weeks,
+  initialPostsTimeRangeTab: TimeRangeTab = TimeRangeTab.Weeks
 ) {
   var selectedScreen by mutableStateOf(MemosScreen.Habits)
-  var selectedTimeRangeTab by mutableStateOf(initialTimeRangeTab)
+  var habitsTimeRangeTab by mutableStateOf(initialHabitsTimeRangeTab)
+  var postsTimeRangeTab by mutableStateOf(initialPostsTimeRangeTab)
   var weekStart by mutableStateOf(startOfWeek(currentDate))
   var monthYear by mutableStateOf(currentDate.year)
   var month by mutableStateOf(currentDate.month)

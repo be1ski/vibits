@@ -52,8 +52,11 @@ import space.be1ski.memos.shared.nav_posts
 import space.be1ski.memos.shared.core.ui.ActivityMode
 import space.be1ski.memos.shared.core.ui.ActivityRange
 import space.be1ski.memos.shared.core.ui.Indent
+import space.be1ski.memos.shared.feature.habits.presentation.calculateSuccessRate
 import space.be1ski.memos.shared.feature.habits.presentation.components.earliestMemoDate
 import space.be1ski.memos.shared.feature.habits.presentation.components.quarterIndex
+import space.be1ski.memos.shared.feature.habits.presentation.components.rememberActivityWeekData
+import space.be1ski.memos.shared.feature.habits.presentation.components.rememberHabitsConfigTimeline
 import space.be1ski.memos.shared.feature.habits.presentation.components.startOfWeek
 import space.be1ski.memos.shared.feature.auth.presentation.CredentialsDialog
 import space.be1ski.memos.shared.feature.habits.presentation.HabitsAction
@@ -79,6 +82,7 @@ import space.be1ski.memos.shared.feature.preferences.domain.usecase.LoadPreferen
 import space.be1ski.memos.shared.domain.usecase.LoadStorageInfoUseCase
 import space.be1ski.memos.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.memos.shared.feature.preferences.domain.usecase.SaveTimeRangeTabUseCase
+import space.be1ski.memos.shared.feature.preferences.domain.usecase.TimeRangeScreen
 import space.be1ski.memos.shared.feature.memos.domain.usecase.UpdateMemoUseCase
 import space.be1ski.memos.shared.feature.memos.presentation.MemosUseCases
 import space.be1ski.memos.shared.action_refresh
@@ -104,7 +108,8 @@ fun MemosApp() {
   val appState = remember {
     MemosAppUiState(
       currentDate = currentLocalDate(),
-      initialTimeRangeTab = initialPrefs.selectedTimeRangeTab
+      initialHabitsTimeRangeTab = initialPrefs.habitsTimeRangeTab,
+      initialPostsTimeRangeTab = initialPrefs.postsTimeRangeTab
     )
   }
 
@@ -185,7 +190,7 @@ private fun SyncCredentialsDialog(
   }
 }
 
-@Suppress("LongParameterList")
+@Suppress("LongParameterList", "LongMethod")
 @Composable
 private fun MemosAppContent(
   memosState: MemosState,
@@ -213,11 +218,16 @@ private fun MemosAppContent(
         MemosBottomNavigation(appState)
       }
     ) { padding ->
-      val currentRange = currentRangeForTab(appState.selectedTimeRangeTab, currentLocalDate())
+      val selectedTab = when (appState.selectedScreen) {
+        MemosScreen.Habits -> appState.habitsTimeRangeTab
+        MemosScreen.Stats -> appState.postsTimeRangeTab
+        MemosScreen.Feed -> appState.habitsTimeRangeTab
+      }
+      val currentRange = currentRangeForTab(selectedTab, currentLocalDate())
       val activityRange = activityRangeForState(appState)
       val timeZone = remember { TimeZone.currentSystemDefault() }
       val earliestDate = remember(memosState.memos) { earliestMemoDate(memosState.memos, timeZone) }
-      val minRange = minRangeForTab(appState.selectedTimeRangeTab, earliestDate)
+      val minRange = minRangeForTab(selectedTab, earliestDate)
       Column(
         modifier = Modifier
           .padding(padding)
@@ -230,14 +240,36 @@ private fun MemosAppContent(
           Text(message, color = MaterialTheme.colorScheme.error)
         }
         if (appState.selectedScreen != MemosScreen.Feed) {
+          val successRate = if (appState.selectedScreen == MemosScreen.Habits) {
+            val habitsTimeline = rememberHabitsConfigTimeline(memosState.memos)
+            val hasHabits = remember(habitsTimeline) { habitsTimeline.lastOrNull()?.habits?.isNotEmpty() == true }
+            if (hasHabits) {
+              val weekData = rememberActivityWeekData(memosState.memos, activityRange, ActivityMode.Habits)
+              val today = remember { currentLocalDate() }
+              val data = remember(weekData, activityRange, today) {
+                calculateSuccessRate(weekData, activityRange, today)
+              }
+              if (data.total > 0) data.rate else null
+            } else null
+          } else null
           TimeRangeControls(
-            selectedTab = appState.selectedTimeRangeTab,
+            selectedTab = selectedTab,
             selectedRange = activityRange,
             currentRange = currentRange,
             minRange = minRange,
+            successRate = successRate,
             onTabChange = { newTab ->
-              appState.selectedTimeRangeTab = newTab
-              saveTimeRangeTabUseCase(newTab)
+              when (appState.selectedScreen) {
+                MemosScreen.Habits -> {
+                  appState.habitsTimeRangeTab = newTab
+                  saveTimeRangeTabUseCase(TimeRangeScreen.Habits, newTab)
+                }
+                MemosScreen.Stats -> {
+                  appState.postsTimeRangeTab = newTab
+                  saveTimeRangeTabUseCase(TimeRangeScreen.Posts, newTab)
+                }
+                MemosScreen.Feed -> {}
+              }
             },
             onRangeChange = { range -> updateTimeRangeState(appState, range) }
           )
@@ -354,7 +386,12 @@ private fun MemosTabContent(
 }
 
 private fun activityRangeForState(appState: MemosAppUiState): ActivityRange {
-  return when (appState.selectedTimeRangeTab) {
+  val selectedTab = when (appState.selectedScreen) {
+    MemosScreen.Habits -> appState.habitsTimeRangeTab
+    MemosScreen.Stats -> appState.postsTimeRangeTab
+    MemosScreen.Feed -> appState.habitsTimeRangeTab
+  }
+  return when (selectedTab) {
     TimeRangeTab.Weeks -> ActivityRange.Week(appState.weekStart)
     TimeRangeTab.Months -> ActivityRange.Month(appState.monthYear, appState.month)
     TimeRangeTab.Quarters -> ActivityRange.Quarter(appState.quarterYear, appState.quarterIndex)

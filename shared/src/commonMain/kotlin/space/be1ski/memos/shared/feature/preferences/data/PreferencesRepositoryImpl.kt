@@ -13,13 +13,15 @@ internal class PreferencesRepositoryImpl(
 
   override fun load(): UserPreferences {
     val local = preferencesStore.load()
-    val timeRangeTab = parseTimeRangeTab(local.timeRangeTab)
-    return UserPreferences(selectedTimeRangeTab = timeRangeTab)
+    val habitsTab = parseTimeRangeTab(local.habitsTimeRangeTab)
+    val postsTab = parseTimeRangeTab(local.postsTimeRangeTab)
+    return UserPreferences(habitsTimeRangeTab = habitsTab, postsTimeRangeTab = postsTab)
   }
 
   override fun save(preferences: UserPreferences) {
     val local = LocalUserPreferences(
-      timeRangeTab = preferences.selectedTimeRangeTab.name
+      habitsTimeRangeTab = preferences.habitsTimeRangeTab.name,
+      postsTimeRangeTab = preferences.postsTimeRangeTab.name
     )
     preferencesStore.save(local)
   }

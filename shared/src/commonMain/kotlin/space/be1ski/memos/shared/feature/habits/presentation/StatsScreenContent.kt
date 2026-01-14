@@ -42,7 +42,6 @@ import space.be1ski.memos.shared.hint_add_habits_config
 import space.be1ski.memos.shared.hint_habits_config
 import space.be1ski.memos.shared.label_activity
 import space.be1ski.memos.shared.label_habits_config
-import space.be1ski.memos.shared.label_today
 import space.be1ski.memos.shared.msg_no_habits_yet
 import space.be1ski.memos.shared.core.ui.ActivityMode
 import space.be1ski.memos.shared.core.ui.ActivityRange
@@ -62,6 +61,43 @@ import space.be1ski.memos.shared.feature.habits.presentation.components.activity
 import space.be1ski.memos.shared.feature.habits.presentation.components.lastSevenDays
 import space.be1ski.memos.shared.feature.habits.presentation.components.ChartDimens
 import space.be1ski.memos.shared.feature.habits.presentation.HabitsAction
+
+@Composable
+internal fun StatsInfoCard(derived: StatsScreenDerivedState) {
+  val state = derived.state
+  val dispatch = derived.dispatch
+  val isHabitsMode = state.activityMode == ActivityMode.Habits
+  val hasTodayConfig = derived.todayConfig.isNotEmpty()
+
+  if (!isHabitsMode || !hasTodayConfig) return
+
+  val todayStatuses = derived.todayDay?.habitStatuses.orEmpty()
+  val todayDone = todayStatuses.count { it.done }
+  val todayTotal = todayStatuses.size
+
+  if (todayTotal == 0) return
+
+  OutlinedCard(modifier = Modifier.fillMaxWidth()) {
+    Row(
+      modifier = Modifier.padding(Indent.s).fillMaxWidth(),
+      horizontalArrangement = Arrangement.SpaceBetween,
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Text(
+        stringResource(Res.string.format_habits_progress, todayDone, todayTotal),
+        style = MaterialTheme.typography.titleSmall
+      )
+      Button(
+        onClick = {
+          val day = derived.todayDay ?: return@Button
+          dispatch(HabitsAction.OpenEditor(day, derived.todayConfig))
+        }
+      ) {
+        Text(stringResource(Res.string.action_track))
+      }
+    }
+  }
+}
 
 @Composable
 internal fun StatsHeaderRow(derived: StatsScreenDerivedState) {
@@ -123,44 +159,6 @@ internal fun StatsHabitsEmptyState(derived: StatsScreenDerivedState) {
       )
       Button(onClick = { dispatch(HabitsAction.OpenConfigEditor) }) {
         Text(stringResource(Res.string.action_configure_habits))
-      }
-    }
-  }
-}
-
-@Composable
-internal fun StatsTodaySection(derived: StatsScreenDerivedState) {
-  val state = derived.state
-  val dispatch = derived.dispatch
-  if (state.activityMode != ActivityMode.Habits || derived.todayConfig.isEmpty()) {
-    return
-  }
-  val todayStatuses = derived.todayDay?.habitStatuses.orEmpty()
-  val doneCount = todayStatuses.count { it.done }
-  val totalCount = todayStatuses.size
-  OutlinedCard(modifier = Modifier.fillMaxWidth()) {
-    Column(
-      modifier = Modifier.padding(Indent.s),
-      verticalArrangement = Arrangement.spacedBy(Indent.xs)
-    ) {
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-        Column(verticalArrangement = Arrangement.spacedBy(Indent.x5s)) {
-          Text(stringResource(Res.string.label_today), style = MaterialTheme.typography.titleSmall)
-          Text(
-            stringResource(Res.string.format_habits_progress, doneCount, totalCount),
-            style = MaterialTheme.typography.bodySmall
-          )
-        }
-        Button(onClick = {
-          val day = derived.todayDay ?: return@Button
-          dispatch(HabitsAction.OpenEditor(day, derived.todayConfig))
-        }) {
-          Text(stringResource(Res.string.action_track))
-        }
       }
     }
   }

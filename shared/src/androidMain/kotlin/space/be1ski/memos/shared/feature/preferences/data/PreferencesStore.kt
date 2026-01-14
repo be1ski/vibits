@@ -11,13 +11,15 @@ actual class PreferencesStore {
   private val prefsName = "memos_prefs"
 
   actual fun load(): LocalUserPreferences {
+    val defaultTab = LocalUserPreferences.DEFAULT_TIME_RANGE_TAB
     if (!AndroidContextHolder.isReady()) {
-      return LocalUserPreferences(timeRangeTab = LocalUserPreferences.DEFAULT_TIME_RANGE_TAB)
+      return LocalUserPreferences(habitsTimeRangeTab = defaultTab, postsTimeRangeTab = defaultTab)
     }
     val prefs = AndroidContextHolder.context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-    val timeRangeTab = prefs.getString("ui_time_range_tab", LocalUserPreferences.DEFAULT_TIME_RANGE_TAB)
-      ?: LocalUserPreferences.DEFAULT_TIME_RANGE_TAB
-    return LocalUserPreferences(timeRangeTab = timeRangeTab)
+    val legacyTab = prefs.getString("ui_time_range_tab", null)
+    val habitsTab = prefs.getString("ui_habits_time_range_tab", legacyTab ?: defaultTab) ?: defaultTab
+    val postsTab = prefs.getString("ui_posts_time_range_tab", legacyTab ?: defaultTab) ?: defaultTab
+    return LocalUserPreferences(habitsTimeRangeTab = habitsTab, postsTimeRangeTab = postsTab)
   }
 
   actual fun save(preferences: LocalUserPreferences) {
@@ -26,7 +28,8 @@ actual class PreferencesStore {
     }
     val prefs = AndroidContextHolder.context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
     prefs.edit {
-      putString("ui_time_range_tab", preferences.timeRangeTab)
+      putString("ui_habits_time_range_tab", preferences.habitsTimeRangeTab)
+      putString("ui_posts_time_range_tab", preferences.postsTimeRangeTab)
     }
   }
 }

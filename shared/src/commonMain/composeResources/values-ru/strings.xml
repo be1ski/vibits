@@ -44,6 +44,7 @@
     <string name="label_demo_mode">Демо-режим</string>
     <string name="label_habits_config">Конфигурация привычек</string>
     <string name="label_storage">Хранилище</string>
+    <string name="label_success_rate">Успешность</string>
     <string name="label_today">Сегодня</string>
 
     <!-- Messages -->
@@ -62,9 +63,13 @@
     <string name="privacy_hidden_habit">Скрытая привычка</string>
 
     <!-- Time periods -->
+    <string name="time_month">Месяц</string>
     <string name="time_months">Месяцы</string>
+    <string name="time_quarter">Квартал</string>
     <string name="time_quarters">Кварталы</string>
+    <string name="time_week">Неделя</string>
     <string name="time_weeks">Недели</string>
+    <string name="time_year">Год</string>
     <string name="time_years">Годы</string>
 
     <!-- Titles -->

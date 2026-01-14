@@ -46,6 +46,7 @@ fun StatsScreen(
   StatsScreenDialogs(derived)
 }
 
+@Suppress("LongMethod")
 @Composable
 private fun rememberStatsScreenDerived(
   state: StatsScreenState,
@@ -89,6 +90,11 @@ private fun rememberStatsScreenDerived(
   val selectedDay = remember(weekData.weeks, habitsState.selectedDate) {
     habitsState.selectedDate?.let { date -> findDayByDate(weekData, date) }
   }
+  val successRateData = remember(weekData, range, activityMode, currentHabitsConfig) {
+    if (activityMode == ActivityMode.Habits && currentHabitsConfig.isNotEmpty()) {
+      calculateSuccessRate(weekData, range, today)
+    } else null
+  }
   return StatsScreenDerivedState(
     state = state,
     habitsState = habitsState,
@@ -104,7 +110,8 @@ private fun rememberStatsScreenDerived(
     selectedDay = selectedDay,
     todayConfig = todayConfig,
     todayDay = todayDay,
-    timeZone = timeZone
+    timeZone = timeZone,
+    successRateData = successRateData
   )
 }
 
@@ -148,7 +155,7 @@ private fun StatsScreenContent(derived: StatsScreenDerivedState) {
     ) {
       StatsHeaderRow(derived)
       StatsHabitsEmptyState(derived)
-      StatsTodaySection(derived)
+      StatsInfoCard(derived)
       StatsHabitsConfigSection(derived)
       StatsMainChart(derived)
       StatsWeeklyChart(derived)

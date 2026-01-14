@@ -2,10 +2,14 @@
 
 package space.be1ski.memos.shared.app
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
@@ -18,6 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
@@ -41,6 +47,7 @@ internal fun TimeRangeControls(
   selectedRange: ActivityRange,
   currentRange: ActivityRange,
   minRange: ActivityRange?,
+  successRate: Float? = null,
   onTabChange: (TimeRangeTab) -> Unit,
   onRangeChange: (ActivityRange) -> Unit
 ) {
@@ -71,6 +78,7 @@ internal fun TimeRangeControls(
       selectedRange = selectedRange,
       currentRange = currentRange,
       minRange = minRange,
+      successRate = successRate,
       onRangeChange = onRangeChange
     )
   }
@@ -81,6 +89,7 @@ private fun TimeRangeNavigator(
   selectedRange: ActivityRange,
   currentRange: ActivityRange,
   minRange: ActivityRange?,
+  successRate: Float?,
   onRangeChange: (ActivityRange) -> Unit
 ) {
   val label = rangeLabel(selectedRange)
@@ -97,8 +106,14 @@ private fun TimeRangeNavigator(
     ) {
       Icon(imageVector = Icons.Filled.ChevronLeft, contentDescription = stringResource(Res.string.action_previous))
     }
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Row(
+      horizontalArrangement = Arrangement.spacedBy(Indent.s),
+      verticalAlignment = Alignment.CenterVertically
+    ) {
       Text(label, style = MaterialTheme.typography.titleSmall)
+      successRate?.let { rate ->
+        SuccessRateBadge(rate)
+      }
     }
     IconButton(
       onClick = { onRangeChange(shiftRange(selectedRange, 1)) },
@@ -201,7 +216,43 @@ private fun floorMod(value: Int, divisor: Int): Int {
   return if (mod < 0) mod + divisor else mod
 }
 
+@Composable
+private fun SuccessRateBadge(rate: Float) {
+  val percent = (rate * PERCENT_MULTIPLIER).toInt()
+  val color = when {
+    rate >= GREEN_THRESHOLD -> COLOR_GREEN
+    rate >= YELLOW_THRESHOLD -> COLOR_YELLOW
+    else -> COLOR_RED
+  }
+  Box(
+    modifier = Modifier
+      .background(color.copy(alpha = BADGE_ALPHA), RoundedCornerShape(BADGE_CORNER_RADIUS))
+      .padding(horizontal = BADGE_PADDING_H, vertical = BADGE_PADDING_V)
+  ) {
+    Text(
+      text = "$percent%",
+      style = MaterialTheme.typography.labelSmall,
+      color = color
+    )
+  }
+}
+
 private const val DAYS_IN_WEEK = 7
 private const val WEEK_END_OFFSET = 6
 private const val QUARTERS_IN_YEAR = 4
 private const val MONTH_ABBREV_LENGTH = 3
+
+private const val PERCENT_MULTIPLIER = 100
+private const val GREEN_THRESHOLD = 0.8f
+private const val YELLOW_THRESHOLD = 0.5f
+private const val BADGE_ALPHA = 0.2f
+private val BADGE_CORNER_RADIUS = 4.dp
+private val BADGE_PADDING_H = 6.dp
+private val BADGE_PADDING_V = 2.dp
+
+private const val COLOR_GREEN_HEX = 0xFF4CAF50
+private const val COLOR_YELLOW_HEX = 0xFFFFC107
+private const val COLOR_RED_HEX = 0xFFE57373
+private val COLOR_GREEN = Color(COLOR_GREEN_HEX)
+private val COLOR_YELLOW = Color(COLOR_YELLOW_HEX)
+private val COLOR_RED = Color(COLOR_RED_HEX)

@@ -33,6 +33,6 @@ We use TDD for business logic and target high coverage.
 ## Coverage
 
 Last updated: 2026-01-14
-- Desktop (Jacoco) instructions: 24%
-- Desktop (Jacoco) branches: 11%
-- Desktop (Jacoco) lines: 1,271/3,885 (32%)
+- Desktop (Jacoco) instructions: 26%
+- Desktop (Jacoco) branches: 13%
+- Desktop (Jacoco) lines: 1,384/4,064 (34%)

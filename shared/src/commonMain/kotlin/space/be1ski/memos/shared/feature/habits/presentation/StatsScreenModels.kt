@@ -43,6 +43,12 @@ internal data class HabitActivitySectionActions(
   val onCreateRequested: (ContributionDay) -> Unit
 )
 
+internal data class SuccessRateData(
+  val completed: Int,
+  val total: Int,
+  val rate: Float
+)
+
 internal data class StatsScreenDerivedState(
   val state: StatsScreenState,
   val habitsState: HabitsState,
@@ -58,5 +64,6 @@ internal data class StatsScreenDerivedState(
   val selectedDay: ContributionDay?,
   val todayConfig: List<HabitConfig>,
   val todayDay: ContributionDay?,
-  val timeZone: TimeZone
+  val timeZone: TimeZone,
+  val successRateData: SuccessRateData?
 )

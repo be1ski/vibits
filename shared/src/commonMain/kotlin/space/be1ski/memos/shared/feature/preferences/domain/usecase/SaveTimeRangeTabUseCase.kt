@@ -3,12 +3,17 @@ package space.be1ski.memos.shared.feature.preferences.domain.usecase
 import space.be1ski.memos.shared.feature.preferences.domain.model.TimeRangeTab
 import space.be1ski.memos.shared.feature.preferences.domain.repository.PreferencesRepository
 
+internal enum class TimeRangeScreen { Habits, Posts }
+
 internal class SaveTimeRangeTabUseCase(
   private val preferencesRepository: PreferencesRepository
 ) {
-  operator fun invoke(timeRangeTab: TimeRangeTab) {
+  operator fun invoke(screen: TimeRangeScreen, timeRangeTab: TimeRangeTab) {
     val currentPrefs = preferencesRepository.load()
-    val updatedPrefs = currentPrefs.copy(selectedTimeRangeTab = timeRangeTab)
+    val updatedPrefs = when (screen) {
+      TimeRangeScreen.Habits -> currentPrefs.copy(habitsTimeRangeTab = timeRangeTab)
+      TimeRangeScreen.Posts -> currentPrefs.copy(postsTimeRangeTab = timeRangeTab)
+    }
     preferencesRepository.save(updatedPrefs)
   }
 }

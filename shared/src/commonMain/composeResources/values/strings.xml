@@ -44,6 +44,7 @@
     <string name="label_demo_mode">Demo mode</string>
     <string name="label_habits_config">Habits config</string>
     <string name="label_storage">Storage</string>
+    <string name="label_success_rate">Success rate</string>
     <string name="label_today">Today</string>
 
     <!-- Messages -->
@@ -62,9 +63,13 @@
     <string name="privacy_hidden_habit">Hidden habit</string>
 
     <!-- Time periods -->
+    <string name="time_month">Month</string>
     <string name="time_months">Months</string>
+    <string name="time_quarter">Quarter</string>
     <string name="time_quarters">Quarters</string>
+    <string name="time_week">Week</string>
     <string name="time_weeks">Weeks</string>
+    <string name="time_year">Year</string>
     <string name="time_years">Years</string>
 
     <!-- Titles -->

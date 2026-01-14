@@ -1,11 +1,13 @@
 package space.be1ski.memos.shared.feature.habits.presentation
 
 import kotlinx.datetime.LocalDate
+import space.be1ski.memos.shared.core.ui.ActivityRange
 import space.be1ski.memos.shared.feature.habits.domain.buildHabitStatuses
 import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.memos.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.memos.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.memos.shared.feature.habits.presentation.components.rangeBounds
 
 internal fun findDayByDate(
   weekData: ActivityWeekData,
@@ -37,4 +39,23 @@ internal fun buildHabitDay(
     dailyMemo = dailyMemo,
     inRange = true
   )
+}
+
+internal fun calculateSuccessRate(
+  weekData: ActivityWeekData,
+  range: ActivityRange,
+  today: LocalDate
+): SuccessRateData {
+  val bounds = rangeBounds(range)
+  val effectiveEnd = if (today in bounds.start..bounds.end) today else bounds.end
+
+  val days = weekData.weeks
+    .flatMap { it.days }
+    .filter { it.date >= bounds.start && it.date <= effectiveEnd && it.totalHabits > 0 }
+
+  val completed = days.sumOf { it.count }
+  val total = days.sumOf { it.totalHabits }
+  val rate = if (total > 0) completed.toFloat() / total else 0f
+
+  return SuccessRateData(completed, total, rate)
 }

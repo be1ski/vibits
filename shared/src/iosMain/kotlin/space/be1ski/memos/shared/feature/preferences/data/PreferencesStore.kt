@@ -9,12 +9,15 @@ actual class PreferencesStore {
   private val defaults = NSUserDefaults.standardUserDefaults
 
   actual fun load(): LocalUserPreferences {
-    val timeRangeTab = defaults.stringForKey("ui_time_range_tab")
-      ?: LocalUserPreferences.DEFAULT_TIME_RANGE_TAB
-    return LocalUserPreferences(timeRangeTab = timeRangeTab)
+    val defaultTab = LocalUserPreferences.DEFAULT_TIME_RANGE_TAB
+    val legacyTab = defaults.stringForKey("ui_time_range_tab")
+    val habitsTab = defaults.stringForKey("ui_habits_time_range_tab") ?: legacyTab ?: defaultTab
+    val postsTab = defaults.stringForKey("ui_posts_time_range_tab") ?: legacyTab ?: defaultTab
+    return LocalUserPreferences(habitsTimeRangeTab = habitsTab, postsTimeRangeTab = postsTab)
   }
 
   actual fun save(preferences: LocalUserPreferences) {
-    defaults.setObject(preferences.timeRangeTab, forKey = "ui_time_range_tab")
+    defaults.setObject(preferences.habitsTimeRangeTab, forKey = "ui_habits_time_range_tab")
+    defaults.setObject(preferences.postsTimeRangeTab, forKey = "ui_posts_time_range_tab")
   }
 }
