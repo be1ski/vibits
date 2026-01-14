@@ -17,17 +17,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.TimeZone
-import space.be1ski.memos.shared.presentation.components.ActivityMode
-import space.be1ski.memos.shared.presentation.components.ActivityRange
-import space.be1ski.memos.shared.presentation.components.Indent
+import space.be1ski.memos.shared.core.ui.ActivityMode
+import space.be1ski.memos.shared.core.ui.ActivityRange
+import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeekData
+import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
+import space.be1ski.memos.shared.core.ui.Indent
 import space.be1ski.memos.shared.presentation.components.findDailyMemoForDate
 import space.be1ski.memos.shared.presentation.components.habitsConfigForDate
 import space.be1ski.memos.shared.presentation.components.rememberActivityWeekData
 import space.be1ski.memos.shared.presentation.components.rememberHabitsConfigTimeline
 import space.be1ski.memos.shared.presentation.habits.HabitsAction
 import space.be1ski.memos.shared.presentation.habits.HabitsState
-import space.be1ski.memos.shared.presentation.time.currentLocalDate
-import space.be1ski.memos.shared.presentation.util.isDesktop
+import space.be1ski.memos.shared.core.platform.currentLocalDate
+import space.be1ski.memos.shared.core.platform.isDesktop
 
 /**
  * Stats tab with activity charts.

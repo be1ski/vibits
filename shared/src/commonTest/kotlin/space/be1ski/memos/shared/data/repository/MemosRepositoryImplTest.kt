@@ -17,10 +17,11 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.time.Instant
 import kotlinx.serialization.json.Json
-import space.be1ski.memos.shared.data.mapper.MemoMapper
-import space.be1ski.memos.shared.data.remote.MemosApi
-import space.be1ski.memos.shared.domain.model.auth.Credentials
-import space.be1ski.memos.shared.domain.model.memo.Memo
+import space.be1ski.memos.shared.feature.memos.data.mapper.MemoMapper
+import space.be1ski.memos.shared.feature.memos.data.remote.MemosApi
+import space.be1ski.memos.shared.feature.memos.data.MemosRepositoryImpl
+import space.be1ski.memos.shared.feature.auth.domain.model.Credentials
+import space.be1ski.memos.shared.feature.memos.domain.model.Memo
 import space.be1ski.memos.shared.test.FakeCredentialsRepository
 import space.be1ski.memos.shared.test.FakeMemoCache
 

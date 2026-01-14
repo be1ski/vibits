@@ -3,8 +3,8 @@ package space.be1ski.memos.shared.presentation.app
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import space.be1ski.memos.shared.domain.model.memo.Memo
-import space.be1ski.memos.shared.domain.model.preferences.TimeRangeTab
+import space.be1ski.memos.shared.feature.memos.domain.model.Memo
+import space.be1ski.memos.shared.feature.preferences.domain.model.TimeRangeTab
 import kotlinx.datetime.LocalDate
 import space.be1ski.memos.shared.presentation.components.startOfWeek
 

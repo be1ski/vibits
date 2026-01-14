@@ -7,8 +7,15 @@ import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
-import space.be1ski.memos.shared.domain.model.memo.Memo
-import space.be1ski.memos.shared.presentation.time.currentLocalDate
+import space.be1ski.memos.shared.feature.memos.domain.model.Memo
+import space.be1ski.memos.shared.core.platform.currentLocalDate
+import space.be1ski.memos.shared.core.ui.ActivityMode
+import space.be1ski.memos.shared.core.ui.ActivityRange
+import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeek
+import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeekData
+import space.be1ski.memos.shared.feature.habits.domain.model.DailyMemoInfo
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitStatus
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitsConfigEntry
 
 private const val DAYS_IN_WEEK = 7
 

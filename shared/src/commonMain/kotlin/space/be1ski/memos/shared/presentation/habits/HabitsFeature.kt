@@ -1,11 +1,13 @@
 package space.be1ski.memos.shared.presentation.habits
 
 import kotlinx.datetime.LocalDate
-import space.be1ski.memos.shared.domain.model.memo.Memo
-import space.be1ski.memos.shared.presentation.components.ActivityWeek
-import space.be1ski.memos.shared.presentation.components.ContributionDay
-import space.be1ski.memos.shared.presentation.components.DailyMemoInfo
-import space.be1ski.memos.shared.presentation.components.HabitConfig
+import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeek
+import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
+import space.be1ski.memos.shared.feature.habits.domain.model.DailyMemoInfo
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.memos.shared.feature.memos.domain.model.Memo
+import space.be1ski.memos.shared.feature.habits.domain.HabitTag
+import space.be1ski.memos.shared.feature.habits.domain.IsSelected
 
 /**
  * Actions for the Habits feature.
@@ -51,7 +53,7 @@ data class HabitsState(
   // Editor state
   val editorDay: ContributionDay? = null,
   val editorConfig: List<HabitConfig> = emptyList(),
-  val editorSelections: Map<String, Boolean> = emptyMap(),
+  val editorSelections: Map<HabitTag, IsSelected> = emptyMap(),
   val editorExisting: DailyMemoInfo? = null,
   val editorError: String? = null,
 

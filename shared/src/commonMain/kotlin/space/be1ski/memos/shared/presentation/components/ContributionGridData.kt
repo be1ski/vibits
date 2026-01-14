@@ -1,7 +1,13 @@
 package space.be1ski.memos.shared.presentation.components
 
 import kotlinx.datetime.TimeZone
-import space.be1ski.memos.shared.domain.model.memo.Memo
+import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeekData
+import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitStatus
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitsConfigEntry
+import space.be1ski.memos.shared.feature.habits.domain.parseHabitConfigLine
+import space.be1ski.memos.shared.feature.memos.domain.model.Memo
 
 private const val LAST_SEVEN_DAYS = 7
 

@@ -4,9 +4,12 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.datetime.LocalDate
-import space.be1ski.memos.shared.presentation.components.ContributionDay
-import space.be1ski.memos.shared.presentation.components.HabitConfig
-import space.be1ski.memos.shared.presentation.components.HabitStatus
+import space.be1ski.memos.shared.feature.habits.domain.buildDailyContent
+import space.be1ski.memos.shared.feature.habits.domain.buildHabitsConfigContent
+import space.be1ski.memos.shared.feature.habits.domain.buildHabitsEditorSelections
+import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitStatus
 
 class HabitContentBuilderTest {
 

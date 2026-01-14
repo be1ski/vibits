@@ -7,7 +7,7 @@ import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.datetime.Instant
-import space.be1ski.memos.shared.domain.model.memo.Memo
+import space.be1ski.memos.shared.feature.memos.domain.model.Memo
 
 class MemosReducerTest {
 

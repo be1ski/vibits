@@ -2,15 +2,15 @@ package space.be1ski.memos.shared.presentation.memos
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import space.be1ski.memos.shared.domain.model.auth.Credentials
-import space.be1ski.memos.shared.domain.usecase.CreateMemoUseCase
-import space.be1ski.memos.shared.domain.usecase.DeleteMemoUseCase
-import space.be1ski.memos.shared.domain.usecase.LoadCachedMemosUseCase
-import space.be1ski.memos.shared.domain.usecase.LoadCredentialsUseCase
-import space.be1ski.memos.shared.domain.usecase.LoadMemosUseCase
-import space.be1ski.memos.shared.domain.usecase.SaveCredentialsUseCase
-import space.be1ski.memos.shared.domain.usecase.UpdateMemoUseCase
-import space.be1ski.memos.shared.elm.EffectHandler
+import space.be1ski.memos.shared.feature.auth.domain.model.Credentials
+import space.be1ski.memos.shared.feature.memos.domain.usecase.CreateMemoUseCase
+import space.be1ski.memos.shared.feature.memos.domain.usecase.DeleteMemoUseCase
+import space.be1ski.memos.shared.feature.memos.domain.usecase.LoadCachedMemosUseCase
+import space.be1ski.memos.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
+import space.be1ski.memos.shared.feature.memos.domain.usecase.LoadMemosUseCase
+import space.be1ski.memos.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
+import space.be1ski.memos.shared.feature.memos.domain.usecase.UpdateMemoUseCase
+import space.be1ski.memos.shared.core.elm.EffectHandler
 
 /**
  * Effect handler for the Memos feature.

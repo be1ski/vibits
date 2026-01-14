@@ -2,13 +2,13 @@ package space.be1ski.memos.shared.presentation.screen
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import space.be1ski.memos.shared.domain.model.memo.Memo
-import space.be1ski.memos.shared.presentation.components.ActivityMode
-import space.be1ski.memos.shared.presentation.components.ActivityRange
-import space.be1ski.memos.shared.presentation.components.ActivityWeekData
-import space.be1ski.memos.shared.presentation.components.ContributionDay
-import space.be1ski.memos.shared.presentation.components.HabitConfig
-import space.be1ski.memos.shared.presentation.components.HabitsConfigEntry
+import space.be1ski.memos.shared.core.ui.ActivityMode
+import space.be1ski.memos.shared.core.ui.ActivityRange
+import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeekData
+import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitsConfigEntry
+import space.be1ski.memos.shared.feature.memos.domain.model.Memo
 import space.be1ski.memos.shared.presentation.habits.HabitsAction
 import space.be1ski.memos.shared.presentation.habits.HabitsState
 

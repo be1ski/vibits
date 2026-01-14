@@ -7,12 +7,12 @@ import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.datetime.LocalDate
-import space.be1ski.memos.shared.domain.model.memo.Memo
-import space.be1ski.memos.shared.presentation.components.ActivityWeek
-import space.be1ski.memos.shared.presentation.components.ContributionDay
-import space.be1ski.memos.shared.presentation.components.DailyMemoInfo
-import space.be1ski.memos.shared.presentation.components.HabitConfig
-import space.be1ski.memos.shared.presentation.components.HabitStatus
+import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeek
+import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
+import space.be1ski.memos.shared.feature.habits.domain.model.DailyMemoInfo
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitStatus
+import space.be1ski.memos.shared.feature.memos.domain.model.Memo
 
 class HabitsReducerTest {
 

@@ -4,7 +4,8 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant as KtInstant
-import space.be1ski.memos.shared.domain.model.memo.Memo
+import space.be1ski.memos.shared.feature.habits.domain.model.DailyMemoInfo
+import space.be1ski.memos.shared.feature.memos.domain.model.Memo
 
 internal fun extractDailyMemos(
   memos: List<Memo>,

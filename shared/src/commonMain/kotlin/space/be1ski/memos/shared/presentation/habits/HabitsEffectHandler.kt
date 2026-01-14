@@ -2,8 +2,8 @@ package space.be1ski.memos.shared.presentation.habits
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import space.be1ski.memos.shared.domain.repository.MemosRepository
-import space.be1ski.memos.shared.elm.EffectHandler
+import space.be1ski.memos.shared.feature.memos.domain.repository.MemosRepository
+import space.be1ski.memos.shared.core.elm.EffectHandler
 
 /**
  * Effect handler for the Habits feature.

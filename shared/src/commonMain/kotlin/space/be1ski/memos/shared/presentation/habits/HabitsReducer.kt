@@ -1,10 +1,10 @@
 package space.be1ski.memos.shared.presentation.habits
 
-import space.be1ski.memos.shared.domain.habits.buildDailyContent
-import space.be1ski.memos.shared.domain.habits.buildHabitsConfigContent
-import space.be1ski.memos.shared.domain.habits.buildHabitsEditorSelections
-import space.be1ski.memos.shared.elm.Reducer
-import space.be1ski.memos.shared.elm.reducer
+import space.be1ski.memos.shared.feature.habits.domain.buildDailyContent
+import space.be1ski.memos.shared.feature.habits.domain.buildHabitsConfigContent
+import space.be1ski.memos.shared.feature.habits.domain.buildHabitsEditorSelections
+import space.be1ski.memos.shared.core.elm.Reducer
+import space.be1ski.memos.shared.core.elm.reducer
 
 /**
  * Pure reducer for the Habits feature.

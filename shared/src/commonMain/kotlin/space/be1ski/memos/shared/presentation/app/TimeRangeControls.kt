@@ -21,11 +21,11 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.memos.shared.Res
-import space.be1ski.memos.shared.domain.model.preferences.TimeRangeTab
+import space.be1ski.memos.shared.feature.preferences.domain.model.TimeRangeTab
 import space.be1ski.memos.shared.time_months
 import space.be1ski.memos.shared.action_next
-import space.be1ski.memos.shared.presentation.components.ActivityRange
-import space.be1ski.memos.shared.presentation.components.Indent
+import space.be1ski.memos.shared.core.ui.ActivityRange
+import space.be1ski.memos.shared.core.ui.Indent
 import space.be1ski.memos.shared.action_previous
 import space.be1ski.memos.shared.time_quarters
 import space.be1ski.memos.shared.time_weeks

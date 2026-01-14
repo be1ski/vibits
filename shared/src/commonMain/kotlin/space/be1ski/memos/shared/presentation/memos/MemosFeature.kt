@@ -1,6 +1,6 @@
 package space.be1ski.memos.shared.presentation.memos
 
-import space.be1ski.memos.shared.domain.model.memo.Memo
+import space.be1ski.memos.shared.feature.memos.domain.model.Memo
 
 /**
  * Actions for the Memos feature.

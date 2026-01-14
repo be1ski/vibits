@@ -1,13 +1,14 @@
 package space.be1ski.memos.shared.presentation.screen
 
 import kotlinx.datetime.LocalDate
-import space.be1ski.memos.shared.presentation.components.ContributionDay
-import space.be1ski.memos.shared.presentation.components.DailyMemoInfo
-import space.be1ski.memos.shared.presentation.components.HabitConfig
-import space.be1ski.memos.shared.presentation.components.buildHabitStatuses
+import space.be1ski.memos.shared.feature.habits.domain.buildHabitStatuses
+import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeekData
+import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
+import space.be1ski.memos.shared.feature.habits.domain.model.DailyMemoInfo
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitConfig
 
 internal fun findDayByDate(
-  weekData: space.be1ski.memos.shared.presentation.components.ActivityWeekData,
+  weekData: ActivityWeekData,
   date: kotlinx.datetime.LocalDate
 ): ContributionDay? {
   return weekData.weeks.firstNotNullOfOrNull { week ->

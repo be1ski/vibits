@@ -2,6 +2,8 @@ package space.be1ski.memos.shared.presentation.components
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
+import space.be1ski.memos.shared.core.ui.ActivityRange
+import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeek
 
 internal fun buildTimelineLabels(weeks: List<ActivityWeek>, range: ActivityRange): List<String> {
   if (weeks.isEmpty()) {

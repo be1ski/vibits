@@ -4,7 +4,9 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.time.Instant
-import space.be1ski.memos.shared.domain.model.memo.Memo
+import space.be1ski.memos.shared.feature.memos.domain.model.Memo
+import space.be1ski.memos.shared.feature.memos.data.local.MemoEntity
+import space.be1ski.memos.shared.feature.memos.data.local.MemoEntityMapper
 
 class MemoEntityMapperTest {
   @Test

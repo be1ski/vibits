@@ -1,6 +1,10 @@
 package space.be1ski.memos.shared.presentation.components
 
 import androidx.compose.foundation.ScrollState
+import space.be1ski.memos.shared.core.ui.DEMO_PLACEHOLDER_HABIT
+import space.be1ski.memos.shared.core.ui.Indent
+import space.be1ski.memos.shared.core.ui.hoverAware
+import space.be1ski.memos.shared.core.ui.obfuscateIfNeeded
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -44,6 +48,12 @@ import androidx.compose.ui.window.PopupPositionProvider
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
+import space.be1ski.memos.shared.core.ui.ActivityRange
+import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeek
+import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeekData
+import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitStatus
 import space.be1ski.memos.shared.Res
 import space.be1ski.memos.shared.title_create_day
 import space.be1ski.memos.shared.title_edit_day

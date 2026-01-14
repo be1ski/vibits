@@ -19,7 +19,7 @@ import space.be1ski.memos.shared.title_create_day
 import space.be1ski.memos.shared.action_delete
 import space.be1ski.memos.shared.msg_delete_day_confirm
 import space.be1ski.memos.shared.title_delete_day
-import space.be1ski.memos.shared.presentation.components.Indent
+import space.be1ski.memos.shared.core.ui.Indent
 import space.be1ski.memos.shared.action_update
 import space.be1ski.memos.shared.title_update_day
 import space.be1ski.memos.shared.presentation.habits.HabitsAction

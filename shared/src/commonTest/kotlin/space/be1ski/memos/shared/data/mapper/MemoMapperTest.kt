@@ -4,7 +4,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.time.Instant
-import space.be1ski.memos.shared.data.remote.dto.MemoDto
+import space.be1ski.memos.shared.feature.memos.data.remote.dto.MemoDto
+import space.be1ski.memos.shared.feature.memos.data.mapper.MemoMapper
 
 class MemoMapperTest {
   private val mapper = MemoMapper()

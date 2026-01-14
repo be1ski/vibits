@@ -1,5 +1,6 @@
 package space.be1ski.memos.shared.data.remote
 
+import space.be1ski.memos.shared.feature.memos.data.remote.MemosApi
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope

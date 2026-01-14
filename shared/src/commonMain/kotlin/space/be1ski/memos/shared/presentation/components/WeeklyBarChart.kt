@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeek
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.plus
 

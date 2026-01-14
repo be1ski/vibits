@@ -4,7 +4,13 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import space.be1ski.memos.shared.presentation.components.HabitConfig
+import space.be1ski.memos.shared.feature.habits.domain.buildHabitStatuses
+import space.be1ski.memos.shared.feature.habits.domain.extractCompletedHabits
+import space.be1ski.memos.shared.feature.habits.domain.extractHabitTagsFromContent
+import space.be1ski.memos.shared.feature.habits.domain.labelFromTag
+import space.be1ski.memos.shared.feature.habits.domain.normalizeHabitTag
+import space.be1ski.memos.shared.feature.habits.domain.parseHabitConfigLine
+import space.be1ski.memos.shared.feature.habits.domain.model.HabitConfig
 
 class HabitParserTest {
 

@@ -1,8 +1,8 @@
 package space.be1ski.memos.shared.presentation.memos
 
-import space.be1ski.memos.shared.domain.model.memo.Memo
-import space.be1ski.memos.shared.elm.Reducer
-import space.be1ski.memos.shared.elm.reducer
+import space.be1ski.memos.shared.feature.memos.domain.model.Memo
+import space.be1ski.memos.shared.core.elm.Reducer
+import space.be1ski.memos.shared.core.elm.reducer
 
 /**
  * Pure reducer for the Memos feature.

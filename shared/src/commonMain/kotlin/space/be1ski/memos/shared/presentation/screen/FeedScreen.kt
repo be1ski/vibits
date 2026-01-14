@@ -20,9 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import space.be1ski.memos.shared.domain.model.memo.Memo
-import space.be1ski.memos.shared.presentation.components.DEMO_PLACEHOLDER_CONTENT
-import space.be1ski.memos.shared.presentation.components.Indent
+import space.be1ski.memos.shared.feature.memos.domain.model.Memo
+import space.be1ski.memos.shared.core.ui.DEMO_PLACEHOLDER_CONTENT
+import space.be1ski.memos.shared.core.ui.Indent
 
 /**
  * Feed tab showing the raw memos list.

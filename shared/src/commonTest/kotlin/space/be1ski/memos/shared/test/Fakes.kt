@@ -1,10 +1,10 @@
 package space.be1ski.memos.shared.test
 
-import space.be1ski.memos.shared.data.local.MemoCache
-import space.be1ski.memos.shared.domain.model.auth.Credentials
-import space.be1ski.memos.shared.domain.model.memo.Memo
-import space.be1ski.memos.shared.domain.repository.CredentialsRepository
-import space.be1ski.memos.shared.domain.repository.MemosRepository
+import space.be1ski.memos.shared.feature.memos.data.local.MemoCache
+import space.be1ski.memos.shared.feature.auth.domain.model.Credentials
+import space.be1ski.memos.shared.feature.memos.domain.model.Memo
+import space.be1ski.memos.shared.feature.auth.domain.repository.CredentialsRepository
+import space.be1ski.memos.shared.feature.memos.domain.repository.MemosRepository
 
 class FakeCredentialsRepository(
   initial: Credentials = Credentials(baseUrl = "", token = "")
