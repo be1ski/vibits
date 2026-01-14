@@ -207,20 +207,6 @@ internal fun StatsMainChart(derived: StatsScreenDerivedState) {
 }
 
 @Composable
-internal fun StatsHabitDetailsToggle(derived: StatsScreenDerivedState) {
-  if (!derived.collapseHabits || derived.currentHabitsConfig.isEmpty()) {
-    return
-  }
-  val uiState = derived.uiState
-  OutlinedButton(
-    onClick = { uiState.showHabitDetails = !uiState.showHabitDetails },
-    modifier = Modifier.fillMaxWidth()
-  ) {
-    Text(if (uiState.showHabitDetails) stringResource(Res.string.action_hide_details) else stringResource(Res.string.action_show_details))
-  }
-}
-
-@Composable
 internal fun StatsWeeklyChart(derived: StatsScreenDerivedState) {
   val state = derived.state
   if (state.activityMode != ActivityMode.Posts) {

@@ -65,7 +65,6 @@ internal class StatsScreenUiState {
   var showEmptyDeleteConfirm by mutableStateOf(false)
   var showHabitsConfig by mutableStateOf(false)
   var habitsConfigText by mutableStateOf("")
-  var showHabitDetails by mutableStateOf(false)
   var selectedWeek by mutableStateOf<ActivityWeek?>(null)
   var selectedDate by mutableStateOf<LocalDate?>(null)
   var activeSelectionId by mutableStateOf<String?>(null)

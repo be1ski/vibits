@@ -81,8 +81,7 @@ private fun rememberStatsScreenDerived(
     currentHabitsConfig.isNotEmpty()
   val showHabitSections = !showLast7DaysMatrix &&
     activityMode == ActivityMode.Habits &&
-    currentHabitsConfig.isNotEmpty() &&
-    (!collapseHabits || uiState.showHabitDetails)
+    currentHabitsConfig.isNotEmpty()
   val selectedDay = remember(weekData.weeks, uiState.selectedDate) {
     uiState.selectedDate?.let { date -> findDayByDate(weekData, date) }
   }
@@ -152,7 +151,6 @@ private fun StatsScreenContent(derived: StatsScreenDerivedState) {
       StatsTodaySection(derived)
       StatsHabitsConfigSection(derived)
       StatsMainChart(derived)
-      StatsHabitDetailsToggle(derived)
       StatsWeeklyChart(derived)
       StatsHabitSections(derived)
     }
