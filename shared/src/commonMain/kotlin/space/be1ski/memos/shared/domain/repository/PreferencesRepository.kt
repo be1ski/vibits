@@ -1,0 +1,18 @@
+package space.be1ski.memos.shared.domain.repository
+
+import space.be1ski.memos.shared.domain.model.preferences.UserPreferences
+
+/**
+ * Repository for reading and persisting user preferences.
+ */
+internal interface PreferencesRepository {
+  /**
+   * Loads stored preferences or default values.
+   */
+  fun load(): UserPreferences
+
+  /**
+   * Persists user preferences locally.
+   */
+  fun save(preferences: UserPreferences)
+}

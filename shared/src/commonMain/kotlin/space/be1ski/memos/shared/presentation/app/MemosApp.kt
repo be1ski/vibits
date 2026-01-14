@@ -58,6 +58,9 @@ import space.be1ski.memos.shared.presentation.state.MemosUiState
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 import space.be1ski.memos.shared.presentation.util.isDesktop
 import space.be1ski.memos.shared.presentation.viewmodel.MemosViewModel
+import space.be1ski.memos.shared.domain.model.preferences.TimeRangeTab
+import space.be1ski.memos.shared.domain.usecase.LoadPreferencesUseCase
+import space.be1ski.memos.shared.domain.usecase.SaveTimeRangeTabUseCase
 import space.be1ski.memos.shared.action_refresh
 import space.be1ski.memos.shared.action_save
 import space.be1ski.memos.shared.nav_settings
@@ -67,13 +70,22 @@ import space.be1ski.memos.shared.hint_write_memo
 @Composable
 fun MemosApp() {
   val viewModel: MemosViewModel = koinInject()
-  val appState = remember { MemosAppUiState(currentLocalDate()) }
+  val loadPreferencesUseCase: LoadPreferencesUseCase = koinInject()
+  val saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase = koinInject()
+
+  val initialPrefs = remember { loadPreferencesUseCase() }
+  val appState = remember {
+    MemosAppUiState(
+      currentDate = currentLocalDate(),
+      initialTimeRangeTab = initialPrefs.selectedTimeRangeTab
+    )
+  }
   val uiState = viewModel.uiState
 
   SyncAutoLoad(uiState, appState, viewModel)
   SyncCredentialsDialog(uiState, appState)
 
-  MemosAppContent(uiState, appState, viewModel)
+  MemosAppContent(uiState, appState, viewModel, saveTimeRangeTabUseCase)
   CredentialsDialog(uiState, appState, viewModel)
   MemoCreateDialog(appState, viewModel)
   MemoEditDialog(appState, viewModel)
@@ -113,7 +125,8 @@ private fun SyncCredentialsDialog(
 private fun MemosAppContent(
   uiState: MemosUiState,
   appState: MemosAppUiState,
-  viewModel: MemosViewModel
+  viewModel: MemosViewModel,
+  saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase
 ) {
   MaterialTheme {
     Scaffold(
@@ -155,7 +168,10 @@ private fun MemosAppContent(
             selectedRange = activityRange,
             currentRange = currentRange,
             minRange = minRange,
-            onTabChange = { appState.selectedTimeRangeTab = it },
+            onTabChange = { newTab ->
+              appState.selectedTimeRangeTab = newTab
+              saveTimeRangeTabUseCase(newTab)
+            },
             onRangeChange = { range -> updateTimeRangeState(appState, range) }
           )
         }

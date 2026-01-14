@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import space.be1ski.memos.shared.domain.model.memo.Memo
+import space.be1ski.memos.shared.domain.model.preferences.TimeRangeTab
 import kotlinx.datetime.LocalDate
 import space.be1ski.memos.shared.presentation.components.startOfWeek
 
@@ -13,16 +14,12 @@ internal enum class MemosScreen {
   Feed
 }
 
-internal enum class TimeRangeTab {
-  Weeks,
-  Months,
-  Quarters,
-  Years
-}
-
-internal class MemosAppUiState(currentDate: LocalDate) {
+internal class MemosAppUiState(
+  currentDate: LocalDate,
+  initialTimeRangeTab: TimeRangeTab = TimeRangeTab.Weeks
+) {
   var selectedScreen by mutableStateOf(MemosScreen.Habits)
-  var selectedTimeRangeTab by mutableStateOf(TimeRangeTab.Weeks)
+  var selectedTimeRangeTab by mutableStateOf(initialTimeRangeTab)
   var weekStart by mutableStateOf(startOfWeek(currentDate))
   var monthYear by mutableStateOf(currentDate.year)
   var month by mutableStateOf(currentDate.month)
