@@ -87,14 +87,16 @@ import space.be1ski.memos.shared.feature.memos.domain.usecase.UpdateMemoUseCase
 import space.be1ski.memos.shared.feature.memos.presentation.MemosUseCases
 import space.be1ski.memos.shared.feature.mode.domain.model.AppMode
 import space.be1ski.memos.shared.feature.mode.domain.usecase.LoadAppModeUseCase
+import space.be1ski.memos.shared.feature.mode.domain.usecase.ResetAppUseCase
 import space.be1ski.memos.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
 import space.be1ski.memos.shared.action_refresh
 import space.be1ski.memos.shared.action_save
 import space.be1ski.memos.shared.hint_write_memo
 import space.be1ski.memos.shared.nav_settings
 
+@Suppress("LongMethod")
 @Composable
-fun MemosApp() {
+fun MemosApp(onResetApp: () -> Unit = {}) {
   val loadPreferencesUseCase: LoadPreferencesUseCase = koinInject()
   val saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase = koinInject()
   val loadStorageInfoUseCase: LoadStorageInfoUseCase = koinInject()
@@ -108,6 +110,7 @@ fun MemosApp() {
   val deleteMemoUseCase: DeleteMemoUseCase = koinInject()
   val loadAppModeUseCase: LoadAppModeUseCase = koinInject()
   val switchAppModeUseCase: SwitchAppModeUseCase = koinInject()
+  val resetAppUseCase: ResetAppUseCase = koinInject()
 
   val initialPrefs = remember { loadPreferencesUseCase() }
   val initialMode = remember { loadAppModeUseCase() }
@@ -159,7 +162,15 @@ fun MemosApp() {
   SyncCredentialsDialog(memosState, appState)
 
   MemosAppContent(memosState, appState, dispatchMemos, saveTimeRangeTabUseCase, habitsState, habitsFeature::send)
-  CredentialsDialog(memosState, appState, dispatchMemos, storageInfo, switchAppModeUseCase)
+  CredentialsDialog(
+    memosState = memosState,
+    appState = appState,
+    dispatch = dispatchMemos,
+    storageInfo = storageInfo,
+    switchAppModeUseCase = switchAppModeUseCase,
+    resetAppUseCase = resetAppUseCase,
+    onResetComplete = onResetApp
+  )
   MemoCreateDialog(appState, dispatchMemos)
   MemoEditDialog(appState, dispatchMemos)
 }
@@ -208,9 +219,8 @@ private fun MemosAppContent(
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit
 ) {
-  MaterialTheme {
-    Scaffold(
-      floatingActionButton = {
+  Scaffold(
+    floatingActionButton = {
         if (memosFabModeForScreen(appState.selectedScreen) == MemosFabMode.Memo) {
           FloatingActionButton(
             onClick = { appState.showCreateMemoDialog = true }
@@ -285,7 +295,6 @@ private fun MemosAppContent(
         MemosTabContent(memosState, appState, activityRange, habitsState, onHabitsAction)
       }
     }
-  }
 }
 
 @Composable

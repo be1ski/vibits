@@ -36,19 +36,25 @@ import space.be1ski.memos.shared.feature.memos.presentation.MemosState
 import space.be1ski.memos.shared.feature.mode.domain.model.AppMode
 import space.be1ski.memos.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
 import space.be1ski.memos.shared.app.MemosAppUiState
+import space.be1ski.memos.shared.action_reset_app
 import space.be1ski.memos.shared.action_save
+import space.be1ski.memos.shared.format_offline_storage
 import space.be1ski.memos.shared.mode_offline_title
 import space.be1ski.memos.shared.mode_online_title
 import space.be1ski.memos.shared.nav_settings
 import space.be1ski.memos.shared.label_storage
+import space.be1ski.memos.shared.feature.mode.domain.usecase.ResetAppUseCase
 
+@Suppress("LongParameterList")
 @Composable
 internal fun CredentialsDialog(
   memosState: MemosState,
   appState: MemosAppUiState,
   dispatch: (MemosAction) -> Unit,
   storageInfo: StorageInfo,
-  switchAppModeUseCase: SwitchAppModeUseCase
+  switchAppModeUseCase: SwitchAppModeUseCase,
+  resetAppUseCase: ResetAppUseCase,
+  onResetComplete: () -> Unit
 ) {
   if (!appState.showCredentialsDialog) {
     return
@@ -77,6 +83,13 @@ internal fun CredentialsDialog(
             appState.appMode = mode
             dispatch(MemosAction.LoadMemos)
           }
+        },
+        onReset = {
+          scope.launch {
+            resetAppUseCase()
+            appState.showCredentialsDialog = false
+            onResetComplete()
+          }
         }
       )
     },
@@ -90,7 +103,8 @@ private fun CredentialsDialogContent(
   appState: MemosAppUiState,
   dispatch: (MemosAction) -> Unit,
   storageInfo: StorageInfo,
-  onModeChange: (AppMode) -> Unit
+  onModeChange: (AppMode) -> Unit,
+  onReset: () -> Unit
 ) {
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
     AppModeSelector(
@@ -130,7 +144,10 @@ private fun CredentialsDialogContent(
         onCheckedChange = { appState.demoMode = it }
       )
     }
-    StorageInfoSection(storageInfo)
+    StorageInfoSection(storageInfo, appState.appMode)
+    TextButton(onClick = onReset, modifier = Modifier.fillMaxWidth()) {
+      Text(stringResource(Res.string.action_reset_app))
+    }
   }
 }
 
@@ -161,12 +178,16 @@ private fun AppModeSelector(
 }
 
 @Composable
-private fun StorageInfoSection(storageInfo: StorageInfo) {
+private fun StorageInfoSection(storageInfo: StorageInfo, appMode: AppMode) {
   Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
     Text(stringResource(Res.string.label_storage))
     Text(stringResource(Res.string.format_environment, storageInfo.environment))
-    Text(stringResource(Res.string.format_credentials, storageInfo.credentialsStore))
-    Text(stringResource(Res.string.format_memos_db, storageInfo.memosDatabase))
+    if (appMode == AppMode.Offline) {
+      Text(stringResource(Res.string.format_offline_storage, storageInfo.offlineStorage))
+    } else {
+      Text(stringResource(Res.string.format_credentials, storageInfo.credentialsStore))
+      Text(stringResource(Res.string.format_memos_db, storageInfo.memosDatabase))
+    }
   }
 }
 

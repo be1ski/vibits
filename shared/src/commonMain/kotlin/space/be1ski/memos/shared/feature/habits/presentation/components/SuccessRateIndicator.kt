@@ -21,6 +21,8 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import space.be1ski.memos.shared.core.ui.theme.AppColors
+import space.be1ski.memos.shared.core.ui.theme.resolve
 
 private const val ANIMATION_DURATION_MS = 600
 private const val ARC_START_ANGLE = 135f
@@ -33,14 +35,6 @@ private val STROKE_WIDTH = 8.dp
 
 private const val GREEN_THRESHOLD = 0.8f
 private const val YELLOW_THRESHOLD = 0.5f
-
-private const val COLOR_GREEN_HEX = 0xFF4CAF50
-private const val COLOR_YELLOW_HEX = 0xFFFFC107
-private const val COLOR_RED_HEX = 0xFFE57373
-
-private val COLOR_GREEN = Color(COLOR_GREEN_HEX)
-private val COLOR_YELLOW = Color(COLOR_YELLOW_HEX)
-private val COLOR_RED = Color(COLOR_RED_HEX)
 
 @Composable
 internal fun SuccessRateIndicator(
@@ -104,10 +98,11 @@ internal fun SuccessRateIndicator(
   }
 }
 
+@Composable
 private fun successRateColor(rate: Float): Color {
   return when {
-    rate >= GREEN_THRESHOLD -> COLOR_GREEN
-    rate >= YELLOW_THRESHOLD -> COLOR_YELLOW
-    else -> COLOR_RED
+    rate >= GREEN_THRESHOLD -> AppColors.statusGreen.resolve()
+    rate >= YELLOW_THRESHOLD -> AppColors.statusYellow.resolve()
+    else -> AppColors.statusRed.resolve()
   }
 }

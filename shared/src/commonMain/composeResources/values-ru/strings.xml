@@ -13,6 +13,7 @@
     <string name="action_show_details">Показать детали</string>
     <string name="action_track">Отметить</string>
     <string name="action_track_today">Отметить сегодня</string>
+    <string name="action_reset_app">Сбросить</string>
     <string name="action_update">Обновить</string>
 
     <!-- App -->
@@ -28,6 +29,7 @@
     <string name="format_environment">Окружение: %1$s</string>
     <string name="format_habits_progress">Выполнено привычек: %1$d из %2$d</string>
     <string name="format_memos_db">Memos DB: %1$s</string>
+    <string name="format_offline_storage">Офлайн: %1$s</string>
     <string name="format_tooltip_habits">%1$s: привычек %2$d/%3$d</string>
     <string name="format_tooltip_posts">%1$s: постов %2$d</string>
 

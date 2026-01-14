@@ -9,6 +9,7 @@ actual class StorageInfoProvider {
   actual fun load(): StorageInfo = StorageInfo(
     environment = "web",
     credentialsStore = "in-memory",
-    memosDatabase = "in-memory"
+    memosDatabase = "in-memory",
+    offlineStorage = "localStorage"
   )
 }

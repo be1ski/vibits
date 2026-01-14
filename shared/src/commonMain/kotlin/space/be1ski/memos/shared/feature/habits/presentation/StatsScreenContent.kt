@@ -4,7 +4,6 @@ package space.be1ski.memos.shared.feature.habits.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -43,6 +42,8 @@ import space.be1ski.memos.shared.label_habits_config
 import space.be1ski.memos.shared.msg_no_habits_yet
 import space.be1ski.memos.shared.core.ui.ActivityMode
 import space.be1ski.memos.shared.core.ui.ActivityRange
+import space.be1ski.memos.shared.core.ui.theme.AppColors
+import space.be1ski.memos.shared.core.ui.theme.resolve
 import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeek
 import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.memos.shared.feature.habits.presentation.components.ContributionGrid
@@ -365,6 +366,7 @@ private fun LastSevenDaysMatrix(
           }
         }
       }
+      val pendingColor = AppColors.inactiveCell.resolve()
       habits.forEach { habit ->
         Row(
           horizontalArrangement = Arrangement.spacedBy(spacing),
@@ -374,7 +376,7 @@ private fun LastSevenDaysMatrix(
           Text(label, style = MaterialTheme.typography.bodySmall, modifier = Modifier.width(labelWidth))
           days.forEach { day ->
             val done = day.habitStatuses.firstOrNull { status -> status.tag == habit.tag }?.done == true
-            val cellColor = if (done) Color(habit.color) else HABIT_PENDING_COLOR
+            val cellColor = if (done) androidx.compose.ui.graphics.Color(habit.color) else pendingColor
             Box(
               modifier = Modifier
                 .size(cellSize)

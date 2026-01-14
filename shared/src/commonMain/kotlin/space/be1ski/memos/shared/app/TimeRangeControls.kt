@@ -22,8 +22,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import space.be1ski.memos.shared.core.ui.theme.AppColors
+import space.be1ski.memos.shared.core.ui.theme.resolve
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
@@ -220,9 +221,9 @@ private fun floorMod(value: Int, divisor: Int): Int {
 private fun SuccessRateBadge(rate: Float) {
   val percent = (rate * PERCENT_MULTIPLIER).toInt()
   val color = when {
-    rate >= GREEN_THRESHOLD -> COLOR_GREEN
-    rate >= YELLOW_THRESHOLD -> COLOR_YELLOW
-    else -> COLOR_RED
+    rate >= GREEN_THRESHOLD -> AppColors.statusGreen.resolve()
+    rate >= YELLOW_THRESHOLD -> AppColors.statusYellow.resolve()
+    else -> AppColors.statusRed.resolve()
   }
   Box(
     modifier = Modifier
@@ -249,10 +250,3 @@ private const val BADGE_ALPHA = 0.2f
 private val BADGE_CORNER_RADIUS = 4.dp
 private val BADGE_PADDING_H = 6.dp
 private val BADGE_PADDING_V = 2.dp
-
-private const val COLOR_GREEN_HEX = 0xFF4CAF50
-private const val COLOR_YELLOW_HEX = 0xFFFFC107
-private const val COLOR_RED_HEX = 0xFFE57373
-private val COLOR_GREEN = Color(COLOR_GREEN_HEX)
-private val COLOR_YELLOW = Color(COLOR_YELLOW_HEX)
-private val COLOR_RED = Color(COLOR_RED_HEX)

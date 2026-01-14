@@ -49,6 +49,8 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.memos.shared.core.ui.ActivityRange
+import space.be1ski.memos.shared.core.ui.theme.AppColors
+import space.be1ski.memos.shared.core.ui.theme.resolve
 import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeek
 import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
@@ -76,15 +78,6 @@ private const val COMPACT_SPACING_DP = 1
 private const val REGULAR_SPACING_DP = 2
 private const val COMPACT_CELL_DP = 7
 private const val REGULAR_CELL_DP = 10
-
-@Suppress("MagicNumber")
-private val INACTIVE_CELL_COLOR = Color(0xFFE2E8F0)
-
-@Suppress("MagicNumber")
-private val HABIT_START_COLOR = Color(0xFFCFEED6)
-
-@Suppress("MagicNumber")
-private val HABIT_END_COLOR = Color(0xFF0B7D3E)
 
 private const val HABIT_COLOR_LIGHT_RATIO = 0.3f
 
@@ -444,13 +437,16 @@ private fun ContributionCell(
   callbacks: ContributionCellCallbacks
 ) {
   var coordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
-  val (startColor, endColor) = remember(state.habitColor) {
+  val defaultStartColor = AppColors.habitGradientStart.resolve()
+  val defaultEndColor = AppColors.habitGradientEnd.resolve()
+  val inactiveCellColor = AppColors.inactiveCell.resolve()
+  val (startColor, endColor) = remember(state.habitColor, defaultStartColor, defaultEndColor) {
     if (state.habitColor != null) {
       val base = Color(state.habitColor)
       val light = lerp(Color.White, base, HABIT_COLOR_LIGHT_RATIO)
       light to base
     } else {
-      HABIT_START_COLOR to HABIT_END_COLOR
+      defaultStartColor to defaultEndColor
     }
   }
   val color = when {
@@ -464,7 +460,7 @@ private fun ContributionCell(
         0f
       }
       if (ratio <= 0f) {
-        INACTIVE_CELL_COLOR
+        inactiveCellColor
       } else {
         lerp(startColor, endColor, ratio.coerceIn(0f, 1f))
       }

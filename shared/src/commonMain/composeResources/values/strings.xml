@@ -13,6 +13,7 @@
     <string name="action_show_details">Show habit details</string>
     <string name="action_track">Track</string>
     <string name="action_track_today">Track today</string>
+    <string name="action_reset_app">Reset app</string>
     <string name="action_update">Update</string>
 
     <!-- App -->
@@ -28,6 +29,7 @@
     <string name="format_environment">Environment: %1$s</string>
     <string name="format_habits_progress">%1$d of %2$d habits done</string>
     <string name="format_memos_db">Memos DB: %1$s</string>
+    <string name="format_offline_storage">Offline: %1$s</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d habits</string>
     <string name="format_tooltip_posts">%1$s: %2$d posts</string>
 

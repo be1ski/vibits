@@ -6,5 +6,6 @@ package space.be1ski.memos.shared.domain.model.storage
 data class StorageInfo(
   val environment: String,
   val credentialsStore: String,
-  val memosDatabase: String
+  val memosDatabase: String,
+  val offlineStorage: String
 )
