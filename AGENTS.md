@@ -24,13 +24,12 @@ Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if a
 - Naming: PascalCase types, camelCase functions/vars, UPPER_SNAKE_CASE constants.
 - Avoid `!!`; keep composables small and focused.
 - **Self-documenting code over comments.** Don't add KDoc/comments that restate function names or obvious logic.
-- Avoid `// given`, `// when`, `// then` comments in tests; use clear test names and structure instead.
 - Prefer clean refactors over quick reuse: avoid introducing or keeping code smells, and leave the codebase cleaner than you found it.
 - Keep Gradle dependencies and `gradle/libs.versions.toml` entries alphabetically sorted within each block.
 
 ## Testing Guidelines
 
-We follow TDD for business logic and aim for high coverage (100% when practical).
+We follow TDD for business logic and aim for high coverage.
 
 ### Running Tests
 
@@ -49,11 +48,10 @@ We follow TDD for business logic and aim for high coverage (100% when practical)
 
 Tests must stay useful and up-to-date. Follow these rules:
 
-1. **Run tests before every commit.** If tests don't compile or pass, fix them before pushing.
-2. **Never test constants.** Tests like `assertEquals(200, PAGE_SIZE)` provide no value — they just duplicate the constant.
-3. **Delete tests when deleting code.** If you remove a function/class, remove its tests too.
-4. **New features need tests.** Every new public API should have corresponding tests.
-5. **Test behavior, not implementation.** Focus on what code does, not how it does it.
+1. **Never test constants.** Tests like `assertEquals(200, PAGE_SIZE)` provide no value — they just duplicate the constant.
+2. **Delete tests when deleting code.** If you remove a function/class, remove its tests too.
+3. **New features need tests.** Every new public API should have corresponding tests.
+4. **Test behavior, not implementation.** Focus on what code does, not how it does it.
 
 ## Linting
 
@@ -62,8 +60,6 @@ Tests must stay useful and up-to-date. Follow these rules:
 - Run detekt: `./gradlew detekt`
 - All detekt issues must be resolved before committing. Zero tolerance for lint warnings.
 - Use `@Suppress` annotations only when the lint rule doesn't apply (e.g., `LongParameterList` for Composables with many parameters is acceptable).
-- Extract magic numbers to named constants.
-- Replace wildcard imports with explicit imports.
 
 ## Commit & Pull Request Guidelines
 
