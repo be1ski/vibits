@@ -1,6 +1,7 @@
 package space.be1ski.memos.shared.data.local
 
 import android.content.Context
+import androidx.core.content.edit
 
 /**
  * Android implementation backed by SharedPreferences.
@@ -23,8 +24,8 @@ actual class PreferencesStore {
       return
     }
     val prefs = AndroidContextHolder.context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-    prefs.edit()
-      .putString("ui_time_range_tab", preferences.timeRangeTab)
-      .apply()
+    prefs.edit {
+      putString("ui_time_range_tab", preferences.timeRangeTab)
+    }
   }
 }
