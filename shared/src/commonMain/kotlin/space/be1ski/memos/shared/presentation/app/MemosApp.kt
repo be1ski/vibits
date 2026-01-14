@@ -55,30 +55,47 @@ import space.be1ski.memos.shared.presentation.components.startOfWeek
 import space.be1ski.memos.shared.presentation.habits.HabitsAction
 import space.be1ski.memos.shared.presentation.habits.HabitsState
 import space.be1ski.memos.shared.presentation.habits.createHabitsFeature
+import space.be1ski.memos.shared.presentation.memos.MemosAction
+import space.be1ski.memos.shared.presentation.memos.MemosState
+import space.be1ski.memos.shared.presentation.memos.createMemosFeature
 import space.be1ski.memos.shared.presentation.screen.FeedScreen
 import space.be1ski.memos.shared.presentation.screen.PostsScreen
 import space.be1ski.memos.shared.presentation.screen.StatsScreen
 import space.be1ski.memos.shared.presentation.screen.StatsScreenState
 import space.be1ski.memos.shared.domain.repository.MemosRepository
-import space.be1ski.memos.shared.presentation.state.MemosUiState
 import space.be1ski.memos.shared.presentation.time.currentLocalDate
 import space.be1ski.memos.shared.presentation.util.isDesktop
-import space.be1ski.memos.shared.presentation.viewmodel.MemosViewModel
 import space.be1ski.memos.shared.domain.model.preferences.TimeRangeTab
+import space.be1ski.memos.shared.domain.usecase.CreateMemoUseCase
+import space.be1ski.memos.shared.domain.usecase.DeleteMemoUseCase
+import space.be1ski.memos.shared.domain.usecase.LoadCachedMemosUseCase
+import space.be1ski.memos.shared.domain.usecase.LoadCredentialsUseCase
+import space.be1ski.memos.shared.domain.usecase.LoadMemosUseCase
 import space.be1ski.memos.shared.domain.usecase.LoadPreferencesUseCase
+import space.be1ski.memos.shared.domain.usecase.LoadStorageInfoUseCase
+import space.be1ski.memos.shared.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.memos.shared.domain.usecase.SaveTimeRangeTabUseCase
+import space.be1ski.memos.shared.domain.usecase.UpdateMemoUseCase
 import space.be1ski.memos.shared.action_refresh
 import space.be1ski.memos.shared.action_save
-import space.be1ski.memos.shared.nav_settings
 import space.be1ski.memos.shared.hint_write_memo
+import space.be1ski.memos.shared.nav_settings
 
 /** Root shared UI for the app. */
 @Composable
 fun MemosApp() {
-  val viewModel: MemosViewModel = koinInject()
+  // Use cases
   val loadPreferencesUseCase: LoadPreferencesUseCase = koinInject()
   val saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase = koinInject()
+  val loadStorageInfoUseCase: LoadStorageInfoUseCase = koinInject()
   val memosRepository: MemosRepository = koinInject()
+  val loadMemosUseCase: LoadMemosUseCase = koinInject()
+  val loadCachedMemosUseCase: LoadCachedMemosUseCase = koinInject()
+  val loadCredentialsUseCase: LoadCredentialsUseCase = koinInject()
+  val saveCredentialsUseCase: SaveCredentialsUseCase = koinInject()
+  val createMemoUseCase: CreateMemoUseCase = koinInject()
+  val updateMemoUseCase: UpdateMemoUseCase = koinInject()
+  val deleteMemoUseCase: DeleteMemoUseCase = koinInject()
 
   val initialPrefs = remember { loadPreferencesUseCase() }
   val appState = remember {
@@ -87,55 +104,74 @@ fun MemosApp() {
       initialTimeRangeTab = initialPrefs.selectedTimeRangeTab
     )
   }
-  val uiState = viewModel.uiState
 
-  // HabitsFeature lives here at the app level
-  val habitsFeature = remember {
-    createHabitsFeature(
-      memosRepository = memosRepository,
-      onRefresh = { viewModel.loadMemos() }
+  // MemosFeature
+  val memosFeature = remember {
+    createMemosFeature(
+      loadMemosUseCase = loadMemosUseCase,
+      loadCachedMemosUseCase = loadCachedMemosUseCase,
+      loadCredentialsUseCase = loadCredentialsUseCase,
+      saveCredentialsUseCase = saveCredentialsUseCase,
+      createMemoUseCase = createMemoUseCase,
+      updateMemoUseCase = updateMemoUseCase,
+      deleteMemoUseCase = deleteMemoUseCase
     )
   }
   val scope = rememberCoroutineScope()
+  LaunchedEffect(memosFeature) {
+    memosFeature.launchIn(scope)
+  }
+  val memosState by memosFeature.state.collectAsState()
+  val dispatchMemos: (MemosAction) -> Unit = memosFeature::send
+
+  // HabitsFeature
+  val habitsFeature = remember {
+    createHabitsFeature(
+      memosRepository = memosRepository,
+      onRefresh = { dispatchMemos(MemosAction.LoadMemos) }
+    )
+  }
   LaunchedEffect(habitsFeature) {
     habitsFeature.launchIn(scope)
   }
   val habitsState by habitsFeature.state.collectAsState()
 
-  SyncAutoLoad(uiState, appState, viewModel)
-  SyncCredentialsDialog(uiState, appState)
+  val storageInfo = remember { loadStorageInfoUseCase() }
 
-  MemosAppContent(uiState, appState, viewModel, saveTimeRangeTabUseCase, habitsState, habitsFeature::send)
-  CredentialsDialog(uiState, appState, viewModel)
-  MemoCreateDialog(appState, viewModel)
-  MemoEditDialog(appState, viewModel)
+  SyncAutoLoad(memosState, appState, dispatchMemos)
+  SyncCredentialsDialog(memosState, appState)
+
+  MemosAppContent(memosState, appState, dispatchMemos, saveTimeRangeTabUseCase, habitsState, habitsFeature::send)
+  CredentialsDialog(memosState, appState, dispatchMemos, storageInfo)
+  MemoCreateDialog(appState, dispatchMemos)
+  MemoEditDialog(appState, dispatchMemos)
 }
 
 @Composable
 private fun SyncAutoLoad(
-  uiState: MemosUiState,
+  memosState: MemosState,
   appState: MemosAppUiState,
-  viewModel: MemosViewModel
+  dispatch: (MemosAction) -> Unit
 ) {
-  LaunchedEffect(uiState, appState.autoLoaded) {
-    if (uiState is MemosUiState.Ready && !appState.autoLoaded && !uiState.isLoading) {
+  LaunchedEffect(memosState.credentialsMode, appState.autoLoaded, memosState.isLoading) {
+    if (!memosState.credentialsMode && !appState.autoLoaded && !memosState.isLoading && memosState.hasCredentials) {
       appState.autoLoaded = true
-      viewModel.loadMemos()
+      dispatch(MemosAction.LoadMemos)
     }
   }
 }
 
 @Composable
 private fun SyncCredentialsDialog(
-  uiState: MemosUiState,
+  memosState: MemosState,
   appState: MemosAppUiState
 ) {
-  LaunchedEffect(uiState, appState.showCredentialsDialog, appState.credentialsDismissed) {
-    if (uiState is MemosUiState.CredentialsInput && !appState.showCredentialsDialog && !appState.credentialsDismissed) {
+  LaunchedEffect(memosState.credentialsMode, appState.showCredentialsDialog, appState.credentialsDismissed) {
+    if (memosState.credentialsMode && !appState.showCredentialsDialog && !appState.credentialsDismissed) {
       appState.showCredentialsDialog = true
       appState.credentialsInitialized = false
     }
-    if (uiState is MemosUiState.Ready) {
+    if (!memosState.credentialsMode) {
       appState.credentialsDismissed = false
     }
   }
@@ -143,9 +179,9 @@ private fun SyncCredentialsDialog(
 
 @Composable
 private fun MemosAppContent(
-  uiState: MemosUiState,
+  memosState: MemosState,
   appState: MemosAppUiState,
-  viewModel: MemosViewModel,
+  dispatchMemos: (MemosAction) -> Unit,
   saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase,
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit
@@ -171,7 +207,7 @@ private fun MemosAppContent(
       val currentRange = currentRangeForTab(appState.selectedTimeRangeTab, currentLocalDate())
       val activityRange = activityRangeForState(appState)
       val timeZone = remember { TimeZone.currentSystemDefault() }
-      val earliestDate = remember(uiState.memos) { earliestMemoDate(uiState.memos, timeZone) }
+      val earliestDate = remember(memosState.memos) { earliestMemoDate(memosState.memos, timeZone) }
       val minRange = minRangeForTab(appState.selectedTimeRangeTab, earliestDate)
       Column(
         modifier = Modifier
@@ -180,8 +216,8 @@ private fun MemosAppContent(
           .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(Indent.s)
       ) {
-        MemosHeader(appState, viewModel)
-        uiState.errorMessage?.let { message ->
+        MemosHeader(appState, dispatchMemos)
+        memosState.errorMessage?.let { message ->
           Text(message, color = MaterialTheme.colorScheme.error)
         }
         if (appState.selectedScreen != MemosScreen.Feed) {
@@ -197,14 +233,14 @@ private fun MemosAppContent(
             onRangeChange = { range -> updateTimeRangeState(appState, range) }
           )
         }
-        MemosTabContent(uiState, appState, activityRange, habitsState, onHabitsAction)
+        MemosTabContent(memosState, appState, activityRange, habitsState, onHabitsAction)
       }
     }
   }
 }
 
 @Composable
-private fun MemosHeader(appState: MemosAppUiState, viewModel: MemosViewModel) {
+private fun MemosHeader(appState: MemosAppUiState, dispatch: (MemosAction) -> Unit) {
   Row(
     modifier = Modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.SpaceBetween,
@@ -213,13 +249,13 @@ private fun MemosHeader(appState: MemosAppUiState, viewModel: MemosViewModel) {
     Text(stringResource(Res.string.app_name), style = MaterialTheme.typography.headlineSmall)
     Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs), verticalAlignment = Alignment.CenterVertically) {
       if (isDesktop) {
-        IconButton(onClick = { viewModel.loadMemos() }) {
+        IconButton(onClick = { dispatch(MemosAction.LoadMemos) }) {
           Icon(imageVector = Icons.Filled.Refresh, contentDescription = stringResource(Res.string.action_refresh))
         }
       }
       TextButton(
         onClick = {
-          viewModel.editCredentials()
+          dispatch(MemosAction.EditCredentials)
           appState.showCredentialsDialog = true
           appState.credentialsInitialized = false
           appState.credentialsDismissed = false
@@ -262,13 +298,13 @@ private fun MemosBottomNavigation(appState: MemosAppUiState) {
 
 @Composable
 private fun MemosTabContent(
-  uiState: MemosUiState,
+  memosState: MemosState,
   appState: MemosAppUiState,
   activityRange: ActivityRange,
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit
 ) {
-  val memos = uiState.memos
+  val memos = memosState.memos
   when (appState.selectedScreen) {
     MemosScreen.Habits -> StatsScreen(
       state = StatsScreenState(
@@ -289,7 +325,7 @@ private fun MemosTabContent(
     )
     MemosScreen.Feed -> FeedScreen(
       memos = memos,
-      isRefreshing = uiState.isLoading,
+      isRefreshing = memosState.isLoading,
       onRefresh = {},
       enablePullRefresh = !isDesktop,
       demoMode = appState.demoMode,
@@ -351,7 +387,7 @@ private const val MONTHS_IN_QUARTER = 3
 private const val FIRST_QUARTER_INDEX = 1
 
 @Composable
-private fun MemoCreateDialog(appState: MemosAppUiState, viewModel: MemosViewModel) {
+private fun MemoCreateDialog(appState: MemosAppUiState, dispatch: (MemosAction) -> Unit) {
   if (!appState.showCreateMemoDialog) {
     return
   }
@@ -373,7 +409,7 @@ private fun MemoCreateDialog(appState: MemosAppUiState, viewModel: MemosViewMode
       val content = appState.createMemoContent.trim()
       Button(
         onClick = {
-          viewModel.createMemo(content)
+          dispatch(MemosAction.CreateMemo(content))
           appState.showCreateMemoDialog = false
           appState.createMemoContent = ""
         },
@@ -396,7 +432,7 @@ private fun MemoCreateDialog(appState: MemosAppUiState, viewModel: MemosViewMode
 }
 
 @Composable
-private fun MemoEditDialog(appState: MemosAppUiState, viewModel: MemosViewModel) {
+private fun MemoEditDialog(appState: MemosAppUiState, dispatch: (MemosAction) -> Unit) {
   if (!appState.showEditMemoDialog) {
     return
   }
@@ -415,7 +451,7 @@ private fun MemoEditDialog(appState: MemosAppUiState, viewModel: MemosViewModel)
       val content = appState.editMemoContent.trim()
       Button(
         onClick = {
-          viewModel.updateMemo(memo.name, content)
+          dispatch(MemosAction.UpdateMemo(memo.name, content))
           clearMemoEdit(appState)
         },
         enabled = content.isNotBlank()

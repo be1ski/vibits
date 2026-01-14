@@ -25,7 +25,6 @@ import space.be1ski.memos.shared.domain.usecase.SaveTimeRangeTabUseCase
 import space.be1ski.memos.shared.domain.usecase.CreateMemoUseCase
 import space.be1ski.memos.shared.domain.usecase.DeleteMemoUseCase
 import space.be1ski.memos.shared.domain.usecase.UpdateMemoUseCase
-import space.be1ski.memos.shared.presentation.viewmodel.MemosViewModel
 
 /**
  * Koin module that wires shared dependencies.
@@ -51,5 +50,4 @@ fun sharedModule(): Module = module {
   factory { CreateMemoUseCase(get()) }
   factory { UpdateMemoUseCase(get()) }
   factory { DeleteMemoUseCase(get()) }
-  factory { MemosViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
 }
