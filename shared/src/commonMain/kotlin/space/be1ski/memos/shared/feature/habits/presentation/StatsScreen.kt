@@ -153,7 +153,7 @@ private fun StatsScreenContent(derived: StatsScreenDerivedState) {
       verticalArrangement = Arrangement.spacedBy(Indent.s),
       modifier = columnModifier
     ) {
-      StatsHeaderRow(derived)
+      StatsHeaderRow()
       StatsHabitsEmptyState(derived)
       StatsInfoCard(derived)
       StatsHabitsConfigSection(derived)

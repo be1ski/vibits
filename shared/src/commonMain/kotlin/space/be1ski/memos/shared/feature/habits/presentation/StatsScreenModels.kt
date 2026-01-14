@@ -34,7 +34,8 @@ internal data class HabitActivitySectionState(
   val compactHeight: Boolean,
   val range: ActivityRange,
   val demoMode: Boolean,
-  val today: LocalDate? = null
+  val today: LocalDate? = null,
+  val habitColor: Long? = null
 )
 
 internal data class HabitActivitySectionActions(

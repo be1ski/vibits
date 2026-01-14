@@ -4,6 +4,7 @@ package space.be1ski.memos.shared.feature.habits.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -89,47 +90,37 @@ internal fun StatsInfoCard(derived: StatsScreenDerivedState) {
         stringResource(Res.string.format_habits_progress, todayDone, todayTotal),
         style = MaterialTheme.typography.titleSmall
       )
-      Button(
-        onClick = {
-          val day = derived.todayDay ?: return@Button
-          dispatch(HabitsAction.OpenEditor(day, derived.todayConfig))
-        }
+      Row(
+        horizontalArrangement = Arrangement.spacedBy(Indent.xs),
+        verticalAlignment = Alignment.CenterVertically
       ) {
-        Text(stringResource(Res.string.action_track))
+        IconButton(
+          onClick = { dispatch(HabitsAction.OpenConfigDialog(derived.currentHabitsConfig)) },
+          modifier = Modifier.size(36.dp)
+        ) {
+          Icon(
+            imageVector = Icons.Filled.Settings,
+            contentDescription = stringResource(Res.string.label_habits_config),
+            modifier = Modifier.size(20.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+          )
+        }
+        Button(
+          onClick = {
+            val day = derived.todayDay ?: return@Button
+            dispatch(HabitsAction.OpenEditor(day, derived.todayConfig))
+          }
+        ) {
+          Text(stringResource(Res.string.action_track))
+        }
       }
     }
   }
 }
 
 @Composable
-internal fun StatsHeaderRow(derived: StatsScreenDerivedState) {
-  val state = derived.state
-  val dispatch = derived.dispatch
-  Row(
-    modifier = Modifier.fillMaxWidth(),
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.SpaceBetween
-  ) {
-    Row(
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(Indent.xs)
-    ) {
-      Text(stringResource(Res.string.label_activity), style = MaterialTheme.typography.titleMedium)
-      if (state.activityMode == ActivityMode.Habits) {
-        IconButton(
-          onClick = { dispatch(HabitsAction.OpenConfigDialog(derived.currentHabitsConfig)) },
-          modifier = Modifier.size(32.dp)
-        ) {
-          Icon(
-            imageVector = Icons.Filled.Settings,
-            contentDescription = stringResource(Res.string.label_habits_config),
-            modifier = Modifier.size(18.dp),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
-          )
-        }
-      }
-    }
-  }
+internal fun StatsHeaderRow() {
+  Text(stringResource(Res.string.label_activity), style = MaterialTheme.typography.titleMedium)
 }
 
 @Composable
@@ -274,7 +265,8 @@ internal fun StatsHabitSections(derived: StatsScreenDerivedState) {
         compactHeight = derived.useCompactHeight,
         range = derived.state.range,
         demoMode = derived.state.demoMode,
-        today = derived.today
+        today = derived.today,
+        habitColor = habit.color
       ),
       actions = HabitActivitySectionActions(
         onDaySelected = { day ->
@@ -367,7 +359,8 @@ private fun HabitActivitySection(
         showAllWeekdayLabels = true,
         compactHeight = state.compactHeight,
         showTimeline = showTimeline,
-        today = state.today
+        today = state.today,
+        habitColor = state.habitColor
       ),
       callbacks = ContributionGridCallbacks(
         onDaySelected = actions.onDaySelected,
@@ -422,7 +415,7 @@ private fun LastSevenDaysMatrix(
           Text(label, style = MaterialTheme.typography.bodySmall, modifier = Modifier.width(labelWidth))
           days.forEach { day ->
             val done = day.habitStatuses.firstOrNull { status -> status.tag == habit.tag }?.done == true
-            val cellColor = if (done) HABIT_DONE_COLOR else HABIT_PENDING_COLOR
+            val cellColor = if (done) Color(habit.color) else HABIT_PENDING_COLOR
             Box(
               modifier = Modifier
                 .size(cellSize)

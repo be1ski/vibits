@@ -86,6 +86,8 @@ private val HABIT_START_COLOR = Color(0xFFCFEED6)
 @Suppress("MagicNumber")
 private val HABIT_END_COLOR = Color(0xFF0B7D3E)
 
+private const val HABIT_COLOR_LIGHT_RATIO = 0.3f
+
 /**
  * Renders GitHub-style daily activity grid for the provided [state].
  */
@@ -207,7 +209,8 @@ private fun ContributionGridWeeks(
                 isHovered = interaction.hoveredDate == day.date,
                 isWeekSelected = isWeekSelected,
                 showDayNumber = state.showDayNumbers,
-                isToday = state.today == day.date
+                isToday = state.today == day.date,
+                habitColor = state.habitColor
               ),
               callbacks = ContributionCellCallbacks(
                 onClick = { offset ->
@@ -441,6 +444,15 @@ private fun ContributionCell(
   callbacks: ContributionCellCallbacks
 ) {
   var coordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
+  val (startColor, endColor) = remember(state.habitColor) {
+    if (state.habitColor != null) {
+      val base = Color(state.habitColor)
+      val light = lerp(Color.White, base, HABIT_COLOR_LIGHT_RATIO)
+      light to base
+    } else {
+      HABIT_START_COLOR to HABIT_END_COLOR
+    }
+  }
   val color = when {
     !state.enabled -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
     else -> {
@@ -454,7 +466,7 @@ private fun ContributionCell(
       if (ratio <= 0f) {
         INACTIVE_CELL_COLOR
       } else {
-        lerp(HABIT_START_COLOR, HABIT_END_COLOR, ratio.coerceIn(0f, 1f))
+        lerp(startColor, endColor, ratio.coerceIn(0f, 1f))
       }
     }
   }

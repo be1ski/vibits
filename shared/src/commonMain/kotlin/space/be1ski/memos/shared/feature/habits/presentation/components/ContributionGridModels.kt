@@ -25,7 +25,8 @@ data class ContributionGridState(
   val compactHeight: Boolean = false,
   val showTimeline: Boolean = false,
   val showDayNumbers: Boolean = false,
-  val today: LocalDate? = null
+  val today: LocalDate? = null,
+  val habitColor: Long? = null
 )
 
 /**
@@ -60,7 +61,8 @@ internal data class ContributionCellState(
   val isHovered: Boolean,
   val isWeekSelected: Boolean,
   val showDayNumber: Boolean,
-  val isToday: Boolean = false
+  val isToday: Boolean = false,
+  val habitColor: Long? = null
 )
 
 internal data class ContributionCellCallbacks(
