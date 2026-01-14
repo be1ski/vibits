@@ -385,8 +385,10 @@ private fun TimelineRow(state: TimelineRowState) {
     ) {
       state.labels.forEach { label ->
         Box(
-          modifier = Modifier.size(state.cellSize),
-          contentAlignment = Alignment.TopCenter
+          modifier = Modifier
+            .width(state.cellSize)
+            .height(state.cellSize + 4.dp),
+          contentAlignment = Alignment.Center
         ) {
           if (label.isNotBlank()) {
             Text(
