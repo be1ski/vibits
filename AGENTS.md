@@ -23,11 +23,7 @@ Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if a
 - Indentation: 2 spaces (match existing files).
 - Naming: PascalCase types, camelCase functions/vars, UPPER_SNAKE_CASE constants.
 - Avoid `!!`; keep composables small and focused.
-- **Self-documenting code over comments.** Don't add KDoc/comments that restate function names or obvious logic. Comments are only for:
-  - Complex/non-obvious logic
-  - TODOs
-  - Workarounds and their reasons
-  - `@Suppress` annotations with justification
+- **Self-documenting code over comments.** Don't add KDoc/comments that restate function names or obvious logic.
 - Avoid `// given`, `// when`, `// then` comments in tests; use clear test names and structure instead.
 - Prefer clean refactors over quick reuse: avoid introducing or keeping code smells, and leave the codebase cleaner than you found it.
 - Keep Gradle dependencies and `gradle/libs.versions.toml` entries alphabetically sorted within each block.
