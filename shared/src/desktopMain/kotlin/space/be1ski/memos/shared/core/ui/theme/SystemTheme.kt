@@ -6,19 +6,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import java.awt.Toolkit
+import kotlinx.coroutines.withContext
 
-private const val THEME_POLL_INTERVAL_MS = 1000L
+private const val THEME_POLL_INTERVAL_MS = 2000L
 
 @Composable
 actual fun rememberSystemDarkTheme(): Boolean {
-  var isDark by remember { mutableStateOf(isSystemInDarkThemeDesktop()) }
+  var isDark by remember { mutableStateOf(isSystemInDarkThemeDesktopCached()) }
 
   LaunchedEffect(Unit) {
     while (true) {
       delay(THEME_POLL_INTERVAL_MS)
-      val currentIsDark = isSystemInDarkThemeDesktop()
+      val currentIsDark = withContext(Dispatchers.IO) {
+        isSystemInDarkThemeDesktop()
+      }
       if (currentIsDark != isDark) {
         isDark = currentIsDark
       }
@@ -26,6 +29,13 @@ actual fun rememberSystemDarkTheme(): Boolean {
   }
 
   return isDark
+}
+
+// Cached value for initial composition (avoid blocking UI)
+private var cachedDarkTheme: Boolean? = null
+
+private fun isSystemInDarkThemeDesktopCached(): Boolean {
+  return cachedDarkTheme ?: isSystemInDarkThemeDesktop().also { cachedDarkTheme = it }
 }
 
 private fun isSystemInDarkThemeDesktop(): Boolean {
