@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.LayoutCoordinates
@@ -466,18 +467,23 @@ private fun ContributionCell(
       }
     }
   }
-  val selectedColor = color
+
+  // Apply subtle highlight for today
+  val todayOverlay = AppColors.todayHighlight.resolve()
+  val cellColor = if (state.isToday && state.enabled) {
+    color.compositeOver(todayOverlay)
+  } else {
+    color
+  }
 
   val borderColor = when {
     state.isSelected -> MaterialTheme.colorScheme.primary
-    state.isToday -> MaterialTheme.colorScheme.tertiary
     state.isHovered -> MaterialTheme.colorScheme.outlineVariant
     state.isWeekSelected -> MaterialTheme.colorScheme.outlineVariant
     else -> Color.Transparent
   }
   val borderWidth = when {
     state.isSelected -> Indent.x4s
-    state.isToday -> Indent.x4s
     state.isHovered || state.isWeekSelected -> Indent.x5s
     else -> 0.dp
   }
@@ -485,7 +491,7 @@ private fun ContributionCell(
   Box(
     modifier = Modifier
       .size(state.size)
-      .background(color = selectedColor, shape = MaterialTheme.shapes.extraSmall)
+      .background(color = cellColor, shape = MaterialTheme.shapes.extraSmall)
       .border(width = borderWidth, color = borderColor, shape = MaterialTheme.shapes.extraSmall)
       .onGloballyPositioned { coordinates = it }
       .then(

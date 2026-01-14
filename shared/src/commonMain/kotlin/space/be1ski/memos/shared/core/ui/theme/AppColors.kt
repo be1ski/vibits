@@ -30,6 +30,10 @@ object AppColors {
     light = Color(0xFFE2E8F0),
     dark = Color(0xFF1E2530)
   )
+  val todayHighlight = ColorPair(
+    light = Color(0x18000000),
+    dark = Color(0x20FFFFFF)
+  )
   val habitGradientStart = ColorPair(
     light = Color(0xFFCFEED6),
     dark = Color(0xFF0F2318)
