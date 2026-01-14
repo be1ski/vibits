@@ -15,15 +15,14 @@ import org.jetbrains.compose.resources.stringResource
 import space.be1ski.memos.shared.Res
 import space.be1ski.memos.shared.action_cancel
 import space.be1ski.memos.shared.action_create
-import space.be1ski.memos.shared.title_create_day
 import space.be1ski.memos.shared.action_delete
-import space.be1ski.memos.shared.msg_delete_day_confirm
-import space.be1ski.memos.shared.title_delete_day
-import space.be1ski.memos.shared.core.ui.Indent
 import space.be1ski.memos.shared.action_update
+import space.be1ski.memos.shared.core.ui.Indent
+import space.be1ski.memos.shared.feature.habits.presentation.components.HabitsConfigDialog
+import space.be1ski.memos.shared.msg_delete_day_confirm
+import space.be1ski.memos.shared.title_create_day
+import space.be1ski.memos.shared.title_delete_day
 import space.be1ski.memos.shared.title_update_day
-import space.be1ski.memos.shared.feature.habits.presentation.HabitsAction
-import space.be1ski.memos.shared.feature.habits.presentation.HabitsState
 
 @Composable
 internal fun HabitEditorDialog(derived: StatsScreenDerivedState) {

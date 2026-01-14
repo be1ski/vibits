@@ -206,7 +206,8 @@ private fun ContributionGridWeeks(
                 isSelected = state.selectedDay?.date == day.date,
                 isHovered = interaction.hoveredDate == day.date,
                 isWeekSelected = isWeekSelected,
-                showDayNumber = state.showDayNumbers
+                showDayNumber = state.showDayNumbers,
+                isToday = state.today == day.date
               ),
               callbacks = ContributionCellCallbacks(
                 onClick = { offset ->
@@ -461,12 +462,14 @@ private fun ContributionCell(
 
   val borderColor = when {
     state.isSelected -> MaterialTheme.colorScheme.primary
+    state.isToday -> MaterialTheme.colorScheme.tertiary
     state.isHovered -> MaterialTheme.colorScheme.outlineVariant
     state.isWeekSelected -> MaterialTheme.colorScheme.outlineVariant
     else -> Color.Transparent
   }
   val borderWidth = when {
     state.isSelected -> Indent.x4s
+    state.isToday -> Indent.x4s
     state.isHovered || state.isWeekSelected -> Indent.x5s
     else -> 0.dp
   }

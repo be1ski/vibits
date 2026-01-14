@@ -34,6 +34,7 @@
     <!-- Hints -->
     <string name="hint_add_habits_config">Добавьте заметку с конфигурацией привычек, чтобы начать отслеживание.</string>
     <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habit_name">Название привычки</string>
     <string name="hint_habits_config">Гимнастика | #habits/gym\nЧтение | #habits/reading</string>
     <string name="hint_write_memo">Напишите заметку...</string>
 

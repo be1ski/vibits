@@ -33,7 +33,8 @@ internal data class HabitActivitySectionState(
   val showWeekdayLegend: Boolean,
   val compactHeight: Boolean,
   val range: ActivityRange,
-  val demoMode: Boolean
+  val demoMode: Boolean,
+  val today: LocalDate? = null
 )
 
 internal data class HabitActivitySectionActions(
@@ -64,6 +65,7 @@ internal data class StatsScreenDerivedState(
   val selectedDay: ContributionDay?,
   val todayConfig: List<HabitConfig>,
   val todayDay: ContributionDay?,
+  val today: LocalDate,
   val timeZone: TimeZone,
   val successRateData: SuccessRateData?
 )

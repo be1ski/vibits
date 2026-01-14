@@ -22,12 +22,11 @@ import space.be1ski.memos.shared.core.ui.ActivityRange
 import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.memos.shared.core.ui.Indent
+import space.be1ski.memos.shared.feature.habits.presentation.components.HabitsConfigDialog
 import space.be1ski.memos.shared.feature.habits.presentation.components.findDailyMemoForDate
 import space.be1ski.memos.shared.feature.habits.presentation.components.habitsConfigForDate
 import space.be1ski.memos.shared.feature.habits.presentation.components.rememberActivityWeekData
 import space.be1ski.memos.shared.feature.habits.presentation.components.rememberHabitsConfigTimeline
-import space.be1ski.memos.shared.feature.habits.presentation.HabitsAction
-import space.be1ski.memos.shared.feature.habits.presentation.HabitsState
 import space.be1ski.memos.shared.core.platform.currentLocalDate
 import space.be1ski.memos.shared.core.platform.isDesktop
 
@@ -110,6 +109,7 @@ private fun rememberStatsScreenDerived(
     selectedDay = selectedDay,
     todayConfig = todayConfig,
     todayDay = todayDay,
+    today = today,
     timeZone = timeZone,
     successRateData = successRateData
   )
@@ -169,4 +169,5 @@ private fun StatsScreenContent(derived: StatsScreenDerivedState) {
 private fun StatsScreenDialogs(derived: StatsScreenDerivedState) {
   HabitEditorDialog(derived)
   EmptyDeleteDialog(derived)
+  HabitsConfigDialog(derived.habitsState, derived.dispatch)
 }

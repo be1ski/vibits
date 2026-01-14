@@ -1,31 +1,65 @@
 package space.be1ski.memos.shared.feature.habits.domain
 
+import space.be1ski.memos.shared.feature.habits.domain.model.DEFAULT_HABIT_COLOR
 import space.be1ski.memos.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.memos.shared.feature.habits.domain.model.HabitStatus
 
 /**
  * Parses a single line from a habits config memo.
  * Supports formats:
+ * - "Label | #habits/tag | #hexcolor"
  * - "Label | #habits/tag"
  * - "#habits/tag" (label derived from tag)
  * - "Label" (tag derived from label)
  */
 fun parseHabitConfigLine(line: String): HabitConfig? {
-  val parts = line.split("|", limit = 2).map { it.trim() }.filter { it.isNotBlank() }
+  val parts = line.split("|", limit = 3).map { it.trim() }.filter { it.isNotBlank() }
   if (parts.isEmpty()) {
     return null
   }
-  val (label, tagRaw) = if (parts.size == 1) {
-    val raw = parts.first()
-    val tag = normalizeHabitTag(raw)
-    val label = if (raw.startsWith("#habits/") || raw.startsWith("#habit/")) labelFromTag(tag) else raw
-    label to tag
-  } else {
-    val label = parts[0]
-    val tag = normalizeHabitTag(parts[1])
-    label to tag
+  val (label, tagRaw, color) = when {
+    parts.size == 1 -> {
+      val raw = parts.first()
+      val tag = normalizeHabitTag(raw)
+      val lbl = if (raw.startsWith("#habits/") || raw.startsWith("#habit/")) labelFromTag(tag) else raw
+      Triple(lbl, tag, DEFAULT_HABIT_COLOR)
+    }
+    parts.size == 2 -> {
+      val lbl = parts[0]
+      val tag = normalizeHabitTag(parts[1])
+      Triple(lbl, tag, DEFAULT_HABIT_COLOR)
+    }
+    else -> {
+      val lbl = parts[0]
+      val tag = normalizeHabitTag(parts[1])
+      val clr = parseHexColor(parts[2]) ?: DEFAULT_HABIT_COLOR
+      Triple(lbl, tag, clr)
+    }
   }
-  return HabitConfig(tag = tagRaw, label = label)
+  return HabitConfig(tag = tagRaw, label = label, color = color)
+}
+
+/**
+ * Parses a hex color string to ARGB Long.
+ * Supports formats: #RRGGBB or #AARRGGBB
+ */
+@Suppress("MagicNumber")
+fun parseHexColor(hex: String): Long? {
+  val clean = hex.trim().removePrefix("#")
+  return when (clean.length) {
+    6 -> clean.toLongOrNull(16)?.let { 0xFF000000L or it }
+    8 -> clean.toLongOrNull(16)
+    else -> null
+  }
+}
+
+/**
+ * Formats an ARGB Long color to hex string (#RRGGBB).
+ */
+@Suppress("MagicNumber")
+fun formatHexColor(color: Long): String {
+  val rgb = color and 0xFFFFFFL
+  return "#${rgb.toString(16).uppercase().padStart(6, '0')}"
 }
 
 /**

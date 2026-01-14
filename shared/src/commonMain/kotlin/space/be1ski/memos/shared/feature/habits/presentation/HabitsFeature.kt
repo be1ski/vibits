@@ -28,11 +28,20 @@ sealed interface HabitsAction {
   data object ConfirmDelete : HabitsAction
   data object CancelDelete : HabitsAction
 
-  // Config management
+  // Config management (legacy text editor)
   data object OpenConfigEditor : HabitsAction
   data object CloseConfigEditor : HabitsAction
   data class UpdateConfigText(val text: String) : HabitsAction
   data object SaveConfig : HabitsAction
+
+  // Config dialog (new UI)
+  data class OpenConfigDialog(val currentConfig: List<HabitConfig>) : HabitsAction
+  data object CloseConfigDialog : HabitsAction
+  data object AddHabit : HabitsAction
+  data class UpdateHabitLabel(val id: String, val label: String) : HabitsAction
+  data class UpdateHabitColor(val id: String, val color: Long) : HabitsAction
+  data class DeleteHabit(val id: String) : HabitsAction
+  data object SaveConfigDialog : HabitsAction
 
   // Selection management
   data class SelectDay(val day: ContributionDay, val selectionId: String) : HabitsAction
@@ -44,6 +53,27 @@ sealed interface HabitsAction {
   data class MemoUpdated(val memo: Memo) : HabitsAction
   data class MemoDeleted(val name: String) : HabitsAction
   data class MemoOperationFailed(val error: String) : HabitsAction
+}
+
+/**
+ * Editable habit entry for the config dialog.
+ */
+data class EditableHabit(
+  val id: String,
+  val tag: String,
+  val label: String,
+  val color: Long
+) {
+  fun toHabitConfig(): HabitConfig = HabitConfig(tag = tag, label = label, color = color)
+
+  companion object {
+    fun fromHabitConfig(config: HabitConfig, id: String): EditableHabit = EditableHabit(
+      id = id,
+      tag = config.tag,
+      label = config.label,
+      color = config.color
+    )
+  }
 }
 
 /**
@@ -60,9 +90,13 @@ data class HabitsState(
   // Delete confirmation
   val showDeleteConfirm: Boolean = false,
 
-  // Config editor state
+  // Config editor state (legacy)
   val showConfigEditor: Boolean = false,
   val configText: String = "",
+
+  // Config dialog state (new)
+  val showConfigDialog: Boolean = false,
+  val editingHabits: List<EditableHabit> = emptyList(),
 
   // Selection state
   val selectedWeek: ActivityWeek? = null,

@@ -34,6 +34,7 @@
     <!-- Hints -->
     <string name="hint_add_habits_config">Add a habits config memo to start tracking.</string>
     <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habit_name">Habit name</string>
     <string name="hint_habits_config">Gymnastics | #habits/gym\nReading | #habits/reading</string>
     <string name="hint_write_memo">Write a memo...</string>
 

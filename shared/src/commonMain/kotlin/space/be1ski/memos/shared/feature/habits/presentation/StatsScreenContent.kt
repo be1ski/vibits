@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddTask
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -102,24 +104,28 @@ internal fun StatsInfoCard(derived: StatsScreenDerivedState) {
 @Composable
 internal fun StatsHeaderRow(derived: StatsScreenDerivedState) {
   val state = derived.state
-  val habitsState = derived.habitsState
   val dispatch = derived.dispatch
   Row(
     modifier = Modifier.fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.SpaceBetween
   ) {
-    Text(stringResource(Res.string.label_activity), style = MaterialTheme.typography.titleMedium)
-    Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs), verticalAlignment = Alignment.CenterVertically) {
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(Indent.xs)
+    ) {
+      Text(stringResource(Res.string.label_activity), style = MaterialTheme.typography.titleMedium)
       if (state.activityMode == ActivityMode.Habits) {
-        TextButton(onClick = {
-          if (habitsState.showConfigEditor) {
-            dispatch(HabitsAction.CloseConfigEditor)
-          } else {
-            dispatch(HabitsAction.OpenConfigEditor)
-          }
-        }) {
-          Text(stringResource(Res.string.label_habits_config))
+        IconButton(
+          onClick = { dispatch(HabitsAction.OpenConfigDialog(derived.currentHabitsConfig)) },
+          modifier = Modifier.size(32.dp)
+        ) {
+          Icon(
+            imageVector = Icons.Filled.Settings,
+            contentDescription = stringResource(Res.string.label_habits_config),
+            modifier = Modifier.size(18.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+          )
         }
       }
     }
@@ -191,7 +197,8 @@ internal fun StatsMainChart(derived: StatsScreenDerivedState) {
         showAllWeekdayLabels = true,
         compactHeight = derived.useCompactHeight,
         showTimeline = showTimeline,
-        showDayNumbers = false
+        showDayNumbers = false,
+        today = derived.today
       ),
       callbacks = ContributionGridCallbacks(
         onDaySelected = { day ->
@@ -266,7 +273,8 @@ internal fun StatsHabitSections(derived: StatsScreenDerivedState) {
         showWeekdayLegend = derived.showWeekdayLegend,
         compactHeight = derived.useCompactHeight,
         range = derived.state.range,
-        demoMode = derived.state.demoMode
+        demoMode = derived.state.demoMode,
+        today = derived.today
       ),
       actions = HabitActivitySectionActions(
         onDaySelected = { day ->
@@ -358,7 +366,8 @@ private fun HabitActivitySection(
         showWeekdayLegend = state.showWeekdayLegend,
         showAllWeekdayLabels = true,
         compactHeight = state.compactHeight,
-        showTimeline = showTimeline
+        showTimeline = showTimeline,
+        today = state.today
       ),
       callbacks = ContributionGridCallbacks(
         onDaySelected = actions.onDaySelected,

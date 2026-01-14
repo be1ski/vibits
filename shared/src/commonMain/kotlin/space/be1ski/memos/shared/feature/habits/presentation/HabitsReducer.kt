@@ -1,10 +1,14 @@
 package space.be1ski.memos.shared.feature.habits.presentation
 
-import space.be1ski.memos.shared.feature.habits.domain.buildDailyContent
-import space.be1ski.memos.shared.feature.habits.domain.buildHabitsConfigContent
-import space.be1ski.memos.shared.feature.habits.domain.buildHabitsEditorSelections
 import space.be1ski.memos.shared.core.elm.Reducer
 import space.be1ski.memos.shared.core.elm.reducer
+import space.be1ski.memos.shared.feature.habits.domain.buildDailyContent
+import space.be1ski.memos.shared.feature.habits.domain.buildHabitsConfigContent
+import space.be1ski.memos.shared.feature.habits.domain.buildHabitsConfigContentFromList
+import space.be1ski.memos.shared.feature.habits.domain.buildHabitsEditorSelections
+import space.be1ski.memos.shared.feature.habits.domain.normalizeHabitTag
+import space.be1ski.memos.shared.feature.habits.domain.model.DEFAULT_HABIT_COLOR
+import kotlin.random.Random
 
 /**
  * Pure reducer for the Habits feature.
@@ -102,6 +106,64 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> = reducer { 
       effect(HabitsEffect.CreateMemo(content))
     }
 
+    is HabitsAction.OpenConfigDialog -> {
+      val editableHabits = action.currentConfig.mapIndexed { index, config ->
+        EditableHabit.fromHabitConfig(config, "habit_$index")
+      }
+      state { copy(showConfigDialog = true, editingHabits = editableHabits) }
+    }
+
+    is HabitsAction.CloseConfigDialog -> {
+      state { copy(showConfigDialog = false, editingHabits = emptyList()) }
+    }
+
+    is HabitsAction.AddHabit -> {
+      val newId = "habit_${Random.nextLong()}"
+      val newHabit = EditableHabit(
+        id = newId,
+        tag = "",
+        label = "",
+        color = DEFAULT_HABIT_COLOR
+      )
+      state { copy(editingHabits = editingHabits + newHabit) }
+    }
+
+    is HabitsAction.UpdateHabitLabel -> {
+      val updated = state.editingHabits.map { habit ->
+        if (habit.id == action.id) {
+          habit.copy(label = action.label, tag = normalizeHabitTag(action.label))
+        } else {
+          habit
+        }
+      }
+      state { copy(editingHabits = updated) }
+    }
+
+    is HabitsAction.UpdateHabitColor -> {
+      val updated = state.editingHabits.map { habit ->
+        if (habit.id == action.id) {
+          habit.copy(color = action.color)
+        } else {
+          habit
+        }
+      }
+      state { copy(editingHabits = updated) }
+    }
+
+    is HabitsAction.DeleteHabit -> {
+      val updated = state.editingHabits.filter { it.id != action.id }
+      state { copy(editingHabits = updated) }
+    }
+
+    is HabitsAction.SaveConfigDialog -> {
+      val validHabits = state.editingHabits
+        .filter { it.label.isNotBlank() }
+        .map { it.toHabitConfig() }
+      val content = buildHabitsConfigContentFromList(validHabits)
+      state { copy(isLoading = true) }
+      effect(HabitsEffect.CreateMemo(content))
+    }
+
     is HabitsAction.SelectDay -> {
       state {
         copy(
@@ -135,7 +197,9 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> = reducer { 
           editorExisting = null,
           editorError = null,
           showConfigEditor = false,
-          configText = ""
+          configText = "",
+          showConfigDialog = false,
+          editingHabits = emptyList()
         )
       }
       effect(HabitsEffect.RefreshMemos)

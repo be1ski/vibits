@@ -32,10 +32,22 @@ fun buildHabitsConfigContent(rawText: String): String {
     .filter { it.isNotBlank() }
     .mapNotNull { parseHabitConfigLine(it) }
     .toList()
+  return buildHabitsConfigContentFromList(entries)
+}
+
+/**
+ * Builds the content for a habits config memo from a list of HabitConfig entries.
+ */
+fun buildHabitsConfigContentFromList(entries: List<HabitConfig>): String {
   return buildString {
     append("#habits/config\n\n")
     entries.forEach { entry ->
-      append(entry.label).append(" | ").append(entry.tag).append('\n')
+      append(entry.label)
+        .append(" | ")
+        .append(entry.tag)
+        .append(" | ")
+        .append(formatHexColor(entry.color))
+        .append('\n')
     }
   }
 }
