@@ -381,13 +381,11 @@ private fun TimelineRow(state: TimelineRowState) {
         .width(state.contentWidth)
         .then(if (state.useScroll) Modifier.horizontalScroll(state.scrollState) else Modifier),
       horizontalArrangement = Arrangement.spacedBy(state.spacing),
-      verticalAlignment = Alignment.Top
+      verticalAlignment = Alignment.CenterVertically
     ) {
       state.labels.forEach { label ->
         Box(
-          modifier = Modifier
-            .size(state.cellSize)
-            .padding(top = 2.dp),
+          modifier = Modifier.size(state.cellSize),
           contentAlignment = Alignment.TopCenter
         ) {
           if (label.isNotBlank()) {
