@@ -1,7 +1,7 @@
 # Memos KMP
 
 [![CI](https://github.com/be1ski/memos-kmp/actions/workflows/ci.yml/badge.svg)](https://github.com/be1ski/memos-kmp/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/be1ski/memos-kmp/graph/badge.svg)](https://codecov.io/gh/be1ski/memos-kmp)
+[![codecov](https://codecov.io/gh/be1ski/memos-kmp/branch/main/graph/badge.svg)](https://codecov.io/gh/be1ski/memos-kmp)
 [![Release](https://img.shields.io/github/v/release/be1ski/memos-kmp)](https://github.com/be1ski/memos-kmp/releases)
 
 Cross-platform Memos client built with Kotlin Multiplatform + Compose Multiplatform.
