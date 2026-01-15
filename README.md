@@ -5,7 +5,7 @@
 
 ![Vibits](.github/hero.jpg)
 
-Habit tracker powered by Memos. Built with Kotlin Multiplatform + Compose Multiplatform.
+Habit tracker powered by [Memos](https://github.com/usememos/memos). Built with Kotlin Multiplatform + Compose Multiplatform.
 
 ## Modules
 
