@@ -49,7 +49,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build DMG
-        run: ./gradlew :desktopApp:packageDmg
+        run: ./gradlew :desktopApp:packageDmg -PappVersion=${GITHUB_REF_NAME#v}
 
       - name: Upload DMG to Release
         uses: softprops/action-gh-release@v2
@@ -73,7 +73,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build EXE
-        run: ./gradlew :desktopApp:packageExe
+        shell: bash
+        run: ./gradlew :desktopApp:packageExe -PappVersion=${GITHUB_REF_NAME#v}
 
       - name: Upload EXE to Release
         uses: softprops/action-gh-release@v2

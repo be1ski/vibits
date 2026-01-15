@@ -1,5 +1,7 @@
 import org.gradle.api.tasks.JavaExec
 
+val appVersion: String = providers.gradleProperty("appVersion").getOrElse("0.0.0-dev")
+
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.compose.multiplatform)
@@ -30,7 +32,7 @@ compose.desktop {
         org.jetbrains.compose.desktop.application.dsl.TargetFormat.Exe
       )
       packageName = "Memos"
-      packageVersion = "1.0.0"
+      packageVersion = appVersion
 
       windows {
         menuGroup = "Memos"
