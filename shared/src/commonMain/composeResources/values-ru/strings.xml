@@ -25,6 +25,7 @@
     <string name="day_wed">Ср</string>
 
     <!-- Format strings -->
+    <string name="format_app_version">Версия: %1$s</string>
     <string name="format_credentials">Креденшелы: %1$s</string>
     <string name="format_environment">Окружение: %1$s</string>
     <string name="format_habits_progress">Выполнено привычек: %1$d из %2$d</string>
