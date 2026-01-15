@@ -69,7 +69,6 @@ import space.be1ski.vibits.shared.feature.memos.presentation.FeedScreen
 import space.be1ski.vibits.shared.feature.memos.presentation.PostsScreen
 import space.be1ski.vibits.shared.feature.habits.presentation.StatsScreen
 import space.be1ski.vibits.shared.feature.habits.presentation.StatsScreenState
-import space.be1ski.vibits.shared.feature.memos.data.ModeAwareMemosRepository
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.core.platform.currentLocalDate
 import space.be1ski.vibits.shared.core.platform.isDesktop
@@ -102,7 +101,6 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
   val saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase = koinInject()
   val loadAppDetailsUseCase: LoadAppDetailsUseCase = koinInject()
   val memosRepository: MemosRepository = koinInject()
-  val modeAwareMemosRepository: ModeAwareMemosRepository = koinInject()
   val loadMemosUseCase: LoadMemosUseCase = koinInject()
   val loadCachedMemosUseCase: LoadCachedMemosUseCase = koinInject()
   val loadCredentialsUseCase: LoadCredentialsUseCase = koinInject()
@@ -163,7 +161,6 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
 
   SyncAutoLoad(memosState, appState, dispatchMemos)
   SyncCredentialsDialog(memosState, appState)
-  SyncDemoMode(appState, modeAwareMemosRepository, dispatchMemos)
 
   VibitsAppContent(
     memosState = memosState,
@@ -218,18 +215,6 @@ private fun SyncCredentialsDialog(
     if (!memosState.credentialsMode) {
       appState.credentialsDismissed = false
     }
-  }
-}
-
-@Composable
-private fun SyncDemoMode(
-  appState: VibitsAppUiState,
-  modeAwareMemosRepository: ModeAwareMemosRepository,
-  dispatch: (MemosAction) -> Unit
-) {
-  LaunchedEffect(appState.demoMode) {
-    modeAwareMemosRepository.setDemoMode(appState.demoMode)
-    dispatch(MemosAction.LoadMemos)
   }
 }
 
@@ -401,7 +386,7 @@ private fun MemosTabContent(
         activityMode = ActivityMode.Habits,
         useVerticalScroll = true,
         enablePullRefresh = false,
-        demoMode = appState.demoMode
+        demoMode = appState.appMode == AppMode.Demo
       ),
       habitsState = habitsState,
       onHabitsAction = onHabitsAction
@@ -409,7 +394,7 @@ private fun MemosTabContent(
     MemosScreen.Stats -> PostsScreen(
       memos = memos,
       range = activityRange,
-      demoMode = appState.demoMode
+      demoMode = appState.appMode == AppMode.Demo
     )
     MemosScreen.Feed -> FeedScreen(
       memos = memos,

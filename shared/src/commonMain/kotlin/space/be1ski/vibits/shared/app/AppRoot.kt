@@ -29,7 +29,7 @@ fun AppRoot() {
           }
         )
       }
-      AppMode.Online, AppMode.Offline -> {
+      AppMode.Online, AppMode.Offline, AppMode.Demo -> {
         VibitsApp(
           onResetApp = { appMode = AppMode.NotSelected }
         )

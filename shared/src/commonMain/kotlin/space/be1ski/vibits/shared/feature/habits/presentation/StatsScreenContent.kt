@@ -152,8 +152,7 @@ internal fun StatsMainChart(derived: StatsScreenDerivedState) {
     LastSevenDaysMatrix(
       days = lastSevenDays(derived.weekData),
       habits = derived.currentHabitsConfig,
-      compactHeight = derived.useCompactHeight,
-      demoMode = state.demoMode
+      compactHeight = derived.useCompactHeight
     )
   } else {
     val showTimeline = state.range is ActivityRange.Quarter || state.range is ActivityRange.Year
@@ -334,8 +333,7 @@ private fun HabitActivitySection(
 private fun LastSevenDaysMatrix(
   days: List<ContributionDay>,
   habits: List<HabitConfig>,
-  compactHeight: Boolean,
-  demoMode: Boolean
+  compactHeight: Boolean
 ) {
   if (days.isEmpty() || habits.isEmpty()) {
     return

@@ -30,7 +30,6 @@ internal class VibitsAppUiState(
   var quarterYear by mutableStateOf(currentDate.year)
   var quarterIndex by mutableStateOf(quarterIndex(currentDate))
   var year by mutableStateOf(currentDate.year)
-  var demoMode by mutableStateOf(false)
   var autoLoaded by mutableStateOf(false)
   var showCredentialsDialog by mutableStateOf(false)
   var credentialsInitialized by mutableStateOf(false)

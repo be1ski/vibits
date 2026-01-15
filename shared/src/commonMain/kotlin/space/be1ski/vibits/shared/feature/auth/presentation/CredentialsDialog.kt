@@ -2,19 +2,16 @@ package space.be1ski.vibits.shared.feature.auth.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -28,7 +25,7 @@ import space.be1ski.vibits.shared.hint_base_url
 import space.be1ski.vibits.shared.action_cancel
 import space.be1ski.vibits.shared.format_app_version
 import space.be1ski.vibits.shared.format_credentials
-import space.be1ski.vibits.shared.label_demo_mode
+import space.be1ski.vibits.shared.mode_demo_title
 import space.be1ski.vibits.shared.domain.model.app.AppDetails
 import space.be1ski.vibits.shared.format_environment
 import space.be1ski.vibits.shared.format_memos_db
@@ -134,17 +131,6 @@ private fun CredentialsDialogContent(
         modifier = Modifier.fillMaxWidth()
       )
     }
-    Row(
-      modifier = Modifier.fillMaxWidth(),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-      Text(stringResource(Res.string.label_demo_mode))
-      Switch(
-        checked = appState.demoMode,
-        onCheckedChange = { appState.demoMode = it }
-      )
-    }
     AppDetailsSection(appDetails, appState.appMode)
     TextButton(onClick = onReset, modifier = Modifier.fillMaxWidth()) {
       Text(stringResource(Res.string.action_reset_app))
@@ -163,16 +149,23 @@ private fun AppModeSelector(
       SegmentedButton(
         selected = currentMode == AppMode.Online,
         onClick = { onModeChange(AppMode.Online) },
-        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
+        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3)
       ) {
         Text(stringResource(Res.string.mode_online_title))
       }
       SegmentedButton(
         selected = currentMode == AppMode.Offline,
         onClick = { onModeChange(AppMode.Offline) },
-        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
+        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3)
       ) {
         Text(stringResource(Res.string.mode_offline_title))
+      }
+      SegmentedButton(
+        selected = currentMode == AppMode.Demo,
+        onClick = { onModeChange(AppMode.Demo) },
+        shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3)
+      ) {
+        Text(stringResource(Res.string.mode_demo_title))
       }
     }
   }
@@ -182,13 +175,15 @@ private fun AppModeSelector(
 private fun AppDetailsSection(appDetails: AppDetails, appMode: AppMode) {
   Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
     Text(stringResource(Res.string.format_app_version, appDetails.version))
-    Text(stringResource(Res.string.label_storage))
-    Text(stringResource(Res.string.format_environment, appDetails.environment))
-    if (appMode == AppMode.Offline) {
-      Text(stringResource(Res.string.format_offline_storage, appDetails.offlineStorage))
-    } else {
-      Text(stringResource(Res.string.format_credentials, appDetails.credentialsStore))
-      Text(stringResource(Res.string.format_memos_db, appDetails.memosDatabase))
+    if (appMode != AppMode.Demo) {
+      Text(stringResource(Res.string.label_storage))
+      Text(stringResource(Res.string.format_environment, appDetails.environment))
+      if (appMode == AppMode.Offline) {
+        Text(stringResource(Res.string.format_offline_storage, appDetails.offlineStorage))
+      } else {
+        Text(stringResource(Res.string.format_credentials, appDetails.credentialsStore))
+        Text(stringResource(Res.string.format_memos_db, appDetails.memosDatabase))
+      }
     }
   }
 }
