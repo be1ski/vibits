@@ -1,9 +1,9 @@
-# Memos KMP
+# Vibits
 
 [![CI](https://github.com/be1ski/memos-kmp/actions/workflows/ci.yml/badge.svg)](https://github.com/be1ski/memos-kmp/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/be1ski/memos-kmp/graph/badge.svg?token=63WZCYQE5I)](https://codecov.io/gh/be1ski/memos-kmp)
 
-Cross-platform Memos client built with Kotlin Multiplatform + Compose Multiplatform.
+Habit tracker powered by Memos. Built with Kotlin Multiplatform + Compose Multiplatform.
 
 ## Modules
 
@@ -20,7 +20,7 @@ Cross-platform Memos client built with Kotlin Multiplatform + Compose Multiplatf
 - Web: `./gradlew :webApp:wasmJsBrowserDevelopmentRun`
 - iOS XCFramework: `./gradlew :shared:assembleSharedDebugXCFramework`
 - Desktop DMG: `./gradlew :desktopApp:packageDmg -Dorg.gradle.java.home=$(/usr/libexec/java_home -v 21)`
-- DMG output: `desktopApp/build/compose/binaries/main/dmg/Memos-1.0.0.dmg`
+- DMG output: `desktopApp/build/compose/binaries/main/dmg/Vibits-1.0.0.dmg`
 
 ## Tests
 

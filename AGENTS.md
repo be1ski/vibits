@@ -1,6 +1,6 @@
 # Repository Guidelines
 
-This repository is a Kotlin Multiplatform (KMP) client for Memos with shared Compose UI and platform launchers.
+Vibits is a habit tracker powered by Memos, built with Kotlin Multiplatform (KMP) and Compose Multiplatform.
 
 ## Project Structure & Module Organization
 
@@ -17,7 +17,7 @@ Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if a
 - `./gradlew :androidApp:installDebug` — build and install the Android app on a device/emulator.
 - `./gradlew :shared:compileKotlinDesktop` — fast compile check for shared code.
 
-## Coding Style & Naming Conventions
+## Coding Style & Naming Conventionslf
 
 - Kotlin style: official (`kotlin.code.style=official`).
 - Indentation: 2 spaces (match existing files).

@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-  namespace = "space.be1ski.memos.android"
+  namespace = "space.be1ski.vibits.android"
   compileSdk = 36
 
   defaultConfig {
-    applicationId = "space.be1ski.memos.android"
+    applicationId = "space.be1ski.vibits.android"
     minSdk = 31
     targetSdk = 36
     versionCode = appVersion.replace(".", "").toIntOrNull() ?: 1
@@ -23,7 +23,7 @@ android {
       val keystorePath = System.getenv("KEYSTORE_PATH") ?: rootProject.file("release.keystore").absolutePath
       storeFile = file(keystorePath)
       storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "changeit"
-      keyAlias = System.getenv("KEY_ALIAS") ?: "memos"
+      keyAlias = System.getenv("KEY_ALIAS") ?: "vibits"
       keyPassword = System.getenv("KEY_PASSWORD") ?: "changeit"
     }
   }

@@ -19,7 +19,7 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "Memos"
+rootProject.name = "Vibits"
 include(":androidApp")
 include(":desktopApp")
 include(":webApp")

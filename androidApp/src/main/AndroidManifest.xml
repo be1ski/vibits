@@ -1,12 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
   <application
-    android:name=".MemosApplication"
+    android:name=".VibitsApplication"
     android:allowBackup="true"
     android:dataExtractionRules="@xml/data_extraction_rules"
     android:icon="@drawable/ic_launcher"
-    android:label="Memos"
+    android:label="Vibits"
     android:roundIcon="@drawable/ic_launcher_round"
-    android:theme="@style/Theme.Memos"
+    android:theme="@style/Theme.Vibits"
     android:supportsRtl="true">
     <activity
       android:name=".MainActivity"
