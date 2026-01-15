@@ -1,6 +1,6 @@
 import org.gradle.api.tasks.JavaExec
 
-val appVersion: String = providers.gradleProperty("appVersion").getOrElse("0.0.0-dev")
+val appVersion: String = providers.gradleProperty("appVersion").getOrElse("1.0.0")
 
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
