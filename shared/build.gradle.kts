@@ -132,7 +132,7 @@ tasks.register<JacocoReport>("jacocoDesktopTestReport") {
   dependsOn("desktopTest")
   executionData.setFrom(fileTree(layout.buildDirectory).include("jacoco/desktopTest.exec"))
   classDirectories.setFrom(fileTree(layout.buildDirectory.dir("classes/kotlin/desktop")) {
-    exclude("**/BuildConfig.*")
+    exclude("**/BuildConfig.*", "**/core/elm/**")
   })
   sourceDirectories.setFrom(files("src/commonMain/kotlin", "src/desktopMain/kotlin"))
   reports {
