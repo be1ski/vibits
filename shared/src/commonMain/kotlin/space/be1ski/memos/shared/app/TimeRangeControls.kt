@@ -1,5 +1,3 @@
-@file:Suppress("TooManyFunctions")
-
 package space.be1ski.memos.shared.app
 
 import androidx.compose.foundation.background
@@ -25,9 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import space.be1ski.memos.shared.core.ui.theme.AppColors
 import space.be1ski.memos.shared.core.ui.theme.resolve
-import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.plus
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.memos.shared.Res
 import space.be1ski.memos.shared.feature.preferences.domain.model.TimeRangeTab
@@ -39,7 +34,9 @@ import space.be1ski.memos.shared.action_previous
 import space.be1ski.memos.shared.time_quarters
 import space.be1ski.memos.shared.time_weeks
 import space.be1ski.memos.shared.time_years
-import kotlinx.datetime.Month as CalendarMonth
+import space.be1ski.memos.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
+
+private val navigateActivityRangeUseCase = NavigateActivityRangeUseCase()
 
 @Suppress("LongParameterList")
 @Composable
@@ -126,96 +123,14 @@ private fun TimeRangeNavigator(
   }
 }
 
-private fun rangeLabel(range: ActivityRange): String {
-  return when (range) {
-    is ActivityRange.Week -> {
-      val endDate = range.startDate.plus(DatePeriod(days = WEEK_END_OFFSET))
-      "${formatMonthDay(range.startDate)} - ${formatMonthDay(endDate)}"
-    }
-    is ActivityRange.Month -> "${monthShort(range.month)} ${range.year}"
-    is ActivityRange.Quarter -> "Q${range.index} ${range.year}"
-    is ActivityRange.Year -> range.year.toString()
-  }
-}
+private fun rangeLabel(range: ActivityRange): String =
+  navigateActivityRangeUseCase.formatLabel(range)
 
-private fun formatMonthDay(date: LocalDate): String {
-  return "${monthShort(date.month)} ${date.day}"
-}
+private fun isBeforeRange(selectedRange: ActivityRange, currentRange: ActivityRange): Boolean =
+  navigateActivityRangeUseCase.isBefore(selectedRange, currentRange)
 
-private fun monthShort(month: CalendarMonth): String {
-  return month.name.take(MONTH_ABBREV_LENGTH).lowercase().replaceFirstChar { it.uppercase() }
-}
-
-private fun isBeforeRange(selectedRange: ActivityRange, currentRange: ActivityRange): Boolean {
-  return when (selectedRange) {
-    is ActivityRange.Week -> currentRange is ActivityRange.Week &&
-      selectedRange.startDate < currentRange.startDate
-    is ActivityRange.Month -> currentRange is ActivityRange.Month &&
-      compareYearMonth(selectedRange.year, selectedRange.month, currentRange.year, currentRange.month) < 0
-    is ActivityRange.Quarter -> currentRange is ActivityRange.Quarter &&
-      compareYearQuarter(selectedRange.year, selectedRange.index, currentRange.year, currentRange.index) < 0
-    is ActivityRange.Year -> currentRange is ActivityRange.Year && selectedRange.year < currentRange.year
-  }
-}
-
-private fun compareYearMonth(
-  year: Int,
-  month: CalendarMonth,
-  otherYear: Int,
-  otherMonth: CalendarMonth
-): Int {
-  return if (year != otherYear) {
-    year - otherYear
-  } else {
-    month.ordinal - otherMonth.ordinal
-  }
-}
-
-private fun compareYearQuarter(
-  year: Int,
-  quarter: Int,
-  otherYear: Int,
-  otherQuarter: Int
-): Int {
-  return if (year != otherYear) {
-    year - otherYear
-  } else {
-    quarter - otherQuarter
-  }
-}
-
-private fun shiftRange(range: ActivityRange, delta: Int): ActivityRange {
-  return when (range) {
-    is ActivityRange.Week -> range.copy(
-      startDate = range.startDate.plus(DatePeriod(days = delta * DAYS_IN_WEEK))
-    )
-    is ActivityRange.Month -> {
-      val start = LocalDate(range.year, range.month, 1)
-      val shifted = start.plus(DatePeriod(months = delta))
-      ActivityRange.Month(shifted.year, shifted.month)
-    }
-    is ActivityRange.Quarter -> {
-      val zeroBased = range.index - 1 + delta
-      val yearShift = floorDiv(zeroBased, QUARTERS_IN_YEAR)
-      val quarterIndex = floorMod(zeroBased, QUARTERS_IN_YEAR) + 1
-      ActivityRange.Quarter(range.year + yearShift, quarterIndex)
-    }
-    is ActivityRange.Year -> ActivityRange.Year(range.year + delta)
-  }
-}
-
-private fun floorDiv(value: Int, divisor: Int): Int {
-  var result = value / divisor
-  if (value xor divisor < 0 && value % divisor != 0) {
-    result -= 1
-  }
-  return result
-}
-
-private fun floorMod(value: Int, divisor: Int): Int {
-  val mod = value % divisor
-  return if (mod < 0) mod + divisor else mod
-}
+private fun shiftRange(range: ActivityRange, delta: Int): ActivityRange =
+  navigateActivityRangeUseCase(range, delta)
 
 @Composable
 private fun SuccessRateBadge(rate: Float) {
@@ -237,11 +152,6 @@ private fun SuccessRateBadge(rate: Float) {
     )
   }
 }
-
-private const val DAYS_IN_WEEK = 7
-private const val WEEK_END_OFFSET = 6
-private const val QUARTERS_IN_YEAR = 4
-private const val MONTH_ABBREV_LENGTH = 3
 
 private const val PERCENT_MULTIPLIER = 100
 private const val GREEN_THRESHOLD = 0.8f

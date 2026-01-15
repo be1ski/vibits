@@ -1,23 +1,18 @@
 package space.be1ski.memos.shared.feature.habits.presentation.components
 
-import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.minus
 import space.be1ski.memos.shared.core.ui.ActivityMode
 import space.be1ski.memos.shared.feature.habits.domain.buildHabitStatuses
 import space.be1ski.memos.shared.feature.habits.domain.extractHabitTagsFromContent
 import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.memos.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.memos.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.memos.shared.feature.habits.domain.usecase.DateCalculationsUseCase
 
-internal fun startOfWeek(date: LocalDate): LocalDate {
-  var start = date
-  while (start.dayOfWeek != DayOfWeek.MONDAY) {
-    start = start.minus(DatePeriod(days = 1))
-  }
-  return start
-}
+private val dateCalculationsUseCase = DateCalculationsUseCase()
+
+internal fun startOfWeek(date: LocalDate): LocalDate =
+  dateCalculationsUseCase.startOfWeek(date)
 
 internal fun buildDayData(context: DayDataContext): ContributionDay {
   val dailyMemo = context.dailyMemos[context.date]

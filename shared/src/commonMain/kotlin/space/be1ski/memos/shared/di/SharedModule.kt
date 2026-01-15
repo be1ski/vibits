@@ -33,6 +33,13 @@ import space.be1ski.memos.shared.feature.mode.domain.usecase.ResetAppUseCase
 import space.be1ski.memos.shared.feature.mode.domain.usecase.SaveAppModeUseCase
 import space.be1ski.memos.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
 import space.be1ski.memos.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
+import space.be1ski.memos.shared.feature.habits.domain.usecase.ExtractDailyMemosUseCase
+import space.be1ski.memos.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
+import space.be1ski.memos.shared.feature.habits.domain.usecase.CountDailyPostsUseCase
+import space.be1ski.memos.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
+import space.be1ski.memos.shared.feature.habits.domain.usecase.DateCalculationsUseCase
+import space.be1ski.memos.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
+import space.be1ski.memos.shared.feature.habits.domain.usecase.BuildHabitDayUseCase
 import space.be1ski.memos.shared.feature.memos.data.ModeAwareMemosRepository
 import space.be1ski.memos.shared.feature.memos.data.offline.OfflineMemoStorage
 import space.be1ski.memos.shared.feature.memos.data.offline.OfflineMemosRepository
@@ -72,4 +79,11 @@ fun sharedModule(): Module = module {
   factory { SwitchAppModeUseCase(get(), get()) }
   factory { ResetAppUseCase(get(), get()) }
   factory { CalculateSuccessRateUseCase() }
+  factory { ExtractDailyMemosUseCase() }
+  factory { ExtractHabitsConfigUseCase() }
+  factory { CountDailyPostsUseCase() }
+  factory { NavigateActivityRangeUseCase() }
+  factory { DateCalculationsUseCase() }
+  factory { BuildActivityDataUseCase() }
+  factory { BuildHabitDayUseCase() }
 }
