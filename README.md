@@ -3,6 +3,8 @@
 [![CI](https://github.com/be1ski/memos-kmp/actions/workflows/ci.yml/badge.svg)](https://github.com/be1ski/memos-kmp/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/be1ski/memos-kmp/graph/badge.svg?token=63WZCYQE5I)](https://codecov.io/gh/be1ski/memos-kmp)
 
+![Vibits](.github/hero.jpg)
+
 Habit tracker powered by Memos. Built with Kotlin Multiplatform + Compose Multiplatform.
 
 ## Modules
