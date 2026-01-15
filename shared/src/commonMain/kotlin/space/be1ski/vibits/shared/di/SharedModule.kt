@@ -41,6 +41,7 @@ import space.be1ski.vibits.shared.feature.habits.domain.usecase.DateCalculations
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildHabitDayUseCase
 import space.be1ski.vibits.shared.feature.memos.data.ModeAwareMemosRepository
+import space.be1ski.vibits.shared.feature.memos.data.demo.DemoMemosRepository
 import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemoStorage
 import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemosRepository
 
@@ -62,7 +63,8 @@ fun sharedModule(): Module = module {
   single { OfflineMemoStorage() }
   single { MemosRepositoryImpl(get(), get(), get(), get()) }
   single { OfflineMemosRepository(get()) }
-  single { ModeAwareMemosRepository(get(), get(), get(), get()) }
+  single { DemoMemosRepository() }
+  single { ModeAwareMemosRepository(get(), get(), get(), get(), get()) }
   single<MemosRepository> { get<ModeAwareMemosRepository>() }
   factory { LoadCachedMemosUseCase(get()) }
   factory { LoadMemosUseCase(get()) }

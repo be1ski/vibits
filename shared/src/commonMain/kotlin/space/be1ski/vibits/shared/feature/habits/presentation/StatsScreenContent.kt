@@ -53,7 +53,6 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.presentation.components.calculateLayout
 import space.be1ski.vibits.shared.feature.habits.presentation.components.habitsConfigForDate
-import space.be1ski.vibits.shared.core.ui.obfuscateIfNeeded
 import space.be1ski.vibits.shared.feature.habits.presentation.components.WeeklyBarChart
 import space.be1ski.vibits.shared.feature.habits.presentation.components.WeeklyBarChartState
 import space.be1ski.vibits.shared.feature.habits.presentation.components.activityWeekDataForHabit
@@ -237,9 +236,7 @@ internal fun StatsHabitSections(derived: StatsScreenDerivedState) {
   derived.currentHabitsConfig.forEach { habit ->
     HabitActivitySection(
       state = HabitActivitySectionState(
-        habit = habit.copy(
-          label = obfuscateIfNeeded(habit.label, derived.state.demoMode, "Hidden habit")
-        ),
+        habit = habit,
         baseWeekData = derived.weekData,
         selectedDate = if (habitsState.activeSelectionId == "habit:${habit.tag}") habitsState.selectedDate else null,
         isActiveSelection = habitsState.activeSelectionId == "habit:${habit.tag}",
@@ -372,8 +369,7 @@ private fun LastSevenDaysMatrix(
           horizontalArrangement = Arrangement.spacedBy(spacing),
           verticalAlignment = Alignment.CenterVertically
         ) {
-          val label = obfuscateIfNeeded(habit.label, demoMode, "Hidden habit")
-          Text(label, style = MaterialTheme.typography.bodySmall, modifier = Modifier.width(labelWidth))
+          Text(habit.label, style = MaterialTheme.typography.bodySmall, modifier = Modifier.width(labelWidth))
           days.forEach { day ->
             val done = day.habitStatuses.firstOrNull { status -> status.tag == habit.tag }?.done == true
             val cellColor = if (done) androidx.compose.ui.graphics.Color(habit.color) else pendingColor

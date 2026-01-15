@@ -1,0 +1,160 @@
+package space.be1ski.vibits.shared.feature.memos.data.demo
+
+import kotlin.random.Random
+import kotlin.time.Clock
+import kotlin.time.Instant
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.toLocalDateTime
+import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+
+/**
+ * Demo habit configuration with completion probability.
+ */
+internal data class DemoHabit(
+  val label: String,
+  val tag: String,
+  val color: String,
+  val baseCompletionRate: Float,
+  val weekendModifier: Float = 1.0f
+)
+
+/**
+ * Generates mock memos for demo mode with realistic habit data.
+ */
+internal object DemoDataGenerator {
+
+  private val demoHabits = listOf(
+    DemoHabit("Morning Exercise", "#habits/exercise", "#4CAF50", 0.85f, 0.7f),
+    DemoHabit("Reading", "#habits/reading", "#2196F3", 0.70f, 1.1f),
+    DemoHabit("Meditation", "#habits/meditation", "#9C27B0", 0.60f, 1.0f),
+    DemoHabit("Drink Water", "#habits/water", "#00BCD4", 0.90f, 0.95f),
+    DemoHabit("Learn Something", "#habits/learning", "#FF9800", 0.50f, 0.6f),
+    DemoHabit("Walk 10K Steps", "#habits/walking", "#009688", 0.65f, 1.2f),
+    DemoHabit("No Sugar", "#habits/no_sugar", "#F44336", 0.45f, 0.8f),
+    DemoHabit("Sleep Before 11pm", "#habits/early_sleep", "#3F51B5", 0.55f, 0.7f)
+  )
+
+  private const val MONTHS_OF_HISTORY = 18
+
+  /**
+   * Generates all demo memos including config and daily memos.
+   */
+  fun generateDemoMemos(): List<Memo> {
+    val memos = mutableListOf<Memo>()
+    val now = Clock.System.now()
+    val timeZone = TimeZone.currentSystemDefault()
+    val today = now.toLocalDateTime(timeZone).date
+
+    // Config memo (created at the start of history)
+    val configDate = today.minus(MONTHS_OF_HISTORY, DateTimeUnit.MONTH)
+    val configInstant = instantForDate(configDate, hoursOffset = 8)
+    memos.add(createConfigMemo(configInstant))
+
+    // Daily memos for each day
+    var currentDate = configDate
+    val random = Random(42) // Fixed seed for reproducibility in demos
+
+    while (currentDate <= today) {
+      val dailyInstant = instantForDate(currentDate, hoursOffset = 22)
+      val completedHabits = selectCompletedHabits(currentDate, random)
+      if (completedHabits.isNotEmpty()) {
+        memos.add(createDailyMemo(currentDate, completedHabits, dailyInstant))
+      }
+      currentDate = currentDate.plus(1, DateTimeUnit.DAY)
+    }
+
+    // Add a few regular memos for variety
+    memos.addAll(createSampleMemos(today))
+
+    return memos
+  }
+
+  private fun createConfigMemo(createTime: Instant): Memo {
+    val content = buildString {
+      appendLine("#habits/config")
+      appendLine()
+      demoHabits.forEach { habit ->
+        appendLine("${habit.label} | ${habit.tag} | ${habit.color}")
+      }
+    }
+    return Memo(
+      name = "memos/demo_config",
+      content = content.trim(),
+      createTime = createTime,
+      updateTime = createTime
+    )
+  }
+
+  private fun createDailyMemo(
+    date: LocalDate,
+    completedHabits: List<DemoHabit>,
+    createTime: Instant
+  ): Memo {
+    val content = buildString {
+      appendLine("#habits/daily $date")
+      appendLine()
+      completedHabits.forEach { habit ->
+        appendLine(habit.tag)
+      }
+    }
+    return Memo(
+      name = "memos/demo_daily_$date",
+      content = content.trim(),
+      createTime = createTime,
+      updateTime = createTime
+    )
+  }
+
+  private fun selectCompletedHabits(date: LocalDate, random: Random): List<DemoHabit> {
+    val isWeekend = date.dayOfWeek == DayOfWeek.SATURDAY || date.dayOfWeek == DayOfWeek.SUNDAY
+    return demoHabits.filter { habit ->
+      val rate = if (isWeekend) {
+        habit.baseCompletionRate * habit.weekendModifier
+      } else {
+        habit.baseCompletionRate
+      }
+      // Add some seasonal variation
+      val seasonalModifier = 1.0f + (date.month.ordinal - 5) * 0.01f
+      val adjustedRate = (rate * seasonalModifier).coerceIn(0.1f, 0.98f)
+      random.nextFloat() < adjustedRate
+    }
+  }
+
+  private fun createSampleMemos(today: LocalDate): List<Memo> {
+    return listOf(
+      Memo(
+        name = "memos/demo_note_1",
+        content = "Weekly review: Good progress on meditation practice this week.",
+        createTime = instantForDate(today.minus(3, DateTimeUnit.DAY), hoursOffset = 14),
+        updateTime = instantForDate(today.minus(3, DateTimeUnit.DAY), hoursOffset = 14)
+      ),
+      Memo(
+        name = "memos/demo_note_2",
+        content = "Book finished: Atomic Habits by James Clear. Great insights on habit formation.",
+        createTime = instantForDate(today.minus(10, DateTimeUnit.DAY), hoursOffset = 20),
+        updateTime = instantForDate(today.minus(10, DateTimeUnit.DAY), hoursOffset = 20)
+      ),
+      Memo(
+        name = "memos/demo_note_3",
+        content = "New goal: Increase walking to 12K steps by end of month.",
+        createTime = instantForDate(today.minus(7, DateTimeUnit.DAY), hoursOffset = 9),
+        updateTime = instantForDate(today.minus(7, DateTimeUnit.DAY), hoursOffset = 9)
+      )
+    )
+  }
+
+  @Suppress("MagicNumber")
+  private fun instantForDate(date: LocalDate, hoursOffset: Int): Instant {
+    val epochDays = date.toEpochDays()
+    val epochSeconds = epochDays * 24 * 60 * 60 + hoursOffset * 60 * 60
+    return Instant.fromEpochSeconds(epochSeconds)
+  }
+
+  private fun LocalDate.plus(value: Int, unit: DateTimeUnit.DayBased): LocalDate {
+    return kotlinx.datetime.LocalDate.fromEpochDays(this.toEpochDays() + value)
+  }
+}
