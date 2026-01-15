@@ -18,11 +18,6 @@ data class ColorPair(val light: Color, val dark: Color)
 fun ColorPair.resolve(): Color = if (LocalDarkTheme.current) dark else light
 
 /**
- * Resolves the color based on the provided dark theme flag.
- */
-fun ColorPair.resolve(isDark: Boolean): Color = if (isDark) dark else light
-
-/**
  * Application color palette with light/dark theme support.
  */
 object AppColors {

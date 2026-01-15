@@ -7,9 +7,11 @@ import kotlin.test.assertTrue
 import space.be1ski.memos.shared.feature.habits.domain.buildHabitStatuses
 import space.be1ski.memos.shared.feature.habits.domain.extractCompletedHabits
 import space.be1ski.memos.shared.feature.habits.domain.extractHabitTagsFromContent
+import space.be1ski.memos.shared.feature.habits.domain.formatHexColor
 import space.be1ski.memos.shared.feature.habits.domain.labelFromTag
 import space.be1ski.memos.shared.feature.habits.domain.normalizeHabitTag
 import space.be1ski.memos.shared.feature.habits.domain.parseHabitConfigLine
+import space.be1ski.memos.shared.feature.habits.domain.parseHexColor
 import space.be1ski.memos.shared.feature.habits.domain.model.HabitConfig
 
 class HabitParserTest {
@@ -206,5 +208,44 @@ class HabitParserTest {
   fun `when habits list is empty then returns empty list`() {
     val result = buildHabitStatuses("some content", emptyList())
     assertTrue(result.isEmpty())
+  }
+
+  // parseHexColor tests
+
+  @Test
+  fun `when hex color is valid 6 digits then parses with alpha`() {
+    val result = parseHexColor("#FF5733")
+    assertEquals(0xFFFF5733L, result) // Adds 0xFF alpha
+  }
+
+  @Test
+  fun `when hex color without hash then parses with alpha`() {
+    val result = parseHexColor("FF5733")
+    assertEquals(0xFFFF5733L, result)
+  }
+
+  @Test
+  fun `when hex color is invalid then returns null`() {
+    assertNull(parseHexColor("invalid"))
+    assertNull(parseHexColor("#GGG"))
+  }
+
+  @Test
+  fun `when hex color is empty then returns null`() {
+    assertNull(parseHexColor(""))
+  }
+
+  // formatHexColor tests
+
+  @Test
+  fun `when color is valid then formats with hash and uppercase`() {
+    val result = formatHexColor(0xFF5733L)
+    assertEquals("#FF5733", result)
+  }
+
+  @Test
+  fun `when color has leading zeros then pads correctly`() {
+    val result = formatHexColor(0x000033L)
+    assertEquals("#000033", result)
   }
 }

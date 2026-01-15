@@ -5,6 +5,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.datetime.LocalDate
 import space.be1ski.memos.shared.feature.habits.domain.buildDailyContent
+import space.be1ski.memos.shared.feature.habits.domain.buildHabitsConfigContentFromList
 import space.be1ski.memos.shared.feature.habits.domain.buildHabitsEditorSelections
 import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.memos.shared.feature.habits.domain.model.HabitConfig
@@ -124,5 +125,28 @@ class HabitContentBuilderTest {
     val result = buildHabitsEditorSelections(day, config)
 
     assertEquals(false, result["#habits/new_habit"])
+  }
+
+  // buildHabitsConfigContentFromList tests
+
+  @Test
+  fun `when entries exist then builds config content with header`() {
+    val entries = listOf(
+      HabitConfig("#habits/exercise", "Exercise", 0xFF4CAF50L),
+      HabitConfig("#habits/reading", "Reading", 0xFF2196F3L)
+    )
+
+    val result = buildHabitsConfigContentFromList(entries)
+
+    assertTrue(result.startsWith("#habits/config\n\n"))
+    assertTrue(result.contains("Exercise | #habits/exercise | #4CAF50"))
+    assertTrue(result.contains("Reading | #habits/reading | #2196F3"))
+  }
+
+  @Test
+  fun `when entries empty then returns only header`() {
+    val result = buildHabitsConfigContentFromList(emptyList())
+
+    assertEquals("#habits/config\n\n", result)
   }
 }

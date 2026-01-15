@@ -6,3 +6,9 @@ naming:
     ignoreAnnotated:
       - Composable
       - Preview
+
+style:
+  UnusedPrivateMember:
+    active: true
+    ignoreAnnotated:
+      - Preview
