@@ -17,7 +17,7 @@ Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if a
 - `./gradlew :androidApp:installDebug` — build and install the Android app on a device/emulator.
 - `./gradlew :shared:compileKotlinDesktop` — fast compile check for shared code.
 
-## Coding Style & Naming Conventionslf
+## Coding Style & Naming Conventions
 
 - Kotlin style: official (`kotlin.code.style=official`).
 - Indentation: 2 spaces (match existing files).
