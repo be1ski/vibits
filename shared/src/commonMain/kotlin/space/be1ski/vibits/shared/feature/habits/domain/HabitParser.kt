@@ -17,14 +17,14 @@ fun parseHabitConfigLine(line: String): HabitConfig? {
   if (parts.isEmpty()) {
     return null
   }
-  val (label, tagRaw, color) = when {
-    parts.size == 1 -> {
+  val (label, tagRaw, color) = when (parts.size) {
+    1 -> {
       val raw = parts.first()
       val tag = normalizeHabitTag(raw)
       val lbl = if (raw.startsWith("#habits/") || raw.startsWith("#habit/")) labelFromTag(tag) else raw
       Triple(lbl, tag, DEFAULT_HABIT_COLOR)
     }
-    parts.size == 2 -> {
+    2 -> {
       val lbl = parts[0]
       val tag = normalizeHabitTag(parts[1])
       Triple(lbl, tag, DEFAULT_HABIT_COLOR)

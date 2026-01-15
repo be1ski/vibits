@@ -12,6 +12,8 @@ import space.be1ski.vibits.shared.feature.mode.domain.usecase.LoadAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionScreen
 
+// Suppress false positive: mutableStateOf assignments trigger recomposition
+@Suppress("AssignedValueIsNeverRead")
 @Composable
 fun AppRoot() {
   val loadAppModeUseCase: LoadAppModeUseCase = koinInject()

@@ -18,7 +18,6 @@ import space.be1ski.vibits.shared.action_create
 import space.be1ski.vibits.shared.action_delete
 import space.be1ski.vibits.shared.action_update
 import space.be1ski.vibits.shared.core.ui.Indent
-import space.be1ski.vibits.shared.feature.habits.presentation.components.HabitsConfigDialog
 import space.be1ski.vibits.shared.msg_delete_day_confirm
 import space.be1ski.vibits.shared.title_create_day
 import space.be1ski.vibits.shared.title_delete_day

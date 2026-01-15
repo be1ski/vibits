@@ -107,7 +107,7 @@ internal object DemoDataGenerator {
           memos.add(createDailyMemo(currentDate, completedHabits, dailyInstant))
         }
       }
-      currentDate = currentDate.plusDays(1)
+      currentDate = currentDate.nextDay()
     }
 
     // Add a few regular memos for variety
@@ -197,7 +197,6 @@ internal object DemoDataGenerator {
     return Instant.fromEpochSeconds(epochSeconds)
   }
 
-  private fun LocalDate.plusDays(days: Int): LocalDate {
-    return kotlinx.datetime.LocalDate.fromEpochDays(this.toEpochDays() + days)
-  }
+  private fun LocalDate.nextDay(): LocalDate =
+    kotlinx.datetime.LocalDate.fromEpochDays(this.toEpochDays() + 1)
 }

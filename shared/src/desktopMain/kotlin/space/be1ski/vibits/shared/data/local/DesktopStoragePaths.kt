@@ -8,16 +8,16 @@ import java.nio.file.Paths
  * Desktop paths for preferences and databases.
  */
 object DesktopStoragePaths {
-  private const val appName = "Memos"
-  private const val appId = "space.be1ski.vibits"
-  private const val environmentProperty = "memos.env"
-  private const val versionProperty = "memos.version"
+  private const val APP_NAME = "Memos"
+  private const val APP_ID = "space.be1ski.vibits"
+  private const val ENVIRONMENT_PROPERTY = "memos.env"
+  private const val VERSION_PROPERTY = "memos.version"
 
   /**
    * Returns the application version.
    */
   fun appVersion(): String =
-    System.getProperty(versionProperty)?.takeIf { it.isNotBlank() }
+    System.getProperty(VERSION_PROPERTY)?.takeIf { it.isNotBlank() }
       ?: DesktopStoragePaths::class.java.`package`?.implementationVersion
       ?: "dev"
 
@@ -26,7 +26,7 @@ object DesktopStoragePaths {
    */
   fun preferencesNode(): String {
     val env = environmentSuffix()
-    return if (env.isBlank()) appId else "$appId.$env"
+    return if (env.isBlank()) APP_ID else "$APP_ID.$env"
   }
 
   /**
@@ -54,13 +54,13 @@ object DesktopStoragePaths {
       }
     }
     val env = environmentSuffix().ifBlank { "prod" }
-    val target = baseDir.resolve("$appName-$env")
+    val target = baseDir.resolve("$APP_NAME-$env")
     runCatching { Files.createDirectories(target) }
     return target
   }
 
   private fun environmentSuffix(): String =
-    System.getProperty(environmentProperty)
+    System.getProperty(ENVIRONMENT_PROPERTY)
       ?.trim()
       ?.lowercase()
       ?.takeIf { it.isNotBlank() }

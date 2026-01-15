@@ -8,6 +8,6 @@ import kotlinx.datetime.Month
  */
 actual fun currentLocalDate(): LocalDate {
   val today = java.time.LocalDate.now()
-  val month = Month.values()[today.monthValue - 1]
+  val month = Month.entries[today.monthValue - 1]
   return LocalDate(year = today.year, month = month, day = today.dayOfMonth)
 }

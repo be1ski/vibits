@@ -134,12 +134,10 @@ class MemosApiTest {
     }
   }
 
-  private fun bodyText(request: HttpRequestData): String {
-    val body = request.body
-    return when (body) {
+  private fun bodyText(request: HttpRequestData): String =
+    when (val body = request.body) {
       is TextContent -> body.text
       is io.ktor.http.content.ByteArrayContent -> body.bytes().decodeToString()
       else -> body.toString()
     }
-  }
 }

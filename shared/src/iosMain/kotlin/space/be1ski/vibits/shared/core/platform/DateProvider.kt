@@ -15,7 +15,7 @@ actual fun currentLocalDate(): LocalDate {
     fromDate = NSDate()
   )
   val monthIndex = (components.month.toInt() - 1).coerceIn(0, MAX_MONTH_INDEX)
-  val month = Month.values()[monthIndex]
+  val month = Month.entries[monthIndex]
   return LocalDate(
     year = components.year.toInt(),
     month = month,

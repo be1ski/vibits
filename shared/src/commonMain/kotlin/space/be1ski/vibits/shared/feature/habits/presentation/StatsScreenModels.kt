@@ -10,8 +10,6 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.habits.domain.model.SuccessRateData
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
 
 /**
  * Public state holder for the stats screen.
