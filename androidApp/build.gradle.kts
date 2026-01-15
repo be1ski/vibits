@@ -4,6 +4,8 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.google.services)
+  alias(libs.plugins.firebase.appdistribution)
 }
 
 android {
@@ -11,7 +13,7 @@ android {
   compileSdk = 36
 
   defaultConfig {
-    applicationId = "space.be1ski.vibits.android"
+    applicationId = "space.be1ski.vibits"
     minSdk = 31
     targetSdk = 36
     versionCode = appVersion.replace(".", "").toIntOrNull() ?: 1
@@ -36,6 +38,11 @@ android {
       isMinifyEnabled = false
       signingConfig = signingConfigs.getByName("release")
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+      firebaseAppDistribution {
+        artifactType = "APK"
+        groups = "testers"
+        serviceCredentialsFile = System.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+      }
     }
   }
   compileOptions {
@@ -45,6 +52,10 @@ android {
   buildFeatures {
     compose = true
   }
+}
+
+tasks.matching { it.name.startsWith("process") && it.name.endsWith("GoogleServices") }.configureEach {
+  enabled = name.contains("Release")
 }
 
 dependencies {
@@ -60,4 +71,6 @@ dependencies {
   implementation(platform(libs.androidx.compose.bom))
   implementation(project(":shared"))
   debugImplementation(libs.androidx.compose.ui.tooling)
+  releaseImplementation(platform(libs.firebase.bom))
+  releaseImplementation(libs.firebase.analytics)
 }

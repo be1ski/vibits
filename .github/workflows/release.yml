@@ -40,6 +40,17 @@ jobs:
         with:
           files: androidApp/build/outputs/apk/release/androidApp-release.apk
 
+      - name: Upload to Firebase App Distribution
+        env:
+          KEYSTORE_PATH: ${{ github.workspace }}/release.keystore
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-sa.json
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > ${{ runner.temp }}/firebase-sa.json
+          ./gradlew :androidApp:appDistributionUploadRelease -PappVersion=${GITHUB_REF_NAME#v}
+
   build-dmg:
     runs-on: macos-latest
 
