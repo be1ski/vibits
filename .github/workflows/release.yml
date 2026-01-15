@@ -75,7 +75,7 @@ jobs:
         with:
           files: desktopApp/build/compose/binaries/main/dmg/*.dmg
 
-  build-exe:
+  build-msi:
     runs-on: windows-latest
 
     steps:
@@ -91,11 +91,11 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build EXE
+      - name: Build MSI
         shell: bash
-        run: ./gradlew :desktopApp:packageExe -PappVersion=${GITHUB_REF_NAME#v}
+        run: ./gradlew :desktopApp:packageMsi -PappVersion=${GITHUB_REF_NAME#v}
 
-      - name: Upload EXE to Release
+      - name: Upload MSI to Release
         uses: softprops/action-gh-release@v2
         with:
-          files: desktopApp/build/compose/binaries/main/exe/*.exe
+          files: desktopApp/build/compose/binaries/main/msi/*.msi
