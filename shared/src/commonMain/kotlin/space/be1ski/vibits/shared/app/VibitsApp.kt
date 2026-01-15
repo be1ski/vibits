@@ -136,7 +136,8 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
     )
   }
   val memosFeature = remember {
-    createMemosFeature(memosUseCases, isOfflineMode = initialMode == AppMode.Offline)
+    val skipCredentials = initialMode == AppMode.Offline || initialMode == AppMode.Demo
+    createMemosFeature(memosUseCases, isOfflineMode = skipCredentials)
   }
   val scope = rememberCoroutineScope()
   LaunchedEffect(memosFeature) {
@@ -190,11 +191,12 @@ private fun SyncAutoLoad(
   appState: VibitsAppUiState,
   dispatch: (MemosAction) -> Unit
 ) {
-  LaunchedEffect(memosState.credentialsMode, appState.autoLoaded, memosState.isLoading) {
+  LaunchedEffect(memosState.credentialsMode, appState.autoLoaded, memosState.isLoading, appState.appMode) {
+    val skipCredentialsCheck = appState.appMode == AppMode.Demo || appState.appMode == AppMode.Offline
     val shouldAutoLoad = !memosState.credentialsMode &&
       !appState.autoLoaded &&
       !memosState.isLoading &&
-      memosState.hasCredentials
+      (skipCredentialsCheck || memosState.hasCredentials)
     if (shouldAutoLoad) {
       appState.autoLoaded = true
       dispatch(MemosAction.LoadMemos)
