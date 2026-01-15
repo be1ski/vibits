@@ -34,9 +34,14 @@ compose.desktop {
       packageName = "Vibits"
       packageVersion = appVersion
 
+      macOS {
+        iconFile.set(project.file("src/desktopMain/resources/icon.icns"))
+      }
+
       windows {
         menuGroup = "Vibits"
         upgradeUuid = "18159995-d967-4CD2-8885-77BFB7EE7B8B"
+        iconFile.set(project.file("src/desktopMain/resources/icon.ico"))
       }
     }
   }
