@@ -1,5 +1,9 @@
 # Memos KMP
 
+[![CI](https://github.com/be1ski/memos-kmp/actions/workflows/ci.yml/badge.svg)](https://github.com/be1ski/memos-kmp/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/be1ski/memos-kmp/graph/badge.svg)](https://codecov.io/gh/be1ski/memos-kmp)
+[![Release](https://img.shields.io/github/v/release/be1ski/memos-kmp)](https://github.com/be1ski/memos-kmp/releases)
+
 Cross-platform Memos client built with Kotlin Multiplatform + Compose Multiplatform.
 
 ## Modules
@@ -28,11 +32,3 @@ We use TDD for business logic and target high coverage.
 - Run tests: `./gradlew :shared:desktopTest`
 - Coverage: `./gradlew :shared:jacocoDesktopTestReport`
 - Coverage report: `shared/build/reports/jacoco/jacocoDesktopTestReport/html/index.html`
-- Before every commit: run tests, generate coverage, update metrics below.
-
-## Coverage
-
-Last updated: 2026-01-15
-- Desktop (Jacoco) instructions: 30%
-- Desktop (Jacoco) branches: 16%
-- Desktop (Jacoco) lines: 2,059/5,352 (38%)
