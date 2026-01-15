@@ -27,7 +27,7 @@ class CalculateSuccessRateUseCase {
 
     val days = weekData.weeks
       .flatMap { it.days }
-      .filter { it.date >= effectiveStart && it.date <= effectiveEnd && it.totalHabits > 0 }
+      .filter { it.date in effectiveStart..effectiveEnd && it.totalHabits > 0 }
 
     val completed = days.sumOf { it.count }
     val total = days.sumOf { it.totalHabits }
