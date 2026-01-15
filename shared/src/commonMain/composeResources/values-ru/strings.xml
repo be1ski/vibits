@@ -63,6 +63,8 @@
     <string name="mode_online_desc">Подключение к серверу Memos для полной синхронизации</string>
     <string name="mode_offline_title">Офлайн режим</string>
     <string name="mode_offline_desc">Хранение данных локально без подключения к серверу</string>
+    <string name="mode_demo_title">Демо</string>
+    <string name="mode_demo_desc">Попробовать приложение с примером данных</string>
 
     <!-- Navigation -->
     <string name="nav_feed">Лента</string>

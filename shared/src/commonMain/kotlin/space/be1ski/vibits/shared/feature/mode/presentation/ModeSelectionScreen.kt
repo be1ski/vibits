@@ -1,5 +1,6 @@
 package space.be1ski.vibits.shared.feature.mode.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +20,8 @@ import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
+import space.be1ski.vibits.shared.mode_demo_desc
+import space.be1ski.vibits.shared.mode_demo_title
 import space.be1ski.vibits.shared.mode_offline_desc
 import space.be1ski.vibits.shared.mode_offline_title
 import space.be1ski.vibits.shared.mode_online_desc
@@ -33,6 +36,7 @@ fun ModeSelectionScreen(
   Column(
     modifier = Modifier
       .fillMaxSize()
+      .background(MaterialTheme.colorScheme.background)
       .padding(Indent.l),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center
@@ -63,6 +67,15 @@ fun ModeSelectionScreen(
       description = stringResource(Res.string.mode_offline_desc),
       isPrimary = false,
       onClick = { onModeSelected(AppMode.Offline) }
+    )
+
+    Spacer(modifier = Modifier.height(Indent.m))
+
+    ModeCard(
+      title = stringResource(Res.string.mode_demo_title),
+      description = stringResource(Res.string.mode_demo_desc),
+      isPrimary = false,
+      onClick = { onModeSelected(AppMode.Demo) }
     )
   }
 }

@@ -22,29 +22,10 @@ class ModeAwareMemosRepository(
 
   private var lastKnownMode: AppMode? = null
 
-  /**
-   * When true, all operations are delegated to the in-memory demo repository.
-   */
-  var demoMode: Boolean = false
-    private set
-
-  /**
-   * Enables or disables demo mode.
-   * When enabled, resets demo data to initial state.
-   */
-  fun setDemoMode(enabled: Boolean) {
-    if (enabled && !demoMode) {
-      demoRepository.reset()
-    }
-    demoMode = enabled
-  }
-
   private fun currentRepository(): MemosRepository {
-    if (demoMode) {
-      return demoRepository
-    }
     val currentMode = appModeRepository.loadMode()
     return when (currentMode) {
+      AppMode.Demo -> demoRepository
       AppMode.Offline -> offlineRepository
       else -> onlineRepository
     }
@@ -83,6 +64,9 @@ class ModeAwareMemosRepository(
     val currentMode = appModeRepository.loadMode()
     if (lastKnownMode != null && lastKnownMode != currentMode) {
       memoCache.clear()
+      if (currentMode == AppMode.Demo) {
+        demoRepository.reset()
+      }
     }
     lastKnownMode = currentMode
   }

@@ -25,6 +25,7 @@ internal data class DemoHabit(
 /**
  * Generates mock memos for demo mode with realistic habit data.
  */
+@Suppress("MagicNumber")
 internal object DemoDataGenerator {
 
   private val demoHabits = listOf(
@@ -39,6 +40,13 @@ internal object DemoDataGenerator {
   )
 
   private const val MONTHS_OF_HISTORY = 18
+  private const val ZERO_MOTIVATION_CHANCE = 0.06f
+  private const val CONFIG_HOUR = 8
+  private const val DAILY_HOUR = 22
+  private const val SEASONAL_MODIFIER_BASE = 5
+  private const val SEASONAL_MODIFIER_FACTOR = 0.01f
+  private const val MIN_COMPLETION_RATE = 0.1f
+  private const val MAX_COMPLETION_RATE = 0.98f
 
   /**
    * Generates all demo memos including config and daily memos.
@@ -51,7 +59,7 @@ internal object DemoDataGenerator {
 
     // Config memo (created at the start of history)
     val configDate = today.minus(MONTHS_OF_HISTORY, DateTimeUnit.MONTH)
-    val configInstant = instantForDate(configDate, hoursOffset = 8)
+    val configInstant = instantForDate(configDate, hoursOffset = CONFIG_HOUR)
     memos.add(createConfigMemo(configInstant))
 
     // Daily memos for each day
@@ -59,12 +67,15 @@ internal object DemoDataGenerator {
     val random = Random(42) // Fixed seed for reproducibility in demos
 
     while (currentDate <= today) {
-      val dailyInstant = instantForDate(currentDate, hoursOffset = 22)
-      val completedHabits = selectCompletedHabits(currentDate, random)
-      if (completedHabits.isNotEmpty()) {
-        memos.add(createDailyMemo(currentDate, completedHabits, dailyInstant))
+      // Some days have zero motivation - skip them entirely
+      if (random.nextFloat() >= ZERO_MOTIVATION_CHANCE) {
+        val dailyInstant = instantForDate(currentDate, hoursOffset = DAILY_HOUR)
+        val completedHabits = selectCompletedHabits(currentDate, random)
+        if (completedHabits.isNotEmpty()) {
+          memos.add(createDailyMemo(currentDate, completedHabits, dailyInstant))
+        }
       }
-      currentDate = currentDate.plus(1, DateTimeUnit.DAY)
+      currentDate = currentDate.plusDays(1)
     }
 
     // Add a few regular memos for variety
@@ -118,8 +129,8 @@ internal object DemoDataGenerator {
         habit.baseCompletionRate
       }
       // Add some seasonal variation
-      val seasonalModifier = 1.0f + (date.month.ordinal - 5) * 0.01f
-      val adjustedRate = (rate * seasonalModifier).coerceIn(0.1f, 0.98f)
+      val seasonalModifier = 1.0f + (date.month.ordinal - SEASONAL_MODIFIER_BASE) * SEASONAL_MODIFIER_FACTOR
+      val adjustedRate = (rate * seasonalModifier).coerceIn(MIN_COMPLETION_RATE, MAX_COMPLETION_RATE)
       random.nextFloat() < adjustedRate
     }
   }
@@ -147,14 +158,13 @@ internal object DemoDataGenerator {
     )
   }
 
-  @Suppress("MagicNumber")
   private fun instantForDate(date: LocalDate, hoursOffset: Int): Instant {
     val epochDays = date.toEpochDays()
     val epochSeconds = epochDays * 24 * 60 * 60 + hoursOffset * 60 * 60
     return Instant.fromEpochSeconds(epochSeconds)
   }
 
-  private fun LocalDate.plus(value: Int, unit: DateTimeUnit.DayBased): LocalDate {
-    return kotlinx.datetime.LocalDate.fromEpochDays(this.toEpochDays() + value)
+  private fun LocalDate.plusDays(days: Int): LocalDate {
+    return kotlinx.datetime.LocalDate.fromEpochDays(this.toEpochDays() + days)
   }
 }
