@@ -89,9 +89,12 @@ private fun rememberStatsScreenDerived(
   val selectedDay = remember(weekData.weeks, habitsState.selectedDate) {
     habitsState.selectedDate?.let { date -> findDayByDate(weekData, date) }
   }
-  val successRateData = remember(weekData, range, activityMode, currentHabitsConfig) {
+  val configStartDate = remember(habitsConfigTimeline) {
+    habitsConfigTimeline.firstOrNull()?.date
+  }
+  val successRateData = remember(weekData, range, activityMode, currentHabitsConfig, configStartDate) {
     if (activityMode == ActivityMode.Habits && currentHabitsConfig.isNotEmpty()) {
-      calculateSuccessRate(weekData, range, today)
+      calculateSuccessRate(weekData, range, today, configStartDate)
     } else null
   }
   return StatsScreenDerivedState(

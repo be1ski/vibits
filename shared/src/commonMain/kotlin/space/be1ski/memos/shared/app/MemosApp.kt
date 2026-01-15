@@ -264,8 +264,9 @@ private fun MemosAppContent(
             if (hasHabits) {
               val weekData = rememberActivityWeekData(memosState.memos, activityRange, ActivityMode.Habits)
               val today = remember { currentLocalDate() }
-              val data = remember(weekData, activityRange, today) {
-                calculateSuccessRate(weekData, activityRange, today)
+              val configStartDate = remember(habitsTimeline) { habitsTimeline.firstOrNull()?.date }
+              val data = remember(weekData, activityRange, today, configStartDate) {
+                calculateSuccessRate(weekData, activityRange, today, configStartDate)
               }
               if (data.total > 0) data.rate else null
             } else null

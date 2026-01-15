@@ -44,14 +44,20 @@ internal fun buildHabitDay(
 internal fun calculateSuccessRate(
   weekData: ActivityWeekData,
   range: ActivityRange,
-  today: LocalDate
+  today: LocalDate,
+  configStartDate: LocalDate? = null
 ): SuccessRateData {
   val bounds = rangeBounds(range)
+  val effectiveStart = if (configStartDate != null && configStartDate > bounds.start) {
+    configStartDate
+  } else {
+    bounds.start
+  }
   val effectiveEnd = if (today in bounds.start..bounds.end) today else bounds.end
 
   val days = weekData.weeks
     .flatMap { it.days }
-    .filter { it.date >= bounds.start && it.date <= effectiveEnd && it.totalHabits > 0 }
+    .filter { it.date >= effectiveStart && it.date <= effectiveEnd && it.totalHabits > 0 }
 
   val completed = days.sumOf { it.count }
   val total = days.sumOf { it.totalHabits }

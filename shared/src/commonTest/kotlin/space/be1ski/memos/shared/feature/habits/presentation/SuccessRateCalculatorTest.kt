@@ -104,6 +104,48 @@ class SuccessRateCalculatorTest {
   }
 
   @Test
+  fun `when config created mid-week then calculates from config start date`() {
+    val monday = LocalDate(2024, 1, 8)
+    val wednesday = LocalDate(2024, 1, 10)
+    val thursday = LocalDate(2024, 1, 11)
+    val weekData = createWeekData(
+      monday to dayWithHabits(monday, completed = 0, total = 3),
+      LocalDate(2024, 1, 9) to dayWithHabits(LocalDate(2024, 1, 9), completed = 0, total = 3),
+      wednesday to dayWithHabits(wednesday, completed = 3, total = 3),
+      thursday to dayWithHabits(thursday, completed = 2, total = 3)
+    )
+    val range = ActivityRange.Week(startDate = monday)
+
+    val result = calculateSuccessRate(weekData, range, today = thursday, configStartDate = wednesday)
+
+    // Should only count Wednesday (3/3) and Thursday (2/3), not Monday and Tuesday
+    assertEquals(5, result.completed)
+    assertEquals(6, result.total)
+    assertEquals(0.833f, result.rate, 0.01f)
+  }
+
+  @Test
+  fun `when config start date is before range then uses range start`() {
+    val monday = LocalDate(2024, 1, 8)
+    val lastWeek = LocalDate(2024, 1, 1)
+    val thursday = LocalDate(2024, 1, 11)
+    val weekData = createWeekData(
+      monday to dayWithHabits(monday, completed = 2, total = 3),
+      LocalDate(2024, 1, 9) to dayWithHabits(LocalDate(2024, 1, 9), completed = 3, total = 3),
+      LocalDate(2024, 1, 10) to dayWithHabits(LocalDate(2024, 1, 10), completed = 1, total = 3),
+      thursday to dayWithHabits(thursday, completed = 2, total = 3)
+    )
+    val range = ActivityRange.Week(startDate = monday)
+
+    val result = calculateSuccessRate(weekData, range, today = thursday, configStartDate = lastWeek)
+
+    // Config started before this week, so use full week range
+    assertEquals(8, result.completed)
+    assertEquals(12, result.total)
+    assertEquals(0.667f, result.rate, 0.01f)
+  }
+
+  @Test
   fun `when past period with inRange false then still calculates correctly`() {
     val monday = LocalDate(2024, 1, 1)
     val weekData = createWeekData(
