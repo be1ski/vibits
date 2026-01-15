@@ -25,9 +25,17 @@ compose.desktop {
   application {
     mainClass = "space.be1ski.memos.desktop.DesktopMainKt"
     nativeDistributions {
-      targetFormats(org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg)
+      targetFormats(
+        org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg,
+        org.jetbrains.compose.desktop.application.dsl.TargetFormat.Exe
+      )
       packageName = "Memos"
       packageVersion = "1.0.0"
+
+      windows {
+        menuGroup = "Memos"
+        upgradeUuid = "18159995-d967-4CD2-8885-77BFB7EE7B8B"
+      }
     }
   }
 }
