@@ -95,6 +95,7 @@ class NavigateActivityRangeUseCase {
     return if (year != otherYear) year - otherYear else quarter - otherQuarter
   }
 
+  @Suppress("SameParameterValue") // Standard math utility, kept generic for clarity
   private fun floorDiv(value: Int, divisor: Int): Int {
     var result = value / divisor
     if (value xor divisor < 0 && value % divisor != 0) {
@@ -103,6 +104,7 @@ class NavigateActivityRangeUseCase {
     return result
   }
 
+  @Suppress("SameParameterValue") // Standard math utility, kept generic for clarity
   private fun floorMod(value: Int, divisor: Int): Int {
     val mod = value % divisor
     return if (mod < 0) mod + divisor else mod

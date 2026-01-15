@@ -47,14 +47,9 @@ import androidx.compose.ui.window.PopupPositionProvider
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
-import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
-import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
-import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
-import space.be1ski.vibits.shared.feature.habits.domain.model.HabitStatus
 import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.title_create_day
 import space.be1ski.vibits.shared.title_edit_day
@@ -257,11 +252,10 @@ private fun ContributionGridTooltip(
   val tooltip = interaction.tooltip ?: return
   val positionProvider = remember(tooltip.offset) {
     object : PopupPositionProvider {
-      @Suppress("UNUSED_PARAMETER")
       override fun calculatePosition(
-        anchorBounds: IntRect,
+        @Suppress("unused") anchorBounds: IntRect,
         windowSize: IntSize,
-        layoutDirection: LayoutDirection,
+        @Suppress("unused") layoutDirection: LayoutDirection,
         popupContentSize: IntSize
       ): IntOffset {
         val maxX = (windowSize.width - popupContentSize.width).coerceAtLeast(0)

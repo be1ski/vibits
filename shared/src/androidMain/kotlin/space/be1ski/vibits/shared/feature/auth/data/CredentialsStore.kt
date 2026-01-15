@@ -1,6 +1,7 @@
 package space.be1ski.vibits.shared.feature.auth.data
 
 import android.content.Context
+import androidx.core.content.edit
 import space.be1ski.vibits.shared.data.local.AndroidContextHolder
 
 /**
@@ -30,9 +31,9 @@ actual class CredentialsStore {
       return
     }
     val prefs = AndroidContextHolder.context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-    prefs.edit()
-      .putString("base_url", credentials.baseUrl.trim())
-      .putString("token", credentials.token.trim())
-      .apply()
+    prefs.edit {
+      putString("base_url", credentials.baseUrl.trim())
+      putString("token", credentials.token.trim())
+    }
   }
 }
