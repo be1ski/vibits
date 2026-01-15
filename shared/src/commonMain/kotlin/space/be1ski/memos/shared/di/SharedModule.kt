@@ -5,7 +5,7 @@ import org.koin.dsl.module
 import space.be1ski.memos.shared.feature.auth.data.CredentialsStore
 import space.be1ski.memos.shared.feature.memos.data.local.MemoCache
 import space.be1ski.memos.shared.feature.preferences.data.PreferencesStore
-import space.be1ski.memos.shared.data.local.StorageInfoProvider
+import space.be1ski.memos.shared.data.local.AppDetailsProvider
 import space.be1ski.memos.shared.feature.memos.data.mapper.MemoMapper
 import space.be1ski.memos.shared.feature.memos.data.remote.MemosApi
 import space.be1ski.memos.shared.core.network.createHttpClient
@@ -19,7 +19,7 @@ import space.be1ski.memos.shared.feature.auth.domain.usecase.LoadCredentialsUseC
 import space.be1ski.memos.shared.feature.memos.domain.usecase.LoadCachedMemosUseCase
 import space.be1ski.memos.shared.feature.memos.domain.usecase.LoadMemosUseCase
 import space.be1ski.memos.shared.feature.preferences.domain.usecase.LoadPreferencesUseCase
-import space.be1ski.memos.shared.domain.usecase.LoadStorageInfoUseCase
+import space.be1ski.memos.shared.domain.usecase.LoadAppDetailsUseCase
 import space.be1ski.memos.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.memos.shared.feature.preferences.domain.usecase.SaveTimeRangeTabUseCase
 import space.be1ski.memos.shared.feature.memos.domain.usecase.CreateMemoUseCase
@@ -52,7 +52,7 @@ fun sharedModule(): Module = module {
   single { CredentialsStore() }
   single { MemoCache() }
   single { PreferencesStore() }
-  single { StorageInfoProvider() }
+  single { AppDetailsProvider() }
   single { MemoMapper() }
   single { MemosApi(get()) }
   single<CredentialsRepository> { CredentialsRepositoryImpl(get()) }
@@ -68,7 +68,7 @@ fun sharedModule(): Module = module {
   factory { LoadMemosUseCase(get()) }
   factory { LoadCredentialsUseCase(get()) }
   factory { LoadPreferencesUseCase(get()) }
-  factory { LoadStorageInfoUseCase(get()) }
+  factory { LoadAppDetailsUseCase(get()) }
   factory { SaveCredentialsUseCase(get()) }
   factory { SaveTimeRangeTabUseCase(get()) }
   factory { CreateMemoUseCase(get()) }

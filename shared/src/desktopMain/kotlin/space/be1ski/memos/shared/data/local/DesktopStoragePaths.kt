@@ -11,6 +11,15 @@ object DesktopStoragePaths {
   private const val appName = "Memos"
   private const val appId = "space.be1ski.memos"
   private const val environmentProperty = "memos.env"
+  private const val versionProperty = "memos.version"
+
+  /**
+   * Returns the application version.
+   */
+  fun appVersion(): String =
+    System.getProperty(versionProperty)?.takeIf { it.isNotBlank() }
+      ?: DesktopStoragePaths::class.java.`package`?.implementationVersion
+      ?: "dev"
 
   /**
    * Returns the preferences node name with an optional environment suffix.
