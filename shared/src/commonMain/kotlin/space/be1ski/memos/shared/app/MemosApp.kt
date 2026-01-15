@@ -162,7 +162,15 @@ fun MemosApp(onResetApp: () -> Unit = {}) {
   SyncAutoLoad(memosState, appState, dispatchMemos)
   SyncCredentialsDialog(memosState, appState)
 
-  MemosAppContent(memosState, appState, dispatchMemos, saveTimeRangeTabUseCase, habitsState, habitsFeature::send, calculateSuccessRate)
+  MemosAppContent(
+    memosState = memosState,
+    appState = appState,
+    dispatchMemos = dispatchMemos,
+    saveTimeRangeTabUseCase = saveTimeRangeTabUseCase,
+    habitsState = habitsState,
+    onHabitsAction = habitsFeature::send,
+    calculateSuccessRate = calculateSuccessRate
+  )
   CredentialsDialog(
     memosState = memosState,
     appState = appState,
