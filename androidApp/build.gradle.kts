@@ -1,3 +1,5 @@
+val appVersion: String = providers.gradleProperty("appVersion").getOrElse("1.0.0")
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
@@ -12,8 +14,8 @@ android {
     applicationId = "space.be1ski.memos.android"
     minSdk = 31
     targetSdk = 36
-    versionCode = 1
-    versionName = "1.0"
+    versionCode = appVersion.replace(".", "").toIntOrNull() ?: 1
+    versionName = appVersion
   }
 
   signingConfigs {
