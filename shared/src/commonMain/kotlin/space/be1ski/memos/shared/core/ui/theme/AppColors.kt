@@ -95,17 +95,4 @@ object AppColors {
     dark = Color(0xFFFDE047)
   )
 
-  /** Ordered list of habit color pairs matching HABIT_COLORS order in HabitConfig. */
-  val habitPalette: List<ColorPair> = listOf(
-    habitGreen,
-    habitBlue,
-    habitRed,
-    habitOrange,
-    habitPurple,
-    habitCyan,
-    habitPink,
-    habitBrown,
-    habitBlueGrey,
-    habitYellow
-  )
 }

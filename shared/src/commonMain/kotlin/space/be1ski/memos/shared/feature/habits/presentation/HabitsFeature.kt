@@ -98,7 +98,6 @@ data class HabitsState(
 ) {
   val isEditorOpen: Boolean get() = editorDay != null
   val isEditing: Boolean get() = editorExisting != null
-  val hasSelection: Boolean get() = editorSelections.values.any { it }
 }
 
 /**

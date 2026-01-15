@@ -13,7 +13,6 @@ package space.be1ski.memos.shared.core.elm
  *       effect(MyEffect.ShowResetNotification)
  *     }
  *     is MyAction.LoadData -> effect(MyEffect.FetchData)
- *     is MyAction.WithEffects -> effects(MyEffect.FetchData, MyEffect.ShowLoading, MyEffect.LogAnalytics)
  *   }
  * }
  * ```
@@ -59,14 +58,6 @@ public class ReducerContext<State, Effect> {
 
   public fun effect(effect: Effect) {
     effects.add(effect)
-  }
-
-  public fun effects(vararg effects: Effect) {
-    effects(effects.toList())
-  }
-
-  public fun effects(effects: List<Effect>) {
-    this.effects.addAll(effects)
   }
 
   internal fun getResult(initialState: State): ReducerResult<State, Effect> {

@@ -259,6 +259,7 @@ private fun ContributionGridTooltip(
   val tooltip = interaction.tooltip ?: return
   val positionProvider = remember(tooltip.offset) {
     object : PopupPositionProvider {
+      @Suppress("UNUSED_PARAMETER")
       override fun calculatePosition(
         anchorBounds: IntRect,
         windowSize: IntSize,
