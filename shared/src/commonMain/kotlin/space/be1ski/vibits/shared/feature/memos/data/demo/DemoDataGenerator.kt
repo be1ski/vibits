@@ -177,5 +177,5 @@ internal object DemoDataGenerator {
   }
 
   private fun LocalDate.nextDay(): LocalDate =
-    kotlinx.datetime.LocalDate.fromEpochDays(this.toEpochDays() + 1)
+    LocalDate.fromEpochDays(this.toEpochDays() + 1)
 }

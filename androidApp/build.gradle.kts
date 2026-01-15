@@ -1,3 +1,5 @@
+import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
+
 val appVersion: String = providers.gradleProperty("appVersion").getOrElse("1.0.0")
 
 plugins {
