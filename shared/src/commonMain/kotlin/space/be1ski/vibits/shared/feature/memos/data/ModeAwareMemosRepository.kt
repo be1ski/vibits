@@ -1,5 +1,6 @@
 package space.be1ski.vibits.shared.feature.memos.data
 
+import space.be1ski.vibits.shared.feature.memos.data.demo.DemoMemosRepository
 import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
 import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemosRepository
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
@@ -8,19 +9,40 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
 
 /**
- * Repository that delegates to online or offline implementation based on current mode.
+ * Repository that delegates to online, offline, or demo implementation based on current mode.
  * Clears cache when switching modes to ensure data isolation.
  */
 class ModeAwareMemosRepository(
   private val appModeRepository: AppModeRepository,
   private val onlineRepository: MemosRepositoryImpl,
   private val offlineRepository: OfflineMemosRepository,
+  private val demoRepository: DemoMemosRepository,
   private val memoCache: MemoCache
 ) : MemosRepository {
 
   private var lastKnownMode: AppMode? = null
 
+  /**
+   * When true, all operations are delegated to the in-memory demo repository.
+   */
+  var demoMode: Boolean = false
+    private set
+
+  /**
+   * Enables or disables demo mode.
+   * When enabled, resets demo data to initial state.
+   */
+  fun setDemoMode(enabled: Boolean) {
+    if (enabled && !demoMode) {
+      demoRepository.reset()
+    }
+    demoMode = enabled
+  }
+
   private fun currentRepository(): MemosRepository {
+    if (demoMode) {
+      return demoRepository
+    }
     val currentMode = appModeRepository.loadMode()
     return when (currentMode) {
       AppMode.Offline -> offlineRepository

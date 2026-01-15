@@ -1,10 +1,8 @@
 package space.be1ski.vibits.shared.feature.habits.presentation.components
 
 import androidx.compose.foundation.ScrollState
-import space.be1ski.vibits.shared.core.ui.DEMO_PLACEHOLDER_HABIT
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.hoverAware
-import space.be1ski.vibits.shared.core.ui.obfuscateIfNeeded
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -298,8 +296,7 @@ private fun ContributionGridTooltip(
               MaterialTheme.colorScheme.onSurfaceVariant
             }
             val prefix = if (status.done) "\u2713 " else "\u2022 "
-            val label = obfuscateIfNeeded(status.label, callbacks.demoMode, DEMO_PLACEHOLDER_HABIT)
-            Text("$prefix$label", color = color, style = MaterialTheme.typography.labelSmall)
+            Text("$prefix${status.label}", color = color, style = MaterialTheme.typography.labelSmall)
           }
         }
       }

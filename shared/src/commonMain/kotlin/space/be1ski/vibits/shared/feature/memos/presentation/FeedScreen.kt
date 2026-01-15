@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
-import space.be1ski.vibits.shared.core.ui.DEMO_PLACEHOLDER_CONTENT
 import space.be1ski.vibits.shared.core.ui.Indent
 
 /**
@@ -35,7 +34,6 @@ fun FeedScreen(
   isRefreshing: Boolean = false,
   onRefresh: () -> Unit = {},
   enablePullRefresh: Boolean = true,
-  demoMode: Boolean = false,
   onMemoClick: (Memo) -> Unit = {}
 ) {
   val timeZone = TimeZone.currentSystemDefault()
@@ -65,8 +63,7 @@ fun FeedScreen(
             if (dateLabel.isNotBlank()) {
               Text(dateLabel, style = MaterialTheme.typography.labelSmall)
             }
-            val content = if (demoMode) DEMO_PLACEHOLDER_CONTENT else memo.content
-            Text(content, style = MaterialTheme.typography.bodyMedium)
+            Text(memo.content, style = MaterialTheme.typography.bodyMedium)
           }
         }
       }
