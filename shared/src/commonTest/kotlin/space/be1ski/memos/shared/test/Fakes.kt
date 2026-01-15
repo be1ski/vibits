@@ -5,6 +5,8 @@ import space.be1ski.memos.shared.feature.auth.domain.model.Credentials
 import space.be1ski.memos.shared.feature.memos.domain.model.Memo
 import space.be1ski.memos.shared.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.memos.shared.feature.memos.domain.repository.MemosRepository
+import space.be1ski.memos.shared.feature.mode.domain.model.AppMode
+import space.be1ski.memos.shared.feature.mode.domain.repository.AppModeRepository
 
 class FakeCredentialsRepository(
   initial: Credentials = Credentials(baseUrl = "", token = "")
@@ -31,6 +33,8 @@ class FakeMemoCache(
     private set
   var deletedName: String? = null
     private set
+  var clearCalls: Int = 0
+    private set
 
   override suspend fun readMemos(): List<Memo> = memos
 
@@ -47,6 +51,11 @@ class FakeMemoCache(
   override suspend fun deleteMemo(name: String) {
     deletedName = name
     memos = memos.filterNot { it.name == name }
+  }
+
+  override suspend fun clear() {
+    clearCalls += 1
+    memos = emptyList()
   }
 }
 
@@ -90,5 +99,21 @@ class FakeMemosRepository : MemosRepository {
   override suspend fun deleteMemo(name: String) {
     deleteMemoCalls += 1
     deleteMemoResult.getOrThrow()
+  }
+}
+
+class FakeAppModeRepository(
+  initial: AppMode = AppMode.NotSelected
+) : AppModeRepository {
+  var storedMode: AppMode = initial
+    private set
+  var saveCalls: Int = 0
+    private set
+
+  override fun loadMode(): AppMode = storedMode
+
+  override fun saveMode(mode: AppMode) {
+    storedMode = mode
+    saveCalls += 1
   }
 }

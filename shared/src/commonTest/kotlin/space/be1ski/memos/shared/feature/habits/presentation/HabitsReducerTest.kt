@@ -300,4 +300,123 @@ class HabitsReducerTest {
     assertEquals("Network error", newState.editorError)
     assertTrue(effects.isEmpty())
   }
+
+  // Config dialog tests
+
+  @Test
+  fun `when OpenConfigDialog then shows dialog with editable habits`() {
+    val (newState, effects) = habitsReducer(
+      HabitsAction.OpenConfigDialog(testConfig),
+      HabitsState()
+    )
+
+    assertTrue(newState.showConfigDialog)
+    assertEquals(2, newState.editingHabits.size)
+    assertEquals("Exercise", newState.editingHabits.first().label)
+    assertTrue(effects.isEmpty())
+  }
+
+  @Test
+  fun `when CloseConfigDialog then hides dialog and clears habits`() {
+    val state = HabitsState(
+      showConfigDialog = true,
+      editingHabits = listOf(EditableHabit("1", "#habits/test", "Test", 0xFF0000L))
+    )
+
+    val (newState, effects) = habitsReducer(HabitsAction.CloseConfigDialog, state)
+
+    assertFalse(newState.showConfigDialog)
+    assertTrue(newState.editingHabits.isEmpty())
+    assertTrue(effects.isEmpty())
+  }
+
+  @Test
+  fun `when AddHabit then adds new empty habit`() {
+    val state = HabitsState(editingHabits = emptyList())
+
+    val (newState, effects) = habitsReducer(HabitsAction.AddHabit, state)
+
+    assertEquals(1, newState.editingHabits.size)
+    assertEquals("", newState.editingHabits.first().label)
+    assertTrue(effects.isEmpty())
+  }
+
+  @Test
+  fun `when UpdateHabitLabel then updates label and normalizes tag`() {
+    val habit = EditableHabit("habit_1", "", "", 0xFF0000L)
+    val state = HabitsState(editingHabits = listOf(habit))
+
+    val (newState, effects) = habitsReducer(
+      HabitsAction.UpdateHabitLabel("habit_1", "Morning Run"),
+      state
+    )
+
+    assertEquals("Morning Run", newState.editingHabits.first().label)
+    assertEquals("#habits/Morning_Run", newState.editingHabits.first().tag)
+    assertTrue(effects.isEmpty())
+  }
+
+  @Test
+  fun `when UpdateHabitColor then updates color`() {
+    val habit = EditableHabit("habit_1", "#habits/test", "Test", 0xFF0000L)
+    val state = HabitsState(editingHabits = listOf(habit))
+
+    val (newState, effects) = habitsReducer(
+      HabitsAction.UpdateHabitColor("habit_1", 0x00FF00L),
+      state
+    )
+
+    assertEquals(0x00FF00L, newState.editingHabits.first().color)
+    assertTrue(effects.isEmpty())
+  }
+
+  @Test
+  fun `when DeleteHabit then removes habit from list`() {
+    val habits = listOf(
+      EditableHabit("habit_1", "#habits/a", "A", 0xFF0000L),
+      EditableHabit("habit_2", "#habits/b", "B", 0x00FF00L)
+    )
+    val state = HabitsState(editingHabits = habits)
+
+    val (newState, effects) = habitsReducer(
+      HabitsAction.DeleteHabit("habit_1"),
+      state
+    )
+
+    assertEquals(1, newState.editingHabits.size)
+    assertEquals("habit_2", newState.editingHabits.first().id)
+    assertTrue(effects.isEmpty())
+  }
+
+  @Test
+  fun `when SaveConfigDialog then emits CreateMemo with config content`() {
+    val habits = listOf(
+      EditableHabit("habit_1", "#habits/exercise", "Exercise", 0xFF0000L)
+    )
+    val state = HabitsState(editingHabits = habits)
+
+    val (newState, effects) = habitsReducer(HabitsAction.SaveConfigDialog, state)
+
+    assertTrue(newState.isLoading)
+    assertEquals(1, effects.size)
+    assertIs<HabitsEffect.CreateMemo>(effects.first())
+  }
+
+  @Test
+  fun `when MemoUpdated then clears editor and emits refresh`() {
+    val state = HabitsState(
+      isLoading = true,
+      editorDay = testDay
+    )
+
+    val (newState, effects) = habitsReducer(
+      HabitsAction.MemoUpdated(Memo(name = "memos/1")),
+      state
+    )
+
+    assertFalse(newState.isLoading)
+    assertNull(newState.editorDay)
+    assertEquals(1, effects.size)
+    assertIs<HabitsEffect.RefreshMemos>(effects.first())
+  }
 }
