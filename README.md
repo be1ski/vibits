@@ -1,7 +1,8 @@
 # Vibits
 
-[![CI](https://github.com/be1ski/memos-kmp/actions/workflows/ci.yml/badge.svg)](https://github.com/be1ski/memos-kmp/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/be1ski/memos-kmp/graph/badge.svg?token=63WZCYQE5I)](https://codecov.io/gh/be1ski/memos-kmp)
+[![CI](https://github.com/be1ski/vibits/actions/workflows/ci.yml/badge.svg)](https://github.com/be1ski/vibits/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/be1ski/vibits/graph/badge.svg?token=63WZCYQE5I)](https://codecov.io/gh/be1ski/vibits)
+[![Release](https://img.shields.io/github/v/release/be1ski/vibits)](https://github.com/be1ski/vibits/releases/latest)
 
 ![Vibits](.github/hero.webp)
 
