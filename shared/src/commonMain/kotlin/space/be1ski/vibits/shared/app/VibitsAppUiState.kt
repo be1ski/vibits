@@ -1,0 +1,46 @@
+package space.be1ski.vibits.shared.app
+
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
+import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
+import kotlinx.datetime.LocalDate
+import space.be1ski.vibits.shared.feature.habits.presentation.components.quarterIndex
+import space.be1ski.vibits.shared.feature.habits.presentation.components.startOfWeek
+
+internal enum class MemosScreen {
+  Habits,
+  Stats,
+  Feed
+}
+
+internal class VibitsAppUiState(
+  currentDate: LocalDate,
+  initialHabitsTimeRangeTab: TimeRangeTab = TimeRangeTab.Weeks,
+  initialPostsTimeRangeTab: TimeRangeTab = TimeRangeTab.Weeks
+) {
+  var selectedScreen by mutableStateOf(MemosScreen.Habits)
+  var habitsTimeRangeTab by mutableStateOf(initialHabitsTimeRangeTab)
+  var postsTimeRangeTab by mutableStateOf(initialPostsTimeRangeTab)
+  var weekStart by mutableStateOf(startOfWeek(currentDate))
+  var monthYear by mutableStateOf(currentDate.year)
+  var month by mutableStateOf(currentDate.month)
+  var quarterYear by mutableStateOf(currentDate.year)
+  var quarterIndex by mutableStateOf(quarterIndex(currentDate))
+  var year by mutableStateOf(currentDate.year)
+  var demoMode by mutableStateOf(false)
+  var autoLoaded by mutableStateOf(false)
+  var showCredentialsDialog by mutableStateOf(false)
+  var credentialsInitialized by mutableStateOf(false)
+  var credentialsDismissed by mutableStateOf(false)
+  var editBaseUrl by mutableStateOf("")
+  var editToken by mutableStateOf("")
+  var showCreateMemoDialog by mutableStateOf(false)
+  var createMemoContent by mutableStateOf("")
+  var showEditMemoDialog by mutableStateOf(false)
+  var editMemoContent by mutableStateOf("")
+  var editMemoTarget by mutableStateOf<Memo?>(null)
+  var appMode by mutableStateOf(AppMode.NotSelected)
+}

@@ -25,17 +25,17 @@ kotlin {
 
 compose.desktop {
   application {
-    mainClass = "space.be1ski.memos.desktop.DesktopMainKt"
+    mainClass = "space.be1ski.vibits.desktop.DesktopMainKt"
     nativeDistributions {
       targetFormats(
         org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg,
         org.jetbrains.compose.desktop.application.dsl.TargetFormat.Exe
       )
-      packageName = "Memos"
+      packageName = "Vibits"
       packageVersion = appVersion
 
       windows {
-        menuGroup = "Memos"
+        menuGroup = "Vibits"
         upgradeUuid = "18159995-d967-4CD2-8885-77BFB7EE7B8B"
       }
     }
@@ -44,6 +44,6 @@ compose.desktop {
 
 tasks.matching { it.name == "run" || it.name == "desktopRun" }.configureEach {
   doFirst {
-    (this as? JavaExec)?.systemProperty("memos.env", "dev")
+    (this as? JavaExec)?.systemProperty("vibits.env", "dev")
   }
 }

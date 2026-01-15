@@ -9,7 +9,7 @@ kotlin {
   wasmJs {
     browser {
       commonWebpackConfig {
-        outputFileName = "memos.js"
+        outputFileName = "vibits.js"
       }
     }
     binaries.executable()

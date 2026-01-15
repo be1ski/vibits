@@ -14,7 +14,7 @@ plugins {
 
 kotlin {
   androidLibrary {
-    namespace = "space.be1ski.memos.shared"
+    namespace = "space.be1ski.vibits.shared"
     compileSdk = 36
     minSdk = 31
 
@@ -111,7 +111,7 @@ kotlin {
 }
 
 compose.resources {
-  packageOfResClass = "space.be1ski.memos.shared"
+  packageOfResClass = "space.be1ski.vibits.shared"
 }
 
 dependencies {
