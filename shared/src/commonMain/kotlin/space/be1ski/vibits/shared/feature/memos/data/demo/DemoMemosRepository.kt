@@ -13,29 +13,36 @@ import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepositor
 class DemoMemosRepository : MemosRepository {
 
   private val memos = mutableListOf<Memo>()
-
-  init {
-    reset()
-  }
+  private var initialized = false
 
   /**
    * Resets the repository to initial demo data.
    * Called when entering demo mode to ensure fresh data.
    */
-  fun reset() {
+  suspend fun reset() {
     memos.clear()
     memos.addAll(DemoDataGenerator.generateDemoMemos())
+    initialized = true
+  }
+
+  private suspend fun ensureInitialized() {
+    if (!initialized) {
+      reset()
+    }
   }
 
   override suspend fun listMemos(): List<Memo> {
+    ensureInitialized()
     return memos.toList()
   }
 
   override suspend fun cachedMemos(): List<Memo> {
+    ensureInitialized()
     return memos.toList()
   }
 
   override suspend fun updateMemo(name: String, content: String): Memo {
+    ensureInitialized()
     val now = Clock.System.now()
     val index = memos.indexOfFirst { it.name == name }
     return if (index >= 0) {
@@ -49,6 +56,7 @@ class DemoMemosRepository : MemosRepository {
 
   @OptIn(ExperimentalUuidApi::class)
   override suspend fun createMemo(content: String): Memo {
+    ensureInitialized()
     val now = Clock.System.now()
     val name = "memos/demo_${now.toEpochMilliseconds()}_${Uuid.random()}"
     val memo = Memo(
@@ -62,6 +70,7 @@ class DemoMemosRepository : MemosRepository {
   }
 
   override suspend fun deleteMemo(name: String) {
+    ensureInitialized()
     memos.removeAll { it.name == name }
   }
 }
