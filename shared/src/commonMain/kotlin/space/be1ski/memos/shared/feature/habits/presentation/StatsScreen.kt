@@ -17,6 +17,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.TimeZone
+import org.koin.compose.koinInject
+import space.be1ski.memos.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.memos.shared.core.ui.ActivityMode
 import space.be1ski.memos.shared.core.ui.ActivityRange
 import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeekData
@@ -37,9 +39,10 @@ import space.be1ski.memos.shared.core.platform.isDesktop
 fun StatsScreen(
   state: StatsScreenState,
   habitsState: HabitsState = HabitsState(),
-  onHabitsAction: (HabitsAction) -> Unit = {}
+  onHabitsAction: (HabitsAction) -> Unit = {},
+  calculateSuccessRate: CalculateSuccessRateUseCase = koinInject()
 ) {
-  val derived = rememberStatsScreenDerived(state, habitsState, onHabitsAction)
+  val derived = rememberStatsScreenDerived(state, habitsState, onHabitsAction, calculateSuccessRate)
   SyncStatsScreenState(derived)
   StatsScreenContent(derived)
   StatsScreenDialogs(derived)
@@ -50,7 +53,8 @@ fun StatsScreen(
 private fun rememberStatsScreenDerived(
   state: StatsScreenState,
   habitsState: HabitsState,
-  dispatch: (HabitsAction) -> Unit
+  dispatch: (HabitsAction) -> Unit,
+  calculateSuccessRate: CalculateSuccessRateUseCase
 ): StatsScreenDerivedState {
   val memos = state.memos
   val range = state.range

@@ -8,6 +8,7 @@ import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.memos.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.memos.shared.feature.habits.domain.model.HabitsConfigEntry
+import space.be1ski.memos.shared.feature.habits.domain.model.SuccessRateData
 import space.be1ski.memos.shared.feature.memos.domain.model.Memo
 import space.be1ski.memos.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.memos.shared.feature.habits.presentation.HabitsState
@@ -43,12 +44,6 @@ internal data class HabitActivitySectionActions(
   val onClearSelection: () -> Unit,
   val onEditRequested: (ContributionDay) -> Unit,
   val onCreateRequested: (ContributionDay) -> Unit
-)
-
-internal data class SuccessRateData(
-  val completed: Int,
-  val total: Int,
-  val rate: Float
 )
 
 internal data class StatsScreenDerivedState(

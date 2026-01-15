@@ -52,7 +52,7 @@ import space.be1ski.memos.shared.nav_posts
 import space.be1ski.memos.shared.core.ui.ActivityMode
 import space.be1ski.memos.shared.core.ui.ActivityRange
 import space.be1ski.memos.shared.core.ui.Indent
-import space.be1ski.memos.shared.feature.habits.presentation.calculateSuccessRate
+import space.be1ski.memos.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.memos.shared.feature.habits.presentation.components.earliestMemoDate
 import space.be1ski.memos.shared.feature.habits.presentation.components.quarterIndex
 import space.be1ski.memos.shared.feature.habits.presentation.components.rememberActivityWeekData
@@ -111,6 +111,7 @@ fun MemosApp(onResetApp: () -> Unit = {}) {
   val loadAppModeUseCase: LoadAppModeUseCase = koinInject()
   val switchAppModeUseCase: SwitchAppModeUseCase = koinInject()
   val resetAppUseCase: ResetAppUseCase = koinInject()
+  val calculateSuccessRate: CalculateSuccessRateUseCase = koinInject()
 
   val initialPrefs = remember { loadPreferencesUseCase() }
   val initialMode = remember { loadAppModeUseCase() }
@@ -161,7 +162,7 @@ fun MemosApp(onResetApp: () -> Unit = {}) {
   SyncAutoLoad(memosState, appState, dispatchMemos)
   SyncCredentialsDialog(memosState, appState)
 
-  MemosAppContent(memosState, appState, dispatchMemos, saveTimeRangeTabUseCase, habitsState, habitsFeature::send)
+  MemosAppContent(memosState, appState, dispatchMemos, saveTimeRangeTabUseCase, habitsState, habitsFeature::send, calculateSuccessRate)
   CredentialsDialog(
     memosState = memosState,
     appState = appState,
@@ -217,7 +218,8 @@ private fun MemosAppContent(
   dispatchMemos: (MemosAction) -> Unit,
   saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase,
   habitsState: HabitsState,
-  onHabitsAction: (HabitsAction) -> Unit
+  onHabitsAction: (HabitsAction) -> Unit,
+  calculateSuccessRate: CalculateSuccessRateUseCase
 ) {
   Scaffold(
     floatingActionButton = {
@@ -262,13 +264,7 @@ private fun MemosAppContent(
             val habitsTimeline = rememberHabitsConfigTimeline(memosState.memos)
             val hasHabits = remember(habitsTimeline) { habitsTimeline.lastOrNull()?.habits?.isNotEmpty() == true }
             if (hasHabits) {
-              val weekData = rememberActivityWeekData(memosState.memos, activityRange, ActivityMode.Habits)
-              val today = remember { currentLocalDate() }
-              val configStartDate = remember(habitsTimeline) { habitsTimeline.firstOrNull()?.date }
-              val data = remember(weekData, activityRange, today, configStartDate) {
-                calculateSuccessRate(weekData, activityRange, today, configStartDate)
-              }
-              if (data.total > 0) data.rate else null
+              rememberSuccessRate(memosState.memos, activityRange, calculateSuccessRate)
             } else null
           } else null
           TimeRangeControls(
@@ -544,4 +540,20 @@ private fun clearMemoEdit(appState: MemosAppUiState) {
   appState.showEditMemoDialog = false
   appState.editMemoTarget = null
   appState.editMemoContent = ""
+}
+
+@Composable
+private fun rememberSuccessRate(
+  memos: List<Memo>,
+  activityRange: ActivityRange,
+  calculateSuccessRate: CalculateSuccessRateUseCase
+): Float? {
+  val weekData = rememberActivityWeekData(memos, activityRange, ActivityMode.Habits)
+  val habitsTimeline = rememberHabitsConfigTimeline(memos)
+  val today = remember { currentLocalDate() }
+  val configStartDate = remember(habitsTimeline) { habitsTimeline.firstOrNull()?.date }
+  val data = remember(weekData, activityRange, today, configStartDate) {
+    calculateSuccessRate(weekData, activityRange, today, configStartDate)
+  }
+  return if (data.total > 0) data.rate else null
 }

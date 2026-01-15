@@ -32,6 +32,7 @@ import space.be1ski.memos.shared.feature.mode.domain.usecase.LoadAppModeUseCase
 import space.be1ski.memos.shared.feature.mode.domain.usecase.ResetAppUseCase
 import space.be1ski.memos.shared.feature.mode.domain.usecase.SaveAppModeUseCase
 import space.be1ski.memos.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
+import space.be1ski.memos.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.memos.shared.feature.memos.data.ModeAwareMemosRepository
 import space.be1ski.memos.shared.feature.memos.data.offline.OfflineMemoStorage
 import space.be1ski.memos.shared.feature.memos.data.offline.OfflineMemosRepository
@@ -70,4 +71,5 @@ fun sharedModule(): Module = module {
   factory { SaveAppModeUseCase(get()) }
   factory { SwitchAppModeUseCase(get(), get()) }
   factory { ResetAppUseCase(get(), get()) }
+  factory { CalculateSuccessRateUseCase() }
 }

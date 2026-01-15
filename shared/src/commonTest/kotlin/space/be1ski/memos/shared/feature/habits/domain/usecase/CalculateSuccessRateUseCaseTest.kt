@@ -1,4 +1,4 @@
-package space.be1ski.memos.shared.feature.habits.presentation
+package space.be1ski.memos.shared.feature.habits.domain.usecase
 
 import kotlinx.datetime.LocalDate
 import space.be1ski.memos.shared.core.ui.ActivityRange
@@ -8,7 +8,9 @@ import space.be1ski.memos.shared.feature.habits.domain.model.ContributionDay
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class SuccessRateCalculatorTest {
+class CalculateSuccessRateUseCaseTest {
+
+  private val useCase = CalculateSuccessRateUseCase()
 
   @Test
   fun `when current week and today is Thursday then calculates Monday to Thursday`() {
@@ -25,7 +27,7 @@ class SuccessRateCalculatorTest {
     )
     val range = ActivityRange.Week(startDate = monday)
 
-    val result = calculateSuccessRate(weekData, range, today = thursday)
+    val result = useCase(weekData, range, today = thursday)
 
     assertEquals(8, result.completed)
     assertEquals(12, result.total)
@@ -47,7 +49,7 @@ class SuccessRateCalculatorTest {
     val range = ActivityRange.Week(startDate = monday)
     val today = LocalDate(2024, 1, 15)
 
-    val result = calculateSuccessRate(weekData, range, today)
+    val result = useCase(weekData, range, today)
 
     assertEquals(13, result.completed)
     assertEquals(14, result.total)
@@ -64,7 +66,7 @@ class SuccessRateCalculatorTest {
     val range = ActivityRange.Month(year = 2024, month = kotlinx.datetime.Month.JANUARY)
     val today = LocalDate(2024, 1, 17)
 
-    val result = calculateSuccessRate(weekData, range, today)
+    val result = useCase(weekData, range, today)
 
     assertEquals(17, result.completed)
     assertEquals(34, result.total)
@@ -81,7 +83,7 @@ class SuccessRateCalculatorTest {
     val range = ActivityRange.Month(year = 2024, month = kotlinx.datetime.Month.JANUARY)
     val today = LocalDate(2024, 2, 15)
 
-    val result = calculateSuccessRate(weekData, range, today)
+    val result = useCase(weekData, range, today)
 
     assertEquals(62, result.completed)
     assertEquals(62, result.total)
@@ -96,7 +98,7 @@ class SuccessRateCalculatorTest {
     )
     val range = ActivityRange.Week(startDate = monday)
 
-    val result = calculateSuccessRate(weekData, range, today = monday)
+    val result = useCase(weekData, range, today = monday)
 
     assertEquals(0, result.completed)
     assertEquals(0, result.total)
@@ -116,7 +118,7 @@ class SuccessRateCalculatorTest {
     )
     val range = ActivityRange.Week(startDate = monday)
 
-    val result = calculateSuccessRate(weekData, range, today = thursday, configStartDate = wednesday)
+    val result = useCase(weekData, range, today = thursday, configStartDate = wednesday)
 
     // Should only count Wednesday (3/3) and Thursday (2/3), not Monday and Tuesday
     assertEquals(5, result.completed)
@@ -137,7 +139,7 @@ class SuccessRateCalculatorTest {
     )
     val range = ActivityRange.Week(startDate = monday)
 
-    val result = calculateSuccessRate(weekData, range, today = thursday, configStartDate = lastWeek)
+    val result = useCase(weekData, range, today = thursday, configStartDate = lastWeek)
 
     // Config started before this week, so use full week range
     assertEquals(8, result.completed)
@@ -156,7 +158,7 @@ class SuccessRateCalculatorTest {
     val range = ActivityRange.Week(startDate = monday)
     val today = LocalDate(2024, 1, 15)
 
-    val result = calculateSuccessRate(weekData, range, today)
+    val result = useCase(weekData, range, today)
 
     assertEquals(5, result.completed)
     assertEquals(6, result.total)

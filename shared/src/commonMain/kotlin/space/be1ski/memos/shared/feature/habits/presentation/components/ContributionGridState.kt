@@ -16,13 +16,10 @@ import space.be1ski.memos.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.memos.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.memos.shared.feature.habits.domain.model.HabitStatus
 import space.be1ski.memos.shared.feature.habits.domain.model.HabitsConfigEntry
+import space.be1ski.memos.shared.feature.habits.domain.model.RangeBounds
+import space.be1ski.memos.shared.feature.habits.domain.model.rangeBounds
 
 private const val DAYS_IN_WEEK = 7
-
-internal data class RangeBounds(
-  val start: LocalDate,
-  val end: LocalDate
-)
 
 internal data class DayDataContext(
   val date: LocalDate,
