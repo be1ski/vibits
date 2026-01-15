@@ -26,9 +26,10 @@ import space.be1ski.memos.shared.label_app_mode
 import space.be1ski.memos.shared.label_base_url
 import space.be1ski.memos.shared.hint_base_url
 import space.be1ski.memos.shared.action_cancel
+import space.be1ski.memos.shared.format_app_version
 import space.be1ski.memos.shared.format_credentials
 import space.be1ski.memos.shared.label_demo_mode
-import space.be1ski.memos.shared.domain.model.storage.StorageInfo
+import space.be1ski.memos.shared.domain.model.app.AppDetails
 import space.be1ski.memos.shared.format_environment
 import space.be1ski.memos.shared.format_memos_db
 import space.be1ski.memos.shared.feature.memos.presentation.MemosAction
@@ -51,7 +52,7 @@ internal fun CredentialsDialog(
   memosState: MemosState,
   appState: MemosAppUiState,
   dispatch: (MemosAction) -> Unit,
-  storageInfo: StorageInfo,
+  appDetails: AppDetails,
   switchAppModeUseCase: SwitchAppModeUseCase,
   resetAppUseCase: ResetAppUseCase,
   onResetComplete: () -> Unit
@@ -76,7 +77,7 @@ internal fun CredentialsDialog(
       CredentialsDialogContent(
         appState = appState,
         dispatch = dispatch,
-        storageInfo = storageInfo,
+        appDetails = appDetails,
         onModeChange = { mode ->
           scope.launch {
             switchAppModeUseCase(mode)
@@ -102,7 +103,7 @@ internal fun CredentialsDialog(
 private fun CredentialsDialogContent(
   appState: MemosAppUiState,
   dispatch: (MemosAction) -> Unit,
-  storageInfo: StorageInfo,
+  appDetails: AppDetails,
   onModeChange: (AppMode) -> Unit,
   onReset: () -> Unit
 ) {
@@ -144,7 +145,7 @@ private fun CredentialsDialogContent(
         onCheckedChange = { appState.demoMode = it }
       )
     }
-    StorageInfoSection(storageInfo, appState.appMode)
+    AppDetailsSection(appDetails, appState.appMode)
     TextButton(onClick = onReset, modifier = Modifier.fillMaxWidth()) {
       Text(stringResource(Res.string.action_reset_app))
     }
@@ -178,15 +179,16 @@ private fun AppModeSelector(
 }
 
 @Composable
-private fun StorageInfoSection(storageInfo: StorageInfo, appMode: AppMode) {
+private fun AppDetailsSection(appDetails: AppDetails, appMode: AppMode) {
   Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Text(stringResource(Res.string.format_app_version, appDetails.version))
     Text(stringResource(Res.string.label_storage))
-    Text(stringResource(Res.string.format_environment, storageInfo.environment))
+    Text(stringResource(Res.string.format_environment, appDetails.environment))
     if (appMode == AppMode.Offline) {
-      Text(stringResource(Res.string.format_offline_storage, storageInfo.offlineStorage))
+      Text(stringResource(Res.string.format_offline_storage, appDetails.offlineStorage))
     } else {
-      Text(stringResource(Res.string.format_credentials, storageInfo.credentialsStore))
-      Text(stringResource(Res.string.format_memos_db, storageInfo.memosDatabase))
+      Text(stringResource(Res.string.format_credentials, appDetails.credentialsStore))
+      Text(stringResource(Res.string.format_memos_db, appDetails.memosDatabase))
     }
   }
 }

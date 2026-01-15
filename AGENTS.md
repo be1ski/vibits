@@ -22,6 +22,8 @@ Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if a
 - Kotlin style: official (`kotlin.code.style=official`).
 - Indentation: 2 spaces (match existing files).
 - Naming: PascalCase types, camelCase functions/vars, UPPER_SNAKE_CASE constants.
+- **Avoid meaningless suffixes** like `Info`, `Data`, `Model`, `Object` in class names — they add no semantic value. Use descriptive names that reflect purpose (e.g., `AppDetails` not `AppInfo`, `Credentials` not `CredentialsData`).
+- **When extending a class, verify the name still fits.** If you add a field that changes the class's scope (e.g., adding `version` to `StorageInfo`), rename the class to reflect its new purpose.
 - Avoid `!!`; keep composables small and focused.
 - **Self-documenting code over comments.** Don't add KDoc/comments that restate function names or obvious logic.
 - Prefer clean refactors over quick reuse: avoid introducing or keeping code smells, and leave the codebase cleaner than you found it.

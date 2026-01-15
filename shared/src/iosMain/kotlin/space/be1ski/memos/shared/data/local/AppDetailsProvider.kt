@@ -1,21 +1,25 @@
 package space.be1ski.memos.shared.data.local
 
+import platform.Foundation.NSBundle
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSUserDomainMask
-import space.be1ski.memos.shared.domain.model.storage.StorageInfo
+import space.be1ski.memos.shared.domain.model.app.AppDetails
 
 /**
- * iOS storage info implementation.
+ * iOS implementation.
  */
-actual class StorageInfoProvider {
-  actual fun load(): StorageInfo {
+actual class AppDetailsProvider {
+  actual fun load(): AppDetails {
     val documentsPath = NSSearchPathForDirectoriesInDomains(
       NSDocumentDirectory,
       NSUserDomainMask,
       true
     ).firstOrNull() as? String ?: ""
-    return StorageInfo(
+    val version = NSBundle.mainBundle.infoDictionary
+      ?.get("CFBundleShortVersionString") as? String ?: "unknown"
+    return AppDetails(
+      version = version,
       environment = "ios",
       credentialsStore = "NSUserDefaults(base_url, token)",
       memosDatabase = "$documentsPath/memos.db",

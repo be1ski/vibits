@@ -79,7 +79,7 @@ import space.be1ski.memos.shared.feature.memos.domain.usecase.LoadCachedMemosUse
 import space.be1ski.memos.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.memos.shared.feature.memos.domain.usecase.LoadMemosUseCase
 import space.be1ski.memos.shared.feature.preferences.domain.usecase.LoadPreferencesUseCase
-import space.be1ski.memos.shared.domain.usecase.LoadStorageInfoUseCase
+import space.be1ski.memos.shared.domain.usecase.LoadAppDetailsUseCase
 import space.be1ski.memos.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.memos.shared.feature.preferences.domain.usecase.SaveTimeRangeTabUseCase
 import space.be1ski.memos.shared.feature.preferences.domain.usecase.TimeRangeScreen
@@ -99,7 +99,7 @@ import space.be1ski.memos.shared.nav_settings
 fun MemosApp(onResetApp: () -> Unit = {}) {
   val loadPreferencesUseCase: LoadPreferencesUseCase = koinInject()
   val saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase = koinInject()
-  val loadStorageInfoUseCase: LoadStorageInfoUseCase = koinInject()
+  val loadAppDetailsUseCase: LoadAppDetailsUseCase = koinInject()
   val memosRepository: MemosRepository = koinInject()
   val loadMemosUseCase: LoadMemosUseCase = koinInject()
   val loadCachedMemosUseCase: LoadCachedMemosUseCase = koinInject()
@@ -157,7 +157,7 @@ fun MemosApp(onResetApp: () -> Unit = {}) {
   }
   val habitsState by habitsFeature.state.collectAsState()
 
-  val storageInfo = remember { loadStorageInfoUseCase() }
+  val appDetails = remember { loadAppDetailsUseCase() }
 
   SyncAutoLoad(memosState, appState, dispatchMemos)
   SyncCredentialsDialog(memosState, appState)
@@ -175,7 +175,7 @@ fun MemosApp(onResetApp: () -> Unit = {}) {
     memosState = memosState,
     appState = appState,
     dispatch = dispatchMemos,
-    storageInfo = storageInfo,
+    appDetails = appDetails,
     switchAppModeUseCase = switchAppModeUseCase,
     resetAppUseCase = resetAppUseCase,
     onResetComplete = onResetApp

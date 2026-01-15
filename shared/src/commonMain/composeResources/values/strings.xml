@@ -25,6 +25,7 @@
     <string name="day_wed">Wed</string>
 
     <!-- Format strings -->
+    <string name="format_app_version">Version: %1$s</string>
     <string name="format_credentials">Credentials: %1$s</string>
     <string name="format_environment">Environment: %1$s</string>
     <string name="format_habits_progress">%1$d of %2$d habits done</string>
