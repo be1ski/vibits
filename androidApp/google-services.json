@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "63151195233",
+    "project_id": "vibits-af2da",
+    "storage_bucket": "vibits-af2da.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:63151195233:android:6510b0bd0ec159046d5620",
+        "android_client_info": {
+          "package_name": "space.be1ski.vibits"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyyczpGkic7Ay5FYX3TOZrCHpVylNLhNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
