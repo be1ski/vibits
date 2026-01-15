@@ -19,3 +19,5 @@ kotlin-js-store/
 *.db-shm
 *.db-wal
 /inspections/
+vibits-*.json
+
