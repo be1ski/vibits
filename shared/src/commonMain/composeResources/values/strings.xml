@@ -94,4 +94,14 @@
     <string name="title_edit_memo">Edit memo</string>
     <string name="title_new_memo">New memo</string>
     <string name="title_update_day">Update day</string>
+
+    <!-- Demo habits -->
+    <string name="demo_habit_exercise">Exercise</string>
+    <string name="demo_habit_reading">Reading</string>
+    <string name="demo_habit_meditation">Meditation</string>
+    <string name="demo_habit_water">Drink Water</string>
+    <string name="demo_habit_learning">Learning</string>
+    <string name="demo_habit_walking">10K Steps</string>
+    <string name="demo_habit_no_sugar">No Sugar</string>
+    <string name="demo_habit_early_sleep">Sleep by 11pm</string>
 </resources>

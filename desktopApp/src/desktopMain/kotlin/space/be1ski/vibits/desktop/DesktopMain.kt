@@ -16,7 +16,7 @@ fun main() = application {
   Window(
     onCloseRequest = ::exitApplication,
     title = "Vibits",
-    state = rememberWindowState(width = 720.dp, height = 960.dp)
+    state = rememberWindowState(width = 480.dp, height = 932.dp)
   ) {
     AppRoot()
   }

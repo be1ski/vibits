@@ -93,4 +93,14 @@
     <string name="title_edit_memo">Редактировать заметку</string>
     <string name="title_new_memo">Новая заметка</string>
     <string name="title_update_day">Обновить день</string>
+
+    <!-- Demo habits -->
+    <string name="demo_habit_exercise">Зарядка</string>
+    <string name="demo_habit_reading">Чтение</string>
+    <string name="demo_habit_meditation">Медитация</string>
+    <string name="demo_habit_water">Вода</string>
+    <string name="demo_habit_learning">Обучение</string>
+    <string name="demo_habit_walking">10К шагов</string>
+    <string name="demo_habit_no_sugar">Без сахара</string>
+    <string name="demo_habit_early_sleep">Сон до 23:00</string>
 </resources>

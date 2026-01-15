@@ -9,18 +9,50 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
+import space.be1ski.vibits.shared.core.platform.currentLanguage
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 /**
  * Demo habit configuration with completion probability.
  */
 internal data class DemoHabit(
-  val label: String,
   val tag: String,
   val color: String,
   val baseCompletionRate: Float,
   val weekendModifier: Float = 1.0f
 )
+
+/**
+ * Localized labels for demo habits.
+ */
+private object DemoHabitLabels {
+  private val english = mapOf(
+    "#habits/exercise" to "Exercise",
+    "#habits/reading" to "Reading",
+    "#habits/meditation" to "Meditation",
+    "#habits/water" to "Drink Water",
+    "#habits/learning" to "Learning",
+    "#habits/walking" to "10K Steps",
+    "#habits/no_sugar" to "No Sugar",
+    "#habits/early_sleep" to "Sleep by 11pm"
+  )
+
+  private val russian = mapOf(
+    "#habits/exercise" to "Зарядка",
+    "#habits/reading" to "Чтение",
+    "#habits/meditation" to "Медитация",
+    "#habits/water" to "Вода",
+    "#habits/learning" to "Обучение",
+    "#habits/walking" to "10К шагов",
+    "#habits/no_sugar" to "Без сахара",
+    "#habits/early_sleep" to "Сон до 23:00"
+  )
+
+  fun labelFor(tag: String): String {
+    val labels = if (currentLanguage() == "ru") russian else english
+    return labels[tag] ?: tag
+  }
+}
 
 /**
  * Generates mock memos for demo mode with realistic habit data.
@@ -29,14 +61,14 @@ internal data class DemoHabit(
 internal object DemoDataGenerator {
 
   private val demoHabits = listOf(
-    DemoHabit("Morning Exercise", "#habits/exercise", "#4CAF50", 0.85f, 0.7f),
-    DemoHabit("Reading", "#habits/reading", "#2196F3", 0.70f, 1.1f),
-    DemoHabit("Meditation", "#habits/meditation", "#9C27B0", 0.60f, 1.0f),
-    DemoHabit("Drink Water", "#habits/water", "#00BCD4", 0.90f, 0.95f),
-    DemoHabit("Learn Something", "#habits/learning", "#FF9800", 0.50f, 0.6f),
-    DemoHabit("Walk 10K Steps", "#habits/walking", "#009688", 0.65f, 1.2f),
-    DemoHabit("No Sugar", "#habits/no_sugar", "#F44336", 0.45f, 0.8f),
-    DemoHabit("Sleep Before 11pm", "#habits/early_sleep", "#3F51B5", 0.55f, 0.7f)
+    DemoHabit("#habits/exercise", "#4CAF50", 0.85f, 0.7f),
+    DemoHabit("#habits/reading", "#2196F3", 0.70f, 1.1f),
+    DemoHabit("#habits/meditation", "#9C27B0", 0.60f, 1.0f),
+    DemoHabit("#habits/water", "#00BCD4", 0.90f, 0.95f),
+    DemoHabit("#habits/learning", "#FF9800", 0.50f, 0.6f),
+    DemoHabit("#habits/walking", "#009688", 0.65f, 1.2f),
+    DemoHabit("#habits/no_sugar", "#F44336", 0.45f, 0.8f),
+    DemoHabit("#habits/early_sleep", "#3F51B5", 0.55f, 0.7f)
   )
 
   private const val MONTHS_OF_HISTORY = 18
@@ -89,7 +121,8 @@ internal object DemoDataGenerator {
       appendLine("#habits/config")
       appendLine()
       demoHabits.forEach { habit ->
-        appendLine("${habit.label} | ${habit.tag} | ${habit.color}")
+        val label = DemoHabitLabels.labelFor(habit.tag)
+        appendLine("$label | ${habit.tag} | ${habit.color}")
       }
     }
     return Memo(
