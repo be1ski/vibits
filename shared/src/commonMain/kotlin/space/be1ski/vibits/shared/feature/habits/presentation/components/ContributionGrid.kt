@@ -253,9 +253,9 @@ private fun ContributionGridTooltip(
   val positionProvider = remember(tooltip.offset) {
     object : PopupPositionProvider {
       override fun calculatePosition(
-        @Suppress("unused") anchorBounds: IntRect,
+        anchorBounds: IntRect,
         windowSize: IntSize,
-        @Suppress("unused") layoutDirection: LayoutDirection,
+        layoutDirection: LayoutDirection,
         popupContentSize: IntSize
       ): IntOffset {
         val maxX = (windowSize.width - popupContentSize.width).coerceAtLeast(0)

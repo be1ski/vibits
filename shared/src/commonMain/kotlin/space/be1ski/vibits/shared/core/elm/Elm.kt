@@ -1,3 +1,5 @@
+@file:Suppress("RedundantVisibilityModifier")
+
 package space.be1ski.vibits.shared.core.elm
 
 import kotlinx.coroutines.CoroutineScope
