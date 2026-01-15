@@ -44,7 +44,6 @@ import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
-import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.presentation.components.ContributionGrid
 import space.be1ski.vibits.shared.feature.habits.presentation.components.ContributionGridCallbacks
@@ -58,7 +57,6 @@ import space.be1ski.vibits.shared.feature.habits.presentation.components.WeeklyB
 import space.be1ski.vibits.shared.feature.habits.presentation.components.activityWeekDataForHabit
 import space.be1ski.vibits.shared.feature.habits.presentation.components.lastSevenDays
 import space.be1ski.vibits.shared.feature.habits.presentation.components.ChartDimens
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 
 @Composable
 internal fun StatsInfoCard(derived: StatsScreenDerivedState) {
