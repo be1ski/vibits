@@ -51,6 +51,33 @@ class HabitParserTest {
     assertEquals("Exercise", result?.label)
   }
 
+  @Test
+  fun `when line has label tag and color then parses all three`() {
+    val result = parseHabitConfigLine("Exercise | #habits/exercise | #4CAF50")
+    assertEquals("Exercise", result?.label)
+    assertEquals("#habits/exercise", result?.tag)
+    assertEquals(0xFF4CAF50L, result?.color)
+  }
+
+  @Test
+  fun `when line has label tag and color with spaces then parses correctly`() {
+    val result = parseHabitConfigLine("  Morning Run  |  #habits/morning_run  |  #FF5733  ")
+    assertEquals("Morning Run", result?.label)
+    assertEquals("#habits/morning_run", result?.tag)
+    assertEquals(0xFFFF5733L, result?.color)
+  }
+
+  @Test
+  fun `when line has tag and color without label then tag becomes label`() {
+    // This format "#habits/tag | #color" is NOT supported -
+    // parser treats first part as label, second as tag
+    // This test documents current behavior to prevent regression
+    val result = parseHabitConfigLine("#habits/exercise | #4CAF50")
+    // Current behavior: #habits/exercise is treated as label, #4CAF50 as tag
+    assertEquals("#habits/exercise", result?.label)
+    assertEquals("#habits/#4CAF50", result?.tag) // Color becomes tag with #habits/ prefix
+  }
+
   // normalizeHabitTag tests
 
   @Test

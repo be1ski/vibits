@@ -9,6 +9,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
+import space.be1ski.vibits.shared.feature.habits.domain.labelFromTag
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 /**
@@ -88,7 +89,8 @@ internal object DemoDataGenerator {
       appendLine("#habits/config")
       appendLine()
       demoHabits.forEach { habit ->
-        appendLine("${habit.tag} | ${habit.color}")
+        val label = labelFromTag(habit.tag)
+        appendLine("$label | ${habit.tag} | ${habit.color}")
       }
     }
     return Memo(
