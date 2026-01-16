@@ -67,11 +67,15 @@ internal fun MemosHeader(appState: VibitsAppUiState, dispatch: (MemosAction) -> 
 }
 
 @Composable
-internal fun MemosBottomNavigation(appState: VibitsAppUiState) {
+internal fun MemosBottomNavigation(
+  appState: VibitsAppUiState,
+  onClearSelection: () -> Unit
+) {
   NavigationBar {
     NavigationBarItem(
       selected = appState.selectedScreen == MemosScreen.Habits,
       onClick = {
+        onClearSelection()
         if (appState.selectedScreen == MemosScreen.Habits) {
           resetToHome(appState, currentLocalDate())
         } else {
@@ -89,6 +93,7 @@ internal fun MemosBottomNavigation(appState: VibitsAppUiState) {
     NavigationBarItem(
       selected = appState.selectedScreen == MemosScreen.Stats,
       onClick = {
+        onClearSelection()
         if (appState.selectedScreen == MemosScreen.Stats) {
           resetToHome(appState, currentLocalDate())
         } else {
@@ -105,7 +110,10 @@ internal fun MemosBottomNavigation(appState: VibitsAppUiState) {
     )
     NavigationBarItem(
       selected = appState.selectedScreen == MemosScreen.Feed,
-      onClick = { appState.selectedScreen = MemosScreen.Feed },
+      onClick = {
+        onClearSelection()
+        appState.selectedScreen = MemosScreen.Feed
+      },
       icon = {
         Icon(
           imageVector = Icons.AutoMirrored.Filled.List,
