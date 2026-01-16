@@ -1,104 +1,57 @@
-@file:Suppress("TooManyFunctions")
-
 package space.be1ski.vibits.shared.app
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
-import kotlinx.coroutines.launch
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import space.be1ski.vibits.shared.Res
-import space.be1ski.vibits.shared.app_name
-import space.be1ski.vibits.shared.action_cancel
-import space.be1ski.vibits.shared.action_create
 import space.be1ski.vibits.shared.action_create_memo
-import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
-import space.be1ski.vibits.shared.title_edit_memo
-import space.be1ski.vibits.shared.nav_feed
-import space.be1ski.vibits.shared.nav_habits
-import space.be1ski.vibits.shared.title_new_memo
-import space.be1ski.vibits.shared.nav_posts
-import space.be1ski.vibits.shared.core.ui.ActivityMode
-import space.be1ski.vibits.shared.core.ui.ActivityRange
+import space.be1ski.vibits.shared.core.platform.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
-import space.be1ski.vibits.shared.feature.habits.presentation.components.earliestMemoDate
-import space.be1ski.vibits.shared.feature.habits.presentation.components.quarterIndex
-import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberActivityWeekData
-import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberHabitsConfigTimeline
-import space.be1ski.vibits.shared.feature.habits.presentation.components.startOfWeek
-import space.be1ski.vibits.shared.feature.auth.presentation.CredentialsDialog
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
+import space.be1ski.vibits.shared.feature.habits.presentation.components.earliestMemoDate
+import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberHabitsConfigTimeline
 import space.be1ski.vibits.shared.feature.habits.presentation.createHabitsFeature
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
-import space.be1ski.vibits.shared.feature.memos.presentation.createMemosFeature
-import space.be1ski.vibits.shared.feature.memos.presentation.FeedScreen
-import space.be1ski.vibits.shared.feature.memos.presentation.PostsScreen
-import space.be1ski.vibits.shared.feature.habits.presentation.StatsScreen
-import space.be1ski.vibits.shared.feature.habits.presentation.StatsScreenState
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
+import space.be1ski.vibits.shared.feature.auth.presentation.CredentialsDialog
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
-import space.be1ski.vibits.shared.core.platform.currentLocalDate
-import space.be1ski.vibits.shared.core.platform.isDesktop
-import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.CreateMemoUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.DeleteMemoUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadCachedMemosUseCase
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadMemosUseCase
-import space.be1ski.vibits.shared.feature.preferences.domain.usecase.LoadPreferencesUseCase
-import space.be1ski.vibits.shared.domain.usecase.LoadAppDetailsUseCase
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
-import space.be1ski.vibits.shared.feature.preferences.domain.usecase.SaveTimeRangeTabUseCase
-import space.be1ski.vibits.shared.feature.preferences.domain.usecase.TimeRangeScreen
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.UpdateMemoUseCase
+import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosUseCases
+import space.be1ski.vibits.shared.feature.memos.presentation.createMemosFeature
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.LoadAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
-import space.be1ski.vibits.shared.action_refresh
-import space.be1ski.vibits.shared.action_save
-import space.be1ski.vibits.shared.hint_write_memo
-import space.be1ski.vibits.shared.nav_settings
+import space.be1ski.vibits.shared.feature.preferences.domain.usecase.LoadPreferencesUseCase
+import space.be1ski.vibits.shared.feature.preferences.domain.usecase.SaveTimeRangeTabUseCase
+import space.be1ski.vibits.shared.feature.preferences.domain.usecase.TimeRangeScreen
+import space.be1ski.vibits.shared.domain.usecase.LoadAppDetailsUseCase
 
 @Suppress("LongMethod")
 @Composable
@@ -191,41 +144,6 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
   MemoEditDialog(appState, dispatchMemos)
 }
 
-@Composable
-private fun SyncAutoLoad(
-  memosState: MemosState,
-  appState: VibitsAppUiState,
-  dispatch: (MemosAction) -> Unit
-) {
-  LaunchedEffect(memosState.credentialsMode, appState.autoLoaded, memosState.isLoading, appState.appMode) {
-    val skipCredentialsCheck = appState.appMode == AppMode.Demo || appState.appMode == AppMode.Offline
-    val shouldAutoLoad = !memosState.credentialsMode &&
-      !appState.autoLoaded &&
-      !memosState.isLoading &&
-      (skipCredentialsCheck || memosState.hasCredentials)
-    if (shouldAutoLoad) {
-      appState.autoLoaded = true
-      dispatch(MemosAction.LoadMemos)
-    }
-  }
-}
-
-@Composable
-private fun SyncCredentialsDialog(
-  memosState: MemosState,
-  appState: VibitsAppUiState
-) {
-  LaunchedEffect(memosState.credentialsMode, appState.showCredentialsDialog, appState.credentialsDismissed) {
-    if (memosState.credentialsMode && !appState.showCredentialsDialog && !appState.credentialsDismissed) {
-      appState.showCredentialsDialog = true
-      appState.credentialsInitialized = false
-    }
-    if (!memosState.credentialsMode) {
-      appState.credentialsDismissed = false
-    }
-  }
-}
-
 @Suppress("LongParameterList", "LongMethod")
 @Composable
 private fun VibitsAppContent(
@@ -239,447 +157,80 @@ private fun VibitsAppContent(
 ) {
   Scaffold(
     floatingActionButton = {
-        if (memosFabModeForScreen(appState.selectedScreen) == MemosFabMode.Memo) {
-          FloatingActionButton(
-            onClick = { appState.showCreateMemoDialog = true }
-          ) {
-            Icon(
-              imageVector = Icons.Filled.Edit,
-              contentDescription = stringResource(Res.string.action_create_memo)
-            )
-          }
-        }
-      },
-      bottomBar = {
-        MemosBottomNavigation(appState)
-      }
-    ) { padding ->
-      val selectedTab = when (appState.selectedScreen) {
-        MemosScreen.Habits -> appState.habitsTimeRangeTab
-        MemosScreen.Stats -> appState.postsTimeRangeTab
-        MemosScreen.Feed -> appState.habitsTimeRangeTab
-      }
-      val currentRange = currentRangeForTab(selectedTab, currentLocalDate())
-      val activityRange = activityRangeForState(appState)
-      val timeZone = remember { TimeZone.currentSystemDefault() }
-      val earliestDate = remember(memosState.memos) { earliestMemoDate(memosState.memos, timeZone) }
-      val minRange = minRangeForTab(selectedTab, earliestDate)
-      Column(
-        modifier = Modifier
-          .padding(padding)
-          .padding(Indent.m)
-          .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(Indent.s)
-      ) {
-        MemosHeader(appState, dispatchMemos)
-        memosState.errorMessage?.let { message ->
-          Text(message, color = MaterialTheme.colorScheme.error)
-        }
-        if (appState.selectedScreen != MemosScreen.Feed) {
-          val successRate = if (appState.selectedScreen == MemosScreen.Habits) {
-            val habitsTimeline = rememberHabitsConfigTimeline(memosState.memos)
-            val hasHabits = remember(habitsTimeline) { habitsTimeline.lastOrNull()?.habits?.isNotEmpty() == true }
-            if (hasHabits) {
-              rememberSuccessRate(memosState.memos, activityRange, calculateSuccessRate)
-            } else null
-          } else null
-          TimeRangeControls(
-            selectedTab = selectedTab,
-            selectedRange = activityRange,
-            currentRange = currentRange,
-            minRange = minRange,
-            successRate = successRate,
-            onTabChange = { newTab ->
-              when (appState.selectedScreen) {
-                MemosScreen.Habits -> {
-                  appState.habitsTimeRangeTab = newTab
-                  saveTimeRangeTabUseCase(TimeRangeScreen.Habits, newTab)
-                }
-                MemosScreen.Stats -> {
-                  appState.postsTimeRangeTab = newTab
-                  saveTimeRangeTabUseCase(TimeRangeScreen.Posts, newTab)
-                }
-                MemosScreen.Feed -> {}
-              }
-            },
-            onRangeChange = { range -> updateTimeRangeState(appState, range) }
+      if (memosFabModeForScreen(appState.selectedScreen) == MemosFabMode.Memo) {
+        FloatingActionButton(
+          onClick = { appState.showCreateMemoDialog = true }
+        ) {
+          Icon(
+            imageVector = Icons.Filled.Edit,
+            contentDescription = stringResource(Res.string.action_create_memo)
           )
         }
-        SwipeableTabContent(
-          memosState = memosState,
-          appState = appState,
+      }
+    },
+    bottomBar = {
+      MemosBottomNavigation(appState)
+    }
+  ) { padding ->
+    val selectedTab = when (appState.selectedScreen) {
+      MemosScreen.Habits -> appState.habitsTimeRangeTab
+      MemosScreen.Stats -> appState.postsTimeRangeTab
+      MemosScreen.Feed -> appState.habitsTimeRangeTab
+    }
+    val currentRange = currentRangeForTab(selectedTab, currentLocalDate())
+    val activityRange = activityRangeForState(appState)
+    val timeZone = remember { TimeZone.currentSystemDefault() }
+    val earliestDate = remember(memosState.memos) { earliestMemoDate(memosState.memos, timeZone) }
+    val minRange = minRangeForTab(selectedTab, earliestDate)
+    Column(
+      modifier = Modifier
+        .padding(padding)
+        .padding(Indent.m)
+        .fillMaxSize(),
+      verticalArrangement = Arrangement.spacedBy(Indent.s)
+    ) {
+      MemosHeader(appState, dispatchMemos)
+      memosState.errorMessage?.let { message ->
+        Text(message, color = MaterialTheme.colorScheme.error)
+      }
+      if (appState.selectedScreen != MemosScreen.Feed) {
+        val successRate = if (appState.selectedScreen == MemosScreen.Habits) {
+          val habitsTimeline = rememberHabitsConfigTimeline(memosState.memos)
+          val hasHabits = remember(habitsTimeline) { habitsTimeline.lastOrNull()?.habits?.isNotEmpty() == true }
+          if (hasHabits) {
+            rememberSuccessRate(memosState.memos, activityRange, calculateSuccessRate)
+          } else null
+        } else null
+        TimeRangeControls(
+          selectedTab = selectedTab,
+          selectedRange = activityRange,
           currentRange = currentRange,
           minRange = minRange,
-          habitsState = habitsState,
-          onHabitsAction = onHabitsAction
+          successRate = successRate,
+          onTabChange = { newTab ->
+            when (appState.selectedScreen) {
+              MemosScreen.Habits -> {
+                appState.habitsTimeRangeTab = newTab
+                saveTimeRangeTabUseCase(TimeRangeScreen.Habits, newTab)
+              }
+              MemosScreen.Stats -> {
+                appState.postsTimeRangeTab = newTab
+                saveTimeRangeTabUseCase(TimeRangeScreen.Posts, newTab)
+              }
+              MemosScreen.Feed -> {}
+            }
+          },
+          onRangeChange = { range -> updateTimeRangeState(appState, range) }
         )
       }
-    }
-}
-
-@Composable
-private fun MemosHeader(appState: VibitsAppUiState, dispatch: (MemosAction) -> Unit) {
-  Row(
-    modifier = Modifier.fillMaxWidth(),
-    horizontalArrangement = Arrangement.SpaceBetween,
-    verticalAlignment = Alignment.CenterVertically
-  ) {
-    Text(stringResource(Res.string.app_name), style = MaterialTheme.typography.headlineSmall)
-    Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs), verticalAlignment = Alignment.CenterVertically) {
-      if (isDesktop) {
-        IconButton(onClick = { dispatch(MemosAction.LoadMemos) }) {
-          Icon(imageVector = Icons.Filled.Refresh, contentDescription = stringResource(Res.string.action_refresh))
-        }
-      }
-      TextButton(
-        onClick = {
-          dispatch(MemosAction.EditCredentials)
-          appState.showCredentialsDialog = true
-          appState.credentialsInitialized = false
-          appState.credentialsDismissed = false
-        }
-      ) {
-        Text(stringResource(Res.string.nav_settings))
-      }
-    }
-  }
-}
-
-@Composable
-private fun MemosBottomNavigation(appState: VibitsAppUiState) {
-  NavigationBar {
-    NavigationBarItem(
-      selected = appState.selectedScreen == MemosScreen.Habits,
-      onClick = {
-        if (appState.selectedScreen == MemosScreen.Habits) {
-          resetToHome(appState, currentLocalDate())
-        } else {
-          appState.selectedScreen = MemosScreen.Habits
-        }
-      },
-      icon = {
-        Icon(
-          imageVector = Icons.Filled.CheckCircle,
-          contentDescription = stringResource(Res.string.nav_habits)
-        )
-      },
-      label = { Text(stringResource(Res.string.nav_habits)) }
-    )
-    NavigationBarItem(
-      selected = appState.selectedScreen == MemosScreen.Stats,
-      onClick = {
-        if (appState.selectedScreen == MemosScreen.Stats) {
-          resetToHome(appState, currentLocalDate())
-        } else {
-          appState.selectedScreen = MemosScreen.Stats
-        }
-      },
-      icon = {
-        Icon(
-          imageVector = Icons.Filled.Description,
-          contentDescription = stringResource(Res.string.nav_posts)
-        )
-      },
-      label = { Text(stringResource(Res.string.nav_posts)) }
-    )
-    NavigationBarItem(
-      selected = appState.selectedScreen == MemosScreen.Feed,
-      onClick = { appState.selectedScreen = MemosScreen.Feed },
-      icon = {
-        Icon(
-          imageVector = Icons.AutoMirrored.Filled.List,
-          contentDescription = stringResource(Res.string.nav_feed)
-        )
-      },
-      label = { Text(stringResource(Res.string.nav_feed)) }
-    )
-  }
-}
-
-private val navigateRange = NavigateActivityRangeUseCase()
-private const val PAGER_CENTER_PAGE = 500
-
-@Suppress("LongParameterList")
-@Composable
-private fun SwipeableTabContent(
-  memosState: MemosState,
-  appState: VibitsAppUiState,
-  currentRange: ActivityRange,
-  minRange: ActivityRange?,
-  habitsState: HabitsState,
-  onHabitsAction: (HabitsAction) -> Unit
-) {
-  if (appState.selectedScreen == MemosScreen.Feed) {
-    FeedScreen(
-      memos = memosState.memos,
-      isRefreshing = memosState.isLoading,
-      onRefresh = {},
-      enablePullRefresh = !isDesktop,
-      onMemoClick = { memo -> beginEditMemo(appState, memo) }
-    )
-    return
-  }
-
-  val activityRange = activityRangeForState(appState)
-  val currentDelta = remember(activityRange, currentRange) {
-    navigateRange.calculateDelta(currentRange, activityRange)
-  }
-  // Calculate page bounds: minPage for earliest data, maxPage for current period (no future)
-  val minDelta = remember(minRange, currentRange) {
-    minRange?.let { navigateRange.calculateDelta(currentRange, it) } ?: -PAGER_CENTER_PAGE
-  }
-  val maxDelta = 0 // Can't go to future
-  val pageCount = maxDelta - minDelta + 1
-  val initialPage = (currentDelta - minDelta).coerceIn(0, pageCount - 1)
-
-  val pagerState = rememberPagerState(
-    initialPage = initialPage,
-    pageCount = { pageCount }
-  )
-  val scope = rememberCoroutineScope()
-
-  // Sync pager when activityRange changes externally (arrows, tab reset)
-  LaunchedEffect(currentDelta, minDelta) {
-    val targetPage = (currentDelta - minDelta).coerceIn(0, pageCount - 1)
-    if (pagerState.currentPage != targetPage) {
-      pagerState.scrollToPage(targetPage) // instant, no animation
-    }
-  }
-
-  // Update appState when user swipes
-  LaunchedEffect(pagerState, minDelta) {
-    snapshotFlow { pagerState.settledPage }.collect { page ->
-      val delta = page + minDelta
-      val newRange = navigateRange(currentRange, delta)
-      if (newRange != activityRangeForState(appState)) {
-        updateTimeRangeState(appState, newRange)
-      }
-    }
-  }
-
-  HorizontalPager(
-    state = pagerState,
-    modifier = Modifier.fillMaxSize(),
-    beyondViewportPageCount = 0, // don't pre-render neighbors, fixes Years lag
-    key = { it }
-  ) { page ->
-    val delta = page + minDelta
-    val pageRange = navigateRange(currentRange, delta)
-    MemosTabContent(
-      memosState = memosState,
-      appState = appState,
-      activityRange = pageRange,
-      habitsState = habitsState,
-      onHabitsAction = onHabitsAction
-    )
-  }
-}
-
-@Composable
-private fun MemosTabContent(
-  memosState: MemosState,
-  appState: VibitsAppUiState,
-  activityRange: ActivityRange,
-  habitsState: HabitsState,
-  onHabitsAction: (HabitsAction) -> Unit
-) {
-  val memos = memosState.memos
-  when (appState.selectedScreen) {
-    MemosScreen.Habits -> StatsScreen(
-      state = StatsScreenState(
-        memos = memos,
-        range = activityRange,
-        activityMode = ActivityMode.Habits,
-        useVerticalScroll = true,
-        enablePullRefresh = false,
-        demoMode = appState.appMode == AppMode.Demo
-      ),
-      habitsState = habitsState,
-      onHabitsAction = onHabitsAction
-    )
-    MemosScreen.Stats -> PostsScreen(
-      memos = memos,
-      range = activityRange,
-      demoMode = appState.appMode == AppMode.Demo
-    )
-    MemosScreen.Feed -> FeedScreen(
-      memos = memos,
-      isRefreshing = memosState.isLoading,
-      onRefresh = {},
-      enablePullRefresh = !isDesktop,
-      onMemoClick = { memo -> beginEditMemo(appState, memo) }
-    )
-  }
-}
-
-private fun activityRangeForState(appState: VibitsAppUiState): ActivityRange {
-  val selectedTab = when (appState.selectedScreen) {
-    MemosScreen.Habits -> appState.habitsTimeRangeTab
-    MemosScreen.Stats -> appState.postsTimeRangeTab
-    MemosScreen.Feed -> appState.habitsTimeRangeTab
-  }
-  val date = appState.periodStartDate
-  return when (selectedTab) {
-    TimeRangeTab.Weeks -> ActivityRange.Week(startOfWeek(date))
-    TimeRangeTab.Months -> ActivityRange.Month(date.year, date.month)
-    TimeRangeTab.Quarters -> ActivityRange.Quarter(date.year, quarterIndex(date))
-    TimeRangeTab.Years -> ActivityRange.Year(date.year)
-  }
-}
-
-private const val MONTHS_PER_QUARTER = 3
-
-private fun updateTimeRangeState(appState: VibitsAppUiState, range: ActivityRange) {
-  appState.periodStartDate = when (range) {
-    is ActivityRange.Week -> range.startDate
-    is ActivityRange.Month -> LocalDate(range.year, range.month, 1)
-    is ActivityRange.Quarter -> {
-      val month = Month((range.index - 1) * MONTHS_PER_QUARTER + 1)
-      LocalDate(range.year, month, 1)
-    }
-    is ActivityRange.Year -> LocalDate(range.year, Month.JANUARY, 1)
-  }
-}
-
-private fun resetToCurrentPeriod(appState: VibitsAppUiState, today: LocalDate) {
-  appState.periodStartDate = today
-}
-
-private fun resetToHome(appState: VibitsAppUiState, today: LocalDate) {
-  resetToCurrentPeriod(appState, today)
-  when (appState.selectedScreen) {
-    MemosScreen.Habits -> appState.habitsTimeRangeTab = TimeRangeTab.Weeks
-    MemosScreen.Stats -> appState.postsTimeRangeTab = TimeRangeTab.Weeks
-    MemosScreen.Feed -> {}
-  }
-}
-
-private fun currentRangeForTab(tab: TimeRangeTab, today: LocalDate): ActivityRange {
-  return when (tab) {
-    TimeRangeTab.Weeks -> ActivityRange.Week(startOfWeek(today))
-    TimeRangeTab.Months -> ActivityRange.Month(today.year, today.month)
-    TimeRangeTab.Quarters -> ActivityRange.Quarter(today.year, quarterIndex(today))
-    TimeRangeTab.Years -> ActivityRange.Year(today.year)
-  }
-}
-
-private fun minRangeForTab(tab: TimeRangeTab, earliestDate: LocalDate?): ActivityRange? {
-  if (earliestDate == null) {
-    return null
-  }
-  return when (tab) {
-    TimeRangeTab.Weeks -> ActivityRange.Week(startOfWeek(earliestDate))
-    TimeRangeTab.Months -> ActivityRange.Month(earliestDate.year, earliestDate.month)
-    TimeRangeTab.Quarters -> ActivityRange.Quarter(earliestDate.year, quarterIndex(earliestDate))
-    TimeRangeTab.Years -> ActivityRange.Year(earliestDate.year)
-  }
-}
-
-@Composable
-private fun MemoCreateDialog(appState: VibitsAppUiState, dispatch: (MemosAction) -> Unit) {
-  if (!appState.showCreateMemoDialog) {
-    return
-  }
-  AlertDialog(
-    onDismissRequest = {
-      appState.showCreateMemoDialog = false
-      appState.createMemoContent = ""
-    },
-    title = { Text(stringResource(Res.string.title_new_memo)) },
-    text = {
-      TextField(
-        value = appState.createMemoContent,
-        onValueChange = { appState.createMemoContent = it },
-        placeholder = { Text(stringResource(Res.string.hint_write_memo)) },
-        modifier = Modifier.fillMaxWidth()
+      SwipeableTabContent(
+        memosState = memosState,
+        appState = appState,
+        currentRange = currentRange,
+        minRange = minRange,
+        habitsState = habitsState,
+        onHabitsAction = onHabitsAction
       )
-    },
-    confirmButton = {
-      val content = appState.createMemoContent.trim()
-      Button(
-        onClick = {
-          dispatch(MemosAction.CreateMemo(content))
-          appState.showCreateMemoDialog = false
-          appState.createMemoContent = ""
-        },
-        enabled = content.isNotBlank()
-      ) {
-        Text(stringResource(Res.string.action_create))
-      }
-    },
-    dismissButton = {
-      TextButton(
-        onClick = {
-          appState.showCreateMemoDialog = false
-          appState.createMemoContent = ""
-        }
-      ) {
-        Text(stringResource(Res.string.action_cancel))
-      }
     }
-  )
-}
-
-@Composable
-private fun MemoEditDialog(appState: VibitsAppUiState, dispatch: (MemosAction) -> Unit) {
-  if (!appState.showEditMemoDialog) {
-    return
   }
-  val memo = appState.editMemoTarget ?: return
-  AlertDialog(
-    onDismissRequest = { clearMemoEdit(appState) },
-    title = { Text(stringResource(Res.string.title_edit_memo)) },
-    text = {
-      TextField(
-        value = appState.editMemoContent,
-        onValueChange = { appState.editMemoContent = it },
-        modifier = Modifier.fillMaxWidth()
-      )
-    },
-    confirmButton = {
-      val content = appState.editMemoContent.trim()
-      Button(
-        onClick = {
-          dispatch(MemosAction.UpdateMemo(memo.name, content))
-          clearMemoEdit(appState)
-        },
-        enabled = content.isNotBlank()
-      ) {
-        Text(stringResource(Res.string.action_save))
-      }
-    },
-    dismissButton = {
-      TextButton(onClick = { clearMemoEdit(appState) }) {
-        Text(stringResource(Res.string.action_cancel))
-      }
-    }
-  )
-}
-
-private fun beginEditMemo(appState: VibitsAppUiState, memo: Memo) {
-  appState.editMemoTarget = memo
-  appState.editMemoContent = memo.content
-  appState.showEditMemoDialog = true
-}
-
-private fun clearMemoEdit(appState: VibitsAppUiState) {
-  appState.showEditMemoDialog = false
-  appState.editMemoTarget = null
-  appState.editMemoContent = ""
-}
-
-@Composable
-private fun rememberSuccessRate(
-  memos: List<Memo>,
-  activityRange: ActivityRange,
-  calculateSuccessRate: CalculateSuccessRateUseCase
-): Float? {
-  val weekData = rememberActivityWeekData(memos, activityRange, ActivityMode.Habits)
-  val habitsTimeline = rememberHabitsConfigTimeline(memos)
-  val today = remember { currentLocalDate() }
-  val configStartDate = remember(habitsTimeline) { habitsTimeline.firstOrNull()?.date }
-  val data = remember(weekData, activityRange, today, configStartDate) {
-    calculateSuccessRate(weekData, activityRange, today, configStartDate)
-  }
-  return if (data.total > 0) data.rate else null
 }
