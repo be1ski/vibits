@@ -9,6 +9,7 @@ import kotlinx.datetime.Month
 private const val DAYS_IN_WEEK = 7
 private const val WEEK_END_OFFSET = 6
 private const val QUARTERS_IN_YEAR = 4
+private const val MONTHS_IN_YEAR = 12
 private const val MONTH_ABBREV_LENGTH = 3
 
 /**
@@ -67,6 +68,25 @@ class NavigateActivityRangeUseCase {
         compareYearQuarter(range.year, range.index, other.year, other.index) < 0
       is ActivityRange.Year -> other is ActivityRange.Year && range.year < other.year
     }
+  }
+
+  /**
+   * Calculates the number of periods between [from] and [to].
+   * Returns positive if [to] is after [from], negative otherwise.
+   */
+  fun calculateDelta(from: ActivityRange, to: ActivityRange): Int = when (from) {
+    is ActivityRange.Week -> if (to is ActivityRange.Week) {
+      (to.startDate.toEpochDays() - from.startDate.toEpochDays()).toInt() / DAYS_IN_WEEK
+    } else 0
+    is ActivityRange.Month -> if (to is ActivityRange.Month) {
+      (to.year - from.year) * MONTHS_IN_YEAR + (to.month.ordinal - from.month.ordinal)
+    } else 0
+    is ActivityRange.Quarter -> if (to is ActivityRange.Quarter) {
+      (to.year - from.year) * QUARTERS_IN_YEAR + (to.index - from.index)
+    } else 0
+    is ActivityRange.Year -> if (to is ActivityRange.Year) {
+      to.year - from.year
+    } else 0
   }
 
   private fun formatMonthDay(date: LocalDate): String {

@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.CheckCircle
@@ -32,9 +34,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -53,6 +58,7 @@ import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.components.earliestMemoDate
 import space.be1ski.vibits.shared.feature.habits.presentation.components.quarterIndex
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberActivityWeekData
@@ -299,7 +305,14 @@ private fun VibitsAppContent(
             onRangeChange = { range -> updateTimeRangeState(appState, range) }
           )
         }
-        MemosTabContent(memosState, appState, activityRange, habitsState, onHabitsAction)
+        SwipeableTabContent(
+          memosState = memosState,
+          appState = appState,
+          currentRange = currentRange,
+          minRange = minRange,
+          habitsState = habitsState,
+          onHabitsAction = onHabitsAction
+        )
       }
     }
 }
@@ -337,7 +350,13 @@ private fun MemosBottomNavigation(appState: VibitsAppUiState) {
   NavigationBar {
     NavigationBarItem(
       selected = appState.selectedScreen == MemosScreen.Habits,
-      onClick = { appState.selectedScreen = MemosScreen.Habits },
+      onClick = {
+        if (appState.selectedScreen == MemosScreen.Habits) {
+          resetToHome(appState, currentLocalDate())
+        } else {
+          appState.selectedScreen = MemosScreen.Habits
+        }
+      },
       icon = {
         Icon(
           imageVector = Icons.Filled.CheckCircle,
@@ -348,7 +367,13 @@ private fun MemosBottomNavigation(appState: VibitsAppUiState) {
     )
     NavigationBarItem(
       selected = appState.selectedScreen == MemosScreen.Stats,
-      onClick = { appState.selectedScreen = MemosScreen.Stats },
+      onClick = {
+        if (appState.selectedScreen == MemosScreen.Stats) {
+          resetToHome(appState, currentLocalDate())
+        } else {
+          appState.selectedScreen = MemosScreen.Stats
+        }
+      },
       icon = {
         Icon(
           imageVector = Icons.Filled.Description,
@@ -367,6 +392,85 @@ private fun MemosBottomNavigation(appState: VibitsAppUiState) {
         )
       },
       label = { Text(stringResource(Res.string.nav_feed)) }
+    )
+  }
+}
+
+private val navigateRange = NavigateActivityRangeUseCase()
+private const val PAGER_CENTER_PAGE = 500
+
+@Suppress("LongParameterList")
+@Composable
+private fun SwipeableTabContent(
+  memosState: MemosState,
+  appState: VibitsAppUiState,
+  currentRange: ActivityRange,
+  minRange: ActivityRange?,
+  habitsState: HabitsState,
+  onHabitsAction: (HabitsAction) -> Unit
+) {
+  if (appState.selectedScreen == MemosScreen.Feed) {
+    FeedScreen(
+      memos = memosState.memos,
+      isRefreshing = memosState.isLoading,
+      onRefresh = {},
+      enablePullRefresh = !isDesktop,
+      onMemoClick = { memo -> beginEditMemo(appState, memo) }
+    )
+    return
+  }
+
+  val activityRange = activityRangeForState(appState)
+  val currentDelta = remember(activityRange, currentRange) {
+    navigateRange.calculateDelta(currentRange, activityRange)
+  }
+  // Calculate page bounds: minPage for earliest data, maxPage for current period (no future)
+  val minDelta = remember(minRange, currentRange) {
+    minRange?.let { navigateRange.calculateDelta(currentRange, it) } ?: -PAGER_CENTER_PAGE
+  }
+  val maxDelta = 0 // Can't go to future
+  val pageCount = maxDelta - minDelta + 1
+  val initialPage = (currentDelta - minDelta).coerceIn(0, pageCount - 1)
+
+  val pagerState = rememberPagerState(
+    initialPage = initialPage,
+    pageCount = { pageCount }
+  )
+  val scope = rememberCoroutineScope()
+
+  // Sync pager when activityRange changes externally (arrows, tab reset)
+  LaunchedEffect(currentDelta, minDelta) {
+    val targetPage = (currentDelta - minDelta).coerceIn(0, pageCount - 1)
+    if (pagerState.currentPage != targetPage) {
+      pagerState.scrollToPage(targetPage) // instant, no animation
+    }
+  }
+
+  // Update appState when user swipes
+  LaunchedEffect(pagerState, minDelta) {
+    snapshotFlow { pagerState.settledPage }.collect { page ->
+      val delta = page + minDelta
+      val newRange = navigateRange(currentRange, delta)
+      if (newRange != activityRangeForState(appState)) {
+        updateTimeRangeState(appState, newRange)
+      }
+    }
+  }
+
+  HorizontalPager(
+    state = pagerState,
+    modifier = Modifier.fillMaxSize(),
+    beyondViewportPageCount = 0, // don't pre-render neighbors, fixes Years lag
+    key = { it }
+  ) { page ->
+    val delta = page + minDelta
+    val pageRange = navigateRange(currentRange, delta)
+    MemosTabContent(
+      memosState = memosState,
+      appState = appState,
+      activityRange = pageRange,
+      habitsState = habitsState,
+      onHabitsAction = onHabitsAction
     )
   }
 }
@@ -414,26 +518,39 @@ private fun activityRangeForState(appState: VibitsAppUiState): ActivityRange {
     MemosScreen.Stats -> appState.postsTimeRangeTab
     MemosScreen.Feed -> appState.habitsTimeRangeTab
   }
+  val date = appState.periodStartDate
   return when (selectedTab) {
-    TimeRangeTab.Weeks -> ActivityRange.Week(appState.weekStart)
-    TimeRangeTab.Months -> ActivityRange.Month(appState.monthYear, appState.month)
-    TimeRangeTab.Quarters -> ActivityRange.Quarter(appState.quarterYear, appState.quarterIndex)
-    TimeRangeTab.Years -> ActivityRange.Year(appState.year)
+    TimeRangeTab.Weeks -> ActivityRange.Week(startOfWeek(date))
+    TimeRangeTab.Months -> ActivityRange.Month(date.year, date.month)
+    TimeRangeTab.Quarters -> ActivityRange.Quarter(date.year, quarterIndex(date))
+    TimeRangeTab.Years -> ActivityRange.Year(date.year)
   }
 }
 
+private const val MONTHS_PER_QUARTER = 3
+
 private fun updateTimeRangeState(appState: VibitsAppUiState, range: ActivityRange) {
-  when (range) {
-    is ActivityRange.Week -> appState.weekStart = range.startDate
-    is ActivityRange.Month -> {
-      appState.monthYear = range.year
-      appState.month = range.month
-    }
+  appState.periodStartDate = when (range) {
+    is ActivityRange.Week -> range.startDate
+    is ActivityRange.Month -> LocalDate(range.year, range.month, 1)
     is ActivityRange.Quarter -> {
-      appState.quarterYear = range.year
-      appState.quarterIndex = range.index
+      val month = Month((range.index - 1) * MONTHS_PER_QUARTER + 1)
+      LocalDate(range.year, month, 1)
     }
-    is ActivityRange.Year -> appState.year = range.year
+    is ActivityRange.Year -> LocalDate(range.year, Month.JANUARY, 1)
+  }
+}
+
+private fun resetToCurrentPeriod(appState: VibitsAppUiState, today: LocalDate) {
+  appState.periodStartDate = today
+}
+
+private fun resetToHome(appState: VibitsAppUiState, today: LocalDate) {
+  resetToCurrentPeriod(appState, today)
+  when (appState.selectedScreen) {
+    MemosScreen.Habits -> appState.habitsTimeRangeTab = TimeRangeTab.Weeks
+    MemosScreen.Stats -> appState.postsTimeRangeTab = TimeRangeTab.Weeks
+    MemosScreen.Feed -> {}
   }
 }
 

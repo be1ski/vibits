@@ -7,8 +7,6 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
 import kotlinx.datetime.LocalDate
-import space.be1ski.vibits.shared.feature.habits.presentation.components.quarterIndex
-import space.be1ski.vibits.shared.feature.habits.presentation.components.startOfWeek
 
 internal enum class MemosScreen {
   Habits,
@@ -24,12 +22,7 @@ internal class VibitsAppUiState(
   var selectedScreen by mutableStateOf(MemosScreen.Habits)
   var habitsTimeRangeTab by mutableStateOf(initialHabitsTimeRangeTab)
   var postsTimeRangeTab by mutableStateOf(initialPostsTimeRangeTab)
-  var weekStart by mutableStateOf(startOfWeek(currentDate))
-  var monthYear by mutableStateOf(currentDate.year)
-  var month by mutableStateOf(currentDate.month)
-  var quarterYear by mutableStateOf(currentDate.year)
-  var quarterIndex by mutableStateOf(quarterIndex(currentDate))
-  var year by mutableStateOf(currentDate.year)
+  var periodStartDate by mutableStateOf(currentDate)
   var autoLoaded by mutableStateOf(false)
   var showCredentialsDialog by mutableStateOf(false)
   var credentialsInitialized by mutableStateOf(false)

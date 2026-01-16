@@ -166,4 +166,76 @@ class NavigateActivityRangeUseCaseTest {
     assertFalse(useCase.isBefore(week, month))
     assertFalse(useCase.isBefore(month, week))
   }
+
+  @Test
+  fun `calculateDelta returns positive for forward weeks`() {
+    val from = ActivityRange.Week(startDate = LocalDate(2024, 1, 1))
+    val to = ActivityRange.Week(startDate = LocalDate(2024, 1, 15))
+
+    assertEquals(2, useCase.calculateDelta(from, to))
+  }
+
+  @Test
+  fun `calculateDelta returns negative for backward weeks`() {
+    val from = ActivityRange.Week(startDate = LocalDate(2024, 1, 15))
+    val to = ActivityRange.Week(startDate = LocalDate(2024, 1, 1))
+
+    assertEquals(-2, useCase.calculateDelta(from, to))
+  }
+
+  @Test
+  fun `calculateDelta returns correct delta for months`() {
+    val from = ActivityRange.Month(year = 2024, month = Month.JANUARY)
+    val to = ActivityRange.Month(year = 2024, month = Month.APRIL)
+
+    assertEquals(3, useCase.calculateDelta(from, to))
+  }
+
+  @Test
+  fun `calculateDelta returns correct delta for months across years`() {
+    val from = ActivityRange.Month(year = 2023, month = Month.NOVEMBER)
+    val to = ActivityRange.Month(year = 2024, month = Month.FEBRUARY)
+
+    assertEquals(3, useCase.calculateDelta(from, to))
+  }
+
+  @Test
+  fun `calculateDelta returns correct delta for quarters`() {
+    val from = ActivityRange.Quarter(year = 2024, index = 1)
+    val to = ActivityRange.Quarter(year = 2024, index = 4)
+
+    assertEquals(3, useCase.calculateDelta(from, to))
+  }
+
+  @Test
+  fun `calculateDelta returns correct delta for quarters across years`() {
+    val from = ActivityRange.Quarter(year = 2023, index = 3)
+    val to = ActivityRange.Quarter(year = 2024, index = 2)
+
+    assertEquals(3, useCase.calculateDelta(from, to))
+  }
+
+  @Test
+  fun `calculateDelta returns correct delta for years`() {
+    val from = ActivityRange.Year(year = 2020)
+    val to = ActivityRange.Year(year = 2024)
+
+    assertEquals(4, useCase.calculateDelta(from, to))
+  }
+
+  @Test
+  fun `calculateDelta returns zero for different range types`() {
+    val week = ActivityRange.Week(startDate = LocalDate(2024, 1, 8))
+    val month = ActivityRange.Month(year = 2024, month = Month.JANUARY)
+
+    assertEquals(0, useCase.calculateDelta(week, month))
+    assertEquals(0, useCase.calculateDelta(month, week))
+  }
+
+  @Test
+  fun `calculateDelta returns zero for same range`() {
+    val range = ActivityRange.Week(startDate = LocalDate(2024, 1, 8))
+
+    assertEquals(0, useCase.calculateDelta(range, range))
+  }
 }
