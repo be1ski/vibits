@@ -99,3 +99,32 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: desktopApp/build/compose/binaries/main/msi/*.msi
+
+  build-web:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build Web Distribution
+        run: ./gradlew :webApp:wasmJsBrowserDistribution
+
+      - name: Create tarball
+        run: |
+          cd webApp/build/dist/wasmJs
+          tar -czf vibits-web.tar.gz productionExecutable
+
+      - name: Upload Web to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: webApp/build/dist/wasmJs/vibits-web.tar.gz
