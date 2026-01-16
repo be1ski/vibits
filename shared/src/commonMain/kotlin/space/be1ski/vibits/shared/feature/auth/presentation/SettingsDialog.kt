@@ -62,7 +62,7 @@ import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
 
 @Suppress("LongParameterList")
 @Composable
-internal fun CredentialsDialog(
+internal fun SettingsDialog(
   memosState: MemosState,
   appState: VibitsAppUiState,
   dispatch: (MemosAction) -> Unit,
@@ -71,24 +71,24 @@ internal fun CredentialsDialog(
   resetAppUseCase: ResetAppUseCase,
   onResetComplete: () -> Unit
 ) {
-  if (!appState.showCredentialsDialog) {
+  if (!appState.showSettingsDialog) {
     return
   }
-  if (!appState.credentialsInitialized) {
+  if (!appState.settingsInitialized) {
     appState.editBaseUrl = memosState.baseUrl
     appState.editToken = memosState.token
-    appState.credentialsInitialized = true
+    appState.settingsInitialized = true
   }
   val scope = rememberCoroutineScope()
   androidx.compose.material3.AlertDialog(
     onDismissRequest = {
-      appState.showCredentialsDialog = false
-      appState.credentialsInitialized = false
-      appState.credentialsDismissed = true
+      appState.showSettingsDialog = false
+      appState.settingsInitialized = false
+      appState.settingsDismissed = true
     },
     title = { Text(stringResource(Res.string.nav_settings)) },
     text = {
-      CredentialsDialogContent(
+      SettingsDialogContent(
         appState = appState,
         dispatch = dispatch,
         appDetails = appDetails,
@@ -102,19 +102,19 @@ internal fun CredentialsDialog(
         onReset = {
           scope.launch {
             resetAppUseCase()
-            appState.showCredentialsDialog = false
+            appState.showSettingsDialog = false
             onResetComplete()
           }
         }
       )
     },
-    confirmButton = { CredentialsDialogConfirmButton(appState, dispatch) },
-    dismissButton = { CredentialsDialogDismissButton(appState) }
+    confirmButton = { SettingsDialogConfirmButton(appState, dispatch) },
+    dismissButton = { SettingsDialogDismissButton(appState) }
   )
 }
 
 @Composable
-private fun CredentialsDialogContent(
+private fun SettingsDialogContent(
   appState: VibitsAppUiState,
   dispatch: (MemosAction) -> Unit,
   appDetails: AppDetails,
@@ -217,16 +217,16 @@ private fun AppDetailsSection(appDetails: AppDetails, appMode: AppMode) {
 }
 
 @Composable
-private fun CredentialsDialogConfirmButton(
+private fun SettingsDialogConfirmButton(
   appState: VibitsAppUiState,
   dispatch: (MemosAction) -> Unit
 ) {
   Button(
     onClick = {
       dispatch(MemosAction.LoadMemos)
-      appState.showCredentialsDialog = false
-      appState.credentialsInitialized = false
-      appState.credentialsDismissed = true
+      appState.showSettingsDialog = false
+      appState.settingsInitialized = false
+      appState.settingsDismissed = true
     }
   ) {
     Text(stringResource(Res.string.action_save))
@@ -234,12 +234,12 @@ private fun CredentialsDialogConfirmButton(
 }
 
 @Composable
-private fun CredentialsDialogDismissButton(appState: VibitsAppUiState) {
+private fun SettingsDialogDismissButton(appState: VibitsAppUiState) {
   TextButton(
     onClick = {
-      appState.showCredentialsDialog = false
-      appState.credentialsInitialized = false
-      appState.credentialsDismissed = true
+      appState.showSettingsDialog = false
+      appState.settingsInitialized = false
+      appState.settingsDismissed = true
     }
   ) {
     Text(stringResource(Res.string.action_cancel))

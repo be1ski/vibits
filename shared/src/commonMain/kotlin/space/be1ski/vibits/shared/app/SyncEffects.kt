@@ -26,17 +26,17 @@ internal fun SyncAutoLoad(
 }
 
 @Composable
-internal fun SyncCredentialsDialog(
+internal fun SyncSettingsDialog(
   memosState: MemosState,
   appState: VibitsAppUiState
 ) {
-  LaunchedEffect(memosState.credentialsMode, appState.showCredentialsDialog, appState.credentialsDismissed) {
-    if (memosState.credentialsMode && !appState.showCredentialsDialog && !appState.credentialsDismissed) {
-      appState.showCredentialsDialog = true
-      appState.credentialsInitialized = false
+  LaunchedEffect(memosState.credentialsMode, appState.showSettingsDialog, appState.settingsDismissed) {
+    if (memosState.credentialsMode && !appState.showSettingsDialog && !appState.settingsDismissed) {
+      appState.showSettingsDialog = true
+      appState.settingsInitialized = false
     }
     if (!memosState.credentialsMode) {
-      appState.credentialsDismissed = false
+      appState.settingsDismissed = false
     }
   }
 }
