@@ -8,22 +8,22 @@ import kotlinx.datetime.toLocalDateTime
 /**
  * Simple in-memory log storage for debugging.
  */
-object AppLogger {
+object Log {
   private const val MAX_LOGS = 500
 
   private val _logs = mutableStateListOf<LogEntry>()
   val logs: List<LogEntry> get() = _logs.toList()
 
   fun d(tag: String, message: String) {
-    log(LogLevel.DEBUG, tag, message)
+    record(LogLevel.DEBUG, tag, message)
   }
 
   fun i(tag: String, message: String) {
-    log(LogLevel.INFO, tag, message)
+    record(LogLevel.INFO, tag, message)
   }
 
   fun w(tag: String, message: String) {
-    log(LogLevel.WARN, tag, message)
+    record(LogLevel.WARN, tag, message)
   }
 
   fun e(tag: String, message: String, throwable: Throwable? = null) {
@@ -32,10 +32,10 @@ object AppLogger {
     } else {
       message
     }
-    log(LogLevel.ERROR, tag, fullMessage)
+    record(LogLevel.ERROR, tag, fullMessage)
   }
 
-  private fun log(level: LogLevel, tag: String, message: String) {
+  private fun record(level: LogLevel, tag: String, message: String) {
     val timestamp = Clock.System.now()
       .toLocalDateTime(TimeZone.currentSystemDefault())
     val entry = LogEntry(timestamp.toString(), level, tag, message)

@@ -1,6 +1,6 @@
 package space.be1ski.vibits.shared.feature.auth.data
 
-import space.be1ski.vibits.shared.core.logging.AppLogger
+import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
 
@@ -20,7 +20,7 @@ class CredentialsRepositoryImpl(
     val local = credentialsStore.load()
     val maskedUrl = maskUrl(local.baseUrl)
     val hasToken = local.token.isNotBlank()
-    AppLogger.i(TAG, "load() baseUrl='$maskedUrl' hasToken=$hasToken")
+    Log.i(TAG, "load() baseUrl='$maskedUrl' hasToken=$hasToken")
     return Credentials(baseUrl = local.baseUrl, token = local.token)
   }
 
@@ -29,7 +29,7 @@ class CredentialsRepositoryImpl(
    */
   override fun save(credentials: Credentials) {
     val maskedUrl = maskUrl(credentials.baseUrl)
-    AppLogger.i(TAG, "save() baseUrl='$maskedUrl'")
+    Log.i(TAG, "save() baseUrl='$maskedUrl'")
     credentialsStore.save(LocalCredentials(baseUrl = credentials.baseUrl, token = credentials.token))
   }
 

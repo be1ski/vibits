@@ -59,6 +59,8 @@ import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCa
 import space.be1ski.vibits.shared.feature.preferences.domain.usecase.LoadPreferencesUseCase
 import space.be1ski.vibits.shared.feature.preferences.domain.usecase.SaveTimeRangeTabUseCase
 import space.be1ski.vibits.shared.feature.preferences.domain.usecase.TimeRangeScreen
+import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
+import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.domain.usecase.LoadAppDetailsUseCase
 
 @Suppress("LongMethod")
@@ -179,12 +181,46 @@ private fun VibitsAppContent(
     buildHabitDay(date = today, habitsConfig = todayConfig, dailyMemo = todayMemo)
   }
 
+  val onClearSelection = remember(onHabitsAction) {
+    { onHabitsAction(HabitsAction.ClearSelection) }
+  }
+  val onShowCreateMemoDialog = remember(appState) {
+    { appState.showCreateMemoDialog = true }
+  }
+  val onOpenTodayEditor = remember(onHabitsAction, todayDay, todayConfig) {
+    { if (todayDay != null) onHabitsAction(HabitsAction.OpenEditor(todayDay, todayConfig)) }
+  }
+  val onRangeChange = remember(onHabitsAction, appState) {
+    { range: ActivityRange ->
+      onHabitsAction(HabitsAction.ClearSelection)
+      updateTimeRangeState(appState, range)
+    }
+  }
+  val onTabChange = remember(onHabitsAction, appState, saveTimeRangeTabUseCase) {
+    { newTab: TimeRangeTab ->
+      onHabitsAction(HabitsAction.ClearSelection)
+      when (appState.selectedScreen) {
+        MemosScreen.Habits -> {
+          adjustDateForTabChange(appState, appState.habitsTimeRangeTab, newTab)
+          appState.habitsTimeRangeTab = newTab
+          saveTimeRangeTabUseCase(TimeRangeScreen.Habits, newTab)
+        }
+        MemosScreen.Stats -> {
+          adjustDateForTabChange(appState, appState.postsTimeRangeTab, newTab)
+          appState.postsTimeRangeTab = newTab
+          saveTimeRangeTabUseCase(TimeRangeScreen.Posts, newTab)
+        }
+        MemosScreen.Feed -> {}
+      }
+    }
+  }
+
   Scaffold(
     floatingActionButton = {
       when (memosFabModeForScreen(appState.selectedScreen)) {
         MemosFabMode.Memo -> {
           FloatingActionButton(
-            onClick = { appState.showCreateMemoDialog = true }
+            onClick = onShowCreateMemoDialog
           ) {
             Icon(
               imageVector = Icons.Filled.Edit,
@@ -195,7 +231,7 @@ private fun VibitsAppContent(
         MemosFabMode.Habits -> {
           if (todayConfig.isNotEmpty() && todayDay != null) {
             FloatingActionButton(
-              onClick = { onHabitsAction(HabitsAction.OpenEditor(todayDay, todayConfig)) }
+              onClick = onOpenTodayEditor
             ) {
               Icon(
                 imageVector = Icons.Filled.AddTask,
@@ -207,7 +243,7 @@ private fun VibitsAppContent(
       }
     },
     bottomBar = {
-      MemosBottomNavigation(appState) { onHabitsAction(HabitsAction.ClearSelection) }
+      MemosBottomNavigation(appState, onClearSelection)
     }
   ) { padding ->
     val selectedTab = when (appState.selectedScreen) {
@@ -243,26 +279,8 @@ private fun VibitsAppContent(
           currentRange = currentRange,
           minRange = minRange,
           successRate = successRate,
-          onTabChange = { newTab ->
-            onHabitsAction(HabitsAction.ClearSelection)
-            when (appState.selectedScreen) {
-              MemosScreen.Habits -> {
-                adjustDateForTabChange(appState, appState.habitsTimeRangeTab, newTab)
-                appState.habitsTimeRangeTab = newTab
-                saveTimeRangeTabUseCase(TimeRangeScreen.Habits, newTab)
-              }
-              MemosScreen.Stats -> {
-                adjustDateForTabChange(appState, appState.postsTimeRangeTab, newTab)
-                appState.postsTimeRangeTab = newTab
-                saveTimeRangeTabUseCase(TimeRangeScreen.Posts, newTab)
-              }
-              MemosScreen.Feed -> {}
-            }
-          },
-          onRangeChange = { range ->
-            onHabitsAction(HabitsAction.ClearSelection)
-            updateTimeRangeState(appState, range)
-          }
+          onTabChange = onTabChange,
+          onRangeChange = onRangeChange
         )
       }
       SwipeableTabContent(

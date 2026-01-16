@@ -234,6 +234,28 @@ internal fun StatsMainChart(
   val state = derived.state
   val habitsState = derived.habitsState
   val chartScrollState = rememberScrollState()
+
+  val onDaySelected = remember(dispatch, state.activityMode, derived.weekData.weeks) {
+    { day: ContributionDay ->
+      dispatch(HabitsAction.SelectDay(day, "main"))
+      if (state.activityMode == ActivityMode.Posts) {
+        val week = derived.weekData.weeks.firstOrNull { week ->
+          week.days.any { it.date == day.date }
+        }
+        if (week != null) {
+          dispatch(HabitsAction.SelectWeek(week))
+        }
+      }
+    }
+  }
+  val onClearSelection = remember(dispatch) { { dispatch(HabitsAction.ClearSelection) } }
+  val onEditRequested = remember(dispatch, derived.habitsConfigTimeline) {
+    { day: ContributionDay ->
+      val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
+      dispatch(HabitsAction.OpenEditor(day, config))
+    }
+  }
+
   if (derived.showLast7DaysMatrix) {
     LastSevenDaysMatrix(
       days = lastSevenDays(derived.weekData),
@@ -258,26 +280,10 @@ internal fun StatsMainChart(
         today = derived.today,
         demoMode = state.demoMode
       ),
-      onDaySelected = { day ->
-        dispatch(HabitsAction.SelectDay(day, "main"))
-        if (state.activityMode == ActivityMode.Posts) {
-          val week = derived.weekData.weeks.firstOrNull { week ->
-            week.days.any { it.date == day.date }
-          }
-          if (week != null) {
-            dispatch(HabitsAction.SelectWeek(week))
-          }
-        }
-      },
-      onClearSelection = { dispatch(HabitsAction.ClearSelection) },
-      onEditRequested = { day ->
-        val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
-        dispatch(HabitsAction.OpenEditor(day, config))
-      },
-      onCreateRequested = { day ->
-        val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
-        dispatch(HabitsAction.OpenEditor(day, config))
-      }
+      onDaySelected = onDaySelected,
+      onClearSelection = onClearSelection,
+      onEditRequested = onEditRequested,
+      onCreateRequested = onEditRequested
     )
   }
 }
@@ -336,13 +342,25 @@ internal fun StatsHabitSections(
   }
 
   val habitsState = derived.habitsState
+  val onClearSelection = remember(dispatch) { { dispatch(HabitsAction.ClearSelection) } }
+  val onEditRequested = remember(dispatch, derived.habitsConfigTimeline) {
+    { day: ContributionDay ->
+      val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
+      dispatch(HabitsAction.OpenEditor(day, config))
+    }
+  }
+
   derived.currentHabitsConfig.forEach { habit ->
+    val selectionId = "habit:${habit.tag}"
+    val onDaySelected = remember(dispatch, selectionId) {
+      { day: ContributionDay -> dispatch(HabitsAction.SelectDay(day, selectionId)) }
+    }
     HabitActivitySection(
       state = HabitActivitySectionState(
         habit = habit,
         baseWeekData = derived.weekData,
-        selectedDate = if (habitsState.activeSelectionId == "habit:${habit.tag}") habitsState.selectedDate else null,
-        isActiveSelection = habitsState.activeSelectionId == "habit:${habit.tag}",
+        selectedDate = if (habitsState.activeSelectionId == selectionId) habitsState.selectedDate else null,
+        isActiveSelection = habitsState.activeSelectionId == selectionId,
         showWeekdayLegend = derived.showWeekdayLegend,
         compactHeight = derived.useCompactHeight,
         range = derived.state.range,
@@ -350,20 +368,10 @@ internal fun StatsHabitSections(
         today = derived.today,
         habitColor = habit.color
       ),
-      onDaySelected = { day ->
-        dispatch(HabitsAction.SelectDay(day, "habit:${habit.tag}"))
-      },
-      onClearSelection = {
-        dispatch(HabitsAction.ClearSelection)
-      },
-      onEditRequested = { day ->
-        val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
-        dispatch(HabitsAction.OpenEditor(day, config))
-      },
-      onCreateRequested = { day ->
-        val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
-        dispatch(HabitsAction.OpenEditor(day, config))
-      }
+      onDaySelected = onDaySelected,
+      onClearSelection = onClearSelection,
+      onEditRequested = onEditRequested,
+      onCreateRequested = onEditRequested
     )
   }
 }

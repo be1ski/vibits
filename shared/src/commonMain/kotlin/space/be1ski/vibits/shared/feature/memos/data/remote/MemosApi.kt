@@ -12,7 +12,7 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
-import space.be1ski.vibits.shared.core.logging.AppLogger
+import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.memos.data.remote.dto.CreateMemoRequestDto
 import space.be1ski.vibits.shared.feature.memos.data.remote.dto.ListMemosResponseDto
 import space.be1ski.vibits.shared.feature.memos.data.remote.dto.MemoDto
@@ -32,7 +32,7 @@ class MemosApi(
   ): ListMemosResponseDto {
     val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
     val fullUrl = "$normalizedBaseUrl/api/v1/memos"
-    AppLogger.i(TAG, "GET $fullUrl")
+    Log.i(TAG, "GET $fullUrl")
     return try {
       val response: ListMemosResponseDto = httpClient.get(fullUrl) {
         header(HttpHeaders.Authorization, "Bearer $token")
@@ -42,10 +42,10 @@ class MemosApi(
           parameter("pageToken", pageToken)
         }
       }.body()
-      AppLogger.i(TAG, "GET $fullUrl -> OK, ${response.memos.size} memos")
+      Log.i(TAG, "GET $fullUrl -> OK, ${response.memos.size} memos")
       response
     } catch (e: Exception) {
-      AppLogger.e(TAG, "GET $fullUrl -> FAILED", e)
+      Log.e(TAG, "GET $fullUrl -> FAILED", e)
       throw e
     }
   }
@@ -58,7 +58,7 @@ class MemosApi(
   ): MemoDto {
     val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
     val fullUrl = "$normalizedBaseUrl/api/v1/$name"
-    AppLogger.i(TAG, "PATCH $fullUrl")
+    Log.i(TAG, "PATCH $fullUrl")
     return try {
       val response: MemoDto = httpClient.patch(fullUrl) {
         header(HttpHeaders.Authorization, "Bearer $token")
@@ -66,10 +66,10 @@ class MemosApi(
         contentType(ContentType.Application.Json)
         setBody(UpdateMemoRequestDto(content = content))
       }.body()
-      AppLogger.i(TAG, "PATCH $fullUrl -> OK")
+      Log.i(TAG, "PATCH $fullUrl -> OK")
       response
     } catch (e: Exception) {
-      AppLogger.e(TAG, "PATCH $fullUrl -> FAILED", e)
+      Log.e(TAG, "PATCH $fullUrl -> FAILED", e)
       throw e
     }
   }
@@ -81,17 +81,17 @@ class MemosApi(
   ): MemoDto {
     val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
     val fullUrl = "$normalizedBaseUrl/api/v1/memos"
-    AppLogger.i(TAG, "POST $fullUrl")
+    Log.i(TAG, "POST $fullUrl")
     return try {
       val response: MemoDto = httpClient.post(fullUrl) {
         header(HttpHeaders.Authorization, "Bearer $token")
         contentType(ContentType.Application.Json)
         setBody(CreateMemoRequestDto(content = content))
       }.body()
-      AppLogger.i(TAG, "POST $fullUrl -> OK")
+      Log.i(TAG, "POST $fullUrl -> OK")
       response
     } catch (e: Exception) {
-      AppLogger.e(TAG, "POST $fullUrl -> FAILED", e)
+      Log.e(TAG, "POST $fullUrl -> FAILED", e)
       throw e
     }
   }
@@ -103,14 +103,14 @@ class MemosApi(
   ) {
     val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
     val fullUrl = "$normalizedBaseUrl/api/v1/$name"
-    AppLogger.i(TAG, "DELETE $fullUrl")
+    Log.i(TAG, "DELETE $fullUrl")
     try {
       httpClient.delete(fullUrl) {
         header(HttpHeaders.Authorization, "Bearer $token")
       }
-      AppLogger.i(TAG, "DELETE $fullUrl -> OK")
+      Log.i(TAG, "DELETE $fullUrl -> OK")
     } catch (e: Exception) {
-      AppLogger.e(TAG, "DELETE $fullUrl -> FAILED", e)
+      Log.e(TAG, "DELETE $fullUrl -> FAILED", e)
       throw e
     }
   }
