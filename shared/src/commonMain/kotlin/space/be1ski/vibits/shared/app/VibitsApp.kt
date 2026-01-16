@@ -289,7 +289,8 @@ private fun VibitsAppContent(
         currentRange = currentRange,
         minRange = minRange,
         habitsState = habitsState,
-        onHabitsAction = onHabitsAction
+        onHabitsAction = onHabitsAction,
+        dispatchMemos = dispatchMemos
       )
     }
   }
