@@ -9,8 +9,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.core.ui.ActivityRange
@@ -198,3 +201,49 @@ internal fun minRangeForTab(tab: TimeRangeTab, earliestDate: LocalDate?): Activi
     TimeRangeTab.Years -> ActivityRange.Year(earliestDate.year)
   }
 }
+
+/**
+ * When switching from larger to smaller granularity, move periodStartDate to the end
+ * of the current period so we show the LAST sub-period instead of the first.
+ */
+internal fun adjustDateForTabChange(
+  appState: VibitsAppUiState,
+  oldTab: TimeRangeTab,
+  newTab: TimeRangeTab
+) {
+  if (oldTab.ordinal > newTab.ordinal) {
+    // Going from larger to smaller granularity - move to end of current period
+    val date = appState.periodStartDate
+    val currentRange = when (oldTab) {
+      TimeRangeTab.Weeks -> return // Can't go smaller than weeks
+      TimeRangeTab.Months -> ActivityRange.Month(date.year, date.month)
+      TimeRangeTab.Quarters -> ActivityRange.Quarter(date.year, quarterIndex(date))
+      TimeRangeTab.Years -> ActivityRange.Year(date.year)
+    }
+    appState.periodStartDate = endDateOfRange(currentRange)
+  }
+}
+
+private fun endDateOfRange(range: ActivityRange): LocalDate {
+  return when (range) {
+    is ActivityRange.Week -> range.startDate.plus(DatePeriod(days = DAYS_IN_WEEK - 1))
+    is ActivityRange.Month -> {
+      val nextMonth = LocalDate(range.year, range.month, 1).plus(DatePeriod(months = 1))
+      nextMonth.minus(DatePeriod(days = 1))
+    }
+    is ActivityRange.Quarter -> {
+      val lastMonthOfQuarter = range.index * MONTHS_PER_QUARTER
+      val firstOfNextQuarter = if (lastMonthOfQuarter == MONTHS_IN_YEAR) {
+        LocalDate(range.year + 1, Month.JANUARY, 1)
+      } else {
+        LocalDate(range.year, Month(lastMonthOfQuarter + 1), 1)
+      }
+      firstOfNextQuarter.minus(DatePeriod(days = 1))
+    }
+    is ActivityRange.Year -> LocalDate(range.year, Month.DECEMBER, LAST_DAY_OF_DECEMBER)
+  }
+}
+
+private const val DAYS_IN_WEEK = 7
+private const val MONTHS_IN_YEAR = 12
+private const val LAST_DAY_OF_DECEMBER = 31

@@ -210,10 +210,12 @@ private fun VibitsAppContent(
           onTabChange = { newTab ->
             when (appState.selectedScreen) {
               MemosScreen.Habits -> {
+                adjustDateForTabChange(appState, appState.habitsTimeRangeTab, newTab)
                 appState.habitsTimeRangeTab = newTab
                 saveTimeRangeTabUseCase(TimeRangeScreen.Habits, newTab)
               }
               MemosScreen.Stats -> {
+                adjustDateForTabChange(appState, appState.postsTimeRangeTab, newTab)
                 appState.postsTimeRangeTab = newTab
                 saveTimeRangeTabUseCase(TimeRangeScreen.Posts, newTab)
               }
