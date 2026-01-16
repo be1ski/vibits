@@ -6,6 +6,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build-apk:
@@ -108,6 +110,9 @@ jobs:
 
   build-web:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
 
     steps:
       - name: Checkout
@@ -135,3 +140,15 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: webApp/build/dist/wasmJs/Vibits-*-web.tar.gz
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: webApp/build/dist/wasmJs/productionExecutable
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
