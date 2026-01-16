@@ -36,7 +36,7 @@ import space.be1ski.vibits.shared.feature.habits.presentation.components.remembe
 import space.be1ski.vibits.shared.feature.habits.presentation.createHabitsFeature
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
-import space.be1ski.vibits.shared.feature.auth.presentation.CredentialsDialog
+import space.be1ski.vibits.shared.feature.auth.presentation.SettingsDialog
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.CreateMemoUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.DeleteMemoUseCase
@@ -124,7 +124,7 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
   val activityWeekDataCache = remember { ActivityWeekDataCache() }
 
   SyncAutoLoad(memosState, appState, dispatchMemos)
-  SyncCredentialsDialog(memosState, appState)
+  SyncSettingsDialog(memosState, appState)
 
   CompositionLocalProvider(LocalActivityWeekDataCache provides activityWeekDataCache) {
     VibitsAppContent(
@@ -136,7 +136,7 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
       onHabitsAction = habitsFeature::send,
       calculateSuccessRate = calculateSuccessRate
     )
-    CredentialsDialog(
+    SettingsDialog(
       memosState = memosState,
       appState = appState,
       dispatch = dispatchMemos,
