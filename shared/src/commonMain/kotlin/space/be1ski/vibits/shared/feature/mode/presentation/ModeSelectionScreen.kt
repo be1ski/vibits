@@ -43,7 +43,8 @@ fun ModeSelectionScreen(
   ) {
     Text(
       text = stringResource(Res.string.mode_select_title),
-      style = MaterialTheme.typography.headlineMedium
+      style = MaterialTheme.typography.headlineMedium,
+      color = MaterialTheme.colorScheme.onBackground
     )
     Spacer(modifier = Modifier.height(Indent.xs))
     Text(
