@@ -1,7 +1,11 @@
 package space.be1ski.vibits.shared.feature.auth.data
 
+import space.be1ski.vibits.shared.core.logging.AppLogger
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
+
+private const val TAG = "Credentials"
+private const val URL_LOG_MAX_LENGTH = 50
 
 /**
  * Repository implementation backed by platform credential storage.
@@ -14,6 +18,9 @@ class CredentialsRepositoryImpl(
    */
   override fun load(): Credentials {
     val local = credentialsStore.load()
+    val maskedUrl = maskUrl(local.baseUrl)
+    val hasToken = local.token.isNotBlank()
+    AppLogger.i(TAG, "load() baseUrl='$maskedUrl' hasToken=$hasToken")
     return Credentials(baseUrl = local.baseUrl, token = local.token)
   }
 
@@ -21,6 +28,11 @@ class CredentialsRepositoryImpl(
    * Persists credentials to the platform store.
    */
   override fun save(credentials: Credentials) {
+    val maskedUrl = maskUrl(credentials.baseUrl)
+    AppLogger.i(TAG, "save() baseUrl='$maskedUrl'")
     credentialsStore.save(LocalCredentials(baseUrl = credentials.baseUrl, token = credentials.token))
   }
+
+  private fun maskUrl(url: String): String =
+    url.take(URL_LOG_MAX_LENGTH) + if (url.length > URL_LOG_MAX_LENGTH) "..." else ""
 }
