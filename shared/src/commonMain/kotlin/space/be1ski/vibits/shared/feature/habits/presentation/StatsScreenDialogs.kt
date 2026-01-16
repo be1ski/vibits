@@ -18,6 +18,7 @@ import space.be1ski.vibits.shared.action_create
 import space.be1ski.vibits.shared.action_delete
 import space.be1ski.vibits.shared.action_update
 import space.be1ski.vibits.shared.core.ui.Indent
+import space.be1ski.vibits.shared.feature.habits.presentation.components.localizedLabel
 import space.be1ski.vibits.shared.msg_delete_day_confirm
 import space.be1ski.vibits.shared.title_create_day
 import space.be1ski.vibits.shared.title_delete_day
@@ -29,6 +30,7 @@ internal fun HabitEditorDialog(
   dispatch: (HabitsAction) -> Unit
 ) {
   val habitsState = derived.habitsState
+  val demoMode = derived.state.demoMode
   if (!habitsState.isEditorOpen) {
     return
   }
@@ -38,14 +40,14 @@ internal fun HabitEditorDialog(
       val titleRes = if (habitsState.isEditing) Res.string.title_update_day else Res.string.title_create_day
       Text(stringResource(titleRes))
     },
-    text = { HabitEditorContent(habitsState, dispatch) },
+    text = { HabitEditorContent(habitsState, demoMode, dispatch) },
     confirmButton = { HabitEditorConfirmButton(habitsState, dispatch) },
     dismissButton = { HabitEditorDismissButton(habitsState, dispatch) }
   )
 }
 
 @Composable
-private fun HabitEditorContent(habitsState: HabitsState, dispatch: (HabitsAction) -> Unit) {
+private fun HabitEditorContent(habitsState: HabitsState, demoMode: Boolean, dispatch: (HabitsAction) -> Unit) {
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
     if (habitsState.editorConfig.isNotEmpty()) {
       habitsState.editorConfig.forEach { habit ->
@@ -58,7 +60,7 @@ private fun HabitEditorContent(habitsState: HabitsState, dispatch: (HabitsAction
               dispatch(HabitsAction.ToggleHabit(tag, checked))
             }
           )
-          Text(habit.label, style = MaterialTheme.typography.bodySmall)
+          Text(habit.localizedLabel(demoMode), style = MaterialTheme.typography.bodySmall)
         }
       }
     } else {
