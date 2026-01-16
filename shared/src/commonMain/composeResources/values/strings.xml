@@ -60,9 +60,9 @@
     <!-- Mode selection -->
     <string name="mode_select_title">Select Mode</string>
     <string name="mode_select_subtitle">Choose how you want to use the app</string>
-    <string name="mode_online_title">Online Mode</string>
+    <string name="mode_online_title">Online</string>
     <string name="mode_online_desc">Connect to your Memos server for full sync</string>
-    <string name="mode_offline_title">Offline Mode</string>
+    <string name="mode_offline_title">Offline</string>
     <string name="mode_offline_desc">Store data locally without server connection</string>
     <string name="mode_demo_title">Demo</string>
     <string name="mode_demo_desc">Try the app with sample data</string>

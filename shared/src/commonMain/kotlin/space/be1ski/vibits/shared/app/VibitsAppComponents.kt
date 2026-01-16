@@ -55,9 +55,9 @@ internal fun MemosHeader(appState: VibitsAppUiState, dispatch: (MemosAction) -> 
       TextButton(
         onClick = {
           dispatch(MemosAction.EditCredentials)
-          appState.showCredentialsDialog = true
-          appState.credentialsInitialized = false
-          appState.credentialsDismissed = false
+          appState.showSettingsDialog = true
+          appState.settingsInitialized = false
+          appState.settingsDismissed = false
         }
       ) {
         Text(stringResource(Res.string.nav_settings))
