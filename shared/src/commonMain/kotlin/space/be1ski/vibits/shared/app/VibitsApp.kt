@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,6 +29,8 @@ import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
+import space.be1ski.vibits.shared.feature.habits.presentation.components.ActivityWeekDataCache
+import space.be1ski.vibits.shared.feature.habits.presentation.components.LocalActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.habits.presentation.components.earliestMemoDate
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberHabitsConfigTimeline
 import space.be1ski.vibits.shared.feature.habits.presentation.createHabitsFeature
@@ -118,30 +121,33 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
   val habitsState by habitsFeature.state.collectAsState()
 
   val appDetails = remember { loadAppDetailsUseCase() }
+  val activityWeekDataCache = remember { ActivityWeekDataCache() }
 
   SyncAutoLoad(memosState, appState, dispatchMemos)
   SyncCredentialsDialog(memosState, appState)
 
-  VibitsAppContent(
-    memosState = memosState,
-    appState = appState,
-    dispatchMemos = dispatchMemos,
-    saveTimeRangeTabUseCase = saveTimeRangeTabUseCase,
-    habitsState = habitsState,
-    onHabitsAction = habitsFeature::send,
-    calculateSuccessRate = calculateSuccessRate
-  )
-  CredentialsDialog(
-    memosState = memosState,
-    appState = appState,
-    dispatch = dispatchMemos,
-    appDetails = appDetails,
-    switchAppModeUseCase = switchAppModeUseCase,
-    resetAppUseCase = resetAppUseCase,
-    onResetComplete = onResetApp
-  )
-  MemoCreateDialog(appState, dispatchMemos)
-  MemoEditDialog(appState, dispatchMemos)
+  CompositionLocalProvider(LocalActivityWeekDataCache provides activityWeekDataCache) {
+    VibitsAppContent(
+      memosState = memosState,
+      appState = appState,
+      dispatchMemos = dispatchMemos,
+      saveTimeRangeTabUseCase = saveTimeRangeTabUseCase,
+      habitsState = habitsState,
+      onHabitsAction = habitsFeature::send,
+      calculateSuccessRate = calculateSuccessRate
+    )
+    CredentialsDialog(
+      memosState = memosState,
+      appState = appState,
+      dispatch = dispatchMemos,
+      appDetails = appDetails,
+      switchAppModeUseCase = switchAppModeUseCase,
+      resetAppUseCase = resetAppUseCase,
+      onResetComplete = onResetApp
+    )
+    MemoCreateDialog(appState, dispatchMemos)
+    MemoEditDialog(appState, dispatchMemos)
+  }
 }
 
 @Suppress("LongParameterList", "LongMethod")
