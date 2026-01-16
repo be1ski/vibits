@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.Res
-import space.be1ski.vibits.shared.core.logging.AppLogger
+import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.logging.LogLevel
 import space.be1ski.vibits.shared.label_access_token
 import space.be1ski.vibits.shared.label_app_mode
@@ -251,7 +251,7 @@ private const val LOG_TIMESTAMP_LENGTH = 8
 @Suppress("LongMethod")
 @Composable
 private fun LogsDialog(onDismiss: () -> Unit) {
-  val logs = AppLogger.logs
+  val logs = Log.logs
 
   AlertDialog(
     onDismissRequest = onDismiss,
@@ -303,7 +303,7 @@ private fun LogsDialog(onDismiss: () -> Unit) {
       }
     },
     confirmButton = {
-      TextButton(onClick = { AppLogger.clear() }) {
+      TextButton(onClick = { Log.clear() }) {
         Text("Clear")
       }
     },
