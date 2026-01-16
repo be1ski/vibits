@@ -79,7 +79,7 @@ fun sharedModule(): Module = module {
   factory { LoadAppModeUseCase(get()) }
   factory { SaveAppModeUseCase(get()) }
   factory { SwitchAppModeUseCase(get(), get()) }
-  factory { ResetAppUseCase(get(), get(), get(), get()) }
+  factory { ResetAppUseCase(get(), get(), get(), get(), get()) }
   factory { CalculateSuccessRateUseCase() }
   factory { ExtractDailyMemosUseCase() }
   factory { ExtractHabitsConfigUseCase() }
