@@ -120,20 +120,21 @@ fun rememberActivityWeekData(
   val configTimeline = rememberHabitsConfigTimeline(memos)
   val dailyMemos = rememberDailyMemos(memos)
 
-  // Check cache SYNCHRONOUSLY - survives tab switches
-  // Note: this call may increment cache.version if memos reference changed
+  // Check cache SYNCHRONOUSLY on every composition
+  // This ensures we pick up cached data even if local state got reset during recomposition
   val cachedData = cache.get(memos, range, mode)
+
+  // If cache has data, return immediately - no shimmer needed
+  if (cachedData != null) {
+    return ActivityWeekDataState(data = cachedData, isLoading = false)
+  }
+
+  // Cache miss - need to load in background
   val cacheVersion = cache.version
-  var currentData by remember(cacheVersion, range, mode) { mutableStateOf(cachedData ?: emptyWeekData) }
-  var isLoading by remember(cacheVersion, range, mode) { mutableStateOf(cachedData == null) }
+  var currentData by remember(cacheVersion, range, mode) { mutableStateOf(emptyWeekData) }
+  var isLoading by remember(cacheVersion, range, mode) { mutableStateOf(true) }
 
-  // Use cache.version as key to ensure LaunchedEffect restarts when memos reference changes
   LaunchedEffect(cacheVersion, range, mode) {
-    // Already have cached data - nothing to do
-    if (cache.get(memos, range, mode) != null) {
-      return@LaunchedEffect
-    }
-
     val result = withContext(Dispatchers.Default) {
       buildActivityWeekData(configTimeline, dailyMemos, timeZone, memos, range, mode)
     }
