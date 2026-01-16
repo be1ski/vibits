@@ -1,9 +1,18 @@
 package space.be1ski.vibits.shared.feature.auth.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -11,13 +20,21 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.Res
+import space.be1ski.vibits.shared.core.logging.AppLogger
+import space.be1ski.vibits.shared.core.logging.LogLevel
 import space.be1ski.vibits.shared.label_access_token
 import space.be1ski.vibits.shared.label_app_mode
 import space.be1ski.vibits.shared.label_base_url
@@ -104,6 +121,8 @@ private fun CredentialsDialogContent(
   onModeChange: (AppMode) -> Unit,
   onReset: () -> Unit
 ) {
+  var showLogs by remember { mutableStateOf(false) }
+
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
     AppModeSelector(
       currentMode = appState.appMode,
@@ -132,9 +151,18 @@ private fun CredentialsDialogContent(
       )
     }
     AppDetailsSection(appDetails, appState.appMode)
-    TextButton(onClick = onReset, modifier = Modifier.fillMaxWidth()) {
-      Text(stringResource(Res.string.action_reset_app))
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+      TextButton(onClick = { showLogs = true }, modifier = Modifier.weight(1f)) {
+        Text("View Logs")
+      }
+      TextButton(onClick = onReset, modifier = Modifier.weight(1f)) {
+        Text(stringResource(Res.string.action_reset_app))
+      }
     }
+  }
+
+  if (showLogs) {
+    LogsDialog(onDismiss = { showLogs = false })
   }
 }
 
@@ -216,4 +244,73 @@ private fun CredentialsDialogDismissButton(appState: VibitsAppUiState) {
   ) {
     Text(stringResource(Res.string.action_cancel))
   }
+}
+
+private const val LOG_TIMESTAMP_LENGTH = 8
+
+@Suppress("LongMethod")
+@Composable
+private fun LogsDialog(onDismiss: () -> Unit) {
+  val logs = AppLogger.logs
+
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = { Text("Logs (${logs.size})") },
+    text = {
+      LazyColumn(
+        modifier = Modifier
+          .fillMaxWidth()
+          .heightIn(max = 400.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+      ) {
+        items(logs) { entry ->
+          val bgColor = when (entry.level) {
+            LogLevel.ERROR -> MaterialTheme.colorScheme.errorContainer
+            LogLevel.WARN -> MaterialTheme.colorScheme.tertiaryContainer
+            else -> MaterialTheme.colorScheme.surfaceVariant
+          }
+          Column(
+            modifier = Modifier
+              .fillMaxWidth()
+              .background(bgColor, RoundedCornerShape(4.dp))
+              .padding(6.dp)
+          ) {
+            val time = entry.timestamp.substringAfter('T').take(LOG_TIMESTAMP_LENGTH)
+            val header = "$time ${entry.level.name.first()}/${entry.tag}"
+            Text(
+              text = header,
+              style = MaterialTheme.typography.labelSmall,
+              color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+              text = entry.message,
+              style = MaterialTheme.typography.bodySmall.copy(
+                fontFamily = FontFamily.Monospace,
+                fontSize = 11.sp
+              )
+            )
+          }
+        }
+        if (logs.isEmpty()) {
+          item {
+            Text(
+              "No logs yet",
+              style = MaterialTheme.typography.bodyMedium,
+              color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+          }
+        }
+      }
+    },
+    confirmButton = {
+      TextButton(onClick = { AppLogger.clear() }) {
+        Text("Clear")
+      }
+    },
+    dismissButton = {
+      TextButton(onClick = onDismiss) {
+        Text("Close")
+      }
+    }
+  )
 }

@@ -12,11 +12,15 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
+import space.be1ski.vibits.shared.core.logging.AppLogger
 import space.be1ski.vibits.shared.feature.memos.data.remote.dto.CreateMemoRequestDto
 import space.be1ski.vibits.shared.feature.memos.data.remote.dto.ListMemosResponseDto
 import space.be1ski.vibits.shared.feature.memos.data.remote.dto.MemoDto
 import space.be1ski.vibits.shared.feature.memos.data.remote.dto.UpdateMemoRequestDto
 
+private const val TAG = "MemosApi"
+
+@Suppress("TooGenericExceptionCaught")
 class MemosApi(
   private val httpClient: HttpClient
 ) {
@@ -27,14 +31,23 @@ class MemosApi(
     pageToken: String?
   ): ListMemosResponseDto {
     val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
-    return httpClient.get("$normalizedBaseUrl/api/v1/memos") {
-      header(HttpHeaders.Authorization, "Bearer $token")
-      parameter("pageSize", pageSize)
-      parameter("limit", pageSize)
-      if (!pageToken.isNullOrBlank()) {
-        parameter("pageToken", pageToken)
-      }
-    }.body()
+    val fullUrl = "$normalizedBaseUrl/api/v1/memos"
+    AppLogger.i(TAG, "GET $fullUrl")
+    return try {
+      val response: ListMemosResponseDto = httpClient.get(fullUrl) {
+        header(HttpHeaders.Authorization, "Bearer $token")
+        parameter("pageSize", pageSize)
+        parameter("limit", pageSize)
+        if (!pageToken.isNullOrBlank()) {
+          parameter("pageToken", pageToken)
+        }
+      }.body()
+      AppLogger.i(TAG, "GET $fullUrl -> OK, ${response.memos.size} memos")
+      response
+    } catch (e: Exception) {
+      AppLogger.e(TAG, "GET $fullUrl -> FAILED", e)
+      throw e
+    }
   }
 
   suspend fun updateMemo(
@@ -44,12 +57,21 @@ class MemosApi(
     content: String
   ): MemoDto {
     val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
-    return httpClient.patch("$normalizedBaseUrl/api/v1/$name") {
-      header(HttpHeaders.Authorization, "Bearer $token")
-      parameter("updateMask", "content")
-      contentType(ContentType.Application.Json)
-      setBody(UpdateMemoRequestDto(content = content))
-    }.body()
+    val fullUrl = "$normalizedBaseUrl/api/v1/$name"
+    AppLogger.i(TAG, "PATCH $fullUrl")
+    return try {
+      val response: MemoDto = httpClient.patch(fullUrl) {
+        header(HttpHeaders.Authorization, "Bearer $token")
+        parameter("updateMask", "content")
+        contentType(ContentType.Application.Json)
+        setBody(UpdateMemoRequestDto(content = content))
+      }.body()
+      AppLogger.i(TAG, "PATCH $fullUrl -> OK")
+      response
+    } catch (e: Exception) {
+      AppLogger.e(TAG, "PATCH $fullUrl -> FAILED", e)
+      throw e
+    }
   }
 
   suspend fun createMemo(
@@ -58,11 +80,20 @@ class MemosApi(
     content: String
   ): MemoDto {
     val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
-    return httpClient.post("$normalizedBaseUrl/api/v1/memos") {
-      header(HttpHeaders.Authorization, "Bearer $token")
-      contentType(ContentType.Application.Json)
-      setBody(CreateMemoRequestDto(content = content))
-    }.body()
+    val fullUrl = "$normalizedBaseUrl/api/v1/memos"
+    AppLogger.i(TAG, "POST $fullUrl")
+    return try {
+      val response: MemoDto = httpClient.post(fullUrl) {
+        header(HttpHeaders.Authorization, "Bearer $token")
+        contentType(ContentType.Application.Json)
+        setBody(CreateMemoRequestDto(content = content))
+      }.body()
+      AppLogger.i(TAG, "POST $fullUrl -> OK")
+      response
+    } catch (e: Exception) {
+      AppLogger.e(TAG, "POST $fullUrl -> FAILED", e)
+      throw e
+    }
   }
 
   suspend fun deleteMemo(
@@ -71,8 +102,16 @@ class MemosApi(
     name: String
   ) {
     val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
-    httpClient.delete("$normalizedBaseUrl/api/v1/$name") {
-      header(HttpHeaders.Authorization, "Bearer $token")
+    val fullUrl = "$normalizedBaseUrl/api/v1/$name"
+    AppLogger.i(TAG, "DELETE $fullUrl")
+    try {
+      httpClient.delete(fullUrl) {
+        header(HttpHeaders.Authorization, "Bearer $token")
+      }
+      AppLogger.i(TAG, "DELETE $fullUrl -> OK")
+    } catch (e: Exception) {
+      AppLogger.e(TAG, "DELETE $fullUrl -> FAILED", e)
+      throw e
     }
   }
 }
