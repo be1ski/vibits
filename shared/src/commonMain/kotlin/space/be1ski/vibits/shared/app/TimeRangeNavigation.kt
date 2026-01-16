@@ -17,6 +17,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.ActivityMode
+import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
@@ -126,6 +127,7 @@ private fun SwipeablePagerContent(
     state = pagerState,
     modifier = Modifier.fillMaxSize(),
     beyondViewportPageCount = 0,
+    pageSpacing = Indent.xl,
     key = { it }
   ) { page ->
     val delta = page + minDelta
