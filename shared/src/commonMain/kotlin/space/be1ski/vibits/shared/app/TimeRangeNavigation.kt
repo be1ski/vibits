@@ -117,6 +117,7 @@ private fun SwipeablePagerContent(
       val newRange = navigateRange(currentRange, delta)
       if (newRange != activityRangeForState(appState)) {
         updateTimeRangeState(appState, newRange)
+        onHabitsAction(HabitsAction.ClearSelection)
       }
     }
   }
