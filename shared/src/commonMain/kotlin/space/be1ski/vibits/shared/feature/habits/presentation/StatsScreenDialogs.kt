@@ -24,9 +24,11 @@ import space.be1ski.vibits.shared.title_delete_day
 import space.be1ski.vibits.shared.title_update_day
 
 @Composable
-internal fun HabitEditorDialog(derived: StatsScreenDerivedState) {
+internal fun HabitEditorDialog(
+  derived: StatsScreenDerivedState,
+  dispatch: (HabitsAction) -> Unit
+) {
   val habitsState = derived.habitsState
-  val dispatch = derived.dispatch
   if (!habitsState.isEditorOpen) {
     return
   }
@@ -101,9 +103,11 @@ private fun HabitEditorDismissButton(habitsState: HabitsState, dispatch: (Habits
 }
 
 @Composable
-internal fun EmptyDeleteDialog(derived: StatsScreenDerivedState) {
+internal fun EmptyDeleteDialog(
+  derived: StatsScreenDerivedState,
+  dispatch: (HabitsAction) -> Unit
+) {
   val habitsState = derived.habitsState
-  val dispatch = derived.dispatch
   if (!habitsState.showDeleteConfirm) {
     return
   }

@@ -78,10 +78,14 @@ private const val HABIT_COLOR_LIGHT_RATIO = 0.3f
 /**
  * Renders GitHub-style daily activity grid for the provided [state].
  */
+@Suppress("LongParameterList")
 @Composable
 fun ContributionGrid(
   state: ContributionGridState,
-  callbacks: ContributionGridCallbacks,
+  onDaySelected: (ContributionDay) -> Unit,
+  onClearSelection: () -> Unit,
+  onEditRequested: (ContributionDay) -> Unit,
+  onCreateRequested: (ContributionDay) -> Unit,
   modifier: Modifier = Modifier
 ) {
   val interaction = remember { ContributionGridInteractionState() }
@@ -89,8 +93,8 @@ fun ContributionGrid(
     interaction.tooltip = null
   }
   Column(modifier = modifier) {
-    ContributionGridLayout(state, callbacks, interaction)
-    ContributionGridTooltip(interaction, callbacks)
+    ContributionGridLayout(state, onDaySelected, onClearSelection, interaction)
+    ContributionGridTooltip(state, interaction, onEditRequested, onCreateRequested)
   }
 }
 
@@ -111,7 +115,8 @@ private data class ContributionGridLayoutState(
 @Composable
 private fun ContributionGridLayout(
   state: ContributionGridState,
-  callbacks: ContributionGridCallbacks,
+  onDaySelected: (ContributionDay) -> Unit,
+  onClearSelection: () -> Unit,
   interaction: ContributionGridInteractionState
 ) {
   BoxWithConstraints(
@@ -126,7 +131,7 @@ private fun ContributionGridLayout(
             }
             interaction.tooltip = null
             interaction.hoveredDate = null
-            callbacks.onClearSelection()
+            onClearSelection()
           }
         )
       }
@@ -150,7 +155,7 @@ private fun ContributionGridLayout(
     )
 
     Column(verticalArrangement = Arrangement.spacedBy(spacing)) {
-      ContributionGridWeeks(state, callbacks, interaction, layoutState)
+      ContributionGridWeeks(state, onDaySelected, interaction, layoutState)
       ContributionGridTimelineRow(state, layoutState)
     }
   }
@@ -159,7 +164,7 @@ private fun ContributionGridLayout(
 @Composable
 private fun ContributionGridWeeks(
   state: ContributionGridState,
-  callbacks: ContributionGridCallbacks,
+  onDaySelected: (ContributionDay) -> Unit,
   interaction: ContributionGridInteractionState,
   layoutState: ContributionGridLayoutState
 ) {
@@ -199,20 +204,18 @@ private fun ContributionGridWeeks(
                 isToday = state.today == day.date,
                 habitColor = state.habitColor
               ),
-              callbacks = ContributionCellCallbacks(
-                onClick = { offset ->
-                  callbacks.onDaySelected(day)
-                  interaction.tooltip = DayTooltip(day, offset)
-                  interaction.suppressClear = true
-                },
-                onHoverChange = { hovering ->
-                  interaction.hoveredDate = if (hovering) {
-                    day.date
-                  } else {
-                    interaction.hoveredDate?.takeIf { it != day.date }
-                  }
+              onClick = { offset ->
+                onDaySelected(day)
+                interaction.tooltip = DayTooltip(day, offset)
+                interaction.suppressClear = true
+              },
+              onHoverChange = { hovering ->
+                interaction.hoveredDate = if (hovering) {
+                  day.date
+                } else {
+                  interaction.hoveredDate?.takeIf { it != day.date }
                 }
-              )
+              }
             )
           }
         }
@@ -246,8 +249,10 @@ private fun ContributionGridTimelineRow(
 
 @Composable
 private fun ContributionGridTooltip(
+  state: ContributionGridState,
   interaction: ContributionGridInteractionState,
-  callbacks: ContributionGridCallbacks
+  onEditRequested: (ContributionDay) -> Unit,
+  onCreateRequested: (ContributionDay) -> Unit
 ) {
   val tooltip = interaction.tooltip ?: return
   val positionProvider = remember(tooltip.offset) {
@@ -295,12 +300,12 @@ private fun ContributionGridTooltip(
         }
       }
       tooltip.day.dailyMemo?.let {
-        TextButton(onClick = { callbacks.onEditRequested(tooltip.day) }) {
+        TextButton(onClick = { onEditRequested(tooltip.day) }) {
           Text(stringResource(Res.string.title_edit_day))
         }
       } ?: run {
-        if (tooltip.day.totalHabits > 0 && tooltip.day.inRange) {
-          TextButton(onClick = { callbacks.onCreateRequested(tooltip.day) }) {
+        if (tooltip.day.totalHabits > 0 && tooltip.day.inRange && !state.demoMode) {
+          TextButton(onClick = { onCreateRequested(tooltip.day) }) {
             Text(stringResource(Res.string.title_create_day))
           }
         }
@@ -427,7 +432,8 @@ internal data class ChartLayout(
 @Composable
 private fun ContributionCell(
   state: ContributionCellState,
-  callbacks: ContributionCellCallbacks
+  onClick: ((IntOffset) -> Unit)?,
+  onHoverChange: ((Boolean) -> Unit)?
 ) {
   var coordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
   val defaultStartColor = AppColors.habitGradientStart.resolve()
@@ -487,20 +493,20 @@ private fun ContributionCell(
       .border(width = borderWidth, color = borderColor, shape = MaterialTheme.shapes.extraSmall)
       .onGloballyPositioned { coordinates = it }
       .then(
-        if (callbacks.onHoverChange != null) {
-          Modifier.hoverAware(callbacks.onHoverChange)
+        if (onHoverChange != null) {
+          Modifier.hoverAware(onHoverChange)
         } else {
           Modifier
         }
       )
       .then(
-        if (callbacks.onClick != null && state.enabled) {
+        if (onClick != null && state.enabled) {
           Modifier.clickable {
             val coords = coordinates
             if (coords != null) {
               val position = coords.positionInWindow()
               val offset = IntOffset(position.x.toInt(), (position.y + coords.size.height).toInt())
-              callbacks.onClick.invoke(offset)
+              onClick.invoke(offset)
             }
           }
         } else {

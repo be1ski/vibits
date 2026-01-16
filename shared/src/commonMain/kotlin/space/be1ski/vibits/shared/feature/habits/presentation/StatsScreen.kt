@@ -36,10 +36,10 @@ fun StatsScreen(
   onHabitsAction: (HabitsAction) -> Unit = {},
   calculateSuccessRate: CalculateSuccessRateUseCase = koinInject()
 ) {
-  val derived = rememberStatsScreenDerived(state, habitsState, onHabitsAction, calculateSuccessRate)
-  SyncStatsScreenState(derived)
-  StatsScreenContent(derived)
-  StatsScreenDialogs(derived)
+  val derived = rememberStatsScreenDerived(state, habitsState, calculateSuccessRate)
+  SyncStatsScreenState(derived, onHabitsAction)
+  StatsScreenContent(derived, onHabitsAction)
+  StatsScreenDialogs(derived, onHabitsAction)
 }
 
 @Suppress("LongMethod")
@@ -47,7 +47,6 @@ fun StatsScreen(
 private fun rememberStatsScreenDerived(
   state: StatsScreenState,
   habitsState: HabitsState,
-  dispatch: (HabitsAction) -> Unit,
   calculateSuccessRate: CalculateSuccessRateUseCase
 ): StatsScreenDerivedState {
   val memos = state.memos
@@ -100,7 +99,6 @@ private fun rememberStatsScreenDerived(
   return StatsScreenDerivedState(
     state = state,
     habitsState = habitsState,
-    dispatch = dispatch,
     habitsConfigTimeline = habitsConfigTimeline,
     currentHabitsConfig = currentHabitsConfig,
     weekData = weekData,
@@ -120,9 +118,11 @@ private fun rememberStatsScreenDerived(
 }
 
 @Composable
-private fun SyncStatsScreenState(derived: StatsScreenDerivedState) {
+private fun SyncStatsScreenState(
+  derived: StatsScreenDerivedState,
+  dispatch: (HabitsAction) -> Unit
+) {
   val habitsState = derived.habitsState
-  val dispatch = derived.dispatch
   LaunchedEffect(derived.weekData.weeks) {
     if (habitsState.selectedDate == null && habitsState.activeSelectionId == null) {
       val lastDay = derived.weekData.weeks.lastOrNull()?.days?.lastOrNull()
@@ -134,7 +134,10 @@ private fun SyncStatsScreenState(derived: StatsScreenDerivedState) {
 }
 
 @Composable
-private fun StatsScreenContent(derived: StatsScreenDerivedState) {
+private fun StatsScreenContent(
+  derived: StatsScreenDerivedState,
+  dispatch: (HabitsAction) -> Unit
+) {
   val state = derived.state
   val columnModifier = if (state.useVerticalScroll) {
     Modifier.verticalScroll(rememberScrollState())
@@ -150,19 +153,22 @@ private fun StatsScreenContent(derived: StatsScreenDerivedState) {
       modifier = columnModifier
     ) {
       StatsHeaderRow()
-      StatsHabitsEmptyState(derived)
-      StatsInfoCard(derived)
-      StatsMainChart(derived)
-      StatsWeeklyChart(derived)
-      StatsHabitSections(derived)
+      StatsHabitsEmptyState(derived, dispatch)
+      StatsInfoCard(derived, dispatch)
+      StatsMainChart(derived, dispatch)
+      StatsWeeklyChart(derived, dispatch)
+      StatsHabitSections(derived, dispatch)
     }
-    StatsFloatingAction(derived)
+    StatsFloatingAction(derived, dispatch)
   }
 }
 
 @Composable
-private fun StatsScreenDialogs(derived: StatsScreenDerivedState) {
-  HabitEditorDialog(derived)
-  EmptyDeleteDialog(derived)
-  HabitsConfigDialog(derived.habitsState, derived.dispatch)
+private fun StatsScreenDialogs(
+  derived: StatsScreenDerivedState,
+  dispatch: (HabitsAction) -> Unit
+) {
+  HabitEditorDialog(derived, dispatch)
+  EmptyDeleteDialog(derived, dispatch)
+  HabitsConfigDialog(derived.habitsState, dispatch)
 }
