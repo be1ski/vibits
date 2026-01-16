@@ -8,6 +8,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -264,7 +265,8 @@ internal fun StatsMainChart(
       days = lastSevenDays(derived.weekData),
       habits = derived.currentHabitsConfig,
       compactHeight = derived.useCompactHeight,
-      demoMode = state.demoMode
+      demoMode = state.demoMode,
+      onDayClick = onEditRequested
     )
   } else {
     val showTimeline = state.range is ActivityRange.Quarter || state.range is ActivityRange.Year
@@ -429,7 +431,8 @@ private fun LastSevenDaysMatrix(
   days: List<ContributionDay>,
   habits: List<HabitConfig>,
   compactHeight: Boolean,
-  demoMode: Boolean
+  demoMode: Boolean,
+  onDayClick: (ContributionDay) -> Unit = {}
 ) {
   if (days.isEmpty() || habits.isEmpty()) {
     return
@@ -445,7 +448,7 @@ private fun LastSevenDaysMatrix(
       spacing = spacing
     )
     val cellSize = layout.columnSize
-    Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
+    Column(verticalArrangement = Arrangement.spacedBy(spacing)) {
       Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
         Spacer(modifier = Modifier.width(labelWidth))
         days.forEach { day ->
@@ -475,6 +478,7 @@ private fun LastSevenDaysMatrix(
               modifier = Modifier
                 .size(cellSize)
                 .background(cellColor, shape = MaterialTheme.shapes.extraSmall)
+                .clickable { onDayClick(day) }
             )
           }
         }
