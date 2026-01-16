@@ -6,6 +6,7 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.test.FakeAppModeRepository
 import space.be1ski.vibits.shared.test.FakeCredentialsRepository
 import space.be1ski.vibits.shared.test.FakeMemoCache
+import space.be1ski.vibits.shared.test.FakePreferencesRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -52,7 +53,8 @@ class ResetAppUseCaseTest {
     val credentialsRepository = FakeCredentialsRepository(
       initial = Credentials(baseUrl = "https://example.com", token = "token")
     )
-    val useCase = ResetAppUseCase(appModeRepository, memoCache, credentialsRepository)
+    val preferencesRepository = FakePreferencesRepository()
+    val useCase = ResetAppUseCase(appModeRepository, memoCache, credentialsRepository, preferencesRepository)
 
     useCase()
 
@@ -66,7 +68,8 @@ class ResetAppUseCaseTest {
     val credentialsRepository = FakeCredentialsRepository(
       initial = Credentials(baseUrl = "https://example.com", token = "token")
     )
-    val useCase = ResetAppUseCase(appModeRepository, memoCache, credentialsRepository)
+    val preferencesRepository = FakePreferencesRepository()
+    val useCase = ResetAppUseCase(appModeRepository, memoCache, credentialsRepository, preferencesRepository)
 
     useCase()
 
@@ -78,10 +81,24 @@ class ResetAppUseCaseTest {
     val memoCache = FakeMemoCache()
     val appModeRepository = FakeAppModeRepository(initial = AppMode.Online)
     val credentialsRepository = FakeCredentialsRepository()
-    val useCase = ResetAppUseCase(appModeRepository, memoCache, credentialsRepository)
+    val preferencesRepository = FakePreferencesRepository()
+    val useCase = ResetAppUseCase(appModeRepository, memoCache, credentialsRepository, preferencesRepository)
 
     useCase()
 
     assertEquals(AppMode.NotSelected, appModeRepository.storedMode)
+  }
+
+  @Test
+  fun `when invoke then resets preferences`() = runTest {
+    val memoCache = FakeMemoCache()
+    val appModeRepository = FakeAppModeRepository(initial = AppMode.Online)
+    val credentialsRepository = FakeCredentialsRepository()
+    val preferencesRepository = FakePreferencesRepository()
+    val useCase = ResetAppUseCase(appModeRepository, memoCache, credentialsRepository, preferencesRepository)
+
+    useCase()
+
+    assertEquals(1, preferencesRepository.saveCalls)
   }
 }

@@ -7,6 +7,9 @@ import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
+import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
+import space.be1ski.vibits.shared.feature.preferences.domain.model.UserPreferences
+import space.be1ski.vibits.shared.feature.preferences.domain.repository.PreferencesRepository
 
 class FakeCredentialsRepository(
   initial: Credentials = Credentials(baseUrl = "", token = "")
@@ -114,6 +117,22 @@ class FakeAppModeRepository(
 
   override fun saveMode(mode: AppMode) {
     storedMode = mode
+    saveCalls += 1
+  }
+}
+
+class FakePreferencesRepository(
+  initial: UserPreferences = UserPreferences(TimeRangeTab.Weeks, TimeRangeTab.Weeks)
+) : PreferencesRepository {
+  var stored: UserPreferences = initial
+    private set
+  var saveCalls: Int = 0
+    private set
+
+  override fun load(): UserPreferences = stored
+
+  override fun save(preferences: UserPreferences) {
+    stored = preferences
     saveCalls += 1
   }
 }

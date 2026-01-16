@@ -5,7 +5,7 @@ import space.be1ski.vibits.shared.feature.preferences.domain.model.UserPreferenc
 /**
  * Repository for reading and persisting user preferences.
  */
-internal interface PreferencesRepository {
+interface PreferencesRepository {
   /**
    * Loads stored preferences or default values.
    */
