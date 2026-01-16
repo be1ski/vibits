@@ -2,6 +2,7 @@ package space.be1ski.vibits.shared.feature.mode.domain.usecase
 
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
+import space.be1ski.vibits.shared.feature.memos.data.demo.DemoMemosRepository
 import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
@@ -11,18 +12,21 @@ import space.be1ski.vibits.shared.feature.preferences.domain.repository.Preferen
 
 /**
  * Use case for resetting app to initial state.
- * Clears mode selection, cache, credentials, and preferences, showing mode selection screen on next launch.
+ * Clears mode selection, cache, credentials, preferences, and demo data,
+ * showing mode selection screen on next launch.
  */
 class ResetAppUseCase(
   private val appModeRepository: AppModeRepository,
   private val memoCache: MemoCache,
   private val credentialsRepository: CredentialsRepository,
-  private val preferencesRepository: PreferencesRepository
+  private val preferencesRepository: PreferencesRepository,
+  private val demoMemosRepository: DemoMemosRepository
 ) {
   suspend operator fun invoke() {
     memoCache.clear()
     credentialsRepository.save(Credentials(baseUrl = "", token = ""))
     preferencesRepository.save(UserPreferences(TimeRangeTab.Weeks, TimeRangeTab.Weeks))
+    demoMemosRepository.reset()
     appModeRepository.saveMode(AppMode.NotSelected)
   }
 }
