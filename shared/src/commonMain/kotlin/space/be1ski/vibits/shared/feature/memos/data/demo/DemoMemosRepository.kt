@@ -19,13 +19,13 @@ class DemoMemosRepository : MemosRepository {
    * Resets the repository to initial demo data.
    * Called when entering demo mode to ensure fresh data.
    */
-  suspend fun reset() {
+  fun reset() {
     memos.clear()
     memos.addAll(DemoDataGenerator.generateDemoMemos())
     initialized = true
   }
 
-  private suspend fun ensureInitialized() {
+  private fun ensureInitialized() {
     if (!initialized) {
       reset()
     }

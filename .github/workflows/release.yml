@@ -35,10 +35,16 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew :androidApp:assembleRelease -PappVersion=${GITHUB_REF_NAME#v}
 
+      - name: Rename APK
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          mv androidApp/build/outputs/apk/release/androidApp-release.apk \
+             androidApp/build/outputs/apk/release/Vibits-${VERSION}.apk
+
       - name: Upload APK to Release
         uses: softprops/action-gh-release@v2
         with:
-          files: androidApp/build/outputs/apk/release/androidApp-release.apk
+          files: androidApp/build/outputs/apk/release/Vibits-*.apk
 
       - name: Upload to Firebase App Distribution
         env:
@@ -121,10 +127,11 @@ jobs:
 
       - name: Create tarball
         run: |
+          VERSION=${GITHUB_REF_NAME#v}
           cd webApp/build/dist/wasmJs
-          tar -czf vibits-web.tar.gz productionExecutable
+          tar -czf Vibits-${VERSION}-web.tar.gz productionExecutable
 
       - name: Upload Web to Release
         uses: softprops/action-gh-release@v2
         with:
-          files: webApp/build/dist/wasmJs/vibits-web.tar.gz
+          files: webApp/build/dist/wasmJs/Vibits-*-web.tar.gz

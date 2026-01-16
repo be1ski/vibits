@@ -48,6 +48,7 @@ import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
+import space.be1ski.vibits.shared.feature.habits.presentation.components.localizedLabel
 import space.be1ski.vibits.shared.feature.habits.presentation.components.ContributionGrid
 import space.be1ski.vibits.shared.feature.habits.presentation.components.ContributionGridState
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
@@ -260,7 +261,8 @@ internal fun StatsMainChart(
     LastSevenDaysMatrix(
       days = lastSevenDays(derived.weekData),
       habits = derived.currentHabitsConfig,
-      compactHeight = derived.useCompactHeight
+      compactHeight = derived.useCompactHeight,
+      demoMode = state.demoMode
     )
   } else {
     val showTimeline = state.range is ActivityRange.Quarter || state.range is ActivityRange.Year
@@ -393,7 +395,7 @@ private fun HabitActivitySection(
   val chartScrollState = rememberScrollState()
 
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs), modifier = Modifier.padding(top = Indent.s)) {
-    Text(state.habit.label, style = MaterialTheme.typography.titleSmall)
+    Text(state.habit.localizedLabel(state.demoMode), style = MaterialTheme.typography.titleSmall)
     val showTimeline = state.range is ActivityRange.Quarter || state.range is ActivityRange.Year
     ContributionGrid(
       state = ContributionGridState(
@@ -423,7 +425,8 @@ private fun HabitActivitySection(
 private fun LastSevenDaysMatrix(
   days: List<ContributionDay>,
   habits: List<HabitConfig>,
-  compactHeight: Boolean
+  compactHeight: Boolean,
+  demoMode: Boolean
 ) {
   if (days.isEmpty() || habits.isEmpty()) {
     return
@@ -457,7 +460,7 @@ private fun LastSevenDaysMatrix(
           horizontalArrangement = Arrangement.spacedBy(spacing),
           verticalAlignment = Alignment.CenterVertically
         ) {
-          Text(habit.label, style = MaterialTheme.typography.bodySmall, modifier = Modifier.width(labelWidth))
+          Text(habit.localizedLabel(demoMode), style = MaterialTheme.typography.bodySmall, modifier = Modifier.width(labelWidth))
           days.forEach { day ->
             val done = day.habitStatuses.firstOrNull { status -> status.tag == habit.tag }?.done == true
             val cellColor = if (done) androidx.compose.ui.graphics.Color(habit.color) else pendingColor
