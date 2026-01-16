@@ -15,7 +15,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
-import space.be1ski.vibits.shared.core.platform.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
@@ -120,7 +119,6 @@ fun rememberActivityWeekData(
   // These are cached by memos only - won't recompute on range change
   val configTimeline = rememberHabitsConfigTimeline(memos)
   val dailyMemos = rememberDailyMemos(memos)
-  val today = currentLocalDate()
 
   // Check cache SYNCHRONOUSLY - survives tab switches
   // Note: this call may increment cache.version if memos reference changed
