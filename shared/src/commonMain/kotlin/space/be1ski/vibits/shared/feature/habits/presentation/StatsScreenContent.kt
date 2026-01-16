@@ -53,7 +53,6 @@ import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.presentation.components.ContributionGrid
-import space.be1ski.vibits.shared.feature.habits.presentation.components.ContributionGridCallbacks
 import space.be1ski.vibits.shared.feature.habits.presentation.components.ContributionGridState
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.core.ui.Indent
@@ -66,9 +65,11 @@ import space.be1ski.vibits.shared.feature.habits.presentation.components.lastSev
 import space.be1ski.vibits.shared.feature.habits.presentation.components.ChartDimens
 
 @Composable
-internal fun StatsInfoCard(derived: StatsScreenDerivedState) {
+internal fun StatsInfoCard(
+  derived: StatsScreenDerivedState,
+  dispatch: (HabitsAction) -> Unit
+) {
   val state = derived.state
-  val dispatch = derived.dispatch
   val isHabitsMode = state.activityMode == ActivityMode.Habits
   val hasTodayConfig = derived.todayConfig.isNotEmpty()
 
@@ -124,9 +125,11 @@ internal fun StatsHeaderRow() {
 }
 
 @Composable
-internal fun StatsHabitsEmptyState(derived: StatsScreenDerivedState) {
+internal fun StatsHabitsEmptyState(
+  derived: StatsScreenDerivedState,
+  dispatch: (HabitsAction) -> Unit
+) {
   val state = derived.state
-  val dispatch = derived.dispatch
   if (state.activityMode != ActivityMode.Habits || derived.currentHabitsConfig.isNotEmpty()) {
     return
   }
@@ -222,7 +225,10 @@ private fun HabitSectionShimmer(label: String, compactHeight: Boolean) {
 }
 
 @Composable
-internal fun StatsMainChart(derived: StatsScreenDerivedState) {
+internal fun StatsMainChart(
+  derived: StatsScreenDerivedState,
+  dispatch: (HabitsAction) -> Unit
+) {
   // Show shimmer while loading and no data yet
   if (derived.isLoadingWeekData && derived.weekData.weeks.isEmpty()) {
     ChartShimmer(derived.useCompactHeight)
@@ -231,7 +237,6 @@ internal fun StatsMainChart(derived: StatsScreenDerivedState) {
 
   val state = derived.state
   val habitsState = derived.habitsState
-  val dispatch = derived.dispatch
   val chartScrollState = rememberScrollState()
   if (derived.showLast7DaysMatrix) {
     LastSevenDaysMatrix(
@@ -254,37 +259,38 @@ internal fun StatsMainChart(derived: StatsScreenDerivedState) {
         compactHeight = derived.useCompactHeight,
         showTimeline = showTimeline,
         showDayNumbers = false,
-        today = derived.today
-      ),
-      callbacks = ContributionGridCallbacks(
-        onDaySelected = { day ->
-          dispatch(HabitsAction.SelectDay(day, "main"))
-          if (state.activityMode == ActivityMode.Posts) {
-            val week = derived.weekData.weeks.firstOrNull { week ->
-              week.days.any { it.date == day.date }
-            }
-            if (week != null) {
-              dispatch(HabitsAction.SelectWeek(week))
-            }
-          }
-        },
-        onClearSelection = { dispatch(HabitsAction.ClearSelection) },
-        onEditRequested = { day ->
-          val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
-          dispatch(HabitsAction.OpenEditor(day, config))
-        },
-        onCreateRequested = { day ->
-          val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
-          dispatch(HabitsAction.OpenEditor(day, config))
-        },
+        today = derived.today,
         demoMode = state.demoMode
-      )
+      ),
+      onDaySelected = { day ->
+        dispatch(HabitsAction.SelectDay(day, "main"))
+        if (state.activityMode == ActivityMode.Posts) {
+          val week = derived.weekData.weeks.firstOrNull { week ->
+            week.days.any { it.date == day.date }
+          }
+          if (week != null) {
+            dispatch(HabitsAction.SelectWeek(week))
+          }
+        }
+      },
+      onClearSelection = { dispatch(HabitsAction.ClearSelection) },
+      onEditRequested = { day ->
+        val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
+        dispatch(HabitsAction.OpenEditor(day, config))
+      },
+      onCreateRequested = { day ->
+        val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
+        dispatch(HabitsAction.OpenEditor(day, config))
+      }
     )
   }
 }
 
 @Composable
-internal fun StatsWeeklyChart(derived: StatsScreenDerivedState) {
+internal fun StatsWeeklyChart(
+  derived: StatsScreenDerivedState,
+  dispatch: (HabitsAction) -> Unit
+) {
   val state = derived.state
   if (state.activityMode != ActivityMode.Posts) {
     return
@@ -297,7 +303,6 @@ internal fun StatsWeeklyChart(derived: StatsScreenDerivedState) {
   }
 
   val habitsState = derived.habitsState
-  val dispatch = derived.dispatch
   val chartScrollState = rememberScrollState()
   WeeklyBarChart(
     state = WeeklyBarChartState(
@@ -318,7 +323,10 @@ internal fun StatsWeeklyChart(derived: StatsScreenDerivedState) {
 }
 
 @Composable
-internal fun StatsHabitSections(derived: StatsScreenDerivedState) {
+internal fun StatsHabitSections(
+  derived: StatsScreenDerivedState,
+  dispatch: (HabitsAction) -> Unit
+) {
   if (!derived.showHabitSections) {
     return
   }
@@ -332,7 +340,6 @@ internal fun StatsHabitSections(derived: StatsScreenDerivedState) {
   }
 
   val habitsState = derived.habitsState
-  val dispatch = derived.dispatch
   derived.currentHabitsConfig.forEach { habit ->
     HabitActivitySection(
       state = HabitActivitySectionState(
@@ -347,30 +354,30 @@ internal fun StatsHabitSections(derived: StatsScreenDerivedState) {
         today = derived.today,
         habitColor = habit.color
       ),
-      actions = HabitActivitySectionActions(
-        onDaySelected = { day ->
-          dispatch(HabitsAction.SelectDay(day, "habit:${habit.tag}"))
-        },
-        onClearSelection = {
-          dispatch(HabitsAction.ClearSelection)
-        },
-        onEditRequested = { day ->
-          val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
-          dispatch(HabitsAction.OpenEditor(day, config))
-        },
-        onCreateRequested = { day ->
-          val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
-          dispatch(HabitsAction.OpenEditor(day, config))
-        }
-      )
+      onDaySelected = { day ->
+        dispatch(HabitsAction.SelectDay(day, "habit:${habit.tag}"))
+      },
+      onClearSelection = {
+        dispatch(HabitsAction.ClearSelection)
+      },
+      onEditRequested = { day ->
+        val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
+        dispatch(HabitsAction.OpenEditor(day, config))
+      },
+      onCreateRequested = { day ->
+        val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
+        dispatch(HabitsAction.OpenEditor(day, config))
+      }
     )
   }
 }
 
 @Composable
-internal fun BoxScope.StatsFloatingAction(derived: StatsScreenDerivedState) {
+internal fun BoxScope.StatsFloatingAction(
+  derived: StatsScreenDerivedState,
+  dispatch: (HabitsAction) -> Unit
+) {
   val state = derived.state
-  val dispatch = derived.dispatch
   if (state.activityMode != ActivityMode.Habits || derived.todayConfig.isEmpty()) {
     return
   }
@@ -391,7 +398,10 @@ internal fun BoxScope.StatsFloatingAction(derived: StatsScreenDerivedState) {
 @Composable
 private fun HabitActivitySection(
   state: HabitActivitySectionState,
-  actions: HabitActivitySectionActions
+  onDaySelected: (ContributionDay) -> Unit,
+  onClearSelection: () -> Unit,
+  onEditRequested: (ContributionDay) -> Unit,
+  onCreateRequested: (ContributionDay) -> Unit
 ) {
   val habitWeekData = remember(state.baseWeekData, state.habit) {
     activityWeekDataForHabit(state.baseWeekData, state.habit)
@@ -417,15 +427,13 @@ private fun HabitActivitySection(
         compactHeight = state.compactHeight,
         showTimeline = showTimeline,
         today = state.today,
-        habitColor = state.habitColor
-      ),
-      callbacks = ContributionGridCallbacks(
-        onDaySelected = actions.onDaySelected,
-        onClearSelection = actions.onClearSelection,
-        onEditRequested = actions.onEditRequested,
-        onCreateRequested = actions.onCreateRequested,
+        habitColor = state.habitColor,
         demoMode = state.demoMode
-      )
+      ),
+      onDaySelected = onDaySelected,
+      onClearSelection = onClearSelection,
+      onEditRequested = onEditRequested,
+      onCreateRequested = onCreateRequested
     )
   }
 }
