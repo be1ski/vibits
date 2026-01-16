@@ -72,7 +72,9 @@ private fun rememberStatsScreenDerived(
       dailyMemo = todayMemo
     )
   }
-  val weekData = rememberActivityWeekData(memos, range, activityMode)
+  val weekDataState = rememberActivityWeekData(memos, range, activityMode)
+  val weekData = weekDataState.data
+  val isLoadingWeekData = weekDataState.isLoading
   val showWeekdayLegend = range is ActivityRange.Week ||
     range is ActivityRange.Month ||
     range is ActivityRange.Quarter
@@ -102,6 +104,7 @@ private fun rememberStatsScreenDerived(
     habitsConfigTimeline = habitsConfigTimeline,
     currentHabitsConfig = currentHabitsConfig,
     weekData = weekData,
+    isLoadingWeekData = isLoadingWeekData,
     showWeekdayLegend = showWeekdayLegend,
     useCompactHeight = useCompactHeight,
     collapseHabits = collapseHabits,

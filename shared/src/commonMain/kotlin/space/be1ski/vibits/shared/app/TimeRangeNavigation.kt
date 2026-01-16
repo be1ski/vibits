@@ -5,6 +5,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
@@ -55,6 +56,36 @@ internal fun SwipeableTabContent(
     return
   }
 
+  val selectedTab = when (appState.selectedScreen) {
+    MemosScreen.Habits -> appState.habitsTimeRangeTab
+    MemosScreen.Stats -> appState.postsTimeRangeTab
+    MemosScreen.Feed -> appState.habitsTimeRangeTab
+  }
+
+  // Key the entire pager on selectedTab to force re-initialization when tab changes
+  // This prevents flickering where old page content is briefly visible
+  key(selectedTab) {
+    SwipeablePagerContent(
+      memosState = memosState,
+      appState = appState,
+      currentRange = currentRange,
+      minRange = minRange,
+      habitsState = habitsState,
+      onHabitsAction = onHabitsAction
+    )
+  }
+}
+
+@Suppress("LongParameterList")
+@Composable
+private fun SwipeablePagerContent(
+  memosState: MemosState,
+  appState: VibitsAppUiState,
+  currentRange: ActivityRange,
+  minRange: ActivityRange?,
+  habitsState: HabitsState,
+  onHabitsAction: (HabitsAction) -> Unit
+) {
   val activityRange = activityRangeForState(appState)
   val currentDelta = remember(activityRange, currentRange) {
     navigateRange.calculateDelta(currentRange, activityRange)

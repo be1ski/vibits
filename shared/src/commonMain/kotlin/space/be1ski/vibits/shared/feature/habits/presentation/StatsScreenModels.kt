@@ -51,6 +51,7 @@ internal data class StatsScreenDerivedState(
   val habitsConfigTimeline: List<HabitsConfigEntry>,
   val currentHabitsConfig: List<HabitConfig>,
   val weekData: ActivityWeekData,
+  val isLoadingWeekData: Boolean,
   val showWeekdayLegend: Boolean,
   val useCompactHeight: Boolean,
   val collapseHabits: Boolean,

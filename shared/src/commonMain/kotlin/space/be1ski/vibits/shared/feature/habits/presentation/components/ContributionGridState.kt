@@ -1,8 +1,15 @@
 package space.be1ski.vibits.shared.feature.habits.presentation.components
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Dp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -37,20 +44,107 @@ internal data class HabitSelectionState(
   val configTags: Set<String>
 )
 
+private val emptyWeekData = ActivityWeekData(weeks = emptyList(), maxDaily = 0, maxWeekly = 0)
+
+/**
+ * Result of [rememberActivityWeekData] with loading state.
+ */
+data class ActivityWeekDataState(
+  val data: ActivityWeekData,
+  val isLoading: Boolean
+)
+
+/**
+ * Runtime cache for ActivityWeekData.
+ * Clears automatically when memos list changes (by reference).
+ * Exposes [version] to trigger LaunchedEffect restart when memos reference changes.
+ */
+class ActivityWeekDataCache {
+  private var lastMemos: List<Memo>? = null
+  private val cache = mutableMapOf<Pair<ActivityRange, ActivityMode>, ActivityWeekData>()
+
+  /**
+   * Increments when memos reference changes.
+   * Use as LaunchedEffect key to ensure recomputation.
+   */
+  var version: Int = 0
+    private set
+
+  fun get(memos: List<Memo>, range: ActivityRange, mode: ActivityMode): ActivityWeekData? {
+    val sameRef = memos === lastMemos
+    if (!sameRef) {
+      cache.clear()
+      lastMemos = memos
+      version++
+      return null
+    }
+    return cache[range to mode]
+  }
+
+  fun put(memos: List<Memo>, range: ActivityRange, mode: ActivityMode, data: ActivityWeekData) {
+    if (memos !== lastMemos) {
+      cache.clear()
+      lastMemos = memos
+      version++
+    }
+    cache[range to mode] = data
+  }
+
+  fun clear() {
+    cache.clear()
+    lastMemos = null
+    version++
+  }
+}
+
+/**
+ * CompositionLocal for [ActivityWeekDataCache].
+ * Provided at app level, survives tab switches and recomposition.
+ */
+val LocalActivityWeekDataCache = compositionLocalOf { ActivityWeekDataCache() }
+
 /**
  * Memoized builder for [ActivityWeekData].
+ * Pre-extracts config and daily memos (cached by memos only), then builds range-dependent data.
+ * Computation runs in background thread; caches results per range for instant switching.
+ * Uses cache from [LocalActivityWeekDataCache] that survives tab switches.
  */
 @Composable
 fun rememberActivityWeekData(
   memos: List<Memo>,
   range: ActivityRange,
   mode: ActivityMode
-): ActivityWeekData {
+): ActivityWeekDataState {
+  val cache = LocalActivityWeekDataCache.current
   val timeZone = remember { TimeZone.currentSystemDefault() }
+  // These are cached by memos only - won't recompute on range change
+  val configTimeline = rememberHabitsConfigTimeline(memos)
+  val dailyMemos = rememberDailyMemos(memos)
   val today = currentLocalDate()
-  return remember(memos, range, mode, today) {
-    buildActivityWeekData(memos, timeZone, range, mode)
+
+  // Check cache SYNCHRONOUSLY - survives tab switches
+  // Note: this call may increment cache.version if memos reference changed
+  val cachedData = cache.get(memos, range, mode)
+  val cacheVersion = cache.version
+  var currentData by remember(cacheVersion, range, mode) { mutableStateOf(cachedData ?: emptyWeekData) }
+  var isLoading by remember(cacheVersion, range, mode) { mutableStateOf(cachedData == null) }
+
+  // Use cache.version as key to ensure LaunchedEffect restarts when memos reference changes
+  LaunchedEffect(cacheVersion, range, mode) {
+    // Already have cached data - nothing to do
+    if (cache.get(memos, range, mode) != null) {
+      return@LaunchedEffect
+    }
+
+    val result = withContext(Dispatchers.Default) {
+      buildActivityWeekData(configTimeline, dailyMemos, timeZone, memos, range, mode)
+    }
+    cache.put(memos, range, mode, result)
+    currentData = result
+    isLoading = false
   }
+
+  return ActivityWeekDataState(data = currentData, isLoading = isLoading)
 }
 
 /**
@@ -61,6 +155,17 @@ fun rememberHabitsConfigTimeline(memos: List<Memo>): List<HabitsConfigEntry> {
   val timeZone = remember { TimeZone.currentSystemDefault() }
   return remember(memos, timeZone) {
     extractHabitsConfigEntries(memos, timeZone)
+  }
+}
+
+/**
+ * Memoized builder for daily memos map.
+ */
+@Composable
+fun rememberDailyMemos(memos: List<Memo>): Map<LocalDate, DailyMemoInfo> {
+  val timeZone = remember { TimeZone.currentSystemDefault() }
+  return remember(memos, timeZone) {
+    extractDailyMemos(memos, timeZone)
   }
 }
 
@@ -84,20 +189,19 @@ internal fun calculateLayout(
 
 /**
  * Builds the chart dataset for a given [range].
+ * Uses pre-extracted configTimeline and dailyMemos to avoid redundant work on range change.
  */
+@Suppress("LongParameterList")
 private fun buildActivityWeekData(
-  memos: List<Memo>,
+  configTimeline: List<HabitsConfigEntry>,
+  dailyMemos: Map<LocalDate, DailyMemoInfo>,
   timeZone: TimeZone,
+  memos: List<Memo>,
   range: ActivityRange,
   mode: ActivityMode
 ): ActivityWeekData {
   val bounds = rangeBounds(range)
-  val configTimeline = if (mode == ActivityMode.Habits) {
-    extractHabitsConfigEntries(memos, timeZone)
-  } else {
-    emptyList()
-  }
-  val dailyMemos = extractDailyMemos(memos, timeZone)
+  val effectiveConfigTimeline = if (mode == ActivityMode.Habits) configTimeline else emptyList()
   val counts = if (mode == ActivityMode.Posts) extractDailyPostCounts(memos, timeZone, bounds) else emptyMap()
 
   val start = startOfWeek(bounds.start)
@@ -110,7 +214,7 @@ private fun buildActivityWeekData(
           date = cursor.plus(DatePeriod(days = offset)),
           bounds = bounds,
           mode = mode,
-          configTimeline = configTimeline,
+          configTimeline = effectiveConfigTimeline,
           dailyMemos = dailyMemos,
           counts = counts
         )
