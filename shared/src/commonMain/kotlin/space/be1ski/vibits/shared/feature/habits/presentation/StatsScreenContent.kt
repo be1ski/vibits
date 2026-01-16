@@ -2,6 +2,11 @@
 
 package space.be1ski.vibits.shared.feature.habits.presentation
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,10 +16,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddTask
 import androidx.compose.material.icons.filled.Settings
@@ -140,8 +147,88 @@ internal fun StatsHabitsEmptyState(derived: StatsScreenDerivedState) {
   }
 }
 
+private const val SHIMMER_DURATION_MS = 1000
+private const val DAYS_IN_WEEK = 7
+private const val SHIMMER_LABEL_HEIGHT = 20
+
+@Composable
+private fun ChartShimmer(compactHeight: Boolean) {
+  val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
+  val alpha = infiniteTransition.animateFloat(
+    initialValue = 0.3f,
+    targetValue = 0.7f,
+    animationSpec = infiniteRepeatable(
+      animation = tween(SHIMMER_DURATION_MS),
+      repeatMode = RepeatMode.Reverse
+    ),
+    label = "shimmer_alpha"
+  )
+  val cellSize = ChartDimens.minCell(compactHeight)
+  val spacing = ChartDimens.spacing(compactHeight)
+  val chartHeight = (cellSize + spacing) * DAYS_IN_WEEK
+
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(chartHeight)
+      .background(
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha.value),
+        shape = RoundedCornerShape(4.dp)
+      )
+  )
+}
+
+@Composable
+private fun HabitSectionShimmer(label: String, compactHeight: Boolean) {
+  val infiniteTransition = rememberInfiniteTransition(label = "shimmer_$label")
+  val alpha = infiniteTransition.animateFloat(
+    initialValue = 0.3f,
+    targetValue = 0.7f,
+    animationSpec = infiniteRepeatable(
+      animation = tween(SHIMMER_DURATION_MS),
+      repeatMode = RepeatMode.Reverse
+    ),
+    label = "shimmer_alpha_$label"
+  )
+  val cellSize = ChartDimens.minCell(compactHeight)
+  val spacing = ChartDimens.spacing(compactHeight)
+  val chartHeight = (cellSize + spacing) * DAYS_IN_WEEK
+
+  Column(
+    verticalArrangement = Arrangement.spacedBy(Indent.xs),
+    modifier = Modifier.padding(top = Indent.s)
+  ) {
+    // Label shimmer
+    Box(
+      modifier = Modifier
+        .width(80.dp)
+        .height(SHIMMER_LABEL_HEIGHT.dp)
+        .background(
+          color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha.value),
+          shape = RoundedCornerShape(4.dp)
+        )
+    )
+    // Chart shimmer
+    Box(
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(chartHeight)
+        .background(
+          color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha.value),
+          shape = RoundedCornerShape(4.dp)
+        )
+    )
+  }
+}
+
 @Composable
 internal fun StatsMainChart(derived: StatsScreenDerivedState) {
+  // Show shimmer while loading and no data yet
+  if (derived.isLoadingWeekData && derived.weekData.weeks.isEmpty()) {
+    ChartShimmer(derived.useCompactHeight)
+    return
+  }
+
   val state = derived.state
   val habitsState = derived.habitsState
   val dispatch = derived.dispatch
@@ -202,6 +289,13 @@ internal fun StatsWeeklyChart(derived: StatsScreenDerivedState) {
   if (state.activityMode != ActivityMode.Posts) {
     return
   }
+
+  // Show shimmer while loading
+  if (derived.isLoadingWeekData && derived.weekData.weeks.isEmpty()) {
+    ChartShimmer(derived.useCompactHeight)
+    return
+  }
+
   val habitsState = derived.habitsState
   val dispatch = derived.dispatch
   val chartScrollState = rememberScrollState()
@@ -228,6 +322,15 @@ internal fun StatsHabitSections(derived: StatsScreenDerivedState) {
   if (!derived.showHabitSections) {
     return
   }
+
+  // Show shimmers while loading
+  if (derived.isLoadingWeekData && derived.weekData.weeks.isEmpty()) {
+    derived.currentHabitsConfig.forEach { habit ->
+      HabitSectionShimmer(habit.tag, derived.useCompactHeight)
+    }
+    return
+  }
+
   val habitsState = derived.habitsState
   val dispatch = derived.dispatch
   derived.currentHabitsConfig.forEach { habit ->
