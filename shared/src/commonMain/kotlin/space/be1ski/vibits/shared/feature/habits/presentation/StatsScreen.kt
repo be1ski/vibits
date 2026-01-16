@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.TimeZone
@@ -37,7 +36,6 @@ fun StatsScreen(
   calculateSuccessRate: CalculateSuccessRateUseCase = koinInject()
 ) {
   val derived = rememberStatsScreenDerived(state, habitsState, calculateSuccessRate)
-  SyncStatsScreenState(derived, onHabitsAction)
   StatsScreenContent(derived, onHabitsAction)
   StatsScreenDialogs(derived, onHabitsAction)
 }
@@ -117,21 +115,6 @@ private fun rememberStatsScreenDerived(
   )
 }
 
-@Composable
-private fun SyncStatsScreenState(
-  derived: StatsScreenDerivedState,
-  dispatch: (HabitsAction) -> Unit
-) {
-  val habitsState = derived.habitsState
-  LaunchedEffect(derived.weekData.weeks) {
-    if (habitsState.selectedDate == null && habitsState.activeSelectionId == null) {
-      val lastDay = derived.weekData.weeks.lastOrNull()?.days?.lastOrNull()
-      if (lastDay != null) {
-        dispatch(HabitsAction.SelectDay(lastDay, "main"))
-      }
-    }
-  }
-}
 
 @Composable
 private fun StatsScreenContent(
