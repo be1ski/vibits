@@ -175,7 +175,7 @@ private fun VibitsAppContent(
       }
     },
     bottomBar = {
-      MemosBottomNavigation(appState)
+      MemosBottomNavigation(appState) { onHabitsAction(HabitsAction.ClearSelection) }
     }
   ) { padding ->
     val selectedTab = when (appState.selectedScreen) {
@@ -214,6 +214,7 @@ private fun VibitsAppContent(
           minRange = minRange,
           successRate = successRate,
           onTabChange = { newTab ->
+            onHabitsAction(HabitsAction.ClearSelection)
             when (appState.selectedScreen) {
               MemosScreen.Habits -> {
                 adjustDateForTabChange(appState, appState.habitsTimeRangeTab, newTab)
@@ -228,7 +229,10 @@ private fun VibitsAppContent(
               MemosScreen.Feed -> {}
             }
           },
-          onRangeChange = { range -> updateTimeRangeState(appState, range) }
+          onRangeChange = { range ->
+            onHabitsAction(HabitsAction.ClearSelection)
+            updateTimeRangeState(appState, range)
+          }
         )
       }
       SwipeableTabContent(
