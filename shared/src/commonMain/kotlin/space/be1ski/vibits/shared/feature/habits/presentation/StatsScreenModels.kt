@@ -37,17 +37,9 @@ internal data class HabitActivitySectionState(
   val habitColor: Long? = null
 )
 
-internal data class HabitActivitySectionActions(
-  val onDaySelected: (ContributionDay) -> Unit,
-  val onClearSelection: () -> Unit,
-  val onEditRequested: (ContributionDay) -> Unit,
-  val onCreateRequested: (ContributionDay) -> Unit
-)
-
 internal data class StatsScreenDerivedState(
   val state: StatsScreenState,
   val habitsState: HabitsState,
-  val dispatch: (HabitsAction) -> Unit,
   val habitsConfigTimeline: List<HabitsConfigEntry>,
   val currentHabitsConfig: List<HabitConfig>,
   val weekData: ActivityWeekData,

@@ -3,7 +3,6 @@ package space.be1ski.vibits.shared.feature.habits.presentation.components
 import androidx.compose.foundation.ScrollState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
@@ -26,17 +25,7 @@ data class ContributionGridState(
   val showTimeline: Boolean = false,
   val showDayNumbers: Boolean = false,
   val today: LocalDate? = null,
-  val habitColor: Long? = null
-)
-
-/**
- * Event handlers for the contribution grid.
- */
-data class ContributionGridCallbacks(
-  val onDaySelected: (ContributionDay) -> Unit,
-  val onEditRequested: (ContributionDay) -> Unit,
-  val onCreateRequested: (ContributionDay) -> Unit,
-  val onClearSelection: () -> Unit,
+  val habitColor: Long? = null,
   val demoMode: Boolean = false
 )
 
@@ -63,9 +52,4 @@ internal data class ContributionCellState(
   val showDayNumber: Boolean,
   val isToday: Boolean = false,
   val habitColor: Long? = null
-)
-
-internal data class ContributionCellCallbacks(
-  val onClick: ((IntOffset) -> Unit)?,
-  val onHoverChange: ((Boolean) -> Unit)?
 )
