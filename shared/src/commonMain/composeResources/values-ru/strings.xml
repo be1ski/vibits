@@ -17,7 +17,7 @@
     <string name="action_update">Обновить</string>
 
     <!-- App -->
-    <string name="app_name">Memos</string>
+    <string name="app_name">Vibits</string>
 
     <!-- Days of week -->
     <string name="day_fri">Пт</string>
@@ -90,6 +90,7 @@
     <!-- Titles -->
     <string name="title_create_day">Создать день</string>
     <string name="title_delete_day">Удалить день?</string>
+    <string name="title_delete_memo">Удалить заметку?</string>
     <string name="title_edit_day">Изменить день</string>
     <string name="title_edit_memo">Редактировать заметку</string>
     <string name="title_new_memo">Новая заметка</string>

@@ -27,6 +27,7 @@ import space.be1ski.vibits.shared.feature.habits.presentation.StatsScreenState
 import space.be1ski.vibits.shared.feature.habits.presentation.components.quarterIndex
 import space.be1ski.vibits.shared.feature.habits.presentation.components.startOfWeek
 import space.be1ski.vibits.shared.feature.memos.presentation.FeedScreen
+import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
 import space.be1ski.vibits.shared.feature.memos.presentation.PostsScreen
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
@@ -44,7 +45,8 @@ internal fun SwipeableTabContent(
   currentRange: ActivityRange,
   minRange: ActivityRange?,
   habitsState: HabitsState,
-  onHabitsAction: (HabitsAction) -> Unit
+  onHabitsAction: (HabitsAction) -> Unit,
+  dispatchMemos: (MemosAction) -> Unit = {}
 ) {
   if (appState.selectedScreen == MemosScreen.Feed) {
     FeedScreen(
@@ -52,7 +54,8 @@ internal fun SwipeableTabContent(
       isRefreshing = memosState.isLoading,
       onRefresh = {},
       enablePullRefresh = !isDesktop,
-      onMemoClick = { memo -> beginEditMemo(appState, memo) }
+      onMemoClick = { memo -> beginEditMemo(appState, memo) },
+      onDeleteMemo = { memo -> dispatchMemos(MemosAction.DeleteMemo(memo.name)) }
     )
     return
   }

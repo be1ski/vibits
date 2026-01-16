@@ -86,7 +86,8 @@ internal fun StatsInfoCard(
     ) {
       Text(
         stringResource(Res.string.format_habits_progress, todayDone, todayTotal),
-        style = MaterialTheme.typography.titleSmall
+        style = MaterialTheme.typography.titleSmall,
+        modifier = Modifier.weight(1f, fill = false)
       )
       Row(
         horizontalArrangement = Arrangement.spacedBy(Indent.xs),
