@@ -221,6 +221,7 @@ private fun HabitSectionShimmer(label: String, compactHeight: Boolean) {
   }
 }
 
+@Suppress("LongMethod")
 @Composable
 internal fun StatsMainChart(
   derived: StatsScreenDerivedState,
@@ -421,6 +422,7 @@ private fun HabitActivitySection(
   }
 }
 
+@Suppress("LongMethod")
 @Composable
 private fun LastSevenDaysMatrix(
   days: List<ContributionDay>,
@@ -460,7 +462,11 @@ private fun LastSevenDaysMatrix(
           horizontalArrangement = Arrangement.spacedBy(spacing),
           verticalAlignment = Alignment.CenterVertically
         ) {
-          Text(habit.localizedLabel(demoMode), style = MaterialTheme.typography.bodySmall, modifier = Modifier.width(labelWidth))
+          Text(
+            text = habit.localizedLabel(demoMode),
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.width(labelWidth)
+          )
           days.forEach { day ->
             val done = day.habitStatuses.firstOrNull { status -> status.tag == habit.tag }?.done == true
             val cellColor = if (done) androidx.compose.ui.graphics.Color(habit.color) else pendingColor
