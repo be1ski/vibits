@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddTask
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -24,6 +25,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_create_memo
+import space.be1ski.vibits.shared.action_track_today
 import space.be1ski.vibits.shared.core.platform.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
@@ -32,7 +34,10 @@ import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
 import space.be1ski.vibits.shared.feature.habits.presentation.components.ActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.habits.presentation.components.LocalActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.habits.presentation.components.earliestMemoDate
+import space.be1ski.vibits.shared.feature.habits.presentation.components.findDailyMemoForDate
+import space.be1ski.vibits.shared.feature.habits.presentation.components.habitsConfigForDate
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberHabitsConfigTimeline
+import space.be1ski.vibits.shared.feature.habits.presentation.buildHabitDay
 import space.be1ski.vibits.shared.feature.habits.presentation.createHabitsFeature
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
@@ -150,7 +155,7 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
   }
 }
 
-@Suppress("LongParameterList", "LongMethod")
+@Suppress("LongParameterList", "LongMethod", "CyclomaticComplexMethod")
 @Composable
 private fun VibitsAppContent(
   memosState: MemosState,
@@ -161,16 +166,43 @@ private fun VibitsAppContent(
   onHabitsAction: (HabitsAction) -> Unit,
   calculateSuccessRate: CalculateSuccessRateUseCase
 ) {
+  val timeZone = remember { TimeZone.currentSystemDefault() }
+  val today = currentLocalDate()
+  val habitsTimeline = rememberHabitsConfigTimeline(memosState.memos)
+  val todayConfig = remember(habitsTimeline, today) {
+    habitsConfigForDate(habitsTimeline, today)?.habits.orEmpty()
+  }
+  val todayMemo = remember(memosState.memos, today) {
+    findDailyMemoForDate(memosState.memos, timeZone, today)
+  }
+  val todayDay = remember(todayConfig, todayMemo, today) {
+    buildHabitDay(date = today, habitsConfig = todayConfig, dailyMemo = todayMemo)
+  }
+
   Scaffold(
     floatingActionButton = {
-      if (memosFabModeForScreen(appState.selectedScreen) == MemosFabMode.Memo) {
-        FloatingActionButton(
-          onClick = { appState.showCreateMemoDialog = true }
-        ) {
-          Icon(
-            imageVector = Icons.Filled.Edit,
-            contentDescription = stringResource(Res.string.action_create_memo)
-          )
+      when (memosFabModeForScreen(appState.selectedScreen)) {
+        MemosFabMode.Memo -> {
+          FloatingActionButton(
+            onClick = { appState.showCreateMemoDialog = true }
+          ) {
+            Icon(
+              imageVector = Icons.Filled.Edit,
+              contentDescription = stringResource(Res.string.action_create_memo)
+            )
+          }
+        }
+        MemosFabMode.Habits -> {
+          if (todayConfig.isNotEmpty() && todayDay != null) {
+            FloatingActionButton(
+              onClick = { onHabitsAction(HabitsAction.OpenEditor(todayDay, todayConfig)) }
+            ) {
+              Icon(
+                imageVector = Icons.Filled.AddTask,
+                contentDescription = stringResource(Res.string.action_track_today)
+              )
+            }
+          }
         }
       }
     },
@@ -183,9 +215,8 @@ private fun VibitsAppContent(
       MemosScreen.Stats -> appState.postsTimeRangeTab
       MemosScreen.Feed -> appState.habitsTimeRangeTab
     }
-    val currentRange = currentRangeForTab(selectedTab, currentLocalDate())
+    val currentRange = currentRangeForTab(selectedTab, today)
     val activityRange = activityRangeForState(appState)
-    val timeZone = remember { TimeZone.currentSystemDefault() }
     val earliestDate = remember(memosState.memos) { earliestMemoDate(memosState.memos, timeZone) }
     val minRange = minRangeForTab(selectedTab, earliestDate)
     Column(
@@ -201,7 +232,6 @@ private fun VibitsAppContent(
       }
       if (appState.selectedScreen != MemosScreen.Feed) {
         val successRate = if (appState.selectedScreen == MemosScreen.Habits) {
-          val habitsTimeline = rememberHabitsConfigTimeline(memosState.memos)
           val hasHabits = remember(habitsTimeline) { habitsTimeline.lastOrNull()?.habits?.isNotEmpty() == true }
           if (hasHabits) {
             rememberSuccessRate(memosState.memos, activityRange, calculateSuccessRate)
