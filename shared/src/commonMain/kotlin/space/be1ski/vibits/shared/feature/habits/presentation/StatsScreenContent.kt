@@ -10,7 +10,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,11 +22,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddTask
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -41,7 +38,6 @@ import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_configure_habits
 import space.be1ski.vibits.shared.action_track
-import space.be1ski.vibits.shared.action_track_today
 import space.be1ski.vibits.shared.format_habits_progress
 import space.be1ski.vibits.shared.hint_add_habits_config
 import space.be1ski.vibits.shared.label_activity
@@ -368,29 +364,6 @@ internal fun StatsHabitSections(
         val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
         dispatch(HabitsAction.OpenEditor(day, config))
       }
-    )
-  }
-}
-
-@Composable
-internal fun BoxScope.StatsFloatingAction(
-  derived: StatsScreenDerivedState,
-  dispatch: (HabitsAction) -> Unit
-) {
-  val state = derived.state
-  if (state.activityMode != ActivityMode.Habits || derived.todayConfig.isEmpty()) {
-    return
-  }
-  FloatingActionButton(
-    onClick = {
-      val day = derived.todayDay ?: return@FloatingActionButton
-      dispatch(HabitsAction.OpenEditor(day, derived.todayConfig))
-    },
-    modifier = Modifier.align(Alignment.BottomEnd)
-  ) {
-    Icon(
-      imageVector = Icons.Filled.AddTask,
-      contentDescription = stringResource(Res.string.action_track_today)
     )
   }
 }

@@ -3,9 +3,7 @@
 package space.be1ski.vibits.shared.feature.habits.presentation
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -128,21 +126,16 @@ private fun StatsScreenContent(
     Modifier
   }
 
-  Box(
-    modifier = Modifier.fillMaxSize()
+  Column(
+    verticalArrangement = Arrangement.spacedBy(Indent.s),
+    modifier = columnModifier
   ) {
-    Column(
-      verticalArrangement = Arrangement.spacedBy(Indent.s),
-      modifier = columnModifier
-    ) {
-      StatsHeaderRow()
-      StatsHabitsEmptyState(derived, dispatch)
-      StatsInfoCard(derived, dispatch)
-      StatsMainChart(derived, dispatch)
-      StatsWeeklyChart(derived, dispatch)
-      StatsHabitSections(derived, dispatch)
-    }
-    StatsFloatingAction(derived, dispatch)
+    StatsHeaderRow()
+    StatsHabitsEmptyState(derived, dispatch)
+    StatsInfoCard(derived, dispatch)
+    StatsMainChart(derived, dispatch)
+    StatsWeeklyChart(derived, dispatch)
+    StatsHabitSections(derived, dispatch)
   }
 }
 
