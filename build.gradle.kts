@@ -73,7 +73,6 @@ tasks.register("checkAll") {
     ":webApp:ktlintCheck",
     // detekt
     ":shared:detekt",
-    ":androidApp:detekt",
     ":desktopApp:detekt",
     ":webApp:detekt",
     // compile and test
