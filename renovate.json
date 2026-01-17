@@ -2,10 +2,50 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
   "labels": ["dependencies"],
+  "automerge": true,
+  "automergeType": "pr",
+  "platformAutomerge": true,
   "packageRules": [
     {
       "matchManagers": ["gradle", "gradle-wrapper"],
-      "groupName": "gradle"
+      "separateMajorMinor": true,
+      "separateMinorPatch": false
+    },
+    {
+      "description": "Major updates require manual review",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "major"]
+    },
+    {
+      "description": "Ignore pre-release and compat versions",
+      "matchPackagePatterns": ["*"],
+      "allowedVersions": "!/(-compat|-alpha|-beta|-rc|SNAPSHOT)/"
+    },
+    {
+      "description": "Group Kotlin dependencies",
+      "matchPackagePatterns": ["^org.jetbrains.kotlin"],
+      "groupName": "kotlin"
+    },
+    {
+      "description": "Group Compose dependencies",
+      "matchPackagePatterns": ["^org.jetbrains.compose", "^androidx.compose"],
+      "groupName": "compose"
+    },
+    {
+      "description": "Group AndroidX dependencies",
+      "matchPackagePatterns": ["^androidx\\.(?!compose)"],
+      "groupName": "androidx"
+    },
+    {
+      "description": "Group Ktor dependencies",
+      "matchPackagePatterns": ["^io.ktor"],
+      "groupName": "ktor"
+    },
+    {
+      "description": "Group Firebase dependencies",
+      "matchPackagePatterns": ["^com.google.firebase"],
+      "groupName": "firebase"
     }
   ]
 }
