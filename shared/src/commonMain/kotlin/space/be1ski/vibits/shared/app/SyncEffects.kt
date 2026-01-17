@@ -24,19 +24,3 @@ internal fun SyncAutoLoad(
     }
   }
 }
-
-@Composable
-internal fun SyncSettingsDialog(
-  memosState: MemosState,
-  appState: VibitsAppUiState
-) {
-  LaunchedEffect(memosState.credentialsMode, appState.showSettingsDialog, appState.settingsDismissed) {
-    if (memosState.credentialsMode && !appState.showSettingsDialog && !appState.settingsDismissed) {
-      appState.showSettingsDialog = true
-      appState.settingsInitialized = false
-    }
-    if (!memosState.credentialsMode) {
-      appState.settingsDismissed = false
-    }
-  }
-}

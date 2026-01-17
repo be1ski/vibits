@@ -1,6 +1,8 @@
 <resources>
     <!-- Actions -->
     <string name="action_cancel">Cancel</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_close">Close</string>
     <string name="action_configure_habits">Configure habits</string>
     <string name="action_create">Create</string>
     <string name="action_create_memo">Create memo</string>
@@ -9,12 +11,14 @@
     <string name="action_next">Next</string>
     <string name="action_previous">Previous</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_reset">Reset</string>
+    <string name="action_reset_app">Reset app</string>
     <string name="action_save">Save</string>
     <string name="action_show_details">Show habit details</string>
     <string name="action_track">Track</string>
     <string name="action_track_today">Track today</string>
-    <string name="action_reset_app">Reset app</string>
     <string name="action_update">Update</string>
+    <string name="action_view_logs">View Logs</string>
 
     <!-- App -->
     <string name="app_name">Vibits</string>
@@ -57,12 +61,14 @@
     <string name="label_today">Today</string>
 
     <!-- Messages -->
-    <string name="msg_toggle_habit_confirm">Toggle "%1$s" for %2$s?</string>
     <string name="msg_connection_failed">Connection failed</string>
     <string name="msg_delete_day_confirm">No habits selected. The daily entry will be deleted.</string>
     <string name="msg_fill_all_fields">Please fill in all fields</string>
     <string name="msg_no_habits_yet">No habits configured yet.</string>
+    <string name="msg_no_logs">No logs yet</string>
+    <string name="msg_reset_confirm">Are you sure you want to reset the app? This will clear all data.</string>
     <string name="msg_select_habit">Select at least one habit.</string>
+    <string name="msg_toggle_habit_confirm">Toggle "%1$s" for %2$s?</string>
 
     <!-- Mode selection -->
     <string name="mode_select_title">Select Mode</string>
@@ -95,13 +101,14 @@
     <string name="time_years">Years</string>
 
     <!-- Titles -->
-    <string name="title_toggle_habit">Toggle habit?</string>
     <string name="title_create_day">Create day</string>
     <string name="title_delete_day">Delete day?</string>
     <string name="title_delete_memo">Delete memo?</string>
     <string name="title_edit_day">Edit day</string>
     <string name="title_edit_memo">Edit memo</string>
+    <string name="title_logs">Logs (%1$d)</string>
     <string name="title_new_memo">New memo</string>
+    <string name="title_toggle_habit">Toggle habit?</string>
     <string name="title_update_day">Update day</string>
 
     <!-- Demo habits -->
