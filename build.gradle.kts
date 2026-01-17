@@ -55,3 +55,22 @@ subprojects {
     }
   }
 }
+
+tasks.register("checkAll") {
+  group = "verification"
+  description = "Runs all checks: ktlint, detekt, compile, and tests"
+  dependsOn(
+    ":shared:ktlintCheck",
+    ":shared:detekt",
+    ":shared:compileKotlinDesktop",
+    ":shared:desktopTest",
+  )
+}
+
+tasks.register<Copy>("installGitHooks") {
+  group = "setup"
+  description = "Installs git pre-commit hook"
+  from("scripts/pre-commit")
+  into(".git/hooks")
+  fileMode = 0b111101101 // 755
+}

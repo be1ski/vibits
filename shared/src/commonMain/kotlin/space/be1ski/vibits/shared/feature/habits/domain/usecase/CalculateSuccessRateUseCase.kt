@@ -1,6 +1,6 @@
 package space.be1ski.vibits.shared.feature.habits.domain.usecase
 
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
@@ -10,7 +10,8 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.rangeBounds
 /**
  * Calculates success rate for habits within a given time range.
  */
-class CalculateSuccessRateUseCase @Inject constructor() {
+@Inject
+class CalculateSuccessRateUseCase {
   operator fun invoke(
     weekData: ActivityWeekData,
     range: ActivityRange,

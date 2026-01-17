@@ -1,10 +1,11 @@
 package space.be1ski.vibits.shared.feature.auth.domain.usecase
 
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
 
-class SaveCredentialsUseCase @Inject constructor(
+@Inject
+class SaveCredentialsUseCase(
   private val credentialsRepository: CredentialsRepository,
 ) {
   operator fun invoke(credentials: Credentials) {

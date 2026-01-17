@@ -1,6 +1,6 @@
 package space.be1ski.vibits.shared.feature.auth.data
 
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
@@ -11,7 +11,8 @@ private const val URL_LOG_MAX_LENGTH = 50
 /**
  * Repository implementation backed by platform credential storage.
  */
-class CredentialsRepositoryImpl @Inject constructor(
+@Inject
+class CredentialsRepositoryImpl(
   private val credentialsStore: CredentialsStore,
 ) : CredentialsRepository {
   /**

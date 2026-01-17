@@ -1,6 +1,6 @@
 package space.be1ski.vibits.shared.feature.mode.domain.usecase
 
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
@@ -9,7 +9,8 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
  * This can happen for users who switched to Online mode before validation was added.
  * Remove this use case after a few releases when all users have migrated.
  */
-class FixInvalidOnlineModeUseCase @Inject constructor(
+@Inject
+class FixInvalidOnlineModeUseCase(
   private val loadAppModeUseCase: LoadAppModeUseCase,
   private val saveAppModeUseCase: SaveAppModeUseCase,
   private val loadCredentialsUseCase: LoadCredentialsUseCase,

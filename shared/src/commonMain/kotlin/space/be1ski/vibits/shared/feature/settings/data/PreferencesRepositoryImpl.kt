@@ -1,6 +1,6 @@
 package space.be1ski.vibits.shared.feature.settings.data
 
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
@@ -10,7 +10,8 @@ import space.be1ski.vibits.shared.feature.settings.domain.repository.Preferences
 /**
  * Repository implementation backed by platform preferences storage.
  */
-class PreferencesRepositoryImpl @Inject constructor(
+@Inject
+class PreferencesRepositoryImpl(
   private val preferencesStore: PreferencesStore,
 ) : PreferencesRepository {
   override fun load(): UserPreferences {
