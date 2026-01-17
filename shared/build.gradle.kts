@@ -9,6 +9,7 @@ plugins {
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.compose.multiplatform)
   alias(libs.plugins.ksp)
+  alias(libs.plugins.metro)
   jacoco
 }
 
@@ -53,8 +54,6 @@ kotlin {
         implementation(compose.runtime)
         implementation(compose.ui)
         implementation(compose.components.resources)
-        implementation(libs.koin.compose)
-        implementation(libs.koin.core)
         implementation(libs.ktor.client.content.negotiation)
         implementation(libs.ktor.client.core)
         implementation(libs.ktor.client.logging)
@@ -80,7 +79,8 @@ kotlin {
     val androidMain by getting {
       dependsOn(roomMain)
       dependencies {
-        implementation(libs.koin.android)
+        implementation(libs.androidx.appcompat)
+        implementation(libs.androidx.core.ktx)
         implementation(libs.ktor.client.okhttp)
       }
     }
