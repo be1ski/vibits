@@ -1,0 +1,194 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_cancel">Жокко чыгаруу</string>
+    <string name="action_clear">Тазалоо</string>
+    <string name="action_close">Жабуу</string>
+    <string name="action_copied">Көчүрүлдү</string>
+    <string name="action_configure_habits">Адаттарды тууралоо</string>
+    <string name="action_create">Түзүү</string>
+    <string name="action_create_memo">Жазуу түзүү</string>
+    <string name="action_delete">Өчүрүү</string>
+    <string name="action_hide_details">Деталдарды жашыруу</string>
+    <string name="action_next">Кийинки</string>
+    <string name="action_previous">Мурунку</string>
+    <string name="action_refresh">Жаңылоо</string>
+    <string name="action_reset">Баштапкыга кайтаруу</string>
+    <string name="action_reset_app">Колдонмону баштапкыга кайтаруу</string>
+    <string name="action_save">Сактоо</string>
+    <string name="action_show_details">Деталдарды көрсөтүү</string>
+    <string name="action_track">Белгилөө</string>
+    <string name="action_track_today">Бүгүн белгилөө</string>
+    <string name="action_update">Жаңылоо</string>
+    <string name="action_view_logs">Логдор</string>
+    <string name="action_export">Экспорт</string>
+    <string name="action_export_logs">Логдорду экспорттоо</string>
+    <string name="action_export_memos">Жазууларды экспорттоо</string>
+    <string name="msg_export_success">%1$s-ке экспорттолду</string>
+    <string name="msg_export_failed">Экспорт катасы</string>
+
+    <!-- App -->
+    <string name="app_name">Vibits</string>
+
+    <!-- Days of week -->
+    <string name="day_mon">Дш</string>
+    <string name="day_tue">Шш</string>
+    <string name="day_wed">Шр</string>
+    <string name="day_thu">Бш</string>
+    <string name="day_fri">Жм</string>
+    <string name="day_sat">Иш</string>
+    <string name="day_sun">Жк</string>
+
+    <!-- Months short -->
+    <string name="month_jan">Үчт</string>
+    <string name="month_feb">Бир</string>
+    <string name="month_mar">Жал</string>
+    <string name="month_apr">Чын</string>
+    <string name="month_may">Буг</string>
+    <string name="month_jun">Кул</string>
+    <string name="month_jul">Теке</string>
+    <string name="month_aug">Баш</string>
+    <string name="month_sep">Аяк</string>
+    <string name="month_oct">Тог</string>
+    <string name="month_nov">Жет</string>
+    <string name="month_dec">Беш</string>
+
+    <!-- Format strings -->
+    <string name="format_app_version">Версия: %1$s</string>
+    <string name="format_credentials">Эсеп маалыматы: %1$s</string>
+    <string name="format_environment">Чөйрө: %1$s</string>
+    <string name="format_habits_progress">%2$d адаттан %1$d аткарылды</string>
+    <string name="format_memos_db">Жазуулар базасы: %1$s</string>
+    <string name="format_offline_storage">Офлайн: %1$s</string>
+    <string name="format_memos_count">%1$d жазуу</string>
+    <string name="format_memos_today">Бүгүн %1$d жазуу</string>
+    <string name="format_memos_this_week">Бул жумада %1$d жазуу</string>
+    <string name="format_memos_in_month">%2$s айында %1$d жазуу</string>
+    <string name="format_memos_in_quarter">%2$s чейректе %1$d жазуу</string>
+    <string name="format_memos_in_year">%2$d жылында %1$d жазуу</string>
+    <string name="action_show_memos">Жазууларды көрсөтүү</string>
+    <string name="action_hide_memos">Жазууларды жашыруу</string>
+    <string name="action_write">Жазуу</string>
+    <string name="format_tooltip_habits">%1$s: %2$d/%3$d адат</string>
+    <string name="format_tooltip_memos">%1$s: %2$d жазуу</string>
+
+    <!-- Hints -->
+    <string name="hint_add_habits_config">Көзөмөлдөөнү баштоо үчүн адаттар конфигурациясын кошуңуз.</string>
+    <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habit_name">Адат аты</string>
+    <string name="hint_habits_config">Көнүгүү | #habits/gym\nОкуу | #habits/reading</string>
+    <string name="hint_write_memo">Жазуу жазыңыз...</string>
+
+    <!-- Labels -->
+    <string name="label_access_token">Кирүү токени</string>
+    <string name="label_language">Тил</string>
+    <string name="label_time_night">Түн</string>
+    <string name="label_time_morning">Эртең</string>
+    <string name="label_time_day">Күн</string>
+    <string name="label_time_evening">Кеч</string>
+    <string name="label_activity">Активдүүлүк</string>
+    <string name="label_app_mode">Колдонмо режими</string>
+    <string name="label_base_url">Base URL</string>
+    <string name="label_credentials">Эсеп маалыматы</string>
+    <string name="label_demo_mode">Демо режим</string>
+    <string name="label_environment">Чөйрө</string>
+    <string name="label_habits_config">Адаттар конфигурациясы</string>
+    <string name="label_memos_db">Жазуулар базасы</string>
+    <string name="label_storage">Сактагыч</string>
+    <string name="label_version">Версия</string>
+    <string name="label_success_rate">Ийгилик деңгээли</string>
+    <string name="label_today">Бүгүн</string>
+
+    <!-- Messages -->
+    <string name="msg_connection_failed">Байланыш катасы</string>
+    <string name="msg_delete_day_confirm">Адаттар тандалган эмес. Күндүк жазуу өчүрүлөт.</string>
+    <string name="msg_fill_all_fields">Бардык талааларды толтуруңуз</string>
+    <string name="msg_no_habits_yet">Адаттар али тууралangan эмес.</string>
+    <string name="msg_no_logs">Логдор али жок</string>
+    <string name="msg_no_memos_yet">Бул мезгилде жазуулар жок.</string>
+    <string name="msg_reset_confirm">Колдонмону баштапкыга кайтаргыңыз келеби? Бардык маалыматтар өчүрүлөт.</string>
+    <string name="msg_select_habit">Жок дегенде бир адатты тандаңыз.</string>
+    <string name="msg_mark_done_confirm">«%1$s» %2$s үчүн аткарылды деп белгилөө керекпи?</string>
+    <string name="msg_mark_not_done_confirm">%2$s күнү «%1$s» белгисин алып салуу керекпи?</string>
+    <string name="msg_restart_required">Тил өзгөртүүсүн колдонуу үчүн кайра иштетүү керек</string>
+
+    <!-- Language selection -->
+    <string name="language_system">Тутумдук</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_hindi">हिन्दी</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_portuguese">Português</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_ukrainian">Українська</string>
+    <string name="language_belarusian">Беларуская</string>
+    <string name="language_kazakh">Қазақша</string>
+    <string name="language_uzbek">Oʻzbekcha</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_french">Français</string>
+    <string name="language_georgian">ქართული</string>
+    <string name="language_azerbaijani">Azərbaycan</string>
+    <string name="language_kyrgyz">Кыргызча</string>
+    <string name="language_tajik">Тоҷикӣ</string>
+    <string name="language_romanian">Română</string>
+    <string name="language_turkmen">Türkmen</string>
+
+    <!-- Theme selection -->
+    <string name="label_theme">Тема</string>
+    <string name="theme_system">Тутумдук</string>
+    <string name="theme_light">Жарык</string>
+    <string name="theme_dark">Караңгы</string>
+
+    <!-- Mode selection -->
+    <string name="mode_select_title">Режимди тандаңыз</string>
+    <string name="mode_select_subtitle">Колдонмону кантип колдонгуңуз келет?</string>
+    <string name="mode_online_title">Онлайн</string>
+    <string name="mode_online_desc">Толук синхрондоо үчүн Memos серверине туташуу</string>
+    <string name="mode_offline_title">Офлайн</string>
+    <string name="mode_offline_desc">Серверге туташуусуз маалыматтарды жергиликтүү сактоо</string>
+    <string name="mode_demo_title">Демо</string>
+    <string name="mode_demo_desc">Колдонмону үлгү маалыматтар менен сынап көрүү</string>
+
+    <!-- Navigation -->
+    <string name="nav_feed">Лента</string>
+    <string name="nav_habits">Адаттар</string>
+    <string name="nav_memos">Жазуулар</string>
+    <string name="nav_settings">Жөндөөлөр</string>
+
+    <!-- Privacy -->
+    <string name="privacy_hidden_content">Жашырылган мазмун</string>
+    <string name="privacy_hidden_habit">Жашырылган адат</string>
+
+    <!-- Time periods -->
+    <string name="time_month">Ай</string>
+    <string name="time_months">Айлар</string>
+    <string name="time_quarter">Чейрек</string>
+    <string name="time_quarters">Чейректер</string>
+    <string name="time_week">Жума</string>
+    <string name="time_weeks">Жумалар</string>
+    <string name="time_year">Жыл</string>
+    <string name="time_years">Жылдар</string>
+
+    <!-- Titles -->
+    <string name="title_create_day">Күн түзүү</string>
+    <string name="title_delete_day">Күндү өчүрүү?</string>
+    <string name="title_delete_memo">Жазууну өчүрүү?</string>
+    <string name="title_edit_day">Күндү түзөтүү</string>
+    <string name="title_edit_memo">Жазууну түзөтүү</string>
+    <string name="title_logs">Логдор (%1$d)</string>
+    <string name="title_new_memo">Жаңы жазуу</string>
+    <string name="title_mark_done">Аткарылды деп белгилөө?</string>
+    <string name="title_mark_not_done">Белгини алып салуу?</string>
+    <string name="title_update_day">Күндү жаңылоо</string>
+
+    <!-- Demo habits -->
+    <string name="demo_habit_exercise">Көнүгүү</string>
+    <string name="demo_habit_reading">Окуу</string>
+    <string name="demo_habit_meditation">Медитация</string>
+    <string name="demo_habit_water">Суу ичүү</string>
+    <string name="demo_habit_learning">Үйрөнүү</string>
+    <string name="demo_habit_walking">10К кадам</string>
+    <string name="demo_habit_no_sugar">Кантсыз</string>
+    <string name="demo_habit_early_sleep">23:00гө чейин уктоо</string>
+</resources>

@@ -1,0 +1,194 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_cancel">Ýatyr</string>
+    <string name="action_clear">Arassala</string>
+    <string name="action_close">Ýap</string>
+    <string name="action_copied">Göçürildi</string>
+    <string name="action_configure_habits">Endikleri düz</string>
+    <string name="action_create">Döret</string>
+    <string name="action_create_memo">Bellik döret</string>
+    <string name="action_delete">Poz</string>
+    <string name="action_hide_details">Jikme-jiklikleri gizle</string>
+    <string name="action_next">Indiki</string>
+    <string name="action_previous">Öňki</string>
+    <string name="action_refresh">Täzele</string>
+    <string name="action_reset">Täzeden başla</string>
+    <string name="action_reset_app">Programany täzele</string>
+    <string name="action_save">Sakla</string>
+    <string name="action_show_details">Jikme-jiklikleri görkez</string>
+    <string name="action_track">Bellik et</string>
+    <string name="action_track_today">Şu gün bellik et</string>
+    <string name="action_update">Täzele</string>
+    <string name="action_view_logs">Loglar</string>
+    <string name="action_export">Eksport</string>
+    <string name="action_export_logs">Loglary eksport et</string>
+    <string name="action_export_memos">Bellikleri eksport et</string>
+    <string name="msg_export_success">%1$s-a eksport edildi</string>
+    <string name="msg_export_failed">Eksport ýalňyşlygy</string>
+
+    <!-- App -->
+    <string name="app_name">Vibits</string>
+
+    <!-- Days of week -->
+    <string name="day_mon">Db</string>
+    <string name="day_tue">Sb</string>
+    <string name="day_wed">Çr</string>
+    <string name="day_thu">Pn</string>
+    <string name="day_fri">An</string>
+    <string name="day_sat">Şn</string>
+    <string name="day_sun">Ýk</string>
+
+    <!-- Months short -->
+    <string name="month_jan">Ýan</string>
+    <string name="month_feb">Few</string>
+    <string name="month_mar">Mar</string>
+    <string name="month_apr">Apr</string>
+    <string name="month_may">Maý</string>
+    <string name="month_jun">Iýn</string>
+    <string name="month_jul">Iýl</string>
+    <string name="month_aug">Awg</string>
+    <string name="month_sep">Sen</string>
+    <string name="month_oct">Okt</string>
+    <string name="month_nov">Noý</string>
+    <string name="month_dec">Dek</string>
+
+    <!-- Format strings -->
+    <string name="format_app_version">Wersiýa: %1$s</string>
+    <string name="format_credentials">Hasap maglumatlary: %1$s</string>
+    <string name="format_environment">Gurşaw: %1$s</string>
+    <string name="format_habits_progress">%2$d endikden %1$d ýerine ýetirildi</string>
+    <string name="format_memos_db">Bellikler bazasy: %1$s</string>
+    <string name="format_offline_storage">Oflaýn: %1$s</string>
+    <string name="format_memos_count">%1$d bellik</string>
+    <string name="format_memos_today">Şu gün %1$d bellik</string>
+    <string name="format_memos_this_week">Bu hepde %1$d bellik</string>
+    <string name="format_memos_in_month">%2$s aýynda %1$d bellik</string>
+    <string name="format_memos_in_quarter">%2$s çärýeginde %1$d bellik</string>
+    <string name="format_memos_in_year">%2$d ýylynda %1$d bellik</string>
+    <string name="action_show_memos">Bellikleri görkez</string>
+    <string name="action_hide_memos">Bellikleri gizle</string>
+    <string name="action_write">Ýaz</string>
+    <string name="format_tooltip_habits">%1$s: %2$d/%3$d endik</string>
+    <string name="format_tooltip_memos">%1$s: %2$d bellik</string>
+
+    <!-- Hints -->
+    <string name="hint_add_habits_config">Yzarlamagy başlamak üçin endikler konfigurasiýasyny goşuň.</string>
+    <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habit_name">Endik ady</string>
+    <string name="hint_habits_config">Maşk | #habits/gym\nOkamak | #habits/reading</string>
+    <string name="hint_write_memo">Bellik ýaz...</string>
+
+    <!-- Labels -->
+    <string name="label_access_token">Giriş tokeni</string>
+    <string name="label_language">Dil</string>
+    <string name="label_time_night">Gije</string>
+    <string name="label_time_morning">Irden</string>
+    <string name="label_time_day">Gündiz</string>
+    <string name="label_time_evening">Agşam</string>
+    <string name="label_activity">Işjeňlik</string>
+    <string name="label_app_mode">Programma režimi</string>
+    <string name="label_base_url">Base URL</string>
+    <string name="label_credentials">Hasap maglumatlary</string>
+    <string name="label_demo_mode">Demo režim</string>
+    <string name="label_environment">Gurşaw</string>
+    <string name="label_habits_config">Endikler konfigurasiýasy</string>
+    <string name="label_memos_db">Bellikler bazasy</string>
+    <string name="label_storage">Ammar</string>
+    <string name="label_version">Wersiýa</string>
+    <string name="label_success_rate">Üstünlik derejesi</string>
+    <string name="label_today">Şu gün</string>
+
+    <!-- Messages -->
+    <string name="msg_connection_failed">Baglanşyk ýalňyşlygy</string>
+    <string name="msg_delete_day_confirm">Endik saýlanmady. Gündelik ýazgy öçüriler.</string>
+    <string name="msg_fill_all_fields">Ähli meýdanlary dolduryň</string>
+    <string name="msg_no_habits_yet">Endikler heniz düzülmedi.</string>
+    <string name="msg_no_logs">Loglar heniz ýok</string>
+    <string name="msg_no_memos_yet">Bu döwürde bellik ýok.</string>
+    <string name="msg_reset_confirm">Programmany täzeden başlamak isleýärsiňizmi? Ähli maglumatlar öçüriler.</string>
+    <string name="msg_select_habit">Azyndan bir endik saýlaň.</string>
+    <string name="msg_mark_done_confirm">«%1$s» %2$s üçin ýerine ýetirilen diýip bellesinmi?</string>
+    <string name="msg_mark_not_done_confirm">%2$s güni «%1$s» belligini aýyrmak isleýärsiňizmi?</string>
+    <string name="msg_restart_required">Dil üýtgemesini ulanmak üçin täzeden başlamaly</string>
+
+    <!-- Language selection -->
+    <string name="language_system">Ulgam</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_hindi">हिन्दी</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_portuguese">Português</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_ukrainian">Українська</string>
+    <string name="language_belarusian">Беларуская</string>
+    <string name="language_kazakh">Қазақша</string>
+    <string name="language_uzbek">Oʻzbekcha</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_french">Français</string>
+    <string name="language_georgian">ქართული</string>
+    <string name="language_azerbaijani">Azərbaycan</string>
+    <string name="language_kyrgyz">Кыргызча</string>
+    <string name="language_tajik">Тоҷикӣ</string>
+    <string name="language_romanian">Română</string>
+    <string name="language_turkmen">Türkmen</string>
+
+    <!-- Theme selection -->
+    <string name="label_theme">Tema</string>
+    <string name="theme_system">Ulgam</string>
+    <string name="theme_light">Ýagty</string>
+    <string name="theme_dark">Garaňky</string>
+
+    <!-- Mode selection -->
+    <string name="mode_select_title">Režim saýlaň</string>
+    <string name="mode_select_subtitle">Programmany nädip ulanmak isleýärsiňiz?</string>
+    <string name="mode_online_title">Onlaýn</string>
+    <string name="mode_online_desc">Doly sinhronizasiýa üçin Memos serverine birikdiriň</string>
+    <string name="mode_offline_title">Oflaýn</string>
+    <string name="mode_offline_desc">Maglumatlary ýerli ýerde server birikmezden saklaň</string>
+    <string name="mode_demo_title">Demo</string>
+    <string name="mode_demo_desc">Programmany nusga maglumatlar bilen synag ediň</string>
+
+    <!-- Navigation -->
+    <string name="nav_feed">Lenta</string>
+    <string name="nav_habits">Endikler</string>
+    <string name="nav_memos">Bellikler</string>
+    <string name="nav_settings">Sazlamalar</string>
+
+    <!-- Privacy -->
+    <string name="privacy_hidden_content">Gizlin mazmun</string>
+    <string name="privacy_hidden_habit">Gizlin endik</string>
+
+    <!-- Time periods -->
+    <string name="time_month">Aý</string>
+    <string name="time_months">Aýlar</string>
+    <string name="time_quarter">Çärýek</string>
+    <string name="time_quarters">Çärýekler</string>
+    <string name="time_week">Hepde</string>
+    <string name="time_weeks">Hepdeler</string>
+    <string name="time_year">Ýyl</string>
+    <string name="time_years">Ýyllar</string>
+
+    <!-- Titles -->
+    <string name="title_create_day">Gün döret</string>
+    <string name="title_delete_day">Güni poz?</string>
+    <string name="title_delete_memo">Belligi poz?</string>
+    <string name="title_edit_day">Güni redaktirle</string>
+    <string name="title_edit_memo">Belligi redaktirle</string>
+    <string name="title_logs">Loglar (%1$d)</string>
+    <string name="title_new_memo">Täze bellik</string>
+    <string name="title_mark_done">Ýerine ýetirilen diýip bellesin?</string>
+    <string name="title_mark_not_done">Belligi aýyr?</string>
+    <string name="title_update_day">Güni täzele</string>
+
+    <!-- Demo habits -->
+    <string name="demo_habit_exercise">Maşk</string>
+    <string name="demo_habit_reading">Okamak</string>
+    <string name="demo_habit_meditation">Meditasiýa</string>
+    <string name="demo_habit_water">Suw iç</string>
+    <string name="demo_habit_learning">Öwrenmek</string>
+    <string name="demo_habit_walking">10K ädim</string>
+    <string name="demo_habit_no_sugar">Şekersiz</string>
+    <string name="demo_habit_early_sleep">23:00-a çenli uky</string>
+</resources>

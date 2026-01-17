@@ -1,0 +1,194 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_cancel">Бекор кардан</string>
+    <string name="action_clear">Тоза кардан</string>
+    <string name="action_close">Пӯшидан</string>
+    <string name="action_copied">Нусхабардорӣ шуд</string>
+    <string name="action_configure_habits">Танзими одатҳо</string>
+    <string name="action_create">Эҷод кардан</string>
+    <string name="action_create_memo">Эҷоди ёддошт</string>
+    <string name="action_delete">Нест кардан</string>
+    <string name="action_hide_details">Пинҳон кардани тафсилот</string>
+    <string name="action_next">Навбатӣ</string>
+    <string name="action_previous">Қаблӣ</string>
+    <string name="action_refresh">Навсозӣ</string>
+    <string name="action_reset">Барқарор кардан</string>
+    <string name="action_reset_app">Барқарор кардани барнома</string>
+    <string name="action_save">Захира кардан</string>
+    <string name="action_show_details">Нишон додани тафсилот</string>
+    <string name="action_track">Қайд кардан</string>
+    <string name="action_track_today">Имрӯз қайд кардан</string>
+    <string name="action_update">Навсозӣ</string>
+    <string name="action_view_logs">Логҳо</string>
+    <string name="action_export">Содирот</string>
+    <string name="action_export_logs">Содироти логҳо</string>
+    <string name="action_export_memos">Содироти ёддоштҳо</string>
+    <string name="msg_export_success">Ба %1$s содир шуд</string>
+    <string name="msg_export_failed">Хатои содирот</string>
+
+    <!-- App -->
+    <string name="app_name">Vibits</string>
+
+    <!-- Days of week -->
+    <string name="day_mon">Дш</string>
+    <string name="day_tue">Сш</string>
+    <string name="day_wed">Чш</string>
+    <string name="day_thu">Пш</string>
+    <string name="day_fri">Ҷм</string>
+    <string name="day_sat">Шб</string>
+    <string name="day_sun">Яш</string>
+
+    <!-- Months short -->
+    <string name="month_jan">Янв</string>
+    <string name="month_feb">Фев</string>
+    <string name="month_mar">Мар</string>
+    <string name="month_apr">Апр</string>
+    <string name="month_may">Май</string>
+    <string name="month_jun">Июн</string>
+    <string name="month_jul">Июл</string>
+    <string name="month_aug">Авг</string>
+    <string name="month_sep">Сен</string>
+    <string name="month_oct">Окт</string>
+    <string name="month_nov">Ноя</string>
+    <string name="month_dec">Дек</string>
+
+    <!-- Format strings -->
+    <string name="format_app_version">Версия: %1$s</string>
+    <string name="format_credentials">Маълумоти ҳисоб: %1$s</string>
+    <string name="format_environment">Муҳит: %1$s</string>
+    <string name="format_habits_progress">%2$d одатҳо аз %1$d иҷро шуд</string>
+    <string name="format_memos_db">Базаи ёддоштҳо: %1$s</string>
+    <string name="format_offline_storage">Офлайн: %1$s</string>
+    <string name="format_memos_count">%1$d ёддошт</string>
+    <string name="format_memos_today">Имрӯз %1$d ёддошт</string>
+    <string name="format_memos_this_week">Ин ҳафта %1$d ёддошт</string>
+    <string name="format_memos_in_month">Дар моҳи %2$s %1$d ёддошт</string>
+    <string name="format_memos_in_quarter">Дар семоҳаи %2$s %1$d ёддошт</string>
+    <string name="format_memos_in_year">Дар соли %2$d %1$d ёддошт</string>
+    <string name="action_show_memos">Нишон додани ёддоштҳо</string>
+    <string name="action_hide_memos">Пинҳон кардани ёддоштҳо</string>
+    <string name="action_write">Навиштан</string>
+    <string name="format_tooltip_habits">%1$s: %2$d/%3$d одат</string>
+    <string name="format_tooltip_memos">%1$s: %2$d ёддошт</string>
+
+    <!-- Hints -->
+    <string name="hint_add_habits_config">Барои оғоз кардани пайгирӣ конфигуратсияи одатҳоро илова кунед.</string>
+    <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habit_name">Номи одат</string>
+    <string name="hint_habits_config">Варзиш | #habits/gym\nХондан | #habits/reading</string>
+    <string name="hint_write_memo">Ёддошт нависед...</string>
+
+    <!-- Labels -->
+    <string name="label_access_token">Токени дастрасӣ</string>
+    <string name="label_language">Забон</string>
+    <string name="label_time_night">Шаб</string>
+    <string name="label_time_morning">Субҳ</string>
+    <string name="label_time_day">Рӯз</string>
+    <string name="label_time_evening">Бегоҳ</string>
+    <string name="label_activity">Фаъолият</string>
+    <string name="label_app_mode">Режими барнома</string>
+    <string name="label_base_url">Base URL</string>
+    <string name="label_credentials">Маълумоти ҳисоб</string>
+    <string name="label_demo_mode">Режими намоишӣ</string>
+    <string name="label_environment">Муҳит</string>
+    <string name="label_habits_config">Конфигуратсияи одатҳо</string>
+    <string name="label_memos_db">Базаи ёддоштҳо</string>
+    <string name="label_storage">Анбор</string>
+    <string name="label_version">Версия</string>
+    <string name="label_success_rate">Дараҷаи муваффақият</string>
+    <string name="label_today">Имрӯз</string>
+
+    <!-- Messages -->
+    <string name="msg_connection_failed">Хатои пайвастшавӣ</string>
+    <string name="msg_delete_day_confirm">Одат интихоб нашудааст. Сабти рӯзона нест мешавад.</string>
+    <string name="msg_fill_all_fields">Ҳамаи майдонҳоро пур кунед</string>
+    <string name="msg_no_habits_yet">Одатҳо ҳанӯз танзим нашудаанд.</string>
+    <string name="msg_no_logs">Логҳо ҳанӯз нестанд</string>
+    <string name="msg_no_memos_yet">Дар ин давра ёддоштҳо нестанд.</string>
+    <string name="msg_reset_confirm">Шумо мутмаин ҳастед, ки мехоҳед барномаро барқарор кунед? Ҳамаи маълумот нест мешавад.</string>
+    <string name="msg_select_habit">Ҳадди ақал як одатро интихоб кунед.</string>
+    <string name="msg_mark_done_confirm">«%1$s»-ро барои %2$s ҳамчун иҷрошуда қайд кунем?</string>
+    <string name="msg_mark_not_done_confirm">Қайдро аз «%1$s» барои %2$s бардорем?</string>
+    <string name="msg_restart_required">Барои татбиқи тағйироти забон аз нав оғоз кардан лозим аст</string>
+
+    <!-- Language selection -->
+    <string name="language_system">Системавӣ</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_hindi">हिन्दी</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_portuguese">Português</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_ukrainian">Українська</string>
+    <string name="language_belarusian">Беларуская</string>
+    <string name="language_kazakh">Қазақша</string>
+    <string name="language_uzbek">Oʻzbekcha</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_french">Français</string>
+    <string name="language_georgian">ქართული</string>
+    <string name="language_azerbaijani">Azərbaycan</string>
+    <string name="language_kyrgyz">Кыргызча</string>
+    <string name="language_tajik">Тоҷикӣ</string>
+    <string name="language_romanian">Română</string>
+    <string name="language_turkmen">Türkmen</string>
+
+    <!-- Theme selection -->
+    <string name="label_theme">Мавзуъ</string>
+    <string name="theme_system">Системавӣ</string>
+    <string name="theme_light">Равшан</string>
+    <string name="theme_dark">Торик</string>
+
+    <!-- Mode selection -->
+    <string name="mode_select_title">Режимро интихоб кунед</string>
+    <string name="mode_select_subtitle">Шумо чӣ тавр мехоҳед барномаро истифода баред?</string>
+    <string name="mode_online_title">Онлайн</string>
+    <string name="mode_online_desc">Барои ҳамоҳангсозии пурра ба сервери Memos пайваст шавед</string>
+    <string name="mode_offline_title">Офлайн</string>
+    <string name="mode_offline_desc">Маълумотро бе пайвастшавӣ ба сервер маҳаллӣ нигоҳ доред</string>
+    <string name="mode_demo_title">Намоишӣ</string>
+    <string name="mode_demo_desc">Барномаро бо маълумоти намунавӣ санҷед</string>
+
+    <!-- Navigation -->
+    <string name="nav_feed">Лента</string>
+    <string name="nav_habits">Одатҳо</string>
+    <string name="nav_memos">Ёддоштҳо</string>
+    <string name="nav_settings">Танзимот</string>
+
+    <!-- Privacy -->
+    <string name="privacy_hidden_content">Мундариҷаи пинҳон</string>
+    <string name="privacy_hidden_habit">Одати пинҳон</string>
+
+    <!-- Time periods -->
+    <string name="time_month">Моҳ</string>
+    <string name="time_months">Моҳҳо</string>
+    <string name="time_quarter">Семоҳа</string>
+    <string name="time_quarters">Семоҳаҳо</string>
+    <string name="time_week">Ҳафта</string>
+    <string name="time_weeks">Ҳафтаҳо</string>
+    <string name="time_year">Сол</string>
+    <string name="time_years">Солҳо</string>
+
+    <!-- Titles -->
+    <string name="title_create_day">Эҷоди рӯз</string>
+    <string name="title_delete_day">Рӯзро нест кунем?</string>
+    <string name="title_delete_memo">Ёддоштро нест кунем?</string>
+    <string name="title_edit_day">Таҳрири рӯз</string>
+    <string name="title_edit_memo">Таҳрири ёддошт</string>
+    <string name="title_logs">Логҳо (%1$d)</string>
+    <string name="title_new_memo">Ёддошти нав</string>
+    <string name="title_mark_done">Ҳамчун иҷрошуда қайд кунем?</string>
+    <string name="title_mark_not_done">Қайдро бардорем?</string>
+    <string name="title_update_day">Навсозии рӯз</string>
+
+    <!-- Demo habits -->
+    <string name="demo_habit_exercise">Варзиш</string>
+    <string name="demo_habit_reading">Хондан</string>
+    <string name="demo_habit_meditation">Медитатсия</string>
+    <string name="demo_habit_water">Об нӯшидан</string>
+    <string name="demo_habit_learning">Омӯзиш</string>
+    <string name="demo_habit_walking">10К қадам</string>
+    <string name="demo_habit_no_sugar">Бе қанд</string>
+    <string name="demo_habit_early_sleep">Хоб то 23:00</string>
+</resources>

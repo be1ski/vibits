@@ -1,0 +1,194 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_cancel">Болдырмау</string>
+    <string name="action_clear">Тазалау</string>
+    <string name="action_close">Жабу</string>
+    <string name="action_copied">Көшірілді</string>
+    <string name="action_configure_habits">Әдеттерді баптау</string>
+    <string name="action_create">Жасау</string>
+    <string name="action_create_memo">Жазба жасау</string>
+    <string name="action_delete">Жою</string>
+    <string name="action_hide_details">Мәліметтерді жасыру</string>
+    <string name="action_next">Келесі</string>
+    <string name="action_previous">Алдыңғы</string>
+    <string name="action_refresh">Жаңарту</string>
+    <string name="action_reset">Қалпына келтіру</string>
+    <string name="action_reset_app">Қолданбаны қалпына келтіру</string>
+    <string name="action_save">Сақтау</string>
+    <string name="action_show_details">Мәліметтерді көрсету</string>
+    <string name="action_track">Белгілеу</string>
+    <string name="action_track_today">Бүгін белгілеу</string>
+    <string name="action_update">Жаңарту</string>
+    <string name="action_view_logs">Логтар</string>
+    <string name="action_export">Экспорт</string>
+    <string name="action_export_logs">Логтарды экспорттау</string>
+    <string name="action_export_memos">Жазбаларды экспорттау</string>
+    <string name="msg_export_success">%1$s-ге экспортталды</string>
+    <string name="msg_export_failed">Экспорт қатесі</string>
+
+    <!-- App -->
+    <string name="app_name">Vibits</string>
+
+    <!-- Days of week -->
+    <string name="day_mon">Дс</string>
+    <string name="day_tue">Сс</string>
+    <string name="day_wed">Ср</string>
+    <string name="day_thu">Бс</string>
+    <string name="day_fri">Жм</string>
+    <string name="day_sat">Сб</string>
+    <string name="day_sun">Жс</string>
+
+    <!-- Months short -->
+    <string name="month_jan">Қаң</string>
+    <string name="month_feb">Ақп</string>
+    <string name="month_mar">Нау</string>
+    <string name="month_apr">Сәу</string>
+    <string name="month_may">Мам</string>
+    <string name="month_jun">Мау</string>
+    <string name="month_jul">Шіл</string>
+    <string name="month_aug">Там</string>
+    <string name="month_sep">Қыр</string>
+    <string name="month_oct">Қаз</string>
+    <string name="month_nov">Қар</string>
+    <string name="month_dec">Жел</string>
+
+    <!-- Format strings -->
+    <string name="format_app_version">Нұсқа: %1$s</string>
+    <string name="format_credentials">Тіркелгі деректері: %1$s</string>
+    <string name="format_environment">Орта: %1$s</string>
+    <string name="format_habits_progress">%2$d әдеттің %1$d орындалды</string>
+    <string name="format_memos_db">Жазбалар базасы: %1$s</string>
+    <string name="format_offline_storage">Офлайн: %1$s</string>
+    <string name="format_memos_count">%1$d жазба</string>
+    <string name="format_memos_today">Бүгін %1$d жазба</string>
+    <string name="format_memos_this_week">Осы аптада %1$d жазба</string>
+    <string name="format_memos_in_month">%2$s айында %1$d жазба</string>
+    <string name="format_memos_in_quarter">%2$s тоқсанында %1$d жазба</string>
+    <string name="format_memos_in_year">%2$d жылында %1$d жазба</string>
+    <string name="action_show_memos">Жазбаларды көрсету</string>
+    <string name="action_hide_memos">Жазбаларды жасыру</string>
+    <string name="action_write">Жазу</string>
+    <string name="format_tooltip_habits">%1$s: %2$d/%3$d әдет</string>
+    <string name="format_tooltip_memos">%1$s: %2$d жазба</string>
+
+    <!-- Hints -->
+    <string name="hint_add_habits_config">Бақылауды бастау үшін әдеттер конфигурациясын қосыңыз.</string>
+    <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habit_name">Әдет атауы</string>
+    <string name="hint_habits_config">Жаттығу | #habits/gym\nОқу | #habits/reading</string>
+    <string name="hint_write_memo">Жазба жазыңыз...</string>
+
+    <!-- Labels -->
+    <string name="label_access_token">Қол жеткізу токені</string>
+    <string name="label_language">Тіл</string>
+    <string name="label_time_night">Түн</string>
+    <string name="label_time_morning">Таң</string>
+    <string name="label_time_day">Күн</string>
+    <string name="label_time_evening">Кеш</string>
+    <string name="label_activity">Белсенділік</string>
+    <string name="label_app_mode">Қолданба режимі</string>
+    <string name="label_base_url">Base URL</string>
+    <string name="label_credentials">Тіркелгі деректері</string>
+    <string name="label_demo_mode">Демо режим</string>
+    <string name="label_environment">Орта</string>
+    <string name="label_habits_config">Әдеттер конфигурациясы</string>
+    <string name="label_memos_db">Жазбалар базасы</string>
+    <string name="label_storage">Сақтау орны</string>
+    <string name="label_version">Нұсқа</string>
+    <string name="label_success_rate">Сәттілік деңгейі</string>
+    <string name="label_today">Бүгін</string>
+
+    <!-- Messages -->
+    <string name="msg_connection_failed">Қосылу қатесі</string>
+    <string name="msg_delete_day_confirm">Әдеттер таңдалмаған. Күндік жазба жойылады.</string>
+    <string name="msg_fill_all_fields">Барлық өрістерді толтырыңыз</string>
+    <string name="msg_no_habits_yet">Әдеттер әлі бапталмаған.</string>
+    <string name="msg_no_logs">Логтар әлі жоқ</string>
+    <string name="msg_no_memos_yet">Бұл кезеңде жазбалар жоқ.</string>
+    <string name="msg_reset_confirm">Қолданбаны қалпына келтіргіңіз келе ме? Барлық деректер жойылады.</string>
+    <string name="msg_select_habit">Кем дегенде бір әдетті таңдаңыз.</string>
+    <string name="msg_mark_done_confirm">«%1$s» %2$s үшін орындалды деп белгілеу керек пе?</string>
+    <string name="msg_mark_not_done_confirm">%2$s күні «%1$s» белгісін алып тастау керек пе?</string>
+    <string name="msg_restart_required">Тіл өзгерісін қолдану үшін қайта іске қосу қажет</string>
+
+    <!-- Language selection -->
+    <string name="language_system">Жүйелік</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_hindi">हिन्दी</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_portuguese">Português</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_ukrainian">Українська</string>
+    <string name="language_belarusian">Беларуская</string>
+    <string name="language_kazakh">Қазақша</string>
+    <string name="language_uzbek">Oʻzbekcha</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_french">Français</string>
+    <string name="language_georgian">ქართული</string>
+    <string name="language_azerbaijani">Azərbaycan</string>
+    <string name="language_kyrgyz">Кыргызча</string>
+    <string name="language_tajik">Тоҷикӣ</string>
+    <string name="language_romanian">Română</string>
+    <string name="language_turkmen">Türkmen</string>
+
+    <!-- Theme selection -->
+    <string name="label_theme">Тақырып</string>
+    <string name="theme_system">Жүйелік</string>
+    <string name="theme_light">Жарық</string>
+    <string name="theme_dark">Қараңғы</string>
+
+    <!-- Mode selection -->
+    <string name="mode_select_title">Режимді таңдаңыз</string>
+    <string name="mode_select_subtitle">Қолданбаны қалай пайдаланғыңыз келеді?</string>
+    <string name="mode_online_title">Онлайн</string>
+    <string name="mode_online_desc">Толық синхрондау үшін Memos серверіне қосылу</string>
+    <string name="mode_offline_title">Офлайн</string>
+    <string name="mode_offline_desc">Серверге қосылусыз деректерді жергілікті сақтау</string>
+    <string name="mode_demo_title">Демо</string>
+    <string name="mode_demo_desc">Қолданбаны үлгі деректермен байқап көру</string>
+
+    <!-- Navigation -->
+    <string name="nav_feed">Лента</string>
+    <string name="nav_habits">Әдеттер</string>
+    <string name="nav_memos">Жазбалар</string>
+    <string name="nav_settings">Параметрлер</string>
+
+    <!-- Privacy -->
+    <string name="privacy_hidden_content">Жасырын мазмұн</string>
+    <string name="privacy_hidden_habit">Жасырын әдет</string>
+
+    <!-- Time periods -->
+    <string name="time_month">Ай</string>
+    <string name="time_months">Айлар</string>
+    <string name="time_quarter">Тоқсан</string>
+    <string name="time_quarters">Тоқсандар</string>
+    <string name="time_week">Апта</string>
+    <string name="time_weeks">Апталар</string>
+    <string name="time_year">Жыл</string>
+    <string name="time_years">Жылдар</string>
+
+    <!-- Titles -->
+    <string name="title_create_day">Күн жасау</string>
+    <string name="title_delete_day">Күнді жою?</string>
+    <string name="title_delete_memo">Жазбаны жою?</string>
+    <string name="title_edit_day">Күнді өңдеу</string>
+    <string name="title_edit_memo">Жазбаны өңдеу</string>
+    <string name="title_logs">Логтар (%1$d)</string>
+    <string name="title_new_memo">Жаңа жазба</string>
+    <string name="title_mark_done">Орындалды деп белгілеу?</string>
+    <string name="title_mark_not_done">Белгіні алып тастау?</string>
+    <string name="title_update_day">Күнді жаңарту</string>
+
+    <!-- Demo habits -->
+    <string name="demo_habit_exercise">Жаттығу</string>
+    <string name="demo_habit_reading">Оқу</string>
+    <string name="demo_habit_meditation">Медитация</string>
+    <string name="demo_habit_water">Су ішу</string>
+    <string name="demo_habit_learning">Үйрену</string>
+    <string name="demo_habit_walking">10К қадам</string>
+    <string name="demo_habit_no_sugar">Қантсыз</string>
+    <string name="demo_habit_early_sleep">23:00-ге дейін ұйықтау</string>
+</resources>
