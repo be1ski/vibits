@@ -15,7 +15,7 @@ actual class AppDetailsProvider {
         environment = "unknown",
         credentialsStore = "SharedPreferences(memos_prefs)",
         memosDatabase = "memos.db",
-        offlineStorage = "memos.json"
+        offlineStorage = "memos.json",
       )
     }
     val context = AndroidContextHolder.context
@@ -29,7 +29,7 @@ actual class AppDetailsProvider {
       environment = "android",
       credentialsStore = "SharedPreferences(memos_prefs)",
       memosDatabase = databasePath,
-      offlineStorage = offlinePath
+      offlineStorage = offlinePath,
     )
   }
 }

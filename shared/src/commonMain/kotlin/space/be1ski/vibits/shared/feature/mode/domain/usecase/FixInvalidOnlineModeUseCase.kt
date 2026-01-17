@@ -11,7 +11,7 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 class FixInvalidOnlineModeUseCase(
   private val loadAppModeUseCase: LoadAppModeUseCase,
   private val saveAppModeUseCase: SaveAppModeUseCase,
-  private val loadCredentialsUseCase: LoadCredentialsUseCase
+  private val loadCredentialsUseCase: LoadCredentialsUseCase,
 ) {
   operator fun invoke(): AppMode {
     val mode = loadAppModeUseCase()

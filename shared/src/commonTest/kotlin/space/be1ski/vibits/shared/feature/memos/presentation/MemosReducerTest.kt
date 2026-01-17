@@ -1,5 +1,6 @@
 package space.be1ski.vibits.shared.feature.memos.presentation
 
+import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -7,16 +8,15 @@ import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.time.Instant
-import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 class MemosReducerTest {
-
-  private val testMemo = Memo(
-    name = "memos/1",
-    content = "Test content",
-    createTime = Instant.fromEpochMilliseconds(1000L),
-    updateTime = Instant.fromEpochMilliseconds(2000L)
-  )
+  private val testMemo =
+    Memo(
+      name = "memos/1",
+      content = "Test content",
+      createTime = Instant.fromEpochMilliseconds(1000L),
+      updateTime = Instant.fromEpochMilliseconds(2000L),
+    )
 
   // Credentials input tests
 
@@ -24,10 +24,11 @@ class MemosReducerTest {
   fun `when UpdateBaseUrl then updates baseUrl and clears error`() {
     val state = MemosState(errorMessage = "some error")
 
-    val (newState, effects) = memosReducer(
-      MemosAction.UpdateBaseUrl("https://example.com"),
-      state
-    )
+    val (newState, effects) =
+      memosReducer(
+        MemosAction.UpdateBaseUrl("https://example.com"),
+        state,
+      )
 
     assertEquals("https://example.com", newState.baseUrl)
     assertNull(newState.errorMessage)
@@ -38,10 +39,11 @@ class MemosReducerTest {
   fun `when UpdateToken then updates token and clears error`() {
     val state = MemosState(errorMessage = "some error")
 
-    val (newState, effects) = memosReducer(
-      MemosAction.UpdateToken("secret-token"),
-      state
-    )
+    val (newState, effects) =
+      memosReducer(
+        MemosAction.UpdateToken("secret-token"),
+        state,
+      )
 
     assertEquals("secret-token", newState.token)
     assertNull(newState.errorMessage)
@@ -50,10 +52,11 @@ class MemosReducerTest {
 
   @Test
   fun `when EditCredentials then sets credentials mode and emits LoadCredentials`() {
-    val (newState, effects) = memosReducer(
-      MemosAction.EditCredentials,
-      MemosState()
-    )
+    val (newState, effects) =
+      memosReducer(
+        MemosAction.EditCredentials,
+        MemosState(),
+      )
 
     assertTrue(newState.credentialsMode)
     assertNull(newState.errorMessage)
@@ -63,10 +66,11 @@ class MemosReducerTest {
 
   @Test
   fun `when CredentialsLoaded then updates baseUrl and token`() {
-    val (newState, effects) = memosReducer(
-      MemosAction.CredentialsLoaded("https://api.com", "token123"),
-      MemosState()
-    )
+    val (newState, effects) =
+      memosReducer(
+        MemosAction.CredentialsLoaded("https://api.com", "token123"),
+        MemosState(),
+      )
 
     assertEquals("https://api.com", newState.baseUrl)
     assertEquals("token123", newState.token)
@@ -112,10 +116,11 @@ class MemosReducerTest {
   fun `when CachedMemosLoaded with empty state then updates memos`() {
     val memos = listOf(testMemo)
 
-    val (newState, effects) = memosReducer(
-      MemosAction.CachedMemosLoaded(memos),
-      MemosState()
-    )
+    val (newState, effects) =
+      memosReducer(
+        MemosAction.CachedMemosLoaded(memos),
+        MemosState(),
+      )
 
     assertEquals(1, newState.memos.size)
     assertEquals(testMemo.name, newState.memos.first().name)
@@ -127,10 +132,11 @@ class MemosReducerTest {
     val existingMemo = testMemo.copy(name = "memos/existing")
     val state = MemosState(memos = listOf(existingMemo))
 
-    val (newState, effects) = memosReducer(
-      MemosAction.CachedMemosLoaded(listOf(testMemo)),
-      state
-    )
+    val (newState, effects) =
+      memosReducer(
+        MemosAction.CachedMemosLoaded(listOf(testMemo)),
+        state,
+      )
 
     assertEquals(1, newState.memos.size)
     assertEquals("memos/existing", newState.memos.first().name)
@@ -142,10 +148,11 @@ class MemosReducerTest {
     val memos = listOf(testMemo)
     val state = MemosState(isLoading = true, errorMessage = "old error")
 
-    val (newState, effects) = memosReducer(
-      MemosAction.MemosLoaded(memos),
-      state
-    )
+    val (newState, effects) =
+      memosReducer(
+        MemosAction.MemosLoaded(memos),
+        state,
+      )
 
     assertEquals(1, newState.memos.size)
     assertFalse(newState.isLoading)
@@ -157,10 +164,11 @@ class MemosReducerTest {
 
   @Test
   fun `when CreateMemo then starts loading and emits CreateMemo effect`() {
-    val (newState, effects) = memosReducer(
-      MemosAction.CreateMemo("New memo content"),
-      MemosState()
-    )
+    val (newState, effects) =
+      memosReducer(
+        MemosAction.CreateMemo("New memo content"),
+        MemosState(),
+      )
 
     assertTrue(newState.isLoading)
     assertEquals(1, effects.size)
@@ -171,10 +179,11 @@ class MemosReducerTest {
 
   @Test
   fun `when UpdateMemo then starts loading and emits UpdateMemo effect`() {
-    val (newState, effects) = memosReducer(
-      MemosAction.UpdateMemo("memos/1", "Updated content"),
-      MemosState()
-    )
+    val (newState, effects) =
+      memosReducer(
+        MemosAction.UpdateMemo("memos/1", "Updated content"),
+        MemosState(),
+      )
 
     assertTrue(newState.isLoading)
     assertEquals(1, effects.size)
@@ -186,10 +195,11 @@ class MemosReducerTest {
 
   @Test
   fun `when DeleteMemo then starts loading and emits DeleteMemo effect`() {
-    val (newState, effects) = memosReducer(
-      MemosAction.DeleteMemo("memos/1"),
-      MemosState()
-    )
+    val (newState, effects) =
+      memosReducer(
+        MemosAction.DeleteMemo("memos/1"),
+        MemosState(),
+      )
 
     assertTrue(newState.isLoading)
     assertEquals(1, effects.size)
@@ -205,10 +215,11 @@ class MemosReducerTest {
     val state = MemosState(isLoading = true, memos = listOf(testMemo))
     val newMemo = Memo(name = "memos/2", content = "New")
 
-    val (newState, effects) = memosReducer(
-      MemosAction.MemoCreated(newMemo),
-      state
-    )
+    val (newState, effects) =
+      memosReducer(
+        MemosAction.MemoCreated(newMemo),
+        state,
+      )
 
     assertEquals(2, newState.memos.size)
     assertFalse(newState.isLoading)
@@ -220,10 +231,11 @@ class MemosReducerTest {
     val state = MemosState(isLoading = true, memos = listOf(testMemo))
     val updatedMemo = testMemo.copy(content = "Updated content")
 
-    val (newState, effects) = memosReducer(
-      MemosAction.MemoUpdated(updatedMemo),
-      state
-    )
+    val (newState, effects) =
+      memosReducer(
+        MemosAction.MemoUpdated(updatedMemo),
+        state,
+      )
 
     assertEquals(1, newState.memos.size)
     assertEquals("Updated content", newState.memos.first().content)
@@ -235,10 +247,11 @@ class MemosReducerTest {
   fun `when MemoDeleted then removes memo from list and stops loading`() {
     val state = MemosState(isLoading = true, memos = listOf(testMemo))
 
-    val (newState, effects) = memosReducer(
-      MemosAction.MemoDeleted("memos/1"),
-      state
-    )
+    val (newState, effects) =
+      memosReducer(
+        MemosAction.MemoDeleted("memos/1"),
+        state,
+      )
 
     assertTrue(newState.memos.isEmpty())
     assertFalse(newState.isLoading)
@@ -249,10 +262,11 @@ class MemosReducerTest {
   fun `when OperationFailed then sets error and stops loading`() {
     val state = MemosState(isLoading = true)
 
-    val (newState, effects) = memosReducer(
-      MemosAction.OperationFailed("Network error"),
-      state
-    )
+    val (newState, effects) =
+      memosReducer(
+        MemosAction.OperationFailed("Network error"),
+        state,
+      )
 
     assertFalse(newState.isLoading)
     assertEquals("Network error", newState.errorMessage)
@@ -263,19 +277,22 @@ class MemosReducerTest {
 
   @Test
   fun `memos are sorted by update time descending`() {
-    val oldMemo = Memo(
-      name = "memos/old",
-      updateTime = Instant.fromEpochMilliseconds(1000L)
-    )
-    val newMemo = Memo(
-      name = "memos/new",
-      updateTime = Instant.fromEpochMilliseconds(2000L)
-    )
+    val oldMemo =
+      Memo(
+        name = "memos/old",
+        updateTime = Instant.fromEpochMilliseconds(1000L),
+      )
+    val newMemo =
+      Memo(
+        name = "memos/new",
+        updateTime = Instant.fromEpochMilliseconds(2000L),
+      )
 
-    val (newState, _) = memosReducer(
-      MemosAction.MemosLoaded(listOf(oldMemo, newMemo)),
-      MemosState()
-    )
+    val (newState, _) =
+      memosReducer(
+        MemosAction.MemosLoaded(listOf(oldMemo, newMemo)),
+        MemosState(),
+      )
 
     assertEquals("memos/new", newState.memos.first().name)
     assertEquals("memos/old", newState.memos.last().name)

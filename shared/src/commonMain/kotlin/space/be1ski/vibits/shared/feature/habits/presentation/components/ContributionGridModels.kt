@@ -29,13 +29,14 @@ data class ContributionGridState(
   val weekendDays: Set<kotlinx.datetime.DayOfWeek> = DEFAULT_WEEKEND_DAYS,
   val today: LocalDate? = null,
   val habitColor: Long? = null,
-  val demoMode: Boolean = false
+  val demoMode: Boolean = false,
 )
 
-private val DEFAULT_WEEKEND_DAYS = setOf(
-  kotlinx.datetime.DayOfWeek.SATURDAY,
-  kotlinx.datetime.DayOfWeek.SUNDAY
-)
+private val DEFAULT_WEEKEND_DAYS =
+  setOf(
+    kotlinx.datetime.DayOfWeek.SATURDAY,
+    kotlinx.datetime.DayOfWeek.SUNDAY,
+  )
 
 /**
  * UI state for rendering a weekly bar chart.
@@ -46,7 +47,7 @@ data class WeeklyBarChartState(
   val scrollState: ScrollState,
   val showWeekdayLegend: Boolean,
   val compactHeight: Boolean,
-  val modifier: Modifier = Modifier
+  val modifier: Modifier = Modifier,
 )
 
 internal data class ContributionCellState(
@@ -60,5 +61,5 @@ internal data class ContributionCellState(
   val showDayNumber: Boolean,
   val isToday: Boolean = false,
   val isWeekend: Boolean = false,
-  val habitColor: Long? = null
+  val habitColor: Long? = null,
 )

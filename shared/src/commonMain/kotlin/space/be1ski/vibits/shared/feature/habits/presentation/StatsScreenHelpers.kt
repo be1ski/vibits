@@ -13,11 +13,11 @@ private val buildHabitDayUseCase = BuildHabitDayUseCase()
 
 internal fun findDayByDate(
   weekData: ActivityWeekData,
-  date: LocalDate
+  date: LocalDate,
 ): ContributionDay? = buildActivityDataUseCase.findDayByDate(weekData, date)
 
 internal fun buildHabitDay(
   date: LocalDate,
   habitsConfig: List<HabitConfig>,
-  dailyMemo: DailyMemoInfo?
+  dailyMemo: DailyMemoInfo?,
 ): ContributionDay? = buildHabitDayUseCase(date, habitsConfig, dailyMemo)

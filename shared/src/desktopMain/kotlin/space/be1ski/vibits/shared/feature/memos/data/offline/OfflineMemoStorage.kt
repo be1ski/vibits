@@ -9,7 +9,11 @@ import java.nio.file.Paths
  */
 actual class OfflineMemoStorage {
   private val fileName = "memos.json"
-  private val json = Json { ignoreUnknownKeys = true; prettyPrint = true }
+  private val json =
+    Json {
+      ignoreUnknownKeys = true
+      prettyPrint = true
+    }
 
   actual fun load(): OfflineMemosFileDto {
     val file = getFile()

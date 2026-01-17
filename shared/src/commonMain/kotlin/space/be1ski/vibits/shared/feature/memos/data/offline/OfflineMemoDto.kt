@@ -12,7 +12,7 @@ data class OfflineMemoDto(
   val name: String = "",
   val content: String = "",
   @SerialName("createTime") val createTime: String? = null,
-  @SerialName("updateTime") val updateTime: String? = null
+  @SerialName("updateTime") val updateTime: String? = null,
 )
 
 /**
@@ -20,5 +20,5 @@ data class OfflineMemoDto(
  */
 @Serializable
 data class OfflineMemosFileDto(
-  val memos: List<OfflineMemoDto> = emptyList()
+  val memos: List<OfflineMemoDto> = emptyList(),
 )

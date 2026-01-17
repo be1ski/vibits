@@ -20,28 +20,31 @@ private val buildActivityDataUseCase = BuildActivityDataUseCase()
  */
 fun earliestMemoDate(
   memos: List<Memo>,
-  timeZone: TimeZone
+  timeZone: TimeZone,
 ): LocalDate? = dateCalculationsUseCase.earliestMemoDate(memos, timeZone)
 
 /**
  * Returns the most recent habits config entry at or before [date].
  */
-fun habitsConfigForDate(entries: List<HabitsConfigEntry>, date: LocalDate): HabitsConfigEntry? =
-  extractHabitsConfigUseCase.forDate(entries, date)
+fun habitsConfigForDate(
+  entries: List<HabitsConfigEntry>,
+  date: LocalDate,
+): HabitsConfigEntry? = extractHabitsConfigUseCase.forDate(entries, date)
 
-internal fun extractHabitsConfigEntries(memos: List<Memo>, timeZone: TimeZone): List<HabitsConfigEntry> =
-  extractHabitsConfigUseCase(memos, timeZone)
+internal fun extractHabitsConfigEntries(
+  memos: List<Memo>,
+  timeZone: TimeZone,
+): List<HabitsConfigEntry> = extractHabitsConfigUseCase(memos, timeZone)
 
 /**
  * Returns the last 7 in-range days, newest last.
  */
-fun lastSevenDays(weekData: ActivityWeekData): List<ContributionDay> =
-  buildActivityDataUseCase.lastSevenDays(weekData)
+fun lastSevenDays(weekData: ActivityWeekData): List<ContributionDay> = buildActivityDataUseCase.lastSevenDays(weekData)
 
 /**
  * Derives a week dataset for a single habit tag.
  */
 fun activityWeekDataForHabit(
   weekData: ActivityWeekData,
-  habit: HabitConfig
+  habit: HabitConfig,
 ): ActivityWeekData = buildActivityDataUseCase.activityWeekDataForHabit(weekData, habit)

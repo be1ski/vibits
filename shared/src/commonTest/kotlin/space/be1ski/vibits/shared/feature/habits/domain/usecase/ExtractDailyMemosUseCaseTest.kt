@@ -10,16 +10,16 @@ import kotlin.test.assertNull
 import kotlin.time.Instant as KtInstant
 
 class ExtractDailyMemosUseCaseTest {
-
   private val useCase = ExtractDailyMemosUseCase()
   private val timeZone = TimeZone.UTC
 
   @Test
   fun `extracts daily memos with habits daily tag`() {
-    val memo = createMemo(
-      content = "#habits/daily 2024-01-15\n- completed task",
-      createTime = KtInstant.parse("2024-01-15T10:00:00Z")
-    )
+    val memo =
+      createMemo(
+        content = "#habits/daily 2024-01-15\n- completed task",
+        createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
+      )
 
     val result = useCase(listOf(memo), timeZone)
 
@@ -29,10 +29,11 @@ class ExtractDailyMemosUseCaseTest {
 
   @Test
   fun `extracts daily memos with daily tag`() {
-    val memo = createMemo(
-      content = "#daily 2024-01-15\n- completed task",
-      createTime = KtInstant.parse("2024-01-15T10:00:00Z")
-    )
+    val memo =
+      createMemo(
+        content = "#daily 2024-01-15\n- completed task",
+        createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
+      )
 
     val result = useCase(listOf(memo), timeZone)
 
@@ -42,10 +43,11 @@ class ExtractDailyMemosUseCaseTest {
 
   @Test
   fun `ignores non-daily memos`() {
-    val memo = createMemo(
-      content = "Regular memo without daily tag",
-      createTime = KtInstant.parse("2024-01-15T10:00:00Z")
-    )
+    val memo =
+      createMemo(
+        content = "Regular memo without daily tag",
+        createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
+      )
 
     val result = useCase(listOf(memo), timeZone)
 
@@ -54,10 +56,11 @@ class ExtractDailyMemosUseCaseTest {
 
   @Test
   fun `parses date from content when available`() {
-    val memo = createMemo(
-      content = "#daily 2024-02-20\n- task",
-      createTime = KtInstant.parse("2024-01-15T10:00:00Z")
-    )
+    val memo =
+      createMemo(
+        content = "#daily 2024-02-20\n- task",
+        createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
+      )
 
     val result = useCase(listOf(memo), timeZone)
 
@@ -67,10 +70,11 @@ class ExtractDailyMemosUseCaseTest {
 
   @Test
   fun `forDate returns memo for specific date`() {
-    val memo = createMemo(
-      content = "#daily 2024-01-15\n- task",
-      createTime = KtInstant.parse("2024-01-15T10:00:00Z")
-    )
+    val memo =
+      createMemo(
+        content = "#daily 2024-01-15\n- task",
+        createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
+      )
 
     val result = useCase.forDate(listOf(memo), timeZone, LocalDate(2024, 1, 15))
 
@@ -80,10 +84,11 @@ class ExtractDailyMemosUseCaseTest {
 
   @Test
   fun `forDate returns null for non-existing date`() {
-    val memo = createMemo(
-      content = "#daily 2024-01-15\n- task",
-      createTime = KtInstant.parse("2024-01-15T10:00:00Z")
-    )
+    val memo =
+      createMemo(
+        content = "#daily 2024-01-15\n- task",
+        createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
+      )
 
     val result = useCase.forDate(listOf(memo), timeZone, LocalDate(2024, 1, 20))
 
@@ -119,10 +124,11 @@ class ExtractDailyMemosUseCaseTest {
 
   @Test
   fun `parseMemoDate extracts date from memo timestamp`() {
-    val memo = createMemo(
-      content = "any content",
-      createTime = KtInstant.parse("2024-05-10T15:30:00Z")
-    )
+    val memo =
+      createMemo(
+        content = "any content",
+        createTime = KtInstant.parse("2024-05-10T15:30:00Z"),
+      )
 
     val result = ExtractDailyMemosUseCase.parseMemoDate(memo, timeZone)
 
@@ -131,11 +137,12 @@ class ExtractDailyMemosUseCaseTest {
 
   @Test
   fun `parseMemoInstant prefers updateTime over createTime`() {
-    val memo = createMemo(
-      content = "any content",
-      createTime = KtInstant.parse("2024-01-10T10:00:00Z"),
-      updateTime = KtInstant.parse("2024-01-15T15:00:00Z")
-    )
+    val memo =
+      createMemo(
+        content = "any content",
+        createTime = KtInstant.parse("2024-01-10T10:00:00Z"),
+        updateTime = KtInstant.parse("2024-01-15T15:00:00Z"),
+      )
 
     val result = ExtractDailyMemosUseCase.parseMemoInstant(memo)
 
@@ -145,13 +152,12 @@ class ExtractDailyMemosUseCaseTest {
   private fun createMemo(
     content: String,
     createTime: KtInstant,
-    updateTime: KtInstant? = null
-  ): Memo {
-    return Memo(
+    updateTime: KtInstant? = null,
+  ): Memo =
+    Memo(
       name = "memos/test",
       content = content,
       createTime = createTime,
-      updateTime = updateTime
+      updateTime = updateTime,
     )
-  }
 }

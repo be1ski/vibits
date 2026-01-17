@@ -6,7 +6,8 @@ import android.content.Context
 /**
  * Holds application context for shared Android code.
  */
-@SuppressLint("StaticFieldLeak") object AndroidContextHolder {
+@SuppressLint("StaticFieldLeak")
+object AndroidContextHolder {
   lateinit var context: Context
     private set
 

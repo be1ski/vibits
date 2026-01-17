@@ -4,8 +4,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
 import kotlinx.browser.document
 import org.koin.core.context.startKoin
-import space.be1ski.vibits.shared.di.sharedModule
 import space.be1ski.vibits.shared.app.AppRoot
+import space.be1ski.vibits.shared.di.sharedModule
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {

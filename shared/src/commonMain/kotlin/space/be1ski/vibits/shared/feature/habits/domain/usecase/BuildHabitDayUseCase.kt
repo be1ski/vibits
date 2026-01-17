@@ -10,11 +10,10 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
  * Builds a ContributionDay for a specific date with habits configuration.
  */
 class BuildHabitDayUseCase {
-
   operator fun invoke(
     date: LocalDate,
     habitsConfig: List<HabitConfig>,
-    dailyMemo: DailyMemoInfo?
+    dailyMemo: DailyMemoInfo?,
   ): ContributionDay? {
     if (habitsConfig.isEmpty()) {
       return null
@@ -30,7 +29,7 @@ class BuildHabitDayUseCase {
       completionRatio = ratio.coerceIn(0f, 1f),
       habitStatuses = statuses,
       dailyMemo = dailyMemo,
-      inRange = true
+      inRange = true,
     )
   }
 }

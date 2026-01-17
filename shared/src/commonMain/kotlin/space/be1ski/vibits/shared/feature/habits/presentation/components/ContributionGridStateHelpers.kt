@@ -11,8 +11,7 @@ import space.be1ski.vibits.shared.feature.habits.domain.usecase.DateCalculations
 
 private val dateCalculationsUseCase = DateCalculationsUseCase()
 
-internal fun startOfWeek(date: LocalDate): LocalDate =
-  dateCalculationsUseCase.startOfWeek(date)
+internal fun startOfWeek(date: LocalDate): LocalDate = dateCalculationsUseCase.startOfWeek(date)
 
 internal fun buildDayData(context: DayDataContext): ContributionDay {
   val dailyMemo = context.dailyMemos[context.date]
@@ -29,63 +28,67 @@ internal fun buildDayData(context: DayDataContext): ContributionDay {
     completionRatio = ratio.coerceIn(0f, 1f),
     habitStatuses = habitState.habitStatuses,
     dailyMemo = dailyMemo,
-    inRange = inRange
+    inRange = inRange,
   )
 }
 
 private fun habitsForDay(context: DayDataContext): List<HabitConfig> {
-  val configForDay = if (context.mode == ActivityMode.HABITS) {
-    habitsConfigForDate(context.configTimeline, context.date)
-  } else {
-    null
-  }
+  val configForDay =
+    if (context.mode == ActivityMode.HABITS) {
+      habitsConfigForDate(context.configTimeline, context.date)
+    } else {
+      null
+    }
   return configForDay?.habits.orEmpty()
 }
 
 private fun buildHabitSelectionState(
   context: DayDataContext,
   dailyMemo: DailyMemoInfo?,
-  habitsForDay: List<HabitConfig>
+  habitsForDay: List<HabitConfig>,
 ): HabitSelectionState {
   val useHabits = context.mode == ActivityMode.HABITS && habitsForDay.isNotEmpty()
-  val habitStatuses = if (useHabits) {
-    buildHabitStatuses(dailyMemo?.content, habitsForDay)
-  } else {
-    emptyList()
-  }
-  val memoHabitTags = if (useHabits) {
-    extractHabitTagsFromContent(dailyMemo?.content)
-  } else {
-    emptySet()
-  }
+  val habitStatuses =
+    if (useHabits) {
+      buildHabitStatuses(dailyMemo?.content, habitsForDay)
+    } else {
+      emptyList()
+    }
+  val memoHabitTags =
+    if (useHabits) {
+      extractHabitTagsFromContent(dailyMemo?.content)
+    } else {
+      emptySet()
+    }
   val configTags = if (useHabits) habitsForDay.map { it.tag }.toSet() else emptySet()
   return HabitSelectionState(
     useHabits = useHabits,
     habitStatuses = habitStatuses,
     memoHabitTags = memoHabitTags,
-    configTags = configTags
+    configTags = configTags,
   )
 }
 
 private fun completedCount(
   context: DayDataContext,
-  habitState: HabitSelectionState
-): Int {
-  return when {
+  habitState: HabitSelectionState,
+): Int =
+  when {
     habitState.useHabits && habitState.memoHabitTags.isNotEmpty() -> {
-      val memoRelevantTags = if (habitState.configTags.isNotEmpty()) {
-        habitState.memoHabitTags.intersect(habitState.configTags)
-      } else {
-        habitState.memoHabitTags
-      }
+      val memoRelevantTags =
+        if (habitState.configTags.isNotEmpty()) {
+          habitState.memoHabitTags.intersect(habitState.configTags)
+        } else {
+          habitState.memoHabitTags
+        }
       memoRelevantTags.size
     }
     habitState.useHabits -> habitState.habitStatuses.count { it.done }
     context.mode == ActivityMode.POSTS -> context.counts[context.date] ?: 0
     else -> 0
   }
-}
 
-private fun completionRatio(totalHabits: Int, completed: Int): Float {
-  return if (totalHabits > 0) completed.toFloat() / totalHabits.toFloat() else 0f
-}
+private fun completionRatio(
+  totalHabits: Int,
+  completed: Int,
+): Float = if (totalHabits > 0) completed.toFloat() / totalHabits.toFloat() else 0f

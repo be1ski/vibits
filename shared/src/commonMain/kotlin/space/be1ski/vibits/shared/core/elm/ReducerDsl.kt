@@ -35,11 +35,10 @@ package space.be1ski.vibits.shared.core.elm
  * }
  * ```
  */
-public fun <Action, State, Effect> reducer(
-  reduce: ReducerContext<State, Effect>.(Action, State) -> Unit
-): Reducer<Action, State, Effect> {
-  return { action, state -> ReducerContext<State, Effect>().apply { reduce(action, state) }.getResult(state) }
-}
+public fun <Action, State, Effect> reducer(reduce: ReducerContext<State, Effect>.(Action, State) -> Unit): Reducer<Action, State, Effect> =
+  { action, state ->
+    ReducerContext<State, Effect>().apply { reduce(action, state) }.getResult(state)
+  }
 
 /**
  * Class for creating [ReducerResult] instances in a DSL-style.
@@ -71,7 +70,6 @@ public class ReducerContext<State, Effect> {
     this.effects.addAll(effects)
   }
 
-  internal fun getResult(initialState: State): ReducerResult<State, Effect> {
-    return ReducerResult(state = stateUpdate(initialState), effects = effects)
-  }
+  internal fun getResult(initialState: State): ReducerResult<State, Effect> =
+    ReducerResult(state = stateUpdate(initialState), effects = effects)
 }

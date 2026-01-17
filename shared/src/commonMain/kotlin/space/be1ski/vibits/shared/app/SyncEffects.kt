@@ -10,14 +10,15 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 internal fun SyncAutoLoad(
   memosState: MemosState,
   appState: VibitsAppUiState,
-  dispatch: (MemosAction) -> Unit
+  dispatch: (MemosAction) -> Unit,
 ) {
   LaunchedEffect(memosState.credentialsMode, appState.autoLoaded, memosState.isLoading, appState.appMode) {
     val skipCredentialsCheck = appState.appMode == AppMode.DEMO || appState.appMode == AppMode.OFFLINE
-    val shouldAutoLoad = !memosState.credentialsMode &&
-      !appState.autoLoaded &&
-      !memosState.isLoading &&
-      (skipCredentialsCheck || memosState.hasCredentials)
+    val shouldAutoLoad =
+      !memosState.credentialsMode &&
+        !appState.autoLoaded &&
+        !memosState.isLoading &&
+        (skipCredentialsCheck || memosState.hasCredentials)
     if (shouldAutoLoad) {
       appState.autoLoaded = true
       dispatch(MemosAction.LoadMemos)

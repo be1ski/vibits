@@ -2,8 +2,8 @@ package space.be1ski.vibits.shared.feature.mode.domain.usecase
 
 import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
-import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.memos.data.demo.DemoMemosRepository
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.test.FakeAppModeRepository
 import space.be1ski.vibits.shared.test.FakeCredentialsRepository
 import space.be1ski.vibits.shared.test.FakeMemoCache
@@ -52,48 +52,53 @@ class ResetAppUseCaseTest {
     appModeRepository: FakeAppModeRepository = FakeAppModeRepository(initial = AppMode.ONLINE),
     credentialsRepository: FakeCredentialsRepository = FakeCredentialsRepository(),
     preferencesRepository: FakePreferencesRepository = FakePreferencesRepository(),
-    demoMemosRepository: DemoMemosRepository = DemoMemosRepository()
+    demoMemosRepository: DemoMemosRepository = DemoMemosRepository(),
   ) = ResetAppUseCase(appModeRepository, memoCache, credentialsRepository, preferencesRepository, demoMemosRepository)
 
   @Test
-  fun `when invoke then clears memo cache`() = runTest {
-    val memoCache = FakeMemoCache()
-    val useCase = createUseCase(memoCache = memoCache)
+  fun `when invoke then clears memo cache`() =
+    runTest {
+      val memoCache = FakeMemoCache()
+      val useCase = createUseCase(memoCache = memoCache)
 
-    useCase()
+      useCase()
 
-    assertEquals(1, memoCache.clearCalls)
-  }
-
-  @Test
-  fun `when invoke then clears credentials`() = runTest {
-    val credentialsRepository = FakeCredentialsRepository(
-      initial = Credentials(baseUrl = "https://example.com", token = "token")
-    )
-    val useCase = createUseCase(credentialsRepository = credentialsRepository)
-
-    useCase()
-
-    assertEquals(Credentials(baseUrl = "", token = ""), credentialsRepository.stored)
-  }
+      assertEquals(1, memoCache.clearCalls)
+    }
 
   @Test
-  fun `when invoke then sets mode to NotSelected`() = runTest {
-    val appModeRepository = FakeAppModeRepository(initial = AppMode.ONLINE)
-    val useCase = createUseCase(appModeRepository = appModeRepository)
+  fun `when invoke then clears credentials`() =
+    runTest {
+      val credentialsRepository =
+        FakeCredentialsRepository(
+          initial = Credentials(baseUrl = "https://example.com", token = "token"),
+        )
+      val useCase = createUseCase(credentialsRepository = credentialsRepository)
 
-    useCase()
+      useCase()
 
-    assertEquals(AppMode.NOT_SELECTED, appModeRepository.storedMode)
-  }
+      assertEquals(Credentials(baseUrl = "", token = ""), credentialsRepository.stored)
+    }
 
   @Test
-  fun `when invoke then resets preferences`() = runTest {
-    val preferencesRepository = FakePreferencesRepository()
-    val useCase = createUseCase(preferencesRepository = preferencesRepository)
+  fun `when invoke then sets mode to NotSelected`() =
+    runTest {
+      val appModeRepository = FakeAppModeRepository(initial = AppMode.ONLINE)
+      val useCase = createUseCase(appModeRepository = appModeRepository)
 
-    useCase()
+      useCase()
 
-    assertEquals(1, preferencesRepository.saveCalls)
-  }
+      assertEquals(AppMode.NOT_SELECTED, appModeRepository.storedMode)
+    }
+
+  @Test
+  fun `when invoke then resets preferences`() =
+    runTest {
+      val preferencesRepository = FakePreferencesRepository()
+      val useCase = createUseCase(preferencesRepository = preferencesRepository)
+
+      useCase()
+
+      assertEquals(1, preferencesRepository.saveCalls)
+    }
 }

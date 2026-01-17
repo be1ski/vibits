@@ -24,8 +24,8 @@ fun HabitConfig.localizedLabel(demoMode: Boolean): String {
 }
 
 @Composable
-private fun demoHabitLabel(tag: String): String? {
-  return when (tag) {
+private fun demoHabitLabel(tag: String): String? =
+  when (tag) {
     "#habits/exercise" -> stringResource(Res.string.demo_habit_exercise)
     "#habits/reading" -> stringResource(Res.string.demo_habit_reading)
     "#habits/meditation" -> stringResource(Res.string.demo_habit_meditation)
@@ -36,4 +36,3 @@ private fun demoHabitLabel(tag: String): String? {
     "#habits/early_sleep" -> stringResource(Res.string.demo_habit_early_sleep)
     else -> null
   }
-}

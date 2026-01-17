@@ -11,7 +11,7 @@ private const val URL_LOG_MAX_LENGTH = 50
  * Repository implementation backed by platform credential storage.
  */
 class CredentialsRepositoryImpl(
-  private val credentialsStore: CredentialsStore
+  private val credentialsStore: CredentialsStore,
 ) : CredentialsRepository {
   /**
    * Loads stored credentials from the platform store.
@@ -33,6 +33,5 @@ class CredentialsRepositoryImpl(
     credentialsStore.save(LocalCredentials(baseUrl = credentials.baseUrl, token = credentials.token))
   }
 
-  private fun maskUrl(url: String): String =
-    url.take(URL_LOG_MAX_LENGTH) + if (url.length > URL_LOG_MAX_LENGTH) "..." else ""
+  private fun maskUrl(url: String): String = url.take(URL_LOG_MAX_LENGTH) + if (url.length > URL_LOG_MAX_LENGTH) "..." else ""
 }

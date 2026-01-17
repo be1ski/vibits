@@ -13,17 +13,17 @@ private val countDailyPostsUseCase = CountDailyPostsUseCase()
 
 internal fun extractDailyMemos(
   memos: List<Memo>,
-  timeZone: TimeZone
+  timeZone: TimeZone,
 ): Map<LocalDate, DailyMemoInfo> = extractDailyMemosUseCase(memos, timeZone)
 
 internal fun findDailyMemoForDate(
   memos: List<Memo>,
   timeZone: TimeZone,
-  date: LocalDate
+  date: LocalDate,
 ): DailyMemoInfo? = extractDailyMemosUseCase.forDate(memos, timeZone, date)
 
 internal fun extractDailyPostCounts(
   memos: List<Memo>,
   timeZone: TimeZone,
-  bounds: RangeBounds
+  bounds: RangeBounds,
 ): Map<LocalDate, Int> = countDailyPostsUseCase(memos, timeZone, bounds)

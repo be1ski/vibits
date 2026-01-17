@@ -10,11 +10,10 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
  * Excludes memos with #habits hashtag (habit tracking memos).
  */
 class CountDailyPostsUseCase {
-
   operator fun invoke(
     memos: List<Memo>,
     timeZone: TimeZone,
-    bounds: RangeBounds
+    bounds: RangeBounds,
   ): Map<LocalDate, Int> {
     val counts = mutableMapOf<LocalDate, Int>()
     memos.forEach { memo ->
@@ -38,7 +37,6 @@ class CountDailyPostsUseCase {
      * Filters out habit tracking memos from a list.
      * Returns only regular posts (memos without #habits hashtag).
      */
-    fun filterPosts(memos: List<Memo>): List<Memo> =
-      memos.filter { !it.content.contains(HABITS_HASHTAG) }
+    fun filterPosts(memos: List<Memo>): List<Memo> = memos.filter { !it.content.contains(HABITS_HASHTAG) }
   }
 }

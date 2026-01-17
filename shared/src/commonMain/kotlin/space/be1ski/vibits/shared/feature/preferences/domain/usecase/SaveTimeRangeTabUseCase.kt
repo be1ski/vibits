@@ -6,14 +6,18 @@ import space.be1ski.vibits.shared.feature.preferences.domain.repository.Preferen
 internal enum class TimeRangeScreen { HABITS, POSTS }
 
 internal class SaveTimeRangeTabUseCase(
-  private val preferencesRepository: PreferencesRepository
+  private val preferencesRepository: PreferencesRepository,
 ) {
-  operator fun invoke(screen: TimeRangeScreen, timeRangeTab: TimeRangeTab) {
+  operator fun invoke(
+    screen: TimeRangeScreen,
+    timeRangeTab: TimeRangeTab,
+  ) {
     val currentPrefs = preferencesRepository.load()
-    val updatedPrefs = when (screen) {
-      TimeRangeScreen.HABITS -> currentPrefs.copy(habitsTimeRangeTab = timeRangeTab)
-      TimeRangeScreen.POSTS -> currentPrefs.copy(postsTimeRangeTab = timeRangeTab)
-    }
+    val updatedPrefs =
+      when (screen) {
+        TimeRangeScreen.HABITS -> currentPrefs.copy(habitsTimeRangeTab = timeRangeTab)
+        TimeRangeScreen.POSTS -> currentPrefs.copy(postsTimeRangeTab = timeRangeTab)
+      }
     preferencesRepository.save(updatedPrefs)
   }
 }

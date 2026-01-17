@@ -1,21 +1,20 @@
 package space.be1ski.vibits.shared.domain.habits
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 import space.be1ski.vibits.shared.feature.habits.domain.buildHabitStatuses
 import space.be1ski.vibits.shared.feature.habits.domain.extractCompletedHabits
 import space.be1ski.vibits.shared.feature.habits.domain.extractHabitTagsFromContent
 import space.be1ski.vibits.shared.feature.habits.domain.formatHexColor
 import space.be1ski.vibits.shared.feature.habits.domain.labelFromTag
+import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.normalizeHabitTag
 import space.be1ski.vibits.shared.feature.habits.domain.parseHabitConfigLine
 import space.be1ski.vibits.shared.feature.habits.domain.parseHexColor
-import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class HabitParserTest {
-
   // parseHabitConfigLine tests
 
   @Test
@@ -121,11 +120,12 @@ class HabitParserTest {
 
   @Test
   fun `when content has checked checkboxes then extracts habits`() {
-    val content = """
+    val content =
+      """
       - [x] Did #habits/exercise
       - [ ] #habits/reading
       - [X] Completed #habits/meditation
-    """.trimIndent()
+      """.trimIndent()
     val habits = setOf("#habits/exercise", "#habits/reading", "#habits/meditation")
 
     val result = extractCompletedHabits(content, habits)
@@ -135,12 +135,13 @@ class HabitParserTest {
 
   @Test
   fun `when content has no checkboxes then extracts tags directly`() {
-    val content = """
+    val content =
+      """
       #habits/daily 2024-01-15
 
       #habits/exercise
       #habits/meditation
-    """.trimIndent()
+      """.trimIndent()
     val habits = setOf("#habits/exercise", "#habits/meditation", "#habits/reading")
 
     val result = extractCompletedHabits(content, habits)
@@ -150,10 +151,11 @@ class HabitParserTest {
 
   @Test
   fun `when checkbox format mixed with tags then prefers checkboxes`() {
-    val content = """
+    val content =
+      """
       - [x] #habits/exercise
       #habits/reading
-    """.trimIndent()
+      """.trimIndent()
     val habits = setOf("#habits/exercise", "#habits/reading")
 
     val result = extractCompletedHabits(content, habits)
@@ -208,10 +210,11 @@ class HabitParserTest {
 
   @Test
   fun `when content has completed habits then marks them done`() {
-    val habits = listOf(
-      HabitConfig("#habits/exercise", "Exercise"),
-      HabitConfig("#habits/reading", "Reading")
-    )
+    val habits =
+      listOf(
+        HabitConfig("#habits/exercise", "Exercise"),
+        HabitConfig("#habits/reading", "Reading"),
+      )
     val content = "#habits/exercise"
 
     val result = buildHabitStatuses(content, habits)

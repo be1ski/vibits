@@ -61,22 +61,27 @@ Tests must stay useful and up-to-date. Follow these rules:
 3. **New features need tests.** Every new public API should have corresponding tests.
 4. **Test behavior, not implementation.** Focus on what code does, not how it does it.
 
-## Linting
+## Linting & Formatting
 
-**MANDATORY:** Run lints before every commit and fix all issues.
+**MANDATORY:** Run lints and formatting before every commit and fix all issues.
 
-- Run detekt: `./gradlew detekt`
-- All detekt issues must be resolved before committing. Zero tolerance for lint warnings.
-- Use `@Suppress` annotations only when the lint rule doesn't apply (e.g., `LongParameterList` for Composables with many parameters is acceptable).
+- Run ktlint format: `./gradlew ktlintFormat` — auto-fixes code style issues
+- Run ktlint check: `./gradlew ktlintCheck` — verifies code style
+- Run detekt: `./gradlew detekt` — static analysis
+
+All issues must be resolved before committing. Zero tolerance for lint warnings.
+
+Use `@Suppress` annotations only when the lint rule doesn't apply (e.g., `LongParameterList` for Composables, `ktlint:standard:function-naming` for factory functions).
 
 ## Commit & Pull Request Guidelines
 
 - Commit messages follow the current history: imperative, concise, single topic (e.g., "Simplify README").
 - Use a transparent flow: make changes, run the relevant app command, verify behavior, then commit and push.
 - **Pre-commit checklist:**
-  1. Run tests: `./gradlew :shared:desktopTest`
-  2. Run lints: `./gradlew detekt` — fix all issues
-  3. Verify the app runs: `./gradlew :desktopApp:run`
+  1. Format code: `./gradlew ktlintFormat`
+  2. Run lints: `./gradlew ktlintCheck detekt` — fix all issues
+  3. Run tests: `./gradlew :shared:desktopTest`
+  4. Verify the app runs: `./gradlew :desktopApp:run`
 - PRs (if used) should include a summary, testing performed, and screenshots for UI changes.
 
 ## Security & Configuration Tips

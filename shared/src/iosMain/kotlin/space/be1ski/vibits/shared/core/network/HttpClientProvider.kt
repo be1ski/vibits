@@ -13,24 +13,24 @@ import kotlinx.serialization.json.Json
 /**
  * iOS-specific HTTP client configuration.
  */
-actual fun createHttpClient(): HttpClient {
-  return HttpClient(Darwin) {
+actual fun createHttpClient(): HttpClient =
+  HttpClient(Darwin) {
     install(ContentNegotiation) {
       json(
         Json {
           ignoreUnknownKeys = true
           isLenient = true
-        }
+        },
       )
     }
     install(Logging) {
-      logger = object : Logger {
-        override fun log(message: String) {
-          println("HTTP | $message")
+      logger =
+        object : Logger {
+          override fun log(message: String) {
+            println("HTTP | $message")
+          }
         }
-      }
       level = LogLevel.INFO
       sanitizeHeader { it == HttpHeaders.Authorization }
     }
   }
-}

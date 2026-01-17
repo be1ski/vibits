@@ -1,23 +1,23 @@
 package space.be1ski.vibits.shared.feature.settings.presentation
 
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
 class SettingsReducerTest {
-
   // Dialog lifecycle tests
 
   @Test
   fun `when Open then opens dialog with provided values`() {
-    val (newState, effects) = settingsReducer(
-      SettingsAction.Open(baseUrl = "https://api.com", token = "secret", appMode = AppMode.ONLINE),
-      SettingsState()
-    )
+    val (newState, effects) =
+      settingsReducer(
+        SettingsAction.Open(baseUrl = "https://api.com", token = "secret", appMode = AppMode.ONLINE),
+        SettingsState(),
+      )
 
     assertTrue(newState.isOpen)
     assertEquals("https://api.com", newState.editBaseUrl)
@@ -60,10 +60,11 @@ class SettingsReducerTest {
   fun `when UpdateBaseUrl then updates baseUrl and emits SaveCredentials`() {
     val state = SettingsState(editToken = "token123", validationError = "old error")
 
-    val (newState, effects) = settingsReducer(
-      SettingsAction.UpdateBaseUrl("https://new.api.com"),
-      state
-    )
+    val (newState, effects) =
+      settingsReducer(
+        SettingsAction.UpdateBaseUrl("https://new.api.com"),
+        state,
+      )
 
     assertEquals("https://new.api.com", newState.editBaseUrl)
     assertNull(newState.validationError)
@@ -78,10 +79,11 @@ class SettingsReducerTest {
   fun `when UpdateToken then updates token and emits SaveCredentials`() {
     val state = SettingsState(editBaseUrl = "https://api.com", validationError = "old error")
 
-    val (newState, effects) = settingsReducer(
-      SettingsAction.UpdateToken("new-token"),
-      state
-    )
+    val (newState, effects) =
+      settingsReducer(
+        SettingsAction.UpdateToken("new-token"),
+        state,
+      )
 
     assertEquals("new-token", newState.editToken)
     assertNull(newState.validationError)
@@ -98,10 +100,11 @@ class SettingsReducerTest {
   fun `when SelectMode Online with empty credentials then just shows fields without error`() {
     val state = SettingsState(editBaseUrl = "", editToken = "", appMode = AppMode.DEMO)
 
-    val (newState, effects) = settingsReducer(
-      SettingsAction.SelectMode(AppMode.ONLINE),
-      state
-    )
+    val (newState, effects) =
+      settingsReducer(
+        SettingsAction.SelectMode(AppMode.ONLINE),
+        state,
+      )
 
     assertEquals(AppMode.ONLINE, newState.appMode)
     assertNull(newState.validationError)
@@ -113,10 +116,11 @@ class SettingsReducerTest {
   fun `when SelectMode Online with credentials then starts validation`() {
     val state = SettingsState(editBaseUrl = "https://api.com", editToken = "token123")
 
-    val (newState, effects) = settingsReducer(
-      SettingsAction.SelectMode(AppMode.ONLINE),
-      state
-    )
+    val (newState, effects) =
+      settingsReducer(
+        SettingsAction.SelectMode(AppMode.ONLINE),
+        state,
+      )
 
     assertTrue(newState.isValidating)
     assertNull(newState.validationError)
@@ -132,10 +136,11 @@ class SettingsReducerTest {
   fun `when SelectMode Offline then updates mode and emits SwitchMode`() {
     val state = SettingsState(appMode = AppMode.ONLINE, validationError = "old error")
 
-    val (newState, effects) = settingsReducer(
-      SettingsAction.SelectMode(AppMode.OFFLINE),
-      state
-    )
+    val (newState, effects) =
+      settingsReducer(
+        SettingsAction.SelectMode(AppMode.OFFLINE),
+        state,
+      )
 
     assertEquals(AppMode.OFFLINE, newState.appMode)
     assertNull(newState.validationError)
@@ -147,10 +152,11 @@ class SettingsReducerTest {
 
   @Test
   fun `when SelectMode Demo then updates mode and emits SwitchMode`() {
-    val (newState, effects) = settingsReducer(
-      SettingsAction.SelectMode(AppMode.DEMO),
-      SettingsState()
-    )
+    val (newState, effects) =
+      settingsReducer(
+        SettingsAction.SelectMode(AppMode.DEMO),
+        SettingsState(),
+      )
 
     assertEquals(AppMode.DEMO, newState.appMode)
     assertEquals(1, effects.size)
@@ -176,13 +182,14 @@ class SettingsReducerTest {
 
   @Test
   fun `when ValidationSucceeded with pendingSave then closes dialog and notifies with credentials`() {
-    val state = SettingsState(
-      isOpen = true,
-      isValidating = true,
-      pendingSave = true,
-      editBaseUrl = "https://api.com",
-      editToken = "token123"
-    )
+    val state =
+      SettingsState(
+        isOpen = true,
+        isValidating = true,
+        pendingSave = true,
+        editBaseUrl = "https://api.com",
+        editToken = "token123",
+      )
 
     val (newState, effects) = settingsReducer(SettingsAction.ValidationSucceeded, state)
 
@@ -202,10 +209,11 @@ class SettingsReducerTest {
   fun `when ValidationFailed then stops validating and shows error`() {
     val state = SettingsState(isValidating = true, pendingSave = true)
 
-    val (newState, effects) = settingsReducer(
-      SettingsAction.ValidationFailed("connection_failed"),
-      state
-    )
+    val (newState, effects) =
+      settingsReducer(
+        SettingsAction.ValidationFailed("connection_failed"),
+        state,
+      )
 
     assertFalse(newState.isValidating)
     assertFalse(newState.pendingSave)
@@ -304,12 +312,13 @@ class SettingsReducerTest {
 
   @Test
   fun `when Save in Online mode with empty credentials then shows error`() {
-    val state = SettingsState(
-      isOpen = true,
-      appMode = AppMode.ONLINE,
-      editBaseUrl = "",
-      editToken = ""
-    )
+    val state =
+      SettingsState(
+        isOpen = true,
+        appMode = AppMode.ONLINE,
+        editBaseUrl = "",
+        editToken = "",
+      )
 
     val (newState, effects) = settingsReducer(SettingsAction.Save, state)
 
@@ -320,12 +329,13 @@ class SettingsReducerTest {
 
   @Test
   fun `when Save in Online mode with credentials then starts validation with pendingSave`() {
-    val state = SettingsState(
-      isOpen = true,
-      appMode = AppMode.ONLINE,
-      editBaseUrl = "https://api.com",
-      editToken = "token123"
-    )
+    val state =
+      SettingsState(
+        isOpen = true,
+        appMode = AppMode.ONLINE,
+        editBaseUrl = "https://api.com",
+        editToken = "token123",
+      )
 
     val (newState, effects) = settingsReducer(SettingsAction.Save, state)
 

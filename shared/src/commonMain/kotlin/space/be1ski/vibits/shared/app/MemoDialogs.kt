@@ -20,7 +20,10 @@ import space.be1ski.vibits.shared.title_edit_memo
 import space.be1ski.vibits.shared.title_new_memo
 
 @Composable
-internal fun MemoCreateDialog(appState: VibitsAppUiState, dispatch: (MemosAction) -> Unit) {
+internal fun MemoCreateDialog(
+  appState: VibitsAppUiState,
+  dispatch: (MemosAction) -> Unit,
+) {
   if (!appState.showCreateMemoDialog) {
     return
   }
@@ -35,7 +38,7 @@ internal fun MemoCreateDialog(appState: VibitsAppUiState, dispatch: (MemosAction
         value = appState.createMemoContent,
         onValueChange = { appState.createMemoContent = it },
         placeholder = { Text(stringResource(Res.string.hint_write_memo)) },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
       )
     },
     confirmButton = {
@@ -46,7 +49,7 @@ internal fun MemoCreateDialog(appState: VibitsAppUiState, dispatch: (MemosAction
           appState.showCreateMemoDialog = false
           appState.createMemoContent = ""
         },
-        enabled = content.isNotBlank()
+        enabled = content.isNotBlank(),
       ) {
         Text(stringResource(Res.string.action_create))
       }
@@ -56,16 +59,19 @@ internal fun MemoCreateDialog(appState: VibitsAppUiState, dispatch: (MemosAction
         onClick = {
           appState.showCreateMemoDialog = false
           appState.createMemoContent = ""
-        }
+        },
       ) {
         Text(stringResource(Res.string.action_cancel))
       }
-    }
+    },
   )
 }
 
 @Composable
-internal fun MemoEditDialog(appState: VibitsAppUiState, dispatch: (MemosAction) -> Unit) {
+internal fun MemoEditDialog(
+  appState: VibitsAppUiState,
+  dispatch: (MemosAction) -> Unit,
+) {
   if (!appState.showEditMemoDialog) {
     return
   }
@@ -77,7 +83,7 @@ internal fun MemoEditDialog(appState: VibitsAppUiState, dispatch: (MemosAction) 
       TextField(
         value = appState.editMemoContent,
         onValueChange = { appState.editMemoContent = it },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
       )
     },
     confirmButton = {
@@ -87,7 +93,7 @@ internal fun MemoEditDialog(appState: VibitsAppUiState, dispatch: (MemosAction) 
           dispatch(MemosAction.UpdateMemo(memo.name, content))
           clearMemoEdit(appState)
         },
-        enabled = content.isNotBlank()
+        enabled = content.isNotBlank(),
       ) {
         Text(stringResource(Res.string.action_save))
       }
@@ -96,11 +102,14 @@ internal fun MemoEditDialog(appState: VibitsAppUiState, dispatch: (MemosAction) 
       TextButton(onClick = { clearMemoEdit(appState) }) {
         Text(stringResource(Res.string.action_cancel))
       }
-    }
+    },
   )
 }
 
-internal fun beginEditMemo(appState: VibitsAppUiState, memo: Memo) {
+internal fun beginEditMemo(
+  appState: VibitsAppUiState,
+  memo: Memo,
+) {
   appState.editMemoTarget = memo
   appState.editMemoContent = memo.content
   appState.showEditMemoDialog = true

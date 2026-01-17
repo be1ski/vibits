@@ -15,7 +15,6 @@ private const val FIRST_QUARTER_INDEX = 1
  * Date calculation utilities for habits feature.
  */
 class DateCalculationsUseCase {
-
   /**
    * Returns the Monday of the week containing [date].
    */
@@ -30,24 +29,23 @@ class DateCalculationsUseCase {
   /**
    * Returns the quarter index (1-4) for a date.
    */
-  fun quarterIndex(date: LocalDate): Int {
-    return quarterIndex(date.month)
-  }
+  fun quarterIndex(date: LocalDate): Int = quarterIndex(date.month)
 
   /**
    * Returns the quarter index (1-4) for a month.
    */
-  fun quarterIndex(month: Month): Int {
-    return month.ordinal / MONTHS_IN_QUARTER + FIRST_QUARTER_INDEX
-  }
+  fun quarterIndex(month: Month): Int = month.ordinal / MONTHS_IN_QUARTER + FIRST_QUARTER_INDEX
 
   /**
    * Returns the earliest memo date in the dataset.
    */
-  fun earliestMemoDate(memos: List<Memo>, timeZone: TimeZone): LocalDate? {
-    return memos.mapNotNull { memo ->
-      ExtractDailyMemosUseCase.parseDailyDateFromContent(memo.content)
-        ?: ExtractDailyMemosUseCase.parseMemoDate(memo, timeZone)
-    }.minOrNull()
-  }
+  fun earliestMemoDate(
+    memos: List<Memo>,
+    timeZone: TimeZone,
+  ): LocalDate? =
+    memos
+      .mapNotNull { memo ->
+        ExtractDailyMemosUseCase.parseDailyDateFromContent(memo.content)
+          ?: ExtractDailyMemosUseCase.parseMemoDate(memo, timeZone)
+      }.minOrNull()
 }

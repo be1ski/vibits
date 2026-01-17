@@ -12,11 +12,13 @@ actual open class MemoCache {
 
   private fun daoOrNull(): MemoDao? {
     if (database == null && AndroidContextHolder.isReady()) {
-      database = Room.databaseBuilder(
-        AndroidContextHolder.context,
-        MemoDatabase::class.java,
-        "memos.db"
-      ).build()
+      database =
+        Room
+          .databaseBuilder(
+            AndroidContextHolder.context,
+            MemoDatabase::class.java,
+            "memos.db",
+          ).build()
     }
     return database?.memoDao()
   }
