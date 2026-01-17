@@ -22,17 +22,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_create_memo
 import space.be1ski.vibits.shared.action_track_today
 import space.be1ski.vibits.shared.core.platform.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.Indent
-import space.be1ski.vibits.shared.domain.usecase.LoadAppDetailsUseCase
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
@@ -44,64 +39,32 @@ import space.be1ski.vibits.shared.feature.habits.presentation.components.findDai
 import space.be1ski.vibits.shared.feature.habits.presentation.components.habitsConfigForDate
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberHabitsConfigTimeline
 import space.be1ski.vibits.shared.feature.habits.presentation.createHabitsFeature
-import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
-import space.be1ski.vibits.shared.feature.memos.domain.usecase.CreateMemoUseCase
-import space.be1ski.vibits.shared.feature.memos.domain.usecase.DeleteMemoUseCase
-import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadCachedMemosUseCase
-import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadMemosUseCase
-import space.be1ski.vibits.shared.feature.memos.domain.usecase.UpdateMemoUseCase
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosUseCases
 import space.be1ski.vibits.shared.feature.memos.presentation.createMemosFeature
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
-import space.be1ski.vibits.shared.feature.mode.domain.usecase.LoadAppModeUseCase
-import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
-import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
-import space.be1ski.vibits.shared.feature.settings.domain.usecase.LoadPreferencesUseCase
-import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveLanguageUseCase
-import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveThemeUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveTimeRangeTabUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.TimeRangeScreen
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffect
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsUseCases
 import space.be1ski.vibits.shared.feature.settings.presentation.components.SettingsDialog
 import space.be1ski.vibits.shared.feature.settings.presentation.createSettingsFeature
 
 @Suppress("LongMethod")
 @Composable
 fun VibitsApp(
+  dependencies: VibitsAppDependencies,
   currentTheme: AppTheme,
   currentLanguage: AppLanguage,
   onResetApp: () -> Unit = {},
   onThemeChanged: (AppTheme) -> Unit = {},
   onLanguageChanged: (AppLanguage) -> Unit = {},
 ) {
-  val loadPreferencesUseCase: LoadPreferencesUseCase = koinInject()
-  val saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase = koinInject()
-  val loadAppDetailsUseCase: LoadAppDetailsUseCase = koinInject()
-  val memosRepository: MemosRepository = koinInject()
-  val loadMemosUseCase: LoadMemosUseCase = koinInject()
-  val loadCachedMemosUseCase: LoadCachedMemosUseCase = koinInject()
-  val loadCredentialsUseCase: LoadCredentialsUseCase = koinInject()
-  val saveCredentialsUseCase: SaveCredentialsUseCase = koinInject()
-  val createMemoUseCase: CreateMemoUseCase = koinInject()
-  val updateMemoUseCase: UpdateMemoUseCase = koinInject()
-  val deleteMemoUseCase: DeleteMemoUseCase = koinInject()
-  val loadAppModeUseCase: LoadAppModeUseCase = koinInject()
-  val switchAppModeUseCase: SwitchAppModeUseCase = koinInject()
-  val resetAppUseCase: ResetAppUseCase = koinInject()
-  val validateCredentialsUseCase: ValidateCredentialsUseCase = koinInject()
-  val saveLanguageUseCase: SaveLanguageUseCase = koinInject()
-  val saveThemeUseCase: SaveThemeUseCase = koinInject()
-  val calculateSuccessRate: CalculateSuccessRateUseCase = koinInject()
-
-  val initialPrefs = remember { loadPreferencesUseCase() }
-  val initialMode = remember { loadAppModeUseCase() }
+  val initialPrefs = remember { dependencies.loadPreferences() }
+  val initialMode = remember { dependencies.loadAppMode() }
   val appState =
     remember {
       VibitsAppUiState(
@@ -112,22 +75,10 @@ fun VibitsApp(
     }
 
   // MemosFeature
-  val memosUseCases =
-    remember {
-      MemosUseCases(
-        loadMemos = loadMemosUseCase,
-        loadCachedMemos = loadCachedMemosUseCase,
-        loadCredentials = loadCredentialsUseCase,
-        saveCredentials = saveCredentialsUseCase,
-        createMemo = createMemoUseCase,
-        updateMemo = updateMemoUseCase,
-        deleteMemo = deleteMemoUseCase,
-      )
-    }
   val memosFeature =
     remember {
       val skipCredentials = initialMode == AppMode.OFFLINE || initialMode == AppMode.DEMO
-      createMemosFeature(memosUseCases, isOfflineMode = skipCredentials)
+      createMemosFeature(dependencies.memosUseCases, isOfflineMode = skipCredentials)
     }
   val scope = rememberCoroutineScope()
   LaunchedEffect(memosFeature) {
@@ -140,7 +91,7 @@ fun VibitsApp(
   val habitsFeature =
     remember {
       createHabitsFeature(
-        memosRepository = memosRepository,
+        memosRepository = dependencies.memosRepository,
         onRefresh = { dispatchMemos(MemosAction.LoadMemos) },
       )
     }
@@ -149,25 +100,14 @@ fun VibitsApp(
   }
   val habitsState by habitsFeature.state.collectAsState()
 
-  val appDetails = remember { loadAppDetailsUseCase() }
+  val appDetails = remember { dependencies.loadAppDetails() }
   val activityWeekDataCache = remember { ActivityWeekDataCache() }
 
   // SettingsFeature
-  val settingsUseCases =
-    remember {
-      SettingsUseCases(
-        validateCredentials = validateCredentialsUseCase,
-        switchAppMode = switchAppModeUseCase,
-        saveCredentials = saveCredentialsUseCase,
-        resetApp = resetAppUseCase,
-        saveLanguage = saveLanguageUseCase,
-        saveTheme = saveThemeUseCase,
-      )
-    }
   val settingsFeature =
     remember {
       createSettingsFeature(
-        useCases = settingsUseCases,
+        useCases = dependencies.settingsUseCases,
         initialMode = initialMode,
         appDetails = appDetails,
       )
@@ -231,10 +171,10 @@ fun VibitsApp(
       appState = appState,
       dispatchMemos = dispatchMemos,
       dispatchSettings = dispatchSettings,
-      saveTimeRangeTabUseCase = saveTimeRangeTabUseCase,
+      saveTimeRangeTab = dependencies.saveTimeRangeTab,
       habitsState = habitsState,
       onHabitsAction = habitsFeature::send,
-      calculateSuccessRate = calculateSuccessRate,
+      calculateSuccessRate = dependencies.calculateSuccessRate,
       language = currentLanguage,
       theme = currentTheme,
     )
@@ -254,7 +194,7 @@ private fun VibitsAppContent(
   appState: VibitsAppUiState,
   dispatchMemos: (MemosAction) -> Unit,
   dispatchSettings: (SettingsAction) -> Unit,
-  saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase,
+  saveTimeRangeTab: SaveTimeRangeTabUseCase,
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit,
   calculateSuccessRate: CalculateSuccessRateUseCase,
@@ -297,19 +237,19 @@ private fun VibitsAppContent(
       }
     }
   val onTabChange =
-    remember(onHabitsAction, appState, saveTimeRangeTabUseCase) {
+    remember(onHabitsAction, appState, saveTimeRangeTab) {
       { newTab: TimeRangeTab ->
         onHabitsAction(HabitsAction.ClearSelection)
         when (appState.selectedScreen) {
           MemosScreen.HABITS -> {
             adjustDateForTabChange(appState, appState.habitsTimeRangeTab, newTab)
             appState.habitsTimeRangeTab = newTab
-            saveTimeRangeTabUseCase(TimeRangeScreen.HABITS, newTab)
+            saveTimeRangeTab(TimeRangeScreen.HABITS, newTab)
           }
           MemosScreen.STATS -> {
             adjustDateForTabChange(appState, appState.postsTimeRangeTab, newTab)
             appState.postsTimeRangeTab = newTab
-            saveTimeRangeTabUseCase(TimeRangeScreen.POSTS, newTab)
+            saveTimeRangeTab(TimeRangeScreen.POSTS, newTab)
           }
           MemosScreen.FEED -> {}
         }
