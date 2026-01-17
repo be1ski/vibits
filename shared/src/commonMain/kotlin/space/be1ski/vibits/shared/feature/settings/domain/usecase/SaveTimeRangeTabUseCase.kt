@@ -3,9 +3,9 @@ package space.be1ski.vibits.shared.feature.settings.domain.usecase
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
 
-internal enum class TimeRangeScreen { HABITS, POSTS }
+enum class TimeRangeScreen { HABITS, POSTS }
 
-internal class SaveTimeRangeTabUseCase(
+class SaveTimeRangeTabUseCase(
   private val preferencesRepository: PreferencesRepository,
 ) {
   operator fun invoke(

@@ -7,7 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import org.koin.core.context.GlobalContext
 import space.be1ski.vibits.shared.app.AppRoot
+import space.be1ski.vibits.shared.di.createAppDependencies
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,8 +21,9 @@ class MainActivity : ComponentActivity() {
           Color.Transparent.toArgb(),
         ),
     )
+    val dependencies = GlobalContext.get().createAppDependencies()
     setContent {
-      AppRoot()
+      AppRoot(dependencies)
     }
   }
 }
