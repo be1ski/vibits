@@ -14,9 +14,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -51,6 +56,7 @@ import space.be1ski.vibits.shared.action_clear
 import space.be1ski.vibits.shared.action_close
 import space.be1ski.vibits.shared.action_copied
 import space.be1ski.vibits.shared.action_export
+import space.be1ski.vibits.shared.action_export_logs
 import space.be1ski.vibits.shared.action_export_memos
 import space.be1ski.vibits.shared.action_reset
 import space.be1ski.vibits.shared.action_reset_app
@@ -202,17 +208,11 @@ private fun SettingsDialogBody(
         modifier = Modifier.fillMaxWidth(),
       )
     }
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-      TextButton(onClick = { dispatch(SettingsAction.OpenLogs) }, modifier = Modifier.weight(1f)) {
-        Text(stringResource(Res.string.action_view_logs))
-      }
-      TextButton(onClick = { dispatch(SettingsAction.RequestReset) }, modifier = Modifier.weight(1f)) {
-        Text(stringResource(Res.string.action_reset_app))
-      }
-    }
-    if (state.appMode == AppMode.OFFLINE) {
-      ExportMemosButton()
-    }
+    ActionsRow(
+      showMemos = state.appMode == AppMode.OFFLINE,
+      onOpenLogs = { dispatch(SettingsAction.OpenLogs) },
+      onReset = { dispatch(SettingsAction.RequestReset) },
+    )
     state.appDetails?.let { appDetails ->
       AppDetailsSection(appDetails, state.appMode)
     }
@@ -411,13 +411,32 @@ private fun ResetConfirmationDialog(
   )
 }
 
+@Suppress("LongMethod")
 @Composable
-private fun ExportMemosButton() {
+private fun ActionsRow(
+  showMemos: Boolean,
+  onOpenLogs: () -> Unit,
+  onReset: () -> Unit,
+) {
   val scope = rememberCoroutineScope()
+  var exportExpanded by remember { mutableStateOf(false) }
   var exportStatus by remember { mutableStateOf<String?>(null) }
   val exportFailedMsg = stringResource(Res.string.msg_export_failed)
   val exportSuccessTemplate = stringResource(Res.string.msg_export_success, "%s")
   val exporter = remember { Exporter() }
+
+  val onExport: (ExportResult) -> Unit = { result ->
+    exportExpanded = false
+    exportStatus =
+      when (result) {
+        is ExportResult.Success -> exportSuccessTemplate.replace("%s", result.filePath)
+        ExportResult.Failure -> exportFailedMsg
+      }
+    scope.launch {
+      delay(TOAST_DURATION_MS * 2)
+      exportStatus = null
+    }
+  }
 
   Column {
     exportStatus?.let { status ->
@@ -433,21 +452,41 @@ private fun ExportMemosButton() {
         modifier = Modifier.padding(bottom = 4.dp),
       )
     }
-    TextButton(
-      onClick = {
-        exportStatus =
-          when (val result = exporter.exportMemos()) {
-            is ExportResult.Success -> exportSuccessTemplate.replace("%s", result.fileName)
-            ExportResult.Failure -> exportFailedMsg
-          }
-        scope.launch {
-          delay(TOAST_DURATION_MS * 2)
-          exportStatus = null
-        }
-      },
+    Row(
+      horizontalArrangement = Arrangement.SpaceEvenly,
       modifier = Modifier.fillMaxWidth(),
     ) {
-      Text(stringResource(Res.string.action_export_memos))
+      TextButton(onClick = onOpenLogs) {
+        Text(stringResource(Res.string.action_view_logs))
+      }
+      TextButton(onClick = onReset) {
+        Text(stringResource(Res.string.action_reset))
+      }
+      Column {
+        TextButton(onClick = { exportExpanded = true }) {
+          Text(stringResource(Res.string.action_export))
+          Icon(
+            Icons.Default.KeyboardArrowDown,
+            contentDescription = null,
+            modifier = Modifier.size(18.dp),
+          )
+        }
+        DropdownMenu(
+          expanded = exportExpanded,
+          onDismissRequest = { exportExpanded = false },
+        ) {
+          DropdownMenuItem(
+            text = { Text(stringResource(Res.string.action_export_logs)) },
+            onClick = { onExport(exporter.exportLogs()) },
+          )
+          if (showMemos) {
+            DropdownMenuItem(
+              text = { Text(stringResource(Res.string.action_export_memos)) },
+              onClick = { onExport(exporter.exportMemos()) },
+            )
+          }
+        }
+      }
     }
   }
 }
@@ -458,99 +497,63 @@ private const val LOG_TIMESTAMP_LENGTH = 8
 @Composable
 private fun LogsDialog(onDismiss: () -> Unit) {
   val logs = Log.logs
-  val scope = rememberCoroutineScope()
-  var exportStatus by remember { mutableStateOf<String?>(null) }
-  val exportFailedMsg = stringResource(Res.string.msg_export_failed)
-  val exportSuccessTemplate = stringResource(Res.string.msg_export_success, "%s")
-  val exporter = remember { Exporter() }
 
   AlertDialog(
     onDismissRequest = onDismiss,
     title = { Text(stringResource(Res.string.title_logs, logs.size)) },
     text = {
-      Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        exportStatus?.let { status ->
-          Text(
-            text = status,
-            style = MaterialTheme.typography.bodySmall,
-            color =
-              if (status == exportFailedMsg) {
-                MaterialTheme.colorScheme.error
-              } else {
-                MaterialTheme.colorScheme.primary
-              },
-          )
-        }
-        LazyColumn(
-          modifier =
-            Modifier
-              .fillMaxWidth()
-              .heightIn(max = 400.dp),
-          verticalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-          items(logs) { entry ->
-            val bgColor =
-              when (entry.level) {
-                LogLevel.ERROR -> MaterialTheme.colorScheme.errorContainer
-                LogLevel.WARN -> MaterialTheme.colorScheme.tertiaryContainer
-                else -> MaterialTheme.colorScheme.surfaceVariant
-              }
-            Column(
-              modifier =
-                Modifier
-                  .fillMaxWidth()
-                  .background(bgColor, RoundedCornerShape(4.dp))
-                  .padding(6.dp),
-            ) {
-              val time = entry.timestamp.substringAfter('T').take(LOG_TIMESTAMP_LENGTH)
-              val header = "$time ${entry.level.name.first()}/${entry.tag}"
-              Text(
-                text = header,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-              )
-              Text(
-                text = entry.message,
-                style =
-                  MaterialTheme.typography.bodySmall.copy(
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 11.sp,
-                  ),
-              )
+      LazyColumn(
+        modifier =
+          Modifier
+            .fillMaxWidth()
+            .heightIn(max = 400.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+      ) {
+        items(logs) { entry ->
+          val bgColor =
+            when (entry.level) {
+              LogLevel.ERROR -> MaterialTheme.colorScheme.errorContainer
+              LogLevel.WARN -> MaterialTheme.colorScheme.tertiaryContainer
+              else -> MaterialTheme.colorScheme.surfaceVariant
             }
+          Column(
+            modifier =
+              Modifier
+                .fillMaxWidth()
+                .background(bgColor, RoundedCornerShape(4.dp))
+                .padding(6.dp),
+          ) {
+            val time = entry.timestamp.substringAfter('T').take(LOG_TIMESTAMP_LENGTH)
+            val header = "$time ${entry.level.name.first()}/${entry.tag}"
+            Text(
+              text = header,
+              style = MaterialTheme.typography.labelSmall,
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+              text = entry.message,
+              style =
+                MaterialTheme.typography.bodySmall.copy(
+                  fontFamily = FontFamily.Monospace,
+                  fontSize = 11.sp,
+                ),
+            )
           }
-          if (logs.isEmpty()) {
-            item {
-              Text(
-                stringResource(Res.string.msg_no_logs),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-              )
-            }
+        }
+        if (logs.isEmpty()) {
+          item {
+            Text(
+              stringResource(Res.string.msg_no_logs),
+              style = MaterialTheme.typography.bodyMedium,
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
           }
         }
       }
     },
     confirmButton = {
-      Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        TextButton(
-          onClick = {
-            exportStatus =
-              when (val result = exporter.exportLogs()) {
-                is ExportResult.Success -> exportSuccessTemplate.replace("%s", result.fileName)
-                ExportResult.Failure -> exportFailedMsg
-              }
-            scope.launch {
-              delay(TOAST_DURATION_MS * 2)
-              exportStatus = null
-            }
-          },
-        ) {
-          Text(stringResource(Res.string.action_export))
-        }
-        TextButton(onClick = { Log.clear() }) {
-          Text(stringResource(Res.string.action_clear))
-        }
+      TextButton(onClick = { Log.clear() }) {
+        Text(stringResource(Res.string.action_clear))
       }
     },
     dismissButton = {

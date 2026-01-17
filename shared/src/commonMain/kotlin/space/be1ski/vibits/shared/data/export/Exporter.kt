@@ -29,9 +29,9 @@ class Exporter(
   fun exportLogs(): ExportResult {
     val fileName = generateFileName("logs", "txt")
     val content = Log.export()
-    val path = fileExporter.export(fileName, content)
-    return if (path != null) {
-      ExportResult.Success(fileName)
+    val filePath = fileExporter.export(fileName, content)
+    return if (filePath != null) {
+      ExportResult.Success(filePath)
     } else {
       ExportResult.Failure
     }
@@ -45,9 +45,9 @@ class Exporter(
     val fileName = generateFileName("memos", "json")
     val data = offlineMemoStorage.load()
     val content = json.encodeToString(OfflineMemosFileDto.serializer(), data)
-    val path = fileExporter.export(fileName, content)
-    return if (path != null) {
-      ExportResult.Success(fileName)
+    val filePath = fileExporter.export(fileName, content)
+    return if (filePath != null) {
+      ExportResult.Success(filePath)
     } else {
       ExportResult.Failure
     }
@@ -74,7 +74,7 @@ class Exporter(
 
 sealed interface ExportResult {
   data class Success(
-    val fileName: String,
+    val filePath: String,
   ) : ExportResult
 
   data object Failure : ExportResult
