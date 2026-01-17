@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -103,43 +104,30 @@ internal fun StatsInfoCard(
 
   if (todayTotal == 0) return
 
-  OutlinedCard(modifier = Modifier.fillMaxWidth()) {
-    Row(
-      modifier = Modifier.padding(Indent.s).fillMaxWidth(),
-      horizontalArrangement = Arrangement.SpaceBetween,
-      verticalAlignment = Alignment.CenterVertically
-    ) {
-      Text(
-        stringResource(Res.string.format_habits_progress, todayDone, todayTotal),
-        style = MaterialTheme.typography.titleSmall,
-        modifier = Modifier.weight(1f, fill = false)
-      )
-      Row(
-        horizontalArrangement = Arrangement.spacedBy(Indent.xs),
-        verticalAlignment = Alignment.CenterVertically
+  StatsInfoCardLayout(
+    primaryText = stringResource(Res.string.format_habits_progress, todayDone, todayTotal),
+    actions = {
+      IconButton(
+        onClick = { dispatch(HabitsAction.OpenConfigDialog(derived.currentHabitsConfig)) },
+        modifier = Modifier.size(36.dp)
       ) {
-        IconButton(
-          onClick = { dispatch(HabitsAction.OpenConfigDialog(derived.currentHabitsConfig)) },
-          modifier = Modifier.size(36.dp)
-        ) {
-          Icon(
-            imageVector = Icons.Filled.Settings,
-            contentDescription = stringResource(Res.string.label_habits_config),
-            modifier = Modifier.size(20.dp),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
-          )
+        Icon(
+          imageVector = Icons.Filled.Settings,
+          contentDescription = stringResource(Res.string.label_habits_config),
+          modifier = Modifier.size(20.dp),
+          tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+      }
+      Button(
+        onClick = {
+          val day = derived.todayDay ?: return@Button
+          dispatch(HabitsAction.OpenEditor(day, derived.todayConfig))
         }
-        Button(
-          onClick = {
-            val day = derived.todayDay ?: return@Button
-            dispatch(HabitsAction.OpenEditor(day, derived.todayConfig))
-          }
-        ) {
-          Text(stringResource(Res.string.action_track))
-        }
+      ) {
+        Text(stringResource(Res.string.action_track))
       }
     }
-  }
+  )
 }
 
 @Composable
@@ -185,28 +173,54 @@ internal fun StatsPostsInfoCard(
 
   if (totalPosts == 0 && todayPosts == 0) return
 
+  val secondaryText = if (todayPosts > 0) {
+    stringResource(Res.string.format_posts_today, todayPosts)
+  } else null
+
+  StatsInfoCardLayout(
+    primaryText = stringResource(Res.string.format_posts_count, totalPosts),
+    secondaryText = secondaryText
+  )
+}
+
+@Composable
+private fun StatsInfoCardLayout(
+  primaryText: String,
+  secondaryText: String? = null,
+  actions: @Composable RowScope.() -> Unit = {}
+) {
   OutlinedCard(modifier = Modifier.fillMaxWidth()) {
     Row(
-      modifier = Modifier.padding(Indent.s).fillMaxWidth(),
+      modifier = Modifier
+        .padding(Indent.s)
+        .fillMaxWidth()
+        .heightIn(min = INFO_CARD_MIN_HEIGHT),
       horizontalArrangement = Arrangement.SpaceBetween,
       verticalAlignment = Alignment.CenterVertically
     ) {
-      Column(verticalArrangement = Arrangement.spacedBy(Indent.x2s)) {
-        Text(
-          stringResource(Res.string.format_posts_count, totalPosts),
-          style = MaterialTheme.typography.titleSmall
-        )
-        if (todayPosts > 0) {
+      Column(
+        verticalArrangement = Arrangement.spacedBy(Indent.x2s),
+        modifier = Modifier.weight(1f, fill = false)
+      ) {
+        Text(primaryText, style = MaterialTheme.typography.titleSmall)
+        if (secondaryText != null) {
           Text(
-            stringResource(Res.string.format_posts_today, todayPosts),
+            secondaryText,
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
           )
         }
       }
+      Row(
+        horizontalArrangement = Arrangement.spacedBy(Indent.xs),
+        verticalAlignment = Alignment.CenterVertically,
+        content = actions
+      )
     }
   }
 }
+
+private val INFO_CARD_MIN_HEIGHT = 40.dp
 
 private const val DAYS_IN_WEEK = 7
 private const val TIME_BLOCKS = 4
