@@ -65,6 +65,7 @@ import space.be1ski.vibits.shared.label_time_morning
 import space.be1ski.vibits.shared.label_time_day
 import space.be1ski.vibits.shared.label_time_evening
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.core.platform.DateFormatter
 import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
@@ -282,7 +283,7 @@ private fun HeatmapDayHeaders(
     for (dayOffset in 0 until DAYS_IN_WEEK) {
       val date = weekStart.plus(DatePeriod(days = dayOffset))
       Box(modifier = Modifier.size(cellSize), contentAlignment = Alignment.Center) {
-        Text(date.dayOfWeek.name.take(2), style = MaterialTheme.typography.labelSmall)
+        Text(DateFormatter.dayOfWeekShort(date.dayOfWeek), style = MaterialTheme.typography.labelSmall)
       }
     }
   }
@@ -439,8 +440,7 @@ private const val LAST_DAY_OF_DECEMBER = 31
 private fun CompactPostRow(memo: Memo, timeZone: TimeZone) {
   val instant = memo.createTime ?: memo.updateTime
   val dateLabel = instant?.let {
-    val dt = it.toLocalDateTime(timeZone)
-    "${dt.date.day}/${dt.date.month.ordinal + 1} ${dt.hour}:${dt.minute.toString().padStart(2, '0')}"
+    DateFormatter.compactDateTime(it.toLocalDateTime(timeZone))
   } ?: ""
 
   Row(
@@ -789,7 +789,7 @@ private fun LastSevenDaysMatrix(
         days.forEach { day ->
           Box(modifier = Modifier.size(cellSize), contentAlignment = Alignment.Center) {
             Text(
-              day.date.dayOfWeek.name.take(2),
+              DateFormatter.dayOfWeekShort(day.date.dayOfWeek),
               style = MaterialTheme.typography.labelSmall
             )
           }

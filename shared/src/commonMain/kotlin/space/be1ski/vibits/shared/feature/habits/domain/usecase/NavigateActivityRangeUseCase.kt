@@ -2,16 +2,16 @@ package space.be1ski.vibits.shared.feature.habits.domain.usecase
 
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 import kotlinx.datetime.plus
+import space.be1ski.vibits.shared.core.platform.DateFormatter
 import space.be1ski.vibits.shared.core.platform.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.ActivityRange
-import kotlinx.datetime.Month
 
 private const val DAYS_IN_WEEK = 7
 private const val WEEK_END_OFFSET = 6
 private const val QUARTERS_IN_YEAR = 4
 private const val MONTHS_IN_YEAR = 12
-private const val MONTH_ABBREV_LENGTH = 3
 
 /**
  * Handles navigation and comparison of activity ranges.
@@ -49,16 +49,9 @@ class NavigateActivityRangeUseCase {
       is ActivityRange.Week -> {
         val endDate = range.startDate.plus(DatePeriod(days = WEEK_END_OFFSET))
         val currentYear = currentLocalDate().year
-        val showYear = range.startDate.year != currentYear
-        if (!showYear) {
-          "${formatMonthDay(range.startDate)} - ${formatMonthDay(endDate)}"
-        } else if (range.startDate.year == endDate.year) {
-          "${formatMonthDay(range.startDate)} - ${formatMonthDay(endDate)} (${endDate.year})"
-        } else {
-          "${formatMonthDay(range.startDate)}, ${range.startDate.year} – ${formatMonthDay(endDate)}, ${endDate.year}"
-        }
+        DateFormatter.weekRange(range.startDate, endDate, currentYear)
       }
-      is ActivityRange.Month -> "${monthShort(range.month)} ${range.year}"
+      is ActivityRange.Month -> "${DateFormatter.monthShort(range.month)} ${range.year}"
       is ActivityRange.Quarter -> "Q${range.index} ${range.year}"
       is ActivityRange.Year -> range.year.toString()
     }
@@ -96,15 +89,6 @@ class NavigateActivityRangeUseCase {
     is ActivityRange.Year -> if (to is ActivityRange.Year) {
       to.year - from.year
     } else 0
-  }
-
-  private fun formatMonthDay(date: LocalDate, showYear: Boolean = false): String {
-    val base = "${monthShort(date.month)} ${date.day}"
-    return if (showYear) "$base ${date.year}" else base
-  }
-
-  private fun monthShort(month: Month): String {
-    return month.name.take(MONTH_ABBREV_LENGTH).lowercase().replaceFirstChar { it.uppercase() }
   }
 
   private fun compareYearMonth(
