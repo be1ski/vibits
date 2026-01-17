@@ -20,6 +20,8 @@ import space.be1ski.vibits.shared.feature.habits.presentation.components.findDai
 import space.be1ski.vibits.shared.feature.habits.presentation.components.habitsConfigForDate
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberHabitsConfigTimeline
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.CountDailyPostsUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.GetPeriodPostsUseCase
 import space.be1ski.vibits.shared.core.platform.currentLocalDate
 
 /**
@@ -92,6 +94,10 @@ private fun rememberStatsScreenDerived(
       calculateSuccessRate(weekData, range, today, configStartDate)
     } else null
   }
+  val getPeriodPosts = remember { GetPeriodPostsUseCase() }
+  val periodPosts = remember(memos, range, timeZone) {
+    getPeriodPosts(memos, range, timeZone)
+  }
   return StatsScreenDerivedState(
     state = state,
     habitsState = habitsState,
@@ -109,7 +115,8 @@ private fun rememberStatsScreenDerived(
     todayDay = todayDay,
     today = today,
     timeZone = timeZone,
-    successRateData = successRateData
+    successRateData = successRateData,
+    periodPosts = periodPosts
   )
 }
 

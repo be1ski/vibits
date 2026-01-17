@@ -55,5 +55,6 @@ internal data class StatsScreenDerivedState(
   val todayDay: ContributionDay?,
   val today: LocalDate,
   val timeZone: TimeZone,
-  val successRateData: SuccessRateData?
+  val successRateData: SuccessRateData?,
+  val periodPosts: List<Memo>
 )
