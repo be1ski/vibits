@@ -50,6 +50,8 @@ import space.be1ski.vibits.shared.action_cancel
 import space.be1ski.vibits.shared.action_clear
 import space.be1ski.vibits.shared.action_close
 import space.be1ski.vibits.shared.action_copied
+import space.be1ski.vibits.shared.action_export
+import space.be1ski.vibits.shared.action_export_memos
 import space.be1ski.vibits.shared.action_reset
 import space.be1ski.vibits.shared.action_reset_app
 import space.be1ski.vibits.shared.action_save
@@ -57,6 +59,8 @@ import space.be1ski.vibits.shared.action_view_logs
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.logging.LogLevel
 import space.be1ski.vibits.shared.core.ui.SegmentedSelector
+import space.be1ski.vibits.shared.data.export.ExportResult
+import space.be1ski.vibits.shared.data.export.Exporter
 import space.be1ski.vibits.shared.domain.model.app.AppDetails
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
@@ -81,6 +85,8 @@ import space.be1ski.vibits.shared.mode_demo_title
 import space.be1ski.vibits.shared.mode_offline_title
 import space.be1ski.vibits.shared.mode_online_title
 import space.be1ski.vibits.shared.msg_connection_failed
+import space.be1ski.vibits.shared.msg_export_failed
+import space.be1ski.vibits.shared.msg_export_success
 import space.be1ski.vibits.shared.msg_fill_all_fields
 import space.be1ski.vibits.shared.msg_no_logs
 import space.be1ski.vibits.shared.msg_reset_confirm
@@ -203,6 +209,9 @@ private fun SettingsDialogBody(
       TextButton(onClick = { dispatch(SettingsAction.RequestReset) }, modifier = Modifier.weight(1f)) {
         Text(stringResource(Res.string.action_reset_app))
       }
+    }
+    if (state.appMode == AppMode.OFFLINE) {
+      ExportMemosButton()
     }
     state.appDetails?.let { appDetails ->
       AppDetailsSection(appDetails, state.appMode)
@@ -402,69 +411,146 @@ private fun ResetConfirmationDialog(
   )
 }
 
+@Composable
+private fun ExportMemosButton() {
+  val scope = rememberCoroutineScope()
+  var exportStatus by remember { mutableStateOf<String?>(null) }
+  val exportFailedMsg = stringResource(Res.string.msg_export_failed)
+  val exportSuccessTemplate = stringResource(Res.string.msg_export_success, "%s")
+  val exporter = remember { Exporter() }
+
+  Column {
+    exportStatus?.let { status ->
+      Text(
+        text = status,
+        style = MaterialTheme.typography.bodySmall,
+        color =
+          if (status == exportFailedMsg) {
+            MaterialTheme.colorScheme.error
+          } else {
+            MaterialTheme.colorScheme.primary
+          },
+        modifier = Modifier.padding(bottom = 4.dp),
+      )
+    }
+    TextButton(
+      onClick = {
+        exportStatus =
+          when (val result = exporter.exportMemos()) {
+            is ExportResult.Success -> exportSuccessTemplate.replace("%s", result.fileName)
+            ExportResult.Failure -> exportFailedMsg
+          }
+        scope.launch {
+          delay(TOAST_DURATION_MS * 2)
+          exportStatus = null
+        }
+      },
+      modifier = Modifier.fillMaxWidth(),
+    ) {
+      Text(stringResource(Res.string.action_export_memos))
+    }
+  }
+}
+
 private const val LOG_TIMESTAMP_LENGTH = 8
 
 @Suppress("LongMethod")
 @Composable
 private fun LogsDialog(onDismiss: () -> Unit) {
   val logs = Log.logs
+  val scope = rememberCoroutineScope()
+  var exportStatus by remember { mutableStateOf<String?>(null) }
+  val exportFailedMsg = stringResource(Res.string.msg_export_failed)
+  val exportSuccessTemplate = stringResource(Res.string.msg_export_success, "%s")
+  val exporter = remember { Exporter() }
 
   AlertDialog(
     onDismissRequest = onDismiss,
     title = { Text(stringResource(Res.string.title_logs, logs.size)) },
     text = {
-      LazyColumn(
-        modifier =
-          Modifier
-            .fillMaxWidth()
-            .heightIn(max = 400.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-      ) {
-        items(logs) { entry ->
-          val bgColor =
-            when (entry.level) {
-              LogLevel.ERROR -> MaterialTheme.colorScheme.errorContainer
-              LogLevel.WARN -> MaterialTheme.colorScheme.tertiaryContainer
-              else -> MaterialTheme.colorScheme.surfaceVariant
-            }
-          Column(
-            modifier =
-              Modifier
-                .fillMaxWidth()
-                .background(bgColor, RoundedCornerShape(4.dp))
-                .padding(6.dp),
-          ) {
-            val time = entry.timestamp.substringAfter('T').take(LOG_TIMESTAMP_LENGTH)
-            val header = "$time ${entry.level.name.first()}/${entry.tag}"
-            Text(
-              text = header,
-              style = MaterialTheme.typography.labelSmall,
-              color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Text(
-              text = entry.message,
-              style =
-                MaterialTheme.typography.bodySmall.copy(
-                  fontFamily = FontFamily.Monospace,
-                  fontSize = 11.sp,
-                ),
-            )
-          }
+      Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        exportStatus?.let { status ->
+          Text(
+            text = status,
+            style = MaterialTheme.typography.bodySmall,
+            color =
+              if (status == exportFailedMsg) {
+                MaterialTheme.colorScheme.error
+              } else {
+                MaterialTheme.colorScheme.primary
+              },
+          )
         }
-        if (logs.isEmpty()) {
-          item {
-            Text(
-              stringResource(Res.string.msg_no_logs),
-              style = MaterialTheme.typography.bodyMedium,
-              color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+        LazyColumn(
+          modifier =
+            Modifier
+              .fillMaxWidth()
+              .heightIn(max = 400.dp),
+          verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+          items(logs) { entry ->
+            val bgColor =
+              when (entry.level) {
+                LogLevel.ERROR -> MaterialTheme.colorScheme.errorContainer
+                LogLevel.WARN -> MaterialTheme.colorScheme.tertiaryContainer
+                else -> MaterialTheme.colorScheme.surfaceVariant
+              }
+            Column(
+              modifier =
+                Modifier
+                  .fillMaxWidth()
+                  .background(bgColor, RoundedCornerShape(4.dp))
+                  .padding(6.dp),
+            ) {
+              val time = entry.timestamp.substringAfter('T').take(LOG_TIMESTAMP_LENGTH)
+              val header = "$time ${entry.level.name.first()}/${entry.tag}"
+              Text(
+                text = header,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+              )
+              Text(
+                text = entry.message,
+                style =
+                  MaterialTheme.typography.bodySmall.copy(
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 11.sp,
+                  ),
+              )
+            }
+          }
+          if (logs.isEmpty()) {
+            item {
+              Text(
+                stringResource(Res.string.msg_no_logs),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+              )
+            }
           }
         }
       }
     },
     confirmButton = {
-      TextButton(onClick = { Log.clear() }) {
-        Text(stringResource(Res.string.action_clear))
+      Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        TextButton(
+          onClick = {
+            exportStatus =
+              when (val result = exporter.exportLogs()) {
+                is ExportResult.Success -> exportSuccessTemplate.replace("%s", result.fileName)
+                ExportResult.Failure -> exportFailedMsg
+              }
+            scope.launch {
+              delay(TOAST_DURATION_MS * 2)
+              exportStatus = null
+            }
+          },
+        ) {
+          Text(stringResource(Res.string.action_export))
+        }
+        TextButton(onClick = { Log.clear() }) {
+          Text(stringResource(Res.string.action_clear))
+        }
       }
     },
     dismissButton = {
