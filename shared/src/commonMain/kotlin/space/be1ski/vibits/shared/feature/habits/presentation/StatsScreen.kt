@@ -21,7 +21,6 @@ import space.be1ski.vibits.shared.feature.habits.presentation.components.habitsC
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberHabitsConfigTimeline
 import space.be1ski.vibits.shared.core.platform.currentLocalDate
-import space.be1ski.vibits.shared.core.platform.isDesktop
 
 /**
  * Stats tab with activity charts.
@@ -74,7 +73,7 @@ private fun rememberStatsScreenDerived(
   val showWeekdayLegend = range is ActivityRange.Week ||
     range is ActivityRange.Month ||
     range is ActivityRange.Quarter
-  val useCompactHeight = (range is ActivityRange.Year || range is ActivityRange.Month) && !isDesktop
+  val useCompactHeight = range is ActivityRange.Year || range is ActivityRange.Month
   val collapseHabits = activityMode == ActivityMode.Habits && range is ActivityRange.Year
   val showLast7DaysMatrix = activityMode == ActivityMode.Habits &&
     range is ActivityRange.Week &&
