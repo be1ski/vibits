@@ -84,8 +84,16 @@ import space.be1ski.vibits.shared.label_memos_db
 import space.be1ski.vibits.shared.label_storage
 import space.be1ski.vibits.shared.label_theme
 import space.be1ski.vibits.shared.label_version
+import space.be1ski.vibits.shared.language_arabic
+import space.be1ski.vibits.shared.language_chinese
 import space.be1ski.vibits.shared.language_english
+import space.be1ski.vibits.shared.language_french
+import space.be1ski.vibits.shared.language_german
+import space.be1ski.vibits.shared.language_hindi
+import space.be1ski.vibits.shared.language_japanese
+import space.be1ski.vibits.shared.language_portuguese
 import space.be1ski.vibits.shared.language_russian
+import space.be1ski.vibits.shared.language_spanish
 import space.be1ski.vibits.shared.language_system
 import space.be1ski.vibits.shared.mode_demo_title
 import space.be1ski.vibits.shared.mode_offline_title
@@ -158,26 +166,6 @@ private fun SettingsDialogBody(
       Text(error, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
     }
     SegmentedSelector(
-      label = stringResource(Res.string.label_language),
-      options = AppLanguage.entries,
-      selected = state.selectedLanguage,
-      onSelect = { language -> dispatch(SettingsAction.SelectLanguage(language)) },
-      optionLabel = { language ->
-        when (language) {
-          AppLanguage.SYSTEM -> stringResource(Res.string.language_system)
-          AppLanguage.ENGLISH -> stringResource(Res.string.language_english)
-          AppLanguage.RUSSIAN -> stringResource(Res.string.language_russian)
-        }
-      },
-    )
-    if (state.languageChanged) {
-      Text(
-        text = stringResource(Res.string.msg_restart_required),
-        color = MaterialTheme.colorScheme.tertiary,
-        style = MaterialTheme.typography.bodySmall,
-      )
-    }
-    SegmentedSelector(
       label = stringResource(Res.string.label_theme),
       options = AppTheme.entries,
       selected = state.selectedTheme,
@@ -190,6 +178,17 @@ private fun SettingsDialogBody(
         }
       },
     )
+    LanguageDropdown(
+      selectedLanguage = state.selectedLanguage,
+      onSelect = { language -> dispatch(SettingsAction.SelectLanguage(language)) },
+    )
+    if (state.languageChanged) {
+      Text(
+        text = stringResource(Res.string.msg_restart_required),
+        color = MaterialTheme.colorScheme.tertiary,
+        style = MaterialTheme.typography.bodySmall,
+      )
+    }
     if (state.appMode == AppMode.ONLINE) {
       TextField(
         value = state.editBaseUrl,
@@ -373,6 +372,65 @@ private fun shortenPath(path: String): String =
     "..." + path.takeLast(PATH_MAX_LENGTH - ELLIPSIS_LENGTH)
   } else {
     path
+  }
+
+@Composable
+private fun LanguageDropdown(
+  selectedLanguage: AppLanguage,
+  onSelect: (AppLanguage) -> Unit,
+) {
+  var expanded by remember { mutableStateOf(false) }
+
+  Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Text(stringResource(Res.string.label_language))
+    Column {
+      SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+        SegmentedButton(
+          selected = false,
+          onClick = { expanded = true },
+          shape = SegmentedButtonDefaults.itemShape(index = 0, count = 1),
+          icon = {},
+        ) {
+          Text(getLanguageLabel(selectedLanguage))
+          Icon(
+            Icons.Default.KeyboardArrowDown,
+            contentDescription = null,
+            modifier = Modifier.size(18.dp),
+          )
+        }
+      }
+      DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { expanded = false },
+      ) {
+        AppLanguage.entries.forEach { language ->
+          DropdownMenuItem(
+            text = { Text(getLanguageLabel(language)) },
+            onClick = {
+              onSelect(language)
+              expanded = false
+            },
+          )
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun getLanguageLabel(language: AppLanguage): String =
+  when (language) {
+    AppLanguage.SYSTEM -> stringResource(Res.string.language_system)
+    AppLanguage.ENGLISH -> stringResource(Res.string.language_english)
+    AppLanguage.SPANISH -> stringResource(Res.string.language_spanish)
+    AppLanguage.CHINESE -> stringResource(Res.string.language_chinese)
+    AppLanguage.HINDI -> stringResource(Res.string.language_hindi)
+    AppLanguage.ARABIC -> stringResource(Res.string.language_arabic)
+    AppLanguage.PORTUGUESE -> stringResource(Res.string.language_portuguese)
+    AppLanguage.RUSSIAN -> stringResource(Res.string.language_russian)
+    AppLanguage.JAPANESE -> stringResource(Res.string.language_japanese)
+    AppLanguage.GERMAN -> stringResource(Res.string.language_german)
+    AppLanguage.FRENCH -> stringResource(Res.string.language_french)
   }
 
 @Composable
