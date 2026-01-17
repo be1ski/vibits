@@ -1,51 +1,76 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
-  "labels": ["dependencies"],
+  "extends": [
+    "config:recommended"
+  ],
+  "labels": [
+    "dependencies"
+  ],
   "automerge": true,
   "automergeType": "pr",
   "platformAutomerge": true,
   "packageRules": [
     {
-      "matchManagers": ["gradle", "gradle-wrapper"],
+      "matchManagers": [
+        "gradle",
+        "gradle-wrapper"
+      ],
       "separateMajorMinor": true,
       "separateMinorPatch": false
     },
     {
       "description": "Major updates require manual review",
-      "matchUpdateTypes": ["major"],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "automerge": false,
-      "labels": ["dependencies", "major"]
+      "labels": [
+        "dependencies",
+        "major"
+      ]
     },
     {
       "description": "Ignore pre-release and compat versions",
-      "matchPackagePatterns": ["*"],
-      "allowedVersions": "!/(-compat|-alpha|-beta|-rc|SNAPSHOT)/"
+      "allowedVersions": "!/(-compat|-alpha|-beta|-rc|SNAPSHOT)/",
+      "matchPackageNames": [
+        "*"
+      ]
     },
     {
       "description": "Group Kotlin dependencies",
-      "matchPackagePatterns": ["^org.jetbrains.kotlin"],
-      "groupName": "kotlin"
+      "groupName": "kotlin",
+      "matchPackageNames": [
+        "/^org.jetbrains.kotlin/"
+      ]
     },
     {
       "description": "Group AndroidX dependencies (non-compose)",
-      "matchPackagePatterns": ["^androidx\\."],
-      "groupName": "androidx"
+      "groupName": "androidx",
+      "matchPackageNames": [
+        "/^androidx\\./"
+      ]
     },
     {
       "description": "Group Compose dependencies (overrides androidx for compose packages)",
-      "matchPackagePatterns": ["^org.jetbrains.compose", "^androidx.compose"],
-      "groupName": "compose"
+      "groupName": "compose",
+      "matchPackageNames": [
+        "/^org.jetbrains.compose/",
+        "/^androidx.compose/"
+      ]
     },
     {
       "description": "Group Ktor dependencies",
-      "matchPackagePatterns": ["^io.ktor"],
-      "groupName": "ktor"
+      "groupName": "ktor",
+      "matchPackageNames": [
+        "/^io.ktor/"
+      ]
     },
     {
       "description": "Group Firebase dependencies",
-      "matchPackagePatterns": ["^com.google.firebase"],
-      "groupName": "firebase"
+      "groupName": "firebase",
+      "matchPackageNames": [
+        "/^com.google.firebase/"
+      ]
     }
   ]
 }
