@@ -251,6 +251,7 @@ private fun ContributionGridTimelineRow(
   )
 }
 
+@Suppress("CyclomaticComplexMethod")
 @Composable
 private fun ContributionGridTooltip(
   state: ContributionGridState,
@@ -303,14 +304,17 @@ private fun ContributionGridTooltip(
           }
         }
       }
-      tooltip.day.dailyMemo?.let {
-        TextButton(onClick = { onEditRequested(tooltip.day) }) {
-          Text(stringResource(Res.string.title_edit_day))
-        }
-      } ?: run {
-        if (tooltip.day.totalHabits > 0 && tooltip.day.inRange && !state.demoMode) {
-          TextButton(onClick = { onCreateRequested(tooltip.day) }) {
-            Text(stringResource(Res.string.title_create_day))
+      val isFuture = state.today != null && tooltip.day.date > state.today
+      if (!isFuture) {
+        tooltip.day.dailyMemo?.let {
+          TextButton(onClick = { onEditRequested(tooltip.day) }) {
+            Text(stringResource(Res.string.title_edit_day))
+          }
+        } ?: run {
+          if (tooltip.day.totalHabits > 0 && tooltip.day.inRange && !state.demoMode) {
+            TextButton(onClick = { onCreateRequested(tooltip.day) }) {
+              Text(stringResource(Res.string.title_create_day))
+            }
           }
         }
       }
