@@ -76,12 +76,12 @@ private fun rememberStatsScreenDerived(
     range is ActivityRange.Month ||
     range is ActivityRange.Quarter
   val useCompactHeight = range is ActivityRange.Year || range is ActivityRange.Month
-  val collapseHabits = activityMode == ActivityMode.Habits && range is ActivityRange.Year
-  val showLast7DaysMatrix = activityMode == ActivityMode.Habits &&
+  val collapseHabits = activityMode == ActivityMode.HABITS && range is ActivityRange.Year
+  val showLast7DaysMatrix = activityMode == ActivityMode.HABITS &&
     range is ActivityRange.Week &&
     currentHabitsConfig.isNotEmpty()
   val showHabitSections = !showLast7DaysMatrix &&
-    activityMode == ActivityMode.Habits &&
+    activityMode == ActivityMode.HABITS &&
     currentHabitsConfig.isNotEmpty()
   val selectedDay = remember(weekData.weeks, habitsState.selectedDate) {
     habitsState.selectedDate?.let { date -> findDayByDate(weekData, date) }
@@ -90,7 +90,7 @@ private fun rememberStatsScreenDerived(
     habitsConfigTimeline.firstOrNull()?.date
   }
   val successRateData = remember(weekData, range, activityMode, currentHabitsConfig, configStartDate) {
-    if (activityMode == ActivityMode.Habits && currentHabitsConfig.isNotEmpty()) {
+    if (activityMode == ActivityMode.HABITS && currentHabitsConfig.isNotEmpty()) {
       calculateSuccessRate(weekData, range, today, configStartDate)
     } else null
   }

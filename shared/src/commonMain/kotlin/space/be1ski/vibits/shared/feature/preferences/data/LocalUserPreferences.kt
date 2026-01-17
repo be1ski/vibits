@@ -7,7 +7,7 @@ data class LocalUserPreferences(
   val postsTimeRangeTab: String
 ) {
   companion object {
-    val DEFAULT_TIME_RANGE_TAB = TimeRangeTab.Weeks.name
+    val DEFAULT_TIME_RANGE_TAB = TimeRangeTab.WEEKS.name
   }
 }
 

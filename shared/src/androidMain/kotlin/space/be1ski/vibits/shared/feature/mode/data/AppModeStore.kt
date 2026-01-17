@@ -14,11 +14,11 @@ actual class AppModeStore {
 
   actual fun load(): LocalAppMode {
     if (!AndroidContextHolder.isReady()) {
-      return LocalAppMode(mode = AppMode.NotSelected)
+      return LocalAppMode(mode = AppMode.NOT_SELECTED)
     }
     val prefs = AndroidContextHolder.context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
     val modeName = prefs.getString(keyMode, null)
-    val mode = modeName?.let { runCatching { AppMode.valueOf(it) }.getOrNull() } ?: AppMode.NotSelected
+    val mode = modeName?.let { runCatching { AppMode.valueOf(it) }.getOrNull() } ?: AppMode.NOT_SELECTED
     return LocalAppMode(mode = mode)
   }
 

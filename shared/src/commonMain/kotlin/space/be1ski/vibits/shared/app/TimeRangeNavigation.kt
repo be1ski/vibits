@@ -48,7 +48,7 @@ internal fun SwipeableTabContent(
   onHabitsAction: (HabitsAction) -> Unit,
   dispatchMemos: (MemosAction) -> Unit = {}
 ) {
-  if (appState.selectedScreen == MemosScreen.Feed) {
+  if (appState.selectedScreen == MemosScreen.FEED) {
     FeedScreen(
       memos = memosState.memos,
       isRefreshing = memosState.isLoading,
@@ -61,9 +61,9 @@ internal fun SwipeableTabContent(
   }
 
   val selectedTab = when (appState.selectedScreen) {
-    MemosScreen.Habits -> appState.habitsTimeRangeTab
-    MemosScreen.Stats -> appState.postsTimeRangeTab
-    MemosScreen.Feed -> appState.habitsTimeRangeTab
+    MemosScreen.HABITS -> appState.habitsTimeRangeTab
+    MemosScreen.STATS -> appState.postsTimeRangeTab
+    MemosScreen.FEED -> appState.habitsTimeRangeTab
   }
 
   // Key the entire pager on selectedTab to force re-initialization when tab changes
@@ -155,26 +155,26 @@ private fun MemosTabContent(
 ) {
   val memos = memosState.memos
   when (appState.selectedScreen) {
-    MemosScreen.Habits -> StatsScreen(
+    MemosScreen.HABITS -> StatsScreen(
       state = StatsScreenState(
         memos = memos,
         range = activityRange,
-        activityMode = ActivityMode.Habits,
+        activityMode = ActivityMode.HABITS,
         useVerticalScroll = true,
         enablePullRefresh = false,
-        demoMode = appState.appMode == AppMode.Demo
+        demoMode = appState.appMode == AppMode.DEMO
       ),
       habitsState = habitsState,
       onHabitsAction = onHabitsAction
     )
-    MemosScreen.Stats -> PostsScreen(
+    MemosScreen.STATS -> PostsScreen(
       memos = memos,
       range = activityRange,
-      demoMode = appState.appMode == AppMode.Demo,
+      demoMode = appState.appMode == AppMode.DEMO,
       postsListExpanded = appState.postsListExpanded,
       onPostsListExpandedChange = { appState.postsListExpanded = it }
     )
-    MemosScreen.Feed -> FeedScreen(
+    MemosScreen.FEED -> FeedScreen(
       memos = memos,
       isRefreshing = memosState.isLoading,
       onRefresh = {},
@@ -186,16 +186,16 @@ private fun MemosTabContent(
 
 internal fun activityRangeForState(appState: VibitsAppUiState): ActivityRange {
   val selectedTab = when (appState.selectedScreen) {
-    MemosScreen.Habits -> appState.habitsTimeRangeTab
-    MemosScreen.Stats -> appState.postsTimeRangeTab
-    MemosScreen.Feed -> appState.habitsTimeRangeTab
+    MemosScreen.HABITS -> appState.habitsTimeRangeTab
+    MemosScreen.STATS -> appState.postsTimeRangeTab
+    MemosScreen.FEED -> appState.habitsTimeRangeTab
   }
   val date = appState.periodStartDate
   return when (selectedTab) {
-    TimeRangeTab.Weeks -> ActivityRange.Week(startOfWeek(date))
-    TimeRangeTab.Months -> ActivityRange.Month(date.year, date.month)
-    TimeRangeTab.Quarters -> ActivityRange.Quarter(date.year, quarterIndex(date))
-    TimeRangeTab.Years -> ActivityRange.Year(date.year)
+    TimeRangeTab.WEEKS -> ActivityRange.Week(startOfWeek(date))
+    TimeRangeTab.MONTHS -> ActivityRange.Month(date.year, date.month)
+    TimeRangeTab.QUARTERS -> ActivityRange.Quarter(date.year, quarterIndex(date))
+    TimeRangeTab.YEARS -> ActivityRange.Year(date.year)
   }
 }
 
@@ -214,18 +214,18 @@ internal fun updateTimeRangeState(appState: VibitsAppUiState, range: ActivityRan
 internal fun resetToHome(appState: VibitsAppUiState, today: LocalDate) {
   appState.periodStartDate = today
   when (appState.selectedScreen) {
-    MemosScreen.Habits -> appState.habitsTimeRangeTab = TimeRangeTab.Weeks
-    MemosScreen.Stats -> appState.postsTimeRangeTab = TimeRangeTab.Weeks
-    MemosScreen.Feed -> {}
+    MemosScreen.HABITS -> appState.habitsTimeRangeTab = TimeRangeTab.WEEKS
+    MemosScreen.STATS -> appState.postsTimeRangeTab = TimeRangeTab.WEEKS
+    MemosScreen.FEED -> {}
   }
 }
 
 internal fun currentRangeForTab(tab: TimeRangeTab, today: LocalDate): ActivityRange {
   return when (tab) {
-    TimeRangeTab.Weeks -> ActivityRange.Week(startOfWeek(today))
-    TimeRangeTab.Months -> ActivityRange.Month(today.year, today.month)
-    TimeRangeTab.Quarters -> ActivityRange.Quarter(today.year, quarterIndex(today))
-    TimeRangeTab.Years -> ActivityRange.Year(today.year)
+    TimeRangeTab.WEEKS -> ActivityRange.Week(startOfWeek(today))
+    TimeRangeTab.MONTHS -> ActivityRange.Month(today.year, today.month)
+    TimeRangeTab.QUARTERS -> ActivityRange.Quarter(today.year, quarterIndex(today))
+    TimeRangeTab.YEARS -> ActivityRange.Year(today.year)
   }
 }
 
@@ -234,10 +234,10 @@ internal fun minRangeForTab(tab: TimeRangeTab, earliestDate: LocalDate?): Activi
     return null
   }
   return when (tab) {
-    TimeRangeTab.Weeks -> ActivityRange.Week(startOfWeek(earliestDate))
-    TimeRangeTab.Months -> ActivityRange.Month(earliestDate.year, earliestDate.month)
-    TimeRangeTab.Quarters -> ActivityRange.Quarter(earliestDate.year, quarterIndex(earliestDate))
-    TimeRangeTab.Years -> ActivityRange.Year(earliestDate.year)
+    TimeRangeTab.WEEKS -> ActivityRange.Week(startOfWeek(earliestDate))
+    TimeRangeTab.MONTHS -> ActivityRange.Month(earliestDate.year, earliestDate.month)
+    TimeRangeTab.QUARTERS -> ActivityRange.Quarter(earliestDate.year, quarterIndex(earliestDate))
+    TimeRangeTab.YEARS -> ActivityRange.Year(earliestDate.year)
   }
 }
 
@@ -254,10 +254,10 @@ internal fun adjustDateForTabChange(
     // Going from larger to smaller granularity - move to end of current period
     val date = appState.periodStartDate
     val currentRange = when (oldTab) {
-      TimeRangeTab.Weeks -> return // Can't go smaller than weeks
-      TimeRangeTab.Months -> ActivityRange.Month(date.year, date.month)
-      TimeRangeTab.Quarters -> ActivityRange.Quarter(date.year, quarterIndex(date))
-      TimeRangeTab.Years -> ActivityRange.Year(date.year)
+      TimeRangeTab.WEEKS -> return // Can't go smaller than weeks
+      TimeRangeTab.MONTHS -> ActivityRange.Month(date.year, date.month)
+      TimeRangeTab.QUARTERS -> ActivityRange.Quarter(date.year, quarterIndex(date))
+      TimeRangeTab.YEARS -> ActivityRange.Year(date.year)
     }
     appState.periodStartDate = endDateOfRange(currentRange)
   }

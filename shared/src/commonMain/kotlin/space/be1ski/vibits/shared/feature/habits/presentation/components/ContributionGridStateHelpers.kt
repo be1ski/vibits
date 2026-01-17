@@ -34,7 +34,7 @@ internal fun buildDayData(context: DayDataContext): ContributionDay {
 }
 
 private fun habitsForDay(context: DayDataContext): List<HabitConfig> {
-  val configForDay = if (context.mode == ActivityMode.Habits) {
+  val configForDay = if (context.mode == ActivityMode.HABITS) {
     habitsConfigForDate(context.configTimeline, context.date)
   } else {
     null
@@ -47,7 +47,7 @@ private fun buildHabitSelectionState(
   dailyMemo: DailyMemoInfo?,
   habitsForDay: List<HabitConfig>
 ): HabitSelectionState {
-  val useHabits = context.mode == ActivityMode.Habits && habitsForDay.isNotEmpty()
+  val useHabits = context.mode == ActivityMode.HABITS && habitsForDay.isNotEmpty()
   val habitStatuses = if (useHabits) {
     buildHabitStatuses(dailyMemo?.content, habitsForDay)
   } else {
@@ -81,7 +81,7 @@ private fun completedCount(
       memoRelevantTags.size
     }
     habitState.useHabits -> habitState.habitStatuses.count { it.done }
-    context.mode == ActivityMode.Posts -> context.counts[context.date] ?: 0
+    context.mode == ActivityMode.POSTS -> context.counts[context.date] ?: 0
     else -> 0
   }
 }

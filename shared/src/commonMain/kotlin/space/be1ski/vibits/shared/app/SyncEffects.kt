@@ -13,7 +13,7 @@ internal fun SyncAutoLoad(
   dispatch: (MemosAction) -> Unit
 ) {
   LaunchedEffect(memosState.credentialsMode, appState.autoLoaded, memosState.isLoading, appState.appMode) {
-    val skipCredentialsCheck = appState.appMode == AppMode.Demo || appState.appMode == AppMode.Offline
+    val skipCredentialsCheck = appState.appMode == AppMode.DEMO || appState.appMode == AppMode.OFFLINE
     val shouldAutoLoad = !memosState.credentialsMode &&
       !appState.autoLoaded &&
       !memosState.isLoading &&

@@ -23,7 +23,7 @@ fun AppRoot() {
 
   VibitsTheme {
     when (appMode) {
-      AppMode.NotSelected -> {
+      AppMode.NOT_SELECTED -> {
         ModeSelectionScreen(
           onModeSelected = { selectedMode ->
             saveAppModeUseCase(selectedMode)
@@ -31,9 +31,9 @@ fun AppRoot() {
           }
         )
       }
-      AppMode.Online, AppMode.Offline, AppMode.Demo -> {
+      AppMode.ONLINE, AppMode.OFFLINE, AppMode.DEMO -> {
         VibitsApp(
-          onResetApp = { appMode = AppMode.NotSelected }
+          onResetApp = { appMode = AppMode.NOT_SELECTED }
         )
       }
     }

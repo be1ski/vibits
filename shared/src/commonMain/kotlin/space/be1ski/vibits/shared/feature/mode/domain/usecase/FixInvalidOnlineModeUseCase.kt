@@ -16,11 +16,11 @@ class FixInvalidOnlineModeUseCase(
   operator fun invoke(): AppMode {
     val mode = loadAppModeUseCase()
 
-    if (mode == AppMode.Online) {
+    if (mode == AppMode.ONLINE) {
       val credentials = loadCredentialsUseCase()
       if (credentials.baseUrl.isBlank() || credentials.token.isBlank()) {
-        saveAppModeUseCase(AppMode.NotSelected)
-        return AppMode.NotSelected
+        saveAppModeUseCase(AppMode.NOT_SELECTED)
+        return AppMode.NOT_SELECTED
       }
     }
 

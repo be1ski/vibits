@@ -111,7 +111,7 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
     )
   }
   val memosFeature = remember {
-    val skipCredentials = initialMode == AppMode.Offline || initialMode == AppMode.Demo
+    val skipCredentials = initialMode == AppMode.OFFLINE || initialMode == AppMode.DEMO
     createMemosFeature(memosUseCases, isOfflineMode = skipCredentials)
   }
   val scope = rememberCoroutineScope()
@@ -255,17 +255,17 @@ private fun VibitsAppContent(
     { newTab: TimeRangeTab ->
       onHabitsAction(HabitsAction.ClearSelection)
       when (appState.selectedScreen) {
-        MemosScreen.Habits -> {
+        MemosScreen.HABITS -> {
           adjustDateForTabChange(appState, appState.habitsTimeRangeTab, newTab)
           appState.habitsTimeRangeTab = newTab
-          saveTimeRangeTabUseCase(TimeRangeScreen.Habits, newTab)
+          saveTimeRangeTabUseCase(TimeRangeScreen.HABITS, newTab)
         }
-        MemosScreen.Stats -> {
+        MemosScreen.STATS -> {
           adjustDateForTabChange(appState, appState.postsTimeRangeTab, newTab)
           appState.postsTimeRangeTab = newTab
-          saveTimeRangeTabUseCase(TimeRangeScreen.Posts, newTab)
+          saveTimeRangeTabUseCase(TimeRangeScreen.POSTS, newTab)
         }
-        MemosScreen.Feed -> {}
+        MemosScreen.FEED -> {}
       }
     }
   }
@@ -273,7 +273,7 @@ private fun VibitsAppContent(
   Scaffold(
     floatingActionButton = {
       when (memosFabModeForScreen(appState.selectedScreen)) {
-        MemosFabMode.Memo -> {
+        MemosFabMode.MEMO -> {
           FloatingActionButton(
             onClick = onShowCreateMemoDialog
           ) {
@@ -283,7 +283,7 @@ private fun VibitsAppContent(
             )
           }
         }
-        MemosFabMode.Habits -> {
+        MemosFabMode.HABITS -> {
           if (todayConfig.isNotEmpty() && todayDay != null) {
             FloatingActionButton(
               onClick = onOpenTodayEditor
@@ -302,9 +302,9 @@ private fun VibitsAppContent(
     }
   ) { padding ->
     val selectedTab = when (appState.selectedScreen) {
-      MemosScreen.Habits -> appState.habitsTimeRangeTab
-      MemosScreen.Stats -> appState.postsTimeRangeTab
-      MemosScreen.Feed -> appState.habitsTimeRangeTab
+      MemosScreen.HABITS -> appState.habitsTimeRangeTab
+      MemosScreen.STATS -> appState.postsTimeRangeTab
+      MemosScreen.FEED -> appState.habitsTimeRangeTab
     }
     val currentRange = currentRangeForTab(selectedTab, today)
     val activityRange = activityRangeForState(appState)
@@ -321,8 +321,8 @@ private fun VibitsAppContent(
       memosState.errorMessage?.let { message ->
         Text(message, color = MaterialTheme.colorScheme.error)
       }
-      if (appState.selectedScreen != MemosScreen.Feed) {
-        val successRate = if (appState.selectedScreen == MemosScreen.Habits) {
+      if (appState.selectedScreen != MemosScreen.FEED) {
+        val successRate = if (appState.selectedScreen == MemosScreen.HABITS) {
           val hasHabits = remember(habitsTimeline) { habitsTimeline.lastOrNull()?.habits?.isNotEmpty() == true }
           if (hasHabits) {
             rememberSuccessRate(memosState.memos, activityRange, calculateSuccessRate)
