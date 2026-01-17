@@ -82,9 +82,14 @@ Use `@Suppress` annotations only when the lint rule doesn't apply (e.g., `LongPa
 
 ## Commit & Pull Request Guidelines
 
+**All changes must go through pull requests** — never commit directly to `main`. This ensures CI checks pass before merging and keeps the main branch green.
+
+- Create a feature branch, push, and open a PR.
+- Wait for CI to pass before merging.
+- Use squash merge to keep history clean.
 - Commit messages: imperative, concise, single topic (e.g., "Simplify README").
+- PR titles: use English only (no Cyrillic or other non-ASCII characters).
 - Pre-commit hook runs `checkAll` automatically — no manual checks needed.
-- PRs (if used) should include a summary, testing performed, and screenshots for UI changes.
 
 ## Security & Configuration Tips
 
