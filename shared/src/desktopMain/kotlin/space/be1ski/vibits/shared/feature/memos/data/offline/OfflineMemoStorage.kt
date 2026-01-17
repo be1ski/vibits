@@ -5,7 +5,7 @@ import java.io.File
 import java.nio.file.Paths
 
 /**
- * Desktop implementation storing memos in Documents/Memos folder.
+ * Desktop implementation storing memos in Documents/Vibits folder.
  */
 actual class OfflineMemoStorage {
   private val fileName = "memos.json"
@@ -36,7 +36,7 @@ actual class OfflineMemoStorage {
 
   private fun getFile(): File {
     val home = System.getProperty("user.home")
-    val documentsDir = Paths.get(home, "Documents", "Memos").toFile()
+    val documentsDir = Paths.get(home, "Documents", "Vibits").toFile()
     return File(documentsDir, fileName)
   }
 }
