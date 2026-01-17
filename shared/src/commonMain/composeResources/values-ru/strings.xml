@@ -20,6 +20,11 @@
     <string name="action_track_today">Отметить сегодня</string>
     <string name="action_update">Обновить</string>
     <string name="action_view_logs">Логи</string>
+    <string name="action_export">Экспорт</string>
+    <string name="action_export_logs">Экспорт логов</string>
+    <string name="action_export_memos">Экспорт воспоминаний</string>
+    <string name="msg_export_success">Экспортировано в %1$s</string>
+    <string name="msg_export_failed">Ошибка экспорта</string>
 
     <!-- App -->
     <string name="app_name">Vibits</string>
