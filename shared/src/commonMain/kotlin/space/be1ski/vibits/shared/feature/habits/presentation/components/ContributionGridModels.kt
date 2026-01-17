@@ -25,9 +25,16 @@ data class ContributionGridState(
   val showTimeline: Boolean = false,
   val showWeekStartHeaders: Boolean = false,
   val showDayNumbers: Boolean = false,
+  val calendarLayout: Boolean = false,
+  val weekendDays: Set<kotlinx.datetime.DayOfWeek> = DEFAULT_WEEKEND_DAYS,
   val today: LocalDate? = null,
   val habitColor: Long? = null,
   val demoMode: Boolean = false
+)
+
+private val DEFAULT_WEEKEND_DAYS = setOf(
+  kotlinx.datetime.DayOfWeek.SATURDAY,
+  kotlinx.datetime.DayOfWeek.SUNDAY
 )
 
 /**
@@ -52,5 +59,6 @@ internal data class ContributionCellState(
   val isWeekSelected: Boolean,
   val showDayNumber: Boolean,
   val isToday: Boolean = false,
+  val isWeekend: Boolean = false,
   val habitColor: Long? = null
 )

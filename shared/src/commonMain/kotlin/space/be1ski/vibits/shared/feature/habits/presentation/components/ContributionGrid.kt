@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package space.be1ski.vibits.shared.feature.habits.presentation.components
 
 import androidx.compose.foundation.ScrollState
@@ -11,6 +13,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -145,42 +148,164 @@ private fun ContributionGridLayout(
         )
       }
   ) {
-    val columns = state.weekData.weeks.size.coerceAtLeast(1)
-    val spacing = ChartDimens.spacing(state.compactHeight)
-    val minCell = ChartDimens.minCell(state.compactHeight)
-    val maxCell = ChartDimens.maxCell(state.compactHeight)
-    val legendWidth = if (state.showWeekdayLegend) ChartDimens.legendWidth else 0.dp
-    val legendSpacing = if (state.showWeekdayLegend) spacing else 0.dp
-    val availableWidth = (maxWidth - legendWidth - legendSpacing).coerceAtLeast(0.dp)
-    val layout = calculateLayout(availableWidth, columns, minColumnSize = minCell, spacing = spacing, maxColumnSize = maxCell)
-    val formatter = LocalDateFormatter.current
-    val timelineLabels = remember(state.weekData.weeks, state.range, formatter) {
-      if (state.showTimeline) buildTimelineLabels(state.weekData.weeks, state.range, formatter) else emptyList()
-    }
-    val headerLabels = remember(state.weekData.weeks, state.showWeekStartHeaders) {
-      if (state.showWeekStartHeaders) {
-        state.weekData.weeks.map { week ->
-          val firstInRangeDay = week.days.firstOrNull { it.inRange }
-          firstInRangeDay?.date?.day?.toString() ?: ""
-        }
-      } else emptyList()
-    }
-    val layoutState = ContributionGridLayoutState(
-      layout = layout,
-      spacing = spacing,
-      legendWidth = legendWidth,
-      legendSpacing = legendSpacing,
-      timelineLabels = timelineLabels,
-      headerLabels = headerLabels
-    )
-
-    Column(verticalArrangement = Arrangement.spacedBy(spacing)) {
-      ContributionGridHeaderRow(state, layoutState)
-      ContributionGridWeeks(state, onDaySelected, interaction, layoutState)
-      ContributionGridTimelineRow(state, layoutState)
+    if (state.calendarLayout) {
+      CalendarGridLayout(state, onDaySelected, interaction, maxWidth)
+    } else {
+      ContributionGridContent(state, onDaySelected, interaction, maxWidth)
     }
   }
 }
+
+@Composable
+private fun BoxWithConstraintsScope.ContributionGridContent(
+  state: ContributionGridState,
+  onDaySelected: (ContributionDay) -> Unit,
+  interaction: ContributionGridInteractionState,
+  maxWidth: Dp
+) {
+  val columns = state.weekData.weeks.size.coerceAtLeast(1)
+  val spacing = ChartDimens.spacing(state.compactHeight)
+  val minCell = ChartDimens.minCell(state.compactHeight)
+  val maxCell = ChartDimens.maxCell(state.compactHeight)
+  val legendWidth = if (state.showWeekdayLegend) ChartDimens.legendWidth else 0.dp
+  val legendSpacing = if (state.showWeekdayLegend) spacing else 0.dp
+  val availableWidth = (maxWidth - legendWidth - legendSpacing).coerceAtLeast(0.dp)
+  val layout = calculateLayout(
+    availableWidth, columns, minColumnSize = minCell, spacing = spacing, maxColumnSize = maxCell
+  )
+  val formatter = LocalDateFormatter.current
+  val timelineLabels = remember(state.weekData.weeks, state.range, formatter) {
+    if (state.showTimeline) buildTimelineLabels(state.weekData.weeks, state.range, formatter) else emptyList()
+  }
+  val headerLabels = remember(state.weekData.weeks, state.showWeekStartHeaders) {
+    if (state.showWeekStartHeaders) {
+      state.weekData.weeks.map { week ->
+        val firstInRangeDay = week.days.firstOrNull { it.inRange }
+        firstInRangeDay?.date?.day?.toString() ?: ""
+      }
+    } else emptyList()
+  }
+  val layoutState = ContributionGridLayoutState(
+    layout = layout,
+    spacing = spacing,
+    legendWidth = legendWidth,
+    legendSpacing = legendSpacing,
+    timelineLabels = timelineLabels,
+    headerLabels = headerLabels
+  )
+
+  Column(verticalArrangement = Arrangement.spacedBy(spacing)) {
+    ContributionGridHeaderRow(state, layoutState)
+    ContributionGridWeeks(state, onDaySelected, interaction, layoutState)
+    ContributionGridTimelineRow(state, layoutState)
+  }
+}
+
+@Composable
+private fun BoxWithConstraintsScope.CalendarGridLayout(
+  state: ContributionGridState,
+  onDaySelected: (ContributionDay) -> Unit,
+  interaction: ContributionGridInteractionState,
+  maxWidth: Dp
+) {
+  val spacing = ChartDimens.spacing(state.compactHeight)
+  val minCell = ChartDimens.minCell(state.compactHeight)
+  val maxCell = ChartDimens.maxCell(state.compactHeight)
+  val layout = calculateLayout(
+    maxWidth, DAYS_IN_WEEK, minColumnSize = minCell, spacing = spacing, maxColumnSize = maxCell
+  )
+  val cellSize = layout.columnSize
+
+  Column(
+    modifier = Modifier.fillMaxWidth(),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.spacedBy(spacing)
+  ) {
+    // Weekday header row
+    CalendarWeekdayHeader(cellSize, spacing, state.weekendDays)
+
+    // Week rows
+    state.weekData.weeks.forEach { week ->
+      Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
+        week.days.forEach { day ->
+          val isWeekend = day.date.dayOfWeek in state.weekendDays
+          ContributionCell(
+            state = ContributionCellState(
+              day = day,
+              maxCount = state.weekData.maxDaily,
+              enabled = day.inRange,
+              size = cellSize,
+              isSelected = state.selectedDay?.date == day.date,
+              isHovered = interaction.hoveredDate == day.date,
+              isWeekSelected = false,
+              showDayNumber = true,
+              isToday = state.today == day.date,
+              isWeekend = isWeekend,
+              habitColor = state.habitColor
+            ),
+            onClick = { offset ->
+              onDaySelected(day)
+              interaction.tooltip = DayTooltip(day, offset)
+              interaction.suppressClear = true
+            },
+            onHoverChange = { hovering ->
+              interaction.hoveredDate = if (hovering) {
+                day.date
+              } else {
+                interaction.hoveredDate?.takeIf { it != day.date }
+              }
+            }
+          )
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun CalendarWeekdayHeader(
+  cellSize: Dp,
+  spacing: Dp,
+  weekendDays: Set<DayOfWeek>
+) {
+  val weekdayLabels = listOf(
+    stringResource(Res.string.day_mon),
+    stringResource(Res.string.day_tue),
+    stringResource(Res.string.day_wed),
+    stringResource(Res.string.day_thu),
+    stringResource(Res.string.day_fri),
+    stringResource(Res.string.day_sat),
+    stringResource(Res.string.day_sun)
+  )
+  val weekdays = listOf(
+    DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
+    DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY
+  )
+
+  Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
+    weekdays.forEachIndexed { index, dayOfWeek ->
+      val isWeekend = dayOfWeek in weekendDays
+      Box(
+        modifier = Modifier.size(cellSize),
+        contentAlignment = Alignment.Center
+      ) {
+        Text(
+          weekdayLabels[index],
+          style = MaterialTheme.typography.labelSmall,
+          color = if (isWeekend) {
+            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = WEEKEND_LABEL_ALPHA)
+          } else {
+            MaterialTheme.colorScheme.onSurfaceVariant
+          }
+        )
+      }
+    }
+  }
+}
+
+private const val DAYS_IN_WEEK = 7
+private const val WEEKEND_LABEL_ALPHA = 0.6f
+private const val WEEKEND_CELL_ALPHA = 0.15f
 
 @Composable
 private fun ContributionGridWeeks(
@@ -513,12 +638,18 @@ private fun ContributionCell(
     }
   }
 
-  // Apply subtle highlight for today
+  // Apply subtle highlight for today and weekends
   val todayOverlay = AppColors.todayHighlight.resolve()
-  val cellColor = if (state.isToday && state.enabled) {
-    color.compositeOver(todayOverlay)
+  val weekendOverlay = Color.Black.copy(alpha = WEEKEND_CELL_ALPHA)
+  val baseColor = if (state.isWeekend && state.enabled) {
+    color.compositeOver(weekendOverlay)
   } else {
     color
+  }
+  val cellColor = if (state.isToday && state.enabled) {
+    baseColor.compositeOver(todayOverlay)
+  } else {
+    baseColor
   }
 
   val borderColor = when {
