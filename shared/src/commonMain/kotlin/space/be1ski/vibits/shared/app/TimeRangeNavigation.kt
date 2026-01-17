@@ -19,6 +19,7 @@ import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.Indent
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
@@ -46,6 +47,7 @@ internal fun SwipeableTabContent(
   minRange: ActivityRange?,
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit,
+  calculateSuccessRate: CalculateSuccessRateUseCase,
   dispatchMemos: (MemosAction) -> Unit = {},
 ) {
   if (appState.selectedScreen == MemosScreen.FEED) {
@@ -77,6 +79,7 @@ internal fun SwipeableTabContent(
       minRange = minRange,
       habitsState = habitsState,
       onHabitsAction = onHabitsAction,
+      calculateSuccessRate = calculateSuccessRate,
     )
   }
 }
@@ -90,6 +93,7 @@ private fun SwipeablePagerContent(
   minRange: ActivityRange?,
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit,
+  calculateSuccessRate: CalculateSuccessRateUseCase,
 ) {
   val activityRange = activityRangeForState(appState)
   val currentDelta =
@@ -146,10 +150,12 @@ private fun SwipeablePagerContent(
       activityRange = pageRange,
       habitsState = habitsState,
       onHabitsAction = onHabitsAction,
+      calculateSuccessRate = calculateSuccessRate,
     )
   }
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun MemosTabContent(
   memosState: MemosState,
@@ -157,6 +163,7 @@ private fun MemosTabContent(
   activityRange: ActivityRange,
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit,
+  calculateSuccessRate: CalculateSuccessRateUseCase,
 ) {
   val memos = memosState.memos
   when (appState.selectedScreen) {
@@ -171,6 +178,7 @@ private fun MemosTabContent(
             enablePullRefresh = false,
             demoMode = appState.appMode == AppMode.DEMO,
           ),
+        calculateSuccessRate = calculateSuccessRate,
         habitsState = habitsState,
         onHabitsAction = onHabitsAction,
       )
@@ -179,6 +187,7 @@ private fun MemosTabContent(
         memos = memos,
         range = activityRange,
         demoMode = appState.appMode == AppMode.DEMO,
+        calculateSuccessRate = calculateSuccessRate,
         postsListExpanded = appState.postsListExpanded,
         onPostsListExpandedChange = { appState.postsListExpanded = it },
       )

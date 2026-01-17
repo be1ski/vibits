@@ -2,10 +2,15 @@ package space.be1ski.vibits.shared.di
 
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import space.be1ski.vibits.shared.app.AppRootStateHolder
+import space.be1ski.vibits.shared.app.VibitsAppDependencies
 import space.be1ski.vibits.shared.core.network.createHttpClient
 import space.be1ski.vibits.shared.core.platform.LocaleProvider
 import space.be1ski.vibits.shared.data.local.AppDetailsProvider
 import space.be1ski.vibits.shared.domain.usecase.LoadAppDetailsUseCase
+import space.be1ski.vibits.shared.feature.memos.presentation.MemosUseCases
+import space.be1ski.vibits.shared.feature.mode.presentation.CredentialsSetupStateHolder
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsUseCases
 import space.be1ski.vibits.shared.feature.auth.data.CredentialsRepositoryImpl
 import space.be1ski.vibits.shared.feature.auth.data.CredentialsStore
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
@@ -99,4 +104,45 @@ fun sharedModule(): Module =
     factory { DateCalculationsUseCase() }
     factory { BuildActivityDataUseCase() }
     factory { BuildHabitDayUseCase() }
+
+    // State Holders
+    single { AppRootStateHolder(get(), get(), get(), get()) }
+    factory { CredentialsSetupStateHolder(get(), get()) }
+
+    // Grouped UseCases
+    factory {
+      MemosUseCases(
+        loadMemos = get(),
+        loadCachedMemos = get(),
+        loadCredentials = get(),
+        saveCredentials = get(),
+        createMemo = get(),
+        updateMemo = get(),
+        deleteMemo = get(),
+      )
+    }
+    factory {
+      SettingsUseCases(
+        validateCredentials = get(),
+        switchAppMode = get(),
+        saveCredentials = get(),
+        resetApp = get(),
+        saveLanguage = get(),
+        saveTheme = get(),
+      )
+    }
+
+    // App Dependencies
+    factory {
+      VibitsAppDependencies(
+        loadPreferencesUseCase = get(),
+        saveTimeRangeTabUseCase = get(),
+        loadAppDetailsUseCase = get(),
+        loadAppModeUseCase = get(),
+        calculateSuccessRateUseCase = get(),
+        memosRepository = get(),
+        memosUseCases = get(),
+        settingsUseCases = get(),
+      )
+    }
   }
