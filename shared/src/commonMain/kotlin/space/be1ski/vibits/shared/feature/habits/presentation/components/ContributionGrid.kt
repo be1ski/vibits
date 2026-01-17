@@ -70,6 +70,8 @@ internal object ChartDimens {
   fun spacing(compact: Boolean): Dp = if (compact) COMPACT_SPACING_DP.dp else REGULAR_SPACING_DP.dp
 
   fun minCell(compact: Boolean): Dp = if (compact) COMPACT_CELL_DP.dp else REGULAR_CELL_DP.dp
+
+  fun maxCell(compact: Boolean): Dp? = if (compact) MAX_COMPACT_CELL_DP.dp else null
 }
 
 private const val LEGEND_WIDTH_DP = 26
@@ -77,6 +79,7 @@ private const val COMPACT_SPACING_DP = 1
 private const val REGULAR_SPACING_DP = 2
 private const val COMPACT_CELL_DP = 7
 private const val REGULAR_CELL_DP = 10
+private const val MAX_COMPACT_CELL_DP = 40
 
 private const val HABIT_COLOR_LIGHT_RATIO = 0.3f
 
@@ -145,10 +148,11 @@ private fun ContributionGridLayout(
     val columns = state.weekData.weeks.size.coerceAtLeast(1)
     val spacing = ChartDimens.spacing(state.compactHeight)
     val minCell = ChartDimens.minCell(state.compactHeight)
+    val maxCell = ChartDimens.maxCell(state.compactHeight)
     val legendWidth = if (state.showWeekdayLegend) ChartDimens.legendWidth else 0.dp
     val legendSpacing = if (state.showWeekdayLegend) spacing else 0.dp
     val availableWidth = (maxWidth - legendWidth - legendSpacing).coerceAtLeast(0.dp)
-    val layout = calculateLayout(availableWidth, columns, minColumnSize = minCell, spacing = spacing)
+    val layout = calculateLayout(availableWidth, columns, minColumnSize = minCell, spacing = spacing, maxColumnSize = maxCell)
     val formatter = LocalDateFormatter.current
     val timelineLabels = remember(state.weekData.weeks, state.range, formatter) {
       if (state.showTimeline) buildTimelineLabels(state.weekData.weeks, state.range, formatter) else emptyList()
