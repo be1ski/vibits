@@ -398,6 +398,7 @@ private fun VibitsAppContent(
         minRange = minRange,
         habitsState = habitsState,
         onHabitsAction = onHabitsAction,
+        calculateSuccessRate = calculateSuccessRate,
         dispatchMemos = dispatchMemos,
       )
     }

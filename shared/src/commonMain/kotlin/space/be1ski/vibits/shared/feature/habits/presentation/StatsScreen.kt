@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.TimeZone
-import org.koin.compose.koinInject
 import space.be1ski.vibits.shared.core.platform.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.core.ui.ActivityRange
@@ -29,10 +28,10 @@ import space.be1ski.vibits.shared.feature.habits.presentation.components.remembe
 @Composable
 fun StatsScreen(
   state: StatsScreenState,
+  calculateSuccessRate: CalculateSuccessRateUseCase,
   habitsState: HabitsState = HabitsState(),
   onHabitsAction: (HabitsAction) -> Unit = {},
   onPostsListExpandedChange: (Boolean) -> Unit = {},
-  calculateSuccessRate: CalculateSuccessRateUseCase = koinInject(),
 ) {
   val derived = rememberStatsScreenDerived(state, habitsState, calculateSuccessRate)
   StatsScreenContent(derived, onHabitsAction, onPostsListExpandedChange)

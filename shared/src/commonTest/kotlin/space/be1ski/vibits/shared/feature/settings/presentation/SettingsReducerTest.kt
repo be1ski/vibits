@@ -175,13 +175,14 @@ class SettingsReducerTest {
     assertFalse(newState.isOpen)
     assertFalse(newState.pendingSave)
     assertEquals(AppMode.ONLINE, newState.appMode)
-    assertEquals(6, effects.size)
+    assertEquals(7, effects.size)
     assertIs<SettingsEffect.SaveCredentials>(effects[0])
     assertIs<SettingsEffect.SwitchMode>(effects[1])
     assertIs<SettingsEffect.SaveLanguage>(effects[2])
     assertIs<SettingsEffect.SaveTheme>(effects[3])
-    assertIs<SettingsEffect.NotifyThemeChanged>(effects[4])
-    assertIs<SettingsEffect.NotifyCredentialsSaved>(effects[5])
+    assertIs<SettingsEffect.NotifyLanguageChanged>(effects[4])
+    assertIs<SettingsEffect.NotifyThemeChanged>(effects[5])
+    assertIs<SettingsEffect.NotifyCredentialsSaved>(effects[6])
   }
 
   @Test
@@ -291,13 +292,14 @@ class SettingsReducerTest {
     val (newState, effects) = settingsReducer(SettingsAction.Save, state)
 
     assertFalse(newState.isOpen)
-    assertEquals(6, effects.size)
+    assertEquals(7, effects.size)
     assertIs<SettingsEffect.SaveCredentials>(effects[0])
     assertIs<SettingsEffect.SwitchMode>(effects[1])
     assertIs<SettingsEffect.SaveLanguage>(effects[2])
     assertIs<SettingsEffect.SaveTheme>(effects[3])
-    assertIs<SettingsEffect.NotifyThemeChanged>(effects[4])
-    assertIs<SettingsEffect.NotifyCredentialsSaved>(effects[5])
+    assertIs<SettingsEffect.NotifyLanguageChanged>(effects[4])
+    assertIs<SettingsEffect.NotifyThemeChanged>(effects[5])
+    assertIs<SettingsEffect.NotifyCredentialsSaved>(effects[6])
   }
 
   @Test

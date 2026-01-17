@@ -1,39 +1,23 @@
 package space.be1ski.vibits.shared.app
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import org.koin.compose.koinInject
-import space.be1ski.vibits.shared.core.platform.LocaleProvider
 import space.be1ski.vibits.shared.core.ui.theme.VibitsTheme
 import space.be1ski.vibits.shared.core.ui.theme.rememberSystemDarkTheme
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
-import space.be1ski.vibits.shared.feature.mode.domain.usecase.FixInvalidOnlineModeUseCase
-import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionScreen
-import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
-import space.be1ski.vibits.shared.feature.settings.domain.usecase.LoadPreferencesUseCase
 
-// Suppress false positive: mutableStateOf assignments trigger recomposition
-@Suppress("AssignedValueIsNeverRead")
 @Composable
 fun AppRoot() {
-  val saveAppModeUseCase: SaveAppModeUseCase = koinInject()
-  val fixInvalidOnlineModeUseCase: FixInvalidOnlineModeUseCase = koinInject()
-  val loadPreferencesUseCase: LoadPreferencesUseCase = koinInject()
-  val localeProvider: LocaleProvider = koinInject()
+  val stateHolder: AppRootStateHolder = koinInject()
 
-  // Configure locale and load initial theme before first composition
-  val initialPrefs = remember { loadPreferencesUseCase() }
-  remember { localeProvider.configureLocale(initialPrefs.language) }
-
-  var appMode by remember { mutableStateOf(fixInvalidOnlineModeUseCase()) }
-  var appTheme by remember { mutableStateOf(initialPrefs.theme) }
-  var appLanguage by remember { mutableStateOf(initialPrefs.language) }
+  val appMode by stateHolder.appMode.collectAsState()
+  val appTheme by stateHolder.appTheme.collectAsState()
+  val appLanguage by stateHolder.appLanguage.collectAsState()
 
   val systemDarkTheme = rememberSystemDarkTheme()
   val darkTheme =
@@ -50,8 +34,7 @@ fun AppRoot() {
         AppMode.NOT_SELECTED -> {
           ModeSelectionScreen(
             onModeSelected = { selectedMode ->
-              saveAppModeUseCase(selectedMode)
-              appMode = selectedMode
+              stateHolder.saveAppMode(selectedMode)
             },
           )
         }
@@ -59,12 +42,9 @@ fun AppRoot() {
           VibitsApp(
             currentTheme = appTheme,
             currentLanguage = appLanguage,
-            onResetApp = { appMode = AppMode.NOT_SELECTED },
-            onThemeChanged = { theme -> appTheme = theme },
-            onLanguageChanged = { language ->
-              localeProvider.configureLocale(language)
-              appLanguage = language
-            },
+            onResetApp = { stateHolder.resetApp() },
+            onThemeChanged = { theme -> stateHolder.updateTheme(theme) },
+            onLanguageChanged = { language -> stateHolder.updateLanguage(language) },
           )
         }
       }
