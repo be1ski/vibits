@@ -68,7 +68,8 @@
     <string name="msg_no_logs">No logs yet</string>
     <string name="msg_reset_confirm">Are you sure you want to reset the app? This will clear all data.</string>
     <string name="msg_select_habit">Select at least one habit.</string>
-    <string name="msg_toggle_habit_confirm">Toggle "%1$s" for %2$s?</string>
+    <string name="msg_mark_done_confirm">Mark "%1$s" as completed for %2$s?</string>
+    <string name="msg_mark_not_done_confirm">Remove completion for "%1$s" on %2$s?</string>
 
     <!-- Mode selection -->
     <string name="mode_select_title">Select Mode</string>
@@ -108,7 +109,8 @@
     <string name="title_edit_memo">Edit memo</string>
     <string name="title_logs">Logs (%1$d)</string>
     <string name="title_new_memo">New memo</string>
-    <string name="title_toggle_habit">Toggle habit?</string>
+    <string name="title_mark_done">Mark as done?</string>
+    <string name="title_mark_not_done">Mark as not done?</string>
     <string name="title_update_day">Update day</string>
 
     <!-- Demo habits -->
