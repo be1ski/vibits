@@ -1,6 +1,8 @@
 <resources>
     <!-- Actions -->
     <string name="action_cancel">Отмена</string>
+    <string name="action_clear">Очистить</string>
+    <string name="action_close">Закрыть</string>
     <string name="action_configure_habits">Настроить привычки</string>
     <string name="action_create">Создать</string>
     <string name="action_create_memo">Создать заметку</string>
@@ -9,12 +11,14 @@
     <string name="action_next">Вперед</string>
     <string name="action_previous">Назад</string>
     <string name="action_refresh">Обновить</string>
+    <string name="action_reset">Сбросить</string>
+    <string name="action_reset_app">Сбросить</string>
     <string name="action_save">Сохранить</string>
     <string name="action_show_details">Показать детали</string>
     <string name="action_track">Отметить</string>
     <string name="action_track_today">Отметить сегодня</string>
-    <string name="action_reset_app">Сбросить</string>
     <string name="action_update">Обновить</string>
+    <string name="action_view_logs">Логи</string>
 
     <!-- App -->
     <string name="app_name">Vibits</string>
@@ -57,12 +61,14 @@
     <string name="label_today">Сегодня</string>
 
     <!-- Messages -->
-    <string name="msg_toggle_habit_confirm">Переключить "%1$s" на %2$s?</string>
     <string name="msg_connection_failed">Ошибка подключения</string>
     <string name="msg_delete_day_confirm">Привычки не выбраны. Запись за этот день будет удалена.</string>
     <string name="msg_fill_all_fields">Заполните все поля</string>
     <string name="msg_no_habits_yet">Привычки еще не настроены.</string>
+    <string name="msg_no_logs">Логов пока нет</string>
+    <string name="msg_reset_confirm">Вы уверены, что хотите сбросить приложение? Все данные будут удалены.</string>
     <string name="msg_select_habit">Выберите хотя бы одну привычку.</string>
+    <string name="msg_toggle_habit_confirm">Переключить "%1$s" на %2$s?</string>
 
     <!-- Mode selection -->
     <string name="mode_select_title">Выберите режим</string>
@@ -95,13 +101,14 @@
     <string name="time_years">Годы</string>
 
     <!-- Titles -->
-    <string name="title_toggle_habit">Переключить привычку?</string>
     <string name="title_create_day">Создать день</string>
     <string name="title_delete_day">Удалить день?</string>
     <string name="title_delete_memo">Удалить заметку?</string>
     <string name="title_edit_day">Изменить день</string>
     <string name="title_edit_memo">Редактировать заметку</string>
+    <string name="title_logs">Логи (%1$d)</string>
     <string name="title_new_memo">Новая заметка</string>
+    <string name="title_toggle_habit">Переключить привычку?</string>
     <string name="title_update_day">Обновить день</string>
 
     <!-- Demo habits -->

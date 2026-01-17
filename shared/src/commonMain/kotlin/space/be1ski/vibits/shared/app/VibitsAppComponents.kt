@@ -33,13 +33,20 @@ import space.be1ski.vibits.shared.feature.habits.presentation.components.remembe
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberHabitsConfigTimeline
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
 import space.be1ski.vibits.shared.nav_feed
 import space.be1ski.vibits.shared.nav_habits
 import space.be1ski.vibits.shared.nav_posts
 import space.be1ski.vibits.shared.nav_settings
 
 @Composable
-internal fun MemosHeader(appState: VibitsAppUiState, dispatch: (MemosAction) -> Unit) {
+internal fun MemosHeader(
+  memosState: MemosState,
+  appState: VibitsAppUiState,
+  dispatchMemos: (MemosAction) -> Unit,
+  dispatchSettings: (SettingsAction) -> Unit
+) {
   Row(
     modifier = Modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.SpaceBetween,
@@ -48,16 +55,19 @@ internal fun MemosHeader(appState: VibitsAppUiState, dispatch: (MemosAction) -> 
     Text(stringResource(Res.string.app_name), style = MaterialTheme.typography.headlineSmall)
     Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs), verticalAlignment = Alignment.CenterVertically) {
       if (isDesktop) {
-        IconButton(onClick = { dispatch(MemosAction.LoadMemos) }) {
+        IconButton(onClick = { dispatchMemos(MemosAction.LoadMemos) }) {
           Icon(imageVector = Icons.Filled.Refresh, contentDescription = stringResource(Res.string.action_refresh))
         }
       }
       TextButton(
         onClick = {
-          dispatch(MemosAction.EditCredentials)
-          appState.showSettingsDialog = true
-          appState.settingsInitialized = false
-          appState.settingsDismissed = false
+          dispatchSettings(
+            SettingsAction.Open(
+              baseUrl = memosState.baseUrl,
+              token = memosState.token,
+              appMode = appState.appMode
+            )
+          )
         }
       ) {
         Text(stringResource(Res.string.nav_settings))

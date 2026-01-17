@@ -42,7 +42,11 @@ import space.be1ski.vibits.shared.feature.habits.presentation.createHabitsFeatur
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
-import space.be1ski.vibits.shared.feature.auth.presentation.SettingsDialog
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffect
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsUseCases
+import space.be1ski.vibits.shared.feature.settings.presentation.components.SettingsDialog
+import space.be1ski.vibits.shared.feature.settings.presentation.createSettingsFeature
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.CreateMemoUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.DeleteMemoUseCase
@@ -132,28 +136,75 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
   val appDetails = remember { loadAppDetailsUseCase() }
   val activityWeekDataCache = remember { ActivityWeekDataCache() }
 
+  // SettingsFeature
+  val settingsUseCases = remember {
+    SettingsUseCases(
+      validateCredentials = validateCredentialsUseCase,
+      switchAppMode = switchAppModeUseCase,
+      saveCredentials = saveCredentialsUseCase,
+      resetApp = resetAppUseCase
+    )
+  }
+  val settingsFeature = remember {
+    createSettingsFeature(
+      useCases = settingsUseCases,
+      initialMode = initialMode,
+      appDetails = appDetails
+    )
+  }
+  LaunchedEffect(settingsFeature) {
+    settingsFeature.launchIn(scope)
+  }
+  val settingsState by settingsFeature.state.collectAsState()
+  val dispatchSettings: (SettingsAction) -> Unit = settingsFeature::send
+
+  // Observe settings effects for parent coordination
+  LaunchedEffect(settingsFeature) {
+    settingsFeature.effects.collect { effect ->
+      when (effect) {
+        is SettingsEffect.NotifyModeChanged -> {
+          appState.appMode = effect.newMode
+          dispatchMemos(MemosAction.LoadMemos)
+        }
+        is SettingsEffect.NotifyResetCompleted -> onResetApp()
+        is SettingsEffect.NotifyCredentialsSaved -> {
+          dispatchMemos(MemosAction.UpdateBaseUrl(effect.baseUrl))
+          dispatchMemos(MemosAction.UpdateToken(effect.token))
+          dispatchMemos(MemosAction.LoadMemos)
+        }
+        is SettingsEffect.NotifyDialogClosed -> {
+          // Dialog closed, nothing extra needed
+        }
+        else -> {
+          // Internal effects handled by EffectHandler
+        }
+      }
+    }
+  }
+
+  // Open settings when credentials are required
+  LaunchedEffect(memosState.credentialsMode, settingsState.isOpen) {
+    if (memosState.credentialsMode && !settingsState.isOpen) {
+      dispatchSettings(SettingsAction.Open(memosState.baseUrl, memosState.token, appState.appMode))
+    }
+  }
+
   SyncAutoLoad(memosState, appState, dispatchMemos)
-  SyncSettingsDialog(memosState, appState)
 
   CompositionLocalProvider(LocalActivityWeekDataCache provides activityWeekDataCache) {
     VibitsAppContent(
       memosState = memosState,
       appState = appState,
       dispatchMemos = dispatchMemos,
+      dispatchSettings = dispatchSettings,
       saveTimeRangeTabUseCase = saveTimeRangeTabUseCase,
       habitsState = habitsState,
       onHabitsAction = habitsFeature::send,
       calculateSuccessRate = calculateSuccessRate
     )
     SettingsDialog(
-      memosState = memosState,
-      appState = appState,
-      dispatch = dispatchMemos,
-      appDetails = appDetails,
-      switchAppModeUseCase = switchAppModeUseCase,
-      resetAppUseCase = resetAppUseCase,
-      validateCredentialsUseCase = validateCredentialsUseCase,
-      onResetComplete = onResetApp
+      state = settingsState,
+      dispatch = dispatchSettings
     )
     MemoCreateDialog(appState, dispatchMemos)
     MemoEditDialog(appState, dispatchMemos)
@@ -166,6 +217,7 @@ private fun VibitsAppContent(
   memosState: MemosState,
   appState: VibitsAppUiState,
   dispatchMemos: (MemosAction) -> Unit,
+  dispatchSettings: (SettingsAction) -> Unit,
   saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase,
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit,
@@ -265,7 +317,7 @@ private fun VibitsAppContent(
         .fillMaxSize(),
       verticalArrangement = Arrangement.spacedBy(Indent.s)
     ) {
-      MemosHeader(appState, dispatchMemos)
+      MemosHeader(memosState, appState, dispatchMemos, dispatchSettings)
       memosState.errorMessage?.let { message ->
         Text(message, color = MaterialTheme.colorScheme.error)
       }
