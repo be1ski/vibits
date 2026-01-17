@@ -17,6 +17,9 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect> =
             editBaseUrl = action.baseUrl,
             editToken = action.token,
             appMode = action.appMode,
+            selectedLanguage = action.language,
+            languageChanged = false,
+            selectedTheme = action.theme,
             isValidating = false,
             validationError = null,
             showResetConfirmation = false,
@@ -79,6 +82,19 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect> =
           state { copy(appMode = action.mode, validationError = null) }
           effect(SettingsEffect.SwitchMode(action.mode))
         }
+      }
+
+      // Language selection
+      is SettingsAction.SelectLanguage -> {
+        state { copy(selectedLanguage = action.language, languageChanged = true) }
+        effect(SettingsEffect.SaveLanguage(action.language))
+      }
+
+      // Theme selection
+      is SettingsAction.SelectTheme -> {
+        state { copy(selectedTheme = action.theme) }
+        effect(SettingsEffect.SaveTheme(action.theme))
+        effect(SettingsEffect.NotifyThemeChanged(action.theme))
       }
 
       // Validation responses

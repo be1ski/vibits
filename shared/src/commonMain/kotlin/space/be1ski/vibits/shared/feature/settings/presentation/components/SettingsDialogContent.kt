@@ -1,3 +1,4 @@
+@file:Suppress("TooManyFunctions")
 
 package space.be1ski.vibits.shared.feature.settings.presentation.components
 
@@ -57,6 +58,8 @@ import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.logging.LogLevel
 import space.be1ski.vibits.shared.domain.model.app.AppDetails
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
+import space.be1ski.vibits.shared.feature.preferences.domain.model.AppLanguage
+import space.be1ski.vibits.shared.feature.preferences.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsState
 import space.be1ski.vibits.shared.hint_base_url
@@ -65,9 +68,14 @@ import space.be1ski.vibits.shared.label_app_mode
 import space.be1ski.vibits.shared.label_base_url
 import space.be1ski.vibits.shared.label_credentials
 import space.be1ski.vibits.shared.label_environment
+import space.be1ski.vibits.shared.label_language
 import space.be1ski.vibits.shared.label_memos_db
 import space.be1ski.vibits.shared.label_storage
+import space.be1ski.vibits.shared.label_theme
 import space.be1ski.vibits.shared.label_version
+import space.be1ski.vibits.shared.language_english
+import space.be1ski.vibits.shared.language_russian
+import space.be1ski.vibits.shared.language_system
 import space.be1ski.vibits.shared.mode_demo_title
 import space.be1ski.vibits.shared.mode_offline_title
 import space.be1ski.vibits.shared.mode_online_title
@@ -75,7 +83,11 @@ import space.be1ski.vibits.shared.msg_connection_failed
 import space.be1ski.vibits.shared.msg_fill_all_fields
 import space.be1ski.vibits.shared.msg_no_logs
 import space.be1ski.vibits.shared.msg_reset_confirm
+import space.be1ski.vibits.shared.msg_restart_required
 import space.be1ski.vibits.shared.nav_settings
+import space.be1ski.vibits.shared.theme_dark
+import space.be1ski.vibits.shared.theme_light
+import space.be1ski.vibits.shared.theme_system
 import space.be1ski.vibits.shared.title_logs
 
 @Composable
@@ -108,6 +120,7 @@ internal fun SettingsDialog(
   }
 }
 
+@Suppress("LongMethod")
 @Composable
 private fun SettingsDialogBody(
   state: SettingsState,
@@ -131,6 +144,21 @@ private fun SettingsDialogBody(
     validationErrorMessage?.let { error ->
       Text(error, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
     }
+    LanguageSelector(
+      currentLanguage = state.selectedLanguage,
+      onLanguageChange = { language -> dispatch(SettingsAction.SelectLanguage(language)) },
+    )
+    if (state.languageChanged) {
+      Text(
+        text = stringResource(Res.string.msg_restart_required),
+        color = MaterialTheme.colorScheme.tertiary,
+        style = MaterialTheme.typography.bodySmall,
+      )
+    }
+    ThemeSelector(
+      currentTheme = state.selectedTheme,
+      onThemeChange = { theme -> dispatch(SettingsAction.SelectTheme(theme)) },
+    )
     if (state.appMode == AppMode.ONLINE) {
       TextField(
         value = state.editBaseUrl,
@@ -199,6 +227,72 @@ private fun AppModeSelector(
         shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
       ) {
         Text(stringResource(Res.string.mode_demo_title))
+      }
+    }
+  }
+}
+
+@Composable
+private fun LanguageSelector(
+  currentLanguage: AppLanguage,
+  onLanguageChange: (AppLanguage) -> Unit,
+) {
+  Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Text(stringResource(Res.string.label_language))
+    SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+      SegmentedButton(
+        selected = currentLanguage == AppLanguage.SYSTEM,
+        onClick = { onLanguageChange(AppLanguage.SYSTEM) },
+        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
+      ) {
+        Text(stringResource(Res.string.language_system))
+      }
+      SegmentedButton(
+        selected = currentLanguage == AppLanguage.ENGLISH,
+        onClick = { onLanguageChange(AppLanguage.ENGLISH) },
+        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
+      ) {
+        Text(stringResource(Res.string.language_english))
+      }
+      SegmentedButton(
+        selected = currentLanguage == AppLanguage.RUSSIAN,
+        onClick = { onLanguageChange(AppLanguage.RUSSIAN) },
+        shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
+      ) {
+        Text(stringResource(Res.string.language_russian))
+      }
+    }
+  }
+}
+
+@Composable
+private fun ThemeSelector(
+  currentTheme: AppTheme,
+  onThemeChange: (AppTheme) -> Unit,
+) {
+  Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Text(stringResource(Res.string.label_theme))
+    SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+      SegmentedButton(
+        selected = currentTheme == AppTheme.SYSTEM,
+        onClick = { onThemeChange(AppTheme.SYSTEM) },
+        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
+      ) {
+        Text(stringResource(Res.string.theme_system))
+      }
+      SegmentedButton(
+        selected = currentTheme == AppTheme.LIGHT,
+        onClick = { onThemeChange(AppTheme.LIGHT) },
+        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
+      ) {
+        Text(stringResource(Res.string.theme_light))
+      }
+      SegmentedButton(
+        selected = currentTheme == AppTheme.DARK,
+        onClick = { onThemeChange(AppTheme.DARK) },
+        shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
+      ) {
+        Text(stringResource(Res.string.theme_dark))
       }
     }
   }

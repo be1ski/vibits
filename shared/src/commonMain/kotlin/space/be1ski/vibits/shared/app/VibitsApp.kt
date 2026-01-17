@@ -58,8 +58,12 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.LoadAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
+import space.be1ski.vibits.shared.feature.preferences.domain.model.AppLanguage
+import space.be1ski.vibits.shared.feature.preferences.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
 import space.be1ski.vibits.shared.feature.preferences.domain.usecase.LoadPreferencesUseCase
+import space.be1ski.vibits.shared.feature.preferences.domain.usecase.SaveLanguageUseCase
+import space.be1ski.vibits.shared.feature.preferences.domain.usecase.SaveThemeUseCase
 import space.be1ski.vibits.shared.feature.preferences.domain.usecase.SaveTimeRangeTabUseCase
 import space.be1ski.vibits.shared.feature.preferences.domain.usecase.TimeRangeScreen
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
@@ -70,7 +74,10 @@ import space.be1ski.vibits.shared.feature.settings.presentation.createSettingsFe
 
 @Suppress("LongMethod")
 @Composable
-fun VibitsApp(onResetApp: () -> Unit = {}) {
+fun VibitsApp(
+  onResetApp: () -> Unit = {},
+  onThemeChanged: (AppTheme) -> Unit = {},
+) {
   val loadPreferencesUseCase: LoadPreferencesUseCase = koinInject()
   val saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase = koinInject()
   val loadAppDetailsUseCase: LoadAppDetailsUseCase = koinInject()
@@ -86,9 +93,12 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
   val switchAppModeUseCase: SwitchAppModeUseCase = koinInject()
   val resetAppUseCase: ResetAppUseCase = koinInject()
   val validateCredentialsUseCase: ValidateCredentialsUseCase = koinInject()
+  val saveLanguageUseCase: SaveLanguageUseCase = koinInject()
+  val saveThemeUseCase: SaveThemeUseCase = koinInject()
   val calculateSuccessRate: CalculateSuccessRateUseCase = koinInject()
 
   val initialPrefs = remember { loadPreferencesUseCase() }
+  val initialLanguage = remember { initialPrefs.language }
   val initialMode = remember { loadAppModeUseCase() }
   val appState =
     remember {
@@ -148,6 +158,8 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
         switchAppMode = switchAppModeUseCase,
         saveCredentials = saveCredentialsUseCase,
         resetApp = resetAppUseCase,
+        saveLanguage = saveLanguageUseCase,
+        saveTheme = saveThemeUseCase,
       )
     }
   val settingsFeature =
@@ -178,6 +190,9 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
           dispatchMemos(MemosAction.UpdateToken(effect.token))
           dispatchMemos(MemosAction.LoadMemos)
         }
+        is SettingsEffect.NotifyThemeChanged -> {
+          onThemeChanged(effect.theme)
+        }
         is SettingsEffect.NotifyDialogClosed -> {
           // Dialog closed, nothing extra needed
         }
@@ -188,10 +203,20 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
     }
   }
 
+  val initialTheme = remember { initialPrefs.theme }
+
   // Open settings when credentials are required
   LaunchedEffect(memosState.credentialsMode, settingsState.isOpen) {
     if (memosState.credentialsMode && !settingsState.isOpen) {
-      dispatchSettings(SettingsAction.Open(memosState.baseUrl, memosState.token, appState.appMode))
+      dispatchSettings(
+        SettingsAction.Open(
+          baseUrl = memosState.baseUrl,
+          token = memosState.token,
+          appMode = appState.appMode,
+          language = initialLanguage,
+          theme = initialTheme,
+        ),
+      )
     }
   }
 
@@ -207,6 +232,8 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
       habitsState = habitsState,
       onHabitsAction = habitsFeature::send,
       calculateSuccessRate = calculateSuccessRate,
+      language = initialLanguage,
+      theme = initialTheme,
     )
     SettingsDialog(
       state = settingsState,
@@ -228,6 +255,8 @@ private fun VibitsAppContent(
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit,
   calculateSuccessRate: CalculateSuccessRateUseCase,
+  language: AppLanguage,
+  theme: AppTheme,
 ) {
   val timeZone = remember { TimeZone.currentSystemDefault() }
   val today = currentLocalDate()
@@ -333,7 +362,7 @@ private fun VibitsAppContent(
           .fillMaxSize(),
       verticalArrangement = Arrangement.spacedBy(Indent.s),
     ) {
-      MemosHeader(memosState, appState, dispatchMemos, dispatchSettings)
+      MemosHeader(memosState, appState, dispatchMemos, dispatchSettings, language, theme)
       memosState.errorMessage?.let { message ->
         Text(message, color = MaterialTheme.colorScheme.error)
       }
