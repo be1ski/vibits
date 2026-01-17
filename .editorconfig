@@ -1,0 +1,23 @@
+# EditorConfig: https://editorconfig.org
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{kt,kts}]
+indent_style = space
+indent_size = 2
+
+# Kotlin style conventions (not enforced by EditorConfig):
+# - Enum constants: SCREAMING_SNAKE_CASE (e.g., NOT_SELECTED, ONLINE)
+# - Sealed class subclasses: PascalCase (e.g., Success, Error)
+
+[*.{xml,json,yaml,yml}]
+indent_style = space
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
