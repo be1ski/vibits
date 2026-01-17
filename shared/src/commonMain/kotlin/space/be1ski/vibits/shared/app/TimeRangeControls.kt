@@ -35,8 +35,14 @@ import space.be1ski.vibits.shared.time_quarters
 import space.be1ski.vibits.shared.time_weeks
 import space.be1ski.vibits.shared.time_years
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
+import space.be1ski.vibits.shared.core.platform.LocalDateFormatter
+import space.be1ski.vibits.shared.core.platform.currentLocalDate
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.plus
 
 private val navigateActivityRangeUseCase = NavigateActivityRangeUseCase()
+private const val WEEK_END_OFFSET = 6
 
 @Suppress("LongParameterList")
 @Composable
@@ -123,8 +129,20 @@ private fun TimeRangeNavigator(
   }
 }
 
-private fun rangeLabel(range: ActivityRange): String =
-  navigateActivityRangeUseCase.formatLabel(range)
+@Composable
+private fun rangeLabel(range: ActivityRange): String {
+  val formatter = LocalDateFormatter.current
+  return when (range) {
+    is ActivityRange.Week -> {
+      val endDate = range.startDate.plus(DatePeriod(days = WEEK_END_OFFSET))
+      val currentYear = currentLocalDate().year
+      formatter.weekRange(range.startDate, endDate, currentYear)
+    }
+    is ActivityRange.Month -> "${formatter.monthShort(range.month)} ${range.year}"
+    is ActivityRange.Quarter -> "Q${range.index} ${range.year}"
+    is ActivityRange.Year -> range.year.toString()
+  }
+}
 
 private fun isBeforeRange(selectedRange: ActivityRange, currentRange: ActivityRange): Boolean =
   navigateActivityRangeUseCase.isBefore(selectedRange, currentRange)

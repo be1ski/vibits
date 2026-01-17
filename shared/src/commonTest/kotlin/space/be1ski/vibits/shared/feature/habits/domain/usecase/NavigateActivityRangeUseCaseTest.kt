@@ -80,60 +80,6 @@ class NavigateActivityRangeUseCaseTest {
   }
 
   @Test
-  fun `formats week label correctly for current year`() {
-    val range = ActivityRange.Week(startDate = LocalDate(2026, 1, 5))
-
-    val label = useCase.formatLabel(range)
-
-    assertEquals("Jan 5 - Jan 11", label)
-  }
-
-  @Test
-  fun `formats week label with year for past year`() {
-    val range = ActivityRange.Week(startDate = LocalDate(2024, 1, 8))
-
-    val label = useCase.formatLabel(range)
-
-    assertEquals("Jan 8 - Jan 14 (2024)", label)
-  }
-
-  @Test
-  fun `formats week label crossing year boundary`() {
-    val range = ActivityRange.Week(startDate = LocalDate(2024, 12, 30))
-
-    val label = useCase.formatLabel(range)
-
-    assertEquals("Dec 30, 2024 – Jan 5, 2025", label)
-  }
-
-  @Test
-  fun `formats month label correctly`() {
-    val range = ActivityRange.Month(year = 2024, month = Month.MARCH)
-
-    val label = useCase.formatLabel(range)
-
-    assertEquals("Mar 2024", label)
-  }
-
-  @Test
-  fun `formats quarter label correctly`() {
-    val range = ActivityRange.Quarter(year = 2024, index = 2)
-
-    val label = useCase.formatLabel(range)
-
-    assertEquals("Q2 2024", label)
-  }
-
-  @Test
-  fun `formats year label correctly`() {
-    val range = ActivityRange.Year(year = 2024)
-
-    val label = useCase.formatLabel(range)
-
-    assertEquals("2024", label)
-  }
-
-  @Test
   fun `isBefore returns true for earlier week`() {
     val earlier = ActivityRange.Week(startDate = LocalDate(2024, 1, 1))
     val later = ActivityRange.Week(startDate = LocalDate(2024, 1, 8))

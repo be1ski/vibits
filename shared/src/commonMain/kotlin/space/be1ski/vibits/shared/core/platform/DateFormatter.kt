@@ -81,7 +81,7 @@ private fun rememberDateFormatter(): DateFormatter {
  */
 class DateFormatter(
   private val monthsShort: List<String> = emptyList(),
-  private val daysOfWeek: List<String> = DEFAULT_DAYS_OF_WEEK
+  private val daysOfWeek: List<String> = emptyList()
 ) {
 
   /**
@@ -102,7 +102,11 @@ class DateFormatter(
    * Short day of week: "Mo", "Tu", "We"
    */
   fun dayOfWeekShort(day: DayOfWeek): String {
-    return daysOfWeek.getOrNull(day.ordinal) ?: day.name.take(2)
+    return daysOfWeek.getOrNull(day.ordinal) ?: fallbackDayOfWeekShort(day)
+  }
+
+  private fun fallbackDayOfWeekShort(day: DayOfWeek): String {
+    return day.name.take(SHORT_DAY_LENGTH).lowercase().replaceFirstChar { it.uppercase() }
   }
 
   /**
@@ -146,25 +150,10 @@ class DateFormatter(
     }
   }
 
-  companion object {
-    private val DEFAULT_DAYS_OF_WEEK = listOf(
-      "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"
-    )
-
-    private val defaultInstance = DateFormatter()
-
-    // Static methods for non-Composable contexts (uses English defaults)
-    fun monthShort(month: Month): String = defaultInstance.monthShort(month)
-    fun monthInitial(month: Month): String = defaultInstance.monthInitial(month)
-    fun dayOfWeekShort(day: DayOfWeek): String = defaultInstance.dayOfWeekShort(day)
-    fun monthDay(date: LocalDate): String = defaultInstance.monthDay(date)
-    fun dateTime(dateTime: LocalDateTime): String = defaultInstance.dateTime(dateTime)
-    fun compactDateTime(dateTime: LocalDateTime): String = defaultInstance.compactDateTime(dateTime)
-    fun weekRange(start: LocalDate, end: LocalDate, currentYear: Int): String =
-      defaultInstance.weekRange(start, end, currentYear)
-
-    private fun fallbackMonthShort(month: Month): String {
-      return month.name.take(3).lowercase().replaceFirstChar { it.uppercase() }
-    }
+  private fun fallbackMonthShort(month: Month): String {
+    return month.name.take(SHORT_MONTH_LENGTH).lowercase().replaceFirstChar { it.uppercase() }
   }
 }
+
+private const val SHORT_MONTH_LENGTH = 3
+private const val SHORT_DAY_LENGTH = 2

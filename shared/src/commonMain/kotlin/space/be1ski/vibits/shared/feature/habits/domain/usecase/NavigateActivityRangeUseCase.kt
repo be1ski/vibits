@@ -4,12 +4,9 @@ import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.plus
-import space.be1ski.vibits.shared.core.platform.DateFormatter
-import space.be1ski.vibits.shared.core.platform.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 
 private const val DAYS_IN_WEEK = 7
-private const val WEEK_END_OFFSET = 6
 private const val QUARTERS_IN_YEAR = 4
 private const val MONTHS_IN_YEAR = 12
 
@@ -38,22 +35,6 @@ class NavigateActivityRangeUseCase {
         ActivityRange.Quarter(range.year + yearShift, quarterIndex)
       }
       is ActivityRange.Year -> ActivityRange.Year(range.year + delta)
-    }
-  }
-
-  /**
-   * Formats an activity range to a human-readable label.
-   */
-  fun formatLabel(range: ActivityRange): String {
-    return when (range) {
-      is ActivityRange.Week -> {
-        val endDate = range.startDate.plus(DatePeriod(days = WEEK_END_OFFSET))
-        val currentYear = currentLocalDate().year
-        DateFormatter.weekRange(range.startDate, endDate, currentYear)
-      }
-      is ActivityRange.Month -> "${DateFormatter.monthShort(range.month)} ${range.year}"
-      is ActivityRange.Quarter -> "Q${range.index} ${range.year}"
-      is ActivityRange.Year -> range.year.toString()
     }
   }
 
