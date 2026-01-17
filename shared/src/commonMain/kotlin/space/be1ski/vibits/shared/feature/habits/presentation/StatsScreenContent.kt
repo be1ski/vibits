@@ -690,12 +690,6 @@ internal fun StatsHabitSections(
 
   val habitsState = derived.habitsState
   val onClearSelection = remember(dispatch) { { dispatch(HabitsAction.ClearSelection) } }
-  val onEditRequested = remember(dispatch, derived.habitsConfigTimeline) {
-    { day: ContributionDay ->
-      val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
-      dispatch(HabitsAction.OpenEditor(day, config))
-    }
-  }
 
   derived.currentHabitsConfig.forEach { habit ->
     val selectionId = "habit:${habit.tag}"
@@ -716,9 +710,7 @@ internal fun StatsHabitSections(
         habitColor = habit.color
       ),
       onDaySelected = onDaySelected,
-      onClearSelection = onClearSelection,
-      onEditRequested = onEditRequested,
-      onCreateRequested = onEditRequested
+      onClearSelection = onClearSelection
     )
   }
 }
@@ -727,9 +719,7 @@ internal fun StatsHabitSections(
 private fun HabitActivitySection(
   state: HabitActivitySectionState,
   onDaySelected: (ContributionDay) -> Unit,
-  onClearSelection: () -> Unit,
-  onEditRequested: (ContributionDay) -> Unit,
-  onCreateRequested: (ContributionDay) -> Unit
+  onClearSelection: () -> Unit
 ) {
   val habitWeekData = remember(state.baseWeekData, state.habit) {
     activityWeekDataForHabit(state.baseWeekData, state.habit)
@@ -761,9 +751,7 @@ private fun HabitActivitySection(
         demoMode = state.demoMode
       ),
       onDaySelected = onDaySelected,
-      onClearSelection = onClearSelection,
-      onEditRequested = onEditRequested,
-      onCreateRequested = onCreateRequested
+      onClearSelection = onClearSelection
     )
   }
 }
