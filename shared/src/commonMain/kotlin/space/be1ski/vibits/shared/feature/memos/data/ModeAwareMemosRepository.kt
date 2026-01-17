@@ -25,8 +25,8 @@ class ModeAwareMemosRepository(
   private fun currentRepository(): MemosRepository {
     val currentMode = appModeRepository.loadMode()
     return when (currentMode) {
-      AppMode.Demo -> demoRepository
-      AppMode.Offline -> offlineRepository
+      AppMode.DEMO -> demoRepository
+      AppMode.OFFLINE -> offlineRepository
       else -> onlineRepository
     }
   }
@@ -64,7 +64,7 @@ class ModeAwareMemosRepository(
     val currentMode = appModeRepository.loadMode()
     if (lastKnownMode != null && lastKnownMode != currentMode) {
       memoCache.clear()
-      if (currentMode == AppMode.Demo) {
+      if (currentMode == AppMode.DEMO) {
         demoRepository.reset()
       }
     }

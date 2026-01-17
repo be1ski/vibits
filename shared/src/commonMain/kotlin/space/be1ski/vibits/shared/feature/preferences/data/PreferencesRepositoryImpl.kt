@@ -27,6 +27,6 @@ internal class PreferencesRepositoryImpl(
   }
 
   private fun parseTimeRangeTab(value: String): TimeRangeTab {
-    return runCatching { TimeRangeTab.valueOf(value) }.getOrDefault(TimeRangeTab.Weeks)
+    return runCatching { TimeRangeTab.valueOf(value) }.getOrDefault(TimeRangeTab.WEEKS)
   }
 }

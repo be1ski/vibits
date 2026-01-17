@@ -202,8 +202,8 @@ private fun buildActivityWeekData(
   mode: ActivityMode
 ): ActivityWeekData {
   val bounds = rangeBounds(range)
-  val effectiveConfigTimeline = if (mode == ActivityMode.Habits) configTimeline else emptyList()
-  val counts = if (mode == ActivityMode.Posts) extractDailyPostCounts(memos, timeZone, bounds) else emptyMap()
+  val effectiveConfigTimeline = if (mode == ActivityMode.HABITS) configTimeline else emptyList()
+  val counts = if (mode == ActivityMode.POSTS) extractDailyPostCounts(memos, timeZone, bounds) else emptyMap()
 
   val start = startOfWeek(bounds.start)
   val weeks = mutableListOf<ActivityWeek>()

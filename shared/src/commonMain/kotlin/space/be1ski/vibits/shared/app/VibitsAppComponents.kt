@@ -83,13 +83,13 @@ internal fun MemosBottomNavigation(
 ) {
   NavigationBar {
     NavigationBarItem(
-      selected = appState.selectedScreen == MemosScreen.Habits,
+      selected = appState.selectedScreen == MemosScreen.HABITS,
       onClick = {
         onClearSelection()
-        if (appState.selectedScreen == MemosScreen.Habits) {
+        if (appState.selectedScreen == MemosScreen.HABITS) {
           resetToHome(appState, currentLocalDate())
         } else {
-          appState.selectedScreen = MemosScreen.Habits
+          appState.selectedScreen = MemosScreen.HABITS
         }
       },
       icon = {
@@ -101,13 +101,13 @@ internal fun MemosBottomNavigation(
       label = { Text(stringResource(Res.string.nav_habits)) }
     )
     NavigationBarItem(
-      selected = appState.selectedScreen == MemosScreen.Stats,
+      selected = appState.selectedScreen == MemosScreen.STATS,
       onClick = {
         onClearSelection()
-        if (appState.selectedScreen == MemosScreen.Stats) {
+        if (appState.selectedScreen == MemosScreen.STATS) {
           resetToHome(appState, currentLocalDate())
         } else {
-          appState.selectedScreen = MemosScreen.Stats
+          appState.selectedScreen = MemosScreen.STATS
         }
       },
       icon = {
@@ -119,10 +119,10 @@ internal fun MemosBottomNavigation(
       label = { Text(stringResource(Res.string.nav_memos)) }
     )
     NavigationBarItem(
-      selected = appState.selectedScreen == MemosScreen.Feed,
+      selected = appState.selectedScreen == MemosScreen.FEED,
       onClick = {
         onClearSelection()
-        appState.selectedScreen = MemosScreen.Feed
+        appState.selectedScreen = MemosScreen.FEED
       },
       icon = {
         Icon(
@@ -141,7 +141,7 @@ internal fun rememberSuccessRate(
   activityRange: ActivityRange,
   calculateSuccessRate: CalculateSuccessRateUseCase
 ): Float? {
-  val weekDataState = rememberActivityWeekData(memos, activityRange, ActivityMode.Habits)
+  val weekDataState = rememberActivityWeekData(memos, activityRange, ActivityMode.HABITS)
   val weekData = weekDataState.data
   val habitsTimeline = rememberHabitsConfigTimeline(memos)
   val today = remember { currentLocalDate() }

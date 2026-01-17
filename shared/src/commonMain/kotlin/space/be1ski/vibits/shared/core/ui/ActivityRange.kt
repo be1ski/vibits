@@ -8,9 +8,9 @@ import kotlinx.datetime.Month as CalendarMonth
  */
 enum class ActivityMode {
   /** Habit completion based on #habits/daily + #habits/config. */
-  Habits,
+  HABITS,
   /** Raw post count per day. */
-  Posts
+  POSTS
 }
 
 /**
