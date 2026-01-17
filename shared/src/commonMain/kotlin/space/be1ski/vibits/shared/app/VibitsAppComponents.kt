@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.automirrored.filled.StickyNote2
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,12 +45,12 @@ internal fun MemosHeader(
   memosState: MemosState,
   appState: VibitsAppUiState,
   dispatchMemos: (MemosAction) -> Unit,
-  dispatchSettings: (SettingsAction) -> Unit
+  dispatchSettings: (SettingsAction) -> Unit,
 ) {
   Row(
     modifier = Modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.SpaceBetween,
-    verticalAlignment = Alignment.CenterVertically
+    verticalAlignment = Alignment.CenterVertically,
   ) {
     Text(stringResource(Res.string.app_name), style = MaterialTheme.typography.headlineSmall)
     Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs), verticalAlignment = Alignment.CenterVertically) {
@@ -65,10 +65,10 @@ internal fun MemosHeader(
             SettingsAction.Open(
               baseUrl = memosState.baseUrl,
               token = memosState.token,
-              appMode = appState.appMode
-            )
+              appMode = appState.appMode,
+            ),
           )
-        }
+        },
       ) {
         Text(stringResource(Res.string.nav_settings))
       }
@@ -79,7 +79,7 @@ internal fun MemosHeader(
 @Composable
 internal fun MemosBottomNavigation(
   appState: VibitsAppUiState,
-  onClearSelection: () -> Unit
+  onClearSelection: () -> Unit,
 ) {
   NavigationBar {
     NavigationBarItem(
@@ -95,10 +95,10 @@ internal fun MemosBottomNavigation(
       icon = {
         Icon(
           imageVector = Icons.Filled.CheckCircle,
-          contentDescription = stringResource(Res.string.nav_habits)
+          contentDescription = stringResource(Res.string.nav_habits),
         )
       },
-      label = { Text(stringResource(Res.string.nav_habits)) }
+      label = { Text(stringResource(Res.string.nav_habits)) },
     )
     NavigationBarItem(
       selected = appState.selectedScreen == MemosScreen.STATS,
@@ -113,10 +113,10 @@ internal fun MemosBottomNavigation(
       icon = {
         Icon(
           imageVector = Icons.AutoMirrored.Filled.StickyNote2,
-          contentDescription = stringResource(Res.string.nav_memos)
+          contentDescription = stringResource(Res.string.nav_memos),
         )
       },
-      label = { Text(stringResource(Res.string.nav_memos)) }
+      label = { Text(stringResource(Res.string.nav_memos)) },
     )
     NavigationBarItem(
       selected = appState.selectedScreen == MemosScreen.FEED,
@@ -127,10 +127,10 @@ internal fun MemosBottomNavigation(
       icon = {
         Icon(
           imageVector = Icons.AutoMirrored.Filled.List,
-          contentDescription = stringResource(Res.string.nav_feed)
+          contentDescription = stringResource(Res.string.nav_feed),
         )
       },
-      label = { Text(stringResource(Res.string.nav_feed)) }
+      label = { Text(stringResource(Res.string.nav_feed)) },
     )
   }
 }
@@ -139,15 +139,16 @@ internal fun MemosBottomNavigation(
 internal fun rememberSuccessRate(
   memos: List<Memo>,
   activityRange: ActivityRange,
-  calculateSuccessRate: CalculateSuccessRateUseCase
+  calculateSuccessRate: CalculateSuccessRateUseCase,
 ): Float? {
   val weekDataState = rememberActivityWeekData(memos, activityRange, ActivityMode.HABITS)
   val weekData = weekDataState.data
   val habitsTimeline = rememberHabitsConfigTimeline(memos)
   val today = remember { currentLocalDate() }
   val configStartDate = remember(habitsTimeline) { habitsTimeline.firstOrNull()?.date }
-  val data = remember(weekData, activityRange, today, configStartDate) {
-    calculateSuccessRate(weekData, activityRange, today, configStartDate)
-  }
+  val data =
+    remember(weekData, activityRange, today, configStartDate) {
+      calculateSuccessRate(weekData, activityRange, today, configStartDate)
+    }
   return if (data.total > 0) data.rate else null
 }

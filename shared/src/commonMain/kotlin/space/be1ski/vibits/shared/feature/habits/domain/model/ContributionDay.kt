@@ -19,5 +19,5 @@ data class ContributionDay(
   /** Daily memo information when available. */
   val dailyMemo: DailyMemoInfo?,
   /** True if the day is within the requested range. */
-  val inRange: Boolean
+  val inRange: Boolean,
 )

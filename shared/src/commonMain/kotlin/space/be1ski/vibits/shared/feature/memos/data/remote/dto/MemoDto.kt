@@ -23,5 +23,5 @@ data class MemoDto(
   /**
    * ISO timestamp when memo was last updated.
    */
-  @SerialName("updateTime") val updateTime: String? = null
+  @SerialName("updateTime") val updateTime: String? = null,
 )

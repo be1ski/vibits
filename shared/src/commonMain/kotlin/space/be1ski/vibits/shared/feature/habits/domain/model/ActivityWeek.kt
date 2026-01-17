@@ -11,5 +11,5 @@ data class ActivityWeek(
   /** Daily breakdown for the week. */
   val days: List<ContributionDay>,
   /** Sum of all posts in the week. */
-  val weeklyCount: Int
+  val weeklyCount: Int,
 )

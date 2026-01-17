@@ -9,5 +9,5 @@ data class ActivityWeekData(
   /** Maximum posts for a single day in range. */
   val maxDaily: Int,
   /** Maximum posts in a week in range. */
-  val maxWeekly: Int
+  val maxWeekly: Int,
 )

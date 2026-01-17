@@ -9,7 +9,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class NavigateActivityRangeUseCaseTest {
-
   private val useCase = NavigateActivityRangeUseCase()
 
   @Test

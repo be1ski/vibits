@@ -14,7 +14,6 @@ import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
-import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
@@ -24,6 +23,7 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.HabitStatus
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.habits.domain.model.RangeBounds
 import space.be1ski.vibits.shared.feature.habits.domain.model.rangeBounds
+import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 private const val DAYS_IN_WEEK = 7
 
@@ -33,14 +33,14 @@ internal data class DayDataContext(
   val mode: ActivityMode,
   val configTimeline: List<HabitsConfigEntry>,
   val dailyMemos: Map<LocalDate, DailyMemoInfo>,
-  val counts: Map<LocalDate, Int>
+  val counts: Map<LocalDate, Int>,
 )
 
 internal data class HabitSelectionState(
   val useHabits: Boolean,
   val habitStatuses: List<HabitStatus>,
   val memoHabitTags: Set<String>,
-  val configTags: Set<String>
+  val configTags: Set<String>,
 )
 
 private val emptyWeekData = ActivityWeekData(weeks = emptyList(), maxDaily = 0, maxWeekly = 0)
@@ -50,7 +50,7 @@ private val emptyWeekData = ActivityWeekData(weeks = emptyList(), maxDaily = 0, 
  */
 data class ActivityWeekDataState(
   val data: ActivityWeekData,
-  val isLoading: Boolean
+  val isLoading: Boolean,
 )
 
 /**
@@ -69,7 +69,11 @@ class ActivityWeekDataCache {
   var version: Int = 0
     private set
 
-  fun get(memos: List<Memo>, range: ActivityRange, mode: ActivityMode): ActivityWeekData? {
+  fun get(
+    memos: List<Memo>,
+    range: ActivityRange,
+    mode: ActivityMode,
+  ): ActivityWeekData? {
     val sameRef = memos === lastMemos
     if (!sameRef) {
       cache.clear()
@@ -80,7 +84,12 @@ class ActivityWeekDataCache {
     return cache[range to mode]
   }
 
-  fun put(memos: List<Memo>, range: ActivityRange, mode: ActivityMode, data: ActivityWeekData) {
+  fun put(
+    memos: List<Memo>,
+    range: ActivityRange,
+    mode: ActivityMode,
+    data: ActivityWeekData,
+  ) {
     if (memos !== lastMemos) {
       cache.clear()
       lastMemos = memos
@@ -112,7 +121,7 @@ val LocalActivityWeekDataCache = compositionLocalOf { ActivityWeekDataCache() }
 fun rememberActivityWeekData(
   memos: List<Memo>,
   range: ActivityRange,
-  mode: ActivityMode
+  mode: ActivityMode,
 ): ActivityWeekDataState {
   val cache = LocalActivityWeekDataCache.current
   val timeZone = remember { TimeZone.currentSystemDefault() }
@@ -135,9 +144,10 @@ fun rememberActivityWeekData(
   var isLoading by remember(cacheVersion, range, mode) { mutableStateOf(true) }
 
   LaunchedEffect(cacheVersion, range, mode) {
-    val result = withContext(Dispatchers.Default) {
-      buildActivityWeekData(configTimeline, dailyMemos, timeZone, memos, range, mode)
-    }
+    val result =
+      withContext(Dispatchers.Default) {
+        buildActivityWeekData(configTimeline, dailyMemos, timeZone, memos, range, mode)
+      }
     cache.put(memos, range, mode, result)
     currentData = result
     isLoading = false
@@ -176,7 +186,7 @@ internal fun calculateLayout(
   columns: Int,
   minColumnSize: Dp,
   spacing: Dp,
-  maxColumnSize: Dp? = null
+  maxColumnSize: Dp? = null,
 ): ChartLayout {
   val safeColumns = columns.coerceAtLeast(1)
   val totalSpacing = spacing * (safeColumns - 1)
@@ -199,7 +209,7 @@ private fun buildActivityWeekData(
   timeZone: TimeZone,
   memos: List<Memo>,
   range: ActivityRange,
-  mode: ActivityMode
+  mode: ActivityMode,
 ): ActivityWeekData {
   val bounds = rangeBounds(range)
   val effectiveConfigTimeline = if (mode == ActivityMode.HABITS) configTimeline else emptyList()
@@ -209,24 +219,25 @@ private fun buildActivityWeekData(
   val weeks = mutableListOf<ActivityWeek>()
   var cursor = start
   while (cursor <= bounds.end) {
-    val days = (0 until DAYS_IN_WEEK).map { offset ->
-      buildDayData(
-        DayDataContext(
-          date = cursor.plus(DatePeriod(days = offset)),
-          bounds = bounds,
-          mode = mode,
-          configTimeline = effectiveConfigTimeline,
-          dailyMemos = dailyMemos,
-          counts = counts
+    val days =
+      (0 until DAYS_IN_WEEK).map { offset ->
+        buildDayData(
+          DayDataContext(
+            date = cursor.plus(DatePeriod(days = offset)),
+            bounds = bounds,
+            mode = mode,
+            configTimeline = effectiveConfigTimeline,
+            dailyMemos = dailyMemos,
+            counts = counts,
+          ),
         )
-      )
-    }
+      }
     weeks.add(
       ActivityWeek(
         startDate = cursor,
         days = days,
-        weeklyCount = days.sumOf { it.count }
-      )
+        weeklyCount = days.sumOf { it.count },
+      ),
     )
     cursor = cursor.plus(DatePeriod(days = DAYS_IN_WEEK))
   }

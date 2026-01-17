@@ -1,9 +1,9 @@
 package space.be1ski.vibits.shared.test
 
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
-import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
+import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
+import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
@@ -12,7 +12,7 @@ import space.be1ski.vibits.shared.feature.preferences.domain.model.UserPreferenc
 import space.be1ski.vibits.shared.feature.preferences.domain.repository.PreferencesRepository
 
 class FakeCredentialsRepository(
-  initial: Credentials = Credentials(baseUrl = "", token = "")
+  initial: Credentials = Credentials(baseUrl = "", token = ""),
 ) : CredentialsRepository {
   var stored: Credentials = initial
     private set
@@ -28,7 +28,7 @@ class FakeCredentialsRepository(
 }
 
 class FakeMemoCache(
-  private var memos: List<Memo> = emptyList()
+  private var memos: List<Memo> = emptyList(),
 ) : MemoCache() {
   var replaceCalls: Int = 0
     private set
@@ -89,7 +89,10 @@ class FakeMemosRepository : MemosRepository {
     return cachedMemosResult
   }
 
-  override suspend fun updateMemo(name: String, content: String): Memo {
+  override suspend fun updateMemo(
+    name: String,
+    content: String,
+  ): Memo {
     updateMemoCalls += 1
     return updateMemoResult.getOrThrow()
   }
@@ -106,7 +109,7 @@ class FakeMemosRepository : MemosRepository {
 }
 
 class FakeAppModeRepository(
-  initial: AppMode = AppMode.NOT_SELECTED
+  initial: AppMode = AppMode.NOT_SELECTED,
 ) : AppModeRepository {
   var storedMode: AppMode = initial
     private set
@@ -122,7 +125,7 @@ class FakeAppModeRepository(
 }
 
 class FakePreferencesRepository(
-  initial: UserPreferences = UserPreferences(TimeRangeTab.WEEKS, TimeRangeTab.WEEKS)
+  initial: UserPreferences = UserPreferences(TimeRangeTab.WEEKS, TimeRangeTab.WEEKS),
 ) : PreferencesRepository {
   var stored: UserPreferences = initial
     private set

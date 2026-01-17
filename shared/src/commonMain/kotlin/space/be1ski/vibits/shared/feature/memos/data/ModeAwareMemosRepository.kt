@@ -17,9 +17,8 @@ class ModeAwareMemosRepository(
   private val onlineRepository: MemosRepositoryImpl,
   private val offlineRepository: OfflineMemosRepository,
   private val demoRepository: DemoMemosRepository,
-  private val memoCache: MemoCache
+  private val memoCache: MemoCache,
 ) : MemosRepository {
-
   private var lastKnownMode: AppMode? = null
 
   private fun currentRepository(): MemosRepository {
@@ -41,13 +40,12 @@ class ModeAwareMemosRepository(
     return currentRepository().cachedMemos()
   }
 
-  override suspend fun updateMemo(name: String, content: String): Memo {
-    return currentRepository().updateMemo(name, content)
-  }
+  override suspend fun updateMemo(
+    name: String,
+    content: String,
+  ): Memo = currentRepository().updateMemo(name, content)
 
-  override suspend fun createMemo(content: String): Memo {
-    return currentRepository().createMemo(content)
-  }
+  override suspend fun createMemo(content: String): Memo = currentRepository().createMemo(content)
 
   override suspend fun deleteMemo(name: String) {
     currentRepository().deleteMemo(name)

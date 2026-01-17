@@ -1,17 +1,16 @@
 package space.be1ski.vibits.shared.feature.memos.data.demo
 
+import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import kotlin.time.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
-import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 
 /**
  * In-memory repository for demo mode.
  * All changes are stored in memory and reset when demo mode is toggled.
  */
 class DemoMemosRepository : MemosRepository {
-
   private val memos = mutableListOf<Memo>()
   private var initialized = false
 
@@ -41,7 +40,10 @@ class DemoMemosRepository : MemosRepository {
     return memos.toList()
   }
 
-  override suspend fun updateMemo(name: String, content: String): Memo {
+  override suspend fun updateMemo(
+    name: String,
+    content: String,
+  ): Memo {
     ensureInitialized()
     val now = Clock.System.now()
     val index = memos.indexOfFirst { it.name == name }
@@ -59,12 +61,13 @@ class DemoMemosRepository : MemosRepository {
     ensureInitialized()
     val now = Clock.System.now()
     val name = "memos/demo_${now.toEpochMilliseconds()}_${Uuid.random()}"
-    val memo = Memo(
-      name = name,
-      content = content,
-      createTime = now,
-      updateTime = now
-    )
+    val memo =
+      Memo(
+        name = name,
+        content = content,
+        createTime = now,
+        updateTime = now,
+      )
     memos.add(0, memo)
     return memo
   }

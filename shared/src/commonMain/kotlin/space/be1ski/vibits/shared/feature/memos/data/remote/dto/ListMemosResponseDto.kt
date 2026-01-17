@@ -15,5 +15,5 @@ data class ListMemosResponseDto(
   /**
    * Token for the next page, if available.
    */
-  @SerialName("nextPageToken") val nextPageToken: String? = null
+  @SerialName("nextPageToken") val nextPageToken: String? = null,
 )

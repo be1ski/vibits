@@ -7,5 +7,5 @@ enum class TimeRangeTab {
   WEEKS,
   MONTHS,
   QUARTERS,
-  YEARS
+  YEARS,
 }

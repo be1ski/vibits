@@ -9,5 +9,5 @@ data class HabitStatus(
   /** Habit label for display. */
   val label: String,
   /** True when the habit is marked completed in a daily memo. */
-  val done: Boolean
+  val done: Boolean,
 )

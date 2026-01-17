@@ -22,7 +22,7 @@ data class StatsScreenState(
   val isRefreshing: Boolean = false,
   val enablePullRefresh: Boolean = true,
   val demoMode: Boolean = false,
-  val postsListExpanded: Boolean = false
+  val postsListExpanded: Boolean = false,
 )
 
 internal data class HabitActivitySectionState(
@@ -35,7 +35,7 @@ internal data class HabitActivitySectionState(
   val range: ActivityRange,
   val demoMode: Boolean,
   val today: LocalDate? = null,
-  val habitColor: Long? = null
+  val habitColor: Long? = null,
 )
 
 internal data class StatsScreenDerivedState(
@@ -56,5 +56,5 @@ internal data class StatsScreenDerivedState(
   val today: LocalDate,
   val timeZone: TimeZone,
   val successRateData: SuccessRateData?,
-  val periodPosts: List<Memo>
+  val periodPosts: List<Memo>,
 )

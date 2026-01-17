@@ -5,5 +5,5 @@ package space.be1ski.vibits.shared.feature.auth.domain.model
  */
 data class Credentials(
   val baseUrl: String,
-  val token: String
+  val token: String,
 )

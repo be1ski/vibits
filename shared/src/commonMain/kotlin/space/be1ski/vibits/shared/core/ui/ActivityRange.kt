@@ -9,8 +9,9 @@ import kotlinx.datetime.Month as CalendarMonth
 enum class ActivityMode {
   /** Habit completion based on #habits/daily + #habits/config. */
   HABITS,
+
   /** Raw post count per day. */
-  POSTS
+  POSTS,
 }
 
 /**
@@ -18,11 +19,24 @@ enum class ActivityMode {
  */
 sealed class ActivityRange {
   /** Fixed calendar week starting on Monday. */
-  data class Week(val startDate: LocalDate) : ActivityRange()
+  data class Week(
+    val startDate: LocalDate,
+  ) : ActivityRange()
+
   /** Fixed calendar month. */
-  data class Month(val year: Int, val month: CalendarMonth) : ActivityRange()
+  data class Month(
+    val year: Int,
+    val month: CalendarMonth,
+  ) : ActivityRange()
+
   /** Fixed calendar quarter. */
-  data class Quarter(val year: Int, val index: Int) : ActivityRange()
+  data class Quarter(
+    val year: Int,
+    val index: Int,
+  ) : ActivityRange()
+
   /** Fixed calendar year. */
-  data class Year(val year: Int) : ActivityRange()
+  data class Year(
+    val year: Int,
+  ) : ActivityRange()
 }

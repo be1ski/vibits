@@ -11,9 +11,14 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 2
 
+# ktlint configuration
+ktlint_function_naming_ignore_when_annotated_with = Composable, Preview
+ktlint_standard_function-expression-body = disabled
+
 # Kotlin style conventions (not enforced by EditorConfig):
 # - Enum constants: SCREAMING_SNAKE_CASE (e.g., NOT_SELECTED, ONLINE)
 # - Sealed class subclasses: PascalCase (e.g., Success, Error)
+# - @Composable functions: PascalCase
 
 [*.{xml,json,yaml,yml}]
 indent_style = space

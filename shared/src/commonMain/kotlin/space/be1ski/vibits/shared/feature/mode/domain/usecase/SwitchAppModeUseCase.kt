@@ -9,7 +9,7 @@ import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeReposito
  */
 class SwitchAppModeUseCase(
   private val appModeRepository: AppModeRepository,
-  private val modeAwareMemosRepository: ModeAwareMemosRepository
+  private val modeAwareMemosRepository: ModeAwareMemosRepository,
 ) {
   suspend operator fun invoke(mode: AppMode) {
     val currentMode = appModeRepository.loadMode()

@@ -15,5 +15,5 @@ data class MemosUseCases(
   val saveCredentials: SaveCredentialsUseCase,
   val createMemo: CreateMemoUseCase,
   val updateMemo: UpdateMemoUseCase,
-  val deleteMemo: DeleteMemoUseCase
+  val deleteMemo: DeleteMemoUseCase,
 )

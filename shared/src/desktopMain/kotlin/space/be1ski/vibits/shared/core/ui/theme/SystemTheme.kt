@@ -19,9 +19,10 @@ actual fun rememberSystemDarkTheme(): Boolean {
   LaunchedEffect(Unit) {
     while (true) {
       delay(THEME_POLL_INTERVAL_MS)
-      val currentIsDark = withContext(Dispatchers.IO) {
-        isSystemInDarkThemeDesktop()
-      }
+      val currentIsDark =
+        withContext(Dispatchers.IO) {
+          isSystemInDarkThemeDesktop()
+        }
       if (currentIsDark != isDark) {
         isDark = currentIsDark
       }
@@ -34,9 +35,7 @@ actual fun rememberSystemDarkTheme(): Boolean {
 // Cached value for initial composition (avoid blocking UI)
 private var cachedDarkTheme: Boolean? = null
 
-private fun isSystemInDarkThemeDesktopCached(): Boolean {
-  return cachedDarkTheme ?: isSystemInDarkThemeDesktop().also { cachedDarkTheme = it }
-}
+private fun isSystemInDarkThemeDesktopCached(): Boolean = cachedDarkTheme ?: isSystemInDarkThemeDesktop().also { cachedDarkTheme = it }
 
 private fun isSystemInDarkThemeDesktop(): Boolean {
   val osName = System.getProperty("os.name", "").lowercase()
@@ -47,28 +46,35 @@ private fun isSystemInDarkThemeDesktop(): Boolean {
   }
 }
 
-private fun isMacOsDarkTheme(): Boolean {
-  return try {
-    val process = Runtime.getRuntime().exec(
-      arrayOf("defaults", "read", "-g", "AppleInterfaceStyle")
-    )
-    val result = process.inputStream.bufferedReader().readText().trim()
+private fun isMacOsDarkTheme(): Boolean =
+  try {
+    val process =
+      Runtime.getRuntime().exec(
+        arrayOf("defaults", "read", "-g", "AppleInterfaceStyle"),
+      )
+    val result =
+      process.inputStream
+        .bufferedReader()
+        .readText()
+        .trim()
     process.waitFor()
     result.equals("Dark", ignoreCase = true)
   } catch (_: Exception) {
     false
   }
-}
 
-private fun isWindowsDarkTheme(): Boolean {
-  return try {
-    val process = Runtime.getRuntime().exec(
-      arrayOf(
-        "reg", "query",
-        "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
-        "/v", "AppsUseLightTheme"
+private fun isWindowsDarkTheme(): Boolean =
+  try {
+    val process =
+      Runtime.getRuntime().exec(
+        arrayOf(
+          "reg",
+          "query",
+          "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+          "/v",
+          "AppsUseLightTheme",
+        ),
       )
-    )
     val result = process.inputStream.bufferedReader().readText()
     process.waitFor()
     // AppsUseLightTheme = 0 means dark mode
@@ -76,7 +82,6 @@ private fun isWindowsDarkTheme(): Boolean {
   } catch (_: Exception) {
     false
   }
-}
 
 private fun isLinuxDarkTheme(): Boolean {
   return try {
@@ -87,10 +92,15 @@ private fun isLinuxDarkTheme(): Boolean {
     }
 
     // Try gsettings for GNOME
-    val process = Runtime.getRuntime().exec(
-      arrayOf("gsettings", "get", "org.gnome.desktop.interface", "color-scheme")
-    )
-    val result = process.inputStream.bufferedReader().readText().trim()
+    val process =
+      Runtime.getRuntime().exec(
+        arrayOf("gsettings", "get", "org.gnome.desktop.interface", "color-scheme"),
+      )
+    val result =
+      process.inputStream
+        .bufferedReader()
+        .readText()
+        .trim()
     process.waitFor()
     result.contains("dark")
   } catch (_: Exception) {

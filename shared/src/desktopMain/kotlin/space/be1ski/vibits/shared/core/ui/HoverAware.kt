@@ -9,8 +9,7 @@ import androidx.compose.ui.input.pointer.onPointerEvent
  * Desktop hover handling for charts.
  */
 @OptIn(ExperimentalComposeUiApi::class)
-actual fun Modifier.hoverAware(onHoverChange: (Boolean) -> Unit): Modifier {
-  return this
+actual fun Modifier.hoverAware(onHoverChange: (Boolean) -> Unit): Modifier =
+  this
     .onPointerEvent(PointerEventType.Enter) { onHoverChange(true) }
     .onPointerEvent(PointerEventType.Exit) { onHoverChange(false) }
-}

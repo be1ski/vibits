@@ -10,13 +10,9 @@ internal const val FIRST_QUARTER_INDEX = 1
 /**
  * Returns the quarter index (1-4) for a given date.
  */
-internal fun quarterIndex(date: LocalDate): Int {
-  return date.month.ordinal / MONTHS_IN_QUARTER + FIRST_QUARTER_INDEX
-}
+internal fun quarterIndex(date: LocalDate): Int = date.month.ordinal / MONTHS_IN_QUARTER + FIRST_QUARTER_INDEX
 
 /**
  * Returns the quarter index (1-4) for a given month.
  */
-internal fun quarterIndex(month: Month): Int {
-  return month.ordinal / MONTHS_IN_QUARTER + FIRST_QUARTER_INDEX
-}
+internal fun quarterIndex(month: Month): Int = month.ordinal / MONTHS_IN_QUARTER + FIRST_QUARTER_INDEX

@@ -8,7 +8,11 @@ import kotlinx.serialization.json.Json
  */
 actual class OfflineMemoStorage {
   private val storageKey = "memos_offline_data"
-  private val json = Json { ignoreUnknownKeys = true; prettyPrint = true }
+  private val json =
+    Json {
+      ignoreUnknownKeys = true
+      prettyPrint = true
+    }
 
   actual fun load(): OfflineMemosFileDto {
     return runCatching {

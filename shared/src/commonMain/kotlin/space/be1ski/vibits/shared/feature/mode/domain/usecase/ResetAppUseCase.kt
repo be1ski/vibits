@@ -20,7 +20,7 @@ class ResetAppUseCase(
   private val memoCache: MemoCache,
   private val credentialsRepository: CredentialsRepository,
   private val preferencesRepository: PreferencesRepository,
-  private val demoMemosRepository: DemoMemosRepository
+  private val demoMemosRepository: DemoMemosRepository,
 ) {
   suspend operator fun invoke() {
     memoCache.clear()

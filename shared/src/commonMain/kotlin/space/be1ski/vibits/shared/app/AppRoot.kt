@@ -28,12 +28,12 @@ fun AppRoot() {
           onModeSelected = { selectedMode ->
             saveAppModeUseCase(selectedMode)
             appMode = selectedMode
-          }
+          },
         )
       }
       AppMode.ONLINE, AppMode.OFFLINE, AppMode.DEMO -> {
         VibitsApp(
-          onResetApp = { appMode = AppMode.NOT_SELECTED }
+          onResetApp = { appMode = AppMode.NOT_SELECTED },
         )
       }
     }

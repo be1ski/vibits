@@ -10,5 +10,5 @@ data class CreateMemoRequestDto(
   /**
    * Memo content.
    */
-  val content: String
+  val content: String,
 )

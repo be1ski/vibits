@@ -4,12 +4,9 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
 
 class AppModeRepositoryImpl(
-  private val store: AppModeStore
+  private val store: AppModeStore,
 ) : AppModeRepository {
-
-  override fun loadMode(): AppMode {
-    return store.load().mode
-  }
+  override fun loadMode(): AppMode = store.load().mode
 
   override fun saveMode(mode: AppMode) {
     store.save(LocalAppMode(mode = mode))

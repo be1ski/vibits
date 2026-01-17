@@ -5,5 +5,5 @@ package space.be1ski.vibits.shared.feature.preferences.domain.model
  */
 data class UserPreferences(
   val habitsTimeRangeTab: TimeRangeTab,
-  val postsTimeRangeTab: TimeRangeTab
+  val postsTimeRangeTab: TimeRangeTab,
 )

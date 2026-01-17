@@ -20,14 +20,14 @@ val LocalDarkTheme = compositionLocalOf { false }
 @Composable
 fun VibitsTheme(
   darkTheme: Boolean = rememberSystemDarkTheme(),
-  content: @Composable () -> Unit
+  content: @Composable () -> Unit,
 ) {
   val colorScheme = if (darkTheme) darkColorScheme() else lightColorScheme()
 
   CompositionLocalProvider(LocalDarkTheme provides darkTheme) {
     MaterialTheme(
       colorScheme = colorScheme,
-      content = content
+      content = content,
     )
   }
 }

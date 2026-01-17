@@ -7,5 +7,5 @@ data class DailyMemoInfo(
   /** Memo resource name. */
   val name: String,
   /** Memo content. */
-  val content: String
+  val content: String,
 )

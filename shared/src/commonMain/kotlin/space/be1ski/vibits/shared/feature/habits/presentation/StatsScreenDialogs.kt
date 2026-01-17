@@ -31,7 +31,7 @@ import space.be1ski.vibits.shared.title_update_day
 @Composable
 internal fun HabitEditorDialog(
   derived: StatsScreenDerivedState,
-  dispatch: (HabitsAction) -> Unit
+  dispatch: (HabitsAction) -> Unit,
 ) {
   val habitsState = derived.habitsState
   val demoMode = derived.state.demoMode
@@ -46,12 +46,16 @@ internal fun HabitEditorDialog(
     },
     text = { HabitEditorContent(habitsState, demoMode, dispatch) },
     confirmButton = { HabitEditorConfirmButton(habitsState, dispatch) },
-    dismissButton = { HabitEditorDismissButton(habitsState, dispatch) }
+    dismissButton = { HabitEditorDismissButton(habitsState, dispatch) },
   )
 }
 
 @Composable
-private fun HabitEditorContent(habitsState: HabitsState, demoMode: Boolean, dispatch: (HabitsAction) -> Unit) {
+private fun HabitEditorContent(
+  habitsState: HabitsState,
+  demoMode: Boolean,
+  dispatch: (HabitsAction) -> Unit,
+) {
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
     if (habitsState.editorConfig.isNotEmpty()) {
       habitsState.editorConfig.forEach { habit ->
@@ -62,7 +66,7 @@ private fun HabitEditorContent(habitsState: HabitsState, demoMode: Boolean, disp
             checked = done,
             onCheckedChange = { checked ->
               dispatch(HabitsAction.ToggleHabit(tag, checked))
-            }
+            },
           )
           Text(habit.localizedLabel(demoMode), style = MaterialTheme.typography.bodySmall)
         }
@@ -74,7 +78,7 @@ private fun HabitEditorContent(habitsState: HabitsState, demoMode: Boolean, disp
             checked = done,
             onCheckedChange = { checked ->
               dispatch(HabitsAction.ToggleHabit(tag, checked))
-            }
+            },
           )
           Text(tag, style = MaterialTheme.typography.bodySmall)
         }
@@ -87,7 +91,10 @@ private fun HabitEditorContent(habitsState: HabitsState, demoMode: Boolean, disp
 }
 
 @Composable
-private fun HabitEditorConfirmButton(habitsState: HabitsState, dispatch: (HabitsAction) -> Unit) {
+private fun HabitEditorConfirmButton(
+  habitsState: HabitsState,
+  dispatch: (HabitsAction) -> Unit,
+) {
   Button(onClick = { dispatch(HabitsAction.ConfirmEditor) }) {
     val actionRes = if (habitsState.isEditing) Res.string.action_update else Res.string.action_create
     Text(stringResource(actionRes))
@@ -95,7 +102,10 @@ private fun HabitEditorConfirmButton(habitsState: HabitsState, dispatch: (Habits
 }
 
 @Composable
-private fun HabitEditorDismissButton(habitsState: HabitsState, dispatch: (HabitsAction) -> Unit) {
+private fun HabitEditorDismissButton(
+  habitsState: HabitsState,
+  dispatch: (HabitsAction) -> Unit,
+) {
   Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs)) {
     if (habitsState.isEditing) {
       TextButton(onClick = { dispatch(HabitsAction.RequestDelete) }) {
@@ -111,7 +121,7 @@ private fun HabitEditorDismissButton(habitsState: HabitsState, dispatch: (Habits
 @Composable
 internal fun EmptyDeleteDialog(
   derived: StatsScreenDerivedState,
-  dispatch: (HabitsAction) -> Unit
+  dispatch: (HabitsAction) -> Unit,
 ) {
   val habitsState = derived.habitsState
   if (!habitsState.showDeleteConfirm) {
@@ -130,7 +140,7 @@ internal fun EmptyDeleteDialog(
       TextButton(onClick = { dispatch(HabitsAction.CancelDelete) }) {
         Text(stringResource(Res.string.action_cancel))
       }
-    }
+    },
   )
 }
 
@@ -138,7 +148,7 @@ internal fun EmptyDeleteDialog(
 @Composable
 internal fun SingleHabitToggleDialog(
   derived: StatsScreenDerivedState,
-  dispatch: (HabitsAction) -> Unit
+  dispatch: (HabitsAction) -> Unit,
 ) {
   val habitsState = derived.habitsState
   val day = habitsState.singleToggleDay ?: return
@@ -172,6 +182,6 @@ internal fun SingleHabitToggleDialog(
       TextButton(onClick = { dispatch(HabitsAction.CancelSingleHabitToggle) }) {
         Text(stringResource(Res.string.action_cancel))
       }
-    }
+    },
   )
 }

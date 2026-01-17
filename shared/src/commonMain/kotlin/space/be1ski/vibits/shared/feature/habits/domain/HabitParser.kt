@@ -17,25 +17,26 @@ fun parseHabitConfigLine(line: String): HabitConfig? {
   if (parts.isEmpty()) {
     return null
   }
-  val (label, tagRaw, color) = when (parts.size) {
-    1 -> {
-      val raw = parts.first()
-      val tag = normalizeHabitTag(raw)
-      val lbl = if (raw.startsWith("#habits/") || raw.startsWith("#habit/")) labelFromTag(tag) else raw
-      Triple(lbl, tag, DEFAULT_HABIT_COLOR)
+  val (label, tagRaw, color) =
+    when (parts.size) {
+      1 -> {
+        val raw = parts.first()
+        val tag = normalizeHabitTag(raw)
+        val lbl = if (raw.startsWith("#habits/") || raw.startsWith("#habit/")) labelFromTag(tag) else raw
+        Triple(lbl, tag, DEFAULT_HABIT_COLOR)
+      }
+      2 -> {
+        val lbl = parts[0]
+        val tag = normalizeHabitTag(parts[1])
+        Triple(lbl, tag, DEFAULT_HABIT_COLOR)
+      }
+      else -> {
+        val lbl = parts[0]
+        val tag = normalizeHabitTag(parts[1])
+        val clr = parseHexColor(parts[2]) ?: DEFAULT_HABIT_COLOR
+        Triple(lbl, tag, clr)
+      }
     }
-    2 -> {
-      val lbl = parts[0]
-      val tag = normalizeHabitTag(parts[1])
-      Triple(lbl, tag, DEFAULT_HABIT_COLOR)
-    }
-    else -> {
-      val lbl = parts[0]
-      val tag = normalizeHabitTag(parts[1])
-      val clr = parseHexColor(parts[2]) ?: DEFAULT_HABIT_COLOR
-      Triple(lbl, tag, clr)
-    }
-  }
   return HabitConfig(tag = tagRaw, label = label, color = color)
 }
 
@@ -75,19 +76,21 @@ fun normalizeHabitTag(raw: String): String {
 /**
  * Extracts a human-readable label from a habit tag.
  */
-fun labelFromTag(tag: String): String {
-  return tag.removePrefix("#habits/").removePrefix("#habit/").replace('_', ' ')
-}
+fun labelFromTag(tag: String): String = tag.removePrefix("#habits/").removePrefix("#habit/").replace('_', ' ')
 
 /**
  * Builds habit statuses for a day given the memo content and habit configurations.
  */
-fun buildHabitStatuses(content: String?, habits: List<HabitConfig>): List<HabitStatus> {
-  val done = if (content.isNullOrBlank()) {
-    emptySet()
-  } else {
-    extractCompletedHabits(content, habits.map { it.tag }.toSet())
-  }
+fun buildHabitStatuses(
+  content: String?,
+  habits: List<HabitConfig>,
+): List<HabitStatus> {
+  val done =
+    if (content.isNullOrBlank()) {
+      emptySet()
+    } else {
+      extractCompletedHabits(content, habits.map { it.tag }.toSet())
+    }
   return if (habits.isEmpty()) {
     emptyList()
   } else {
@@ -101,7 +104,10 @@ fun buildHabitStatuses(content: String?, habits: List<HabitConfig>): List<HabitS
  * Extracts completed habits from memo content.
  * Supports both checkbox format and plain tag format.
  */
-fun extractCompletedHabits(content: String, habits: Set<String>): Set<String> {
+fun extractCompletedHabits(
+  content: String,
+  habits: Set<String>,
+): Set<String> {
   val done = mutableSetOf<String>()
   val lines = content.lineSequence()
   val checkboxRegex = Regex("^\\s*[-*]\\s*\\[(x|X)\\]\\s+(.+)$")

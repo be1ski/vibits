@@ -14,15 +14,18 @@ private const val MONTHS_IN_YEAR = 12
  * Handles navigation and comparison of activity ranges.
  */
 class NavigateActivityRangeUseCase {
-
   /**
    * Shifts an activity range by [delta] units (positive = forward, negative = backward).
    */
-  operator fun invoke(range: ActivityRange, delta: Int): ActivityRange {
-    return when (range) {
-      is ActivityRange.Week -> range.copy(
-        startDate = range.startDate.plus(DatePeriod(days = delta * DAYS_IN_WEEK))
-      )
+  operator fun invoke(
+    range: ActivityRange,
+    delta: Int,
+  ): ActivityRange =
+    when (range) {
+      is ActivityRange.Week ->
+        range.copy(
+          startDate = range.startDate.plus(DatePeriod(days = delta * DAYS_IN_WEEK)),
+        )
       is ActivityRange.Month -> {
         val start = LocalDate(range.year, range.month, 1)
         val shifted = start.plus(DatePeriod(months = delta))
@@ -36,59 +39,75 @@ class NavigateActivityRangeUseCase {
       }
       is ActivityRange.Year -> ActivityRange.Year(range.year + delta)
     }
-  }
 
   /**
    * Checks if [range] is before [other].
    */
-  fun isBefore(range: ActivityRange, other: ActivityRange): Boolean {
-    return when (range) {
-      is ActivityRange.Week -> other is ActivityRange.Week &&
-        range.startDate < other.startDate
-      is ActivityRange.Month -> other is ActivityRange.Month &&
-        compareYearMonth(range.year, range.month, other.year, other.month) < 0
-      is ActivityRange.Quarter -> other is ActivityRange.Quarter &&
-        compareYearQuarter(range.year, range.index, other.year, other.index) < 0
+  fun isBefore(
+    range: ActivityRange,
+    other: ActivityRange,
+  ): Boolean =
+    when (range) {
+      is ActivityRange.Week ->
+        other is ActivityRange.Week &&
+          range.startDate < other.startDate
+      is ActivityRange.Month ->
+        other is ActivityRange.Month &&
+          compareYearMonth(range.year, range.month, other.year, other.month) < 0
+      is ActivityRange.Quarter ->
+        other is ActivityRange.Quarter &&
+          compareYearQuarter(range.year, range.index, other.year, other.index) < 0
       is ActivityRange.Year -> other is ActivityRange.Year && range.year < other.year
     }
-  }
 
   /**
    * Calculates the number of periods between [from] and [to].
    * Returns positive if [to] is after [from], negative otherwise.
    */
-  fun calculateDelta(from: ActivityRange, to: ActivityRange): Int = when (from) {
-    is ActivityRange.Week -> if (to is ActivityRange.Week) {
-      (to.startDate.toEpochDays() - from.startDate.toEpochDays()).toInt() / DAYS_IN_WEEK
-    } else 0
-    is ActivityRange.Month -> if (to is ActivityRange.Month) {
-      (to.year - from.year) * MONTHS_IN_YEAR + (to.month.ordinal - from.month.ordinal)
-    } else 0
-    is ActivityRange.Quarter -> if (to is ActivityRange.Quarter) {
-      (to.year - from.year) * QUARTERS_IN_YEAR + (to.index - from.index)
-    } else 0
-    is ActivityRange.Year -> if (to is ActivityRange.Year) {
-      to.year - from.year
-    } else 0
-  }
+  fun calculateDelta(
+    from: ActivityRange,
+    to: ActivityRange,
+  ): Int =
+    when (from) {
+      is ActivityRange.Week ->
+        if (to is ActivityRange.Week) {
+          (to.startDate.toEpochDays() - from.startDate.toEpochDays()).toInt() / DAYS_IN_WEEK
+        } else {
+          0
+        }
+      is ActivityRange.Month ->
+        if (to is ActivityRange.Month) {
+          (to.year - from.year) * MONTHS_IN_YEAR + (to.month.ordinal - from.month.ordinal)
+        } else {
+          0
+        }
+      is ActivityRange.Quarter ->
+        if (to is ActivityRange.Quarter) {
+          (to.year - from.year) * QUARTERS_IN_YEAR + (to.index - from.index)
+        } else {
+          0
+        }
+      is ActivityRange.Year ->
+        if (to is ActivityRange.Year) {
+          to.year - from.year
+        } else {
+          0
+        }
+    }
 
   private fun compareYearMonth(
     year: Int,
     month: Month,
     otherYear: Int,
-    otherMonth: Month
-  ): Int {
-    return if (year != otherYear) year - otherYear else month.ordinal - otherMonth.ordinal
-  }
+    otherMonth: Month,
+  ): Int = if (year != otherYear) year - otherYear else month.ordinal - otherMonth.ordinal
 
   private fun compareYearQuarter(
     year: Int,
     quarter: Int,
     otherYear: Int,
-    otherQuarter: Int
-  ): Int {
-    return if (year != otherYear) year - otherYear else quarter - otherQuarter
-  }
+    otherQuarter: Int,
+  ): Int = if (year != otherYear) year - otherYear else quarter - otherQuarter
 
   @Suppress("SameParameterValue") // Standard math utility, kept generic for clarity
   private fun floorDiv(value: Int, divisor: Int): Int {

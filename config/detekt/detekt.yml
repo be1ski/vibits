@@ -8,6 +8,9 @@ naming:
       - Preview
 
 style:
+  MaxLineLength:
+    active: true
+    maxLineLength: 140
   UnusedPrivateMember:
     active: true
     ignoreAnnotated:

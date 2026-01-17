@@ -4,5 +4,5 @@ enum class AppMode {
   ONLINE,
   OFFLINE,
   DEMO,
-  NOT_SELECTED
+  NOT_SELECTED,
 }

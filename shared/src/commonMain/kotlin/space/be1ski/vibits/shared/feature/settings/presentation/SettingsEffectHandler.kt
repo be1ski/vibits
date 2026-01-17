@@ -7,38 +7,44 @@ import space.be1ski.vibits.shared.core.elm.EffectHandler
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 
 class SettingsEffectHandler(
-  private val useCases: SettingsUseCases
+  private val useCases: SettingsUseCases,
 ) : EffectHandler<SettingsEffect, SettingsAction> {
+  override fun invoke(effect: SettingsEffect): Flow<SettingsAction> =
+    when (effect) {
+      is SettingsEffect.ValidateCredentials -> handleValidateCredentials(effect)
+      is SettingsEffect.SwitchMode -> handleSwitchMode(effect)
+      is SettingsEffect.SaveCredentials -> handleSaveCredentials(effect)
+      is SettingsEffect.ResetApp -> handleResetApp()
+      // Parent notification effects are not handled here - they flow through to VibitsApp
+      is SettingsEffect.NotifyModeChanged,
+      is SettingsEffect.NotifyResetCompleted,
+      is SettingsEffect.NotifyCredentialsSaved,
+      is SettingsEffect.NotifyDialogClosed,
+      -> emptyFlow()
+    }
 
-  override fun invoke(effect: SettingsEffect): Flow<SettingsAction> = when (effect) {
-    is SettingsEffect.ValidateCredentials -> handleValidateCredentials(effect)
-    is SettingsEffect.SwitchMode -> handleSwitchMode(effect)
-    is SettingsEffect.SaveCredentials -> handleSaveCredentials(effect)
-    is SettingsEffect.ResetApp -> handleResetApp()
-    // Parent notification effects are not handled here - they flow through to VibitsApp
-    is SettingsEffect.NotifyModeChanged,
-    is SettingsEffect.NotifyResetCompleted,
-    is SettingsEffect.NotifyCredentialsSaved,
-    is SettingsEffect.NotifyDialogClosed -> emptyFlow()
-  }
+  private fun handleValidateCredentials(effect: SettingsEffect.ValidateCredentials): Flow<SettingsAction> =
+    flow {
+      useCases
+        .validateCredentials(effect.baseUrl, effect.token)
+        .onSuccess { emit(SettingsAction.ValidationSucceeded) }
+        .onFailure { emit(SettingsAction.ValidationFailed("connection_failed")) }
+    }
 
-  private fun handleValidateCredentials(effect: SettingsEffect.ValidateCredentials): Flow<SettingsAction> = flow {
-    useCases.validateCredentials(effect.baseUrl, effect.token)
-      .onSuccess { emit(SettingsAction.ValidationSucceeded) }
-      .onFailure { emit(SettingsAction.ValidationFailed("connection_failed")) }
-  }
+  private fun handleSwitchMode(effect: SettingsEffect.SwitchMode): Flow<SettingsAction> =
+    flow {
+      useCases.switchAppMode(effect.mode)
+      emit(SettingsAction.ModeSwitched)
+    }
 
-  private fun handleSwitchMode(effect: SettingsEffect.SwitchMode): Flow<SettingsAction> = flow {
-    useCases.switchAppMode(effect.mode)
-    emit(SettingsAction.ModeSwitched)
-  }
+  private fun handleSaveCredentials(effect: SettingsEffect.SaveCredentials): Flow<SettingsAction> =
+    flow {
+      useCases.saveCredentials(Credentials(effect.baseUrl, effect.token))
+    }
 
-  private fun handleSaveCredentials(effect: SettingsEffect.SaveCredentials): Flow<SettingsAction> = flow {
-    useCases.saveCredentials(Credentials(effect.baseUrl, effect.token))
-  }
-
-  private fun handleResetApp(): Flow<SettingsAction> = flow {
-    useCases.resetApp()
-    emit(SettingsAction.ResetCompleted)
-  }
+  private fun handleResetApp(): Flow<SettingsAction> =
+    flow {
+      useCases.resetApp()
+      emit(SettingsAction.ResetCompleted)
+    }
 }

@@ -21,25 +21,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import space.be1ski.vibits.shared.core.ui.theme.AppColors
-import space.be1ski.vibits.shared.core.ui.theme.resolve
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.plus
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.Res
-import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
-import space.be1ski.vibits.shared.time_months
 import space.be1ski.vibits.shared.action_next
+import space.be1ski.vibits.shared.action_previous
+import space.be1ski.vibits.shared.core.platform.LocalDateFormatter
+import space.be1ski.vibits.shared.core.platform.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.Indent
-import space.be1ski.vibits.shared.action_previous
+import space.be1ski.vibits.shared.core.ui.theme.AppColors
+import space.be1ski.vibits.shared.core.ui.theme.resolve
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
+import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
+import space.be1ski.vibits.shared.time_months
 import space.be1ski.vibits.shared.time_quarters
 import space.be1ski.vibits.shared.time_weeks
 import space.be1ski.vibits.shared.time_years
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
-import space.be1ski.vibits.shared.core.platform.LocalDateFormatter
-import space.be1ski.vibits.shared.core.platform.currentLocalDate
-import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.plus
 
 private val navigateActivityRangeUseCase = NavigateActivityRangeUseCase()
 private const val WEEK_END_OFFSET = 6
@@ -53,29 +52,29 @@ internal fun TimeRangeControls(
   minRange: ActivityRange?,
   successRate: Float? = null,
   onTabChange: (TimeRangeTab) -> Unit,
-  onRangeChange: (ActivityRange) -> Unit
+  onRangeChange: (ActivityRange) -> Unit,
 ) {
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
     PrimaryScrollableTabRow(selectedTabIndex = selectedTab.ordinal, edgePadding = 0.dp) {
       Tab(
         selected = selectedTab == TimeRangeTab.WEEKS,
         onClick = { onTabChange(TimeRangeTab.WEEKS) },
-        text = { Text(stringResource(Res.string.time_weeks)) }
+        text = { Text(stringResource(Res.string.time_weeks)) },
       )
       Tab(
         selected = selectedTab == TimeRangeTab.MONTHS,
         onClick = { onTabChange(TimeRangeTab.MONTHS) },
-        text = { Text(stringResource(Res.string.time_months)) }
+        text = { Text(stringResource(Res.string.time_months)) },
       )
       Tab(
         selected = selectedTab == TimeRangeTab.QUARTERS,
         onClick = { onTabChange(TimeRangeTab.QUARTERS) },
-        text = { Text(stringResource(Res.string.time_quarters)) }
+        text = { Text(stringResource(Res.string.time_quarters)) },
       )
       Tab(
         selected = selectedTab == TimeRangeTab.YEARS,
         onClick = { onTabChange(TimeRangeTab.YEARS) },
-        text = { Text(stringResource(Res.string.time_years)) }
+        text = { Text(stringResource(Res.string.time_years)) },
       )
     }
     TimeRangeNavigator(
@@ -83,7 +82,7 @@ internal fun TimeRangeControls(
       currentRange = currentRange,
       minRange = minRange,
       successRate = successRate,
-      onRangeChange = onRangeChange
+      onRangeChange = onRangeChange,
     )
   }
 }
@@ -94,25 +93,25 @@ private fun TimeRangeNavigator(
   currentRange: ActivityRange,
   minRange: ActivityRange?,
   successRate: Float?,
-  onRangeChange: (ActivityRange) -> Unit
+  onRangeChange: (ActivityRange) -> Unit,
 ) {
   val label = rangeLabel(selectedRange)
   val canGoForward = isBeforeRange(selectedRange, currentRange)
   val canGoBack = minRange?.let { isBeforeRange(it, selectedRange) } ?: true
   Box(
     modifier = Modifier.fillMaxWidth(),
-    contentAlignment = Alignment.Center
+    contentAlignment = Alignment.Center,
   ) {
     IconButton(
       onClick = { onRangeChange(shiftRange(selectedRange, -1)) },
       enabled = canGoBack,
-      modifier = Modifier.align(Alignment.CenterStart)
+      modifier = Modifier.align(Alignment.CenterStart),
     ) {
       Icon(imageVector = Icons.Filled.ChevronLeft, contentDescription = stringResource(Res.string.action_previous))
     }
     Row(
       horizontalArrangement = Arrangement.spacedBy(Indent.s),
-      verticalAlignment = Alignment.CenterVertically
+      verticalAlignment = Alignment.CenterVertically,
     ) {
       Text(label, style = MaterialTheme.typography.titleSmall)
       successRate?.let { rate ->
@@ -122,7 +121,7 @@ private fun TimeRangeNavigator(
     IconButton(
       onClick = { onRangeChange(shiftRange(selectedRange, 1)) },
       enabled = canGoForward,
-      modifier = Modifier.align(Alignment.CenterEnd)
+      modifier = Modifier.align(Alignment.CenterEnd),
     ) {
       Icon(imageVector = Icons.Filled.ChevronRight, contentDescription = stringResource(Res.string.action_next))
     }
@@ -144,29 +143,35 @@ private fun rangeLabel(range: ActivityRange): String {
   }
 }
 
-private fun isBeforeRange(selectedRange: ActivityRange, currentRange: ActivityRange): Boolean =
-  navigateActivityRangeUseCase.isBefore(selectedRange, currentRange)
+private fun isBeforeRange(
+  selectedRange: ActivityRange,
+  currentRange: ActivityRange,
+): Boolean = navigateActivityRangeUseCase.isBefore(selectedRange, currentRange)
 
-private fun shiftRange(range: ActivityRange, delta: Int): ActivityRange =
-  navigateActivityRangeUseCase(range, delta)
+private fun shiftRange(
+  range: ActivityRange,
+  delta: Int,
+): ActivityRange = navigateActivityRangeUseCase(range, delta)
 
 @Composable
 private fun SuccessRateBadge(rate: Float) {
   val percent = (rate * PERCENT_MULTIPLIER).toInt()
-  val color = when {
-    rate >= GREEN_THRESHOLD -> AppColors.statusGreen.resolve()
-    rate >= YELLOW_THRESHOLD -> AppColors.statusYellow.resolve()
-    else -> AppColors.statusRed.resolve()
-  }
+  val color =
+    when {
+      rate >= GREEN_THRESHOLD -> AppColors.statusGreen.resolve()
+      rate >= YELLOW_THRESHOLD -> AppColors.statusYellow.resolve()
+      else -> AppColors.statusRed.resolve()
+    }
   Box(
-    modifier = Modifier
-      .background(color.copy(alpha = BADGE_ALPHA), RoundedCornerShape(BADGE_CORNER_RADIUS))
-      .padding(horizontal = BADGE_PADDING_H, vertical = BADGE_PADDING_V)
+    modifier =
+      Modifier
+        .background(color.copy(alpha = BADGE_ALPHA), RoundedCornerShape(BADGE_CORNER_RADIUS))
+        .padding(horizontal = BADGE_PADDING_H, vertical = BADGE_PADDING_V),
   ) {
     Text(
       text = "$percent%",
       style = MaterialTheme.typography.labelSmall,
-      color = color
+      color = color,
     )
   }
 }

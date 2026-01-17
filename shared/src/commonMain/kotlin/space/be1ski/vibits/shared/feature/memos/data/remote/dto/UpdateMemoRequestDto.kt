@@ -10,5 +10,5 @@ data class UpdateMemoRequestDto(
   /**
    * Updated memo content.
    */
-  val content: String
+  val content: String,
 )

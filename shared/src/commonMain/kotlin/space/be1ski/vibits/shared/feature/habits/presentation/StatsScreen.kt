@@ -11,18 +11,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.TimeZone
 import org.koin.compose.koinInject
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
+import space.be1ski.vibits.shared.core.platform.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.Indent
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.GetPeriodPostsUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.components.HabitsConfigDialog
 import space.be1ski.vibits.shared.feature.habits.presentation.components.findDailyMemoForDate
 import space.be1ski.vibits.shared.feature.habits.presentation.components.habitsConfigForDate
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberHabitsConfigTimeline
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.CountDailyPostsUseCase
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.GetPeriodPostsUseCase
-import space.be1ski.vibits.shared.core.platform.currentLocalDate
 
 /**
  * Stats tab with activity charts.
@@ -33,7 +32,7 @@ fun StatsScreen(
   habitsState: HabitsState = HabitsState(),
   onHabitsAction: (HabitsAction) -> Unit = {},
   onPostsListExpandedChange: (Boolean) -> Unit = {},
-  calculateSuccessRate: CalculateSuccessRateUseCase = koinInject()
+  calculateSuccessRate: CalculateSuccessRateUseCase = koinInject(),
 ) {
   val derived = rememberStatsScreenDerived(state, habitsState, calculateSuccessRate)
   StatsScreenContent(derived, onHabitsAction, onPostsListExpandedChange)
@@ -45,59 +44,72 @@ fun StatsScreen(
 private fun rememberStatsScreenDerived(
   state: StatsScreenState,
   habitsState: HabitsState,
-  calculateSuccessRate: CalculateSuccessRateUseCase
+  calculateSuccessRate: CalculateSuccessRateUseCase,
 ): StatsScreenDerivedState {
   val memos = state.memos
   val range = state.range
   val activityMode = state.activityMode
   val habitsConfigTimeline = rememberHabitsConfigTimeline(memos)
-  val currentHabitsConfig = remember(habitsConfigTimeline) {
-    habitsConfigTimeline.lastOrNull()?.habits ?: emptyList()
-  }
+  val currentHabitsConfig =
+    remember(habitsConfigTimeline) {
+      habitsConfigTimeline.lastOrNull()?.habits ?: emptyList()
+    }
   val timeZone = remember { TimeZone.currentSystemDefault() }
   val today = remember { currentLocalDate() }
-  val todayMemo = remember(memos, timeZone, today) {
-    findDailyMemoForDate(memos, timeZone, today)
-  }
-  val todayConfig = remember(habitsConfigTimeline, today) {
-    habitsConfigForDate(habitsConfigTimeline, today)?.habits.orEmpty()
-  }
-  val todayDay = remember(todayConfig, todayMemo, today) {
-    buildHabitDay(
-      date = today,
-      habitsConfig = todayConfig,
-      dailyMemo = todayMemo
-    )
-  }
+  val todayMemo =
+    remember(memos, timeZone, today) {
+      findDailyMemoForDate(memos, timeZone, today)
+    }
+  val todayConfig =
+    remember(habitsConfigTimeline, today) {
+      habitsConfigForDate(habitsConfigTimeline, today)?.habits.orEmpty()
+    }
+  val todayDay =
+    remember(todayConfig, todayMemo, today) {
+      buildHabitDay(
+        date = today,
+        habitsConfig = todayConfig,
+        dailyMemo = todayMemo,
+      )
+    }
   val weekDataState = rememberActivityWeekData(memos, range, activityMode)
   val weekData = weekDataState.data
   val isLoadingWeekData = weekDataState.isLoading
-  val showWeekdayLegend = range is ActivityRange.Week ||
-    range is ActivityRange.Month ||
-    range is ActivityRange.Quarter
+  val showWeekdayLegend =
+    range is ActivityRange.Week ||
+      range is ActivityRange.Month ||
+      range is ActivityRange.Quarter
   val useCompactHeight = range is ActivityRange.Year || range is ActivityRange.Month
   val collapseHabits = activityMode == ActivityMode.HABITS && range is ActivityRange.Year
-  val showLast7DaysMatrix = activityMode == ActivityMode.HABITS &&
-    range is ActivityRange.Week &&
-    currentHabitsConfig.isNotEmpty()
-  val showHabitSections = !showLast7DaysMatrix &&
+  val showLast7DaysMatrix =
     activityMode == ActivityMode.HABITS &&
-    currentHabitsConfig.isNotEmpty()
-  val selectedDay = remember(weekData.weeks, habitsState.selectedDate) {
-    habitsState.selectedDate?.let { date -> findDayByDate(weekData, date) }
-  }
-  val configStartDate = remember(habitsConfigTimeline) {
-    habitsConfigTimeline.firstOrNull()?.date
-  }
-  val successRateData = remember(weekData, range, activityMode, currentHabitsConfig, configStartDate) {
-    if (activityMode == ActivityMode.HABITS && currentHabitsConfig.isNotEmpty()) {
-      calculateSuccessRate(weekData, range, today, configStartDate)
-    } else null
-  }
+      range is ActivityRange.Week &&
+      currentHabitsConfig.isNotEmpty()
+  val showHabitSections =
+    !showLast7DaysMatrix &&
+      activityMode == ActivityMode.HABITS &&
+      currentHabitsConfig.isNotEmpty()
+  val selectedDay =
+    remember(weekData.weeks, habitsState.selectedDate) {
+      habitsState.selectedDate?.let { date -> findDayByDate(weekData, date) }
+    }
+  val configStartDate =
+    remember(habitsConfigTimeline) {
+      habitsConfigTimeline.firstOrNull()?.date
+    }
+  val successRateData =
+    remember(weekData, range, activityMode, currentHabitsConfig, configStartDate) {
+      if (activityMode == ActivityMode.HABITS && currentHabitsConfig.isNotEmpty()) {
+        calculateSuccessRate(weekData, range, today, configStartDate)
+      } else {
+        null
+      }
+    }
   val getPeriodPosts = remember { GetPeriodPostsUseCase() }
-  val periodPosts = remember(memos, range, timeZone) {
-    getPeriodPosts(memos, range, timeZone)
-  }
+  val periodPosts =
+    remember(memos, range, timeZone) {
+      getPeriodPosts(memos, range, timeZone)
+    }
   return StatsScreenDerivedState(
     state = state,
     habitsState = habitsState,
@@ -116,27 +128,27 @@ private fun rememberStatsScreenDerived(
     today = today,
     timeZone = timeZone,
     successRateData = successRateData,
-    periodPosts = periodPosts
+    periodPosts = periodPosts,
   )
 }
-
 
 @Composable
 private fun StatsScreenContent(
   derived: StatsScreenDerivedState,
   dispatch: (HabitsAction) -> Unit,
-  onPostsListExpandedChange: (Boolean) -> Unit
+  onPostsListExpandedChange: (Boolean) -> Unit,
 ) {
   val state = derived.state
-  val columnModifier = if (state.useVerticalScroll) {
-    Modifier.verticalScroll(rememberScrollState())
-  } else {
-    Modifier
-  }
+  val columnModifier =
+    if (state.useVerticalScroll) {
+      Modifier.verticalScroll(rememberScrollState())
+    } else {
+      Modifier
+    }
 
   Column(
     verticalArrangement = Arrangement.spacedBy(Indent.s),
-    modifier = columnModifier
+    modifier = columnModifier,
   ) {
     StatsHeaderRow()
     StatsHabitsEmptyState(derived, dispatch)
@@ -152,11 +164,10 @@ private fun StatsScreenContent(
 @Composable
 private fun StatsScreenDialogs(
   derived: StatsScreenDerivedState,
-  dispatch: (HabitsAction) -> Unit
+  dispatch: (HabitsAction) -> Unit,
 ) {
   HabitEditorDialog(derived, dispatch)
   EmptyDeleteDialog(derived, dispatch)
   SingleHabitToggleDialog(derived, dispatch)
   HabitsConfigDialog(derived.habitsState, dispatch)
 }
-

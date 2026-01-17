@@ -10,7 +10,6 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class BuildHabitDayUseCaseTest {
-
   private val useCase = BuildHabitDayUseCase()
 
   @Test
@@ -26,14 +25,16 @@ class BuildHabitDayUseCaseTest {
   @Test
   fun `builds day with completed habits`() {
     val date = LocalDate(2024, 1, 15)
-    val habitsConfig = listOf(
-      HabitConfig(tag = "#habits/exercise", label = "Exercise"),
-      HabitConfig(tag = "#habits/reading", label = "Reading")
-    )
-    val dailyMemo = DailyMemoInfo(
-      name = "test",
-      content = "#daily 2024-01-15\n#habits/exercise\n#habits/reading"
-    )
+    val habitsConfig =
+      listOf(
+        HabitConfig(tag = "#habits/exercise", label = "Exercise"),
+        HabitConfig(tag = "#habits/reading", label = "Reading"),
+      )
+    val dailyMemo =
+      DailyMemoInfo(
+        name = "test",
+        content = "#daily 2024-01-15\n#habits/exercise\n#habits/reading",
+      )
 
     val result = useCase(date, habitsConfig, dailyMemo)
 
@@ -48,15 +49,17 @@ class BuildHabitDayUseCaseTest {
   @Test
   fun `builds day with partial completion`() {
     val date = LocalDate(2024, 1, 15)
-    val habitsConfig = listOf(
-      HabitConfig(tag = "#habits/exercise", label = "Exercise"),
-      HabitConfig(tag = "#habits/reading", label = "Reading"),
-      HabitConfig(tag = "#habits/meditation", label = "Meditation")
-    )
-    val dailyMemo = DailyMemoInfo(
-      name = "test",
-      content = "#daily 2024-01-15\n#habits/exercise"
-    )
+    val habitsConfig =
+      listOf(
+        HabitConfig(tag = "#habits/exercise", label = "Exercise"),
+        HabitConfig(tag = "#habits/reading", label = "Reading"),
+        HabitConfig(tag = "#habits/meditation", label = "Meditation"),
+      )
+    val dailyMemo =
+      DailyMemoInfo(
+        name = "test",
+        content = "#daily 2024-01-15\n#habits/exercise",
+      )
 
     val result = useCase(date, habitsConfig, dailyMemo)
 
@@ -69,13 +72,15 @@ class BuildHabitDayUseCaseTest {
   @Test
   fun `builds day with no completed habits`() {
     val date = LocalDate(2024, 1, 15)
-    val habitsConfig = listOf(
-      HabitConfig(tag = "#habits/exercise", label = "Exercise")
-    )
-    val dailyMemo = DailyMemoInfo(
-      name = "test",
-      content = "#daily 2024-01-15"
-    )
+    val habitsConfig =
+      listOf(
+        HabitConfig(tag = "#habits/exercise", label = "Exercise"),
+      )
+    val dailyMemo =
+      DailyMemoInfo(
+        name = "test",
+        content = "#daily 2024-01-15",
+      )
 
     val result = useCase(date, habitsConfig, dailyMemo)
 
@@ -88,9 +93,10 @@ class BuildHabitDayUseCaseTest {
   @Test
   fun `builds day without daily memo`() {
     val date = LocalDate(2024, 1, 15)
-    val habitsConfig = listOf(
-      HabitConfig(tag = "#habits/exercise", label = "Exercise")
-    )
+    val habitsConfig =
+      listOf(
+        HabitConfig(tag = "#habits/exercise", label = "Exercise"),
+      )
 
     val result = useCase(date, habitsConfig, null)
 
@@ -104,14 +110,16 @@ class BuildHabitDayUseCaseTest {
   @Test
   fun `stores habit statuses correctly`() {
     val date = LocalDate(2024, 1, 15)
-    val habitsConfig = listOf(
-      HabitConfig(tag = "#habits/exercise", label = "Exercise"),
-      HabitConfig(tag = "#habits/reading", label = "Reading")
-    )
-    val dailyMemo = DailyMemoInfo(
-      name = "test",
-      content = "#daily\n#habits/exercise"
-    )
+    val habitsConfig =
+      listOf(
+        HabitConfig(tag = "#habits/exercise", label = "Exercise"),
+        HabitConfig(tag = "#habits/reading", label = "Reading"),
+      )
+    val dailyMemo =
+      DailyMemoInfo(
+        name = "test",
+        content = "#daily\n#habits/exercise",
+      )
 
     val result = useCase(date, habitsConfig, dailyMemo)
 
@@ -130,13 +138,15 @@ class BuildHabitDayUseCaseTest {
   @Test
   fun `clamps completion ratio to valid range`() {
     val date = LocalDate(2024, 1, 15)
-    val habitsConfig = listOf(
-      HabitConfig(tag = "#habits/exercise", label = "Exercise")
-    )
-    val dailyMemo = DailyMemoInfo(
-      name = "test",
-      content = "#habits/exercise"
-    )
+    val habitsConfig =
+      listOf(
+        HabitConfig(tag = "#habits/exercise", label = "Exercise"),
+      )
+    val dailyMemo =
+      DailyMemoInfo(
+        name = "test",
+        content = "#habits/exercise",
+      )
 
     val result = useCase(date, habitsConfig, dailyMemo)
 

@@ -1,11 +1,5 @@
 package space.be1ski.vibits.shared.feature.habits.presentation
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertIs
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
@@ -13,35 +7,44 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitStatus
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertIs
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class HabitsReducerTest {
+  private val testDay =
+    ContributionDay(
+      date = LocalDate(2024, 1, 15),
+      count = 1,
+      totalHabits = 2,
+      completionRatio = 0.5f,
+      habitStatuses =
+        listOf(
+          HabitStatus("#habits/exercise", "Exercise", done = true),
+          HabitStatus("#habits/reading", "Reading", done = false),
+        ),
+      dailyMemo = null,
+      inRange = true,
+    )
 
-  private val testDay = ContributionDay(
-    date = LocalDate(2024, 1, 15),
-    count = 1,
-    totalHabits = 2,
-    completionRatio = 0.5f,
-    habitStatuses = listOf(
-      HabitStatus("#habits/exercise", "Exercise", done = true),
-      HabitStatus("#habits/reading", "Reading", done = false)
-    ),
-    dailyMemo = null,
-    inRange = true
-  )
-
-  private val testConfig = listOf(
-    HabitConfig("#habits/exercise", "Exercise"),
-    HabitConfig("#habits/reading", "Reading")
-  )
+  private val testConfig =
+    listOf(
+      HabitConfig("#habits/exercise", "Exercise"),
+      HabitConfig("#habits/reading", "Reading"),
+    )
 
   // OpenEditor tests
 
   @Test
   fun `when OpenEditor then sets editor state`() {
-    val (newState, effects) = habitsReducer(
-      HabitsAction.OpenEditor(testDay, testConfig),
-      HabitsState()
-    )
+    val (newState, effects) =
+      habitsReducer(
+        HabitsAction.OpenEditor(testDay, testConfig),
+        HabitsState(),
+      )
 
     assertEquals(testDay, newState.editorDay)
     assertEquals(testConfig, newState.editorConfig)
@@ -54,10 +57,11 @@ class HabitsReducerTest {
   fun `when OpenEditor with existing memo then sets editorExisting`() {
     val dayWithMemo = testDay.copy(dailyMemo = DailyMemoInfo("memos/1", "content"))
 
-    val (newState, _) = habitsReducer(
-      HabitsAction.OpenEditor(dayWithMemo, testConfig),
-      HabitsState()
-    )
+    val (newState, _) =
+      habitsReducer(
+        HabitsAction.OpenEditor(dayWithMemo, testConfig),
+        HabitsState(),
+      )
 
     assertEquals("memos/1", newState.editorExisting?.name)
   }
@@ -66,13 +70,14 @@ class HabitsReducerTest {
 
   @Test
   fun `when CloseEditor then clears editor state`() {
-    val state = HabitsState(
-      editorDay = testDay,
-      editorConfig = testConfig,
-      editorSelections = mapOf("#habits/exercise" to true),
-      editorError = "some error",
-      showDeleteConfirm = true
-    )
+    val state =
+      HabitsState(
+        editorDay = testDay,
+        editorConfig = testConfig,
+        editorSelections = mapOf("#habits/exercise" to true),
+        editorError = "some error",
+        showDeleteConfirm = true,
+      )
 
     val (newState, effects) = habitsReducer(HabitsAction.CloseEditor, state)
 
@@ -88,14 +93,16 @@ class HabitsReducerTest {
 
   @Test
   fun `when ToggleHabit then updates selection`() {
-    val state = HabitsState(
-      editorSelections = mapOf("#habits/exercise" to false)
-    )
+    val state =
+      HabitsState(
+        editorSelections = mapOf("#habits/exercise" to false),
+      )
 
-    val (newState, effects) = habitsReducer(
-      HabitsAction.ToggleHabit("#habits/exercise", true),
-      state
-    )
+    val (newState, effects) =
+      habitsReducer(
+        HabitsAction.ToggleHabit("#habits/exercise", true),
+        state,
+      )
 
     assertEquals(true, newState.editorSelections["#habits/exercise"])
     assertTrue(effects.isEmpty())
@@ -105,12 +112,13 @@ class HabitsReducerTest {
 
   @Test
   fun `when ConfirmEditor with no selection and existing memo then shows delete confirm`() {
-    val state = HabitsState(
-      editorDay = testDay,
-      editorConfig = testConfig,
-      editorSelections = mapOf("#habits/exercise" to false),
-      editorExisting = DailyMemoInfo("memos/1", "content")
-    )
+    val state =
+      HabitsState(
+        editorDay = testDay,
+        editorConfig = testConfig,
+        editorSelections = mapOf("#habits/exercise" to false),
+        editorExisting = DailyMemoInfo("memos/1", "content"),
+      )
 
     val (newState, effects) = habitsReducer(HabitsAction.ConfirmEditor, state)
 
@@ -120,12 +128,13 @@ class HabitsReducerTest {
 
   @Test
   fun `when ConfirmEditor with no selection and no existing memo then shows error`() {
-    val state = HabitsState(
-      editorDay = testDay,
-      editorConfig = testConfig,
-      editorSelections = mapOf("#habits/exercise" to false),
-      editorExisting = null
-    )
+    val state =
+      HabitsState(
+        editorDay = testDay,
+        editorConfig = testConfig,
+        editorSelections = mapOf("#habits/exercise" to false),
+        editorExisting = null,
+      )
 
     val (newState, effects) = habitsReducer(HabitsAction.ConfirmEditor, state)
 
@@ -135,11 +144,12 @@ class HabitsReducerTest {
 
   @Test
   fun `when ConfirmEditor with selection and no existing memo then emits CreateMemo`() {
-    val state = HabitsState(
-      editorDay = testDay,
-      editorConfig = testConfig,
-      editorSelections = mapOf("#habits/exercise" to true)
-    )
+    val state =
+      HabitsState(
+        editorDay = testDay,
+        editorConfig = testConfig,
+        editorSelections = mapOf("#habits/exercise" to true),
+      )
 
     val (newState, effects) = habitsReducer(HabitsAction.ConfirmEditor, state)
 
@@ -150,12 +160,13 @@ class HabitsReducerTest {
 
   @Test
   fun `when ConfirmEditor with selection and existing memo then emits UpdateMemo`() {
-    val state = HabitsState(
-      editorDay = testDay,
-      editorConfig = testConfig,
-      editorSelections = mapOf("#habits/exercise" to true),
-      editorExisting = DailyMemoInfo("memos/1", "old content")
-    )
+    val state =
+      HabitsState(
+        editorDay = testDay,
+        editorConfig = testConfig,
+        editorSelections = mapOf("#habits/exercise" to true),
+        editorExisting = DailyMemoInfo("memos/1", "old content"),
+      )
 
     val (newState, effects) = habitsReducer(HabitsAction.ConfirmEditor, state)
 
@@ -170,10 +181,11 @@ class HabitsReducerTest {
 
   @Test
   fun `when RequestDelete then shows delete confirm`() {
-    val (newState, effects) = habitsReducer(
-      HabitsAction.RequestDelete,
-      HabitsState()
-    )
+    val (newState, effects) =
+      habitsReducer(
+        HabitsAction.RequestDelete,
+        HabitsState(),
+      )
 
     assertTrue(newState.showDeleteConfirm)
     assertTrue(effects.isEmpty())
@@ -181,9 +193,10 @@ class HabitsReducerTest {
 
   @Test
   fun `when ConfirmDelete then emits DeleteMemo effect`() {
-    val state = HabitsState(
-      editorExisting = DailyMemoInfo("memos/1", "content")
-    )
+    val state =
+      HabitsState(
+        editorExisting = DailyMemoInfo("memos/1", "content"),
+      )
 
     val (newState, effects) = habitsReducer(HabitsAction.ConfirmDelete, state)
 
@@ -208,10 +221,11 @@ class HabitsReducerTest {
 
   @Test
   fun `when SelectDay then updates selection state`() {
-    val (newState, _) = habitsReducer(
-      HabitsAction.SelectDay(testDay, "section-1"),
-      HabitsState()
-    )
+    val (newState, _) =
+      habitsReducer(
+        HabitsAction.SelectDay(testDay, "section-1"),
+        HabitsState(),
+      )
 
     assertEquals(testDay.date, newState.selectedDate)
     assertEquals("section-1", newState.activeSelectionId)
@@ -219,11 +233,12 @@ class HabitsReducerTest {
 
   @Test
   fun `when SelectWeek then updates selected week`() {
-    val week = ActivityWeek(
-      startDate = LocalDate(2024, 1, 15),
-      days = emptyList(),
-      weeklyCount = 0
-    )
+    val week =
+      ActivityWeek(
+        startDate = LocalDate(2024, 1, 15),
+        days = emptyList(),
+        weeklyCount = 0,
+      )
 
     val (newState, _) = habitsReducer(HabitsAction.SelectWeek(week), HabitsState())
 
@@ -232,11 +247,12 @@ class HabitsReducerTest {
 
   @Test
   fun `when ClearSelection then clears all selection state`() {
-    val state = HabitsState(
-      selectedDate = LocalDate(2024, 1, 15),
-      selectedWeek = ActivityWeek(LocalDate(2024, 1, 15), emptyList(), 0),
-      activeSelectionId = "section-1"
-    )
+    val state =
+      HabitsState(
+        selectedDate = LocalDate(2024, 1, 15),
+        selectedWeek = ActivityWeek(LocalDate(2024, 1, 15), emptyList(), 0),
+        activeSelectionId = "section-1",
+      )
 
     val (newState, _) = habitsReducer(HabitsAction.ClearSelection, state)
 
@@ -249,16 +265,18 @@ class HabitsReducerTest {
 
   @Test
   fun `when MemoCreated then clears editor and emits refresh`() {
-    val state = HabitsState(
-      isLoading = true,
-      editorDay = testDay,
-      editorConfig = testConfig
-    )
+    val state =
+      HabitsState(
+        isLoading = true,
+        editorDay = testDay,
+        editorConfig = testConfig,
+      )
 
-    val (newState, effects) = habitsReducer(
-      HabitsAction.MemoCreated(Memo(name = "memos/1")),
-      state
-    )
+    val (newState, effects) =
+      habitsReducer(
+        HabitsAction.MemoCreated(Memo(name = "memos/1")),
+        state,
+      )
 
     assertFalse(newState.isLoading)
     assertNull(newState.editorDay)
@@ -269,16 +287,18 @@ class HabitsReducerTest {
 
   @Test
   fun `when MemoDeleted then clears editor and emits refresh`() {
-    val state = HabitsState(
-      isLoading = true,
-      editorDay = testDay,
-      showDeleteConfirm = true
-    )
+    val state =
+      HabitsState(
+        isLoading = true,
+        editorDay = testDay,
+        showDeleteConfirm = true,
+      )
 
-    val (newState, effects) = habitsReducer(
-      HabitsAction.MemoDeleted("memos/1"),
-      state
-    )
+    val (newState, effects) =
+      habitsReducer(
+        HabitsAction.MemoDeleted("memos/1"),
+        state,
+      )
 
     assertFalse(newState.isLoading)
     assertNull(newState.editorDay)
@@ -291,10 +311,11 @@ class HabitsReducerTest {
   fun `when MemoOperationFailed then sets error and stops loading`() {
     val state = HabitsState(isLoading = true)
 
-    val (newState, effects) = habitsReducer(
-      HabitsAction.MemoOperationFailed("Network error"),
-      state
-    )
+    val (newState, effects) =
+      habitsReducer(
+        HabitsAction.MemoOperationFailed("Network error"),
+        state,
+      )
 
     assertFalse(newState.isLoading)
     assertEquals("Network error", newState.editorError)
@@ -305,10 +326,11 @@ class HabitsReducerTest {
 
   @Test
   fun `when OpenConfigDialog then shows dialog with editable habits`() {
-    val (newState, effects) = habitsReducer(
-      HabitsAction.OpenConfigDialog(testConfig),
-      HabitsState()
-    )
+    val (newState, effects) =
+      habitsReducer(
+        HabitsAction.OpenConfigDialog(testConfig),
+        HabitsState(),
+      )
 
     assertTrue(newState.showConfigDialog)
     assertEquals(2, newState.editingHabits.size)
@@ -318,10 +340,11 @@ class HabitsReducerTest {
 
   @Test
   fun `when CloseConfigDialog then hides dialog and clears habits`() {
-    val state = HabitsState(
-      showConfigDialog = true,
-      editingHabits = listOf(EditableHabit("1", "#habits/test", "Test", 0xFF0000L))
-    )
+    val state =
+      HabitsState(
+        showConfigDialog = true,
+        editingHabits = listOf(EditableHabit("1", "#habits/test", "Test", 0xFF0000L)),
+      )
 
     val (newState, effects) = habitsReducer(HabitsAction.CloseConfigDialog, state)
 
@@ -346,10 +369,11 @@ class HabitsReducerTest {
     val habit = EditableHabit("habit_1", "", "", 0xFF0000L)
     val state = HabitsState(editingHabits = listOf(habit))
 
-    val (newState, effects) = habitsReducer(
-      HabitsAction.UpdateHabitLabel("habit_1", "Morning Run"),
-      state
-    )
+    val (newState, effects) =
+      habitsReducer(
+        HabitsAction.UpdateHabitLabel("habit_1", "Morning Run"),
+        state,
+      )
 
     assertEquals("Morning Run", newState.editingHabits.first().label)
     assertEquals("#habits/Morning_Run", newState.editingHabits.first().tag)
@@ -361,10 +385,11 @@ class HabitsReducerTest {
     val habit = EditableHabit("habit_1", "#habits/test", "Test", 0xFF0000L)
     val state = HabitsState(editingHabits = listOf(habit))
 
-    val (newState, effects) = habitsReducer(
-      HabitsAction.UpdateHabitColor("habit_1", 0x00FF00L),
-      state
-    )
+    val (newState, effects) =
+      habitsReducer(
+        HabitsAction.UpdateHabitColor("habit_1", 0x00FF00L),
+        state,
+      )
 
     assertEquals(0x00FF00L, newState.editingHabits.first().color)
     assertTrue(effects.isEmpty())
@@ -372,16 +397,18 @@ class HabitsReducerTest {
 
   @Test
   fun `when DeleteHabit then removes habit from list`() {
-    val habits = listOf(
-      EditableHabit("habit_1", "#habits/a", "A", 0xFF0000L),
-      EditableHabit("habit_2", "#habits/b", "B", 0x00FF00L)
-    )
+    val habits =
+      listOf(
+        EditableHabit("habit_1", "#habits/a", "A", 0xFF0000L),
+        EditableHabit("habit_2", "#habits/b", "B", 0x00FF00L),
+      )
     val state = HabitsState(editingHabits = habits)
 
-    val (newState, effects) = habitsReducer(
-      HabitsAction.DeleteHabit("habit_1"),
-      state
-    )
+    val (newState, effects) =
+      habitsReducer(
+        HabitsAction.DeleteHabit("habit_1"),
+        state,
+      )
 
     assertEquals(1, newState.editingHabits.size)
     assertEquals("habit_2", newState.editingHabits.first().id)
@@ -390,9 +417,10 @@ class HabitsReducerTest {
 
   @Test
   fun `when SaveConfigDialog then emits CreateMemo with config content`() {
-    val habits = listOf(
-      EditableHabit("habit_1", "#habits/exercise", "Exercise", 0xFF0000L)
-    )
+    val habits =
+      listOf(
+        EditableHabit("habit_1", "#habits/exercise", "Exercise", 0xFF0000L),
+      )
     val state = HabitsState(editingHabits = habits)
 
     val (newState, effects) = habitsReducer(HabitsAction.SaveConfigDialog, state)
@@ -404,15 +432,17 @@ class HabitsReducerTest {
 
   @Test
   fun `when MemoUpdated then clears editor and emits refresh`() {
-    val state = HabitsState(
-      isLoading = true,
-      editorDay = testDay
-    )
+    val state =
+      HabitsState(
+        isLoading = true,
+        editorDay = testDay,
+      )
 
-    val (newState, effects) = habitsReducer(
-      HabitsAction.MemoUpdated(Memo(name = "memos/1")),
-      state
-    )
+    val (newState, effects) =
+      habitsReducer(
+        HabitsAction.MemoUpdated(Memo(name = "memos/1")),
+        state,
+      )
 
     assertFalse(newState.isLoading)
     assertNull(newState.editorDay)

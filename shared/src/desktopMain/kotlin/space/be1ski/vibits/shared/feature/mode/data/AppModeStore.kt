@@ -1,8 +1,8 @@
 package space.be1ski.vibits.shared.feature.mode.data
 
-import java.util.prefs.Preferences
 import space.be1ski.vibits.shared.data.local.DesktopStoragePaths
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
+import java.util.prefs.Preferences
 
 /**
  * Desktop implementation backed by Preferences API.

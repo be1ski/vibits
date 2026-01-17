@@ -15,7 +15,7 @@ actual class AppDetailsProvider {
       environment = DesktopStoragePaths.environmentLabel(),
       credentialsStore = "Preferences(${DesktopStoragePaths.preferencesNode()})",
       memosDatabase = DesktopStoragePaths.databasePath(),
-      offlineStorage = offlinePath
+      offlineStorage = offlinePath,
     )
   }
 }

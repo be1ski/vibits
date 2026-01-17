@@ -10,9 +10,9 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 fun buildDailyContent(
   date: LocalDate,
   habitsConfig: List<HabitConfig>,
-  selections: Map<HabitTag, IsSelected>
-): String {
-  return buildString {
+  selections: Map<HabitTag, IsSelected>,
+): String =
+  buildString {
     append("#habits/daily ").append(date).append("\n\n")
     habitsConfig.forEach { habit ->
       val done = selections[habit.tag] == true
@@ -21,13 +21,12 @@ fun buildDailyContent(
       }
     }
   }
-}
 
 /**
  * Builds the content for a habits config memo from a list of HabitConfig entries.
  */
-fun buildHabitsConfigContentFromList(entries: List<HabitConfig>): String {
-  return buildString {
+fun buildHabitsConfigContentFromList(entries: List<HabitConfig>): String =
+  buildString {
     append("#habits/config\n\n")
     entries.forEach { entry ->
       append(entry.label)
@@ -38,20 +37,18 @@ fun buildHabitsConfigContentFromList(entries: List<HabitConfig>): String {
         .append('\n')
     }
   }
-}
 
 /**
  * Builds initial editor selections from a contribution day.
  */
 fun buildHabitsEditorSelections(
   day: ContributionDay,
-  habitsConfig: List<HabitConfig>
-): Map<HabitTag, IsSelected> {
-  return if (habitsConfig.isNotEmpty()) {
+  habitsConfig: List<HabitConfig>,
+): Map<HabitTag, IsSelected> =
+  if (habitsConfig.isNotEmpty()) {
     habitsConfig.associate { habit ->
       habit.tag to (day.habitStatuses.firstOrNull { it.tag == habit.tag }?.done == true)
     }
   } else {
     day.habitStatuses.associate { it.tag to it.done }
   }
-}

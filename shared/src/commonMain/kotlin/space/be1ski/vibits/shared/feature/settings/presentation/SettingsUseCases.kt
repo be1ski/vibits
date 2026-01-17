@@ -9,5 +9,5 @@ data class SettingsUseCases(
   val validateCredentials: ValidateCredentialsUseCase,
   val switchAppMode: SwitchAppModeUseCase,
   val saveCredentials: SaveCredentialsUseCase,
-  val resetApp: ResetAppUseCase
+  val resetApp: ResetAppUseCase,
 )
