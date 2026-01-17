@@ -20,10 +20,12 @@ import space.be1ski.vibits.shared.action_update
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.presentation.components.localizedLabel
 import space.be1ski.vibits.shared.msg_delete_day_confirm
-import space.be1ski.vibits.shared.msg_toggle_habit_confirm
+import space.be1ski.vibits.shared.msg_mark_done_confirm
+import space.be1ski.vibits.shared.msg_mark_not_done_confirm
 import space.be1ski.vibits.shared.title_create_day
 import space.be1ski.vibits.shared.title_delete_day
-import space.be1ski.vibits.shared.title_toggle_habit
+import space.be1ski.vibits.shared.title_mark_done
+import space.be1ski.vibits.shared.title_mark_not_done
 import space.be1ski.vibits.shared.title_update_day
 
 @Composable
@@ -132,30 +134,34 @@ internal fun EmptyDeleteDialog(
   )
 }
 
+@Suppress("ReturnCount")
 @Composable
 internal fun SingleHabitToggleDialog(
   derived: StatsScreenDerivedState,
   dispatch: (HabitsAction) -> Unit
 ) {
   val habitsState = derived.habitsState
-  val day = habitsState.singleToggleDay
-  val habitLabel = habitsState.singleToggleHabitLabel
+  val day = habitsState.singleToggleDay ?: return
+  val habitLabel = habitsState.singleToggleHabitLabel ?: return
+  val habitTag = habitsState.singleToggleHabitTag ?: return
 
-  if (!habitsState.showSingleToggleConfirm || day == null || habitLabel == null) {
+  if (!habitsState.showSingleToggleConfirm) {
     return
   }
 
   val demoMode = derived.state.demoMode
-  val habitConfig = habitsState.singleToggleConfig.firstOrNull {
-    it.tag == habitsState.singleToggleHabitTag
-  }
+  val habitConfig = habitsState.singleToggleConfig.firstOrNull { it.tag == habitTag }
   val displayLabel = habitConfig?.localizedLabel(demoMode) ?: habitLabel
+  val isCurrentlyDone = day.habitStatuses.firstOrNull { it.tag == habitTag }?.done == true
+
+  val titleRes = if (isCurrentlyDone) Res.string.title_mark_not_done else Res.string.title_mark_done
+  val messageRes = if (isCurrentlyDone) Res.string.msg_mark_not_done_confirm else Res.string.msg_mark_done_confirm
 
   AlertDialog(
     onDismissRequest = { dispatch(HabitsAction.CancelSingleHabitToggle) },
-    title = { Text(stringResource(Res.string.title_toggle_habit)) },
+    title = { Text(stringResource(titleRes)) },
     text = {
-      Text(stringResource(Res.string.msg_toggle_habit_confirm, displayLabel, day.date.toString()))
+      Text(stringResource(messageRes, displayLabel, day.date.toString()))
     },
     confirmButton = {
       Button(onClick = { dispatch(HabitsAction.ConfirmSingleHabitToggle) }) {

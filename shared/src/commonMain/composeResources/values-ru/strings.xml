@@ -68,7 +68,8 @@
     <string name="msg_no_logs">Логов пока нет</string>
     <string name="msg_reset_confirm">Вы уверены, что хотите сбросить приложение? Все данные будут удалены.</string>
     <string name="msg_select_habit">Выберите хотя бы одну привычку.</string>
-    <string name="msg_toggle_habit_confirm">Переключить "%1$s" на %2$s?</string>
+    <string name="msg_mark_done_confirm">Отметить «%1$s» как выполненную за %2$s?</string>
+    <string name="msg_mark_not_done_confirm">Снять отметку с «%1$s» за %2$s?</string>
 
     <!-- Mode selection -->
     <string name="mode_select_title">Выберите режим</string>
@@ -108,7 +109,8 @@
     <string name="title_edit_memo">Редактировать заметку</string>
     <string name="title_logs">Логи (%1$d)</string>
     <string name="title_new_memo">Новая заметка</string>
-    <string name="title_toggle_habit">Переключить привычку?</string>
+    <string name="title_mark_done">Отметить выполнение?</string>
+    <string name="title_mark_not_done">Снять отметку?</string>
     <string name="title_update_day">Обновить день</string>
 
     <!-- Demo habits -->
