@@ -2,7 +2,7 @@ package space.be1ski.vibits.shared.core.platform
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppLanguage
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import java.util.Locale
 
 /**

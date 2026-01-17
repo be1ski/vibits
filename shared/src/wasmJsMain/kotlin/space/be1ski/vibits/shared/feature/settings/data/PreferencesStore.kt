@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.preferences.data
+package space.be1ski.vibits.shared.feature.settings.data
 
 import kotlinx.browser.localStorage
 

@@ -58,8 +58,8 @@ import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.logging.LogLevel
 import space.be1ski.vibits.shared.domain.model.app.AppDetails
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppLanguage
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppTheme
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsState
 import space.be1ski.vibits.shared.hint_base_url

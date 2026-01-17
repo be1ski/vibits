@@ -34,8 +34,8 @@ import space.be1ski.vibits.shared.feature.habits.presentation.components.remembe
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppLanguage
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppTheme
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
 import space.be1ski.vibits.shared.nav_feed
 import space.be1ski.vibits.shared.nav_habits

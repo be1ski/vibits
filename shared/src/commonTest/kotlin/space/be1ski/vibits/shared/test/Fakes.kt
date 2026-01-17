@@ -7,9 +7,9 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
-import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
-import space.be1ski.vibits.shared.feature.preferences.domain.model.UserPreferences
-import space.be1ski.vibits.shared.feature.preferences.domain.repository.PreferencesRepository
+import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
+import space.be1ski.vibits.shared.feature.settings.domain.model.UserPreferences
+import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
 
 class FakeCredentialsRepository(
   initial: Credentials = Credentials(baseUrl = "", token = ""),

@@ -2,8 +2,8 @@ package space.be1ski.vibits.shared.feature.settings.presentation
 
 import space.be1ski.vibits.shared.domain.model.app.AppDetails
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppLanguage
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppTheme
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 
 sealed interface SettingsAction {
   // Dialog lifecycle

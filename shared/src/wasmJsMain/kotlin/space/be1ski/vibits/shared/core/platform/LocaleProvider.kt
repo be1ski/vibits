@@ -1,7 +1,7 @@
 package space.be1ski.vibits.shared.core.platform
 
 import kotlinx.browser.window
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppLanguage
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 
 /**
  * Web implementation.

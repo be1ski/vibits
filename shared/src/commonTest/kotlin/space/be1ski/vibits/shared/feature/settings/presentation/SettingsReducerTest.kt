@@ -1,8 +1,8 @@
 package space.be1ski.vibits.shared.feature.settings.presentation
 
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppLanguage
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppTheme
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

@@ -1,7 +1,7 @@
-package space.be1ski.vibits.shared.feature.preferences.domain.usecase
+package space.be1ski.vibits.shared.feature.settings.domain.usecase
 
-import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
-import space.be1ski.vibits.shared.feature.preferences.domain.repository.PreferencesRepository
+import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
+import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
 
 internal enum class TimeRangeScreen { HABITS, POSTS }
 
