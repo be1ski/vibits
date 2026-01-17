@@ -85,7 +85,6 @@ Use `@Suppress` annotations only when the lint rule doesn't apply (e.g., `LongPa
 **All changes must go through pull requests** — never commit directly to `main`. This ensures CI checks pass before merging and keeps the main branch green.
 
 - Create a feature branch, push, and open a PR.
-- Request review from `@copilot` for automated code review.
 - Use auto-merge with squash (`gh pr merge --auto --squash --delete-branch`).
 - Commit messages: imperative, concise, single topic (e.g., "Simplify README").
 - PR titles: use English only (no Cyrillic or other non-ASCII characters).
