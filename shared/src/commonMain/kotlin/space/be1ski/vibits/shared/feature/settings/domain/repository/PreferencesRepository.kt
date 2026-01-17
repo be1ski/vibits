@@ -1,6 +1,6 @@
-package space.be1ski.vibits.shared.feature.preferences.domain.repository
+package space.be1ski.vibits.shared.feature.settings.domain.repository
 
-import space.be1ski.vibits.shared.feature.preferences.domain.model.UserPreferences
+import space.be1ski.vibits.shared.feature.settings.domain.model.UserPreferences
 
 /**
  * Repository for reading and persisting user preferences.

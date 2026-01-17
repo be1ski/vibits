@@ -1,8 +1,8 @@
-package space.be1ski.vibits.shared.feature.preferences.domain.usecase
+package space.be1ski.vibits.shared.feature.settings.domain.usecase
 
 import space.be1ski.vibits.shared.core.platform.LocaleProvider
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppLanguage
-import space.be1ski.vibits.shared.feature.preferences.domain.repository.PreferencesRepository
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
+import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
 
 /**
  * Saves the selected language preference and configures the locale.

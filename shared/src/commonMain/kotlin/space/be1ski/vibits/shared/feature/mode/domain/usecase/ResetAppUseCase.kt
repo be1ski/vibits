@@ -6,9 +6,9 @@ import space.be1ski.vibits.shared.feature.memos.data.demo.DemoMemosRepository
 import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
-import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
-import space.be1ski.vibits.shared.feature.preferences.domain.model.UserPreferences
-import space.be1ski.vibits.shared.feature.preferences.domain.repository.PreferencesRepository
+import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
+import space.be1ski.vibits.shared.feature.settings.domain.model.UserPreferences
+import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
 
 /**
  * Use case for resetting app to initial state.

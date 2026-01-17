@@ -1,8 +1,8 @@
-package space.be1ski.vibits.shared.feature.preferences.data
+package space.be1ski.vibits.shared.feature.settings.data
 
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppLanguage
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppTheme
-import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
+import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 
 data class LocalUserPreferences(
   val habitsTimeRangeTab: String,

@@ -1,10 +1,10 @@
-package space.be1ski.vibits.shared.feature.preferences.data
+package space.be1ski.vibits.shared.feature.settings.data
 
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppLanguage
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppTheme
-import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
-import space.be1ski.vibits.shared.feature.preferences.domain.model.UserPreferences
-import space.be1ski.vibits.shared.feature.preferences.domain.repository.PreferencesRepository
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
+import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
+import space.be1ski.vibits.shared.feature.settings.domain.model.UserPreferences
+import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
 
 /**
  * Repository implementation backed by platform preferences storage.

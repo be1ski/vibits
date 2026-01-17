@@ -31,7 +31,7 @@ import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
 import space.be1ski.vibits.shared.feature.memos.presentation.PostsScreen
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
-import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
+import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 
 private val navigateRange = NavigateActivityRangeUseCase()
 private const val PAGER_CENTER_PAGE = 500

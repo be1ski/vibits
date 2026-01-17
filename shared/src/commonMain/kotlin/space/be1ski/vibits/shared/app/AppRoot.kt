@@ -13,8 +13,8 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.FixInvalidOnlineModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionScreen
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppTheme
-import space.be1ski.vibits.shared.feature.preferences.domain.usecase.LoadPreferencesUseCase
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
+import space.be1ski.vibits.shared.feature.settings.domain.usecase.LoadPreferencesUseCase
 
 // Suppress false positive: mutableStateOf assignments trigger recomposition
 @Suppress("AssignedValueIsNeverRead")

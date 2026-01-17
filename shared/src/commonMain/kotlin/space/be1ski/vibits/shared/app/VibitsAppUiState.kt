@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
-import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
+import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 
 internal enum class MemosScreen {
   HABITS,

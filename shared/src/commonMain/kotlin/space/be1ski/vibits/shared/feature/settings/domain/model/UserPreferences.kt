@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.preferences.domain.model
+package space.be1ski.vibits.shared.feature.settings.domain.model
 
 /**
  * Domain model for user UI preferences.

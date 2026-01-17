@@ -42,13 +42,13 @@ import space.be1ski.vibits.shared.feature.mode.domain.usecase.LoadAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
-import space.be1ski.vibits.shared.feature.preferences.data.PreferencesRepositoryImpl
-import space.be1ski.vibits.shared.feature.preferences.data.PreferencesStore
-import space.be1ski.vibits.shared.feature.preferences.domain.repository.PreferencesRepository
-import space.be1ski.vibits.shared.feature.preferences.domain.usecase.LoadPreferencesUseCase
-import space.be1ski.vibits.shared.feature.preferences.domain.usecase.SaveLanguageUseCase
-import space.be1ski.vibits.shared.feature.preferences.domain.usecase.SaveThemeUseCase
-import space.be1ski.vibits.shared.feature.preferences.domain.usecase.SaveTimeRangeTabUseCase
+import space.be1ski.vibits.shared.feature.settings.data.PreferencesRepositoryImpl
+import space.be1ski.vibits.shared.feature.settings.data.PreferencesStore
+import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
+import space.be1ski.vibits.shared.feature.settings.domain.usecase.LoadPreferencesUseCase
+import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveLanguageUseCase
+import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveThemeUseCase
+import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveTimeRangeTabUseCase
 
 /**
  * Koin module that wires shared dependencies.
