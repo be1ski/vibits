@@ -6,18 +6,22 @@ import space.be1ski.vibits.shared.core.platform.DateFormatter
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
 
-internal fun buildTimelineLabels(weeks: List<ActivityWeek>, range: ActivityRange): List<String> {
+internal fun buildTimelineLabels(
+  weeks: List<ActivityWeek>,
+  range: ActivityRange,
+  formatter: DateFormatter
+): List<String> {
   if (weeks.isEmpty()) {
     return emptyList()
   }
   return weeks.mapIndexed { index, week ->
     val start = week.startDate
     when (range) {
-      is ActivityRange.Week -> DateFormatter.monthInitial(start.month)
+      is ActivityRange.Week -> formatter.monthInitial(start.month)
       is ActivityRange.Month -> {
         val prev = weeks.getOrNull(index - 1)?.startDate
         if (prev == null || prev.month != start.month || prev.year != start.year) {
-          DateFormatter.monthInitial(start.month)
+          formatter.monthInitial(start.month)
         } else {
           ""
         }
@@ -25,7 +29,7 @@ internal fun buildTimelineLabels(weeks: List<ActivityWeek>, range: ActivityRange
       is ActivityRange.Quarter -> {
         val prev = weeks.getOrNull(index - 1)?.startDate
         if (prev == null || prev.month != start.month || prev.year != start.year) {
-          DateFormatter.monthInitial(start.month)
+          formatter.monthInitial(start.month)
         } else {
           ""
         }

@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import space.be1ski.vibits.shared.core.platform.DateFormatter
+import space.be1ski.vibits.shared.core.platform.LocalDateFormatter
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.core.ui.Indent
 
@@ -58,6 +59,7 @@ fun FeedScreen(
 ) {
   var memoToDelete by remember { mutableStateOf<Memo?>(null) }
   val timeZone = TimeZone.currentSystemDefault()
+  val formatter = LocalDateFormatter.current
   val pullRefreshState = rememberPullRefreshState(isRefreshing, onRefresh)
   val containerModifier = if (enablePullRefresh) {
     Modifier.pullRefresh(pullRefreshState)
@@ -84,7 +86,7 @@ fun FeedScreen(
               modifier = Modifier.weight(1f),
               verticalArrangement = Arrangement.spacedBy(Indent.x2s)
             ) {
-              val dateLabel = memoDateLabel(memo, timeZone)
+              val dateLabel = memoDateLabel(memo, timeZone, formatter)
               if (dateLabel.isNotBlank()) {
                 Text(dateLabel, style = MaterialTheme.typography.labelSmall)
               }
@@ -137,8 +139,8 @@ fun FeedScreen(
   }
 }
 
-private fun memoDateLabel(memo: Memo, timeZone: TimeZone): String {
+private fun memoDateLabel(memo: Memo, timeZone: TimeZone, formatter: DateFormatter): String {
   val instant = memo.updateTime ?: memo.createTime ?: return ""
-  return DateFormatter.dateTime(instant.toLocalDateTime(timeZone))
+  return formatter.dateTime(instant.toLocalDateTime(timeZone))
 }
 

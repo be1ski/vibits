@@ -62,6 +62,7 @@ import space.be1ski.vibits.shared.day_tue
 import space.be1ski.vibits.shared.day_wed
 import space.be1ski.vibits.shared.format_tooltip_habits
 import space.be1ski.vibits.shared.format_tooltip_posts
+import space.be1ski.vibits.shared.core.platform.LocalDateFormatter
 
 internal object ChartDimens {
   val legendWidth = LEGEND_WIDTH_DP.dp
@@ -147,8 +148,9 @@ private fun ContributionGridLayout(
     val legendSpacing = if (state.showWeekdayLegend) spacing else 0.dp
     val availableWidth = (maxWidth - legendWidth - legendSpacing).coerceAtLeast(0.dp)
     val layout = calculateLayout(availableWidth, columns, minColumnSize = minCell, spacing = spacing)
-    val timelineLabels = remember(state.weekData.weeks, state.range) {
-      if (state.showTimeline) buildTimelineLabels(state.weekData.weeks, state.range) else emptyList()
+    val formatter = LocalDateFormatter.current
+    val timelineLabels = remember(state.weekData.weeks, state.range, formatter) {
+      if (state.showTimeline) buildTimelineLabels(state.weekData.weeks, state.range, formatter) else emptyList()
     }
     val layoutState = ContributionGridLayoutState(
       layout = layout,
