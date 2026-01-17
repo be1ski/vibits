@@ -27,7 +27,7 @@ jobs:
         run: ./gradlew :shared:desktopTest
 
       - name: Run ktlint
-        run: ./gradlew ktlintCheck
+        run: ./gradlew :shared:ktlintCommonMainSourceSetCheck :shared:ktlintCommonTestSourceSetCheck :shared:ktlintRoomMainSourceSetCheck :shared:ktlintAndroidMainSourceSetCheck :shared:ktlintDesktopMainSourceSetCheck :shared:ktlintWasmJsMainSourceSetCheck :shared:ktlintIosMainSourceSetCheck :androidApp:ktlintCheck :desktopApp:ktlintCheck :webApp:ktlintCheck
 
       - name: Run detekt
         run: ./gradlew detekt
