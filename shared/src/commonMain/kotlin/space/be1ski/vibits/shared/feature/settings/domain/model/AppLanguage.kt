@@ -8,5 +8,13 @@ enum class AppLanguage(
 ) {
   SYSTEM(null),
   ENGLISH("en"),
+  SPANISH("es"),
+  CHINESE("zh"),
+  HINDI("hi"),
+  ARABIC("ar"),
+  PORTUGUESE("pt"),
   RUSSIAN("ru"),
+  JAPANESE("ja"),
+  GERMAN("de"),
+  FRENCH("fr"),
 }

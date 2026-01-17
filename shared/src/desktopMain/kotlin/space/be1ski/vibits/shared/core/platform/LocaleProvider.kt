@@ -11,12 +11,7 @@ actual class LocaleProvider {
   actual fun getSystemLocale(): String = Locale.getDefault().language
 
   actual fun configureLocale(language: AppLanguage): Boolean {
-    val locale =
-      when (language) {
-        AppLanguage.SYSTEM -> Locale.getDefault()
-        AppLanguage.ENGLISH -> Locale.forLanguageTag("en")
-        AppLanguage.RUSSIAN -> Locale.forLanguageTag("ru")
-      }
+    val locale = language.localeCode?.let { Locale.forLanguageTag(it) } ?: Locale.getDefault()
     Locale.setDefault(locale)
     return true
   }
