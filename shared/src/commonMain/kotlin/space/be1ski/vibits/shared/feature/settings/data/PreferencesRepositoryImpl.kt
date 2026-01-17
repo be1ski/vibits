@@ -1,11 +1,14 @@
 package space.be1ski.vibits.shared.feature.settings.data
 
 import dev.zacsweers.metro.Inject
+import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.shared.feature.settings.domain.model.UserPreferences
 import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
+
+private const val TAG = "Preferences"
 
 /**
  * Repository implementation backed by platform preferences storage.
@@ -20,6 +23,7 @@ class PreferencesRepositoryImpl(
     val postsTab = parseTimeRangeTab(local.postsTimeRangeTab)
     val language = parseLanguage(local.language)
     val theme = parseTheme(local.theme)
+    Log.d(TAG, "Loaded: theme=$theme, lang=$language")
     return UserPreferences(
       habitsTimeRangeTab = habitsTab,
       postsTimeRangeTab = postsTab,
@@ -29,6 +33,7 @@ class PreferencesRepositoryImpl(
   }
 
   override fun save(preferences: UserPreferences) {
+    Log.i(TAG, "Saving: theme=${preferences.theme}, lang=${preferences.language}")
     val local =
       LocalUserPreferences(
         habitsTimeRangeTab = preferences.habitsTimeRangeTab.name,

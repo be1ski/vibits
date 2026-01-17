@@ -1,6 +1,7 @@
 package space.be1ski.vibits.shared.feature.mode.domain.usecase
 
 import dev.zacsweers.metro.Inject
+import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.shared.feature.memos.data.demo.DemoMemosRepository
@@ -10,6 +11,8 @@ import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeReposito
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.shared.feature.settings.domain.model.UserPreferences
 import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
+
+private const val TAG = "ResetApp"
 
 /**
  * Use case for resetting app to initial state.
@@ -25,10 +28,12 @@ class ResetAppUseCase(
   private val demoMemosRepository: DemoMemosRepository,
 ) {
   suspend operator fun invoke() {
+    Log.i(TAG, "Resetting app to initial state...")
     memoCache.clear()
     credentialsRepository.save(Credentials(baseUrl = "", token = ""))
     preferencesRepository.save(UserPreferences(TimeRangeTab.WEEKS, TimeRangeTab.WEEKS))
     demoMemosRepository.reset()
     appModeRepository.saveMode(AppMode.NOT_SELECTED)
+    Log.i(TAG, "App reset completed")
   }
 }
