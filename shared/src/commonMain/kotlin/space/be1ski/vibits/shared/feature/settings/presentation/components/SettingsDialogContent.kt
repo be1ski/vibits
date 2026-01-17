@@ -1,3 +1,4 @@
+
 package space.be1ski.vibits.shared.feature.settings.presentation.components
 
 import androidx.compose.foundation.background
@@ -424,3 +425,4 @@ private fun LogsDialog(onDismiss: () -> Unit) {
     }
   )
 }
+

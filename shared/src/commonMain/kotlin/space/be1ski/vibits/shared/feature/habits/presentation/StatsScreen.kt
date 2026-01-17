@@ -31,10 +31,11 @@ fun StatsScreen(
   state: StatsScreenState,
   habitsState: HabitsState = HabitsState(),
   onHabitsAction: (HabitsAction) -> Unit = {},
+  onPostsListExpandedChange: (Boolean) -> Unit = {},
   calculateSuccessRate: CalculateSuccessRateUseCase = koinInject()
 ) {
   val derived = rememberStatsScreenDerived(state, habitsState, calculateSuccessRate)
-  StatsScreenContent(derived, onHabitsAction)
+  StatsScreenContent(derived, onHabitsAction, onPostsListExpandedChange)
   StatsScreenDialogs(derived, onHabitsAction)
 }
 
@@ -117,7 +118,8 @@ private fun rememberStatsScreenDerived(
 @Composable
 private fun StatsScreenContent(
   derived: StatsScreenDerivedState,
-  dispatch: (HabitsAction) -> Unit
+  dispatch: (HabitsAction) -> Unit,
+  onPostsListExpandedChange: (Boolean) -> Unit
 ) {
   val state = derived.state
   val columnModifier = if (state.useVerticalScroll) {
@@ -133,8 +135,10 @@ private fun StatsScreenContent(
     StatsHeaderRow()
     StatsHabitsEmptyState(derived, dispatch)
     StatsInfoCard(derived, dispatch)
+    StatsPostsInfoCard(derived)
     StatsMainChart(derived, dispatch)
     StatsWeeklyChart(derived, dispatch)
+    StatsCollapsiblePosts(derived, state.postsListExpanded, onPostsListExpandedChange)
     StatsHabitSections(derived, dispatch)
   }
 }
@@ -149,3 +153,4 @@ private fun StatsScreenDialogs(
   SingleHabitToggleDialog(derived, dispatch)
   HabitsConfigDialog(derived.habitsState, dispatch)
 }
+

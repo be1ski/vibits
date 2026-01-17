@@ -14,7 +14,9 @@ import space.be1ski.vibits.shared.core.ui.ActivityRange
 fun PostsScreen(
   memos: List<Memo>,
   range: ActivityRange,
-  demoMode: Boolean
+  demoMode: Boolean,
+  postsListExpanded: Boolean = false,
+  onPostsListExpandedChange: (Boolean) -> Unit = {}
 ) {
   StatsScreen(
     state = StatsScreenState(
@@ -23,7 +25,9 @@ fun PostsScreen(
       activityMode = ActivityMode.Posts,
       useVerticalScroll = true,
       enablePullRefresh = false,
-      demoMode = demoMode
-    )
+      demoMode = demoMode,
+      postsListExpanded = postsListExpanded
+    ),
+    onPostsListExpandedChange = onPostsListExpandedChange
   )
 }
