@@ -1,5 +1,6 @@
 package space.be1ski.vibits.shared.feature.memos.presentation
 
+import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.CreateMemoUseCase
@@ -8,7 +9,9 @@ import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadCachedMemosUs
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadMemosUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.UpdateMemoUseCase
 
-data class MemosUseCases(
+@Suppress("LongParameterList")
+@Inject
+class MemosUseCases(
   val loadMemos: LoadMemosUseCase,
   val loadCachedMemos: LoadCachedMemosUseCase,
   val loadCredentials: LoadCredentialsUseCase,

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "Running pre-commit checks..."
+
+./gradlew checkAll --quiet
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "Pre-commit verification failed. Please fix the issues above before committing."
+  exit 1
+fi
+
+echo "Pre-commit verification passed."
