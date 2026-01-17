@@ -1,5 +1,6 @@
 package space.be1ski.vibits.shared.feature.memos.data
 
+import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.shared.feature.memos.data.demo.DemoMemosRepository
 import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
 import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemosRepository
@@ -12,6 +13,7 @@ import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeReposito
  * Repository that delegates to online, offline, or demo implementation based on current mode.
  * Clears cache when switching modes to ensure data isolation.
  */
+@Inject
 class ModeAwareMemosRepository(
   private val appModeRepository: AppModeRepository,
   private val onlineRepository: MemosRepositoryImpl,

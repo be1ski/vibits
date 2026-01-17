@@ -4,18 +4,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import org.koin.core.context.GlobalContext
-import org.koin.core.context.startKoin
 import space.be1ski.vibits.shared.app.AppRoot
-import space.be1ski.vibits.shared.di.createAppDependencies
-import space.be1ski.vibits.shared.di.sharedModule
+import space.be1ski.vibits.shared.di.AppGraph
 
 fun main() =
   application {
-    startKoin {
-      modules(sharedModule())
-    }
-    val dependencies = GlobalContext.get().createAppDependencies()
+    val dependencies = AppGraph.createAppDependencies()
 
     Window(
       onCloseRequest = ::exitApplication,
