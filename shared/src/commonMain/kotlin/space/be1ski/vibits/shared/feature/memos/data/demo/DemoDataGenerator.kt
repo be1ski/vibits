@@ -40,13 +40,14 @@ internal object DemoDataGenerator {
   )
 
   private const val MONTHS_OF_HISTORY = 18
-  private const val ZERO_MOTIVATION_CHANCE = 0.06f
+  private const val ZERO_MOTIVATION_CHANCE = 0.12f
   private const val CONFIG_HOUR = 8
-  private const val DAILY_HOUR = 22
   private const val SEASONAL_MODIFIER_BASE = 5
   private const val SEASONAL_MODIFIER_FACTOR = 0.01f
   private const val MIN_COMPLETION_RATE = 0.1f
   private const val MAX_COMPLETION_RATE = 0.98f
+  private const val POST_GENERATION_CHANCE = 0.15f
+  private val DAILY_HOURS = listOf(7, 9, 12, 14, 18, 21, 23)
 
   /**
    * Generates all demo memos including config and daily memos.
@@ -69,16 +70,21 @@ internal object DemoDataGenerator {
     while (currentDate <= today) {
       // Some days have zero motivation - skip them entirely
       if (random.nextFloat() >= ZERO_MOTIVATION_CHANCE) {
-        val dailyInstant = instantForDate(currentDate, hoursOffset = DAILY_HOUR)
+        val dailyHour = DAILY_HOURS[random.nextInt(DAILY_HOURS.size)]
+        val dailyInstant = instantForDate(currentDate, hoursOffset = dailyHour)
         val completedHabits = selectCompletedHabits(currentDate, random)
         if (completedHabits.isNotEmpty()) {
           memos.add(createDailyMemo(currentDate, completedHabits, dailyInstant))
         }
       }
+      // Generate regular posts randomly throughout the period
+      if (random.nextFloat() < POST_GENERATION_CHANCE) {
+        memos.add(createRandomPost(currentDate, random))
+      }
       currentDate = currentDate.nextDay()
     }
 
-    // Add a few regular memos for variety
+    // Add a few recent sample memos for variety
     memos.addAll(createSampleMemos(today))
 
     return memos
@@ -134,6 +140,36 @@ internal object DemoDataGenerator {
       val adjustedRate = (rate * seasonalModifier).coerceIn(MIN_COMPLETION_RATE, MAX_COMPLETION_RATE)
       random.nextFloat() < adjustedRate
     }
+  }
+
+  private val randomPostContents = listOf(
+    "Quick thought: Need to organize my workspace tomorrow.",
+    "Idea: Try the new coffee shop on 5th street.",
+    "Note to self: Call dentist for appointment.",
+    "Interesting article about productivity I found today.",
+    "Weather is nice, should go for a walk later.",
+    "Meeting notes from today's standup.",
+    "Reminder: Pick up groceries on the way home.",
+    "Book recommendation from a friend - need to check it out.",
+    "Finished debugging that tricky issue finally!",
+    "Planning the weekend trip - need to book hotel.",
+    "New recipe to try: Thai curry with coconut milk.",
+    "Watched a great documentary about space exploration.",
+    "Phone battery dying too fast, might need replacement.",
+    "Good conversation with team today about the project.",
+    "Found a useful shortcut in the IDE today."
+  )
+
+  private fun createRandomPost(date: LocalDate, random: Random): Memo {
+    val hour = DAILY_HOURS[random.nextInt(DAILY_HOURS.size)]
+    val content = randomPostContents[random.nextInt(randomPostContents.size)]
+    val instant = instantForDate(date, hoursOffset = hour)
+    return Memo(
+      name = "memos/demo_post_${date}_$hour",
+      content = content,
+      createTime = instant,
+      updateTime = instant
+    )
   }
 
   private fun createSampleMemos(today: LocalDate): List<Memo> {

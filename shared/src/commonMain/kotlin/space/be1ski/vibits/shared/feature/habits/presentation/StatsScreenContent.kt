@@ -76,6 +76,7 @@ import space.be1ski.vibits.shared.feature.habits.presentation.components.localiz
 import space.be1ski.vibits.shared.feature.habits.presentation.components.ContributionGrid
 import space.be1ski.vibits.shared.feature.habits.presentation.components.ContributionGridState
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.CountDailyPostsUseCase
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.presentation.components.calculateLayout
 import space.be1ski.vibits.shared.feature.habits.presentation.components.habitsConfigForDate
@@ -301,7 +302,7 @@ private fun HeatmapTimeBlocks(
   labelWidth: androidx.compose.ui.unit.Dp,
   spacing: androidx.compose.ui.unit.Dp
 ) {
-  val activeColor = AppColors.habitGradientEnd.resolve()
+  val activeColor = AppColors.habitBlue.resolve()
   val inactiveColor = AppColors.inactiveCell.resolve()
 
   timeBlockLabels.forEachIndexed { blockIndex, label ->
@@ -426,7 +427,7 @@ private fun rememberPeriodMemos(
       start to end
     }
   }
-  memos.filter { memo ->
+  CountDailyPostsUseCase.filterPosts(memos).filter { memo ->
     val instant = memo.createTime ?: memo.updateTime ?: return@filter false
     val date = instant.toLocalDateTime(timeZone).date
     date in start..end
