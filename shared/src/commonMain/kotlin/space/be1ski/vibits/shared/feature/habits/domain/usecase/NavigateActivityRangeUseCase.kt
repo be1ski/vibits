@@ -50,7 +50,13 @@ class NavigateActivityRangeUseCase {
         val endDate = range.startDate.plus(DatePeriod(days = WEEK_END_OFFSET))
         val currentYear = currentLocalDate().year
         val showYear = range.startDate.year != currentYear
-        "${formatMonthDay(range.startDate, showYear)} - ${formatMonthDay(endDate, showYear)}"
+        if (!showYear) {
+          "${formatMonthDay(range.startDate)} - ${formatMonthDay(endDate)}"
+        } else if (range.startDate.year == endDate.year) {
+          "${formatMonthDay(range.startDate)} - ${formatMonthDay(endDate)} (${endDate.year})"
+        } else {
+          "${formatMonthDay(range.startDate)}, ${range.startDate.year} – ${formatMonthDay(endDate)}, ${endDate.year}"
+        }
       }
       is ActivityRange.Month -> "${monthShort(range.month)} ${range.year}"
       is ActivityRange.Quarter -> "Q${range.index} ${range.year}"
