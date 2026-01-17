@@ -26,6 +26,11 @@ jobs:
       - name: Run tests
         run: ./gradlew :shared:desktopTest
 
+      # Run specific ktlint source set checks instead of umbrella `ktlintCheck`.
+      # On Linux CI, iOS platform-specific source sets (IosArm64, IosX64, IosSimulatorArm64)
+      # cannot be compiled (no Xcode/iOS SDK), and ktlint tasks for them trigger KSP/compilation.
+      # These source sets are empty anyway (only `dependsOn(iosMain)`), so we skip them
+      # and check `iosMain` which contains all shared iOS code.
       - name: Run ktlint
         run: ./gradlew :shared:ktlintCommonMainSourceSetCheck :shared:ktlintCommonTestSourceSetCheck :shared:ktlintRoomMainSourceSetCheck :shared:ktlintAndroidMainSourceSetCheck :shared:ktlintDesktopMainSourceSetCheck :shared:ktlintWasmJsMainSourceSetCheck :shared:ktlintIosMainSourceSetCheck :androidApp:ktlintCheck :desktopApp:ktlintCheck :webApp:ktlintCheck
 
