@@ -75,6 +75,7 @@
 
     <!-- Labels -->
     <string name="label_access_token">Access token</string>
+    <string name="label_language">Language</string>
     <string name="label_time_night">Night</string>
     <string name="label_time_morning">Morning</string>
     <string name="label_time_day">Day</string>
@@ -103,6 +104,18 @@
     <string name="msg_select_habit">Select at least one habit.</string>
     <string name="msg_mark_done_confirm">Mark "%1$s" as completed for %2$s?</string>
     <string name="msg_mark_not_done_confirm">Remove completion for "%1$s" on %2$s?</string>
+    <string name="msg_restart_required">Restart required to apply language change</string>
+
+    <!-- Language selection -->
+    <string name="language_system">System</string>
+    <string name="language_english">English</string>
+    <string name="language_russian">Русский</string>
+
+    <!-- Theme selection -->
+    <string name="label_theme">Theme</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
 
     <!-- Mode selection -->
     <string name="mode_select_title">Select Mode</string>

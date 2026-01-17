@@ -1,5 +1,7 @@
 package space.be1ski.vibits.shared.feature.preferences.data
 
+import space.be1ski.vibits.shared.feature.preferences.domain.model.AppLanguage
+import space.be1ski.vibits.shared.feature.preferences.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
 import space.be1ski.vibits.shared.feature.preferences.domain.model.UserPreferences
 import space.be1ski.vibits.shared.feature.preferences.domain.repository.PreferencesRepository
@@ -14,7 +16,14 @@ internal class PreferencesRepositoryImpl(
     val local = preferencesStore.load()
     val habitsTab = parseTimeRangeTab(local.habitsTimeRangeTab)
     val postsTab = parseTimeRangeTab(local.postsTimeRangeTab)
-    return UserPreferences(habitsTimeRangeTab = habitsTab, postsTimeRangeTab = postsTab)
+    val language = parseLanguage(local.language)
+    val theme = parseTheme(local.theme)
+    return UserPreferences(
+      habitsTimeRangeTab = habitsTab,
+      postsTimeRangeTab = postsTab,
+      language = language,
+      theme = theme,
+    )
   }
 
   override fun save(preferences: UserPreferences) {
@@ -22,9 +31,15 @@ internal class PreferencesRepositoryImpl(
       LocalUserPreferences(
         habitsTimeRangeTab = preferences.habitsTimeRangeTab.name,
         postsTimeRangeTab = preferences.postsTimeRangeTab.name,
+        language = preferences.language.name,
+        theme = preferences.theme.name,
       )
     preferencesStore.save(local)
   }
 
   private fun parseTimeRangeTab(value: String): TimeRangeTab = runCatching { TimeRangeTab.valueOf(value) }.getOrDefault(TimeRangeTab.WEEKS)
+
+  private fun parseLanguage(value: String): AppLanguage = runCatching { AppLanguage.valueOf(value) }.getOrDefault(AppLanguage.SYSTEM)
+
+  private fun parseTheme(value: String): AppTheme = runCatching { AppTheme.valueOf(value) }.getOrDefault(AppTheme.SYSTEM)
 }

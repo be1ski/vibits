@@ -34,18 +34,23 @@ import space.be1ski.vibits.shared.feature.habits.presentation.components.remembe
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
+import space.be1ski.vibits.shared.feature.preferences.domain.model.AppLanguage
+import space.be1ski.vibits.shared.feature.preferences.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
 import space.be1ski.vibits.shared.nav_feed
 import space.be1ski.vibits.shared.nav_habits
 import space.be1ski.vibits.shared.nav_memos
 import space.be1ski.vibits.shared.nav_settings
 
+@Suppress("LongParameterList")
 @Composable
 internal fun MemosHeader(
   memosState: MemosState,
   appState: VibitsAppUiState,
   dispatchMemos: (MemosAction) -> Unit,
   dispatchSettings: (SettingsAction) -> Unit,
+  language: AppLanguage,
+  theme: AppTheme,
 ) {
   Row(
     modifier = Modifier.fillMaxWidth(),
@@ -66,6 +71,8 @@ internal fun MemosHeader(
               baseUrl = memosState.baseUrl,
               token = memosState.token,
               appMode = appState.appMode,
+              language = language,
+              theme = theme,
             ),
           )
         },

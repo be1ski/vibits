@@ -3,6 +3,7 @@ package space.be1ski.vibits.shared.di
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import space.be1ski.vibits.shared.core.network.createHttpClient
+import space.be1ski.vibits.shared.core.platform.LocaleProvider
 import space.be1ski.vibits.shared.data.local.AppDetailsProvider
 import space.be1ski.vibits.shared.domain.usecase.LoadAppDetailsUseCase
 import space.be1ski.vibits.shared.feature.auth.data.CredentialsRepositoryImpl
@@ -45,6 +46,8 @@ import space.be1ski.vibits.shared.feature.preferences.data.PreferencesRepository
 import space.be1ski.vibits.shared.feature.preferences.data.PreferencesStore
 import space.be1ski.vibits.shared.feature.preferences.domain.repository.PreferencesRepository
 import space.be1ski.vibits.shared.feature.preferences.domain.usecase.LoadPreferencesUseCase
+import space.be1ski.vibits.shared.feature.preferences.domain.usecase.SaveLanguageUseCase
+import space.be1ski.vibits.shared.feature.preferences.domain.usecase.SaveThemeUseCase
 import space.be1ski.vibits.shared.feature.preferences.domain.usecase.SaveTimeRangeTabUseCase
 
 /**
@@ -56,6 +59,7 @@ fun sharedModule(): Module =
     single { CredentialsStore() }
     single { MemoCache() }
     single { PreferencesStore() }
+    single { LocaleProvider() }
     single { AppDetailsProvider() }
     single { MemoMapper() }
     single { MemosApi(get()) }
@@ -77,6 +81,8 @@ fun sharedModule(): Module =
     factory { SaveCredentialsUseCase(get()) }
     factory { ValidateCredentialsUseCase(get()) }
     factory { SaveTimeRangeTabUseCase(get()) }
+    factory { SaveLanguageUseCase(get(), get()) }
+    factory { SaveThemeUseCase(get()) }
     factory { CreateMemoUseCase(get()) }
     factory { UpdateMemoUseCase(get()) }
     factory { DeleteMemoUseCase(get()) }

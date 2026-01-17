@@ -1,6 +1,8 @@
 package space.be1ski.vibits.shared.feature.settings.presentation
 
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
+import space.be1ski.vibits.shared.feature.preferences.domain.model.AppLanguage
+import space.be1ski.vibits.shared.feature.preferences.domain.model.AppTheme
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -15,7 +17,13 @@ class SettingsReducerTest {
   fun `when Open then opens dialog with provided values`() {
     val (newState, effects) =
       settingsReducer(
-        SettingsAction.Open(baseUrl = "https://api.com", token = "secret", appMode = AppMode.ONLINE),
+        SettingsAction.Open(
+          baseUrl = "https://api.com",
+          token = "secret",
+          appMode = AppMode.ONLINE,
+          language = AppLanguage.SYSTEM,
+          theme = AppTheme.SYSTEM,
+        ),
         SettingsState(),
       )
 

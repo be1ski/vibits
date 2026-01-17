@@ -15,10 +15,14 @@ class SettingsEffectHandler(
       is SettingsEffect.SwitchMode -> handleSwitchMode(effect)
       is SettingsEffect.SaveCredentials -> handleSaveCredentials(effect)
       is SettingsEffect.ResetApp -> handleResetApp()
+      is SettingsEffect.SaveLanguage -> handleSaveLanguage(effect)
+      is SettingsEffect.SaveTheme -> handleSaveTheme(effect)
       // Parent notification effects are not handled here - they flow through to VibitsApp
       is SettingsEffect.NotifyModeChanged,
       is SettingsEffect.NotifyResetCompleted,
       is SettingsEffect.NotifyCredentialsSaved,
+      is SettingsEffect.NotifyLanguageChanged,
+      is SettingsEffect.NotifyThemeChanged,
       is SettingsEffect.NotifyDialogClosed,
       -> emptyFlow()
     }
@@ -46,5 +50,15 @@ class SettingsEffectHandler(
     flow {
       useCases.resetApp()
       emit(SettingsAction.ResetCompleted)
+    }
+
+  private fun handleSaveLanguage(effect: SettingsEffect.SaveLanguage): Flow<SettingsAction> =
+    emptyFlow<SettingsAction>().also {
+      useCases.saveLanguage(effect.language)
+    }
+
+  private fun handleSaveTheme(effect: SettingsEffect.SaveTheme): Flow<SettingsAction> =
+    emptyFlow<SettingsAction>().also {
+      useCases.saveTheme(effect.theme)
     }
 }
