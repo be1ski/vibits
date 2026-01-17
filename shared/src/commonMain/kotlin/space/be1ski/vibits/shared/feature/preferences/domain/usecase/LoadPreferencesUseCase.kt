@@ -4,7 +4,7 @@ import space.be1ski.vibits.shared.feature.preferences.domain.model.UserPreferenc
 import space.be1ski.vibits.shared.feature.preferences.domain.repository.PreferencesRepository
 
 internal class LoadPreferencesUseCase(
-  private val preferencesRepository: PreferencesRepository
+  private val preferencesRepository: PreferencesRepository,
 ) {
   operator fun invoke(): UserPreferences = preferencesRepository.load()
 }

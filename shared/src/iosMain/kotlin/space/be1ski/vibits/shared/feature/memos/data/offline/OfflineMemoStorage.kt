@@ -19,13 +19,18 @@ import platform.Foundation.stringWithContentsOfFile
  */
 actual class OfflineMemoStorage {
   private val fileName = "memos.json"
-  private val json = Json { ignoreUnknownKeys = true; prettyPrint = true }
+  private val json =
+    Json {
+      ignoreUnknownKeys = true
+      prettyPrint = true
+    }
 
   @OptIn(ExperimentalForeignApi::class)
   actual fun load(): OfflineMemosFileDto {
     val fileManager = NSFileManager.defaultManager
-    val path = getFilePath()?.takeIf { fileManager.fileExistsAtPath(it) }
-      ?: return OfflineMemosFileDto()
+    val path =
+      getFilePath()?.takeIf { fileManager.fileExistsAtPath(it) }
+        ?: return OfflineMemosFileDto()
     return runCatching {
       val content = NSString.stringWithContentsOfFile(path, NSUTF8StringEncoding, null) ?: ""
       json.decodeFromString<OfflineMemosFileDto>(content)
@@ -38,9 +43,10 @@ actual class OfflineMemoStorage {
     runCatching {
       val content = json.encodeToString(OfflineMemosFileDto.serializer(), data)
       val bytes = content.encodeToByteArray()
-      val nsData = bytes.usePinned { pinned ->
-        NSData.create(bytes = pinned.addressOf(0), length = bytes.size.toULong())
-      }
+      val nsData =
+        bytes.usePinned { pinned ->
+          NSData.create(bytes = pinned.addressOf(0), length = bytes.size.toULong())
+        }
       NSFileManager.defaultManager.createFileAtPath(path, nsData, null)
     }
   }

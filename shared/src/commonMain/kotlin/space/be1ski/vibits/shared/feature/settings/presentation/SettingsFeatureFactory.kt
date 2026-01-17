@@ -9,14 +9,14 @@ fun createSettingsFeature(
   useCases: SettingsUseCases,
   initialMode: AppMode,
   appDetails: AppDetails,
-  initialState: SettingsState = SettingsState()
-): Feature<SettingsAction, SettingsState, SettingsEffect> {
-  return FeatureImpl(
-    initialState = initialState.copy(
-      appMode = initialMode,
-      appDetails = appDetails
-    ),
+  initialState: SettingsState = SettingsState(),
+): Feature<SettingsAction, SettingsState, SettingsEffect> =
+  FeatureImpl(
+    initialState =
+      initialState.copy(
+        appMode = initialMode,
+        appDetails = appDetails,
+      ),
     reducer = settingsReducer,
-    effectHandler = SettingsEffectHandler(useCases)
+    effectHandler = SettingsEffectHandler(useCases),
   )
-}

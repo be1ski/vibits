@@ -1,8 +1,8 @@
 package space.be1ski.vibits.shared.feature.memos.data.mapper
 
-import kotlin.time.Instant
 import space.be1ski.vibits.shared.feature.memos.data.remote.dto.MemoDto
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import kotlin.time.Instant
 
 /**
  * Maps network memo DTOs into domain models.
@@ -12,15 +12,17 @@ class MemoMapper {
     const val EPOCH_SECONDS_LENGTH = 10
     const val MILLIS_IN_SECOND = 1000L
   }
+
   /**
    * Converts a [MemoDto] into a domain [Memo].
    */
-  fun toDomain(dto: MemoDto): Memo = Memo(
-    name = dto.name,
-    content = dto.content,
-    createTime = parseInstant(dto.createTime),
-    updateTime = parseInstant(dto.updateTime)
-  )
+  fun toDomain(dto: MemoDto): Memo =
+    Memo(
+      name = dto.name,
+      content = dto.content,
+      createTime = parseInstant(dto.createTime),
+      updateTime = parseInstant(dto.updateTime),
+    )
 
   /**
    * Converts a list of [MemoDto] into domain [Memo] models.

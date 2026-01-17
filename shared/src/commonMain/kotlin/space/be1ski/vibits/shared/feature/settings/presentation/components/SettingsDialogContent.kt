@@ -4,7 +4,6 @@ package space.be1ski.vibits.shared.feature.settings.presentation.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -48,8 +47,8 @@ import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_cancel
 import space.be1ski.vibits.shared.action_clear
-import space.be1ski.vibits.shared.action_copied
 import space.be1ski.vibits.shared.action_close
+import space.be1ski.vibits.shared.action_copied
 import space.be1ski.vibits.shared.action_reset
 import space.be1ski.vibits.shared.action_reset_app
 import space.be1ski.vibits.shared.action_save
@@ -60,11 +59,6 @@ import space.be1ski.vibits.shared.domain.model.app.AppDetails
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsState
-import space.be1ski.vibits.shared.format_app_version
-import space.be1ski.vibits.shared.format_credentials
-import space.be1ski.vibits.shared.format_environment
-import space.be1ski.vibits.shared.format_memos_db
-import space.be1ski.vibits.shared.format_offline_storage
 import space.be1ski.vibits.shared.hint_base_url
 import space.be1ski.vibits.shared.label_access_token
 import space.be1ski.vibits.shared.label_app_mode
@@ -87,7 +81,7 @@ import space.be1ski.vibits.shared.title_logs
 @Composable
 internal fun SettingsDialog(
   state: SettingsState,
-  dispatch: (SettingsAction) -> Unit
+  dispatch: (SettingsAction) -> Unit,
 ) {
   if (!state.isOpen) {
     return
@@ -99,7 +93,7 @@ internal fun SettingsDialog(
       SettingsDialogBody(state = state, dispatch = dispatch)
     },
     confirmButton = { SettingsDialogConfirmButton(dispatch) },
-    dismissButton = { SettingsDialogDismissButton(dispatch) }
+    dismissButton = { SettingsDialogDismissButton(dispatch) },
   )
 
   if (state.showLogsDialog) {
@@ -109,7 +103,7 @@ internal fun SettingsDialog(
   if (state.showResetConfirmation) {
     ResetConfirmationDialog(
       onConfirm = { dispatch(SettingsAction.ConfirmReset) },
-      onDismiss = { dispatch(SettingsAction.CancelReset) }
+      onDismiss = { dispatch(SettingsAction.CancelReset) },
     )
   }
 }
@@ -117,21 +111,22 @@ internal fun SettingsDialog(
 @Composable
 private fun SettingsDialogBody(
   state: SettingsState,
-  dispatch: (SettingsAction) -> Unit
+  dispatch: (SettingsAction) -> Unit,
 ) {
-  val validationErrorMessage = state.validationError?.let { errorKey ->
-    when (errorKey) {
-      "fill_all_fields" -> stringResource(Res.string.msg_fill_all_fields)
-      "connection_failed" -> stringResource(Res.string.msg_connection_failed)
-      else -> errorKey
+  val validationErrorMessage =
+    state.validationError?.let { errorKey ->
+      when (errorKey) {
+        "fill_all_fields" -> stringResource(Res.string.msg_fill_all_fields)
+        "connection_failed" -> stringResource(Res.string.msg_connection_failed)
+        else -> errorKey
+      }
     }
-  }
 
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
     AppModeSelector(
       currentMode = state.appMode,
       isValidating = state.isValidating,
-      onModeChange = { mode -> dispatch(SettingsAction.SelectMode(mode)) }
+      onModeChange = { mode -> dispatch(SettingsAction.SelectMode(mode)) },
     )
     validationErrorMessage?.let { error ->
       Text(error, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
@@ -143,7 +138,7 @@ private fun SettingsDialogBody(
         label = { Text(stringResource(Res.string.label_base_url)) },
         placeholder = { Text(stringResource(Res.string.hint_base_url)) },
         singleLine = true,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
       )
       TextField(
         value = state.editToken,
@@ -151,7 +146,7 @@ private fun SettingsDialogBody(
         label = { Text(stringResource(Res.string.label_access_token)) },
         visualTransformation = PasswordVisualTransformation(),
         singleLine = true,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
       )
     }
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
@@ -172,7 +167,7 @@ private fun SettingsDialogBody(
 private fun AppModeSelector(
   currentMode: AppMode,
   isValidating: Boolean,
-  onModeChange: (AppMode) -> Unit
+  onModeChange: (AppMode) -> Unit,
 ) {
   Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
     Text(stringResource(Res.string.label_app_mode))
@@ -181,7 +176,7 @@ private fun AppModeSelector(
         selected = currentMode == AppMode.ONLINE,
         onClick = { if (!isValidating) onModeChange(AppMode.ONLINE) },
         enabled = !isValidating,
-        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3)
+        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
       ) {
         if (isValidating && currentMode != AppMode.ONLINE) {
           CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
@@ -193,7 +188,7 @@ private fun AppModeSelector(
         selected = currentMode == AppMode.OFFLINE,
         onClick = { if (!isValidating) onModeChange(AppMode.OFFLINE) },
         enabled = !isValidating,
-        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3)
+        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
       ) {
         Text(stringResource(Res.string.mode_offline_title))
       }
@@ -201,7 +196,7 @@ private fun AppModeSelector(
         selected = currentMode == AppMode.DEMO,
         onClick = { if (!isValidating) onModeChange(AppMode.DEMO) },
         enabled = !isValidating,
-        shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3)
+        shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
       ) {
         Text(stringResource(Res.string.mode_demo_title))
       }
@@ -213,7 +208,10 @@ private const val TOAST_DURATION_MS = 1500L
 
 @Suppress("DEPRECATION")
 @Composable
-private fun AppDetailsSection(appDetails: AppDetails, appMode: AppMode) {
+private fun AppDetailsSection(
+  appDetails: AppDetails,
+  appMode: AppMode,
+) {
   val clipboardManager = LocalClipboardManager.current
   val scope = rememberCoroutineScope()
   var copiedKey by remember { mutableStateOf<String?>(null) }
@@ -235,7 +233,7 @@ private fun AppDetailsSection(appDetails: AppDetails, appMode: AppMode) {
         value = appDetails.environment,
         isCopied = copiedKey == "environment",
         copiedLabel = copiedLabel,
-        onCopy = { onCopy("environment", it) }
+        onCopy = { onCopy("environment", it) },
       )
       if (appMode == AppMode.OFFLINE) {
         CopyableInfoRow(
@@ -244,7 +242,7 @@ private fun AppDetailsSection(appDetails: AppDetails, appMode: AppMode) {
           displayValue = shortenPath(appDetails.offlineStorage),
           isCopied = copiedKey == "storage",
           copiedLabel = copiedLabel,
-          onCopy = { onCopy("storage", it) }
+          onCopy = { onCopy("storage", it) },
         )
       } else {
         CopyableInfoRow(
@@ -252,7 +250,7 @@ private fun AppDetailsSection(appDetails: AppDetails, appMode: AppMode) {
           value = appDetails.credentialsStore,
           isCopied = copiedKey == "credentials",
           copiedLabel = copiedLabel,
-          onCopy = { onCopy("credentials", it) }
+          onCopy = { onCopy("credentials", it) },
         )
         CopyableInfoRow(
           label = stringResource(Res.string.label_memos_db),
@@ -260,7 +258,7 @@ private fun AppDetailsSection(appDetails: AppDetails, appMode: AppMode) {
           displayValue = shortenPath(appDetails.memosDatabase),
           isCopied = copiedKey == "memosDb",
           copiedLabel = copiedLabel,
-          onCopy = { onCopy("memosDb", it) }
+          onCopy = { onCopy("memosDb", it) },
         )
       }
     }
@@ -269,7 +267,7 @@ private fun AppDetailsSection(appDetails: AppDetails, appMode: AppMode) {
       value = appDetails.version,
       isCopied = copiedKey == "version",
       copiedLabel = copiedLabel,
-      onCopy = { onCopy("version", it) }
+      onCopy = { onCopy("version", it) },
     )
   }
 }
@@ -282,29 +280,30 @@ private fun CopyableInfoRow(
   displayValue: String = value,
   isCopied: Boolean,
   copiedLabel: String,
-  onCopy: (String) -> Unit
+  onCopy: (String) -> Unit,
 ) {
   Row(
     horizontalArrangement = Arrangement.spacedBy(4.dp),
     verticalAlignment = Alignment.CenterVertically,
-    modifier = Modifier.clickable { onCopy(value) }
+    modifier = Modifier.clickable { onCopy(value) },
   ) {
     Text(
-      text = buildAnnotatedString {
-        append("$label: ")
-        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-          append(displayValue)
-        }
-      },
+      text =
+        buildAnnotatedString {
+          append("$label: ")
+          withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+            append(displayValue)
+          }
+        },
       style = MaterialTheme.typography.bodySmall,
       color = MaterialTheme.colorScheme.onSurfaceVariant,
-      maxLines = 1
+      maxLines = 1,
     )
     if (isCopied) {
       Text(
         text = copiedLabel,
         style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.primary
+        color = MaterialTheme.colorScheme.primary,
       )
     }
   }
@@ -313,13 +312,12 @@ private fun CopyableInfoRow(
 private const val PATH_MAX_LENGTH = 30
 private const val ELLIPSIS_LENGTH = 3
 
-private fun shortenPath(path: String): String {
-  return if (path.length > PATH_MAX_LENGTH) {
+private fun shortenPath(path: String): String =
+  if (path.length > PATH_MAX_LENGTH) {
     "..." + path.takeLast(PATH_MAX_LENGTH - ELLIPSIS_LENGTH)
   } else {
     path
   }
-}
 
 @Composable
 private fun SettingsDialogConfirmButton(dispatch: (SettingsAction) -> Unit) {
@@ -338,7 +336,7 @@ private fun SettingsDialogDismissButton(dispatch: (SettingsAction) -> Unit) {
 @Composable
 private fun ResetConfirmationDialog(
   onConfirm: () -> Unit,
-  onDismiss: () -> Unit
+  onDismiss: () -> Unit,
 ) {
   AlertDialog(
     onDismissRequest = onDismiss,
@@ -353,7 +351,7 @@ private fun ResetConfirmationDialog(
       TextButton(onClick = onDismiss) {
         Text(stringResource(Res.string.action_cancel))
       }
-    }
+    },
   )
 }
 
@@ -369,36 +367,40 @@ private fun LogsDialog(onDismiss: () -> Unit) {
     title = { Text(stringResource(Res.string.title_logs, logs.size)) },
     text = {
       LazyColumn(
-        modifier = Modifier
-          .fillMaxWidth()
-          .heightIn(max = 400.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        modifier =
+          Modifier
+            .fillMaxWidth()
+            .heightIn(max = 400.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
       ) {
         items(logs) { entry ->
-          val bgColor = when (entry.level) {
-            LogLevel.ERROR -> MaterialTheme.colorScheme.errorContainer
-            LogLevel.WARN -> MaterialTheme.colorScheme.tertiaryContainer
-            else -> MaterialTheme.colorScheme.surfaceVariant
-          }
+          val bgColor =
+            when (entry.level) {
+              LogLevel.ERROR -> MaterialTheme.colorScheme.errorContainer
+              LogLevel.WARN -> MaterialTheme.colorScheme.tertiaryContainer
+              else -> MaterialTheme.colorScheme.surfaceVariant
+            }
           Column(
-            modifier = Modifier
-              .fillMaxWidth()
-              .background(bgColor, RoundedCornerShape(4.dp))
-              .padding(6.dp)
+            modifier =
+              Modifier
+                .fillMaxWidth()
+                .background(bgColor, RoundedCornerShape(4.dp))
+                .padding(6.dp),
           ) {
             val time = entry.timestamp.substringAfter('T').take(LOG_TIMESTAMP_LENGTH)
             val header = "$time ${entry.level.name.first()}/${entry.tag}"
             Text(
               text = header,
               style = MaterialTheme.typography.labelSmall,
-              color = MaterialTheme.colorScheme.onSurfaceVariant
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
               text = entry.message,
-              style = MaterialTheme.typography.bodySmall.copy(
-                fontFamily = FontFamily.Monospace,
-                fontSize = 11.sp
-              )
+              style =
+                MaterialTheme.typography.bodySmall.copy(
+                  fontFamily = FontFamily.Monospace,
+                  fontSize = 11.sp,
+                ),
             )
           }
         }
@@ -407,7 +409,7 @@ private fun LogsDialog(onDismiss: () -> Unit) {
             Text(
               stringResource(Res.string.msg_no_logs),
               style = MaterialTheme.typography.bodyMedium,
-              color = MaterialTheme.colorScheme.onSurfaceVariant
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
           }
         }
@@ -422,7 +424,6 @@ private fun LogsDialog(onDismiss: () -> Unit) {
       TextButton(onClick = onDismiss) {
         Text(stringResource(Res.string.action_close))
       }
-    }
+    },
   )
 }
-

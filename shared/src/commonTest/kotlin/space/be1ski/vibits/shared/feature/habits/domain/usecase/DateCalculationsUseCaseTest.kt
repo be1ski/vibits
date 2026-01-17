@@ -11,7 +11,6 @@ import kotlin.test.assertNull
 import kotlin.time.Instant as KtInstant
 
 class DateCalculationsUseCaseTest {
-
   private val useCase = DateCalculationsUseCase()
   private val timeZone = TimeZone.UTC
 
@@ -94,10 +93,11 @@ class DateCalculationsUseCaseTest {
 
   @Test
   fun `earliestMemoDate returns earliest date from content`() {
-    val memos = listOf(
-      createMemo("#daily 2024-03-15", KtInstant.parse("2024-01-10T10:00:00Z")),
-      createMemo("#daily 2024-01-01", KtInstant.parse("2024-01-15T10:00:00Z"))
-    )
+    val memos =
+      listOf(
+        createMemo("#daily 2024-03-15", KtInstant.parse("2024-01-10T10:00:00Z")),
+        createMemo("#daily 2024-01-01", KtInstant.parse("2024-01-15T10:00:00Z")),
+      )
 
     val result = useCase.earliestMemoDate(memos, timeZone)
 
@@ -106,10 +106,11 @@ class DateCalculationsUseCaseTest {
 
   @Test
   fun `earliestMemoDate uses memo date when no date in content`() {
-    val memos = listOf(
-      createMemo("Regular content", KtInstant.parse("2024-01-10T10:00:00Z")),
-      createMemo("Another content", KtInstant.parse("2024-01-15T10:00:00Z"))
-    )
+    val memos =
+      listOf(
+        createMemo("Regular content", KtInstant.parse("2024-01-10T10:00:00Z")),
+        createMemo("Another content", KtInstant.parse("2024-01-15T10:00:00Z")),
+      )
 
     val result = useCase.earliestMemoDate(memos, timeZone)
 
@@ -123,12 +124,14 @@ class DateCalculationsUseCaseTest {
     assertNull(result)
   }
 
-  private fun createMemo(content: String, createTime: KtInstant): Memo {
-    return Memo(
+  private fun createMemo(
+    content: String,
+    createTime: KtInstant,
+  ): Memo =
+    Memo(
       name = "memos/test",
       content = content,
       createTime = createTime,
-      updateTime = null
+      updateTime = null,
     )
-  }
 }

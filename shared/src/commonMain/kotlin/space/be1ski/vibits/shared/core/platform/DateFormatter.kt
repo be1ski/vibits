@@ -48,29 +48,31 @@ fun ProvideDateFormatter(content: @Composable () -> Unit) {
 
 @Composable
 private fun rememberDateFormatter(): DateFormatter {
-  val monthsShort = listOf(
-    stringResource(Res.string.month_jan),
-    stringResource(Res.string.month_feb),
-    stringResource(Res.string.month_mar),
-    stringResource(Res.string.month_apr),
-    stringResource(Res.string.month_may),
-    stringResource(Res.string.month_jun),
-    stringResource(Res.string.month_jul),
-    stringResource(Res.string.month_aug),
-    stringResource(Res.string.month_sep),
-    stringResource(Res.string.month_oct),
-    stringResource(Res.string.month_nov),
-    stringResource(Res.string.month_dec)
-  )
-  val daysOfWeek = listOf(
-    stringResource(Res.string.day_mon),
-    stringResource(Res.string.day_tue),
-    stringResource(Res.string.day_wed),
-    stringResource(Res.string.day_thu),
-    stringResource(Res.string.day_fri),
-    stringResource(Res.string.day_sat),
-    stringResource(Res.string.day_sun)
-  )
+  val monthsShort =
+    listOf(
+      stringResource(Res.string.month_jan),
+      stringResource(Res.string.month_feb),
+      stringResource(Res.string.month_mar),
+      stringResource(Res.string.month_apr),
+      stringResource(Res.string.month_may),
+      stringResource(Res.string.month_jun),
+      stringResource(Res.string.month_jul),
+      stringResource(Res.string.month_aug),
+      stringResource(Res.string.month_sep),
+      stringResource(Res.string.month_oct),
+      stringResource(Res.string.month_nov),
+      stringResource(Res.string.month_dec),
+    )
+  val daysOfWeek =
+    listOf(
+      stringResource(Res.string.day_mon),
+      stringResource(Res.string.day_tue),
+      stringResource(Res.string.day_wed),
+      stringResource(Res.string.day_thu),
+      stringResource(Res.string.day_fri),
+      stringResource(Res.string.day_sat),
+      stringResource(Res.string.day_sun),
+    )
   return remember(monthsShort, daysOfWeek) {
     DateFormatter(monthsShort, daysOfWeek)
   }
@@ -81,40 +83,33 @@ private fun rememberDateFormatter(): DateFormatter {
  */
 class DateFormatter(
   private val monthsShort: List<String> = emptyList(),
-  private val daysOfWeek: List<String> = emptyList()
+  private val daysOfWeek: List<String> = emptyList(),
 ) {
-
   /**
    * Short month name: "Jan", "Feb", "Mar"
    */
-  fun monthShort(month: Month): String {
-    return monthsShort.getOrNull(month.ordinal) ?: fallbackMonthShort(month)
-  }
+  fun monthShort(month: Month): String = monthsShort.getOrNull(month.ordinal) ?: fallbackMonthShort(month)
 
   /**
    * Single letter month initial: "J", "F", "M"
    */
-  fun monthInitial(month: Month): String {
-    return monthShort(month).take(1)
-  }
+  fun monthInitial(month: Month): String = monthShort(month).take(1)
 
   /**
    * Short day of week: "Mo", "Tu", "We"
    */
-  fun dayOfWeekShort(day: DayOfWeek): String {
-    return daysOfWeek.getOrNull(day.ordinal) ?: fallbackDayOfWeekShort(day)
-  }
+  fun dayOfWeekShort(day: DayOfWeek): String = daysOfWeek.getOrNull(day.ordinal) ?: fallbackDayOfWeekShort(day)
 
-  private fun fallbackDayOfWeekShort(day: DayOfWeek): String {
-    return day.name.take(SHORT_DAY_LENGTH).lowercase().replaceFirstChar { it.uppercase() }
-  }
+  private fun fallbackDayOfWeekShort(day: DayOfWeek): String =
+    day.name
+      .take(SHORT_DAY_LENGTH)
+      .lowercase()
+      .replaceFirstChar { it.uppercase() }
 
   /**
    * Month and day: "Jan 15"
    */
-  fun monthDay(date: LocalDate): String {
-    return "${monthShort(date.month)} ${date.day}"
-  }
+  fun monthDay(date: LocalDate): String = "${monthShort(date.month)} ${date.day}"
 
   /**
    * Full date with time: "2026-01-17 14:30"
@@ -139,7 +134,11 @@ class DateFormatter(
    * - Past/future year (same): "Jan 8 - Jan 14 (2024)"
    * - Cross-year: "Dec 30, 2024 – Jan 5, 2025"
    */
-  fun weekRange(start: LocalDate, end: LocalDate, currentYear: Int): String {
+  fun weekRange(
+    start: LocalDate,
+    end: LocalDate,
+    currentYear: Int,
+  ): String {
     val showYear = start.year != currentYear
     return if (!showYear) {
       "${monthDay(start)} - ${monthDay(end)}"
@@ -150,9 +149,11 @@ class DateFormatter(
     }
   }
 
-  private fun fallbackMonthShort(month: Month): String {
-    return month.name.take(SHORT_MONTH_LENGTH).lowercase().replaceFirstChar { it.uppercase() }
-  }
+  private fun fallbackMonthShort(month: Month): String =
+    month.name
+      .take(SHORT_MONTH_LENGTH)
+      .lowercase()
+      .replaceFirstChar { it.uppercase() }
 }
 
 private const val SHORT_MONTH_LENGTH = 3

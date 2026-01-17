@@ -7,16 +7,18 @@ import space.be1ski.vibits.shared.feature.memos.data.remote.MemosApi
  * Returns true if credentials are valid, false otherwise.
  */
 class ValidateCredentialsUseCase(
-  private val memosApi: MemosApi
+  private val memosApi: MemosApi,
 ) {
-  suspend operator fun invoke(baseUrl: String, token: String): Result<Unit> {
-    return runCatching {
+  suspend operator fun invoke(
+    baseUrl: String,
+    token: String,
+  ): Result<Unit> =
+    runCatching {
       memosApi.listMemos(
         baseUrl = baseUrl,
         token = token,
         pageSize = 1,
-        pageToken = null
+        pageToken = null,
       )
     }
-  }
 }

@@ -5,5 +5,6 @@ package space.be1ski.vibits.shared.feature.memos.data.offline
  */
 expect class OfflineMemoStorage() {
   fun load(): OfflineMemosFileDto
+
   fun save(data: OfflineMemosFileDto)
 }

@@ -9,7 +9,7 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
 internal fun buildTimelineLabels(
   weeks: List<ActivityWeek>,
   range: ActivityRange,
-  formatter: DateFormatter
+  formatter: DateFormatter,
 ): List<String> {
   if (weeks.isEmpty()) {
     return emptyList()
@@ -45,8 +45,6 @@ internal fun buildTimelineLabels(
   }
 }
 
-private fun isQuarterStart(date: LocalDate): Boolean {
-  return date.day <= QUARTER_START_DAY_LIMIT &&
+private fun isQuarterStart(date: LocalDate): Boolean =
+  date.day <= QUARTER_START_DAY_LIMIT &&
     date.month in setOf(Month.JANUARY, Month.APRIL, Month.JULY, Month.OCTOBER)
-}
-

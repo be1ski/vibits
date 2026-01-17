@@ -5,288 +5,295 @@ import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.habits.domain.buildDailyContent
 import space.be1ski.vibits.shared.feature.habits.domain.buildHabitsConfigContentFromList
 import space.be1ski.vibits.shared.feature.habits.domain.buildHabitsEditorSelections
-import space.be1ski.vibits.shared.feature.habits.domain.normalizeHabitTag
 import space.be1ski.vibits.shared.feature.habits.domain.model.DEFAULT_HABIT_COLOR
+import space.be1ski.vibits.shared.feature.habits.domain.normalizeHabitTag
 import kotlin.random.Random
 
 /**
  * Pure reducer for the Habits feature.
  * All state transitions are deterministic and testable.
  */
-val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> = reducer { action, state ->
-  when (action) {
-    is HabitsAction.OpenEditor -> {
-      val selections = buildHabitsEditorSelections(action.day, action.config)
-      state {
-        copy(
-          editorDay = action.day,
-          editorConfig = action.config,
-          editorSelections = selections,
-          editorExisting = action.day.dailyMemo,
-          editorError = null,
-          showDeleteConfirm = false
-        )
-      }
-    }
-
-    is HabitsAction.CloseEditor -> {
-      state {
-        copy(
-          editorDay = null,
-          editorConfig = emptyList(),
-          editorSelections = emptyMap(),
-          editorExisting = null,
-          editorError = null,
-          showDeleteConfirm = false
-        )
-      }
-    }
-
-    is HabitsAction.ToggleHabit -> {
-      state {
-        copy(editorSelections = editorSelections + (action.tag to action.checked))
-      }
-    }
-
-    is HabitsAction.ConfirmEditor -> {
-      val hasSelection = state.editorSelections.values.any { it }
-      when {
-        !hasSelection && state.editorExisting != null -> {
-          state { copy(showDeleteConfirm = true) }
+val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
+  reducer { action, state ->
+    when (action) {
+      is HabitsAction.OpenEditor -> {
+        val selections = buildHabitsEditorSelections(action.day, action.config)
+        state {
+          copy(
+            editorDay = action.day,
+            editorConfig = action.config,
+            editorSelections = selections,
+            editorExisting = action.day.dailyMemo,
+            editorError = null,
+            showDeleteConfirm = false,
+          )
         }
-        !hasSelection -> {
-          state { copy(editorError = "Select at least one habit.") }
+      }
+
+      is HabitsAction.CloseEditor -> {
+        state {
+          copy(
+            editorDay = null,
+            editorConfig = emptyList(),
+            editorSelections = emptyMap(),
+            editorExisting = null,
+            editorError = null,
+            showDeleteConfirm = false,
+          )
         }
-        else -> {
-          val day = state.editorDay ?: return@reducer
-          val content = buildDailyContent(day.date, state.editorConfig, state.editorSelections)
-          val existing = state.editorExisting
+      }
 
-          state { copy(isLoading = true, editorError = null) }
+      is HabitsAction.ToggleHabit -> {
+        state {
+          copy(editorSelections = editorSelections + (action.tag to action.checked))
+        }
+      }
 
-          if (existing != null) {
-            effect(HabitsEffect.UpdateMemo(existing.name, content))
-          } else {
-            effect(HabitsEffect.CreateMemo(content))
+      is HabitsAction.ConfirmEditor -> {
+        val hasSelection = state.editorSelections.values.any { it }
+        when {
+          !hasSelection && state.editorExisting != null -> {
+            state { copy(showDeleteConfirm = true) }
+          }
+          !hasSelection -> {
+            state { copy(editorError = "Select at least one habit.") }
+          }
+          else -> {
+            val day = state.editorDay ?: return@reducer
+            val content = buildDailyContent(day.date, state.editorConfig, state.editorSelections)
+            val existing = state.editorExisting
+
+            state { copy(isLoading = true, editorError = null) }
+
+            if (existing != null) {
+              effect(HabitsEffect.UpdateMemo(existing.name, content))
+            } else {
+              effect(HabitsEffect.CreateMemo(content))
+            }
           }
         }
       }
-    }
 
-    is HabitsAction.RequestDelete -> {
-      state { copy(showDeleteConfirm = true) }
-    }
-
-    is HabitsAction.ConfirmDelete -> {
-      val existing = state.editorExisting ?: return@reducer
-      state { copy(isLoading = true) }
-      effect(HabitsEffect.DeleteMemo(existing.name))
-    }
-
-    is HabitsAction.CancelDelete -> {
-      state { copy(showDeleteConfirm = false) }
-    }
-
-    is HabitsAction.OpenConfigDialog -> {
-      val editableHabits = action.currentConfig.mapIndexed { index, config ->
-        EditableHabit.fromHabitConfig(config, "habit_$index")
+      is HabitsAction.RequestDelete -> {
+        state { copy(showDeleteConfirm = true) }
       }
-      state { copy(showConfigDialog = true, editingHabits = editableHabits) }
-    }
 
-    is HabitsAction.CloseConfigDialog -> {
-      state { copy(showConfigDialog = false, editingHabits = emptyList()) }
-    }
+      is HabitsAction.ConfirmDelete -> {
+        val existing = state.editorExisting ?: return@reducer
+        state { copy(isLoading = true) }
+        effect(HabitsEffect.DeleteMemo(existing.name))
+      }
 
-    is HabitsAction.AddHabit -> {
-      val newId = "habit_${Random.nextLong()}"
-      val newHabit = EditableHabit(
-        id = newId,
-        tag = "",
-        label = "",
-        color = DEFAULT_HABIT_COLOR
-      )
-      state { copy(editingHabits = editingHabits + newHabit) }
-    }
+      is HabitsAction.CancelDelete -> {
+        state { copy(showDeleteConfirm = false) }
+      }
 
-    is HabitsAction.UpdateHabitLabel -> {
-      val updated = state.editingHabits.map { habit ->
-        if (habit.id == action.id) {
-          habit.copy(label = action.label, tag = normalizeHabitTag(action.label))
-        } else {
-          habit
+      is HabitsAction.OpenConfigDialog -> {
+        val editableHabits =
+          action.currentConfig.mapIndexed { index, config ->
+            EditableHabit.fromHabitConfig(config, "habit_$index")
+          }
+        state { copy(showConfigDialog = true, editingHabits = editableHabits) }
+      }
+
+      is HabitsAction.CloseConfigDialog -> {
+        state { copy(showConfigDialog = false, editingHabits = emptyList()) }
+      }
+
+      is HabitsAction.AddHabit -> {
+        val newId = "habit_${Random.nextLong()}"
+        val newHabit =
+          EditableHabit(
+            id = newId,
+            tag = "",
+            label = "",
+            color = DEFAULT_HABIT_COLOR,
+          )
+        state { copy(editingHabits = editingHabits + newHabit) }
+      }
+
+      is HabitsAction.UpdateHabitLabel -> {
+        val updated =
+          state.editingHabits.map { habit ->
+            if (habit.id == action.id) {
+              habit.copy(label = action.label, tag = normalizeHabitTag(action.label))
+            } else {
+              habit
+            }
+          }
+        state { copy(editingHabits = updated) }
+      }
+
+      is HabitsAction.UpdateHabitColor -> {
+        val updated =
+          state.editingHabits.map { habit ->
+            if (habit.id == action.id) {
+              habit.copy(color = action.color)
+            } else {
+              habit
+            }
+          }
+        state { copy(editingHabits = updated) }
+      }
+
+      is HabitsAction.DeleteHabit -> {
+        val updated = state.editingHabits.filter { it.id != action.id }
+        state { copy(editingHabits = updated) }
+      }
+
+      is HabitsAction.SaveConfigDialog -> {
+        val validHabits =
+          state.editingHabits
+            .filter { it.label.isNotBlank() }
+            .map { it.toHabitConfig() }
+        val content = buildHabitsConfigContentFromList(validHabits)
+        state { copy(isLoading = true) }
+        effect(HabitsEffect.CreateMemo(content))
+      }
+
+      is HabitsAction.RequestSingleHabitToggle -> {
+        state {
+          copy(
+            singleToggleDay = action.day,
+            singleToggleHabitTag = action.habitTag,
+            singleToggleHabitLabel = action.habitLabel,
+            singleToggleConfig = action.config,
+          )
         }
       }
-      state { copy(editingHabits = updated) }
-    }
 
-    is HabitsAction.UpdateHabitColor -> {
-      val updated = state.editingHabits.map { habit ->
-        if (habit.id == action.id) {
-          habit.copy(color = action.color)
-        } else {
-          habit
-        }
-      }
-      state { copy(editingHabits = updated) }
-    }
+      is HabitsAction.ConfirmSingleHabitToggle -> {
+        val day = state.singleToggleDay ?: return@reducer
+        val habitTag = state.singleToggleHabitTag ?: return@reducer
+        val config = state.singleToggleConfig
 
-    is HabitsAction.DeleteHabit -> {
-      val updated = state.editingHabits.filter { it.id != action.id }
-      state { copy(editingHabits = updated) }
-    }
+        // Build selections by toggling the specific habit
+        val currentDone = day.habitStatuses.firstOrNull { it.tag == habitTag }?.done == true
+        val newDone = !currentDone
 
-    is HabitsAction.SaveConfigDialog -> {
-      val validHabits = state.editingHabits
-        .filter { it.label.isNotBlank() }
-        .map { it.toHabitConfig() }
-      val content = buildHabitsConfigContentFromList(validHabits)
-      state { copy(isLoading = true) }
-      effect(HabitsEffect.CreateMemo(content))
-    }
+        val selections =
+          config.associate { habit ->
+            val wasDone = day.habitStatuses.firstOrNull { it.tag == habit.tag }?.done == true
+            habit.tag to if (habit.tag == habitTag) newDone else wasDone
+          }
 
-    is HabitsAction.RequestSingleHabitToggle -> {
-      state {
-        copy(
-          singleToggleDay = action.day,
-          singleToggleHabitTag = action.habitTag,
-          singleToggleHabitLabel = action.habitLabel,
-          singleToggleConfig = action.config
-        )
-      }
-    }
+        val hasAnySelection = selections.values.any { it }
+        val existing = day.dailyMemo
 
-    is HabitsAction.ConfirmSingleHabitToggle -> {
-      val day = state.singleToggleDay ?: return@reducer
-      val habitTag = state.singleToggleHabitTag ?: return@reducer
-      val config = state.singleToggleConfig
-
-      // Build selections by toggling the specific habit
-      val currentDone = day.habitStatuses.firstOrNull { it.tag == habitTag }?.done == true
-      val newDone = !currentDone
-
-      val selections = config.associate { habit ->
-        val wasDone = day.habitStatuses.firstOrNull { it.tag == habit.tag }?.done == true
-        habit.tag to if (habit.tag == habitTag) newDone else wasDone
-      }
-
-      val hasAnySelection = selections.values.any { it }
-      val existing = day.dailyMemo
-
-      when {
-        !hasAnySelection && existing != null -> {
-          // All habits unchecked and memo exists - delete it
-          state { copy(isLoading = true) }
-          effect(HabitsEffect.DeleteMemo(existing.name))
-        }
-        hasAnySelection -> {
-          // Build and save the memo
-          val content = buildDailyContent(day.date, config, selections)
-          state { copy(isLoading = true) }
-          if (existing != null) {
-            effect(HabitsEffect.UpdateMemo(existing.name, content))
-          } else {
-            effect(HabitsEffect.CreateMemo(content))
+        when {
+          !hasAnySelection && existing != null -> {
+            // All habits unchecked and memo exists - delete it
+            state { copy(isLoading = true) }
+            effect(HabitsEffect.DeleteMemo(existing.name))
+          }
+          hasAnySelection -> {
+            // Build and save the memo
+            val content = buildDailyContent(day.date, config, selections)
+            state { copy(isLoading = true) }
+            if (existing != null) {
+              effect(HabitsEffect.UpdateMemo(existing.name, content))
+            } else {
+              effect(HabitsEffect.CreateMemo(content))
+            }
+          }
+          else -> {
+            // No selection and no existing memo - just close dialog
+            state {
+              copy(
+                singleToggleDay = null,
+                singleToggleHabitTag = null,
+                singleToggleHabitLabel = null,
+                singleToggleConfig = emptyList(),
+              )
+            }
           }
         }
-        else -> {
-          // No selection and no existing memo - just close dialog
-          state {
-            copy(
-              singleToggleDay = null,
-              singleToggleHabitTag = null,
-              singleToggleHabitLabel = null,
-              singleToggleConfig = emptyList()
-            )
-          }
+      }
+
+      is HabitsAction.CancelSingleHabitToggle -> {
+        state {
+          copy(
+            singleToggleDay = null,
+            singleToggleHabitTag = null,
+            singleToggleHabitLabel = null,
+            singleToggleConfig = emptyList(),
+          )
         }
       }
-    }
 
-    is HabitsAction.CancelSingleHabitToggle -> {
-      state {
-        copy(
-          singleToggleDay = null,
-          singleToggleHabitTag = null,
-          singleToggleHabitLabel = null,
-          singleToggleConfig = emptyList()
-        )
+      is HabitsAction.SelectDay -> {
+        state {
+          copy(
+            selectedDate = action.day.date,
+            activeSelectionId = action.selectionId,
+          )
+        }
       }
-    }
 
-    is HabitsAction.SelectDay -> {
-      state {
-        copy(
-          selectedDate = action.day.date,
-          activeSelectionId = action.selectionId
-        )
+      is HabitsAction.SelectWeek -> {
+        state { copy(selectedWeek = action.week) }
       }
-    }
 
-    is HabitsAction.SelectWeek -> {
-      state { copy(selectedWeek = action.week) }
-    }
-
-    is HabitsAction.ClearSelection -> {
-      state {
-        copy(
-          selectedDate = null,
-          selectedWeek = null,
-          activeSelectionId = null
-        )
+      is HabitsAction.ClearSelection -> {
+        state {
+          copy(
+            selectedDate = null,
+            selectedWeek = null,
+            activeSelectionId = null,
+          )
+        }
       }
-    }
 
-    is HabitsAction.MemoCreated, is HabitsAction.MemoUpdated -> {
-      state {
-        copy(
-          isLoading = false,
-          editorDay = null,
-          editorConfig = emptyList(),
-          editorSelections = emptyMap(),
-          editorExisting = null,
-          editorError = null,
-          showConfigDialog = false,
-          editingHabits = emptyList(),
-          singleToggleDay = null,
-          singleToggleHabitTag = null,
-          singleToggleHabitLabel = null,
-          singleToggleConfig = emptyList()
-        )
+      is HabitsAction.MemoCreated, is HabitsAction.MemoUpdated -> {
+        state {
+          copy(
+            isLoading = false,
+            editorDay = null,
+            editorConfig = emptyList(),
+            editorSelections = emptyMap(),
+            editorExisting = null,
+            editorError = null,
+            showConfigDialog = false,
+            editingHabits = emptyList(),
+            singleToggleDay = null,
+            singleToggleHabitTag = null,
+            singleToggleHabitLabel = null,
+            singleToggleConfig = emptyList(),
+          )
+        }
+        effect(HabitsEffect.RefreshMemos)
       }
-      effect(HabitsEffect.RefreshMemos)
-    }
 
-    is HabitsAction.MemoDeleted -> {
-      state {
-        copy(
-          isLoading = false,
-          editorDay = null,
-          editorConfig = emptyList(),
-          editorSelections = emptyMap(),
-          editorExisting = null,
-          editorError = null,
-          showDeleteConfirm = false,
-          singleToggleDay = null,
-          singleToggleHabitTag = null,
-          singleToggleHabitLabel = null,
-          singleToggleConfig = emptyList()
-        )
+      is HabitsAction.MemoDeleted -> {
+        state {
+          copy(
+            isLoading = false,
+            editorDay = null,
+            editorConfig = emptyList(),
+            editorSelections = emptyMap(),
+            editorExisting = null,
+            editorError = null,
+            showDeleteConfirm = false,
+            singleToggleDay = null,
+            singleToggleHabitTag = null,
+            singleToggleHabitLabel = null,
+            singleToggleConfig = emptyList(),
+          )
+        }
+        effect(HabitsEffect.RefreshMemos)
       }
-      effect(HabitsEffect.RefreshMemos)
-    }
 
-    is HabitsAction.MemoOperationFailed -> {
-      state {
-        copy(
-          isLoading = false,
-          editorError = action.error,
-          singleToggleDay = null,
-          singleToggleHabitTag = null,
-          singleToggleHabitLabel = null,
-          singleToggleConfig = emptyList()
-        )
+      is HabitsAction.MemoOperationFailed -> {
+        state {
+          copy(
+            isLoading = false,
+            editorError = action.error,
+            singleToggleDay = null,
+            singleToggleHabitTag = null,
+            singleToggleHabitLabel = null,
+            singleToggleConfig = emptyList(),
+          )
+        }
       }
     }
   }
-}

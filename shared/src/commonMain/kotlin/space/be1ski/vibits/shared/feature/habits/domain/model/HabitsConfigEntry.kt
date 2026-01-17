@@ -12,5 +12,5 @@ data class HabitsConfigEntry(
   /** Habits declared in the config. */
   val habits: List<HabitConfig>,
   /** Source memo. */
-  val memo: Memo
+  val memo: Memo,
 )

@@ -6,5 +6,5 @@ package space.be1ski.vibits.shared.feature.habits.domain.model
 data class SuccessRateData(
   val completed: Int,
   val total: Int,
-  val rate: Float
+  val rate: Float,
 )

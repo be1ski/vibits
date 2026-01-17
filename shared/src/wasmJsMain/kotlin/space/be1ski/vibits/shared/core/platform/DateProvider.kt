@@ -8,8 +8,8 @@ import kotlin.time.Clock
 /**
  * Returns the current local date for web builds.
  */
-actual fun currentLocalDate(): LocalDate {
-  return Clock.System.now()
+actual fun currentLocalDate(): LocalDate =
+  Clock.System
+    .now()
     .toLocalDateTime(TimeZone.currentSystemDefault())
     .date
-}

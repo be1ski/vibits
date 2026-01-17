@@ -14,8 +14,7 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 actual open class MemoCache {
   private val database: MemoDatabase by lazy { createDatabase() }
 
-  actual open suspend fun readMemos(): List<Memo> =
-    database.memoDao().loadAll().map(MemoEntityMapper::toDomain)
+  actual open suspend fun readMemos(): List<Memo> = database.memoDao().loadAll().map(MemoEntityMapper::toDomain)
 
   actual open suspend fun replaceMemos(memos: List<Memo>) {
     val dao = database.memoDao()
@@ -40,11 +39,11 @@ actual open class MemoCache {
   @OptIn(ExperimentalForeignApi::class)
   private fun createDatabase(): MemoDatabase {
     val dbPath = getDatabasePath()
-    return Room.databaseBuilder<MemoDatabase>(
-      name = dbPath,
-      factory = MemoDatabaseConstructor::initialize
-    )
-      .setDriver(BundledSQLiteDriver())
+    return Room
+      .databaseBuilder<MemoDatabase>(
+        name = dbPath,
+        factory = MemoDatabaseConstructor::initialize,
+      ).setDriver(BundledSQLiteDriver())
       .build()
   }
 

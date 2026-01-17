@@ -1,7 +1,7 @@
 package space.be1ski.vibits.shared.feature.auth.data
 
-import java.util.prefs.Preferences
 import space.be1ski.vibits.shared.data.local.DesktopStoragePaths
+import java.util.prefs.Preferences
 
 /**
  * Desktop implementation backed by Preferences API.

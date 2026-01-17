@@ -11,5 +11,5 @@ data class MemoEntity(
   @PrimaryKey val name: String,
   val content: String,
   val createTimeMillis: Long?,
-  val updateTimeMillis: Long?
+  val updateTimeMillis: Long?,
 )

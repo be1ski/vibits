@@ -131,9 +131,11 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().con
 tasks.register<JacocoReport>("jacocoDesktopTestReport") {
   dependsOn("desktopTest")
   executionData.setFrom(fileTree(layout.buildDirectory).include("jacoco/desktopTest.exec"))
-  classDirectories.setFrom(fileTree(layout.buildDirectory.dir("classes/kotlin/desktop")) {
-    exclude("**/BuildConfig.*", "**/core/elm/**")
-  })
+  classDirectories.setFrom(
+    fileTree(layout.buildDirectory.dir("classes/kotlin/desktop")) {
+      exclude("**/BuildConfig.*", "**/core/elm/**")
+    },
+  )
   sourceDirectories.setFrom(files("src/commonMain/kotlin", "src/desktopMain/kotlin"))
   reports {
     html.required.set(true)

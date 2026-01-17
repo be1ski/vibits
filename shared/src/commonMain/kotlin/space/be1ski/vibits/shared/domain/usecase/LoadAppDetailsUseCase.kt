@@ -7,7 +7,7 @@ import space.be1ski.vibits.shared.domain.model.app.AppDetails
  * Loads app details for settings screen.
  */
 class LoadAppDetailsUseCase(
-  private val appDetailsProvider: AppDetailsProvider
+  private val appDetailsProvider: AppDetailsProvider,
 ) {
   operator fun invoke(): AppDetails = appDetailsProvider.load()
 }

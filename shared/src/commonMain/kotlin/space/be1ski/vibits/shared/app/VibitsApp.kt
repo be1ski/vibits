@@ -27,26 +27,23 @@ import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_create_memo
 import space.be1ski.vibits.shared.action_track_today
 import space.be1ski.vibits.shared.core.platform.currentLocalDate
+import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.Indent
+import space.be1ski.vibits.shared.domain.usecase.LoadAppDetailsUseCase
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
+import space.be1ski.vibits.shared.feature.habits.presentation.buildHabitDay
 import space.be1ski.vibits.shared.feature.habits.presentation.components.ActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.habits.presentation.components.LocalActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.habits.presentation.components.earliestMemoDate
 import space.be1ski.vibits.shared.feature.habits.presentation.components.findDailyMemoForDate
 import space.be1ski.vibits.shared.feature.habits.presentation.components.habitsConfigForDate
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberHabitsConfigTimeline
-import space.be1ski.vibits.shared.feature.habits.presentation.buildHabitDay
 import space.be1ski.vibits.shared.feature.habits.presentation.createHabitsFeature
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffect
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsUseCases
-import space.be1ski.vibits.shared.feature.settings.presentation.components.SettingsDialog
-import space.be1ski.vibits.shared.feature.settings.presentation.createSettingsFeature
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.CreateMemoUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.DeleteMemoUseCase
@@ -61,12 +58,15 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.LoadAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
+import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
 import space.be1ski.vibits.shared.feature.preferences.domain.usecase.LoadPreferencesUseCase
 import space.be1ski.vibits.shared.feature.preferences.domain.usecase.SaveTimeRangeTabUseCase
 import space.be1ski.vibits.shared.feature.preferences.domain.usecase.TimeRangeScreen
-import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
-import space.be1ski.vibits.shared.core.ui.ActivityRange
-import space.be1ski.vibits.shared.domain.usecase.LoadAppDetailsUseCase
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffect
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsUseCases
+import space.be1ski.vibits.shared.feature.settings.presentation.components.SettingsDialog
+import space.be1ski.vibits.shared.feature.settings.presentation.createSettingsFeature
 
 @Suppress("LongMethod")
 @Composable
@@ -90,30 +90,33 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
 
   val initialPrefs = remember { loadPreferencesUseCase() }
   val initialMode = remember { loadAppModeUseCase() }
-  val appState = remember {
-    VibitsAppUiState(
-      currentDate = currentLocalDate(),
-      initialHabitsTimeRangeTab = initialPrefs.habitsTimeRangeTab,
-      initialPostsTimeRangeTab = initialPrefs.postsTimeRangeTab
-    ).also { it.appMode = initialMode }
-  }
+  val appState =
+    remember {
+      VibitsAppUiState(
+        currentDate = currentLocalDate(),
+        initialHabitsTimeRangeTab = initialPrefs.habitsTimeRangeTab,
+        initialPostsTimeRangeTab = initialPrefs.postsTimeRangeTab,
+      ).also { it.appMode = initialMode }
+    }
 
   // MemosFeature
-  val memosUseCases = remember {
-    MemosUseCases(
-      loadMemos = loadMemosUseCase,
-      loadCachedMemos = loadCachedMemosUseCase,
-      loadCredentials = loadCredentialsUseCase,
-      saveCredentials = saveCredentialsUseCase,
-      createMemo = createMemoUseCase,
-      updateMemo = updateMemoUseCase,
-      deleteMemo = deleteMemoUseCase
-    )
-  }
-  val memosFeature = remember {
-    val skipCredentials = initialMode == AppMode.OFFLINE || initialMode == AppMode.DEMO
-    createMemosFeature(memosUseCases, isOfflineMode = skipCredentials)
-  }
+  val memosUseCases =
+    remember {
+      MemosUseCases(
+        loadMemos = loadMemosUseCase,
+        loadCachedMemos = loadCachedMemosUseCase,
+        loadCredentials = loadCredentialsUseCase,
+        saveCredentials = saveCredentialsUseCase,
+        createMemo = createMemoUseCase,
+        updateMemo = updateMemoUseCase,
+        deleteMemo = deleteMemoUseCase,
+      )
+    }
+  val memosFeature =
+    remember {
+      val skipCredentials = initialMode == AppMode.OFFLINE || initialMode == AppMode.DEMO
+      createMemosFeature(memosUseCases, isOfflineMode = skipCredentials)
+    }
   val scope = rememberCoroutineScope()
   LaunchedEffect(memosFeature) {
     memosFeature.launchIn(scope)
@@ -122,12 +125,13 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
   val dispatchMemos: (MemosAction) -> Unit = memosFeature::send
 
   // HabitsFeature
-  val habitsFeature = remember {
-    createHabitsFeature(
-      memosRepository = memosRepository,
-      onRefresh = { dispatchMemos(MemosAction.LoadMemos) }
-    )
-  }
+  val habitsFeature =
+    remember {
+      createHabitsFeature(
+        memosRepository = memosRepository,
+        onRefresh = { dispatchMemos(MemosAction.LoadMemos) },
+      )
+    }
   LaunchedEffect(habitsFeature) {
     habitsFeature.launchIn(scope)
   }
@@ -137,21 +141,23 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
   val activityWeekDataCache = remember { ActivityWeekDataCache() }
 
   // SettingsFeature
-  val settingsUseCases = remember {
-    SettingsUseCases(
-      validateCredentials = validateCredentialsUseCase,
-      switchAppMode = switchAppModeUseCase,
-      saveCredentials = saveCredentialsUseCase,
-      resetApp = resetAppUseCase
-    )
-  }
-  val settingsFeature = remember {
-    createSettingsFeature(
-      useCases = settingsUseCases,
-      initialMode = initialMode,
-      appDetails = appDetails
-    )
-  }
+  val settingsUseCases =
+    remember {
+      SettingsUseCases(
+        validateCredentials = validateCredentialsUseCase,
+        switchAppMode = switchAppModeUseCase,
+        saveCredentials = saveCredentialsUseCase,
+        resetApp = resetAppUseCase,
+      )
+    }
+  val settingsFeature =
+    remember {
+      createSettingsFeature(
+        useCases = settingsUseCases,
+        initialMode = initialMode,
+        appDetails = appDetails,
+      )
+    }
   LaunchedEffect(settingsFeature) {
     settingsFeature.launchIn(scope)
   }
@@ -200,11 +206,11 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
       saveTimeRangeTabUseCase = saveTimeRangeTabUseCase,
       habitsState = habitsState,
       onHabitsAction = habitsFeature::send,
-      calculateSuccessRate = calculateSuccessRate
+      calculateSuccessRate = calculateSuccessRate,
     )
     SettingsDialog(
       state = settingsState,
-      dispatch = dispatchSettings
+      dispatch = dispatchSettings,
     )
     MemoCreateDialog(appState, dispatchMemos)
     MemoEditDialog(appState, dispatchMemos)
@@ -221,76 +227,84 @@ private fun VibitsAppContent(
   saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase,
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit,
-  calculateSuccessRate: CalculateSuccessRateUseCase
+  calculateSuccessRate: CalculateSuccessRateUseCase,
 ) {
   val timeZone = remember { TimeZone.currentSystemDefault() }
   val today = currentLocalDate()
   val habitsTimeline = rememberHabitsConfigTimeline(memosState.memos)
-  val todayConfig = remember(habitsTimeline, today) {
-    habitsConfigForDate(habitsTimeline, today)?.habits.orEmpty()
-  }
-  val todayMemo = remember(memosState.memos, today) {
-    findDailyMemoForDate(memosState.memos, timeZone, today)
-  }
-  val todayDay = remember(todayConfig, todayMemo, today) {
-    buildHabitDay(date = today, habitsConfig = todayConfig, dailyMemo = todayMemo)
-  }
-
-  val onClearSelection = remember(onHabitsAction) {
-    { onHabitsAction(HabitsAction.ClearSelection) }
-  }
-  val onShowCreateMemoDialog = remember(appState) {
-    { appState.showCreateMemoDialog = true }
-  }
-  val onOpenTodayEditor = remember(onHabitsAction, todayDay, todayConfig) {
-    { if (todayDay != null) onHabitsAction(HabitsAction.OpenEditor(todayDay, todayConfig)) }
-  }
-  val onRangeChange = remember(onHabitsAction, appState) {
-    { range: ActivityRange ->
-      onHabitsAction(HabitsAction.ClearSelection)
-      updateTimeRangeState(appState, range)
+  val todayConfig =
+    remember(habitsTimeline, today) {
+      habitsConfigForDate(habitsTimeline, today)?.habits.orEmpty()
     }
-  }
-  val onTabChange = remember(onHabitsAction, appState, saveTimeRangeTabUseCase) {
-    { newTab: TimeRangeTab ->
-      onHabitsAction(HabitsAction.ClearSelection)
-      when (appState.selectedScreen) {
-        MemosScreen.HABITS -> {
-          adjustDateForTabChange(appState, appState.habitsTimeRangeTab, newTab)
-          appState.habitsTimeRangeTab = newTab
-          saveTimeRangeTabUseCase(TimeRangeScreen.HABITS, newTab)
-        }
-        MemosScreen.STATS -> {
-          adjustDateForTabChange(appState, appState.postsTimeRangeTab, newTab)
-          appState.postsTimeRangeTab = newTab
-          saveTimeRangeTabUseCase(TimeRangeScreen.POSTS, newTab)
-        }
-        MemosScreen.FEED -> {}
+  val todayMemo =
+    remember(memosState.memos, today) {
+      findDailyMemoForDate(memosState.memos, timeZone, today)
+    }
+  val todayDay =
+    remember(todayConfig, todayMemo, today) {
+      buildHabitDay(date = today, habitsConfig = todayConfig, dailyMemo = todayMemo)
+    }
+
+  val onClearSelection =
+    remember(onHabitsAction) {
+      { onHabitsAction(HabitsAction.ClearSelection) }
+    }
+  val onShowCreateMemoDialog =
+    remember(appState) {
+      { appState.showCreateMemoDialog = true }
+    }
+  val onOpenTodayEditor =
+    remember(onHabitsAction, todayDay, todayConfig) {
+      { if (todayDay != null) onHabitsAction(HabitsAction.OpenEditor(todayDay, todayConfig)) }
+    }
+  val onRangeChange =
+    remember(onHabitsAction, appState) {
+      { range: ActivityRange ->
+        onHabitsAction(HabitsAction.ClearSelection)
+        updateTimeRangeState(appState, range)
       }
     }
-  }
+  val onTabChange =
+    remember(onHabitsAction, appState, saveTimeRangeTabUseCase) {
+      { newTab: TimeRangeTab ->
+        onHabitsAction(HabitsAction.ClearSelection)
+        when (appState.selectedScreen) {
+          MemosScreen.HABITS -> {
+            adjustDateForTabChange(appState, appState.habitsTimeRangeTab, newTab)
+            appState.habitsTimeRangeTab = newTab
+            saveTimeRangeTabUseCase(TimeRangeScreen.HABITS, newTab)
+          }
+          MemosScreen.STATS -> {
+            adjustDateForTabChange(appState, appState.postsTimeRangeTab, newTab)
+            appState.postsTimeRangeTab = newTab
+            saveTimeRangeTabUseCase(TimeRangeScreen.POSTS, newTab)
+          }
+          MemosScreen.FEED -> {}
+        }
+      }
+    }
 
   Scaffold(
     floatingActionButton = {
       when (memosFabModeForScreen(appState.selectedScreen)) {
         MemosFabMode.MEMO -> {
           FloatingActionButton(
-            onClick = onShowCreateMemoDialog
+            onClick = onShowCreateMemoDialog,
           ) {
             Icon(
               imageVector = Icons.Filled.Edit,
-              contentDescription = stringResource(Res.string.action_create_memo)
+              contentDescription = stringResource(Res.string.action_create_memo),
             )
           }
         }
         MemosFabMode.HABITS -> {
           if (todayConfig.isNotEmpty() && todayDay != null) {
             FloatingActionButton(
-              onClick = onOpenTodayEditor
+              onClick = onOpenTodayEditor,
             ) {
               Icon(
                 imageVector = Icons.Filled.AddTask,
-                contentDescription = stringResource(Res.string.action_track_today)
+                contentDescription = stringResource(Res.string.action_track_today),
               )
             }
           }
@@ -299,35 +313,42 @@ private fun VibitsAppContent(
     },
     bottomBar = {
       MemosBottomNavigation(appState, onClearSelection)
-    }
+    },
   ) { padding ->
-    val selectedTab = when (appState.selectedScreen) {
-      MemosScreen.HABITS -> appState.habitsTimeRangeTab
-      MemosScreen.STATS -> appState.postsTimeRangeTab
-      MemosScreen.FEED -> appState.habitsTimeRangeTab
-    }
+    val selectedTab =
+      when (appState.selectedScreen) {
+        MemosScreen.HABITS -> appState.habitsTimeRangeTab
+        MemosScreen.STATS -> appState.postsTimeRangeTab
+        MemosScreen.FEED -> appState.habitsTimeRangeTab
+      }
     val currentRange = currentRangeForTab(selectedTab, today)
     val activityRange = activityRangeForState(appState)
     val earliestDate = remember(memosState.memos) { earliestMemoDate(memosState.memos, timeZone) }
     val minRange = minRangeForTab(selectedTab, earliestDate)
     Column(
-      modifier = Modifier
-        .padding(padding)
-        .padding(Indent.m)
-        .fillMaxSize(),
-      verticalArrangement = Arrangement.spacedBy(Indent.s)
+      modifier =
+        Modifier
+          .padding(padding)
+          .padding(Indent.m)
+          .fillMaxSize(),
+      verticalArrangement = Arrangement.spacedBy(Indent.s),
     ) {
       MemosHeader(memosState, appState, dispatchMemos, dispatchSettings)
       memosState.errorMessage?.let { message ->
         Text(message, color = MaterialTheme.colorScheme.error)
       }
       if (appState.selectedScreen != MemosScreen.FEED) {
-        val successRate = if (appState.selectedScreen == MemosScreen.HABITS) {
-          val hasHabits = remember(habitsTimeline) { habitsTimeline.lastOrNull()?.habits?.isNotEmpty() == true }
-          if (hasHabits) {
-            rememberSuccessRate(memosState.memos, activityRange, calculateSuccessRate)
-          } else null
-        } else null
+        val successRate =
+          if (appState.selectedScreen == MemosScreen.HABITS) {
+            val hasHabits = remember(habitsTimeline) { habitsTimeline.lastOrNull()?.habits?.isNotEmpty() == true }
+            if (hasHabits) {
+              rememberSuccessRate(memosState.memos, activityRange, calculateSuccessRate)
+            } else {
+              null
+            }
+          } else {
+            null
+          }
         TimeRangeControls(
           selectedTab = selectedTab,
           selectedRange = activityRange,
@@ -335,7 +356,7 @@ private fun VibitsAppContent(
           minRange = minRange,
           successRate = successRate,
           onTabChange = onTabChange,
-          onRangeChange = onRangeChange
+          onRangeChange = onRangeChange,
         )
       }
       SwipeableTabContent(
@@ -345,7 +366,7 @@ private fun VibitsAppContent(
         minRange = minRange,
         habitsState = habitsState,
         onHabitsAction = onHabitsAction,
-        dispatchMemos = dispatchMemos
+        dispatchMemos = dispatchMemos,
       )
     }
   }

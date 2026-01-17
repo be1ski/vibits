@@ -24,13 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
-import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.plus
+import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
 
 private val WEEKLY_BAR_MAX_HEIGHT = 72.dp
 private val WEEKLY_BAR_MIN_HEIGHT = 4.dp
@@ -40,7 +40,7 @@ private val WEEKLY_BAR_MIN_HEIGHT = 4.dp
  */
 private data class WeekTooltip(
   val week: ActivityWeek,
-  val offset: IntOffset
+  val offset: IntOffset,
 )
 
 /**
@@ -49,14 +49,14 @@ private data class WeekTooltip(
 @Composable
 fun WeeklyBarChart(
   state: WeeklyBarChartState,
-  onWeekSelected: (ActivityWeek) -> Unit
+  onWeekSelected: (ActivityWeek) -> Unit,
 ) {
   var tooltip by remember { mutableStateOf<WeekTooltip?>(null) }
   Column(modifier = state.modifier) {
     WeeklyBarChartBars(
       state = state,
       onWeekSelected = onWeekSelected,
-      onTooltipChange = { tooltip = it }
+      onTooltipChange = { tooltip = it },
     )
     WeeklyBarChartTooltip(tooltip) { tooltip = null }
   }
@@ -66,35 +66,39 @@ fun WeeklyBarChart(
 private fun WeeklyBarChartBars(
   state: WeeklyBarChartState,
   onWeekSelected: (ActivityWeek) -> Unit,
-  onTooltipChange: (WeekTooltip?) -> Unit
+  onTooltipChange: (WeekTooltip?) -> Unit,
 ) {
   BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-    val columns = state.weekData.weeks.size.coerceAtLeast(1)
+    val columns =
+      state.weekData.weeks.size
+        .coerceAtLeast(1)
     val spacing = ChartDimens.spacing(state.compactHeight)
     val legendWidth = if (state.showWeekdayLegend) ChartDimens.legendWidth else 0.dp
     val legendSpacing = if (state.showWeekdayLegend) spacing else 0.dp
     val availableWidth = (maxWidth - legendWidth - legendSpacing).coerceAtLeast(0.dp)
-    val layout = calculateLayout(
-      availableWidth,
-      columns,
-      minColumnSize = ChartDimens.minCell(state.compactHeight),
-      spacing = spacing
-    )
+    val layout =
+      calculateLayout(
+        availableWidth,
+        columns,
+        minColumnSize = ChartDimens.minCell(state.compactHeight),
+        spacing = spacing,
+      )
 
     Row(
       modifier = Modifier.fillMaxWidth(),
       horizontalArrangement = Arrangement.spacedBy(spacing),
-      verticalAlignment = Alignment.Bottom
+      verticalAlignment = Alignment.Bottom,
     ) {
       if (state.showWeekdayLegend) {
         Spacer(modifier = Modifier.width(legendWidth + legendSpacing))
       }
       Row(
-        modifier = Modifier
-          .width(layout.contentWidth)
-          .then(if (layout.useScroll) Modifier.horizontalScroll(state.scrollState) else Modifier),
+        modifier =
+          Modifier
+            .width(layout.contentWidth)
+            .then(if (layout.useScroll) Modifier.horizontalScroll(state.scrollState) else Modifier),
         horizontalArrangement = Arrangement.spacedBy(spacing),
-        verticalAlignment = Alignment.Bottom
+        verticalAlignment = Alignment.Bottom,
       ) {
         state.weekData.weeks.forEach { week ->
           WeeklyBar(
@@ -105,7 +109,7 @@ private fun WeeklyBarChartBars(
             onClick = { offset ->
               onWeekSelected(week)
               onTooltipChange(WeekTooltip(week, offset))
-            }
+            },
           )
         }
       }
@@ -116,22 +120,23 @@ private fun WeeklyBarChartBars(
 @Composable
 private fun WeeklyBarChartTooltip(
   tooltip: WeekTooltip?,
-  onDismiss: () -> Unit
+  onDismiss: () -> Unit,
 ) {
   tooltip?.let { current ->
     Popup(
       alignment = Alignment.TopStart,
       offset = current.offset,
-      onDismissRequest = onDismiss
+      onDismissRequest = onDismiss,
     ) {
       Column(
-        modifier = Modifier
-          .background(MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.small)
-          .padding(horizontal = 8.dp, vertical = 6.dp)
+        modifier =
+          Modifier
+            .background(MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.small)
+            .padding(horizontal = 8.dp, vertical = 6.dp),
       ) {
         Text(
           "${current.week.startDate} - ${current.week.startDate.plus(DatePeriod(days = 6))}",
-          style = MaterialTheme.typography.labelMedium
+          style = MaterialTheme.typography.labelMedium,
         )
       }
     }
@@ -147,32 +152,34 @@ private fun WeeklyBar(
   maxCount: Int,
   width: Dp,
   isSelected: Boolean,
-  onClick: (IntOffset) -> Unit
+  onClick: (IntOffset) -> Unit,
 ) {
   var coordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
   val maxHeight = WEEKLY_BAR_MAX_HEIGHT
-  val height = if (maxCount <= 0) {
-    WEEKLY_BAR_MIN_HEIGHT
-  } else {
-    (maxHeight.value * (count.toFloat() / maxCount.toFloat())).dp
-  }
+  val height =
+    if (maxCount <= 0) {
+      WEEKLY_BAR_MIN_HEIGHT
+    } else {
+      (maxHeight.value * (count.toFloat() / maxCount.toFloat())).dp
+    }
   val color = if (isSelected) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.outlineVariant
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Bottom,
-    modifier = Modifier.height(maxHeight)
+    modifier = Modifier.height(maxHeight),
   ) {
     Spacer(
-      modifier = Modifier
-        .width(width)
-        .height(height)
-        .background(color, shape = MaterialTheme.shapes.extraSmall)
-        .onGloballyPositioned { coordinates = it }
-        .clickable {
-          val coords = coordinates ?: return@clickable
-          val position = coords.positionInRoot()
-          onClick(IntOffset(position.x.toInt(), (position.y + coords.size.height).toInt()))
-        }
+      modifier =
+        Modifier
+          .width(width)
+          .height(height)
+          .background(color, shape = MaterialTheme.shapes.extraSmall)
+          .onGloballyPositioned { coordinates = it }
+          .clickable {
+            val coords = coordinates ?: return@clickable
+            val position = coords.positionInRoot()
+            onClick(IntOffset(position.x.toInt(), (position.y + coords.size.height).toInt()))
+          },
     )
   }
 }

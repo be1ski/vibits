@@ -1,10 +1,10 @@
-@file:Suppress("MatchingDeclarationName")
+@file:Suppress("MatchingDeclarationName", "ktlint:standard:filename")
 
 package space.be1ski.vibits.shared.app
 
 internal enum class MemosFabMode {
   HABITS,
-  MEMO
+  MEMO,
 }
 
 internal fun memosFabModeForScreen(selectedScreen: MemosScreen): MemosFabMode =

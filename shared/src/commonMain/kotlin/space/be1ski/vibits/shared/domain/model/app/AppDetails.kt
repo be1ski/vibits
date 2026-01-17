@@ -8,5 +8,5 @@ data class AppDetails(
   val environment: String,
   val credentialsStore: String,
   val memosDatabase: String,
-  val offlineStorage: String
+  val offlineStorage: String,
 )

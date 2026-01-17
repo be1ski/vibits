@@ -28,7 +28,6 @@ public open class FeatureImpl<Action, State, Effect>(
   private val initialEffects: List<Effect> = emptyList(),
   private val concurrency: Int = DEFAULT_CONCURRENCY,
 ) : Feature<Action, State, Effect> {
-
   private val _state: MutableStateFlow<State> = MutableStateFlow(initialState)
   override val state: StateFlow<State> = _state.asStateFlow()
 

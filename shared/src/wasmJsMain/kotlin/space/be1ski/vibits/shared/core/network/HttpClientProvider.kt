@@ -11,16 +11,17 @@ import kotlinx.serialization.json.Json
 /**
  * Creates a JS [HttpClient] configured for the Memos API.
  */
-actual fun createHttpClient(): HttpClient {
-  return HttpClient(Js) {
+actual fun createHttpClient(): HttpClient =
+  HttpClient(Js) {
     install(ContentNegotiation) {
-      json(Json {
-        ignoreUnknownKeys = true
-        isLenient = true
-      })
+      json(
+        Json {
+          ignoreUnknownKeys = true
+          isLenient = true
+        },
+      )
     }
     install(Logging) {
       level = LogLevel.INFO
     }
   }
-}
