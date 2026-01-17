@@ -3,6 +3,7 @@ package space.be1ski.vibits.shared.feature.habits.domain.usecase
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
+import space.be1ski.vibits.shared.core.platform.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import kotlinx.datetime.Month
 
@@ -47,7 +48,9 @@ class NavigateActivityRangeUseCase {
     return when (range) {
       is ActivityRange.Week -> {
         val endDate = range.startDate.plus(DatePeriod(days = WEEK_END_OFFSET))
-        "${formatMonthDay(range.startDate)} - ${formatMonthDay(endDate)}"
+        val currentYear = currentLocalDate().year
+        val showYear = range.startDate.year != currentYear
+        "${formatMonthDay(range.startDate, showYear)} - ${formatMonthDay(endDate, showYear)}"
       }
       is ActivityRange.Month -> "${monthShort(range.month)} ${range.year}"
       is ActivityRange.Quarter -> "Q${range.index} ${range.year}"
@@ -89,8 +92,9 @@ class NavigateActivityRangeUseCase {
     } else 0
   }
 
-  private fun formatMonthDay(date: LocalDate): String {
-    return "${monthShort(date.month)} ${date.day}"
+  private fun formatMonthDay(date: LocalDate, showYear: Boolean = false): String {
+    val base = "${monthShort(date.month)} ${date.dayOfMonth}"
+    return if (showYear) "$base ${date.year}" else base
   }
 
   private fun monthShort(month: Month): String {
