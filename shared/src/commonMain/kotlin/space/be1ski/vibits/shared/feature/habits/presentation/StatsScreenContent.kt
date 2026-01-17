@@ -528,7 +528,7 @@ internal fun StatsMainChart(
   // For Posts/Week show time-of-day heatmap instead of contribution grid
   if (state.activityMode == ActivityMode.Posts && state.range is ActivityRange.Week) {
     WeeklyPostsHeatmap(
-      memos = state.memos,
+      memos = CountDailyPostsUseCase.filterPosts(state.memos),
       weekStart = state.range.startDate,
       timeZone = derived.timeZone,
       compactHeight = derived.useCompactHeight
