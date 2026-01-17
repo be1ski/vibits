@@ -56,8 +56,8 @@ import space.be1ski.vibits.shared.feature.settings.presentation.SettingsUseCases
  * Metro dependency graph for the application.
  */
 @Suppress("TooManyFunctions", "LongParameterList")
-@SingleIn(AppGraph::class)
-@DependencyGraph
+@SingleIn(AppScope::class)
+@DependencyGraph(AppScope::class)
 abstract class AppGraph {
   abstract val appDependencies: AppDependencies
 
@@ -72,47 +72,47 @@ abstract class AppGraph {
 
   // Infrastructure - expect/actual classes need @Provides
   @Provides
-  @SingleIn(AppGraph::class)
+  @SingleIn(AppScope::class)
   fun httpClient(): HttpClient = createHttpClient()
 
   @Provides
-  @SingleIn(AppGraph::class)
+  @SingleIn(AppScope::class)
   fun credentialsStore(): CredentialsStore = CredentialsStore()
 
   @Provides
-  @SingleIn(AppGraph::class)
+  @SingleIn(AppScope::class)
   fun memoCache(): MemoCache = MemoCache()
 
   @Provides
-  @SingleIn(AppGraph::class)
+  @SingleIn(AppScope::class)
   fun preferencesStore(): PreferencesStore = PreferencesStore()
 
   @Provides
-  @SingleIn(AppGraph::class)
+  @SingleIn(AppScope::class)
   fun localeProvider(): LocaleProvider = LocaleProvider()
 
   @Provides
-  @SingleIn(AppGraph::class)
+  @SingleIn(AppScope::class)
   fun appDetailsProvider(): AppDetailsProvider = AppDetailsProvider()
 
   @Provides
-  @SingleIn(AppGraph::class)
+  @SingleIn(AppScope::class)
   fun appModeStore(): AppModeStore = AppModeStore()
 
   @Provides
-  @SingleIn(AppGraph::class)
+  @SingleIn(AppScope::class)
   fun offlineMemoStorage(): OfflineMemoStorage = OfflineMemoStorage()
 
   @Provides
-  @SingleIn(AppGraph::class)
+  @SingleIn(AppScope::class)
   fun memoMapper(): MemoMapper = MemoMapper()
 
   @Provides
-  @SingleIn(AppGraph::class)
+  @SingleIn(AppScope::class)
   fun memosApi(httpClient: HttpClient): MemosApi = MemosApi(httpClient)
 
   @Provides
-  @SingleIn(AppGraph::class)
+  @SingleIn(AppScope::class)
   fun demoMemosRepository(): DemoMemosRepository = DemoMemosRepository()
 
   // Repository bindings (interface -> implementation)

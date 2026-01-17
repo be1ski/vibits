@@ -54,6 +54,7 @@ kotlin {
         implementation(compose.runtime)
         implementation(compose.ui)
         implementation(compose.components.resources)
+        implementation(libs.javax.inject)
         implementation(libs.ktor.client.content.negotiation)
         implementation(libs.ktor.client.core)
         implementation(libs.ktor.client.logging)
@@ -141,5 +142,11 @@ tasks.register<JacocoReport>("jacocoDesktopTestReport") {
     html.required.set(true)
     xml.required.set(true)
     csv.required.set(false)
+  }
+}
+
+metro {
+  interop {
+    inject.add("javax/inject/Inject")
   }
 }

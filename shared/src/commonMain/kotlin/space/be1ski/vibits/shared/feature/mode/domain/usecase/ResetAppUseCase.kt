@@ -1,6 +1,6 @@
 package space.be1ski.vibits.shared.feature.mode.domain.usecase
 
-import dev.zacsweers.metro.Inject
+import javax.inject.Inject
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.shared.feature.memos.data.demo.DemoMemosRepository
@@ -16,8 +16,7 @@ import space.be1ski.vibits.shared.feature.settings.domain.repository.Preferences
  * Clears mode selection, cache, credentials, preferences, and demo data,
  * showing mode selection screen on next launch.
  */
-@Inject
-class ResetAppUseCase(
+class ResetAppUseCase @Inject constructor(
   private val appModeRepository: AppModeRepository,
   private val memoCache: MemoCache,
   private val credentialsRepository: CredentialsRepository,

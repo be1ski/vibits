@@ -1,11 +1,10 @@
 package space.be1ski.vibits.shared.feature.settings.domain.usecase
 
-import dev.zacsweers.metro.Inject
+import javax.inject.Inject
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
 
-@Inject
-class SaveThemeUseCase(
+class SaveThemeUseCase @Inject constructor(
   private val preferencesRepository: PreferencesRepository,
 ) {
   operator fun invoke(theme: AppTheme) {
