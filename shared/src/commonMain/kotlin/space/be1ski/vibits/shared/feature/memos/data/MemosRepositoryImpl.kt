@@ -1,6 +1,7 @@
 package space.be1ski.vibits.shared.feature.memos.data
 
 import dev.zacsweers.metro.Inject
+import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
 import space.be1ski.vibits.shared.feature.memos.data.mapper.MemoMapper
@@ -9,6 +10,8 @@ import space.be1ski.vibits.shared.feature.memos.data.remote.MemosPagination
 import space.be1ski.vibits.shared.feature.memos.domain.config.MemosDefaults
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
+
+private const val TAG = "MemosRepository"
 
 /**
  * Repository implementation that loads memos from the network and caches them locally.
@@ -51,14 +54,21 @@ class MemosRepositoryImpl(
       pages += 1
     } while (nextPageToken != null && pages < MemosPagination.MAX_PAGES && allMemos.isNotEmpty())
 
+    Log.i(TAG, "Loaded ${allMemos.size} memos in $pages pages")
     runCatching { memoCache.replaceMemos(allMemos) }
+      .onSuccess { Log.d(TAG, "Cache updated") }
+      .onFailure { Log.e(TAG, "Cache update failed", it) }
     return allMemos
   }
 
   /**
    * Loads cached memos from local storage.
    */
-  override suspend fun cachedMemos(): List<Memo> = memoCache.readMemos()
+  override suspend fun cachedMemos(): List<Memo> {
+    val memos = memoCache.readMemos()
+    Log.d(TAG, "Read ${memos.size} memos from cache")
+    return memos
+  }
 
   /**
    * Updates memo content in the API.
@@ -80,6 +90,7 @@ class MemosRepositoryImpl(
       )
     val updated = memoMapper.toDomain(dto)
     runCatching { memoCache.upsertMemo(updated) }
+    Log.i(TAG, "Updated memo: $name")
     return updated
   }
 
@@ -87,6 +98,7 @@ class MemosRepositoryImpl(
    * Creates a new memo in the API.
    */
   override suspend fun createMemo(content: String): Memo {
+    Log.d(TAG, "Creating memo...")
     val credentials = credentialsRepository.load()
     val baseUrl = credentials.baseUrl.trim()
     val token = credentials.token.trim()
@@ -99,6 +111,7 @@ class MemosRepositoryImpl(
       )
     val created = memoMapper.toDomain(dto)
     runCatching { memoCache.upsertMemo(created) }
+    Log.i(TAG, "Created memo: ${created.name}")
     return created
   }
 
@@ -106,6 +119,7 @@ class MemosRepositoryImpl(
    * Deletes a memo in the API.
    */
   override suspend fun deleteMemo(name: String) {
+    Log.d(TAG, "Deleting memo: $name")
     val credentials = credentialsRepository.load()
     val baseUrl = credentials.baseUrl.trim()
     val token = credentials.token.trim()
@@ -116,5 +130,6 @@ class MemosRepositoryImpl(
       name = name,
     )
     runCatching { memoCache.deleteMemo(name) }
+    Log.i(TAG, "Deleted memo: $name")
   }
 }
