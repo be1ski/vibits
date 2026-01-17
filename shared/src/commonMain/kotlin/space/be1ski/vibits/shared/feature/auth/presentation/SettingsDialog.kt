@@ -59,6 +59,13 @@ import space.be1ski.vibits.shared.mode_online_title
 import space.be1ski.vibits.shared.nav_settings
 import space.be1ski.vibits.shared.label_storage
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
+import space.be1ski.vibits.shared.msg_fill_all_fields
+import space.be1ski.vibits.shared.msg_connection_failed
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.Box
 
 @Suppress("LongParameterList")
 @Composable
@@ -69,6 +76,7 @@ internal fun SettingsDialog(
   appDetails: AppDetails,
   switchAppModeUseCase: SwitchAppModeUseCase,
   resetAppUseCase: ResetAppUseCase,
+  validateCredentialsUseCase: ValidateCredentialsUseCase,
   onResetComplete: () -> Unit
 ) {
   if (!appState.showSettingsDialog) {
@@ -92,6 +100,7 @@ internal fun SettingsDialog(
         appState = appState,
         dispatch = dispatch,
         appDetails = appDetails,
+        validateCredentialsUseCase = validateCredentialsUseCase,
         onModeChange = { mode ->
           scope.launch {
             switchAppModeUseCase(mode)
@@ -113,21 +122,57 @@ internal fun SettingsDialog(
   )
 }
 
+@Suppress("LongParameterList", "LongMethod")
 @Composable
 private fun SettingsDialogContent(
   appState: VibitsAppUiState,
   dispatch: (MemosAction) -> Unit,
   appDetails: AppDetails,
+  validateCredentialsUseCase: ValidateCredentialsUseCase,
   onModeChange: (AppMode) -> Unit,
   onReset: () -> Unit
 ) {
   var showLogs by remember { mutableStateOf(false) }
+  var isValidating by remember { mutableStateOf(false) }
+  var validationError by remember { mutableStateOf<String?>(null) }
+  val scope = rememberCoroutineScope()
+  val fillAllFieldsMessage = stringResource(Res.string.msg_fill_all_fields)
+  val connectionFailedMessage = stringResource(Res.string.msg_connection_failed)
 
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
     AppModeSelector(
       currentMode = appState.appMode,
-      onModeChange = onModeChange
+      isValidating = isValidating,
+      onModeChange = { mode ->
+        if (mode == AppMode.Online) {
+          val baseUrl = appState.editBaseUrl.trim()
+          val token = appState.editToken.trim()
+          if (baseUrl.isBlank() || token.isBlank()) {
+            validationError = fillAllFieldsMessage
+          } else {
+            isValidating = true
+            validationError = null
+            scope.launch {
+              validateCredentialsUseCase(baseUrl, token)
+                .onSuccess {
+                  onModeChange(mode)
+                  isValidating = false
+                }
+                .onFailure {
+                  validationError = connectionFailedMessage
+                  isValidating = false
+                }
+            }
+          }
+        } else {
+          validationError = null
+          onModeChange(mode)
+        }
+      }
     )
+    validationError?.let { error ->
+      Text(error, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+    }
     if (appState.appMode == AppMode.Online) {
       TextField(
         value = appState.editBaseUrl,
@@ -169,6 +214,7 @@ private fun SettingsDialogContent(
 @Composable
 private fun AppModeSelector(
   currentMode: AppMode,
+  isValidating: Boolean,
   onModeChange: (AppMode) -> Unit
 ) {
   Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -176,21 +222,28 @@ private fun AppModeSelector(
     SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
       SegmentedButton(
         selected = currentMode == AppMode.Online,
-        onClick = { onModeChange(AppMode.Online) },
+        onClick = { if (!isValidating) onModeChange(AppMode.Online) },
+        enabled = !isValidating,
         shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3)
       ) {
-        Text(stringResource(Res.string.mode_online_title))
+        if (isValidating && currentMode != AppMode.Online) {
+          CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
+        } else {
+          Text(stringResource(Res.string.mode_online_title))
+        }
       }
       SegmentedButton(
         selected = currentMode == AppMode.Offline,
-        onClick = { onModeChange(AppMode.Offline) },
+        onClick = { if (!isValidating) onModeChange(AppMode.Offline) },
+        enabled = !isValidating,
         shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3)
       ) {
         Text(stringResource(Res.string.mode_offline_title))
       }
       SegmentedButton(
         selected = currentMode == AppMode.Demo,
-        onClick = { onModeChange(AppMode.Demo) },
+        onClick = { if (!isValidating) onModeChange(AppMode.Demo) },
+        enabled = !isValidating,
         shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3)
       ) {
         Text(stringResource(Res.string.mode_demo_title))
