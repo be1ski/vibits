@@ -19,15 +19,11 @@
       "separateMinorPatch": false
     },
     {
-      "description": "Major updates require manual review",
-      "matchUpdateTypes": [
-        "major"
+      "description": "Gradle wrapper requires manual update (run ./gradlew wrapper)",
+      "matchManagers": [
+        "gradle-wrapper"
       ],
-      "automerge": false,
-      "labels": [
-        "dependencies",
-        "major"
-      ]
+      "automerge": false
     },
     {
       "description": "Ignore pre-release and compat versions",
