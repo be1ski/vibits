@@ -1,0 +1,184 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_cancel">キャンセル</string>
+    <string name="action_clear">クリア</string>
+    <string name="action_close">閉じる</string>
+    <string name="action_copied">コピー済み</string>
+    <string name="action_configure_habits">習慣を設定</string>
+    <string name="action_create">作成</string>
+    <string name="action_create_memo">メモを作成</string>
+    <string name="action_delete">削除</string>
+    <string name="action_hide_details">詳細を隠す</string>
+    <string name="action_next">次へ</string>
+    <string name="action_previous">前へ</string>
+    <string name="action_refresh">更新</string>
+    <string name="action_reset">リセット</string>
+    <string name="action_reset_app">アプリをリセット</string>
+    <string name="action_save">保存</string>
+    <string name="action_show_details">詳細を表示</string>
+    <string name="action_track">記録</string>
+    <string name="action_track_today">今日を記録</string>
+    <string name="action_update">更新</string>
+    <string name="action_view_logs">ログを表示</string>
+    <string name="action_export">エクスポート</string>
+    <string name="action_export_logs">ログをエクスポート</string>
+    <string name="action_export_memos">メモをエクスポート</string>
+    <string name="msg_export_success">%1$s にエクスポートしました</string>
+    <string name="msg_export_failed">エクスポートに失敗しました</string>
+
+    <!-- App -->
+    <string name="app_name">Vibits</string>
+
+    <!-- Days of week -->
+    <string name="day_mon">月</string>
+    <string name="day_tue">火</string>
+    <string name="day_wed">水</string>
+    <string name="day_thu">木</string>
+    <string name="day_fri">金</string>
+    <string name="day_sat">土</string>
+    <string name="day_sun">日</string>
+
+    <!-- Months short -->
+    <string name="month_jan">1月</string>
+    <string name="month_feb">2月</string>
+    <string name="month_mar">3月</string>
+    <string name="month_apr">4月</string>
+    <string name="month_may">5月</string>
+    <string name="month_jun">6月</string>
+    <string name="month_jul">7月</string>
+    <string name="month_aug">8月</string>
+    <string name="month_sep">9月</string>
+    <string name="month_oct">10月</string>
+    <string name="month_nov">11月</string>
+    <string name="month_dec">12月</string>
+
+    <!-- Format strings -->
+    <string name="format_app_version">バージョン: %1$s</string>
+    <string name="format_credentials">認証情報: %1$s</string>
+    <string name="format_environment">環境: %1$s</string>
+    <string name="format_habits_progress">%2$d個中%1$d個の習慣完了</string>
+    <string name="format_memos_db">メモDB: %1$s</string>
+    <string name="format_offline_storage">オフライン: %1$s</string>
+    <string name="format_memos_count">%1$d件のメモ</string>
+    <string name="format_memos_today">今日%1$d件のメモ</string>
+    <string name="format_memos_this_week">今週%1$d件のメモ</string>
+    <string name="format_memos_in_month">%2$sに%1$d件のメモ</string>
+    <string name="format_memos_in_quarter">%2$sに%1$d件のメモ</string>
+    <string name="format_memos_in_year">%2$d年に%1$d件のメモ</string>
+    <string name="action_show_memos">メモを表示</string>
+    <string name="action_hide_memos">メモを隠す</string>
+    <string name="action_write">書く</string>
+    <string name="format_tooltip_habits">%1$s: %2$d/%3$d習慣</string>
+    <string name="format_tooltip_memos">%1$s: %2$d件のメモ</string>
+
+    <!-- Hints -->
+    <string name="hint_add_habits_config">トラッキングを開始するには習慣設定メモを追加してください。</string>
+    <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habit_name">習慣名</string>
+    <string name="hint_habits_config">運動 | #habits/gym\n読書 | #habits/reading</string>
+    <string name="hint_write_memo">メモを書く...</string>
+
+    <!-- Labels -->
+    <string name="label_access_token">アクセストークン</string>
+    <string name="label_language">言語</string>
+    <string name="label_time_night">夜</string>
+    <string name="label_time_morning">朝</string>
+    <string name="label_time_day">昼</string>
+    <string name="label_time_evening">夕方</string>
+    <string name="label_activity">アクティビティ</string>
+    <string name="label_app_mode">アプリモード</string>
+    <string name="label_base_url">ベースURL</string>
+    <string name="label_credentials">認証情報</string>
+    <string name="label_demo_mode">デモモード</string>
+    <string name="label_environment">環境</string>
+    <string name="label_habits_config">習慣設定</string>
+    <string name="label_memos_db">メモDB</string>
+    <string name="label_storage">ストレージ</string>
+    <string name="label_version">バージョン</string>
+    <string name="label_success_rate">成功率</string>
+    <string name="label_today">今日</string>
+
+    <!-- Messages -->
+    <string name="msg_connection_failed">接続に失敗しました</string>
+    <string name="msg_delete_day_confirm">習慣が選択されていません。この日のエントリは削除されます。</string>
+    <string name="msg_fill_all_fields">すべての項目を入力してください</string>
+    <string name="msg_no_habits_yet">まだ習慣が設定されていません。</string>
+    <string name="msg_no_logs">ログがありません</string>
+    <string name="msg_no_memos_yet">この期間にメモがありません。</string>
+    <string name="msg_reset_confirm">アプリをリセットしますか？すべてのデータが削除されます。</string>
+    <string name="msg_select_habit">少なくとも1つの習慣を選択してください。</string>
+    <string name="msg_mark_done_confirm">「%1$s」を%2$sに完了としてマークしますか？</string>
+    <string name="msg_mark_not_done_confirm">%2$sの「%1$s」の完了を取り消しますか？</string>
+    <string name="msg_restart_required">言語変更を適用するには再起動が必要です</string>
+
+    <!-- Language selection -->
+    <string name="language_system">システム</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_hindi">हिन्दी</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_portuguese">Português</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_french">Français</string>
+
+    <!-- Theme selection -->
+    <string name="label_theme">テーマ</string>
+    <string name="theme_system">システム</string>
+    <string name="theme_light">ライト</string>
+    <string name="theme_dark">ダーク</string>
+
+    <!-- Mode selection -->
+    <string name="mode_select_title">モードを選択</string>
+    <string name="mode_select_subtitle">アプリの使用方法を選択</string>
+    <string name="mode_online_title">オンライン</string>
+    <string name="mode_online_desc">Memosサーバーに接続して完全同期</string>
+    <string name="mode_offline_title">オフライン</string>
+    <string name="mode_offline_desc">サーバー接続なしでローカルにデータを保存</string>
+    <string name="mode_demo_title">デモ</string>
+    <string name="mode_demo_desc">サンプルデータでアプリを試す</string>
+
+    <!-- Navigation -->
+    <string name="nav_feed">フィード</string>
+    <string name="nav_habits">習慣</string>
+    <string name="nav_memos">メモ</string>
+    <string name="nav_settings">設定</string>
+
+    <!-- Privacy -->
+    <string name="privacy_hidden_content">非表示コンテンツ</string>
+    <string name="privacy_hidden_habit">非表示の習慣</string>
+
+    <!-- Time periods -->
+    <string name="time_month">月</string>
+    <string name="time_months">月</string>
+    <string name="time_quarter">四半期</string>
+    <string name="time_quarters">四半期</string>
+    <string name="time_week">週</string>
+    <string name="time_weeks">週</string>
+    <string name="time_year">年</string>
+    <string name="time_years">年</string>
+
+    <!-- Titles -->
+    <string name="title_create_day">日を作成</string>
+    <string name="title_delete_day">日を削除しますか？</string>
+    <string name="title_delete_memo">メモを削除しますか？</string>
+    <string name="title_edit_day">日を編集</string>
+    <string name="title_edit_memo">メモを編集</string>
+    <string name="title_logs">ログ (%1$d)</string>
+    <string name="title_new_memo">新規メモ</string>
+    <string name="title_mark_done">完了としてマーク？</string>
+    <string name="title_mark_not_done">未完了としてマーク？</string>
+    <string name="title_update_day">日を更新</string>
+
+    <!-- Demo habits -->
+    <string name="demo_habit_exercise">運動</string>
+    <string name="demo_habit_reading">読書</string>
+    <string name="demo_habit_meditation">瞑想</string>
+    <string name="demo_habit_water">水を飲む</string>
+    <string name="demo_habit_learning">学習</string>
+    <string name="demo_habit_walking">1万歩</string>
+    <string name="demo_habit_no_sugar">砂糖なし</string>
+    <string name="demo_habit_early_sleep">23時までに就寝</string>
+</resources>

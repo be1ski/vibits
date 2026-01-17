@@ -1,0 +1,184 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_cancel">रद्द करें</string>
+    <string name="action_clear">साफ़ करें</string>
+    <string name="action_close">बंद करें</string>
+    <string name="action_copied">कॉपी हुआ</string>
+    <string name="action_configure_habits">आदतें कॉन्फ़िगर करें</string>
+    <string name="action_create">बनाएं</string>
+    <string name="action_create_memo">मेमो बनाएं</string>
+    <string name="action_delete">हटाएं</string>
+    <string name="action_hide_details">विवरण छुपाएं</string>
+    <string name="action_next">अगला</string>
+    <string name="action_previous">पिछला</string>
+    <string name="action_refresh">रिफ्रेश</string>
+    <string name="action_reset">रीसेट</string>
+    <string name="action_reset_app">ऐप रीसेट करें</string>
+    <string name="action_save">सेव करें</string>
+    <string name="action_show_details">विवरण दिखाएं</string>
+    <string name="action_track">ट्रैक करें</string>
+    <string name="action_track_today">आज ट्रैक करें</string>
+    <string name="action_update">अपडेट</string>
+    <string name="action_view_logs">लॉग देखें</string>
+    <string name="action_export">निर्यात</string>
+    <string name="action_export_logs">लॉग निर्यात करें</string>
+    <string name="action_export_memos">मेमो निर्यात करें</string>
+    <string name="msg_export_success">%1$s पर निर्यात हुआ</string>
+    <string name="msg_export_failed">निर्यात विफल</string>
+
+    <!-- App -->
+    <string name="app_name">Vibits</string>
+
+    <!-- Days of week -->
+    <string name="day_mon">सो</string>
+    <string name="day_tue">मं</string>
+    <string name="day_wed">बु</string>
+    <string name="day_thu">गु</string>
+    <string name="day_fri">शु</string>
+    <string name="day_sat">श</string>
+    <string name="day_sun">र</string>
+
+    <!-- Months short -->
+    <string name="month_jan">जन</string>
+    <string name="month_feb">फर</string>
+    <string name="month_mar">मार्च</string>
+    <string name="month_apr">अप्रैल</string>
+    <string name="month_may">मई</string>
+    <string name="month_jun">जून</string>
+    <string name="month_jul">जुला</string>
+    <string name="month_aug">अग</string>
+    <string name="month_sep">सित</string>
+    <string name="month_oct">अक्टू</string>
+    <string name="month_nov">नव</string>
+    <string name="month_dec">दिस</string>
+
+    <!-- Format strings -->
+    <string name="format_app_version">संस्करण: %1$s</string>
+    <string name="format_credentials">क्रेडेंशियल: %1$s</string>
+    <string name="format_environment">वातावरण: %1$s</string>
+    <string name="format_habits_progress">%2$d में से %1$d आदतें पूरी</string>
+    <string name="format_memos_db">मेमो DB: %1$s</string>
+    <string name="format_offline_storage">ऑफ़लाइन: %1$s</string>
+    <string name="format_memos_count">%1$d मेमो</string>
+    <string name="format_memos_today">आज %1$d मेमो</string>
+    <string name="format_memos_this_week">इस सप्ताह %1$d मेमो</string>
+    <string name="format_memos_in_month">%2$s में %1$d मेमो</string>
+    <string name="format_memos_in_quarter">%2$s में %1$d मेमो</string>
+    <string name="format_memos_in_year">%2$d में %1$d मेमो</string>
+    <string name="action_show_memos">मेमो दिखाएं</string>
+    <string name="action_hide_memos">मेमो छुपाएं</string>
+    <string name="action_write">लिखें</string>
+    <string name="format_tooltip_habits">%1$s: %2$d/%3$d आदतें</string>
+    <string name="format_tooltip_memos">%1$s: %2$d मेमो</string>
+
+    <!-- Hints -->
+    <string name="hint_add_habits_config">ट्रैकिंग शुरू करने के लिए आदत कॉन्फ़िगरेशन मेमो जोड़ें।</string>
+    <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habit_name">आदत का नाम</string>
+    <string name="hint_habits_config">व्यायाम | #habits/gym\nपढ़ना | #habits/reading</string>
+    <string name="hint_write_memo">एक मेमो लिखें...</string>
+
+    <!-- Labels -->
+    <string name="label_access_token">एक्सेस टोकन</string>
+    <string name="label_language">भाषा</string>
+    <string name="label_time_night">रात</string>
+    <string name="label_time_morning">सुबह</string>
+    <string name="label_time_day">दिन</string>
+    <string name="label_time_evening">शाम</string>
+    <string name="label_activity">गतिविधि</string>
+    <string name="label_app_mode">ऐप मोड</string>
+    <string name="label_base_url">बेस URL</string>
+    <string name="label_credentials">क्रेडेंशियल</string>
+    <string name="label_demo_mode">डेमो मोड</string>
+    <string name="label_environment">वातावरण</string>
+    <string name="label_habits_config">आदत कॉन्फ़िगरेशन</string>
+    <string name="label_memos_db">मेमो DB</string>
+    <string name="label_storage">स्टोरेज</string>
+    <string name="label_version">संस्करण</string>
+    <string name="label_success_rate">सफलता दर</string>
+    <string name="label_today">आज</string>
+
+    <!-- Messages -->
+    <string name="msg_connection_failed">कनेक्शन विफल</string>
+    <string name="msg_delete_day_confirm">कोई आदत चयनित नहीं। दैनिक प्रविष्टि हटा दी जाएगी।</string>
+    <string name="msg_fill_all_fields">कृपया सभी फ़ील्ड भरें</string>
+    <string name="msg_no_habits_yet">अभी तक कोई आदत कॉन्फ़िगर नहीं।</string>
+    <string name="msg_no_logs">अभी कोई लॉग नहीं</string>
+    <string name="msg_no_memos_yet">इस अवधि में कोई मेमो नहीं।</string>
+    <string name="msg_reset_confirm">क्या आप वाकई ऐप रीसेट करना चाहते हैं? सभी डेटा हटा दिया जाएगा।</string>
+    <string name="msg_select_habit">कम से कम एक आदत चुनें।</string>
+    <string name="msg_mark_done_confirm">"%1$s" को %2$s के लिए पूर्ण के रूप में चिह्नित करें?</string>
+    <string name="msg_mark_not_done_confirm">%2$s पर "%1$s" की पूर्णता हटाएं?</string>
+    <string name="msg_restart_required">भाषा परिवर्तन लागू करने के लिए पुनः आरंभ आवश्यक</string>
+
+    <!-- Language selection -->
+    <string name="language_system">सिस्टम</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_hindi">हिन्दी</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_portuguese">Português</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_french">Français</string>
+
+    <!-- Theme selection -->
+    <string name="label_theme">थीम</string>
+    <string name="theme_system">सिस्टम</string>
+    <string name="theme_light">लाइट</string>
+    <string name="theme_dark">डार्क</string>
+
+    <!-- Mode selection -->
+    <string name="mode_select_title">मोड चुनें</string>
+    <string name="mode_select_subtitle">ऐप का उपयोग कैसे करना चाहते हैं चुनें</string>
+    <string name="mode_online_title">ऑनलाइन</string>
+    <string name="mode_online_desc">पूर्ण सिंक के लिए अपने Memos सर्वर से कनेक्ट करें</string>
+    <string name="mode_offline_title">ऑफ़लाइन</string>
+    <string name="mode_offline_desc">सर्वर कनेक्शन के बिना स्थानीय रूप से डेटा स्टोर करें</string>
+    <string name="mode_demo_title">डेमो</string>
+    <string name="mode_demo_desc">नमूना डेटा के साथ ऐप आज़माएं</string>
+
+    <!-- Navigation -->
+    <string name="nav_feed">फ़ीड</string>
+    <string name="nav_habits">आदतें</string>
+    <string name="nav_memos">मेमो</string>
+    <string name="nav_settings">सेटिंग्स</string>
+
+    <!-- Privacy -->
+    <string name="privacy_hidden_content">छुपी सामग्री</string>
+    <string name="privacy_hidden_habit">छुपी आदत</string>
+
+    <!-- Time periods -->
+    <string name="time_month">महीना</string>
+    <string name="time_months">महीने</string>
+    <string name="time_quarter">तिमाही</string>
+    <string name="time_quarters">तिमाहियां</string>
+    <string name="time_week">सप्ताह</string>
+    <string name="time_weeks">सप्ताह</string>
+    <string name="time_year">वर्ष</string>
+    <string name="time_years">वर्ष</string>
+
+    <!-- Titles -->
+    <string name="title_create_day">दिन बनाएं</string>
+    <string name="title_delete_day">दिन हटाएं?</string>
+    <string name="title_delete_memo">मेमो हटाएं?</string>
+    <string name="title_edit_day">दिन संपादित करें</string>
+    <string name="title_edit_memo">मेमो संपादित करें</string>
+    <string name="title_logs">लॉग (%1$d)</string>
+    <string name="title_new_memo">नया मेमो</string>
+    <string name="title_mark_done">पूर्ण चिह्नित करें?</string>
+    <string name="title_mark_not_done">अपूर्ण चिह्नित करें?</string>
+    <string name="title_update_day">दिन अपडेट करें</string>
+
+    <!-- Demo habits -->
+    <string name="demo_habit_exercise">व्यायाम</string>
+    <string name="demo_habit_reading">पढ़ना</string>
+    <string name="demo_habit_meditation">ध्यान</string>
+    <string name="demo_habit_water">पानी पीना</string>
+    <string name="demo_habit_learning">सीखना</string>
+    <string name="demo_habit_walking">10K कदम</string>
+    <string name="demo_habit_no_sugar">बिना चीनी</string>
+    <string name="demo_habit_early_sleep">रात 11 बजे तक सोना</string>
+</resources>
