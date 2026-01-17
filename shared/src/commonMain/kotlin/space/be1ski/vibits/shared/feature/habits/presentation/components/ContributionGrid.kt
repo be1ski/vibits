@@ -95,8 +95,8 @@ fun ContributionGrid(
   state: ContributionGridState,
   onDaySelected: (ContributionDay) -> Unit,
   onClearSelection: () -> Unit,
-  onEditRequested: (ContributionDay) -> Unit,
-  onCreateRequested: (ContributionDay) -> Unit,
+  onEditRequested: ((ContributionDay) -> Unit)? = null,
+  onCreateRequested: ((ContributionDay) -> Unit)? = null,
   modifier: Modifier = Modifier
 ) {
   val interaction = remember { ContributionGridInteractionState() }
@@ -421,8 +421,8 @@ private fun ContributionGridTimelineRow(
 private fun ContributionGridTooltip(
   state: ContributionGridState,
   interaction: ContributionGridInteractionState,
-  onEditRequested: (ContributionDay) -> Unit,
-  onCreateRequested: (ContributionDay) -> Unit
+  onEditRequested: ((ContributionDay) -> Unit)?,
+  onCreateRequested: ((ContributionDay) -> Unit)?
 ) {
   val tooltip = interaction.tooltip ?: return
   val positionProvider = remember(tooltip.offset) {
@@ -470,15 +470,19 @@ private fun ContributionGridTooltip(
         }
       }
       val isFuture = state.today != null && tooltip.day.date > state.today
-      if (!isFuture) {
+      if (!isFuture && (onEditRequested != null || onCreateRequested != null)) {
         tooltip.day.dailyMemo?.let {
-          TextButton(onClick = { onEditRequested(tooltip.day) }) {
-            Text(stringResource(Res.string.title_edit_day))
+          onEditRequested?.let { callback ->
+            TextButton(onClick = { callback(tooltip.day) }) {
+              Text(stringResource(Res.string.title_edit_day))
+            }
           }
         } ?: run {
           if (tooltip.day.totalHabits > 0 && tooltip.day.inRange && !state.demoMode) {
-            TextButton(onClick = { onCreateRequested(tooltip.day) }) {
-              Text(stringResource(Res.string.title_create_day))
+            onCreateRequested?.let { callback ->
+              TextButton(onClick = { callback(tooltip.day) }) {
+                Text(stringResource(Res.string.title_create_day))
+              }
             }
           }
         }
