@@ -7,31 +7,45 @@
 
 ![Vibits](.github/hero.webp)
 
-Habit tracker powered by [Memos](https://github.com/usememos/memos). Built with Kotlin Multiplatform + Compose Multiplatform.
+Habit tracker powered by [Memos](https://github.com/usememos/memos). Kotlin Multiplatform + Compose Multiplatform.
 
-## Modules
-
-- `shared/` - UI, networking, models, DI, platform abstractions.
-- `androidApp/` - Android launcher.
-- `desktopApp/` - Desktop launcher.
-- `iosApp/` - iOS wrapper (XCFramework).
-- `webApp/` - Web entry (Wasm).
+**Platforms:** Android · iOS · Desktop · [Web](https://be1ski.github.io/vibits/)<br>
+**Modes:** Online ([Memos](https://github.com/usememos/memos) sync) · Offline · Demo<br>
+**Localization:** 🇬🇧 🇷🇺
 
 ## Run
 
-- Desktop: `./gradlew :desktopApp:run`
-- Android: `./gradlew :androidApp:installDebug`
-- Web: `./gradlew :webApp:wasmJsBrowserDevelopmentRun`
-- iOS XCFramework: `./gradlew :shared:assembleSharedDebugXCFramework`
-- Desktop DMG: `./gradlew :desktopApp:packageDmg -Dorg.gradle.java.home=$(/usr/libexec/java_home -v 21)`
-- DMG output: `desktopApp/build/compose/binaries/main/dmg/Vibits-1.0.0.dmg`
+```
+./gradlew :desktopApp:run
+./gradlew :androidApp:installDebug
+./gradlew :webApp:wasmJsBrowserDevelopmentRun
+```
 
-## Tests
+## Build
 
-We use TDD for business logic and target high coverage.
+```
+./gradlew checkAll                                  # lint, detekt, compile, tests
+./gradlew :shared:desktopTest                       # unit tests
+./gradlew :androidApp:assembleRelease               # Android APK
+./gradlew :shared:assembleSharedReleaseXCFramework  # iOS framework
+./gradlew :desktopApp:packageDmg                    # macOS DMG
+./gradlew :desktopApp:packageMsi                    # Windows MSI
+```
 
-- Unit tests: `shared/src/commonTest`
-- Test naming: backticks with `when ... then ...`
-- Run tests: `./gradlew :shared:desktopTest`
-- Coverage: `./gradlew :shared:jacocoDesktopTestReport`
-- Coverage report: `shared/build/reports/jacoco/jacocoDesktopTestReport/html/index.html`
+## CI
+
+One-click release → builds all platforms in parallel → uploads to [Releases](https://github.com/be1ski/vibits/releases)
+
+## Modules
+
+```
+shared/      — UI, networking, models, DI
+androidApp/  — Android entry point
+desktopApp/  — Desktop entry point
+iosApp/      — iOS wrapper
+webApp/      — Web entry (WASM)
+```
+
+## Architecture
+
+TEA (The Elm Architecture) · ~95% shared code
