@@ -128,6 +128,19 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().con
   }
 }
 
+// Disable ktlint for iOS platform-specific source sets
+// They have no user-written code and running ktlint triggers iOS compilation before KSP
+tasks
+  .matching { task ->
+    task.name.contains("ktlint") && (
+      task.name.contains("IosArm64") ||
+        task.name.contains("IosX64") ||
+        task.name.contains("IosSimulatorArm64")
+    )
+  }.configureEach {
+    enabled = false
+  }
+
 tasks.register<JacocoReport>("jacocoDesktopTestReport") {
   dependsOn("desktopTest")
   executionData.setFrom(fileTree(layout.buildDirectory).include("jacoco/desktopTest.exec"))
