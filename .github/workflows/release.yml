@@ -1,6 +1,7 @@
 name: Release
 
 on:
+  workflow_dispatch:
   release:
     types: [created]
 
@@ -10,8 +11,60 @@ permissions:
   id-token: write
 
 jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    outputs:
+      tag: ${{ steps.version.outputs.new_tag }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest tag and calculate next version
+        id: version
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v1.0.0")
+          echo "Latest tag: $LATEST_TAG"
+
+          VERSION=${LATEST_TAG#v}
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+          PATCH=$((PATCH + 1))
+          NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+
+          echo "New tag: $NEW_TAG"
+          echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.version.outputs.new_tag }}" \
+            --title "${{ steps.version.outputs.new_tag }}" \
+            --generate-notes
+
+  resolve-version:
+    runs-on: ubuntu-latest
+    needs: [create-release]
+    if: always()
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
+
+    steps:
+      - name: Resolve version
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "version=${{ needs.create-release.outputs.tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
+
   build-apk:
     runs-on: ubuntu-latest
+    needs: [resolve-version]
 
     steps:
       - name: Checkout
@@ -35,17 +88,20 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: ./gradlew :androidApp:assembleRelease -PappVersion=${GITHUB_REF_NAME#v}
+          APP_VERSION: ${{ needs.resolve-version.outputs.version }}
+        run: ./gradlew :androidApp:assembleRelease -PappVersion=${APP_VERSION#v}
 
       - name: Rename APK
+        env:
+          APP_VERSION: ${{ needs.resolve-version.outputs.version }}
         run: |
-          VERSION=${GITHUB_REF_NAME#v}
           mv androidApp/build/outputs/apk/release/androidApp-release.apk \
-             androidApp/build/outputs/apk/release/Vibits-${VERSION}.apk
+             androidApp/build/outputs/apk/release/Vibits-${APP_VERSION#v}.apk
 
       - name: Upload APK to Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ needs.resolve-version.outputs.version }}
           files: androidApp/build/outputs/apk/release/Vibits-*.apk
 
       - name: Upload to Firebase App Distribution
@@ -55,12 +111,14 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-sa.json
+          APP_VERSION: ${{ needs.resolve-version.outputs.version }}
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > ${{ runner.temp }}/firebase-sa.json
-          ./gradlew :androidApp:appDistributionUploadRelease -PappVersion=${GITHUB_REF_NAME#v}
+          ./gradlew :androidApp:appDistributionUploadRelease -PappVersion=${APP_VERSION#v}
 
   build-dmg:
     runs-on: macos-latest
+    needs: [resolve-version]
 
     steps:
       - name: Checkout
@@ -76,15 +134,19 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build DMG
-        run: ./gradlew :desktopApp:packageDmg -PappVersion=${GITHUB_REF_NAME#v}
+        env:
+          APP_VERSION: ${{ needs.resolve-version.outputs.version }}
+        run: ./gradlew :desktopApp:packageDmg -PappVersion=${APP_VERSION#v}
 
       - name: Upload DMG to Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ needs.resolve-version.outputs.version }}
           files: desktopApp/build/compose/binaries/main/dmg/*.dmg
 
   build-msi:
     runs-on: windows-latest
+    needs: [resolve-version]
 
     steps:
       - name: Checkout
@@ -101,15 +163,19 @@ jobs:
 
       - name: Build MSI
         shell: bash
-        run: ./gradlew :desktopApp:packageMsi -PappVersion=${GITHUB_REF_NAME#v}
+        env:
+          APP_VERSION: ${{ needs.resolve-version.outputs.version }}
+        run: ./gradlew :desktopApp:packageMsi -PappVersion=${APP_VERSION#v}
 
       - name: Upload MSI to Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ needs.resolve-version.outputs.version }}
           files: desktopApp/build/compose/binaries/main/msi/*.msi
 
   build-web:
     runs-on: ubuntu-latest
+    needs: [resolve-version]
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
@@ -131,14 +197,16 @@ jobs:
         run: ./gradlew :webApp:wasmJsBrowserDistribution
 
       - name: Create tarball
+        env:
+          APP_VERSION: ${{ needs.resolve-version.outputs.version }}
         run: |
-          VERSION=${GITHUB_REF_NAME#v}
           cd webApp/build/dist/wasmJs
-          tar -czf Vibits-${VERSION}-web.tar.gz productionExecutable
+          tar -czf Vibits-${APP_VERSION#v}-web.tar.gz productionExecutable
 
       - name: Upload Web to Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ needs.resolve-version.outputs.version }}
           files: webApp/build/dist/wasmJs/Vibits-*-web.tar.gz
 
       - name: Setup Pages
