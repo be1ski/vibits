@@ -14,9 +14,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -50,6 +55,9 @@ import space.be1ski.vibits.shared.action_cancel
 import space.be1ski.vibits.shared.action_clear
 import space.be1ski.vibits.shared.action_close
 import space.be1ski.vibits.shared.action_copied
+import space.be1ski.vibits.shared.action_export
+import space.be1ski.vibits.shared.action_export_logs
+import space.be1ski.vibits.shared.action_export_memos
 import space.be1ski.vibits.shared.action_reset
 import space.be1ski.vibits.shared.action_reset_app
 import space.be1ski.vibits.shared.action_save
@@ -57,6 +65,8 @@ import space.be1ski.vibits.shared.action_view_logs
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.logging.LogLevel
 import space.be1ski.vibits.shared.core.ui.SegmentedSelector
+import space.be1ski.vibits.shared.data.export.ExportResult
+import space.be1ski.vibits.shared.data.export.Exporter
 import space.be1ski.vibits.shared.domain.model.app.AppDetails
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
@@ -81,6 +91,8 @@ import space.be1ski.vibits.shared.mode_demo_title
 import space.be1ski.vibits.shared.mode_offline_title
 import space.be1ski.vibits.shared.mode_online_title
 import space.be1ski.vibits.shared.msg_connection_failed
+import space.be1ski.vibits.shared.msg_export_failed
+import space.be1ski.vibits.shared.msg_export_success
 import space.be1ski.vibits.shared.msg_fill_all_fields
 import space.be1ski.vibits.shared.msg_no_logs
 import space.be1ski.vibits.shared.msg_reset_confirm
@@ -196,14 +208,11 @@ private fun SettingsDialogBody(
         modifier = Modifier.fillMaxWidth(),
       )
     }
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-      TextButton(onClick = { dispatch(SettingsAction.OpenLogs) }, modifier = Modifier.weight(1f)) {
-        Text(stringResource(Res.string.action_view_logs))
-      }
-      TextButton(onClick = { dispatch(SettingsAction.RequestReset) }, modifier = Modifier.weight(1f)) {
-        Text(stringResource(Res.string.action_reset_app))
-      }
-    }
+    ActionsRow(
+      showMemos = state.appMode == AppMode.OFFLINE,
+      onOpenLogs = { dispatch(SettingsAction.OpenLogs) },
+      onReset = { dispatch(SettingsAction.RequestReset) },
+    )
     state.appDetails?.let { appDetails ->
       AppDetailsSection(appDetails, state.appMode)
     }
@@ -400,6 +409,86 @@ private fun ResetConfirmationDialog(
       }
     },
   )
+}
+
+@Suppress("LongMethod")
+@Composable
+private fun ActionsRow(
+  showMemos: Boolean,
+  onOpenLogs: () -> Unit,
+  onReset: () -> Unit,
+) {
+  val scope = rememberCoroutineScope()
+  var exportExpanded by remember { mutableStateOf(false) }
+  var exportStatus by remember { mutableStateOf<String?>(null) }
+  val exportFailedMsg = stringResource(Res.string.msg_export_failed)
+  val exportSuccessTemplate = stringResource(Res.string.msg_export_success, "%s")
+  val exporter = remember { Exporter() }
+
+  val onExport: (ExportResult) -> Unit = { result ->
+    exportExpanded = false
+    exportStatus =
+      when (result) {
+        is ExportResult.Success -> exportSuccessTemplate.replace("%s", result.filePath)
+        ExportResult.Failure -> exportFailedMsg
+      }
+    scope.launch {
+      delay(TOAST_DURATION_MS * 2)
+      exportStatus = null
+    }
+  }
+
+  Column {
+    exportStatus?.let { status ->
+      Text(
+        text = status,
+        style = MaterialTheme.typography.bodySmall,
+        color =
+          if (status == exportFailedMsg) {
+            MaterialTheme.colorScheme.error
+          } else {
+            MaterialTheme.colorScheme.primary
+          },
+        modifier = Modifier.padding(bottom = 4.dp),
+      )
+    }
+    Row(
+      horizontalArrangement = Arrangement.SpaceEvenly,
+      modifier = Modifier.fillMaxWidth(),
+    ) {
+      TextButton(onClick = onOpenLogs) {
+        Text(stringResource(Res.string.action_view_logs))
+      }
+      TextButton(onClick = onReset) {
+        Text(stringResource(Res.string.action_reset))
+      }
+      Column {
+        TextButton(onClick = { exportExpanded = true }) {
+          Text(stringResource(Res.string.action_export))
+          Icon(
+            Icons.Default.KeyboardArrowDown,
+            contentDescription = null,
+            modifier = Modifier.size(18.dp),
+          )
+        }
+        DropdownMenu(
+          expanded = exportExpanded,
+          onDismissRequest = { exportExpanded = false },
+        ) {
+          DropdownMenuItem(
+            text = { Text(stringResource(Res.string.action_export_logs)) },
+            onClick = { onExport(exporter.exportLogs()) },
+          )
+          if (showMemos) {
+            DropdownMenuItem(
+              text = { Text(stringResource(Res.string.action_export_memos)) },
+              onClick = { onExport(exporter.exportMemos()) },
+            )
+          }
+        }
+      }
+    }
+  }
 }
 
 private const val LOG_TIMESTAMP_LENGTH = 8

@@ -9,7 +9,7 @@ import java.nio.file.Paths
 actual class AppDetailsProvider {
   actual fun load(): AppDetails {
     val home = System.getProperty("user.home")
-    val offlinePath = Paths.get(home, "Documents", "Memos", "memos.json").toString()
+    val offlinePath = Paths.get(home, "Documents", "Vibits", "memos.json").toString()
     return AppDetails(
       version = DesktopStoragePaths.appVersion(),
       environment = DesktopStoragePaths.environmentLabel(),

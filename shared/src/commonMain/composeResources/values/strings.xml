@@ -20,6 +20,11 @@
     <string name="action_track_today">Track today</string>
     <string name="action_update">Update</string>
     <string name="action_view_logs">View Logs</string>
+    <string name="action_export">Export</string>
+    <string name="action_export_logs">Export Logs</string>
+    <string name="action_export_memos">Export Memos</string>
+    <string name="msg_export_success">Exported to %1$s</string>
+    <string name="msg_export_failed">Export failed</string>
 
     <!-- App -->
     <string name="app_name">Vibits</string>
