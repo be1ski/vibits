@@ -29,6 +29,7 @@ import space.be1ski.vibits.shared.feature.memos.domain.usecase.UpdateMemoUseCase
 import space.be1ski.vibits.shared.feature.mode.data.AppModeStore
 import space.be1ski.vibits.shared.feature.mode.data.AppModeRepositoryImpl
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
+import space.be1ski.vibits.shared.feature.mode.domain.usecase.FixInvalidOnlineModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.LoadAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
@@ -82,6 +83,7 @@ fun sharedModule(): Module = module {
   factory { SaveAppModeUseCase(get()) }
   factory { SwitchAppModeUseCase(get(), get()) }
   factory { ResetAppUseCase(get(), get(), get(), get(), get()) }
+  factory { FixInvalidOnlineModeUseCase(get(), get(), get()) }
   factory { CalculateSuccessRateUseCase() }
   factory { ExtractDailyMemosUseCase() }
   factory { ExtractHabitsConfigUseCase() }

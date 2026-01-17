@@ -7,9 +7,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import org.koin.compose.koinInject
 import space.be1ski.vibits.shared.core.ui.theme.VibitsTheme
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
-import space.be1ski.vibits.shared.feature.mode.domain.usecase.LoadAppModeUseCase
+import space.be1ski.vibits.shared.feature.mode.domain.usecase.FixInvalidOnlineModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionScreen
 
@@ -17,25 +16,10 @@ import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionScreen
 @Suppress("AssignedValueIsNeverRead")
 @Composable
 fun AppRoot() {
-  val loadAppModeUseCase: LoadAppModeUseCase = koinInject()
   val saveAppModeUseCase: SaveAppModeUseCase = koinInject()
-  val loadCredentialsUseCase: LoadCredentialsUseCase = koinInject()
+  val fixInvalidOnlineModeUseCase: FixInvalidOnlineModeUseCase = koinInject()
 
-  var appMode by remember {
-    val mode = loadAppModeUseCase()
-    // Reset to mode selection if Online mode without credentials
-    if (mode == AppMode.Online) {
-      val credentials = loadCredentialsUseCase()
-      if (credentials.baseUrl.isBlank() || credentials.token.isBlank()) {
-        saveAppModeUseCase(AppMode.NotSelected)
-        mutableStateOf(AppMode.NotSelected)
-      } else {
-        mutableStateOf(mode)
-      }
-    } else {
-      mutableStateOf(mode)
-    }
-  }
+  var appMode by remember { mutableStateOf(fixInvalidOnlineModeUseCase()) }
 
   VibitsTheme {
     when (appMode) {
