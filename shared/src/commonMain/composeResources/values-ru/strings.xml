@@ -57,6 +57,7 @@
     <string name="label_today">Сегодня</string>
 
     <!-- Messages -->
+    <string name="msg_toggle_habit_confirm">Переключить "%1$s" на %2$s?</string>
     <string name="msg_connection_failed">Ошибка подключения</string>
     <string name="msg_delete_day_confirm">Привычки не выбраны. Запись за этот день будет удалена.</string>
     <string name="msg_fill_all_fields">Заполните все поля</string>
@@ -94,6 +95,7 @@
     <string name="time_years">Годы</string>
 
     <!-- Titles -->
+    <string name="title_toggle_habit">Переключить привычку?</string>
     <string name="title_create_day">Создать день</string>
     <string name="title_delete_day">Удалить день?</string>
     <string name="title_delete_memo">Удалить заметку?</string>

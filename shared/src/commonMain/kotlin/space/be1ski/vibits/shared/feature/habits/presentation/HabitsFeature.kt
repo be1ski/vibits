@@ -37,6 +37,16 @@ sealed interface HabitsAction {
   data class DeleteHabit(val id: String) : HabitsAction
   data object SaveConfigDialog : HabitsAction
 
+  // Single habit toggle (quick toggle from matrix)
+  data class RequestSingleHabitToggle(
+    val day: ContributionDay,
+    val habitTag: String,
+    val habitLabel: String,
+    val config: List<HabitConfig>
+  ) : HabitsAction
+  data object ConfirmSingleHabitToggle : HabitsAction
+  data object CancelSingleHabitToggle : HabitsAction
+
   // Selection management
   data class SelectDay(val day: ContributionDay, val selectionId: String) : HabitsAction
   data class SelectWeek(val week: ActivityWeek) : HabitsAction
@@ -84,6 +94,12 @@ data class HabitsState(
   // Delete confirmation
   val showDeleteConfirm: Boolean = false,
 
+  // Single habit toggle state
+  val singleToggleDay: ContributionDay? = null,
+  val singleToggleHabitTag: String? = null,
+  val singleToggleHabitLabel: String? = null,
+  val singleToggleConfig: List<HabitConfig> = emptyList(),
+
   // Config dialog state
   val showConfigDialog: Boolean = false,
   val editingHabits: List<EditableHabit> = emptyList(),
@@ -98,6 +114,7 @@ data class HabitsState(
 ) {
   val isEditorOpen: Boolean get() = editorDay != null
   val isEditing: Boolean get() = editorExisting != null
+  val showSingleToggleConfirm: Boolean get() = singleToggleDay != null
 }
 
 /**

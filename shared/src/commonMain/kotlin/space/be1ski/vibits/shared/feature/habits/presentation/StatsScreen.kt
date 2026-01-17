@@ -146,5 +146,6 @@ private fun StatsScreenDialogs(
 ) {
   HabitEditorDialog(derived, dispatch)
   EmptyDeleteDialog(derived, dispatch)
+  SingleHabitToggleDialog(derived, dispatch)
   HabitsConfigDialog(derived.habitsState, dispatch)
 }

@@ -20,8 +20,10 @@ import space.be1ski.vibits.shared.action_update
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.presentation.components.localizedLabel
 import space.be1ski.vibits.shared.msg_delete_day_confirm
+import space.be1ski.vibits.shared.msg_toggle_habit_confirm
 import space.be1ski.vibits.shared.title_create_day
 import space.be1ski.vibits.shared.title_delete_day
+import space.be1ski.vibits.shared.title_toggle_habit
 import space.be1ski.vibits.shared.title_update_day
 
 @Composable
@@ -124,6 +126,44 @@ internal fun EmptyDeleteDialog(
     },
     dismissButton = {
       TextButton(onClick = { dispatch(HabitsAction.CancelDelete) }) {
+        Text(stringResource(Res.string.action_cancel))
+      }
+    }
+  )
+}
+
+@Composable
+internal fun SingleHabitToggleDialog(
+  derived: StatsScreenDerivedState,
+  dispatch: (HabitsAction) -> Unit
+) {
+  val habitsState = derived.habitsState
+  val day = habitsState.singleToggleDay
+  val habitLabel = habitsState.singleToggleHabitLabel
+
+  if (!habitsState.showSingleToggleConfirm || day == null || habitLabel == null) {
+    return
+  }
+
+  val demoMode = derived.state.demoMode
+  val habitConfig = habitsState.singleToggleConfig.firstOrNull {
+    it.tag == habitsState.singleToggleHabitTag
+  }
+  val displayLabel = habitConfig?.localizedLabel(demoMode) ?: habitLabel
+
+  AlertDialog(
+    onDismissRequest = { dispatch(HabitsAction.CancelSingleHabitToggle) },
+    title = { Text(stringResource(Res.string.title_toggle_habit)) },
+    text = {
+      Text(stringResource(Res.string.msg_toggle_habit_confirm, displayLabel, day.date.toString()))
+    },
+    confirmButton = {
+      Button(onClick = { dispatch(HabitsAction.ConfirmSingleHabitToggle) }) {
+        Text(stringResource(Res.string.action_update))
+      }
+    },
+    dismissButton = {
+      TextButton(onClick = { dispatch(HabitsAction.CancelSingleHabitToggle) }) {
         Text(stringResource(Res.string.action_cancel))
       }
     }
