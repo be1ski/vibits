@@ -93,7 +93,7 @@ class NavigateActivityRangeUseCase {
   }
 
   private fun formatMonthDay(date: LocalDate, showYear: Boolean = false): String {
-    val base = "${monthShort(date.month)} ${date.dayOfMonth}"
+    val base = "${monthShort(date.month)} ${date.day}"
     return if (showYear) "$base ${date.year}" else base
   }
 
