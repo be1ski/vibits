@@ -3,6 +3,7 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_clear">Clear</string>
     <string name="action_close">Close</string>
+    <string name="action_copied">Copied</string>
     <string name="action_configure_habits">Configure habits</string>
     <string name="action_create">Create</string>
     <string name="action_create_memo">Create memo</string>
@@ -54,9 +55,13 @@
     <string name="label_activity">Activity</string>
     <string name="label_app_mode">App mode</string>
     <string name="label_base_url">Base URL</string>
+    <string name="label_credentials">Credentials</string>
     <string name="label_demo_mode">Demo mode</string>
+    <string name="label_environment">Environment</string>
     <string name="label_habits_config">Habits config</string>
+    <string name="label_memos_db">Memos DB</string>
     <string name="label_storage">Storage</string>
+    <string name="label_version">Version</string>
     <string name="label_success_rate">Success rate</string>
     <string name="label_today">Today</string>
 
