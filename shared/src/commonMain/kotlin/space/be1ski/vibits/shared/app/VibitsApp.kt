@@ -41,6 +41,7 @@ import space.be1ski.vibits.shared.feature.habits.presentation.buildHabitDay
 import space.be1ski.vibits.shared.feature.habits.presentation.createHabitsFeature
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
 import space.be1ski.vibits.shared.feature.auth.presentation.SettingsDialog
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.CreateMemoUseCase
@@ -80,6 +81,7 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
   val loadAppModeUseCase: LoadAppModeUseCase = koinInject()
   val switchAppModeUseCase: SwitchAppModeUseCase = koinInject()
   val resetAppUseCase: ResetAppUseCase = koinInject()
+  val validateCredentialsUseCase: ValidateCredentialsUseCase = koinInject()
   val calculateSuccessRate: CalculateSuccessRateUseCase = koinInject()
 
   val initialPrefs = remember { loadPreferencesUseCase() }
@@ -150,6 +152,7 @@ fun VibitsApp(onResetApp: () -> Unit = {}) {
       appDetails = appDetails,
       switchAppModeUseCase = switchAppModeUseCase,
       resetAppUseCase = resetAppUseCase,
+      validateCredentialsUseCase = validateCredentialsUseCase,
       onResetComplete = onResetApp
     )
     MemoCreateDialog(appState, dispatchMemos)
