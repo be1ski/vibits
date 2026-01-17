@@ -114,7 +114,8 @@ private data class ContributionGridLayoutState(
   val spacing: Dp,
   val legendWidth: Dp,
   val legendSpacing: Dp,
-  val timelineLabels: List<String>
+  val timelineLabels: List<String>,
+  val headerLabels: List<String> = emptyList()
 )
 
 @Composable
@@ -152,15 +153,25 @@ private fun ContributionGridLayout(
     val timelineLabels = remember(state.weekData.weeks, state.range, formatter) {
       if (state.showTimeline) buildTimelineLabels(state.weekData.weeks, state.range, formatter) else emptyList()
     }
+    val headerLabels = remember(state.weekData.weeks, state.showWeekStartHeaders) {
+      if (state.showWeekStartHeaders) {
+        state.weekData.weeks.map { week ->
+          val firstInRangeDay = week.days.firstOrNull { it.inRange }
+          firstInRangeDay?.date?.day?.toString() ?: ""
+        }
+      } else emptyList()
+    }
     val layoutState = ContributionGridLayoutState(
       layout = layout,
       spacing = spacing,
       legendWidth = legendWidth,
       legendSpacing = legendSpacing,
-      timelineLabels = timelineLabels
+      timelineLabels = timelineLabels,
+      headerLabels = headerLabels
     )
 
     Column(verticalArrangement = Arrangement.spacedBy(spacing)) {
+      ContributionGridHeaderRow(state, layoutState)
       ContributionGridWeeks(state, onDaySelected, interaction, layoutState)
       ContributionGridTimelineRow(state, layoutState)
     }
@@ -228,6 +239,29 @@ private fun ContributionGridWeeks(
       }
     }
   }
+}
+
+@Composable
+private fun ContributionGridHeaderRow(
+  state: ContributionGridState,
+  layoutState: ContributionGridLayoutState
+) {
+  if (!state.showWeekStartHeaders) {
+    return
+  }
+  val layout = layoutState.layout
+  TimelineRow(
+    state = TimelineRowState(
+      labels = layoutState.headerLabels,
+      cellSize = layout.columnSize,
+      contentWidth = layout.contentWidth,
+      spacing = layoutState.spacing,
+      legendWidth = layoutState.legendWidth,
+      legendSpacing = layoutState.legendSpacing,
+      useScroll = layout.useScroll,
+      scrollState = state.scrollState
+    )
+  )
 }
 
 @Composable
