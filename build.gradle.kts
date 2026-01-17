@@ -60,8 +60,24 @@ tasks.register("checkAll") {
   group = "verification"
   description = "Runs all checks: ktlint, detekt, compile, and tests"
   dependsOn(
-    ":shared:ktlintCheck",
+    // ktlint - specific source sets to avoid iOS compilation on Linux CI
+    ":shared:ktlintCommonMainSourceSetCheck",
+    ":shared:ktlintCommonTestSourceSetCheck",
+    ":shared:ktlintRoomMainSourceSetCheck",
+    ":shared:ktlintAndroidMainSourceSetCheck",
+    ":shared:ktlintDesktopMainSourceSetCheck",
+    ":shared:ktlintDesktopTestSourceSetCheck",
+    ":shared:ktlintWasmJsMainSourceSetCheck",
+    ":shared:ktlintIosMainSourceSetCheck",
+    ":androidApp:ktlintCheck",
+    ":desktopApp:ktlintCheck",
+    ":webApp:ktlintCheck",
+    // detekt
     ":shared:detekt",
+    ":androidApp:detekt",
+    ":desktopApp:detekt",
+    ":webApp:detekt",
+    // compile and test
     ":shared:compileKotlinDesktop",
     ":shared:desktopTest",
   )
