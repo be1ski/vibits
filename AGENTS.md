@@ -29,6 +29,12 @@ Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if a
 - Prefer clean refactors over quick reuse: avoid introducing or keeping code smells, and leave the codebase cleaner than you found it.
 - Keep Gradle dependencies and `gradle/libs.versions.toml` entries alphabetically sorted within each block.
 
+## Localization
+
+- **Never hardcode user-facing strings.** All text displayed to users must use string resources from `composeResources/values/strings.xml`.
+- **Always add translations immediately.** When adding a new string resource, add the Russian translation in `values-ru/strings.xml` at the same time.
+- String resource names use `snake_case` with semantic prefixes: `action_`, `label_`, `msg_`, `title_`, `hint_`, `format_`, etc.
+
 ## Testing Guidelines
 
 We follow TDD for business logic and aim for high coverage.
