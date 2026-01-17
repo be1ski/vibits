@@ -1,0 +1,194 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_cancel">Anulare</string>
+    <string name="action_clear">Curăță</string>
+    <string name="action_close">Închide</string>
+    <string name="action_copied">Copiat</string>
+    <string name="action_configure_habits">Configurare obiceiuri</string>
+    <string name="action_create">Creează</string>
+    <string name="action_create_memo">Creează notă</string>
+    <string name="action_delete">Șterge</string>
+    <string name="action_hide_details">Ascunde detalii</string>
+    <string name="action_next">Următorul</string>
+    <string name="action_previous">Anterior</string>
+    <string name="action_refresh">Reîmprospătare</string>
+    <string name="action_reset">Resetare</string>
+    <string name="action_reset_app">Resetare aplicație</string>
+    <string name="action_save">Salvează</string>
+    <string name="action_show_details">Arată detalii</string>
+    <string name="action_track">Marchează</string>
+    <string name="action_track_today">Marchează astăzi</string>
+    <string name="action_update">Actualizare</string>
+    <string name="action_view_logs">Loguri</string>
+    <string name="action_export">Export</string>
+    <string name="action_export_logs">Export loguri</string>
+    <string name="action_export_memos">Export note</string>
+    <string name="msg_export_success">Exportat în %1$s</string>
+    <string name="msg_export_failed">Eroare la export</string>
+
+    <!-- App -->
+    <string name="app_name">Vibits</string>
+
+    <!-- Days of week -->
+    <string name="day_mon">Lu</string>
+    <string name="day_tue">Ma</string>
+    <string name="day_wed">Mi</string>
+    <string name="day_thu">Jo</string>
+    <string name="day_fri">Vi</string>
+    <string name="day_sat">Sâ</string>
+    <string name="day_sun">Du</string>
+
+    <!-- Months short -->
+    <string name="month_jan">Ian</string>
+    <string name="month_feb">Feb</string>
+    <string name="month_mar">Mar</string>
+    <string name="month_apr">Apr</string>
+    <string name="month_may">Mai</string>
+    <string name="month_jun">Iun</string>
+    <string name="month_jul">Iul</string>
+    <string name="month_aug">Aug</string>
+    <string name="month_sep">Sep</string>
+    <string name="month_oct">Oct</string>
+    <string name="month_nov">Nov</string>
+    <string name="month_dec">Dec</string>
+
+    <!-- Format strings -->
+    <string name="format_app_version">Versiune: %1$s</string>
+    <string name="format_credentials">Credențiale: %1$s</string>
+    <string name="format_environment">Mediu: %1$s</string>
+    <string name="format_habits_progress">%1$d din %2$d obiceiuri finalizate</string>
+    <string name="format_memos_db">Baza de date note: %1$s</string>
+    <string name="format_offline_storage">Offline: %1$s</string>
+    <string name="format_memos_count">%1$d note</string>
+    <string name="format_memos_today">%1$d note astăzi</string>
+    <string name="format_memos_this_week">%1$d note săptămâna aceasta</string>
+    <string name="format_memos_in_month">%1$d note în %2$s</string>
+    <string name="format_memos_in_quarter">%1$d note în %2$s</string>
+    <string name="format_memos_in_year">%1$d note în %2$d</string>
+    <string name="action_show_memos">Arată notele</string>
+    <string name="action_hide_memos">Ascunde notele</string>
+    <string name="action_write">Scrie</string>
+    <string name="format_tooltip_habits">%1$s: %2$d/%3$d obiceiuri</string>
+    <string name="format_tooltip_memos">%1$s: %2$d note</string>
+
+    <!-- Hints -->
+    <string name="hint_add_habits_config">Adăugați configurația obiceiurilor pentru a începe urmărirea.</string>
+    <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habit_name">Numele obiceiului</string>
+    <string name="hint_habits_config">Exerciții | #habits/gym\nCitire | #habits/reading</string>
+    <string name="hint_write_memo">Scrie o notă...</string>
+
+    <!-- Labels -->
+    <string name="label_access_token">Token de acces</string>
+    <string name="label_language">Limbă</string>
+    <string name="label_time_night">Noapte</string>
+    <string name="label_time_morning">Dimineață</string>
+    <string name="label_time_day">Zi</string>
+    <string name="label_time_evening">Seară</string>
+    <string name="label_activity">Activitate</string>
+    <string name="label_app_mode">Mod aplicație</string>
+    <string name="label_base_url">Base URL</string>
+    <string name="label_credentials">Credențiale</string>
+    <string name="label_demo_mode">Mod demo</string>
+    <string name="label_environment">Mediu</string>
+    <string name="label_habits_config">Configurare obiceiuri</string>
+    <string name="label_memos_db">Baza de date note</string>
+    <string name="label_storage">Stocare</string>
+    <string name="label_version">Versiune</string>
+    <string name="label_success_rate">Rată de succes</string>
+    <string name="label_today">Astăzi</string>
+
+    <!-- Messages -->
+    <string name="msg_connection_failed">Conexiune eșuată</string>
+    <string name="msg_delete_day_confirm">Niciun obicei selectat. Înregistrarea zilnică va fi ștearsă.</string>
+    <string name="msg_fill_all_fields">Completați toate câmpurile</string>
+    <string name="msg_no_habits_yet">Niciun obicei configurat încă.</string>
+    <string name="msg_no_logs">Niciun log încă</string>
+    <string name="msg_no_memos_yet">Nicio notă în această perioadă.</string>
+    <string name="msg_reset_confirm">Sunteți sigur că doriți să resetați aplicația? Toate datele vor fi șterse.</string>
+    <string name="msg_select_habit">Selectați cel puțin un obicei.</string>
+    <string name="msg_mark_done_confirm">Marcați «%1$s» ca finalizat pentru %2$s?</string>
+    <string name="msg_mark_not_done_confirm">Eliminați marcajul pentru «%1$s» pe %2$s?</string>
+    <string name="msg_restart_required">Repornire necesară pentru aplicarea schimbării limbii</string>
+
+    <!-- Language selection -->
+    <string name="language_system">Sistem</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_hindi">हिन्दी</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_portuguese">Português</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_ukrainian">Українська</string>
+    <string name="language_belarusian">Беларуская</string>
+    <string name="language_kazakh">Қазақша</string>
+    <string name="language_uzbek">Oʻzbekcha</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_french">Français</string>
+    <string name="language_georgian">ქართული</string>
+    <string name="language_azerbaijani">Azərbaycan</string>
+    <string name="language_kyrgyz">Кыргызча</string>
+    <string name="language_tajik">Тоҷикӣ</string>
+    <string name="language_romanian">Română</string>
+    <string name="language_turkmen">Türkmen</string>
+
+    <!-- Theme selection -->
+    <string name="label_theme">Temă</string>
+    <string name="theme_system">Sistem</string>
+    <string name="theme_light">Deschis</string>
+    <string name="theme_dark">Întunecat</string>
+
+    <!-- Mode selection -->
+    <string name="mode_select_title">Selectați modul</string>
+    <string name="mode_select_subtitle">Cum doriți să utilizați aplicația?</string>
+    <string name="mode_online_title">Online</string>
+    <string name="mode_online_desc">Conectați-vă la serverul Memos pentru sincronizare completă</string>
+    <string name="mode_offline_title">Offline</string>
+    <string name="mode_offline_desc">Stocați datele local fără conexiune la server</string>
+    <string name="mode_demo_title">Demo</string>
+    <string name="mode_demo_desc">Încercați aplicația cu date demonstrative</string>
+
+    <!-- Navigation -->
+    <string name="nav_feed">Flux</string>
+    <string name="nav_habits">Obiceiuri</string>
+    <string name="nav_memos">Note</string>
+    <string name="nav_settings">Setări</string>
+
+    <!-- Privacy -->
+    <string name="privacy_hidden_content">Conținut ascuns</string>
+    <string name="privacy_hidden_habit">Obicei ascuns</string>
+
+    <!-- Time periods -->
+    <string name="time_month">Lună</string>
+    <string name="time_months">Luni</string>
+    <string name="time_quarter">Trimestru</string>
+    <string name="time_quarters">Trimestre</string>
+    <string name="time_week">Săptămână</string>
+    <string name="time_weeks">Săptămâni</string>
+    <string name="time_year">An</string>
+    <string name="time_years">Ani</string>
+
+    <!-- Titles -->
+    <string name="title_create_day">Creează zi</string>
+    <string name="title_delete_day">Șterge ziua?</string>
+    <string name="title_delete_memo">Șterge nota?</string>
+    <string name="title_edit_day">Editează ziua</string>
+    <string name="title_edit_memo">Editează nota</string>
+    <string name="title_logs">Loguri (%1$d)</string>
+    <string name="title_new_memo">Notă nouă</string>
+    <string name="title_mark_done">Marchează ca finalizat?</string>
+    <string name="title_mark_not_done">Elimină marcajul?</string>
+    <string name="title_update_day">Actualizează ziua</string>
+
+    <!-- Demo habits -->
+    <string name="demo_habit_exercise">Exerciții</string>
+    <string name="demo_habit_reading">Citire</string>
+    <string name="demo_habit_meditation">Meditație</string>
+    <string name="demo_habit_water">Bea apă</string>
+    <string name="demo_habit_learning">Învățare</string>
+    <string name="demo_habit_walking">10K pași</string>
+    <string name="demo_habit_no_sugar">Fără zahăr</string>
+    <string name="demo_habit_early_sleep">Somn până la 23:00</string>
+</resources>

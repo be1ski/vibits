@@ -85,16 +85,26 @@ import space.be1ski.vibits.shared.label_storage
 import space.be1ski.vibits.shared.label_theme
 import space.be1ski.vibits.shared.label_version
 import space.be1ski.vibits.shared.language_arabic
+import space.be1ski.vibits.shared.language_azerbaijani
+import space.be1ski.vibits.shared.language_belarusian
 import space.be1ski.vibits.shared.language_chinese
 import space.be1ski.vibits.shared.language_english
 import space.be1ski.vibits.shared.language_french
+import space.be1ski.vibits.shared.language_georgian
 import space.be1ski.vibits.shared.language_german
 import space.be1ski.vibits.shared.language_hindi
 import space.be1ski.vibits.shared.language_japanese
+import space.be1ski.vibits.shared.language_kazakh
+import space.be1ski.vibits.shared.language_kyrgyz
 import space.be1ski.vibits.shared.language_portuguese
+import space.be1ski.vibits.shared.language_romanian
 import space.be1ski.vibits.shared.language_russian
 import space.be1ski.vibits.shared.language_spanish
 import space.be1ski.vibits.shared.language_system
+import space.be1ski.vibits.shared.language_tajik
+import space.be1ski.vibits.shared.language_turkmen
+import space.be1ski.vibits.shared.language_ukrainian
+import space.be1ski.vibits.shared.language_uzbek
 import space.be1ski.vibits.shared.mode_demo_title
 import space.be1ski.vibits.shared.mode_offline_title
 import space.be1ski.vibits.shared.mode_online_title
@@ -417,6 +427,7 @@ private fun LanguageDropdown(
   }
 }
 
+@Suppress("CyclomaticComplexMethod")
 @Composable
 private fun getLanguageLabel(language: AppLanguage): String =
   when (language) {
@@ -428,6 +439,16 @@ private fun getLanguageLabel(language: AppLanguage): String =
     AppLanguage.ARABIC -> stringResource(Res.string.language_arabic)
     AppLanguage.PORTUGUESE -> stringResource(Res.string.language_portuguese)
     AppLanguage.RUSSIAN -> stringResource(Res.string.language_russian)
+    AppLanguage.UKRAINIAN -> stringResource(Res.string.language_ukrainian)
+    AppLanguage.BELARUSIAN -> stringResource(Res.string.language_belarusian)
+    AppLanguage.KAZAKH -> stringResource(Res.string.language_kazakh)
+    AppLanguage.UZBEK -> stringResource(Res.string.language_uzbek)
+    AppLanguage.GEORGIAN -> stringResource(Res.string.language_georgian)
+    AppLanguage.AZERBAIJANI -> stringResource(Res.string.language_azerbaijani)
+    AppLanguage.KYRGYZ -> stringResource(Res.string.language_kyrgyz)
+    AppLanguage.TAJIK -> stringResource(Res.string.language_tajik)
+    AppLanguage.ROMANIAN -> stringResource(Res.string.language_romanian)
+    AppLanguage.TURKMEN -> stringResource(Res.string.language_turkmen)
     AppLanguage.JAPANESE -> stringResource(Res.string.language_japanese)
     AppLanguage.GERMAN -> stringResource(Res.string.language_german)
     AppLanguage.FRENCH -> stringResource(Res.string.language_french)

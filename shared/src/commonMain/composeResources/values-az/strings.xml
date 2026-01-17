@@ -1,0 +1,194 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_cancel">Ləğv et</string>
+    <string name="action_clear">Təmizlə</string>
+    <string name="action_close">Bağla</string>
+    <string name="action_copied">Kopyalandı</string>
+    <string name="action_configure_habits">Vərdişləri tənzimlə</string>
+    <string name="action_create">Yarat</string>
+    <string name="action_create_memo">Qeyd yarat</string>
+    <string name="action_delete">Sil</string>
+    <string name="action_hide_details">Detalları gizlət</string>
+    <string name="action_next">Növbəti</string>
+    <string name="action_previous">Əvvəlki</string>
+    <string name="action_refresh">Yenilə</string>
+    <string name="action_reset">Sıfırla</string>
+    <string name="action_reset_app">Tətbiqi sıfırla</string>
+    <string name="action_save">Saxla</string>
+    <string name="action_show_details">Detalları göstər</string>
+    <string name="action_track">Qeyd et</string>
+    <string name="action_track_today">Bu gün qeyd et</string>
+    <string name="action_update">Yenilə</string>
+    <string name="action_view_logs">Loglar</string>
+    <string name="action_export">İxrac</string>
+    <string name="action_export_logs">Logları ixrac et</string>
+    <string name="action_export_memos">Qeydləri ixrac et</string>
+    <string name="msg_export_success">%1$s-ə ixrac edildi</string>
+    <string name="msg_export_failed">İxrac xətası</string>
+
+    <!-- App -->
+    <string name="app_name">Vibits</string>
+
+    <!-- Days of week -->
+    <string name="day_mon">Be</string>
+    <string name="day_tue">Ça</string>
+    <string name="day_wed">Çə</string>
+    <string name="day_thu">Ca</string>
+    <string name="day_fri">Cü</string>
+    <string name="day_sat">Şə</string>
+    <string name="day_sun">Ba</string>
+
+    <!-- Months short -->
+    <string name="month_jan">Yan</string>
+    <string name="month_feb">Fev</string>
+    <string name="month_mar">Mar</string>
+    <string name="month_apr">Apr</string>
+    <string name="month_may">May</string>
+    <string name="month_jun">İyn</string>
+    <string name="month_jul">İyl</string>
+    <string name="month_aug">Avq</string>
+    <string name="month_sep">Sen</string>
+    <string name="month_oct">Okt</string>
+    <string name="month_nov">Noy</string>
+    <string name="month_dec">Dek</string>
+
+    <!-- Format strings -->
+    <string name="format_app_version">Versiya: %1$s</string>
+    <string name="format_credentials">Hesab məlumatları: %1$s</string>
+    <string name="format_environment">Mühit: %1$s</string>
+    <string name="format_habits_progress">%2$d vərdişdən %1$d tamamlandı</string>
+    <string name="format_memos_db">Qeydlər bazası: %1$s</string>
+    <string name="format_offline_storage">Oflayn: %1$s</string>
+    <string name="format_memos_count">%1$d qeyd</string>
+    <string name="format_memos_today">Bu gün %1$d qeyd</string>
+    <string name="format_memos_this_week">Bu həftə %1$d qeyd</string>
+    <string name="format_memos_in_month">%2$s ayında %1$d qeyd</string>
+    <string name="format_memos_in_quarter">%2$s rübündə %1$d qeyd</string>
+    <string name="format_memos_in_year">%2$d ilində %1$d qeyd</string>
+    <string name="action_show_memos">Qeydləri göstər</string>
+    <string name="action_hide_memos">Qeydləri gizlət</string>
+    <string name="action_write">Yaz</string>
+    <string name="format_tooltip_habits">%1$s: %2$d/%3$d vərdiş</string>
+    <string name="format_tooltip_memos">%1$s: %2$d qeyd</string>
+
+    <!-- Hints -->
+    <string name="hint_add_habits_config">İzləməyə başlamaq üçün vərdiş konfiqurasiyası əlavə edin.</string>
+    <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habit_name">Vərdiş adı</string>
+    <string name="hint_habits_config">İdman | #habits/gym\nOxu | #habits/reading</string>
+    <string name="hint_write_memo">Qeyd yazın...</string>
+
+    <!-- Labels -->
+    <string name="label_access_token">Giriş tokeni</string>
+    <string name="label_language">Dil</string>
+    <string name="label_time_night">Gecə</string>
+    <string name="label_time_morning">Səhər</string>
+    <string name="label_time_day">Gündüz</string>
+    <string name="label_time_evening">Axşam</string>
+    <string name="label_activity">Fəaliyyət</string>
+    <string name="label_app_mode">Tətbiq rejimi</string>
+    <string name="label_base_url">Base URL</string>
+    <string name="label_credentials">Hesab məlumatları</string>
+    <string name="label_demo_mode">Demo rejim</string>
+    <string name="label_environment">Mühit</string>
+    <string name="label_habits_config">Vərdiş konfiqurasiyası</string>
+    <string name="label_memos_db">Qeydlər bazası</string>
+    <string name="label_storage">Yaddaş</string>
+    <string name="label_version">Versiya</string>
+    <string name="label_success_rate">Uğur dərəcəsi</string>
+    <string name="label_today">Bu gün</string>
+
+    <!-- Messages -->
+    <string name="msg_connection_failed">Əlaqə xətası</string>
+    <string name="msg_delete_day_confirm">Vərdiş seçilməyib. Günlük qeyd silinəcək.</string>
+    <string name="msg_fill_all_fields">Bütün sahələri doldurun</string>
+    <string name="msg_no_habits_yet">Vərdişlər hələ tənzimlənməyib.</string>
+    <string name="msg_no_logs">Loglar hələ yoxdur</string>
+    <string name="msg_no_memos_yet">Bu dövrdə qeyd yoxdur.</string>
+    <string name="msg_reset_confirm">Tətbiqi sıfırlamaq istədiyinizə əminsiniz? Bütün məlumatlar silinəcək.</string>
+    <string name="msg_select_habit">Ən azı bir vərdiş seçin.</string>
+    <string name="msg_mark_done_confirm">«%1$s» %2$s üçün tamamlanmış kimi qeyd edilsin?</string>
+    <string name="msg_mark_not_done_confirm">%2$s tarixində «%1$s» qeydini silmək istəyirsiniz?</string>
+    <string name="msg_restart_required">Dil dəyişikliyini tətbiq etmək üçün yenidən başlatma tələb olunur</string>
+
+    <!-- Language selection -->
+    <string name="language_system">Sistem</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_hindi">हिन्दी</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_portuguese">Português</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_ukrainian">Українська</string>
+    <string name="language_belarusian">Беларуская</string>
+    <string name="language_kazakh">Қазақша</string>
+    <string name="language_uzbek">Oʻzbekcha</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_french">Français</string>
+    <string name="language_georgian">ქართული</string>
+    <string name="language_azerbaijani">Azərbaycan</string>
+    <string name="language_kyrgyz">Кыргызча</string>
+    <string name="language_tajik">Тоҷикӣ</string>
+    <string name="language_romanian">Română</string>
+    <string name="language_turkmen">Türkmen</string>
+
+    <!-- Theme selection -->
+    <string name="label_theme">Tema</string>
+    <string name="theme_system">Sistem</string>
+    <string name="theme_light">Açıq</string>
+    <string name="theme_dark">Tünd</string>
+
+    <!-- Mode selection -->
+    <string name="mode_select_title">Rejim seçin</string>
+    <string name="mode_select_subtitle">Tətbiqi necə istifadə etmək istəyirsiniz?</string>
+    <string name="mode_online_title">Onlayn</string>
+    <string name="mode_online_desc">Tam sinxronizasiya üçün Memos serverinə qoşulun</string>
+    <string name="mode_offline_title">Oflayn</string>
+    <string name="mode_offline_desc">Serverə qoşulmadan məlumatları lokal saxlayın</string>
+    <string name="mode_demo_title">Demo</string>
+    <string name="mode_demo_desc">Tətbiqi nümunə məlumatlarla sınayın</string>
+
+    <!-- Navigation -->
+    <string name="nav_feed">Lent</string>
+    <string name="nav_habits">Vərdişlər</string>
+    <string name="nav_memos">Qeydlər</string>
+    <string name="nav_settings">Parametrlər</string>
+
+    <!-- Privacy -->
+    <string name="privacy_hidden_content">Gizli məzmun</string>
+    <string name="privacy_hidden_habit">Gizli vərdiş</string>
+
+    <!-- Time periods -->
+    <string name="time_month">Ay</string>
+    <string name="time_months">Aylar</string>
+    <string name="time_quarter">Rüb</string>
+    <string name="time_quarters">Rüblər</string>
+    <string name="time_week">Həftə</string>
+    <string name="time_weeks">Həftələr</string>
+    <string name="time_year">İl</string>
+    <string name="time_years">İllər</string>
+
+    <!-- Titles -->
+    <string name="title_create_day">Gün yarat</string>
+    <string name="title_delete_day">Günü sil?</string>
+    <string name="title_delete_memo">Qeydi sil?</string>
+    <string name="title_edit_day">Günü redaktə et</string>
+    <string name="title_edit_memo">Qeydi redaktə et</string>
+    <string name="title_logs">Loglar (%1$d)</string>
+    <string name="title_new_memo">Yeni qeyd</string>
+    <string name="title_mark_done">Tamamlanmış kimi qeyd et?</string>
+    <string name="title_mark_not_done">Qeydi sil?</string>
+    <string name="title_update_day">Günü yenilə</string>
+
+    <!-- Demo habits -->
+    <string name="demo_habit_exercise">İdman</string>
+    <string name="demo_habit_reading">Oxu</string>
+    <string name="demo_habit_meditation">Meditasiya</string>
+    <string name="demo_habit_water">Su iç</string>
+    <string name="demo_habit_learning">Öyrənmə</string>
+    <string name="demo_habit_walking">10K addım</string>
+    <string name="demo_habit_no_sugar">Şəkərsiz</string>
+    <string name="demo_habit_early_sleep">23:00-a qədər yat</string>
+</resources>

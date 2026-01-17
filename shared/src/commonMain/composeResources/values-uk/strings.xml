@@ -1,0 +1,194 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_cancel">Скасувати</string>
+    <string name="action_clear">Очистити</string>
+    <string name="action_close">Закрити</string>
+    <string name="action_copied">Скопійовано</string>
+    <string name="action_configure_habits">Налаштувати звички</string>
+    <string name="action_create">Створити</string>
+    <string name="action_create_memo">Створити нотатку</string>
+    <string name="action_delete">Видалити</string>
+    <string name="action_hide_details">Сховати деталі</string>
+    <string name="action_next">Далі</string>
+    <string name="action_previous">Назад</string>
+    <string name="action_refresh">Оновити</string>
+    <string name="action_reset">Скинути</string>
+    <string name="action_reset_app">Скинути додаток</string>
+    <string name="action_save">Зберегти</string>
+    <string name="action_show_details">Показати деталі</string>
+    <string name="action_track">Відмітити</string>
+    <string name="action_track_today">Відмітити сьогодні</string>
+    <string name="action_update">Оновити</string>
+    <string name="action_view_logs">Логи</string>
+    <string name="action_export">Експорт</string>
+    <string name="action_export_logs">Експорт логів</string>
+    <string name="action_export_memos">Експорт нотаток</string>
+    <string name="msg_export_success">Експортовано до %1$s</string>
+    <string name="msg_export_failed">Помилка експорту</string>
+
+    <!-- App -->
+    <string name="app_name">Vibits</string>
+
+    <!-- Days of week -->
+    <string name="day_mon">Пн</string>
+    <string name="day_tue">Вт</string>
+    <string name="day_wed">Ср</string>
+    <string name="day_thu">Чт</string>
+    <string name="day_fri">Пт</string>
+    <string name="day_sat">Сб</string>
+    <string name="day_sun">Нд</string>
+
+    <!-- Months short -->
+    <string name="month_jan">Січ</string>
+    <string name="month_feb">Лют</string>
+    <string name="month_mar">Бер</string>
+    <string name="month_apr">Кві</string>
+    <string name="month_may">Тра</string>
+    <string name="month_jun">Чер</string>
+    <string name="month_jul">Лип</string>
+    <string name="month_aug">Сер</string>
+    <string name="month_sep">Вер</string>
+    <string name="month_oct">Жов</string>
+    <string name="month_nov">Лис</string>
+    <string name="month_dec">Гру</string>
+
+    <!-- Format strings -->
+    <string name="format_app_version">Версія: %1$s</string>
+    <string name="format_credentials">Облікові дані: %1$s</string>
+    <string name="format_environment">Середовище: %1$s</string>
+    <string name="format_habits_progress">Виконано %1$d з %2$d звичок</string>
+    <string name="format_memos_db">База нотаток: %1$s</string>
+    <string name="format_offline_storage">Офлайн: %1$s</string>
+    <string name="format_memos_count">%1$d нотаток</string>
+    <string name="format_memos_today">%1$d нотаток сьогодні</string>
+    <string name="format_memos_this_week">%1$d нотаток цього тижня</string>
+    <string name="format_memos_in_month">%1$d нотаток за %2$s</string>
+    <string name="format_memos_in_quarter">%1$d нотаток за %2$s</string>
+    <string name="format_memos_in_year">%1$d нотаток за %2$d</string>
+    <string name="action_show_memos">Показати нотатки</string>
+    <string name="action_hide_memos">Сховати нотатки</string>
+    <string name="action_write">Написати</string>
+    <string name="format_tooltip_habits">%1$s: %2$d/%3$d звичок</string>
+    <string name="format_tooltip_memos">%1$s: %2$d нотаток</string>
+
+    <!-- Hints -->
+    <string name="hint_add_habits_config">Додайте нотатку з конфігурацією звичок, щоб почати відстеження.</string>
+    <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habit_name">Назва звички</string>
+    <string name="hint_habits_config">Гімнастика | #habits/gym\nЧитання | #habits/reading</string>
+    <string name="hint_write_memo">Напишіть нотатку...</string>
+
+    <!-- Labels -->
+    <string name="label_access_token">Токен доступу</string>
+    <string name="label_language">Мова</string>
+    <string name="label_time_night">Ніч</string>
+    <string name="label_time_morning">Ранок</string>
+    <string name="label_time_day">День</string>
+    <string name="label_time_evening">Вечір</string>
+    <string name="label_activity">Активність</string>
+    <string name="label_app_mode">Режим додатку</string>
+    <string name="label_base_url">Base URL</string>
+    <string name="label_credentials">Облікові дані</string>
+    <string name="label_demo_mode">Демо-режим</string>
+    <string name="label_environment">Середовище</string>
+    <string name="label_habits_config">Конфігурація звичок</string>
+    <string name="label_memos_db">База нотаток</string>
+    <string name="label_storage">Сховище</string>
+    <string name="label_version">Версія</string>
+    <string name="label_success_rate">Успішність</string>
+    <string name="label_today">Сьогодні</string>
+
+    <!-- Messages -->
+    <string name="msg_connection_failed">Помилка підключення</string>
+    <string name="msg_delete_day_confirm">Звички не обрано. Запис за цей день буде видалено.</string>
+    <string name="msg_fill_all_fields">Заповніть усі поля</string>
+    <string name="msg_no_habits_yet">Звички ще не налаштовано.</string>
+    <string name="msg_no_logs">Логів поки немає</string>
+    <string name="msg_no_memos_yet">Немає нотаток за цей період.</string>
+    <string name="msg_reset_confirm">Ви впевнені, що хочете скинути додаток? Усі дані буде видалено.</string>
+    <string name="msg_select_habit">Оберіть хоча б одну звичку.</string>
+    <string name="msg_mark_done_confirm">Позначити «%1$s» як виконану за %2$s?</string>
+    <string name="msg_mark_not_done_confirm">Зняти позначку з «%1$s» за %2$s?</string>
+    <string name="msg_restart_required">Для застосування потрібен перезапуск</string>
+
+    <!-- Language selection -->
+    <string name="language_system">Системна</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_hindi">हिन्दी</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_portuguese">Português</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_ukrainian">Українська</string>
+    <string name="language_belarusian">Беларуская</string>
+    <string name="language_kazakh">Қазақша</string>
+    <string name="language_uzbek">Oʻzbekcha</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_french">Français</string>
+    <string name="language_georgian">ქართული</string>
+    <string name="language_azerbaijani">Azərbaycan</string>
+    <string name="language_kyrgyz">Кыргызча</string>
+    <string name="language_tajik">Тоҷикӣ</string>
+    <string name="language_romanian">Română</string>
+    <string name="language_turkmen">Türkmen</string>
+
+    <!-- Theme selection -->
+    <string name="label_theme">Тема</string>
+    <string name="theme_system">Системна</string>
+    <string name="theme_light">Світла</string>
+    <string name="theme_dark">Темна</string>
+
+    <!-- Mode selection -->
+    <string name="mode_select_title">Оберіть режим</string>
+    <string name="mode_select_subtitle">Як ви хочете використовувати додаток?</string>
+    <string name="mode_online_title">Онлайн</string>
+    <string name="mode_online_desc">Підключення до сервера Memos для повної синхронізації</string>
+    <string name="mode_offline_title">Офлайн</string>
+    <string name="mode_offline_desc">Зберігання даних локально без підключення до сервера</string>
+    <string name="mode_demo_title">Демо</string>
+    <string name="mode_demo_desc">Спробувати додаток із прикладом даних</string>
+
+    <!-- Navigation -->
+    <string name="nav_feed">Стрічка</string>
+    <string name="nav_habits">Звички</string>
+    <string name="nav_memos">Нотатки</string>
+    <string name="nav_settings">Налаштування</string>
+
+    <!-- Privacy -->
+    <string name="privacy_hidden_content">Прихований вміст</string>
+    <string name="privacy_hidden_habit">Прихована звичка</string>
+
+    <!-- Time periods -->
+    <string name="time_month">Місяць</string>
+    <string name="time_months">Місяці</string>
+    <string name="time_quarter">Квартал</string>
+    <string name="time_quarters">Квартали</string>
+    <string name="time_week">Тиждень</string>
+    <string name="time_weeks">Тижні</string>
+    <string name="time_year">Рік</string>
+    <string name="time_years">Роки</string>
+
+    <!-- Titles -->
+    <string name="title_create_day">Створити день</string>
+    <string name="title_delete_day">Видалити день?</string>
+    <string name="title_delete_memo">Видалити нотатку?</string>
+    <string name="title_edit_day">Редагувати день</string>
+    <string name="title_edit_memo">Редагувати нотатку</string>
+    <string name="title_logs">Логи (%1$d)</string>
+    <string name="title_new_memo">Нова нотатка</string>
+    <string name="title_mark_done">Позначити виконаним?</string>
+    <string name="title_mark_not_done">Зняти позначку?</string>
+    <string name="title_update_day">Оновити день</string>
+
+    <!-- Demo habits -->
+    <string name="demo_habit_exercise">Зарядка</string>
+    <string name="demo_habit_reading">Читання</string>
+    <string name="demo_habit_meditation">Медитація</string>
+    <string name="demo_habit_water">Вода</string>
+    <string name="demo_habit_learning">Навчання</string>
+    <string name="demo_habit_walking">10К кроків</string>
+    <string name="demo_habit_no_sugar">Без цукру</string>
+    <string name="demo_habit_early_sleep">Сон до 23:00</string>
+</resources>
