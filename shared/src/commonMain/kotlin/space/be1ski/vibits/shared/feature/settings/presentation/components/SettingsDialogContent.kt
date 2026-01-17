@@ -136,7 +136,7 @@ private fun SettingsDialogBody(
     validationErrorMessage?.let { error ->
       Text(error, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
     }
-    if (state.appMode == AppMode.Online) {
+    if (state.appMode == AppMode.ONLINE) {
       TextField(
         value = state.editBaseUrl,
         onValueChange = { dispatch(SettingsAction.UpdateBaseUrl(it)) },
@@ -178,28 +178,28 @@ private fun AppModeSelector(
     Text(stringResource(Res.string.label_app_mode))
     SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
       SegmentedButton(
-        selected = currentMode == AppMode.Online,
-        onClick = { if (!isValidating) onModeChange(AppMode.Online) },
+        selected = currentMode == AppMode.ONLINE,
+        onClick = { if (!isValidating) onModeChange(AppMode.ONLINE) },
         enabled = !isValidating,
         shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3)
       ) {
-        if (isValidating && currentMode != AppMode.Online) {
+        if (isValidating && currentMode != AppMode.ONLINE) {
           CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
         } else {
           Text(stringResource(Res.string.mode_online_title))
         }
       }
       SegmentedButton(
-        selected = currentMode == AppMode.Offline,
-        onClick = { if (!isValidating) onModeChange(AppMode.Offline) },
+        selected = currentMode == AppMode.OFFLINE,
+        onClick = { if (!isValidating) onModeChange(AppMode.OFFLINE) },
         enabled = !isValidating,
         shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3)
       ) {
         Text(stringResource(Res.string.mode_offline_title))
       }
       SegmentedButton(
-        selected = currentMode == AppMode.Demo,
-        onClick = { if (!isValidating) onModeChange(AppMode.Demo) },
+        selected = currentMode == AppMode.DEMO,
+        onClick = { if (!isValidating) onModeChange(AppMode.DEMO) },
         enabled = !isValidating,
         shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3)
       ) {
@@ -229,7 +229,7 @@ private fun AppDetailsSection(appDetails: AppDetails, appMode: AppMode) {
   }
 
   Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-    if (appMode != AppMode.Demo) {
+    if (appMode != AppMode.DEMO) {
       CopyableInfoRow(
         label = stringResource(Res.string.label_environment),
         value = appDetails.environment,
@@ -237,7 +237,7 @@ private fun AppDetailsSection(appDetails: AppDetails, appMode: AppMode) {
         copiedLabel = copiedLabel,
         onCopy = { onCopy("environment", it) }
       )
-      if (appMode == AppMode.Offline) {
+      if (appMode == AppMode.OFFLINE) {
         CopyableInfoRow(
           label = stringResource(Res.string.label_storage),
           value = appDetails.offlineStorage,

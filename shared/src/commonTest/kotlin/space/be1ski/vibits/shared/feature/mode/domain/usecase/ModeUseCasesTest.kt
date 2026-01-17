@@ -14,22 +14,22 @@ import kotlin.test.assertEquals
 class LoadAppModeUseCaseTest {
   @Test
   fun `when invoke then returns mode from repository`() {
-    val repository = FakeAppModeRepository(initial = AppMode.Online)
+    val repository = FakeAppModeRepository(initial = AppMode.ONLINE)
     val useCase = LoadAppModeUseCase(repository)
 
     val result = useCase()
 
-    assertEquals(AppMode.Online, result)
+    assertEquals(AppMode.ONLINE, result)
   }
 
   @Test
   fun `when mode is NotSelected then returns NotSelected`() {
-    val repository = FakeAppModeRepository(initial = AppMode.NotSelected)
+    val repository = FakeAppModeRepository(initial = AppMode.NOT_SELECTED)
     val useCase = LoadAppModeUseCase(repository)
 
     val result = useCase()
 
-    assertEquals(AppMode.NotSelected, result)
+    assertEquals(AppMode.NOT_SELECTED, result)
   }
 }
 
@@ -39,9 +39,9 @@ class SaveAppModeUseCaseTest {
     val repository = FakeAppModeRepository()
     val useCase = SaveAppModeUseCase(repository)
 
-    useCase(AppMode.Offline)
+    useCase(AppMode.OFFLINE)
 
-    assertEquals(AppMode.Offline, repository.storedMode)
+    assertEquals(AppMode.OFFLINE, repository.storedMode)
     assertEquals(1, repository.saveCalls)
   }
 }
@@ -49,7 +49,7 @@ class SaveAppModeUseCaseTest {
 class ResetAppUseCaseTest {
   private fun createUseCase(
     memoCache: FakeMemoCache = FakeMemoCache(),
-    appModeRepository: FakeAppModeRepository = FakeAppModeRepository(initial = AppMode.Online),
+    appModeRepository: FakeAppModeRepository = FakeAppModeRepository(initial = AppMode.ONLINE),
     credentialsRepository: FakeCredentialsRepository = FakeCredentialsRepository(),
     preferencesRepository: FakePreferencesRepository = FakePreferencesRepository(),
     demoMemosRepository: DemoMemosRepository = DemoMemosRepository()
@@ -79,12 +79,12 @@ class ResetAppUseCaseTest {
 
   @Test
   fun `when invoke then sets mode to NotSelected`() = runTest {
-    val appModeRepository = FakeAppModeRepository(initial = AppMode.Online)
+    val appModeRepository = FakeAppModeRepository(initial = AppMode.ONLINE)
     val useCase = createUseCase(appModeRepository = appModeRepository)
 
     useCase()
 
-    assertEquals(AppMode.NotSelected, appModeRepository.storedMode)
+    assertEquals(AppMode.NOT_SELECTED, appModeRepository.storedMode)
   }
 
   @Test

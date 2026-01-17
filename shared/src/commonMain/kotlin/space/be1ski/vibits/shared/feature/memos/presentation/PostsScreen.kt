@@ -22,7 +22,7 @@ fun PostsScreen(
     state = StatsScreenState(
       memos = memos,
       range = range,
-      activityMode = ActivityMode.Posts,
+      activityMode = ActivityMode.POSTS,
       useVerticalScroll = true,
       enablePullRefresh = false,
       demoMode = demoMode,

@@ -9,17 +9,17 @@ import space.be1ski.vibits.shared.feature.preferences.domain.model.TimeRangeTab
 import kotlinx.datetime.LocalDate
 
 internal enum class MemosScreen {
-  Habits,
-  Stats,
-  Feed
+  HABITS,
+  STATS,
+  FEED
 }
 
 internal class VibitsAppUiState(
   currentDate: LocalDate,
-  initialHabitsTimeRangeTab: TimeRangeTab = TimeRangeTab.Weeks,
-  initialPostsTimeRangeTab: TimeRangeTab = TimeRangeTab.Weeks
+  initialHabitsTimeRangeTab: TimeRangeTab = TimeRangeTab.WEEKS,
+  initialPostsTimeRangeTab: TimeRangeTab = TimeRangeTab.WEEKS
 ) {
-  var selectedScreen by mutableStateOf(MemosScreen.Habits)
+  var selectedScreen by mutableStateOf(MemosScreen.HABITS)
   var habitsTimeRangeTab by mutableStateOf(initialHabitsTimeRangeTab)
   var postsTimeRangeTab by mutableStateOf(initialPostsTimeRangeTab)
   var periodStartDate by mutableStateOf(currentDate)
@@ -29,6 +29,6 @@ internal class VibitsAppUiState(
   var showEditMemoDialog by mutableStateOf(false)
   var editMemoContent by mutableStateOf("")
   var editMemoTarget by mutableStateOf<Memo?>(null)
-  var appMode by mutableStateOf(AppMode.NotSelected)
+  var appMode by mutableStateOf(AppMode.NOT_SELECTED)
   var postsListExpanded by mutableStateOf(false)
 }

@@ -25,8 +25,8 @@ class ResetAppUseCase(
   suspend operator fun invoke() {
     memoCache.clear()
     credentialsRepository.save(Credentials(baseUrl = "", token = ""))
-    preferencesRepository.save(UserPreferences(TimeRangeTab.Weeks, TimeRangeTab.Weeks))
+    preferencesRepository.save(UserPreferences(TimeRangeTab.WEEKS, TimeRangeTab.WEEKS))
     demoMemosRepository.reset()
-    appModeRepository.saveMode(AppMode.NotSelected)
+    appModeRepository.saveMode(AppMode.NOT_SELECTED)
   }
 }

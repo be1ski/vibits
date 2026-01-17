@@ -93,7 +93,7 @@ internal fun StatsInfoCard(
   dispatch: (HabitsAction) -> Unit
 ) {
   val state = derived.state
-  val isHabitsMode = state.activityMode == ActivityMode.Habits
+  val isHabitsMode = state.activityMode == ActivityMode.HABITS
   val hasTodayConfig = derived.todayConfig.isNotEmpty()
 
   if (!isHabitsMode || !hasTodayConfig) return
@@ -141,7 +141,7 @@ internal fun StatsHabitsEmptyState(
   dispatch: (HabitsAction) -> Unit
 ) {
   val state = derived.state
-  if (state.activityMode != ActivityMode.Habits || derived.currentHabitsConfig.isNotEmpty()) {
+  if (state.activityMode != ActivityMode.HABITS || derived.currentHabitsConfig.isNotEmpty()) {
     return
   }
   OutlinedCard(modifier = Modifier.fillMaxWidth()) {
@@ -166,7 +166,7 @@ internal fun StatsPostsInfoCard(
   derived: StatsScreenDerivedState
 ) {
   val state = derived.state
-  if (state.activityMode != ActivityMode.Posts) return
+  if (state.activityMode != ActivityMode.POSTS) return
 
   val totalPosts = derived.weekData.weeks.sumOf { it.weeklyCount }
   val todayPosts = derived.todayDay?.count ?: 0
@@ -377,7 +377,7 @@ internal fun StatsCollapsiblePosts(
   onExpandedChange: (Boolean) -> Unit
 ) {
   val state = derived.state
-  if (state.activityMode != ActivityMode.Posts) return
+  if (state.activityMode != ActivityMode.POSTS) return
 
   val posts = derived.periodPosts
   if (posts.isEmpty()) return
@@ -526,7 +526,7 @@ internal fun StatsMainChart(
   val state = derived.state
 
   // For Posts/Week show time-of-day heatmap instead of contribution grid
-  if (state.activityMode == ActivityMode.Posts && state.range is ActivityRange.Week) {
+  if (state.activityMode == ActivityMode.POSTS && state.range is ActivityRange.Week) {
     WeeklyPostsHeatmap(
       memos = CountDailyPostsUseCase.filterPosts(state.memos),
       weekStart = state.range.startDate,
@@ -548,7 +548,7 @@ internal fun StatsMainChart(
   val onDaySelected = remember(dispatch, state.activityMode, derived.weekData.weeks) {
     { day: ContributionDay ->
       dispatch(HabitsAction.SelectDay(day, "main"))
-      if (state.activityMode == ActivityMode.Posts) {
+      if (state.activityMode == ActivityMode.POSTS) {
         val week = derived.weekData.weeks.firstOrNull { week ->
           week.days.any { it.date == day.date }
         }
@@ -588,7 +588,7 @@ internal fun StatsMainChart(
         weekData = derived.weekData,
         range = state.range,
         selectedDay = if (habitsState.activeSelectionId == "main") derived.selectedDay else null,
-        selectedWeekStart = if (state.activityMode == ActivityMode.Posts) habitsState.selectedWeek?.startDate else null,
+        selectedWeekStart = if (state.activityMode == ActivityMode.POSTS) habitsState.selectedWeek?.startDate else null,
         isActiveSelection = habitsState.activeSelectionId == "main",
         scrollState = chartScrollState,
         showWeekdayLegend = derived.showWeekdayLegend && !useCalendarLayout,
@@ -615,7 +615,7 @@ internal fun StatsWeeklyChart(
   val state = derived.state
 
   // Skip for non-Posts mode, Week view (only 1 bar), or Month view (calendar layout)
-  if (state.activityMode != ActivityMode.Posts ||
+  if (state.activityMode != ActivityMode.POSTS ||
     state.range is ActivityRange.Week ||
     state.range is ActivityRange.Month
   ) {

@@ -12,7 +12,7 @@ actual class AppModeStore {
 
   actual fun load(): LocalAppMode {
     val modeName = defaults.stringForKey(keyMode)
-    val mode = modeName?.let { runCatching { AppMode.valueOf(it) }.getOrNull() } ?: AppMode.NotSelected
+    val mode = modeName?.let { runCatching { AppMode.valueOf(it) }.getOrNull() } ?: AppMode.NOT_SELECTED
     return LocalAppMode(mode = mode)
   }
 

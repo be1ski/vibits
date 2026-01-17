@@ -64,12 +64,12 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect> = re
 
     // Mode selection
     is SettingsAction.SelectMode -> {
-      if (action.mode == AppMode.Online) {
+      if (action.mode == AppMode.ONLINE) {
         val baseUrl = state.editBaseUrl.trim()
         val token = state.editToken.trim()
         if (baseUrl.isBlank() || token.isBlank()) {
           // Just show the fields, don't validate yet - user needs to fill them first
-          state { copy(appMode = AppMode.Online, validationError = null) }
+          state { copy(appMode = AppMode.ONLINE, validationError = null) }
         } else {
           state { copy(isValidating = true, validationError = null) }
           effect(SettingsEffect.ValidateCredentials(baseUrl, token, action.mode))
@@ -84,13 +84,13 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect> = re
     is SettingsAction.ValidationSucceeded -> {
       if (state.pendingSave) {
         // Validation succeeded after Save - close dialog and notify
-        state { copy(isValidating = false, isOpen = false, pendingSave = false, appMode = AppMode.Online) }
-        effect(SettingsEffect.SwitchMode(AppMode.Online))
+        state { copy(isValidating = false, isOpen = false, pendingSave = false, appMode = AppMode.ONLINE) }
+        effect(SettingsEffect.SwitchMode(AppMode.ONLINE))
         effect(SettingsEffect.NotifyCredentialsSaved(state.editBaseUrl, state.editToken))
       } else {
         // Validation succeeded after mode selection - just switch mode
-        state { copy(isValidating = false, appMode = AppMode.Online) }
-        effect(SettingsEffect.SwitchMode(AppMode.Online))
+        state { copy(isValidating = false, appMode = AppMode.ONLINE) }
+        effect(SettingsEffect.SwitchMode(AppMode.ONLINE))
       }
     }
 
@@ -132,7 +132,7 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect> = re
 
     // Save
     is SettingsAction.Save -> {
-      if (state.appMode == AppMode.Online) {
+      if (state.appMode == AppMode.ONLINE) {
         val baseUrl = state.editBaseUrl.trim()
         val token = state.editToken.trim()
         if (baseUrl.isBlank() || token.isBlank()) {
@@ -140,7 +140,7 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect> = re
         } else {
           // Validate before saving in Online mode
           state { copy(isValidating = true, validationError = null, pendingSave = true) }
-          effect(SettingsEffect.ValidateCredentials(baseUrl, token, AppMode.Online))
+          effect(SettingsEffect.ValidateCredentials(baseUrl, token, AppMode.ONLINE))
         }
       } else {
         state { copy(isOpen = false) }

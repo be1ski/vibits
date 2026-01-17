@@ -39,7 +39,7 @@ data class SettingsState(
   val isOpen: Boolean = false,
   val editBaseUrl: String = "",
   val editToken: String = "",
-  val appMode: AppMode = AppMode.NotSelected,
+  val appMode: AppMode = AppMode.NOT_SELECTED,
   val isValidating: Boolean = false,
   val validationError: String? = null,
   val showResetConfirmation: Boolean = false,

@@ -106,7 +106,7 @@ class FakeMemosRepository : MemosRepository {
 }
 
 class FakeAppModeRepository(
-  initial: AppMode = AppMode.NotSelected
+  initial: AppMode = AppMode.NOT_SELECTED
 ) : AppModeRepository {
   var storedMode: AppMode = initial
     private set
@@ -122,7 +122,7 @@ class FakeAppModeRepository(
 }
 
 class FakePreferencesRepository(
-  initial: UserPreferences = UserPreferences(TimeRangeTab.Weeks, TimeRangeTab.Weeks)
+  initial: UserPreferences = UserPreferences(TimeRangeTab.WEEKS, TimeRangeTab.WEEKS)
 ) : PreferencesRepository {
   var stored: UserPreferences = initial
     private set

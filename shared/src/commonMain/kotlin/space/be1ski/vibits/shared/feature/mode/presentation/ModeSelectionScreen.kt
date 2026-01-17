@@ -94,7 +94,7 @@ fun ModeSelectionScreen(
       title = stringResource(Res.string.mode_offline_title),
       description = stringResource(Res.string.mode_offline_desc),
       isPrimary = false,
-      onClick = { onModeSelected(AppMode.Offline) }
+      onClick = { onModeSelected(AppMode.OFFLINE) }
     )
 
     Spacer(modifier = Modifier.height(Indent.m))
@@ -103,7 +103,7 @@ fun ModeSelectionScreen(
       title = stringResource(Res.string.mode_demo_title),
       description = stringResource(Res.string.mode_demo_desc),
       isPrimary = false,
-      onClick = { onModeSelected(AppMode.Demo) }
+      onClick = { onModeSelected(AppMode.DEMO) }
     )
   }
 
@@ -112,7 +112,7 @@ fun ModeSelectionScreen(
       onDismiss = { showCredentialsDialog = false },
       onSuccess = {
         showCredentialsDialog = false
-        onModeSelected(AppMode.Online)
+        onModeSelected(AppMode.ONLINE)
       }
     )
   }

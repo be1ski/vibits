@@ -15,14 +15,14 @@ class SettingsReducerTest {
   @Test
   fun `when Open then opens dialog with provided values`() {
     val (newState, effects) = settingsReducer(
-      SettingsAction.Open(baseUrl = "https://api.com", token = "secret", appMode = AppMode.Online),
+      SettingsAction.Open(baseUrl = "https://api.com", token = "secret", appMode = AppMode.ONLINE),
       SettingsState()
     )
 
     assertTrue(newState.isOpen)
     assertEquals("https://api.com", newState.editBaseUrl)
     assertEquals("secret", newState.editToken)
-    assertEquals(AppMode.Online, newState.appMode)
+    assertEquals(AppMode.ONLINE, newState.appMode)
     assertFalse(newState.isValidating)
     assertNull(newState.validationError)
     assertFalse(newState.showResetConfirmation)
@@ -96,14 +96,14 @@ class SettingsReducerTest {
 
   @Test
   fun `when SelectMode Online with empty credentials then just shows fields without error`() {
-    val state = SettingsState(editBaseUrl = "", editToken = "", appMode = AppMode.Demo)
+    val state = SettingsState(editBaseUrl = "", editToken = "", appMode = AppMode.DEMO)
 
     val (newState, effects) = settingsReducer(
-      SettingsAction.SelectMode(AppMode.Online),
+      SettingsAction.SelectMode(AppMode.ONLINE),
       state
     )
 
-    assertEquals(AppMode.Online, newState.appMode)
+    assertEquals(AppMode.ONLINE, newState.appMode)
     assertNull(newState.validationError)
     assertFalse(newState.isValidating)
     assertTrue(effects.isEmpty())
@@ -114,7 +114,7 @@ class SettingsReducerTest {
     val state = SettingsState(editBaseUrl = "https://api.com", editToken = "token123")
 
     val (newState, effects) = settingsReducer(
-      SettingsAction.SelectMode(AppMode.Online),
+      SettingsAction.SelectMode(AppMode.ONLINE),
       state
     )
 
@@ -125,34 +125,34 @@ class SettingsReducerTest {
     assertIs<SettingsEffect.ValidateCredentials>(effect)
     assertEquals("https://api.com", effect.baseUrl)
     assertEquals("token123", effect.token)
-    assertEquals(AppMode.Online, effect.targetMode)
+    assertEquals(AppMode.ONLINE, effect.targetMode)
   }
 
   @Test
   fun `when SelectMode Offline then updates mode and emits SwitchMode`() {
-    val state = SettingsState(appMode = AppMode.Online, validationError = "old error")
+    val state = SettingsState(appMode = AppMode.ONLINE, validationError = "old error")
 
     val (newState, effects) = settingsReducer(
-      SettingsAction.SelectMode(AppMode.Offline),
+      SettingsAction.SelectMode(AppMode.OFFLINE),
       state
     )
 
-    assertEquals(AppMode.Offline, newState.appMode)
+    assertEquals(AppMode.OFFLINE, newState.appMode)
     assertNull(newState.validationError)
     assertEquals(1, effects.size)
     val effect = effects.first()
     assertIs<SettingsEffect.SwitchMode>(effect)
-    assertEquals(AppMode.Offline, effect.mode)
+    assertEquals(AppMode.OFFLINE, effect.mode)
   }
 
   @Test
   fun `when SelectMode Demo then updates mode and emits SwitchMode`() {
     val (newState, effects) = settingsReducer(
-      SettingsAction.SelectMode(AppMode.Demo),
+      SettingsAction.SelectMode(AppMode.DEMO),
       SettingsState()
     )
 
-    assertEquals(AppMode.Demo, newState.appMode)
+    assertEquals(AppMode.DEMO, newState.appMode)
     assertEquals(1, effects.size)
     assertIs<SettingsEffect.SwitchMode>(effects.first())
   }
@@ -166,12 +166,12 @@ class SettingsReducerTest {
     val (newState, effects) = settingsReducer(SettingsAction.ValidationSucceeded, state)
 
     assertFalse(newState.isValidating)
-    assertEquals(AppMode.Online, newState.appMode)
+    assertEquals(AppMode.ONLINE, newState.appMode)
     assertTrue(newState.isOpen) // Dialog stays open
     assertEquals(1, effects.size)
     val effect = effects.first()
     assertIs<SettingsEffect.SwitchMode>(effect)
-    assertEquals(AppMode.Online, effect.mode)
+    assertEquals(AppMode.ONLINE, effect.mode)
   }
 
   @Test
@@ -189,7 +189,7 @@ class SettingsReducerTest {
     assertFalse(newState.isValidating)
     assertFalse(newState.isOpen)
     assertFalse(newState.pendingSave)
-    assertEquals(AppMode.Online, newState.appMode)
+    assertEquals(AppMode.ONLINE, newState.appMode)
     assertEquals(2, effects.size)
     assertIs<SettingsEffect.SwitchMode>(effects[0])
     val savedEffect = effects[1]
@@ -215,14 +215,14 @@ class SettingsReducerTest {
 
   @Test
   fun `when ModeSwitched then emits NotifyModeChanged with current mode`() {
-    val state = SettingsState(appMode = AppMode.Offline)
+    val state = SettingsState(appMode = AppMode.OFFLINE)
 
     val (_, effects) = settingsReducer(SettingsAction.ModeSwitched, state)
 
     assertEquals(1, effects.size)
     val effect = effects.first()
     assertIs<SettingsEffect.NotifyModeChanged>(effect)
-    assertEquals(AppMode.Offline, effect.newMode)
+    assertEquals(AppMode.OFFLINE, effect.newMode)
   }
 
   // Reset flow tests
@@ -293,7 +293,7 @@ class SettingsReducerTest {
 
   @Test
   fun `when Save in Offline mode then closes dialog and notifies`() {
-    val state = SettingsState(isOpen = true, appMode = AppMode.Offline)
+    val state = SettingsState(isOpen = true, appMode = AppMode.OFFLINE)
 
     val (newState, effects) = settingsReducer(SettingsAction.Save, state)
 
@@ -306,7 +306,7 @@ class SettingsReducerTest {
   fun `when Save in Online mode with empty credentials then shows error`() {
     val state = SettingsState(
       isOpen = true,
-      appMode = AppMode.Online,
+      appMode = AppMode.ONLINE,
       editBaseUrl = "",
       editToken = ""
     )
@@ -322,7 +322,7 @@ class SettingsReducerTest {
   fun `when Save in Online mode with credentials then starts validation with pendingSave`() {
     val state = SettingsState(
       isOpen = true,
-      appMode = AppMode.Online,
+      appMode = AppMode.ONLINE,
       editBaseUrl = "https://api.com",
       editToken = "token123"
     )

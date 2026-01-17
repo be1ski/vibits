@@ -58,23 +58,23 @@ internal fun TimeRangeControls(
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
     PrimaryScrollableTabRow(selectedTabIndex = selectedTab.ordinal, edgePadding = 0.dp) {
       Tab(
-        selected = selectedTab == TimeRangeTab.Weeks,
-        onClick = { onTabChange(TimeRangeTab.Weeks) },
+        selected = selectedTab == TimeRangeTab.WEEKS,
+        onClick = { onTabChange(TimeRangeTab.WEEKS) },
         text = { Text(stringResource(Res.string.time_weeks)) }
       )
       Tab(
-        selected = selectedTab == TimeRangeTab.Months,
-        onClick = { onTabChange(TimeRangeTab.Months) },
+        selected = selectedTab == TimeRangeTab.MONTHS,
+        onClick = { onTabChange(TimeRangeTab.MONTHS) },
         text = { Text(stringResource(Res.string.time_months)) }
       )
       Tab(
-        selected = selectedTab == TimeRangeTab.Quarters,
-        onClick = { onTabChange(TimeRangeTab.Quarters) },
+        selected = selectedTab == TimeRangeTab.QUARTERS,
+        onClick = { onTabChange(TimeRangeTab.QUARTERS) },
         text = { Text(stringResource(Res.string.time_quarters)) }
       )
       Tab(
-        selected = selectedTab == TimeRangeTab.Years,
-        onClick = { onTabChange(TimeRangeTab.Years) },
+        selected = selectedTab == TimeRangeTab.YEARS,
+        onClick = { onTabChange(TimeRangeTab.YEARS) },
         text = { Text(stringResource(Res.string.time_years)) }
       )
     }
