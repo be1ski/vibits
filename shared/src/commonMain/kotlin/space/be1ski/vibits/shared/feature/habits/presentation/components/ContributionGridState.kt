@@ -175,14 +175,16 @@ internal fun calculateLayout(
   maxWidth: Dp,
   columns: Int,
   minColumnSize: Dp,
-  spacing: Dp
+  spacing: Dp,
+  maxColumnSize: Dp? = null
 ): ChartLayout {
   val safeColumns = columns.coerceAtLeast(1)
   val totalSpacing = spacing * (safeColumns - 1)
   val calculated = (maxWidth - totalSpacing) / safeColumns
   val useScroll = calculated < minColumnSize
-  val columnSize = if (useScroll) minColumnSize else calculated
-  val contentWidth = if (useScroll) columnSize * safeColumns + totalSpacing else maxWidth
+  val capped = maxColumnSize?.let { calculated.coerceAtMost(it) } ?: calculated
+  val columnSize = if (useScroll) minColumnSize else capped
+  val contentWidth = columnSize * safeColumns + totalSpacing
   return ChartLayout(columnSize = columnSize, contentWidth = contentWidth, useScroll = useScroll)
 }
 
