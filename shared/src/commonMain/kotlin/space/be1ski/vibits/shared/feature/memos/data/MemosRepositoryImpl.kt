@@ -1,6 +1,6 @@
 package space.be1ski.vibits.shared.feature.memos.data
 
-import dev.zacsweers.metro.Inject
+import javax.inject.Inject
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
 import space.be1ski.vibits.shared.feature.memos.data.mapper.MemoMapper
@@ -13,8 +13,7 @@ import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepositor
 /**
  * Repository implementation that loads memos from the network and caches them locally.
  */
-@Inject
-class MemosRepositoryImpl(
+class MemosRepositoryImpl @Inject constructor(
   private val memosApi: MemosApi,
   private val memoMapper: MemoMapper,
   private val credentialsRepository: CredentialsRepository,
