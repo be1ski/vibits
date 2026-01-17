@@ -53,7 +53,7 @@ import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffect
 import space.be1ski.vibits.shared.feature.settings.presentation.components.SettingsDialog
 import space.be1ski.vibits.shared.feature.settings.presentation.createSettingsFeature
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "LongParameterList")
 @Composable
 fun VibitsApp(
   dependencies: VibitsAppDependencies,

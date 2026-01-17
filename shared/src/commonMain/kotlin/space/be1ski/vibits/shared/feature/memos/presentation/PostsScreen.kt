@@ -11,6 +11,7 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 /**
  * Posts stats tab showing activity charts.
  */
+@Suppress("LongParameterList")
 @Composable
 fun PostsScreen(
   memos: List<Memo>,
