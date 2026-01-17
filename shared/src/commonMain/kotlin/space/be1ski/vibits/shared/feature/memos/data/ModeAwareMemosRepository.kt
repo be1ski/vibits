@@ -1,6 +1,7 @@
 package space.be1ski.vibits.shared.feature.memos.data
 
 import dev.zacsweers.metro.Inject
+import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.memos.data.demo.DemoMemosRepository
 import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
 import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemosRepository
@@ -8,6 +9,8 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
+
+private const val TAG = "ModeAwareRepo"
 
 /**
  * Repository that delegates to online, offline, or demo implementation based on current mode.
@@ -57,12 +60,14 @@ class ModeAwareMemosRepository(
    * Clears Room cache when mode changes to ensure data isolation between modes.
    */
   suspend fun clearCacheOnModeChange() {
+    Log.i(TAG, "Clearing cache on mode change")
     memoCache.clear()
   }
 
   private suspend fun checkModeChange() {
     val currentMode = appModeRepository.loadMode()
     if (lastKnownMode != null && lastKnownMode != currentMode) {
+      Log.i(TAG, "Mode changed: $lastKnownMode -> $currentMode")
       memoCache.clear()
       if (currentMode == AppMode.DEMO) {
         demoRepository.reset()

@@ -4,7 +4,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import space.be1ski.vibits.shared.core.elm.EffectHandler
+import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
+
+private const val TAG = "SettingsEffect"
 
 class SettingsEffectHandler(
   private val useCases: SettingsUseCases,
@@ -29,6 +32,7 @@ class SettingsEffectHandler(
 
   private fun handleValidateCredentials(effect: SettingsEffect.ValidateCredentials): Flow<SettingsAction> =
     flow {
+      Log.d(TAG, "Validating credentials")
       useCases
         .validateCredentials(effect.baseUrl, effect.token)
         .onSuccess { emit(SettingsAction.ValidationSucceeded) }
@@ -37,28 +41,33 @@ class SettingsEffectHandler(
 
   private fun handleSwitchMode(effect: SettingsEffect.SwitchMode): Flow<SettingsAction> =
     flow {
+      Log.i(TAG, "Switching mode to ${effect.mode}")
       useCases.switchAppMode(effect.mode)
       emit(SettingsAction.ModeSwitched)
     }
 
   private fun handleSaveCredentials(effect: SettingsEffect.SaveCredentials): Flow<SettingsAction> =
     flow {
+      Log.d(TAG, "Saving credentials")
       useCases.saveCredentials(Credentials(effect.baseUrl, effect.token))
     }
 
   private fun handleResetApp(): Flow<SettingsAction> =
     flow {
+      Log.i(TAG, "Resetting app")
       useCases.resetApp()
       emit(SettingsAction.ResetCompleted)
     }
 
   private fun handleSaveLanguage(effect: SettingsEffect.SaveLanguage): Flow<SettingsAction> =
     emptyFlow<SettingsAction>().also {
+      Log.i(TAG, "Language changed to ${effect.language}")
       useCases.saveLanguage(effect.language)
     }
 
   private fun handleSaveTheme(effect: SettingsEffect.SaveTheme): Flow<SettingsAction> =
     emptyFlow<SettingsAction>().also {
+      Log.i(TAG, "Theme changed to ${effect.theme}")
       useCases.saveTheme(effect.theme)
     }
 }
