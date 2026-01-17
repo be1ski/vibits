@@ -15,7 +15,7 @@ class SaveCredentialsUseCaseTest {
     useCase(credentials)
 
     assertEquals(credentials, repository.stored)
-    assertEquals(999, repository.saveCount) // broken test for CI check
+    assertEquals(1, repository.saveCount)
   }
 }
 
