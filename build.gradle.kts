@@ -69,7 +69,6 @@ tasks.register("checkAll") {
     ":shared:ktlintDesktopTestSourceSetCheck",
     ":shared:ktlintWasmJsMainSourceSetCheck",
     ":shared:ktlintIosMainSourceSetCheck",
-    ":androidApp:ktlintCheck",
     ":desktopApp:ktlintCheck",
     ":webApp:ktlintCheck",
     // detekt
