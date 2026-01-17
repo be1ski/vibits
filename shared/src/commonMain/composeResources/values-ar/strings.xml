@@ -1,0 +1,184 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_cancel">إلغاء</string>
+    <string name="action_clear">مسح</string>
+    <string name="action_close">إغلاق</string>
+    <string name="action_copied">تم النسخ</string>
+    <string name="action_configure_habits">تكوين العادات</string>
+    <string name="action_create">إنشاء</string>
+    <string name="action_create_memo">إنشاء مذكرة</string>
+    <string name="action_delete">حذف</string>
+    <string name="action_hide_details">إخفاء التفاصيل</string>
+    <string name="action_next">التالي</string>
+    <string name="action_previous">السابق</string>
+    <string name="action_refresh">تحديث</string>
+    <string name="action_reset">إعادة تعيين</string>
+    <string name="action_reset_app">إعادة تعيين التطبيق</string>
+    <string name="action_save">حفظ</string>
+    <string name="action_show_details">عرض التفاصيل</string>
+    <string name="action_track">تتبع</string>
+    <string name="action_track_today">تتبع اليوم</string>
+    <string name="action_update">تحديث</string>
+    <string name="action_view_logs">عرض السجلات</string>
+    <string name="action_export">تصدير</string>
+    <string name="action_export_logs">تصدير السجلات</string>
+    <string name="action_export_memos">تصدير المذكرات</string>
+    <string name="msg_export_success">تم التصدير إلى %1$s</string>
+    <string name="msg_export_failed">فشل التصدير</string>
+
+    <!-- App -->
+    <string name="app_name">Vibits</string>
+
+    <!-- Days of week -->
+    <string name="day_mon">إث</string>
+    <string name="day_tue">ثل</string>
+    <string name="day_wed">أر</string>
+    <string name="day_thu">خم</string>
+    <string name="day_fri">جم</string>
+    <string name="day_sat">سب</string>
+    <string name="day_sun">أح</string>
+
+    <!-- Months short -->
+    <string name="month_jan">يناير</string>
+    <string name="month_feb">فبراير</string>
+    <string name="month_mar">مارس</string>
+    <string name="month_apr">أبريل</string>
+    <string name="month_may">مايو</string>
+    <string name="month_jun">يونيو</string>
+    <string name="month_jul">يوليو</string>
+    <string name="month_aug">أغسطس</string>
+    <string name="month_sep">سبتمبر</string>
+    <string name="month_oct">أكتوبر</string>
+    <string name="month_nov">نوفمبر</string>
+    <string name="month_dec">ديسمبر</string>
+
+    <!-- Format strings -->
+    <string name="format_app_version">الإصدار: %1$s</string>
+    <string name="format_credentials">بيانات الاعتماد: %1$s</string>
+    <string name="format_environment">البيئة: %1$s</string>
+    <string name="format_habits_progress">%1$d من %2$d عادات مكتملة</string>
+    <string name="format_memos_db">قاعدة بيانات المذكرات: %1$s</string>
+    <string name="format_offline_storage">غير متصل: %1$s</string>
+    <string name="format_memos_count">%1$d مذكرة</string>
+    <string name="format_memos_today">%1$d مذكرة اليوم</string>
+    <string name="format_memos_this_week">%1$d مذكرة هذا الأسبوع</string>
+    <string name="format_memos_in_month">%1$d مذكرة في %2$s</string>
+    <string name="format_memos_in_quarter">%1$d مذكرة في %2$s</string>
+    <string name="format_memos_in_year">%1$d مذكرة في %2$d</string>
+    <string name="action_show_memos">عرض المذكرات</string>
+    <string name="action_hide_memos">إخفاء المذكرات</string>
+    <string name="action_write">كتابة</string>
+    <string name="format_tooltip_habits">%1$s: %2$d/%3$d عادات</string>
+    <string name="format_tooltip_memos">%1$s: %2$d مذكرة</string>
+
+    <!-- Hints -->
+    <string name="hint_add_habits_config">أضف مذكرة تكوين العادات للبدء في التتبع.</string>
+    <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habit_name">اسم العادة</string>
+    <string name="hint_habits_config">رياضة | #habits/gym\nقراءة | #habits/reading</string>
+    <string name="hint_write_memo">اكتب مذكرة...</string>
+
+    <!-- Labels -->
+    <string name="label_access_token">رمز الوصول</string>
+    <string name="label_language">اللغة</string>
+    <string name="label_time_night">ليل</string>
+    <string name="label_time_morning">صباح</string>
+    <string name="label_time_day">نهار</string>
+    <string name="label_time_evening">مساء</string>
+    <string name="label_activity">النشاط</string>
+    <string name="label_app_mode">وضع التطبيق</string>
+    <string name="label_base_url">عنوان URL الأساسي</string>
+    <string name="label_credentials">بيانات الاعتماد</string>
+    <string name="label_demo_mode">الوضع التجريبي</string>
+    <string name="label_environment">البيئة</string>
+    <string name="label_habits_config">تكوين العادات</string>
+    <string name="label_memos_db">قاعدة بيانات المذكرات</string>
+    <string name="label_storage">التخزين</string>
+    <string name="label_version">الإصدار</string>
+    <string name="label_success_rate">معدل النجاح</string>
+    <string name="label_today">اليوم</string>
+
+    <!-- Messages -->
+    <string name="msg_connection_failed">فشل الاتصال</string>
+    <string name="msg_delete_day_confirm">لم يتم اختيار عادات. سيتم حذف إدخال اليوم.</string>
+    <string name="msg_fill_all_fields">يرجى ملء جميع الحقول</string>
+    <string name="msg_no_habits_yet">لم يتم تكوين عادات بعد.</string>
+    <string name="msg_no_logs">لا توجد سجلات بعد</string>
+    <string name="msg_no_memos_yet">لا توجد مذكرات في هذه الفترة.</string>
+    <string name="msg_reset_confirm">هل أنت متأكد من إعادة تعيين التطبيق؟ سيتم مسح جميع البيانات.</string>
+    <string name="msg_select_habit">اختر عادة واحدة على الأقل.</string>
+    <string name="msg_mark_done_confirm">وضع علامة "%1$s" كمكتمل لـ %2$s؟</string>
+    <string name="msg_mark_not_done_confirm">إزالة إكمال "%1$s" في %2$s؟</string>
+    <string name="msg_restart_required">يلزم إعادة التشغيل لتطبيق تغيير اللغة</string>
+
+    <!-- Language selection -->
+    <string name="language_system">النظام</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_hindi">हिन्दी</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_portuguese">Português</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_french">Français</string>
+
+    <!-- Theme selection -->
+    <string name="label_theme">السمة</string>
+    <string name="theme_system">النظام</string>
+    <string name="theme_light">فاتح</string>
+    <string name="theme_dark">داكن</string>
+
+    <!-- Mode selection -->
+    <string name="mode_select_title">اختر الوضع</string>
+    <string name="mode_select_subtitle">اختر كيف تريد استخدام التطبيق</string>
+    <string name="mode_online_title">متصل</string>
+    <string name="mode_online_desc">اتصل بخادم Memos للمزامنة الكاملة</string>
+    <string name="mode_offline_title">غير متصل</string>
+    <string name="mode_offline_desc">تخزين البيانات محليًا بدون اتصال بالخادم</string>
+    <string name="mode_demo_title">تجريبي</string>
+    <string name="mode_demo_desc">جرب التطبيق مع بيانات نموذجية</string>
+
+    <!-- Navigation -->
+    <string name="nav_feed">الرئيسية</string>
+    <string name="nav_habits">العادات</string>
+    <string name="nav_memos">المذكرات</string>
+    <string name="nav_settings">الإعدادات</string>
+
+    <!-- Privacy -->
+    <string name="privacy_hidden_content">محتوى مخفي</string>
+    <string name="privacy_hidden_habit">عادة مخفية</string>
+
+    <!-- Time periods -->
+    <string name="time_month">شهر</string>
+    <string name="time_months">أشهر</string>
+    <string name="time_quarter">ربع</string>
+    <string name="time_quarters">أرباع</string>
+    <string name="time_week">أسبوع</string>
+    <string name="time_weeks">أسابيع</string>
+    <string name="time_year">سنة</string>
+    <string name="time_years">سنوات</string>
+
+    <!-- Titles -->
+    <string name="title_create_day">إنشاء يوم</string>
+    <string name="title_delete_day">حذف اليوم؟</string>
+    <string name="title_delete_memo">حذف المذكرة؟</string>
+    <string name="title_edit_day">تعديل اليوم</string>
+    <string name="title_edit_memo">تعديل المذكرة</string>
+    <string name="title_logs">السجلات (%1$d)</string>
+    <string name="title_new_memo">مذكرة جديدة</string>
+    <string name="title_mark_done">وضع علامة مكتمل؟</string>
+    <string name="title_mark_not_done">وضع علامة غير مكتمل؟</string>
+    <string name="title_update_day">تحديث اليوم</string>
+
+    <!-- Demo habits -->
+    <string name="demo_habit_exercise">تمرين</string>
+    <string name="demo_habit_reading">قراءة</string>
+    <string name="demo_habit_meditation">تأمل</string>
+    <string name="demo_habit_water">شرب الماء</string>
+    <string name="demo_habit_learning">تعلم</string>
+    <string name="demo_habit_walking">10K خطوة</string>
+    <string name="demo_habit_no_sugar">بدون سكر</string>
+    <string name="demo_habit_early_sleep">النوم قبل 11 مساءً</string>
+</resources>

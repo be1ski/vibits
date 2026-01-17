@@ -1,0 +1,184 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_cancel">取消</string>
+    <string name="action_clear">清除</string>
+    <string name="action_close">关闭</string>
+    <string name="action_copied">已复制</string>
+    <string name="action_configure_habits">配置习惯</string>
+    <string name="action_create">创建</string>
+    <string name="action_create_memo">创建备忘</string>
+    <string name="action_delete">删除</string>
+    <string name="action_hide_details">隐藏详情</string>
+    <string name="action_next">下一个</string>
+    <string name="action_previous">上一个</string>
+    <string name="action_refresh">刷新</string>
+    <string name="action_reset">重置</string>
+    <string name="action_reset_app">重置应用</string>
+    <string name="action_save">保存</string>
+    <string name="action_show_details">显示详情</string>
+    <string name="action_track">记录</string>
+    <string name="action_track_today">今日记录</string>
+    <string name="action_update">更新</string>
+    <string name="action_view_logs">查看日志</string>
+    <string name="action_export">导出</string>
+    <string name="action_export_logs">导出日志</string>
+    <string name="action_export_memos">导出备忘</string>
+    <string name="msg_export_success">已导出至 %1$s</string>
+    <string name="msg_export_failed">导出失败</string>
+
+    <!-- App -->
+    <string name="app_name">Vibits</string>
+
+    <!-- Days of week -->
+    <string name="day_mon">一</string>
+    <string name="day_tue">二</string>
+    <string name="day_wed">三</string>
+    <string name="day_thu">四</string>
+    <string name="day_fri">五</string>
+    <string name="day_sat">六</string>
+    <string name="day_sun">日</string>
+
+    <!-- Months short -->
+    <string name="month_jan">1月</string>
+    <string name="month_feb">2月</string>
+    <string name="month_mar">3月</string>
+    <string name="month_apr">4月</string>
+    <string name="month_may">5月</string>
+    <string name="month_jun">6月</string>
+    <string name="month_jul">7月</string>
+    <string name="month_aug">8月</string>
+    <string name="month_sep">9月</string>
+    <string name="month_oct">10月</string>
+    <string name="month_nov">11月</string>
+    <string name="month_dec">12月</string>
+
+    <!-- Format strings -->
+    <string name="format_app_version">版本: %1$s</string>
+    <string name="format_credentials">凭证: %1$s</string>
+    <string name="format_environment">环境: %1$s</string>
+    <string name="format_habits_progress">已完成 %1$d / %2$d 个习惯</string>
+    <string name="format_memos_db">备忘数据库: %1$s</string>
+    <string name="format_offline_storage">离线: %1$s</string>
+    <string name="format_memos_count">%1$d 条备忘</string>
+    <string name="format_memos_today">今天 %1$d 条备忘</string>
+    <string name="format_memos_this_week">本周 %1$d 条备忘</string>
+    <string name="format_memos_in_month">%2$s %1$d 条备忘</string>
+    <string name="format_memos_in_quarter">%2$s %1$d 条备忘</string>
+    <string name="format_memos_in_year">%2$d年 %1$d 条备忘</string>
+    <string name="action_show_memos">显示备忘</string>
+    <string name="action_hide_memos">隐藏备忘</string>
+    <string name="action_write">写</string>
+    <string name="format_tooltip_habits">%1$s: %2$d/%3$d 习惯</string>
+    <string name="format_tooltip_memos">%1$s: %2$d 条备忘</string>
+
+    <!-- Hints -->
+    <string name="hint_add_habits_config">添加习惯配置备忘以开始跟踪。</string>
+    <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habit_name">习惯名称</string>
+    <string name="hint_habits_config">健身 | #habits/gym\n阅读 | #habits/reading</string>
+    <string name="hint_write_memo">写一条备忘...</string>
+
+    <!-- Labels -->
+    <string name="label_access_token">访问令牌</string>
+    <string name="label_language">语言</string>
+    <string name="label_time_night">夜晚</string>
+    <string name="label_time_morning">早晨</string>
+    <string name="label_time_day">白天</string>
+    <string name="label_time_evening">傍晚</string>
+    <string name="label_activity">活动</string>
+    <string name="label_app_mode">应用模式</string>
+    <string name="label_base_url">服务器地址</string>
+    <string name="label_credentials">凭证</string>
+    <string name="label_demo_mode">演示模式</string>
+    <string name="label_environment">环境</string>
+    <string name="label_habits_config">习惯配置</string>
+    <string name="label_memos_db">备忘数据库</string>
+    <string name="label_storage">存储</string>
+    <string name="label_version">版本</string>
+    <string name="label_success_rate">成功率</string>
+    <string name="label_today">今天</string>
+
+    <!-- Messages -->
+    <string name="msg_connection_failed">连接失败</string>
+    <string name="msg_delete_day_confirm">未选择任何习惯。该日记录将被删除。</string>
+    <string name="msg_fill_all_fields">请填写所有字段</string>
+    <string name="msg_no_habits_yet">尚未配置任何习惯。</string>
+    <string name="msg_no_logs">暂无日志</string>
+    <string name="msg_no_memos_yet">该时期暂无备忘。</string>
+    <string name="msg_reset_confirm">确定要重置应用吗？所有数据将被清除。</string>
+    <string name="msg_select_habit">请至少选择一个习惯。</string>
+    <string name="msg_mark_done_confirm">将"%1$s"标记为 %2$s 完成？</string>
+    <string name="msg_mark_not_done_confirm">取消"%1$s"在 %2$s 的完成标记？</string>
+    <string name="msg_restart_required">需要重启应用以应用语言更改</string>
+
+    <!-- Language selection -->
+    <string name="language_system">系统</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_hindi">हिन्दी</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_portuguese">Português</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_french">Français</string>
+
+    <!-- Theme selection -->
+    <string name="label_theme">主题</string>
+    <string name="theme_system">系统</string>
+    <string name="theme_light">浅色</string>
+    <string name="theme_dark">深色</string>
+
+    <!-- Mode selection -->
+    <string name="mode_select_title">选择模式</string>
+    <string name="mode_select_subtitle">选择您想使用应用的方式</string>
+    <string name="mode_online_title">在线</string>
+    <string name="mode_online_desc">连接到您的 Memos 服务器进行完全同步</string>
+    <string name="mode_offline_title">离线</string>
+    <string name="mode_offline_desc">本地存储数据，无需服务器连接</string>
+    <string name="mode_demo_title">演示</string>
+    <string name="mode_demo_desc">使用示例数据体验应用</string>
+
+    <!-- Navigation -->
+    <string name="nav_feed">动态</string>
+    <string name="nav_habits">习惯</string>
+    <string name="nav_memos">备忘</string>
+    <string name="nav_settings">设置</string>
+
+    <!-- Privacy -->
+    <string name="privacy_hidden_content">隐藏内容</string>
+    <string name="privacy_hidden_habit">隐藏的习惯</string>
+
+    <!-- Time periods -->
+    <string name="time_month">月</string>
+    <string name="time_months">月份</string>
+    <string name="time_quarter">季度</string>
+    <string name="time_quarters">季度</string>
+    <string name="time_week">周</string>
+    <string name="time_weeks">周</string>
+    <string name="time_year">年</string>
+    <string name="time_years">年</string>
+
+    <!-- Titles -->
+    <string name="title_create_day">创建日记录</string>
+    <string name="title_delete_day">删除日记录？</string>
+    <string name="title_delete_memo">删除备忘？</string>
+    <string name="title_edit_day">编辑日记录</string>
+    <string name="title_edit_memo">编辑备忘</string>
+    <string name="title_logs">日志 (%1$d)</string>
+    <string name="title_new_memo">新建备忘</string>
+    <string name="title_mark_done">标记完成？</string>
+    <string name="title_mark_not_done">取消标记？</string>
+    <string name="title_update_day">更新日记录</string>
+
+    <!-- Demo habits -->
+    <string name="demo_habit_exercise">锻炼</string>
+    <string name="demo_habit_reading">阅读</string>
+    <string name="demo_habit_meditation">冥想</string>
+    <string name="demo_habit_water">喝水</string>
+    <string name="demo_habit_learning">学习</string>
+    <string name="demo_habit_walking">一万步</string>
+    <string name="demo_habit_no_sugar">无糖</string>
+    <string name="demo_habit_early_sleep">23点前睡觉</string>
+</resources>

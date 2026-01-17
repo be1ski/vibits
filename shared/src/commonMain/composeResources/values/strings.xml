@@ -114,7 +114,15 @@
     <!-- Language selection -->
     <string name="language_system">System</string>
     <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_hindi">हिन्दी</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_portuguese">Português</string>
     <string name="language_russian">Русский</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_french">Français</string>
 
     <!-- Theme selection -->
     <string name="label_theme">Theme</string>

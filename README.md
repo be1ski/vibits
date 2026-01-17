@@ -11,7 +11,7 @@ Habit tracker powered by [Memos](https://github.com/usememos/memos). Kotlin Mult
 
 **Platforms:** Android · iOS · Desktop · [Web](https://be1ski.github.io/vibits/)<br>
 **Modes:** Online ([Memos](https://github.com/usememos/memos) sync) · Offline · Demo<br>
-**Localization:** 🇬🇧 🇷🇺
+**Localization:** 🇬🇧 🇪🇸 🇨🇳 🇮🇳 🇸🇦 🇧🇷 🇷🇺 🇯🇵 🇩🇪 🇫🇷
 
 ## Run
 
