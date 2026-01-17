@@ -24,13 +24,14 @@ class ModeSelectionReducerTest {
 
   @Test
   fun `when DismissCredentialsDialog then hides dialog and resets state`() {
-    val state = ModeSelectionState(
-      showCredentialsDialog = true,
-      baseUrl = "https://api.com",
-      token = "secret",
-      isValidating = true,
-      error = ModeSelectionError.CONNECTION_FAILED,
-    )
+    val state =
+      ModeSelectionState(
+        showCredentialsDialog = true,
+        baseUrl = "https://api.com",
+        token = "secret",
+        isValidating = true,
+        error = ModeSelectionError.CONNECTION_FAILED,
+      )
 
     val (newState, effects) = modeSelectionReducer(ModeSelectionAction.DismissCredentialsDialog, state)
 
@@ -48,10 +49,11 @@ class ModeSelectionReducerTest {
   fun `when UpdateBaseUrl then updates baseUrl and clears error`() {
     val state = ModeSelectionState(error = ModeSelectionError.FILL_ALL_FIELDS)
 
-    val (newState, effects) = modeSelectionReducer(
-      ModeSelectionAction.UpdateBaseUrl("https://new.api.com"),
-      state,
-    )
+    val (newState, effects) =
+      modeSelectionReducer(
+        ModeSelectionAction.UpdateBaseUrl("https://new.api.com"),
+        state,
+      )
 
     assertEquals("https://new.api.com", newState.baseUrl)
     assertNull(newState.error)
@@ -62,10 +64,11 @@ class ModeSelectionReducerTest {
   fun `when UpdateToken then updates token and clears error`() {
     val state = ModeSelectionState(error = ModeSelectionError.FILL_ALL_FIELDS)
 
-    val (newState, effects) = modeSelectionReducer(
-      ModeSelectionAction.UpdateToken("new-token"),
-      state,
-    )
+    val (newState, effects) =
+      modeSelectionReducer(
+        ModeSelectionAction.UpdateToken("new-token"),
+        state,
+      )
 
     assertEquals("new-token", newState.token)
     assertNull(newState.error)
@@ -136,12 +139,13 @@ class ModeSelectionReducerTest {
 
   @Test
   fun `when ValidationSucceeded then closes dialog saves and notifies`() {
-    val state = ModeSelectionState(
-      showCredentialsDialog = true,
-      baseUrl = "https://api.com",
-      token = "token123",
-      isValidating = true,
-    )
+    val state =
+      ModeSelectionState(
+        showCredentialsDialog = true,
+        baseUrl = "https://api.com",
+        token = "token123",
+        isValidating = true,
+      )
 
     val (newState, effects) = modeSelectionReducer(ModeSelectionAction.ValidationSucceeded, state)
 
@@ -158,12 +162,13 @@ class ModeSelectionReducerTest {
 
   @Test
   fun `when ValidationSucceeded then saves trimmed credentials`() {
-    val state = ModeSelectionState(
-      showCredentialsDialog = true,
-      baseUrl = "  https://api.com  ",
-      token = "  token123  ",
-      isValidating = true,
-    )
+    val state =
+      ModeSelectionState(
+        showCredentialsDialog = true,
+        baseUrl = "  https://api.com  ",
+        token = "  token123  ",
+        isValidating = true,
+      )
 
     val (_, effects) = modeSelectionReducer(ModeSelectionAction.ValidationSucceeded, state)
 
@@ -203,10 +208,11 @@ class ModeSelectionReducerTest {
 
   @Test
   fun `when SelectMode OFFLINE then saves and notifies`() {
-    val (newState, effects) = modeSelectionReducer(
-      ModeSelectionAction.SelectMode(AppMode.OFFLINE),
-      ModeSelectionState(),
-    )
+    val (newState, effects) =
+      modeSelectionReducer(
+        ModeSelectionAction.SelectMode(AppMode.OFFLINE),
+        ModeSelectionState(),
+      )
 
     assertEquals(2, effects.size)
     val saveModeEffect = effects[0]
@@ -220,10 +226,11 @@ class ModeSelectionReducerTest {
 
   @Test
   fun `when SelectMode DEMO then saves and notifies`() {
-    val (_, effects) = modeSelectionReducer(
-      ModeSelectionAction.SelectMode(AppMode.DEMO),
-      ModeSelectionState(),
-    )
+    val (_, effects) =
+      modeSelectionReducer(
+        ModeSelectionAction.SelectMode(AppMode.DEMO),
+        ModeSelectionState(),
+      )
 
     assertEquals(2, effects.size)
     val saveModeEffect = effects[0]

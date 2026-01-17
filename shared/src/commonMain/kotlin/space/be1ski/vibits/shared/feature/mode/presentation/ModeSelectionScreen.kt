@@ -47,9 +47,7 @@ import space.be1ski.vibits.shared.msg_connection_failed
 import space.be1ski.vibits.shared.msg_fill_all_fields
 
 @Composable
-fun ModeSelectionScreen(
-  feature: Feature<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect>,
-) {
+fun ModeSelectionScreen(feature: Feature<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect>) {
   val state by feature.state.collectAsState()
   val dispatch: (ModeSelectionAction) -> Unit = feature::send
 
@@ -115,11 +113,12 @@ private fun CredentialsSetupDialog(
   state: ModeSelectionState,
   dispatch: (ModeSelectionAction) -> Unit,
 ) {
-  val errorText = when (state.error) {
-    ModeSelectionError.FILL_ALL_FIELDS -> stringResource(Res.string.msg_fill_all_fields)
-    ModeSelectionError.CONNECTION_FAILED -> stringResource(Res.string.msg_connection_failed)
-    null -> null
-  }
+  val errorText =
+    when (state.error) {
+      ModeSelectionError.FILL_ALL_FIELDS -> stringResource(Res.string.msg_fill_all_fields)
+      ModeSelectionError.CONNECTION_FAILED -> stringResource(Res.string.msg_connection_failed)
+      null -> null
+    }
 
   AlertDialog(
     onDismissRequest = { if (!state.isValidating) dispatch(ModeSelectionAction.DismissCredentialsDialog) },
