@@ -28,14 +28,14 @@
       "groupName": "kotlin"
     },
     {
-      "description": "Group Compose dependencies",
-      "matchPackagePatterns": ["^org.jetbrains.compose", "^androidx.compose"],
-      "groupName": "compose"
+      "description": "Group AndroidX dependencies (non-compose)",
+      "matchPackagePatterns": ["^androidx\\."],
+      "groupName": "androidx"
     },
     {
-      "description": "Group AndroidX dependencies",
-      "matchPackagePatterns": ["^androidx\\.(?!compose)"],
-      "groupName": "androidx"
+      "description": "Group Compose dependencies (overrides androidx for compose packages)",
+      "matchPackagePatterns": ["^org.jetbrains.compose", "^androidx.compose"],
+      "groupName": "compose"
     },
     {
       "description": "Group Ktor dependencies",
