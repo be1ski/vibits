@@ -1,0 +1,194 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_cancel">გაუქმება</string>
+    <string name="action_clear">გასუფთავება</string>
+    <string name="action_close">დახურვა</string>
+    <string name="action_copied">კოპირებულია</string>
+    <string name="action_configure_habits">ჩვევების კონფიგურაცია</string>
+    <string name="action_create">შექმნა</string>
+    <string name="action_create_memo">ჩანაწერის შექმნა</string>
+    <string name="action_delete">წაშლა</string>
+    <string name="action_hide_details">დეტალების დამალვა</string>
+    <string name="action_next">შემდეგი</string>
+    <string name="action_previous">წინა</string>
+    <string name="action_refresh">განახლება</string>
+    <string name="action_reset">გადატვირთვა</string>
+    <string name="action_reset_app">აპის გადატვირთვა</string>
+    <string name="action_save">შენახვა</string>
+    <string name="action_show_details">დეტალების ჩვენება</string>
+    <string name="action_track">მონიშვნა</string>
+    <string name="action_track_today">დღეს მონიშვნა</string>
+    <string name="action_update">განახლება</string>
+    <string name="action_view_logs">ლოგები</string>
+    <string name="action_export">ექსპორტი</string>
+    <string name="action_export_logs">ლოგების ექსპორტი</string>
+    <string name="action_export_memos">ჩანაწერების ექსპორტი</string>
+    <string name="msg_export_success">ექსპორტირებულია %1$s-ში</string>
+    <string name="msg_export_failed">ექსპორტის შეცდომა</string>
+
+    <!-- App -->
+    <string name="app_name">Vibits</string>
+
+    <!-- Days of week -->
+    <string name="day_mon">ორშ</string>
+    <string name="day_tue">სამ</string>
+    <string name="day_wed">ოთხ</string>
+    <string name="day_thu">ხუთ</string>
+    <string name="day_fri">პარ</string>
+    <string name="day_sat">შაბ</string>
+    <string name="day_sun">კვი</string>
+
+    <!-- Months short -->
+    <string name="month_jan">იან</string>
+    <string name="month_feb">თებ</string>
+    <string name="month_mar">მარ</string>
+    <string name="month_apr">აპრ</string>
+    <string name="month_may">მაი</string>
+    <string name="month_jun">ივნ</string>
+    <string name="month_jul">ივლ</string>
+    <string name="month_aug">აგვ</string>
+    <string name="month_sep">სექ</string>
+    <string name="month_oct">ოქტ</string>
+    <string name="month_nov">ნოე</string>
+    <string name="month_dec">დეკ</string>
+
+    <!-- Format strings -->
+    <string name="format_app_version">ვერსია: %1$s</string>
+    <string name="format_credentials">რწმუნებები: %1$s</string>
+    <string name="format_environment">გარემო: %1$s</string>
+    <string name="format_habits_progress">%2$d ჩვევიდან %1$d შესრულებულია</string>
+    <string name="format_memos_db">ჩანაწერების ბაზა: %1$s</string>
+    <string name="format_offline_storage">ოფლაინ: %1$s</string>
+    <string name="format_memos_count">%1$d ჩანაწერი</string>
+    <string name="format_memos_today">დღეს %1$d ჩანაწერი</string>
+    <string name="format_memos_this_week">ამ კვირაში %1$d ჩანაწერი</string>
+    <string name="format_memos_in_month">%2$s თვეში %1$d ჩანაწერი</string>
+    <string name="format_memos_in_quarter">%2$s კვარტალში %1$d ჩანაწერი</string>
+    <string name="format_memos_in_year">%2$d წელს %1$d ჩანაწერი</string>
+    <string name="action_show_memos">ჩანაწერების ჩვენება</string>
+    <string name="action_hide_memos">ჩანაწერების დამალვა</string>
+    <string name="action_write">წერა</string>
+    <string name="format_tooltip_habits">%1$s: %2$d/%3$d ჩვევა</string>
+    <string name="format_tooltip_memos">%1$s: %2$d ჩანაწერი</string>
+
+    <!-- Hints -->
+    <string name="hint_add_habits_config">დაამატეთ ჩვევების კონფიგურაცია თვალყურის დევნებისთვის.</string>
+    <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habit_name">ჩვევის სახელი</string>
+    <string name="hint_habits_config">ვარჯიში | #habits/gym\nკითხვა | #habits/reading</string>
+    <string name="hint_write_memo">დაწერეთ ჩანაწერი...</string>
+
+    <!-- Labels -->
+    <string name="label_access_token">წვდომის ტოკენი</string>
+    <string name="label_language">ენა</string>
+    <string name="label_time_night">ღამე</string>
+    <string name="label_time_morning">დილა</string>
+    <string name="label_time_day">დღე</string>
+    <string name="label_time_evening">საღამო</string>
+    <string name="label_activity">აქტივობა</string>
+    <string name="label_app_mode">აპის რეჟიმი</string>
+    <string name="label_base_url">Base URL</string>
+    <string name="label_credentials">რწმუნებები</string>
+    <string name="label_demo_mode">დემო რეჟიმი</string>
+    <string name="label_environment">გარემო</string>
+    <string name="label_habits_config">ჩვევების კონფიგურაცია</string>
+    <string name="label_memos_db">ჩანაწერების ბაზა</string>
+    <string name="label_storage">საცავი</string>
+    <string name="label_version">ვერსია</string>
+    <string name="label_success_rate">წარმატების მაჩვენებელი</string>
+    <string name="label_today">დღეს</string>
+
+    <!-- Messages -->
+    <string name="msg_connection_failed">კავშირის შეცდომა</string>
+    <string name="msg_delete_day_confirm">ჩვევები არ არის არჩეული. დღიური ჩანაწერი წაიშლება.</string>
+    <string name="msg_fill_all_fields">შეავსეთ ყველა ველი</string>
+    <string name="msg_no_habits_yet">ჩვევები ჯერ არ არის კონფიგურირებული.</string>
+    <string name="msg_no_logs">ლოგები ჯერ არ არის</string>
+    <string name="msg_no_memos_yet">ამ პერიოდში ჩანაწერები არ არის.</string>
+    <string name="msg_reset_confirm">დარწმუნებული ხართ, რომ გსურთ აპის გადატვირთვა? ყველა მონაცემი წაიშლება.</string>
+    <string name="msg_select_habit">აირჩიეთ მინიმუმ ერთი ჩვევა.</string>
+    <string name="msg_mark_done_confirm">მონიშნოთ «%1$s» როგორც შესრულებული %2$s-ისთვის?</string>
+    <string name="msg_mark_not_done_confirm">მოხსნათ მონიშვნა «%1$s»-ს %2$s-ისთვის?</string>
+    <string name="msg_restart_required">ენის ცვლილებისთვის საჭიროა გადატვირთვა</string>
+
+    <!-- Language selection -->
+    <string name="language_system">სისტემური</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_hindi">हिन्दी</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_portuguese">Português</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_ukrainian">Українська</string>
+    <string name="language_belarusian">Беларуская</string>
+    <string name="language_kazakh">Қазақша</string>
+    <string name="language_uzbek">Oʻzbekcha</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_french">Français</string>
+    <string name="language_georgian">ქართული</string>
+    <string name="language_azerbaijani">Azərbaycan</string>
+    <string name="language_kyrgyz">Кыргызча</string>
+    <string name="language_tajik">Тоҷикӣ</string>
+    <string name="language_romanian">Română</string>
+    <string name="language_turkmen">Türkmen</string>
+
+    <!-- Theme selection -->
+    <string name="label_theme">თემა</string>
+    <string name="theme_system">სისტემური</string>
+    <string name="theme_light">ნათელი</string>
+    <string name="theme_dark">მუქი</string>
+
+    <!-- Mode selection -->
+    <string name="mode_select_title">აირჩიეთ რეჟიმი</string>
+    <string name="mode_select_subtitle">როგორ გსურთ აპის გამოყენება?</string>
+    <string name="mode_online_title">ონლაინ</string>
+    <string name="mode_online_desc">დაუკავშირდით Memos სერვერს სრული სინქრონიზაციისთვის</string>
+    <string name="mode_offline_title">ოფლაინ</string>
+    <string name="mode_offline_desc">შეინახეთ მონაცემები ლოკალურად სერვერთან კავშირის გარეშე</string>
+    <string name="mode_demo_title">დემო</string>
+    <string name="mode_demo_desc">სცადეთ აპი სადემონსტრაციო მონაცემებით</string>
+
+    <!-- Navigation -->
+    <string name="nav_feed">ფიდი</string>
+    <string name="nav_habits">ჩვევები</string>
+    <string name="nav_memos">ჩანაწერები</string>
+    <string name="nav_settings">პარამეტრები</string>
+
+    <!-- Privacy -->
+    <string name="privacy_hidden_content">დამალული კონტენტი</string>
+    <string name="privacy_hidden_habit">დამალული ჩვევა</string>
+
+    <!-- Time periods -->
+    <string name="time_month">თვე</string>
+    <string name="time_months">თვეები</string>
+    <string name="time_quarter">კვარტალი</string>
+    <string name="time_quarters">კვარტალები</string>
+    <string name="time_week">კვირა</string>
+    <string name="time_weeks">კვირები</string>
+    <string name="time_year">წელი</string>
+    <string name="time_years">წლები</string>
+
+    <!-- Titles -->
+    <string name="title_create_day">დღის შექმნა</string>
+    <string name="title_delete_day">დღის წაშლა?</string>
+    <string name="title_delete_memo">ჩანაწერის წაშლა?</string>
+    <string name="title_edit_day">დღის რედაქტირება</string>
+    <string name="title_edit_memo">ჩანაწერის რედაქტირება</string>
+    <string name="title_logs">ლოგები (%1$d)</string>
+    <string name="title_new_memo">ახალი ჩანაწერი</string>
+    <string name="title_mark_done">მონიშნოთ შესრულებულად?</string>
+    <string name="title_mark_not_done">მოხსნათ მონიშვნა?</string>
+    <string name="title_update_day">დღის განახლება</string>
+
+    <!-- Demo habits -->
+    <string name="demo_habit_exercise">ვარჯიში</string>
+    <string name="demo_habit_reading">კითხვა</string>
+    <string name="demo_habit_meditation">მედიტაცია</string>
+    <string name="demo_habit_water">წყლის დალევა</string>
+    <string name="demo_habit_learning">სწავლა</string>
+    <string name="demo_habit_walking">10K ნაბიჯი</string>
+    <string name="demo_habit_no_sugar">შაქრის გარეშე</string>
+    <string name="demo_habit_early_sleep">ძილი 23:00-მდე</string>
+</resources>

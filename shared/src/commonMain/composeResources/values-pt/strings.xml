@@ -123,6 +123,16 @@
     <string name="language_japanese">日本語</string>
     <string name="language_german">Deutsch</string>
     <string name="language_french">Français</string>
+    <string name="language_ukrainian">Українська</string>
+    <string name="language_belarusian">Беларуская</string>
+    <string name="language_kazakh">Қазақша</string>
+    <string name="language_uzbek">Oʻzbekcha</string>
+    <string name="language_georgian">ქართული</string>
+    <string name="language_azerbaijani">Azərbaycan</string>
+    <string name="language_kyrgyz">Кыргызча</string>
+    <string name="language_tajik">Тоҷикӣ</string>
+    <string name="language_romanian">Română</string>
+    <string name="language_turkmen">Türkmen</string>
 
     <!-- Theme selection -->
     <string name="label_theme">Tema</string>
