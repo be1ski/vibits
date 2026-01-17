@@ -346,7 +346,7 @@ private fun HeatmapDayNumbers(
     for (dayOffset in 0 until DAYS_IN_WEEK) {
       val date = weekStart.plus(DatePeriod(days = dayOffset))
       Box(modifier = Modifier.size(cellSize), contentAlignment = Alignment.Center) {
-        Text(date.dayOfMonth.toString(), style = MaterialTheme.typography.labelSmall)
+        Text(date.day.toString(), style = MaterialTheme.typography.labelSmall)
       }
     }
   }
@@ -440,7 +440,7 @@ private fun CompactPostRow(memo: Memo, timeZone: TimeZone) {
   val instant = memo.createTime ?: memo.updateTime
   val dateLabel = instant?.let {
     val dt = it.toLocalDateTime(timeZone)
-    "${dt.date.dayOfMonth}/${dt.date.monthNumber} ${dt.hour}:${dt.minute.toString().padStart(2, '0')}"
+    "${dt.date.day}/${dt.date.month.ordinal + 1} ${dt.hour}:${dt.minute.toString().padStart(2, '0')}"
   } ?: ""
 
   Row(
