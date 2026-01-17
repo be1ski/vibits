@@ -1,6 +1,6 @@
 package space.be1ski.vibits.shared.core.platform
 
-import space.be1ski.vibits.shared.feature.preferences.domain.model.AppLanguage
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 
 /**
  * Platform-specific locale configuration.

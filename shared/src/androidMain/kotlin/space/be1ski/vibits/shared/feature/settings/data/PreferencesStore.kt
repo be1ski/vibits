@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.preferences.data
+package space.be1ski.vibits.shared.feature.settings.data
 
 import android.content.Context
 import androidx.core.content.edit
