@@ -75,6 +75,7 @@ import space.be1ski.vibits.shared.feature.settings.presentation.createSettingsFe
 @Suppress("LongMethod")
 @Composable
 fun VibitsApp(
+  currentTheme: AppTheme,
   onResetApp: () -> Unit = {},
   onThemeChanged: (AppTheme) -> Unit = {},
 ) {
@@ -203,8 +204,6 @@ fun VibitsApp(
     }
   }
 
-  val initialTheme = remember { initialPrefs.theme }
-
   // Open settings when credentials are required
   LaunchedEffect(memosState.credentialsMode, settingsState.isOpen) {
     if (memosState.credentialsMode && !settingsState.isOpen) {
@@ -214,7 +213,7 @@ fun VibitsApp(
           token = memosState.token,
           appMode = appState.appMode,
           language = initialLanguage,
-          theme = initialTheme,
+          theme = currentTheme,
         ),
       )
     }
@@ -233,7 +232,7 @@ fun VibitsApp(
       onHabitsAction = habitsFeature::send,
       calculateSuccessRate = calculateSuccessRate,
       language = initialLanguage,
-      theme = initialTheme,
+      theme = currentTheme,
     )
     SettingsDialog(
       state = settingsState,
