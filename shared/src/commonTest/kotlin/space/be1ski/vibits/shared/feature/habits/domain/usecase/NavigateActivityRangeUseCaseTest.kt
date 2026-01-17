@@ -80,12 +80,21 @@ class NavigateActivityRangeUseCaseTest {
   }
 
   @Test
-  fun `formats week label correctly`() {
+  fun `formats week label correctly for current year`() {
+    val range = ActivityRange.Week(startDate = LocalDate(2026, 1, 5))
+
+    val label = useCase.formatLabel(range)
+
+    assertEquals("Jan 5 - Jan 11", label)
+  }
+
+  @Test
+  fun `formats week label with year for past year`() {
     val range = ActivityRange.Week(startDate = LocalDate(2024, 1, 8))
 
     val label = useCase.formatLabel(range)
 
-    assertEquals("Jan 8 - Jan 14", label)
+    assertEquals("Jan 8 2024 - Jan 14 2024", label)
   }
 
   @Test
