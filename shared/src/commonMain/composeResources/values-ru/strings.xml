@@ -20,9 +20,13 @@
     <string name="app_name">Vibits</string>
 
     <!-- Days of week -->
-    <string name="day_fri">Пт</string>
     <string name="day_mon">Пн</string>
+    <string name="day_tue">Вт</string>
     <string name="day_wed">Ср</string>
+    <string name="day_thu">Чт</string>
+    <string name="day_fri">Пт</string>
+    <string name="day_sat">Сб</string>
+    <string name="day_sun">Вс</string>
 
     <!-- Format strings -->
     <string name="format_app_version">Версия: %1$s</string>
@@ -53,7 +57,9 @@
     <string name="label_today">Сегодня</string>
 
     <!-- Messages -->
+    <string name="msg_connection_failed">Ошибка подключения</string>
     <string name="msg_delete_day_confirm">Привычки не выбраны. Запись за этот день будет удалена.</string>
+    <string name="msg_fill_all_fields">Заполните все поля</string>
     <string name="msg_no_habits_yet">Привычки еще не настроены.</string>
     <string name="msg_select_habit">Выберите хотя бы одну привычку.</string>
 

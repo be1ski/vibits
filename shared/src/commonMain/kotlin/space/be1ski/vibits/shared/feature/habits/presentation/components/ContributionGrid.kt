@@ -54,10 +54,14 @@ import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.title_create_day
 import space.be1ski.vibits.shared.title_edit_day
 import space.be1ski.vibits.shared.day_fri
-import space.be1ski.vibits.shared.format_tooltip_habits
 import space.be1ski.vibits.shared.day_mon
-import space.be1ski.vibits.shared.format_tooltip_posts
+import space.be1ski.vibits.shared.day_sat
+import space.be1ski.vibits.shared.day_sun
+import space.be1ski.vibits.shared.day_thu
+import space.be1ski.vibits.shared.day_tue
 import space.be1ski.vibits.shared.day_wed
+import space.be1ski.vibits.shared.format_tooltip_habits
+import space.be1ski.vibits.shared.format_tooltip_posts
 
 internal object ChartDimens {
   val legendWidth = LEGEND_WIDTH_DP.dp
@@ -339,15 +343,14 @@ private fun DayOfWeekLegend(
         modifier = Modifier.height(cellSize),
         contentAlignment = Alignment.CenterStart
       ) {
-        val label = if (showAllLabels) {
-          day.name.take(DAY_ABBREV_LENGTH).lowercase().replaceFirstChar { it.uppercase() }
-        } else {
-          when (day) {
-            DayOfWeek.MONDAY -> stringResource(Res.string.day_mon)
-            DayOfWeek.WEDNESDAY -> stringResource(Res.string.day_wed)
-            DayOfWeek.FRIDAY -> stringResource(Res.string.day_fri)
-            else -> null
-          }
+        val label = when (day) {
+          DayOfWeek.MONDAY -> stringResource(Res.string.day_mon)
+          DayOfWeek.TUESDAY -> if (showAllLabels) stringResource(Res.string.day_tue) else null
+          DayOfWeek.WEDNESDAY -> stringResource(Res.string.day_wed)
+          DayOfWeek.THURSDAY -> if (showAllLabels) stringResource(Res.string.day_thu) else null
+          DayOfWeek.FRIDAY -> stringResource(Res.string.day_fri)
+          DayOfWeek.SATURDAY -> if (showAllLabels) stringResource(Res.string.day_sat) else null
+          DayOfWeek.SUNDAY -> if (showAllLabels) stringResource(Res.string.day_sun) else null
         }
         if (label != null) {
           Text(
@@ -529,4 +532,3 @@ private fun ContributionCell(
   }
 }
 
-private const val DAY_ABBREV_LENGTH = 3

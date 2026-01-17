@@ -16,6 +16,7 @@ import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.preferences.domain.repository.PreferencesRepository
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadCachedMemosUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadMemosUseCase
 import space.be1ski.vibits.shared.feature.preferences.domain.usecase.LoadPreferencesUseCase
@@ -72,6 +73,7 @@ fun sharedModule(): Module = module {
   factory { LoadPreferencesUseCase(get()) }
   factory { LoadAppDetailsUseCase(get()) }
   factory { SaveCredentialsUseCase(get()) }
+  factory { ValidateCredentialsUseCase(get()) }
   factory { SaveTimeRangeTabUseCase(get()) }
   factory { CreateMemoUseCase(get()) }
   factory { UpdateMemoUseCase(get()) }

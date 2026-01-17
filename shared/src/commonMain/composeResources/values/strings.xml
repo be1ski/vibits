@@ -20,9 +20,13 @@
     <string name="app_name">Vibits</string>
 
     <!-- Days of week -->
-    <string name="day_fri">Fri</string>
-    <string name="day_mon">Mon</string>
-    <string name="day_wed">Wed</string>
+    <string name="day_mon">Mo</string>
+    <string name="day_tue">Tu</string>
+    <string name="day_wed">We</string>
+    <string name="day_thu">Th</string>
+    <string name="day_fri">Fr</string>
+    <string name="day_sat">Sa</string>
+    <string name="day_sun">Su</string>
 
     <!-- Format strings -->
     <string name="format_app_version">Version: %1$s</string>
@@ -53,7 +57,9 @@
     <string name="label_today">Today</string>
 
     <!-- Messages -->
+    <string name="msg_connection_failed">Connection failed</string>
     <string name="msg_delete_day_confirm">No habits selected. The daily entry will be deleted.</string>
+    <string name="msg_fill_all_fields">Please fill in all fields</string>
     <string name="msg_no_habits_yet">No habits configured yet.</string>
     <string name="msg_select_habit">Select at least one habit.</string>
 
