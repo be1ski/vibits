@@ -19,22 +19,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.collectAsState
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_cancel
 import space.be1ski.vibits.shared.action_save
+import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.hint_base_url
@@ -52,9 +47,11 @@ import space.be1ski.vibits.shared.msg_connection_failed
 import space.be1ski.vibits.shared.msg_fill_all_fields
 
 @Composable
-fun ModeSelectionScreen(onModeSelected: (AppMode) -> Unit) {
-  val credentialsStateHolder: CredentialsSetupStateHolder = koinInject()
-  var showCredentialsDialog by remember { mutableStateOf(false) }
+fun ModeSelectionScreen(
+  feature: Feature<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect>,
+) {
+  val state by feature.state.collectAsState()
+  val dispatch: (ModeSelectionAction) -> Unit = feature::send
 
   Column(
     modifier =
@@ -82,7 +79,7 @@ fun ModeSelectionScreen(onModeSelected: (AppMode) -> Unit) {
       title = stringResource(Res.string.mode_online_title),
       description = stringResource(Res.string.mode_online_desc),
       isPrimary = true,
-      onClick = { showCredentialsDialog = true },
+      onClick = { dispatch(ModeSelectionAction.ShowCredentialsDialog) },
     )
 
     Spacer(modifier = Modifier.height(Indent.m))
@@ -91,7 +88,7 @@ fun ModeSelectionScreen(onModeSelected: (AppMode) -> Unit) {
       title = stringResource(Res.string.mode_offline_title),
       description = stringResource(Res.string.mode_offline_desc),
       isPrimary = false,
-      onClick = { onModeSelected(AppMode.OFFLINE) },
+      onClick = { dispatch(ModeSelectionAction.SelectMode(AppMode.OFFLINE)) },
     )
 
     Spacer(modifier = Modifier.height(Indent.m))
@@ -100,22 +97,14 @@ fun ModeSelectionScreen(onModeSelected: (AppMode) -> Unit) {
       title = stringResource(Res.string.mode_demo_title),
       description = stringResource(Res.string.mode_demo_desc),
       isPrimary = false,
-      onClick = { onModeSelected(AppMode.DEMO) },
+      onClick = { dispatch(ModeSelectionAction.SelectMode(AppMode.DEMO)) },
     )
   }
 
-  if (showCredentialsDialog) {
+  if (state.showCredentialsDialog) {
     CredentialsSetupDialog(
-      stateHolder = credentialsStateHolder,
-      onDismiss = {
-        credentialsStateHolder.reset()
-        showCredentialsDialog = false
-      },
-      onSuccess = {
-        credentialsStateHolder.reset()
-        showCredentialsDialog = false
-        onModeSelected(AppMode.ONLINE)
-      },
+      state = state,
+      dispatch = dispatch,
     )
   }
 }
@@ -123,39 +112,39 @@ fun ModeSelectionScreen(onModeSelected: (AppMode) -> Unit) {
 @Suppress("LongMethod")
 @Composable
 private fun CredentialsSetupDialog(
-  stateHolder: CredentialsSetupStateHolder,
-  onDismiss: () -> Unit,
-  onSuccess: () -> Unit,
+  state: ModeSelectionState,
+  dispatch: (ModeSelectionAction) -> Unit,
 ) {
-  val state by stateHolder.state.collectAsState()
-  val scope = rememberCoroutineScope()
-  val fillAllFieldsMessage = stringResource(Res.string.msg_fill_all_fields)
-  val connectionFailedMessage = stringResource(Res.string.msg_connection_failed)
+  val errorText = when (state.error) {
+    ModeSelectionError.FILL_ALL_FIELDS -> stringResource(Res.string.msg_fill_all_fields)
+    ModeSelectionError.CONNECTION_FAILED -> stringResource(Res.string.msg_connection_failed)
+    null -> null
+  }
 
   AlertDialog(
-    onDismissRequest = { if (!state.isLoading) onDismiss() },
+    onDismissRequest = { if (!state.isValidating) dispatch(ModeSelectionAction.DismissCredentialsDialog) },
     title = { Text(stringResource(Res.string.mode_online_title)) },
     text = {
       Column(verticalArrangement = Arrangement.spacedBy(Indent.s)) {
         TextField(
           value = state.baseUrl,
-          onValueChange = { stateHolder.updateBaseUrl(it) },
+          onValueChange = { dispatch(ModeSelectionAction.UpdateBaseUrl(it)) },
           label = { Text(stringResource(Res.string.label_base_url)) },
           placeholder = { Text(stringResource(Res.string.hint_base_url)) },
-          enabled = !state.isLoading,
+          enabled = !state.isValidating,
           modifier = Modifier.fillMaxWidth(),
           singleLine = true,
         )
         TextField(
           value = state.token,
-          onValueChange = { stateHolder.updateToken(it) },
+          onValueChange = { dispatch(ModeSelectionAction.UpdateToken(it)) },
           label = { Text(stringResource(Res.string.label_access_token)) },
           visualTransformation = PasswordVisualTransformation(),
-          enabled = !state.isLoading,
+          enabled = !state.isValidating,
           modifier = Modifier.fillMaxWidth(),
           singleLine = true,
         )
-        state.errorMessage?.let { error ->
+        errorText?.let { error ->
           Text(
             text = error,
             color = MaterialTheme.colorScheme.error,
@@ -166,23 +155,10 @@ private fun CredentialsSetupDialog(
     },
     confirmButton = {
       Button(
-        onClick = {
-          if (state.baseUrl.isBlank() || state.token.isBlank()) {
-            stateHolder.setError(fillAllFieldsMessage)
-            return@Button
-          }
-          scope.launch {
-            val success = stateHolder.validateAndSave()
-            if (success) {
-              onSuccess()
-            } else if (state.errorMessage == null) {
-              stateHolder.setError(connectionFailedMessage)
-            }
-          }
-        },
-        enabled = !state.isLoading,
+        onClick = { dispatch(ModeSelectionAction.Submit) },
+        enabled = !state.isValidating,
       ) {
-        if (state.isLoading) {
+        if (state.isValidating) {
           CircularProgressIndicator(
             modifier = Modifier.size(16.dp),
             strokeWidth = 2.dp,
@@ -195,8 +171,8 @@ private fun CredentialsSetupDialog(
     },
     dismissButton = {
       TextButton(
-        onClick = onDismiss,
-        enabled = !state.isLoading,
+        onClick = { dispatch(ModeSelectionAction.DismissCredentialsDialog) },
+        enabled = !state.isValidating,
       ) {
         Text(stringResource(Res.string.action_cancel))
       }
