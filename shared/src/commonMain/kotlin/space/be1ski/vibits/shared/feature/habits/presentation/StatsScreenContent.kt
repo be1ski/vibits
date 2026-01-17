@@ -605,6 +605,7 @@ internal fun StatsMainChart(
     )
   } else {
     val showTimeline = state.range is ActivityRange.Quarter || state.range is ActivityRange.Year
+    val showWeekStartHeaders = state.range is ActivityRange.Month
     ContributionGrid(
       state = ContributionGridState(
         weekData = derived.weekData,
@@ -617,6 +618,7 @@ internal fun StatsMainChart(
         showAllWeekdayLabels = true,
         compactHeight = derived.useCompactHeight,
         showTimeline = showTimeline,
+        showWeekStartHeaders = showWeekStartHeaders,
         showDayNumbers = false,
         today = derived.today,
         demoMode = state.demoMode
