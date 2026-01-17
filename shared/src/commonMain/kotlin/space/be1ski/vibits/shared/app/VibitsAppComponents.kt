@@ -37,7 +37,7 @@ import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
 import space.be1ski.vibits.shared.nav_feed
 import space.be1ski.vibits.shared.nav_habits
-import space.be1ski.vibits.shared.nav_posts
+import space.be1ski.vibits.shared.nav_memos
 import space.be1ski.vibits.shared.nav_settings
 
 @Composable
@@ -113,10 +113,10 @@ internal fun MemosBottomNavigation(
       icon = {
         Icon(
           imageVector = Icons.Filled.Description,
-          contentDescription = stringResource(Res.string.nav_posts)
+          contentDescription = stringResource(Res.string.nav_memos)
         )
       },
-      label = { Text(stringResource(Res.string.nav_posts)) }
+      label = { Text(stringResource(Res.string.nav_memos)) }
     )
     NavigationBarItem(
       selected = appState.selectedScreen == MemosScreen.Feed,
