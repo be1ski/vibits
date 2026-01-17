@@ -145,6 +145,75 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> = reducer { 
       effect(HabitsEffect.CreateMemo(content))
     }
 
+    is HabitsAction.RequestSingleHabitToggle -> {
+      state {
+        copy(
+          singleToggleDay = action.day,
+          singleToggleHabitTag = action.habitTag,
+          singleToggleHabitLabel = action.habitLabel,
+          singleToggleConfig = action.config
+        )
+      }
+    }
+
+    is HabitsAction.ConfirmSingleHabitToggle -> {
+      val day = state.singleToggleDay ?: return@reducer
+      val habitTag = state.singleToggleHabitTag ?: return@reducer
+      val config = state.singleToggleConfig
+
+      // Build selections by toggling the specific habit
+      val currentDone = day.habitStatuses.firstOrNull { it.tag == habitTag }?.done == true
+      val newDone = !currentDone
+
+      val selections = config.associate { habit ->
+        val wasDone = day.habitStatuses.firstOrNull { it.tag == habit.tag }?.done == true
+        habit.tag to if (habit.tag == habitTag) newDone else wasDone
+      }
+
+      val hasAnySelection = selections.values.any { it }
+      val existing = day.dailyMemo
+
+      when {
+        !hasAnySelection && existing != null -> {
+          // All habits unchecked and memo exists - delete it
+          state { copy(isLoading = true) }
+          effect(HabitsEffect.DeleteMemo(existing.name))
+        }
+        hasAnySelection -> {
+          // Build and save the memo
+          val content = buildDailyContent(day.date, config, selections)
+          state { copy(isLoading = true) }
+          if (existing != null) {
+            effect(HabitsEffect.UpdateMemo(existing.name, content))
+          } else {
+            effect(HabitsEffect.CreateMemo(content))
+          }
+        }
+        else -> {
+          // No selection and no existing memo - just close dialog
+          state {
+            copy(
+              singleToggleDay = null,
+              singleToggleHabitTag = null,
+              singleToggleHabitLabel = null,
+              singleToggleConfig = emptyList()
+            )
+          }
+        }
+      }
+    }
+
+    is HabitsAction.CancelSingleHabitToggle -> {
+      state {
+        copy(
+          singleToggleDay = null,
+          singleToggleHabitTag = null,
+          singleToggleHabitLabel = null,
+          singleToggleConfig = emptyList()
+        )
+      }
+    }
+
     is HabitsAction.SelectDay -> {
       state {
         copy(
@@ -178,7 +247,11 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> = reducer { 
           editorExisting = null,
           editorError = null,
           showConfigDialog = false,
-          editingHabits = emptyList()
+          editingHabits = emptyList(),
+          singleToggleDay = null,
+          singleToggleHabitTag = null,
+          singleToggleHabitLabel = null,
+          singleToggleConfig = emptyList()
         )
       }
       effect(HabitsEffect.RefreshMemos)
@@ -193,7 +266,11 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> = reducer { 
           editorSelections = emptyMap(),
           editorExisting = null,
           editorError = null,
-          showDeleteConfirm = false
+          showDeleteConfirm = false,
+          singleToggleDay = null,
+          singleToggleHabitTag = null,
+          singleToggleHabitLabel = null,
+          singleToggleConfig = emptyList()
         )
       }
       effect(HabitsEffect.RefreshMemos)
@@ -201,7 +278,14 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> = reducer { 
 
     is HabitsAction.MemoOperationFailed -> {
       state {
-        copy(isLoading = false, editorError = action.error)
+        copy(
+          isLoading = false,
+          editorError = action.error,
+          singleToggleDay = null,
+          singleToggleHabitTag = null,
+          singleToggleHabitLabel = null,
+          singleToggleConfig = emptyList()
+        )
       }
     }
   }

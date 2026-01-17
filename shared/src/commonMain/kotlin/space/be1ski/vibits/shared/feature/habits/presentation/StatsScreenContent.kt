@@ -261,12 +261,18 @@ internal fun StatsMainChart(
   }
 
   if (derived.showLast7DaysMatrix) {
+    val onSingleHabitToggle = remember(dispatch, derived.currentHabitsConfig) {
+      { day: ContributionDay, habitTag: String, habitLabel: String ->
+        dispatch(HabitsAction.RequestSingleHabitToggle(day, habitTag, habitLabel, derived.currentHabitsConfig))
+      }
+    }
     LastSevenDaysMatrix(
       days = lastSevenDays(derived.weekData),
       habits = derived.currentHabitsConfig,
       compactHeight = derived.useCompactHeight,
       demoMode = state.demoMode,
-      onDayClick = onEditRequested
+      today = derived.today,
+      onHabitClick = onSingleHabitToggle
     )
   } else {
     val showTimeline = state.range is ActivityRange.Quarter || state.range is ActivityRange.Year
@@ -425,14 +431,15 @@ private fun HabitActivitySection(
   }
 }
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "LongParameterList")
 @Composable
 private fun LastSevenDaysMatrix(
   days: List<ContributionDay>,
   habits: List<HabitConfig>,
   compactHeight: Boolean,
   demoMode: Boolean,
-  onDayClick: (ContributionDay) -> Unit = {}
+  today: kotlinx.datetime.LocalDate,
+  onHabitClick: (day: ContributionDay, habitTag: String, habitLabel: String) -> Unit = { _, _, _ -> }
 ) {
   if (days.isEmpty() || habits.isEmpty()) {
     return
@@ -473,12 +480,20 @@ private fun LastSevenDaysMatrix(
           )
           days.forEach { day ->
             val done = day.habitStatuses.firstOrNull { status -> status.tag == habit.tag }?.done == true
-            val cellColor = if (done) androidx.compose.ui.graphics.Color(habit.color) else pendingColor
+            val isFuture = day.date > today
+            val baseColor = if (done) androidx.compose.ui.graphics.Color(habit.color) else pendingColor
+            val cellColor = if (isFuture) baseColor.copy(alpha = 0.3f) else baseColor
             Box(
               modifier = Modifier
                 .size(cellSize)
                 .background(cellColor, shape = MaterialTheme.shapes.extraSmall)
-                .clickable { onDayClick(day) }
+                .then(
+                  if (!isFuture) {
+                    Modifier.clickable { onHabitClick(day, habit.tag, habit.label) }
+                  } else {
+                    Modifier
+                  }
+                )
             )
           }
         }

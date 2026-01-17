@@ -57,6 +57,7 @@
     <string name="label_today">Today</string>
 
     <!-- Messages -->
+    <string name="msg_toggle_habit_confirm">Toggle "%1$s" for %2$s?</string>
     <string name="msg_connection_failed">Connection failed</string>
     <string name="msg_delete_day_confirm">No habits selected. The daily entry will be deleted.</string>
     <string name="msg_fill_all_fields">Please fill in all fields</string>
@@ -94,6 +95,7 @@
     <string name="time_years">Years</string>
 
     <!-- Titles -->
+    <string name="title_toggle_habit">Toggle habit?</string>
     <string name="title_create_day">Create day</string>
     <string name="title_delete_day">Delete day?</string>
     <string name="title_delete_memo">Delete memo?</string>
