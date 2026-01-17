@@ -56,6 +56,7 @@ import space.be1ski.vibits.shared.action_save
 import space.be1ski.vibits.shared.action_view_logs
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.logging.LogLevel
+import space.be1ski.vibits.shared.core.ui.SegmentedSelector
 import space.be1ski.vibits.shared.domain.model.app.AppDetails
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
@@ -120,7 +121,7 @@ internal fun SettingsDialog(
   }
 }
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable
 private fun SettingsDialogBody(
   state: SettingsState,
@@ -144,9 +145,18 @@ private fun SettingsDialogBody(
     validationErrorMessage?.let { error ->
       Text(error, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
     }
-    LanguageSelector(
-      currentLanguage = state.selectedLanguage,
-      onLanguageChange = { language -> dispatch(SettingsAction.SelectLanguage(language)) },
+    SegmentedSelector(
+      label = stringResource(Res.string.label_language),
+      options = AppLanguage.entries,
+      selected = state.selectedLanguage,
+      onSelect = { language -> dispatch(SettingsAction.SelectLanguage(language)) },
+      optionLabel = { language ->
+        when (language) {
+          AppLanguage.SYSTEM -> stringResource(Res.string.language_system)
+          AppLanguage.ENGLISH -> stringResource(Res.string.language_english)
+          AppLanguage.RUSSIAN -> stringResource(Res.string.language_russian)
+        }
+      },
     )
     if (state.languageChanged) {
       Text(
@@ -155,9 +165,18 @@ private fun SettingsDialogBody(
         style = MaterialTheme.typography.bodySmall,
       )
     }
-    ThemeSelector(
-      currentTheme = state.selectedTheme,
-      onThemeChange = { theme -> dispatch(SettingsAction.SelectTheme(theme)) },
+    SegmentedSelector(
+      label = stringResource(Res.string.label_theme),
+      options = AppTheme.entries,
+      selected = state.selectedTheme,
+      onSelect = { theme -> dispatch(SettingsAction.SelectTheme(theme)) },
+      optionLabel = { theme ->
+        when (theme) {
+          AppTheme.SYSTEM -> stringResource(Res.string.theme_system)
+          AppTheme.LIGHT -> stringResource(Res.string.theme_light)
+          AppTheme.DARK -> stringResource(Res.string.theme_dark)
+        }
+      },
     )
     if (state.appMode == AppMode.ONLINE) {
       TextField(
@@ -227,72 +246,6 @@ private fun AppModeSelector(
         shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
       ) {
         Text(stringResource(Res.string.mode_demo_title))
-      }
-    }
-  }
-}
-
-@Composable
-private fun LanguageSelector(
-  currentLanguage: AppLanguage,
-  onLanguageChange: (AppLanguage) -> Unit,
-) {
-  Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-    Text(stringResource(Res.string.label_language))
-    SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-      SegmentedButton(
-        selected = currentLanguage == AppLanguage.SYSTEM,
-        onClick = { onLanguageChange(AppLanguage.SYSTEM) },
-        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
-      ) {
-        Text(stringResource(Res.string.language_system))
-      }
-      SegmentedButton(
-        selected = currentLanguage == AppLanguage.ENGLISH,
-        onClick = { onLanguageChange(AppLanguage.ENGLISH) },
-        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
-      ) {
-        Text(stringResource(Res.string.language_english))
-      }
-      SegmentedButton(
-        selected = currentLanguage == AppLanguage.RUSSIAN,
-        onClick = { onLanguageChange(AppLanguage.RUSSIAN) },
-        shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
-      ) {
-        Text(stringResource(Res.string.language_russian))
-      }
-    }
-  }
-}
-
-@Composable
-private fun ThemeSelector(
-  currentTheme: AppTheme,
-  onThemeChange: (AppTheme) -> Unit,
-) {
-  Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-    Text(stringResource(Res.string.label_theme))
-    SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-      SegmentedButton(
-        selected = currentTheme == AppTheme.SYSTEM,
-        onClick = { onThemeChange(AppTheme.SYSTEM) },
-        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
-      ) {
-        Text(stringResource(Res.string.theme_system))
-      }
-      SegmentedButton(
-        selected = currentTheme == AppTheme.LIGHT,
-        onClick = { onThemeChange(AppTheme.LIGHT) },
-        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
-      ) {
-        Text(stringResource(Res.string.theme_light))
-      }
-      SegmentedButton(
-        selected = currentTheme == AppTheme.DARK,
-        onClick = { onThemeChange(AppTheme.DARK) },
-        shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
-      ) {
-        Text(stringResource(Res.string.theme_dark))
       }
     }
   }

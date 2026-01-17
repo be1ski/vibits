@@ -52,6 +52,7 @@ fun AppRoot() {
       }
       AppMode.ONLINE, AppMode.OFFLINE, AppMode.DEMO -> {
         VibitsApp(
+          currentTheme = appTheme,
           onResetApp = { appMode = AppMode.NOT_SELECTED },
           onThemeChanged = { theme -> appTheme = theme },
         )
