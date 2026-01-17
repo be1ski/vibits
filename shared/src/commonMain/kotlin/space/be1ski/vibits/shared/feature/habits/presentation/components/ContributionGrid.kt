@@ -210,9 +210,9 @@ private fun BoxWithConstraintsScope.CalendarGridLayout(
 ) {
   val spacing = ChartDimens.spacing(state.compactHeight)
   val minCell = ChartDimens.minCell(state.compactHeight)
-  val maxCell = ChartDimens.maxCell(state.compactHeight)
+  // Calendar layout should fill full width - no max cap
   val layout = calculateLayout(
-    maxWidth, DAYS_IN_WEEK, minColumnSize = minCell, spacing = spacing, maxColumnSize = maxCell
+    maxWidth, DAYS_IN_WEEK, minColumnSize = minCell, spacing = spacing, maxColumnSize = null
   )
   val cellSize = layout.columnSize
 

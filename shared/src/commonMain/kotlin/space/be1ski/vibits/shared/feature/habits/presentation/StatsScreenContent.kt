@@ -742,6 +742,7 @@ private fun HabitActivitySection(
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs), modifier = Modifier.padding(top = Indent.s)) {
     Text(state.habit.localizedLabel(state.demoMode), style = MaterialTheme.typography.titleSmall)
     val showTimeline = state.range is ActivityRange.Quarter || state.range is ActivityRange.Year
+    val useCalendarLayout = state.range is ActivityRange.Month
     ContributionGrid(
       state = ContributionGridState(
         weekData = habitWeekData,
@@ -750,10 +751,11 @@ private fun HabitActivitySection(
         selectedWeekStart = null,
         isActiveSelection = state.isActiveSelection,
         scrollState = chartScrollState,
-        showWeekdayLegend = state.showWeekdayLegend,
+        showWeekdayLegend = state.showWeekdayLegend && !useCalendarLayout,
         showAllWeekdayLabels = true,
         compactHeight = state.compactHeight,
         showTimeline = showTimeline,
+        calendarLayout = useCalendarLayout,
         today = state.today,
         habitColor = state.habitColor,
         demoMode = state.demoMode
