@@ -1,13 +1,14 @@
 package space.be1ski.vibits.shared.feature.auth.domain.usecase
 
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.shared.feature.memos.data.remote.MemosApi
 
 /**
  * Use case that validates credentials by making a test API request.
  * Returns true if credentials are valid, false otherwise.
  */
-class ValidateCredentialsUseCase @Inject constructor(
+@Inject
+class ValidateCredentialsUseCase(
   private val memosApi: MemosApi,
 ) {
   suspend operator fun invoke(

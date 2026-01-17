@@ -1,6 +1,6 @@
 package space.be1ski.vibits.shared.feature.memos.data.offline
 
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import kotlin.time.Clock
@@ -12,7 +12,8 @@ import kotlin.uuid.Uuid
  * Repository implementation for offline mode.
  * Stores memos in local JSON file.
  */
-class OfflineMemosRepository @Inject constructor(
+@Inject
+class OfflineMemosRepository(
   private val storage: OfflineMemoStorage,
 ) : MemosRepository {
   override suspend fun listMemos(): List<Memo> = loadMemos()

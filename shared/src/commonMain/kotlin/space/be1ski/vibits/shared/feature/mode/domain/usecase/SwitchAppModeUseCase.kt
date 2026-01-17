@@ -1,6 +1,6 @@
 package space.be1ski.vibits.shared.feature.mode.domain.usecase
 
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.shared.feature.memos.data.ModeAwareMemosRepository
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
@@ -8,7 +8,8 @@ import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeReposito
 /**
  * Use case for switching app mode with cache invalidation.
  */
-class SwitchAppModeUseCase @Inject constructor(
+@Inject
+class SwitchAppModeUseCase(
   private val appModeRepository: AppModeRepository,
   private val modeAwareMemosRepository: ModeAwareMemosRepository,
 ) {
