@@ -1,0 +1,184 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_cancel">Abbrechen</string>
+    <string name="action_clear">Löschen</string>
+    <string name="action_close">Schließen</string>
+    <string name="action_copied">Kopiert</string>
+    <string name="action_configure_habits">Gewohnheiten konfigurieren</string>
+    <string name="action_create">Erstellen</string>
+    <string name="action_create_memo">Notiz erstellen</string>
+    <string name="action_delete">Löschen</string>
+    <string name="action_hide_details">Details ausblenden</string>
+    <string name="action_next">Weiter</string>
+    <string name="action_previous">Zurück</string>
+    <string name="action_refresh">Aktualisieren</string>
+    <string name="action_reset">Zurücksetzen</string>
+    <string name="action_reset_app">App zurücksetzen</string>
+    <string name="action_save">Speichern</string>
+    <string name="action_show_details">Details anzeigen</string>
+    <string name="action_track">Erfassen</string>
+    <string name="action_track_today">Heute erfassen</string>
+    <string name="action_update">Aktualisieren</string>
+    <string name="action_view_logs">Logs</string>
+    <string name="action_export">Export</string>
+    <string name="action_export_logs">Protokolle exportieren</string>
+    <string name="action_export_memos">Notizen exportieren</string>
+    <string name="msg_export_success">Exportiert nach %1$s</string>
+    <string name="msg_export_failed">Export fehlgeschlagen</string>
+
+    <!-- App -->
+    <string name="app_name">Vibits</string>
+
+    <!-- Days of week -->
+    <string name="day_mon">Mo</string>
+    <string name="day_tue">Di</string>
+    <string name="day_wed">Mi</string>
+    <string name="day_thu">Do</string>
+    <string name="day_fri">Fr</string>
+    <string name="day_sat">Sa</string>
+    <string name="day_sun">So</string>
+
+    <!-- Months short -->
+    <string name="month_jan">Jan</string>
+    <string name="month_feb">Feb</string>
+    <string name="month_mar">Mär</string>
+    <string name="month_apr">Apr</string>
+    <string name="month_may">Mai</string>
+    <string name="month_jun">Jun</string>
+    <string name="month_jul">Jul</string>
+    <string name="month_aug">Aug</string>
+    <string name="month_sep">Sep</string>
+    <string name="month_oct">Okt</string>
+    <string name="month_nov">Nov</string>
+    <string name="month_dec">Dez</string>
+
+    <!-- Format strings -->
+    <string name="format_app_version">Version: %1$s</string>
+    <string name="format_credentials">Anmeldedaten: %1$s</string>
+    <string name="format_environment">Umgebung: %1$s</string>
+    <string name="format_habits_progress">%1$d von %2$d Gewohnheiten erledigt</string>
+    <string name="format_memos_db">Notizen-DB: %1$s</string>
+    <string name="format_offline_storage">Offline: %1$s</string>
+    <string name="format_memos_count">%1$d Notizen</string>
+    <string name="format_memos_today">%1$d Notizen heute</string>
+    <string name="format_memos_this_week">%1$d Notizen diese Woche</string>
+    <string name="format_memos_in_month">%1$d Notizen im %2$s</string>
+    <string name="format_memos_in_quarter">%1$d Notizen im %2$s</string>
+    <string name="format_memos_in_year">%1$d Notizen in %2$d</string>
+    <string name="action_show_memos">Notizen anzeigen</string>
+    <string name="action_hide_memos">Notizen ausblenden</string>
+    <string name="action_write">Schreiben</string>
+    <string name="format_tooltip_habits">%1$s: %2$d/%3$d Gewohnheiten</string>
+    <string name="format_tooltip_memos">%1$s: %2$d Notizen</string>
+
+    <!-- Hints -->
+    <string name="hint_add_habits_config">Fügen Sie eine Gewohnheits-Konfigurationsnotiz hinzu, um mit dem Tracking zu beginnen.</string>
+    <string name="hint_base_url">https://memos.example.com</string>
+    <string name="hint_habit_name">Gewohnheitsname</string>
+    <string name="hint_habits_config">Sport | #habits/gym\nLesen | #habits/reading</string>
+    <string name="hint_write_memo">Notiz schreiben...</string>
+
+    <!-- Labels -->
+    <string name="label_access_token">Zugriffstoken</string>
+    <string name="label_language">Sprache</string>
+    <string name="label_time_night">Nacht</string>
+    <string name="label_time_morning">Morgen</string>
+    <string name="label_time_day">Tag</string>
+    <string name="label_time_evening">Abend</string>
+    <string name="label_activity">Aktivität</string>
+    <string name="label_app_mode">App-Modus</string>
+    <string name="label_base_url">Basis-URL</string>
+    <string name="label_credentials">Anmeldedaten</string>
+    <string name="label_demo_mode">Demo-Modus</string>
+    <string name="label_environment">Umgebung</string>
+    <string name="label_habits_config">Gewohnheits-Konfiguration</string>
+    <string name="label_memos_db">Notizen-DB</string>
+    <string name="label_storage">Speicher</string>
+    <string name="label_version">Version</string>
+    <string name="label_success_rate">Erfolgsrate</string>
+    <string name="label_today">Heute</string>
+
+    <!-- Messages -->
+    <string name="msg_connection_failed">Verbindung fehlgeschlagen</string>
+    <string name="msg_delete_day_confirm">Keine Gewohnheiten ausgewählt. Der Tageseintrag wird gelöscht.</string>
+    <string name="msg_fill_all_fields">Bitte füllen Sie alle Felder aus</string>
+    <string name="msg_no_habits_yet">Noch keine Gewohnheiten konfiguriert.</string>
+    <string name="msg_no_logs">Noch keine Protokolle</string>
+    <string name="msg_no_memos_yet">Keine Notizen in diesem Zeitraum.</string>
+    <string name="msg_reset_confirm">Sind Sie sicher, dass Sie die App zurücksetzen möchten? Alle Daten werden gelöscht.</string>
+    <string name="msg_select_habit">Wählen Sie mindestens eine Gewohnheit aus.</string>
+    <string name="msg_mark_done_confirm">"%1$s" als erledigt für %2$s markieren?</string>
+    <string name="msg_mark_not_done_confirm">Erledigung von "%1$s" am %2$s entfernen?</string>
+    <string name="msg_restart_required">Neustart erforderlich, um die Sprachänderung anzuwenden</string>
+
+    <!-- Language selection -->
+    <string name="language_system">System</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_hindi">हिन्दी</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_portuguese">Português</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_french">Français</string>
+
+    <!-- Theme selection -->
+    <string name="label_theme">Design</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_dark">Dunkel</string>
+
+    <!-- Mode selection -->
+    <string name="mode_select_title">Modus wählen</string>
+    <string name="mode_select_subtitle">Wählen Sie, wie Sie die App nutzen möchten</string>
+    <string name="mode_online_title">Online</string>
+    <string name="mode_online_desc">Mit Ihrem Memos-Server für vollständige Synchronisierung verbinden</string>
+    <string name="mode_offline_title">Offline</string>
+    <string name="mode_offline_desc">Daten lokal ohne Serververbindung speichern</string>
+    <string name="mode_demo_title">Demo</string>
+    <string name="mode_demo_desc">App mit Beispieldaten testen</string>
+
+    <!-- Navigation -->
+    <string name="nav_feed">Feed</string>
+    <string name="nav_habits">Gewohnheiten</string>
+    <string name="nav_memos">Notizen</string>
+    <string name="nav_settings">Einstellungen</string>
+
+    <!-- Privacy -->
+    <string name="privacy_hidden_content">Versteckter Inhalt</string>
+    <string name="privacy_hidden_habit">Versteckte Gewohnheit</string>
+
+    <!-- Time periods -->
+    <string name="time_month">Monat</string>
+    <string name="time_months">Monate</string>
+    <string name="time_quarter">Quartal</string>
+    <string name="time_quarters">Quartale</string>
+    <string name="time_week">Woche</string>
+    <string name="time_weeks">Wochen</string>
+    <string name="time_year">Jahr</string>
+    <string name="time_years">Jahre</string>
+
+    <!-- Titles -->
+    <string name="title_create_day">Tag erstellen</string>
+    <string name="title_delete_day">Tag löschen?</string>
+    <string name="title_delete_memo">Notiz löschen?</string>
+    <string name="title_edit_day">Tag bearbeiten</string>
+    <string name="title_edit_memo">Notiz bearbeiten</string>
+    <string name="title_logs">Protokolle (%1$d)</string>
+    <string name="title_new_memo">Neue Notiz</string>
+    <string name="title_mark_done">Als erledigt markieren?</string>
+    <string name="title_mark_not_done">Als nicht erledigt markieren?</string>
+    <string name="title_update_day">Tag aktualisieren</string>
+
+    <!-- Demo habits -->
+    <string name="demo_habit_exercise">Sport</string>
+    <string name="demo_habit_reading">Lesen</string>
+    <string name="demo_habit_meditation">Meditation</string>
+    <string name="demo_habit_water">Wasser trinken</string>
+    <string name="demo_habit_learning">Lernen</string>
+    <string name="demo_habit_walking">10K Schritte</string>
+    <string name="demo_habit_no_sugar">Kein Zucker</string>
+    <string name="demo_habit_early_sleep">Vor 23 Uhr schlafen</string>
+</resources>
