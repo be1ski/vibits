@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.StickyNote2
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -112,7 +112,7 @@ internal fun MemosBottomNavigation(
       },
       icon = {
         Icon(
-          imageVector = Icons.Filled.Description,
+          imageVector = Icons.Filled.StickyNote2,
           contentDescription = stringResource(Res.string.nav_memos)
         )
       },
