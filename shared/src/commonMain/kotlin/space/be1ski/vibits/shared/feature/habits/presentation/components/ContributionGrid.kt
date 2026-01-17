@@ -64,7 +64,7 @@ import space.be1ski.vibits.shared.day_thu
 import space.be1ski.vibits.shared.day_tue
 import space.be1ski.vibits.shared.day_wed
 import space.be1ski.vibits.shared.format_tooltip_habits
-import space.be1ski.vibits.shared.format_tooltip_posts
+import space.be1ski.vibits.shared.format_tooltip_memos
 import space.be1ski.vibits.shared.core.platform.LocalDateFormatter
 
 internal object ChartDimens {
@@ -453,7 +453,7 @@ private fun ContributionGridTooltip(
       val tooltipText = if (tooltip.day.totalHabits > 0) {
         stringResource(Res.string.format_tooltip_habits, tooltip.day.date, tooltip.day.count, tooltip.day.totalHabits)
       } else {
-        stringResource(Res.string.format_tooltip_posts, tooltip.day.date, tooltip.day.count)
+        stringResource(Res.string.format_tooltip_memos, tooltip.day.date, tooltip.day.count)
       }
       Text(tooltipText, style = MaterialTheme.typography.labelMedium)
       if (tooltip.day.totalHabits > 0) {
