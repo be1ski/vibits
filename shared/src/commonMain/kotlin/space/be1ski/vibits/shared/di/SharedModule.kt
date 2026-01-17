@@ -6,8 +6,6 @@ import space.be1ski.vibits.shared.core.network.createHttpClient
 import space.be1ski.vibits.shared.core.platform.LocaleProvider
 import space.be1ski.vibits.shared.data.local.AppDetailsProvider
 import space.be1ski.vibits.shared.domain.usecase.LoadAppDetailsUseCase
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosUseCases
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsUseCases
 import space.be1ski.vibits.shared.feature.auth.data.CredentialsRepositoryImpl
 import space.be1ski.vibits.shared.feature.auth.data.CredentialsStore
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
@@ -36,6 +34,7 @@ import space.be1ski.vibits.shared.feature.memos.domain.usecase.DeleteMemoUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadCachedMemosUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadMemosUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.UpdateMemoUseCase
+import space.be1ski.vibits.shared.feature.memos.presentation.MemosUseCases
 import space.be1ski.vibits.shared.feature.mode.data.AppModeRepositoryImpl
 import space.be1ski.vibits.shared.feature.mode.data.AppModeStore
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
@@ -51,6 +50,7 @@ import space.be1ski.vibits.shared.feature.settings.domain.usecase.LoadPreference
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveLanguageUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveThemeUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveTimeRangeTabUseCase
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsUseCases
 
 /**
  * Koin module that wires shared dependencies.
@@ -124,5 +124,4 @@ fun sharedModule(): Module =
         saveTheme = get(),
       )
     }
-
   }

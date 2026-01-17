@@ -37,9 +37,10 @@ private fun AutoSizeText(
 
   Text(
     text = text,
-    modifier = modifier.drawWithContent {
-      if (readyToDraw) drawContent()
-    },
+    modifier =
+      modifier.drawWithContent {
+        if (readyToDraw) drawContent()
+      },
     style = scaledStyle,
     maxLines = 1,
     softWrap = false,

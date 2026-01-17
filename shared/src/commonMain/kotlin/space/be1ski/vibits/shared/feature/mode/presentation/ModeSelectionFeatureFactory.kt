@@ -15,9 +15,10 @@ fun createModeSelectionFeature(
   FeatureImpl(
     initialState = initialState,
     reducer = modeSelectionReducer,
-    effectHandler = ModeSelectionEffectHandler(
-      validateCredentials = validateCredentials,
-      saveCredentials = saveCredentials,
-      saveAppMode = saveAppMode,
-    ),
+    effectHandler =
+      ModeSelectionEffectHandler(
+        validateCredentials = validateCredentials,
+        saveCredentials = saveCredentials,
+        saveAppMode = saveAppMode,
+      ),
   )

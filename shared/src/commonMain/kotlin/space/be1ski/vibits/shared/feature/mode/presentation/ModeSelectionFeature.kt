@@ -5,19 +5,29 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 sealed interface ModeSelectionAction {
   // Dialog lifecycle
   data object ShowCredentialsDialog : ModeSelectionAction
+
   data object DismissCredentialsDialog : ModeSelectionAction
 
   // Credentials input
-  data class UpdateBaseUrl(val value: String) : ModeSelectionAction
-  data class UpdateToken(val value: String) : ModeSelectionAction
+  data class UpdateBaseUrl(
+    val value: String,
+  ) : ModeSelectionAction
+
+  data class UpdateToken(
+    val value: String,
+  ) : ModeSelectionAction
 
   // Validation flow
   data object Submit : ModeSelectionAction
+
   data object ValidationSucceeded : ModeSelectionAction
+
   data object ValidationFailed : ModeSelectionAction
 
   // Mode selection (for offline/demo)
-  data class SelectMode(val mode: AppMode) : ModeSelectionAction
+  data class SelectMode(
+    val mode: AppMode,
+  ) : ModeSelectionAction
 }
 
 data class ModeSelectionState(
@@ -45,8 +55,12 @@ sealed interface ModeSelectionEffect {
     val token: String,
   ) : ModeSelectionEffect
 
-  data class SaveMode(val mode: AppMode) : ModeSelectionEffect
+  data class SaveMode(
+    val mode: AppMode,
+  ) : ModeSelectionEffect
 
   // Parent notifications (observed by AppRoot)
-  data class NotifyModeSelected(val mode: AppMode) : ModeSelectionEffect
+  data class NotifyModeSelected(
+    val mode: AppMode,
+  ) : ModeSelectionEffect
 }
