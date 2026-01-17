@@ -76,8 +76,10 @@ import space.be1ski.vibits.shared.feature.settings.presentation.createSettingsFe
 @Composable
 fun VibitsApp(
   currentTheme: AppTheme,
+  currentLanguage: AppLanguage,
   onResetApp: () -> Unit = {},
   onThemeChanged: (AppTheme) -> Unit = {},
+  onLanguageChanged: (AppLanguage) -> Unit = {},
 ) {
   val loadPreferencesUseCase: LoadPreferencesUseCase = koinInject()
   val saveTimeRangeTabUseCase: SaveTimeRangeTabUseCase = koinInject()
@@ -99,7 +101,6 @@ fun VibitsApp(
   val calculateSuccessRate: CalculateSuccessRateUseCase = koinInject()
 
   val initialPrefs = remember { loadPreferencesUseCase() }
-  val initialLanguage = remember { initialPrefs.language }
   val initialMode = remember { loadAppModeUseCase() }
   val appState =
     remember {
@@ -194,6 +195,9 @@ fun VibitsApp(
         is SettingsEffect.NotifyThemeChanged -> {
           onThemeChanged(effect.theme)
         }
+        is SettingsEffect.NotifyLanguageChanged -> {
+          onLanguageChanged(effect.language)
+        }
         is SettingsEffect.NotifyDialogClosed -> {
           // Dialog closed, nothing extra needed
         }
@@ -212,7 +216,7 @@ fun VibitsApp(
           baseUrl = memosState.baseUrl,
           token = memosState.token,
           appMode = appState.appMode,
-          language = initialLanguage,
+          language = currentLanguage,
           theme = currentTheme,
         ),
       )
@@ -231,7 +235,7 @@ fun VibitsApp(
       habitsState = habitsState,
       onHabitsAction = habitsFeature::send,
       calculateSuccessRate = calculateSuccessRate,
-      language = initialLanguage,
+      language = currentLanguage,
       theme = currentTheme,
     )
     SettingsDialog(

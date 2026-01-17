@@ -2,6 +2,7 @@ package space.be1ski.vibits.shared.app
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -13,6 +14,7 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.FixInvalidOnlineModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionScreen
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.LoadPreferencesUseCase
 
@@ -31,6 +33,7 @@ fun AppRoot() {
 
   var appMode by remember { mutableStateOf(fixInvalidOnlineModeUseCase()) }
   var appTheme by remember { mutableStateOf(initialPrefs.theme) }
+  var appLanguage by remember { mutableStateOf(initialPrefs.language) }
 
   val systemDarkTheme = rememberSystemDarkTheme()
   val darkTheme =
@@ -40,22 +43,30 @@ fun AppRoot() {
       AppTheme.DARK -> true
     }
 
-  VibitsTheme(darkTheme = darkTheme) {
-    when (appMode) {
-      AppMode.NOT_SELECTED -> {
-        ModeSelectionScreen(
-          onModeSelected = { selectedMode ->
-            saveAppModeUseCase(selectedMode)
-            appMode = selectedMode
-          },
-        )
-      }
-      AppMode.ONLINE, AppMode.OFFLINE, AppMode.DEMO -> {
-        VibitsApp(
-          currentTheme = appTheme,
-          onResetApp = { appMode = AppMode.NOT_SELECTED },
-          onThemeChanged = { theme -> appTheme = theme },
-        )
+  // Use key to force full recomposition when language changes
+  key(appLanguage) {
+    VibitsTheme(darkTheme = darkTheme) {
+      when (appMode) {
+        AppMode.NOT_SELECTED -> {
+          ModeSelectionScreen(
+            onModeSelected = { selectedMode ->
+              saveAppModeUseCase(selectedMode)
+              appMode = selectedMode
+            },
+          )
+        }
+        AppMode.ONLINE, AppMode.OFFLINE, AppMode.DEMO -> {
+          VibitsApp(
+            currentTheme = appTheme,
+            currentLanguage = appLanguage,
+            onResetApp = { appMode = AppMode.NOT_SELECTED },
+            onThemeChanged = { theme -> appTheme = theme },
+            onLanguageChanged = { language ->
+              localeProvider.configureLocale(language)
+              appLanguage = language
+            },
+          )
+        }
       }
     }
   }
