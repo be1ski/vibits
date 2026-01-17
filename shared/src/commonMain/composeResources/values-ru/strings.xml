@@ -55,7 +55,16 @@
     <string name="format_memos_db">Memos DB: %1$s</string>
     <string name="format_offline_storage">Офлайн: %1$s</string>
     <string name="format_tooltip_habits">%1$s: привычек %2$d/%3$d</string>
-    <string name="format_tooltip_posts">%1$s: постов %2$d</string>
+    <string name="format_tooltip_memos">%1$s: мемосов %2$d</string>
+    <string name="format_memos_count">%1$d мемосов</string>
+    <string name="format_memos_today">%1$d мемосов сегодня</string>
+    <string name="format_memos_this_week">%1$d мемосов за неделю</string>
+    <string name="format_memos_in_month">%1$d мемосов за %2$s</string>
+    <string name="format_memos_in_quarter">%1$d мемосов за %2$s</string>
+    <string name="format_memos_in_year">%1$d мемосов за %2$d</string>
+    <string name="action_show_memos">Показать мемосы</string>
+    <string name="action_hide_memos">Скрыть мемосы</string>
+    <string name="action_write">Написать</string>
 
     <!-- Hints -->
     <string name="hint_add_habits_config">Добавьте заметку с конфигурацией привычек, чтобы начать отслеживание.</string>
@@ -103,7 +112,7 @@
     <!-- Navigation -->
     <string name="nav_feed">Лента</string>
     <string name="nav_habits">Привычки</string>
-    <string name="nav_posts">Посты</string>
+    <string name="nav_memos">Мемосы</string>
     <string name="nav_settings">Настройки</string>
 
     <!-- Privacy -->

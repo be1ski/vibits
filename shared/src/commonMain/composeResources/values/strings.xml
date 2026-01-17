@@ -54,12 +54,17 @@
     <string name="format_habits_progress">%1$d of %2$d habits done</string>
     <string name="format_memos_db">Memos DB: %1$s</string>
     <string name="format_offline_storage">Offline: %1$s</string>
-    <string name="format_posts_count">%1$d posts</string>
-    <string name="format_posts_today">%1$d posts today</string>
-    <string name="action_show_posts">Show posts</string>
-    <string name="action_hide_posts">Hide posts</string>
+    <string name="format_memos_count">%1$d memos</string>
+    <string name="format_memos_today">%1$d memos today</string>
+    <string name="format_memos_this_week">%1$d memos this week</string>
+    <string name="format_memos_in_month">%1$d memos in %2$s</string>
+    <string name="format_memos_in_quarter">%1$d memos in %2$s</string>
+    <string name="format_memos_in_year">%1$d memos in %2$d</string>
+    <string name="action_show_memos">Show memos</string>
+    <string name="action_hide_memos">Hide memos</string>
+    <string name="action_write">Write</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d habits</string>
-    <string name="format_tooltip_posts">%1$s: %2$d posts</string>
+    <string name="format_tooltip_memos">%1$s: %2$d memos</string>
 
     <!-- Hints -->
     <string name="hint_add_habits_config">Add a habits config memo to start tracking.</string>
@@ -93,7 +98,7 @@
     <string name="msg_fill_all_fields">Please fill in all fields</string>
     <string name="msg_no_habits_yet">No habits configured yet.</string>
     <string name="msg_no_logs">No logs yet</string>
-    <string name="msg_no_posts_yet">No posts in this period.</string>
+    <string name="msg_no_memos_yet">No memos in this period.</string>
     <string name="msg_reset_confirm">Are you sure you want to reset the app? This will clear all data.</string>
     <string name="msg_select_habit">Select at least one habit.</string>
     <string name="msg_mark_done_confirm">Mark "%1$s" as completed for %2$s?</string>
@@ -112,7 +117,7 @@
     <!-- Navigation -->
     <string name="nav_feed">Feed</string>
     <string name="nav_habits">Habits</string>
-    <string name="nav_posts">Posts</string>
+    <string name="nav_memos">Memos</string>
     <string name="nav_settings">Settings</string>
 
     <!-- Privacy -->

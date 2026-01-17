@@ -53,14 +53,14 @@ import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_configure_habits
 import space.be1ski.vibits.shared.action_track
 import space.be1ski.vibits.shared.format_habits_progress
-import space.be1ski.vibits.shared.format_posts_count
-import space.be1ski.vibits.shared.format_posts_today
+import space.be1ski.vibits.shared.format_memos_count
+import space.be1ski.vibits.shared.format_memos_today
 import space.be1ski.vibits.shared.hint_add_habits_config
 import space.be1ski.vibits.shared.label_activity
 import space.be1ski.vibits.shared.label_habits_config
 import space.be1ski.vibits.shared.msg_no_habits_yet
-import space.be1ski.vibits.shared.action_show_posts
-import space.be1ski.vibits.shared.action_hide_posts
+import space.be1ski.vibits.shared.action_show_memos
+import space.be1ski.vibits.shared.action_hide_memos
 import space.be1ski.vibits.shared.label_time_night
 import space.be1ski.vibits.shared.label_time_morning
 import space.be1ski.vibits.shared.label_time_day
@@ -174,11 +174,11 @@ internal fun StatsPostsInfoCard(
   if (totalPosts == 0 && todayPosts == 0) return
 
   val secondaryText = if (todayPosts > 0) {
-    stringResource(Res.string.format_posts_today, todayPosts)
+    stringResource(Res.string.format_memos_today, todayPosts)
   } else null
 
   StatsInfoCardLayout(
-    primaryText = stringResource(Res.string.format_posts_count, totalPosts),
+    primaryText = stringResource(Res.string.format_memos_count, totalPosts),
     secondaryText = secondaryText
   )
 }
@@ -386,9 +386,9 @@ internal fun StatsCollapsiblePosts(
     TextButton(onClick = { onExpandedChange(!expanded) }) {
       Text(
         if (expanded) {
-          stringResource(Res.string.action_hide_posts)
+          stringResource(Res.string.action_hide_memos)
         } else {
-          stringResource(Res.string.action_show_posts)
+          stringResource(Res.string.action_show_memos)
         }
       )
     }
