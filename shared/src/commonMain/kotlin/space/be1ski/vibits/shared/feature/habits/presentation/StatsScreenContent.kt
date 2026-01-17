@@ -365,8 +365,8 @@ internal fun StatsCollapsiblePosts(
   val state = derived.state
   if (state.activityMode != ActivityMode.Posts) return
 
-  val periodMemos = rememberPeriodMemos(state.memos, state.range, derived.timeZone)
-  if (periodMemos.isEmpty()) return
+  val posts = derived.periodPosts
+  if (posts.isEmpty()) return
 
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
     TextButton(onClick = { onExpandedChange(!expanded) }) {
@@ -384,9 +384,9 @@ internal fun StatsCollapsiblePosts(
           .heightIn(max = POSTS_LIST_MAX_HEIGHT)
           .verticalScroll(rememberScrollState())
       ) {
-        periodMemos.forEachIndexed { index, memo ->
+        posts.forEachIndexed { index, memo ->
           CompactPostRow(memo = memo, timeZone = derived.timeZone)
-          if (index < periodMemos.lastIndex) {
+          if (index < posts.lastIndex) {
             HorizontalDivider(
               modifier = Modifier.padding(vertical = Indent.x2s),
               color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = DIVIDER_ALPHA)
@@ -400,44 +400,6 @@ internal fun StatsCollapsiblePosts(
 
 private val POSTS_LIST_MAX_HEIGHT = 200.dp
 private const val DIVIDER_ALPHA = 0.5f
-
-@Composable
-private fun rememberPeriodMemos(
-  memos: List<Memo>,
-  range: ActivityRange,
-  timeZone: TimeZone
-): List<Memo> = remember(memos, range, timeZone) {
-  val (start, end) = when (range) {
-    is ActivityRange.Week -> range.startDate to range.startDate.plus(DatePeriod(days = DAYS_IN_WEEK - 1))
-    is ActivityRange.Month -> {
-      val start = kotlinx.datetime.LocalDate(range.year, range.month, 1)
-      val nextMonth = start.plus(DatePeriod(months = 1))
-      val end = nextMonth.plus(DatePeriod(days = -1))
-      start to end
-    }
-    is ActivityRange.Quarter -> {
-      val startMonth = (range.index - 1) * MONTHS_PER_QUARTER + 1
-      val start = kotlinx.datetime.LocalDate(range.year, startMonth, 1)
-      val end = start.plus(DatePeriod(months = MONTHS_PER_QUARTER)).plus(DatePeriod(days = -1))
-      start to end
-    }
-    is ActivityRange.Year -> {
-      val start = kotlinx.datetime.LocalDate(range.year, JANUARY, 1)
-      val end = kotlinx.datetime.LocalDate(range.year, DECEMBER, LAST_DAY_OF_DECEMBER)
-      start to end
-    }
-  }
-  CountDailyPostsUseCase.filterPosts(memos).filter { memo ->
-    val instant = memo.createTime ?: memo.updateTime ?: return@filter false
-    val date = instant.toLocalDateTime(timeZone).date
-    date in start..end
-  }.sortedByDescending { it.createTime ?: it.updateTime }
-}
-
-private const val MONTHS_PER_QUARTER = 3
-private const val JANUARY = 1
-private const val DECEMBER = 12
-private const val LAST_DAY_OF_DECEMBER = 31
 
 @Composable
 private fun CompactPostRow(memo: Memo, timeZone: TimeZone) {
