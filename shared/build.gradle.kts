@@ -128,6 +128,18 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().con
   }
 }
 
+// Ensure KSP runs before Kotlin compilation for all targets
+// This fixes the expect/actual resolution for Room-generated code
+tasks.configureEach {
+  if (name.startsWith("compileKotlin") && !name.contains("Test")) {
+    val kspTaskName = name.replace("compileKotlin", "ksp")
+    val kspTask = tasks.findByName(kspTaskName)
+    if (kspTask != null) {
+      dependsOn(kspTask)
+    }
+  }
+}
+
 tasks.register<JacocoReport>("jacocoDesktopTestReport") {
   dependsOn("desktopTest")
   executionData.setFrom(fileTree(layout.buildDirectory).include("jacoco/desktopTest.exec"))
