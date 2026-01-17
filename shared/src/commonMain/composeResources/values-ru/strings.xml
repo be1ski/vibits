@@ -33,6 +33,20 @@
     <string name="day_sat">Сб</string>
     <string name="day_sun">Вс</string>
 
+    <!-- Months short -->
+    <string name="month_jan">Янв</string>
+    <string name="month_feb">Фев</string>
+    <string name="month_mar">Мар</string>
+    <string name="month_apr">Апр</string>
+    <string name="month_may">Май</string>
+    <string name="month_jun">Июн</string>
+    <string name="month_jul">Июл</string>
+    <string name="month_aug">Авг</string>
+    <string name="month_sep">Сен</string>
+    <string name="month_oct">Окт</string>
+    <string name="month_nov">Ноя</string>
+    <string name="month_dec">Дек</string>
+
     <!-- Format strings -->
     <string name="format_app_version">Версия: %1$s</string>
     <string name="format_credentials">Креденшелы: %1$s</string>
