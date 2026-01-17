@@ -11,11 +11,21 @@ Vibits is a habit tracker powered by Memos, built with Kotlin Multiplatform (KMP
 
 Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if any) live under module `src/.../res`.
 
+## Dependency Injection (Metro)
+
+We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
+
+- Add `@Inject` to classes that should be created by Metro.
+- Use `@Provides` in `AppGraph` only for platform-specific classes (expect/actual).
+- Use `@Binds` to bind implementations to interfaces.
+- Scope singletons with `@SingleIn(AppScope::class)`.
+
 ## Build, Test, and Development Commands
 
+- `./gradlew checkAll` — run all checks (ktlint, detekt, compile, tests).
+- `./gradlew installGitHooks` — install pre-commit hook that runs `checkAll`.
 - `./gradlew :desktopApp:run` — run the desktop app locally.
 - `./gradlew :androidApp:installDebug` — build and install the Android app on a device/emulator.
-- `./gradlew :shared:compileKotlinDesktop` — fast compile check for shared code.
 
 ## Coding Style & Naming Conventions
 
@@ -63,25 +73,17 @@ Tests must stay useful and up-to-date. Follow these rules:
 
 ## Linting & Formatting
 
-**MANDATORY:** Run lints and formatting before every commit and fix all issues.
+**Pre-commit hook handles all checks automatically.** Install it once with `./gradlew installGitHooks`.
 
-- Run ktlint format: `./gradlew ktlintFormat` — auto-fixes code style issues
-- Run ktlint check: `./gradlew ktlintCheck` — verifies code style
-- Run detekt: `./gradlew detekt` — static analysis
+- `./gradlew ktlintFormat` — auto-fix code style issues before committing.
+- `./gradlew checkAll` — manually run all checks if needed.
 
-All issues must be resolved before committing. Zero tolerance for lint warnings.
-
-Use `@Suppress` annotations only when the lint rule doesn't apply (e.g., `LongParameterList` for Composables, `ktlint:standard:function-naming` for factory functions).
+Use `@Suppress` annotations only when the lint rule doesn't apply (e.g., `LongParameterList` for DI containers, `ktlint:standard:function-naming` for factory functions).
 
 ## Commit & Pull Request Guidelines
 
-- Commit messages follow the current history: imperative, concise, single topic (e.g., "Simplify README").
-- Use a transparent flow: make changes, run the relevant app command, verify behavior, then commit and push.
-- **Pre-commit checklist:**
-  1. Format code: `./gradlew ktlintFormat`
-  2. Run lints: `./gradlew ktlintCheck detekt` — fix all issues
-  3. Run tests: `./gradlew :shared:desktopTest`
-  4. Verify the app runs: `./gradlew :desktopApp:run`
+- Commit messages: imperative, concise, single topic (e.g., "Simplify README").
+- Pre-commit hook runs `checkAll` automatically — no manual checks needed.
 - PRs (if used) should include a summary, testing performed, and screenshots for UI changes.
 
 ## Security & Configuration Tips
