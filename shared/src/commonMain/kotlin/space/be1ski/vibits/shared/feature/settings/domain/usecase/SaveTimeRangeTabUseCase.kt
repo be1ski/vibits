@@ -1,13 +1,12 @@
 package space.be1ski.vibits.shared.feature.settings.domain.usecase
 
-import dev.zacsweers.metro.Inject
+import javax.inject.Inject
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
 
 enum class TimeRangeScreen { HABITS, POSTS }
 
-@Inject
-class SaveTimeRangeTabUseCase(
+class SaveTimeRangeTabUseCase @Inject constructor(
   private val preferencesRepository: PreferencesRepository,
 ) {
   operator fun invoke(
