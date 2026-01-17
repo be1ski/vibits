@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.collectAsState
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -35,9 +36,6 @@ import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_cancel
 import space.be1ski.vibits.shared.action_save
 import space.be1ski.vibits.shared.core.ui.Indent
-import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.hint_base_url
 import space.be1ski.vibits.shared.label_access_token
@@ -55,6 +53,7 @@ import space.be1ski.vibits.shared.msg_fill_all_fields
 
 @Composable
 fun ModeSelectionScreen(onModeSelected: (AppMode) -> Unit) {
+  val credentialsStateHolder: CredentialsSetupStateHolder = koinInject()
   var showCredentialsDialog by remember { mutableStateOf(false) }
 
   Column(
@@ -107,8 +106,13 @@ fun ModeSelectionScreen(onModeSelected: (AppMode) -> Unit) {
 
   if (showCredentialsDialog) {
     CredentialsSetupDialog(
-      onDismiss = { showCredentialsDialog = false },
+      stateHolder = credentialsStateHolder,
+      onDismiss = {
+        credentialsStateHolder.reset()
+        showCredentialsDialog = false
+      },
       onSuccess = {
+        credentialsStateHolder.reset()
         showCredentialsDialog = false
         onModeSelected(AppMode.ONLINE)
       },
@@ -119,50 +123,39 @@ fun ModeSelectionScreen(onModeSelected: (AppMode) -> Unit) {
 @Suppress("LongMethod")
 @Composable
 private fun CredentialsSetupDialog(
+  stateHolder: CredentialsSetupStateHolder,
   onDismiss: () -> Unit,
   onSuccess: () -> Unit,
 ) {
-  val validateCredentialsUseCase: ValidateCredentialsUseCase = koinInject()
-  val saveCredentialsUseCase: SaveCredentialsUseCase = koinInject()
+  val state by stateHolder.state.collectAsState()
   val scope = rememberCoroutineScope()
-
-  var baseUrl by remember { mutableStateOf("") }
-  var token by remember { mutableStateOf("") }
-  var isLoading by remember { mutableStateOf(false) }
-  var errorMessage by remember { mutableStateOf<String?>(null) }
   val fillAllFieldsMessage = stringResource(Res.string.msg_fill_all_fields)
   val connectionFailedMessage = stringResource(Res.string.msg_connection_failed)
 
   AlertDialog(
-    onDismissRequest = { if (!isLoading) onDismiss() },
+    onDismissRequest = { if (!state.isLoading) onDismiss() },
     title = { Text(stringResource(Res.string.mode_online_title)) },
     text = {
       Column(verticalArrangement = Arrangement.spacedBy(Indent.s)) {
         TextField(
-          value = baseUrl,
-          onValueChange = {
-            baseUrl = it
-            errorMessage = null
-          },
+          value = state.baseUrl,
+          onValueChange = { stateHolder.updateBaseUrl(it) },
           label = { Text(stringResource(Res.string.label_base_url)) },
           placeholder = { Text(stringResource(Res.string.hint_base_url)) },
-          enabled = !isLoading,
+          enabled = !state.isLoading,
           modifier = Modifier.fillMaxWidth(),
           singleLine = true,
         )
         TextField(
-          value = token,
-          onValueChange = {
-            token = it
-            errorMessage = null
-          },
+          value = state.token,
+          onValueChange = { stateHolder.updateToken(it) },
           label = { Text(stringResource(Res.string.label_access_token)) },
           visualTransformation = PasswordVisualTransformation(),
-          enabled = !isLoading,
+          enabled = !state.isLoading,
           modifier = Modifier.fillMaxWidth(),
           singleLine = true,
         )
-        errorMessage?.let { error ->
+        state.errorMessage?.let { error ->
           Text(
             text = error,
             color = MaterialTheme.colorScheme.error,
@@ -174,29 +167,22 @@ private fun CredentialsSetupDialog(
     confirmButton = {
       Button(
         onClick = {
-          if (baseUrl.isBlank() || token.isBlank()) {
-            errorMessage = fillAllFieldsMessage
+          if (state.baseUrl.isBlank() || state.token.isBlank()) {
+            stateHolder.setError(fillAllFieldsMessage)
             return@Button
           }
-          isLoading = true
-          errorMessage = null
           scope.launch {
-            val result = validateCredentialsUseCase(baseUrl.trim(), token.trim())
-            isLoading = false
-            result.fold(
-              onSuccess = {
-                saveCredentialsUseCase(Credentials(baseUrl.trim(), token.trim()))
-                onSuccess()
-              },
-              onFailure = { e ->
-                errorMessage = e.message ?: connectionFailedMessage
-              },
-            )
+            val success = stateHolder.validateAndSave()
+            if (success) {
+              onSuccess()
+            } else if (state.errorMessage == null) {
+              stateHolder.setError(connectionFailedMessage)
+            }
           }
         },
-        enabled = !isLoading,
+        enabled = !state.isLoading,
       ) {
-        if (isLoading) {
+        if (state.isLoading) {
           CircularProgressIndicator(
             modifier = Modifier.size(16.dp),
             strokeWidth = 2.dp,
@@ -210,7 +196,7 @@ private fun CredentialsSetupDialog(
     dismissButton = {
       TextButton(
         onClick = onDismiss,
-        enabled = !isLoading,
+        enabled = !state.isLoading,
       ) {
         Text(stringResource(Res.string.action_cancel))
       }
