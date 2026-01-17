@@ -94,7 +94,16 @@ class NavigateActivityRangeUseCaseTest {
 
     val label = useCase.formatLabel(range)
 
-    assertEquals("Jan 8 2024 - Jan 14 2024", label)
+    assertEquals("Jan 8 - Jan 14 (2024)", label)
+  }
+
+  @Test
+  fun `formats week label crossing year boundary`() {
+    val range = ActivityRange.Week(startDate = LocalDate(2024, 12, 30))
+
+    val label = useCase.formatLabel(range)
+
+    assertEquals("Dec 30, 2024 – Jan 5, 2025", label)
   }
 
   @Test
