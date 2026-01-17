@@ -87,6 +87,7 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect> =
         effect(SettingsEffect.SwitchMode(AppMode.ONLINE))
         effect(SettingsEffect.SaveLanguage(state.selectedLanguage))
         effect(SettingsEffect.SaveTheme(state.selectedTheme))
+        effect(SettingsEffect.NotifyLanguageChanged(state.selectedLanguage))
         effect(SettingsEffect.NotifyThemeChanged(state.selectedTheme))
         effect(SettingsEffect.NotifyCredentialsSaved(state.editBaseUrl, state.editToken))
       }
@@ -146,6 +147,7 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect> =
           effect(SettingsEffect.SwitchMode(state.appMode))
           effect(SettingsEffect.SaveLanguage(state.selectedLanguage))
           effect(SettingsEffect.SaveTheme(state.selectedTheme))
+          effect(SettingsEffect.NotifyLanguageChanged(state.selectedLanguage))
           effect(SettingsEffect.NotifyThemeChanged(state.selectedTheme))
           effect(SettingsEffect.NotifyCredentialsSaved(state.editBaseUrl, state.editToken))
         }

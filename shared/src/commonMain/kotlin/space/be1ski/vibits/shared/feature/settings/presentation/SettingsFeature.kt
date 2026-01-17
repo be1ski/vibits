@@ -127,7 +127,7 @@ sealed interface SettingsEffect {
   ) : SettingsEffect
 
   data class NotifyLanguageChanged(
-    val requiresRestart: Boolean,
+    val language: AppLanguage,
   ) : SettingsEffect
 
   data class NotifyThemeChanged(
