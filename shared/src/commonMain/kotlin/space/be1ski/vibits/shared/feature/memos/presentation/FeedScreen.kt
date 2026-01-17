@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import space.be1ski.vibits.shared.core.platform.DateFormatter
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.core.ui.Indent
 
@@ -138,9 +139,6 @@ fun FeedScreen(
 
 private fun memoDateLabel(memo: Memo, timeZone: TimeZone): String {
   val instant = memo.updateTime ?: memo.createTime ?: return ""
-  val dateTime = instant.toLocalDateTime(timeZone)
-  val hour = dateTime.hour.toString().padStart(2, '0')
-  val minute = dateTime.minute.toString().padStart(2, '0')
-  return "${dateTime.date} $hour:$minute"
+  return DateFormatter.dateTime(instant.toLocalDateTime(timeZone))
 }
 
