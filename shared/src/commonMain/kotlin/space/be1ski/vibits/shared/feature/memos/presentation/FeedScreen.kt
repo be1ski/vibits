@@ -143,3 +143,4 @@ private fun memoDateLabel(memo: Memo, timeZone: TimeZone): String {
   val minute = dateTime.minute.toString().padStart(2, '0')
   return "${dateTime.date} $hour:$minute"
 }
+

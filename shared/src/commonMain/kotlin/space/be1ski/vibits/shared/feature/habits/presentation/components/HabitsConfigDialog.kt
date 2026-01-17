@@ -178,3 +178,4 @@ private fun ColorCircle(
       .clickable(onClick = onClick)
   )
 }
+

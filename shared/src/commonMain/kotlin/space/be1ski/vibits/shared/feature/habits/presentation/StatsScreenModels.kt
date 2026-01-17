@@ -21,7 +21,8 @@ data class StatsScreenState(
   val useVerticalScroll: Boolean = true,
   val isRefreshing: Boolean = false,
   val enablePullRefresh: Boolean = true,
-  val demoMode: Boolean = false
+  val demoMode: Boolean = false,
+  val postsListExpanded: Boolean = false
 )
 
 internal data class HabitActivitySectionState(

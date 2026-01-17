@@ -30,4 +30,5 @@ internal class VibitsAppUiState(
   var editMemoContent by mutableStateOf("")
   var editMemoTarget by mutableStateOf<Memo?>(null)
   var appMode by mutableStateOf(AppMode.NotSelected)
+  var postsListExpanded by mutableStateOf(false)
 }

@@ -17,10 +17,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -30,20 +33,38 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_configure_habits
 import space.be1ski.vibits.shared.action_track
 import space.be1ski.vibits.shared.format_habits_progress
+import space.be1ski.vibits.shared.format_posts_count
+import space.be1ski.vibits.shared.format_posts_today
 import space.be1ski.vibits.shared.hint_add_habits_config
 import space.be1ski.vibits.shared.label_activity
 import space.be1ski.vibits.shared.label_habits_config
 import space.be1ski.vibits.shared.msg_no_habits_yet
+import space.be1ski.vibits.shared.action_show_posts
+import space.be1ski.vibits.shared.action_hide_posts
+import space.be1ski.vibits.shared.label_time_night
+import space.be1ski.vibits.shared.label_time_morning
+import space.be1ski.vibits.shared.label_time_day
+import space.be1ski.vibits.shared.label_time_evening
+import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
@@ -149,8 +170,301 @@ internal fun StatsHabitsEmptyState(
   }
 }
 
-private const val SHIMMER_DURATION_MS = 1000
+@Composable
+internal fun StatsPostsInfoCard(
+  derived: StatsScreenDerivedState
+) {
+  val state = derived.state
+  if (state.activityMode != ActivityMode.Posts) return
+
+  val totalPosts = derived.weekData.weeks.sumOf { it.weeklyCount }
+  val todayPosts = derived.todayDay?.count ?: 0
+
+  if (totalPosts == 0 && todayPosts == 0) return
+
+  OutlinedCard(modifier = Modifier.fillMaxWidth()) {
+    Row(
+      modifier = Modifier.padding(Indent.s).fillMaxWidth(),
+      horizontalArrangement = Arrangement.SpaceBetween,
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Column(verticalArrangement = Arrangement.spacedBy(Indent.x2s)) {
+        Text(
+          stringResource(Res.string.format_posts_count, totalPosts),
+          style = MaterialTheme.typography.titleSmall
+        )
+        if (todayPosts > 0) {
+          Text(
+            stringResource(Res.string.format_posts_today, todayPosts),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+          )
+        }
+      }
+    }
+  }
+}
+
 private const val DAYS_IN_WEEK = 7
+private const val TIME_BLOCKS = 4
+private const val HOURS_PER_BLOCK = 6
+private const val INTENSITY_BASE = 0.3f
+private const val INTENSITY_RANGE = 0.7f
+
+@Composable
+private fun WeeklyPostsHeatmap(
+  memos: List<Memo>,
+  weekStart: kotlinx.datetime.LocalDate,
+  timeZone: TimeZone,
+  compactHeight: Boolean
+) {
+  val weekEnd = weekStart.plus(DatePeriod(days = DAYS_IN_WEEK - 1))
+  val countMatrix = rememberPostCountMatrix(memos, weekStart, weekEnd, timeZone)
+  val maxCount = countMatrix.maxOfOrNull { row -> row.maxOrNull() ?: 0 } ?: 0
+
+  val timeBlockLabels = listOf(
+    stringResource(Res.string.label_time_night),
+    stringResource(Res.string.label_time_morning),
+    stringResource(Res.string.label_time_day),
+    stringResource(Res.string.label_time_evening)
+  )
+
+  BoxWithConstraints {
+    val labelWidth = HABIT_LABEL_WIDTH
+    val spacing = ChartDimens.spacing(compactHeight)
+    val availableWidth = (maxWidth - labelWidth - spacing).coerceAtLeast(0.dp)
+    val layout = calculateLayout(
+      maxWidth = availableWidth,
+      columns = DAYS_IN_WEEK,
+      minColumnSize = ChartDimens.minCell(compactHeight),
+      spacing = spacing
+    )
+    val cellSize = layout.columnSize
+
+    Column(verticalArrangement = Arrangement.spacedBy(spacing)) {
+      HeatmapDayHeaders(weekStart, cellSize, labelWidth, spacing)
+      HeatmapTimeBlocks(countMatrix, maxCount, timeBlockLabels, cellSize, labelWidth, spacing)
+      HeatmapDayNumbers(weekStart, cellSize, labelWidth, spacing)
+    }
+  }
+}
+
+@Composable
+private fun rememberPostCountMatrix(
+  memos: List<Memo>,
+  weekStart: kotlinx.datetime.LocalDate,
+  weekEnd: kotlinx.datetime.LocalDate,
+  timeZone: TimeZone
+): Array<IntArray> = remember(memos, weekStart, weekEnd, timeZone) {
+  val matrix = Array(TIME_BLOCKS) { IntArray(DAYS_IN_WEEK) }
+  memos.forEach { memo ->
+    val instant = memo.createTime ?: memo.updateTime ?: return@forEach
+    val dateTime = instant.toLocalDateTime(timeZone)
+    val date = dateTime.date
+    if (date !in weekStart..weekEnd) return@forEach
+
+    val dayIndex = date.dayOfWeek.ordinal
+    val blockIndex = dateTime.hour / HOURS_PER_BLOCK
+    matrix[blockIndex][dayIndex]++
+  }
+  matrix
+}
+
+@Composable
+private fun HeatmapDayHeaders(
+  weekStart: kotlinx.datetime.LocalDate,
+  cellSize: androidx.compose.ui.unit.Dp,
+  labelWidth: androidx.compose.ui.unit.Dp,
+  spacing: androidx.compose.ui.unit.Dp
+) {
+  Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
+    Spacer(modifier = Modifier.width(labelWidth))
+    for (dayOffset in 0 until DAYS_IN_WEEK) {
+      val date = weekStart.plus(DatePeriod(days = dayOffset))
+      Box(modifier = Modifier.size(cellSize), contentAlignment = Alignment.Center) {
+        Text(date.dayOfWeek.name.take(2), style = MaterialTheme.typography.labelSmall)
+      }
+    }
+  }
+}
+
+@Suppress("LongParameterList")
+@Composable
+private fun HeatmapTimeBlocks(
+  countMatrix: Array<IntArray>,
+  maxCount: Int,
+  timeBlockLabels: List<String>,
+  cellSize: androidx.compose.ui.unit.Dp,
+  labelWidth: androidx.compose.ui.unit.Dp,
+  spacing: androidx.compose.ui.unit.Dp
+) {
+  val activeColor = AppColors.habitGradientEnd.resolve()
+  val inactiveColor = AppColors.inactiveCell.resolve()
+
+  timeBlockLabels.forEachIndexed { blockIndex, label ->
+    Row(
+      horizontalArrangement = Arrangement.spacedBy(spacing),
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Text(text = label, style = MaterialTheme.typography.bodySmall, modifier = Modifier.width(labelWidth))
+      for (dayIndex in 0 until DAYS_IN_WEEK) {
+        val count = countMatrix[blockIndex][dayIndex]
+        val intensity = if (maxCount > 0) count.toFloat() / maxCount else 0f
+        val cellColor = if (count > 0) {
+          activeColor.copy(alpha = INTENSITY_BASE + intensity * INTENSITY_RANGE)
+        } else {
+          inactiveColor
+        }
+        Box(
+          modifier = Modifier
+            .size(cellSize)
+            .background(cellColor, shape = MaterialTheme.shapes.extraSmall),
+          contentAlignment = Alignment.Center
+        ) {
+          if (count > 0) {
+            Text(
+              count.toString(),
+              style = MaterialTheme.typography.labelSmall,
+              color = MaterialTheme.colorScheme.onSurface
+            )
+          }
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun HeatmapDayNumbers(
+  weekStart: kotlinx.datetime.LocalDate,
+  cellSize: androidx.compose.ui.unit.Dp,
+  labelWidth: androidx.compose.ui.unit.Dp,
+  spacing: androidx.compose.ui.unit.Dp
+) {
+  Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
+    Spacer(modifier = Modifier.width(labelWidth))
+    for (dayOffset in 0 until DAYS_IN_WEEK) {
+      val date = weekStart.plus(DatePeriod(days = dayOffset))
+      Box(modifier = Modifier.size(cellSize), contentAlignment = Alignment.Center) {
+        Text(date.dayOfMonth.toString(), style = MaterialTheme.typography.labelSmall)
+      }
+    }
+  }
+}
+
+@Composable
+internal fun StatsCollapsiblePosts(
+  derived: StatsScreenDerivedState,
+  expanded: Boolean,
+  onExpandedChange: (Boolean) -> Unit
+) {
+  val state = derived.state
+  if (state.activityMode != ActivityMode.Posts) return
+
+  val periodMemos = rememberPeriodMemos(state.memos, state.range, derived.timeZone)
+  if (periodMemos.isEmpty()) return
+
+  Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
+    TextButton(onClick = { onExpandedChange(!expanded) }) {
+      Text(
+        if (expanded) {
+          stringResource(Res.string.action_hide_posts)
+        } else {
+          stringResource(Res.string.action_show_posts)
+        }
+      )
+    }
+    if (expanded) {
+      Column(
+        modifier = Modifier
+          .heightIn(max = POSTS_LIST_MAX_HEIGHT)
+          .verticalScroll(rememberScrollState())
+      ) {
+        periodMemos.forEachIndexed { index, memo ->
+          CompactPostRow(memo = memo, timeZone = derived.timeZone)
+          if (index < periodMemos.lastIndex) {
+            HorizontalDivider(
+              modifier = Modifier.padding(vertical = Indent.x2s),
+              color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = DIVIDER_ALPHA)
+            )
+          }
+        }
+      }
+    }
+  }
+}
+
+private val POSTS_LIST_MAX_HEIGHT = 200.dp
+private const val DIVIDER_ALPHA = 0.5f
+
+@Composable
+private fun rememberPeriodMemos(
+  memos: List<Memo>,
+  range: ActivityRange,
+  timeZone: TimeZone
+): List<Memo> = remember(memos, range, timeZone) {
+  val (start, end) = when (range) {
+    is ActivityRange.Week -> range.startDate to range.startDate.plus(DatePeriod(days = DAYS_IN_WEEK - 1))
+    is ActivityRange.Month -> {
+      val start = kotlinx.datetime.LocalDate(range.year, range.month, 1)
+      val nextMonth = start.plus(DatePeriod(months = 1))
+      val end = nextMonth.plus(DatePeriod(days = -1))
+      start to end
+    }
+    is ActivityRange.Quarter -> {
+      val startMonth = (range.index - 1) * MONTHS_PER_QUARTER + 1
+      val start = kotlinx.datetime.LocalDate(range.year, startMonth, 1)
+      val end = start.plus(DatePeriod(months = MONTHS_PER_QUARTER)).plus(DatePeriod(days = -1))
+      start to end
+    }
+    is ActivityRange.Year -> {
+      val start = kotlinx.datetime.LocalDate(range.year, JANUARY, 1)
+      val end = kotlinx.datetime.LocalDate(range.year, DECEMBER, LAST_DAY_OF_DECEMBER)
+      start to end
+    }
+  }
+  memos.filter { memo ->
+    val instant = memo.createTime ?: memo.updateTime ?: return@filter false
+    val date = instant.toLocalDateTime(timeZone).date
+    date in start..end
+  }.sortedByDescending { it.createTime ?: it.updateTime }
+}
+
+private const val MONTHS_PER_QUARTER = 3
+private const val JANUARY = 1
+private const val DECEMBER = 12
+private const val LAST_DAY_OF_DECEMBER = 31
+
+@Composable
+private fun CompactPostRow(memo: Memo, timeZone: TimeZone) {
+  val instant = memo.createTime ?: memo.updateTime
+  val dateLabel = instant?.let {
+    val dt = it.toLocalDateTime(timeZone)
+    "${dt.date.dayOfMonth}/${dt.date.monthNumber} ${dt.hour}:${dt.minute.toString().padStart(2, '0')}"
+  } ?: ""
+
+  Row(
+    modifier = Modifier.fillMaxWidth().padding(vertical = Indent.x2s),
+    horizontalArrangement = Arrangement.spacedBy(Indent.s)
+  ) {
+    Text(
+      dateLabel,
+      style = MaterialTheme.typography.labelSmall,
+      color = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+    Text(
+      memo.content.lines().firstOrNull()?.take(COMPACT_POST_MAX_LENGTH) ?: "",
+      style = MaterialTheme.typography.bodySmall,
+      maxLines = 1,
+      overflow = TextOverflow.Ellipsis,
+      modifier = Modifier.weight(1f)
+    )
+  }
+}
+
+private const val COMPACT_POST_MAX_LENGTH = 50
+
+private const val SHIMMER_DURATION_MS = 1000
 private const val SHIMMER_LABEL_HEIGHT = 20
 
 @Composable
@@ -229,13 +543,25 @@ internal fun StatsMainChart(
   derived: StatsScreenDerivedState,
   dispatch: (HabitsAction) -> Unit
 ) {
+  val state = derived.state
+
+  // For Posts/Week show time-of-day heatmap instead of contribution grid
+  if (state.activityMode == ActivityMode.Posts && state.range is ActivityRange.Week) {
+    WeeklyPostsHeatmap(
+      memos = state.memos,
+      weekStart = state.range.startDate,
+      timeZone = derived.timeZone,
+      compactHeight = derived.useCompactHeight
+    )
+    return
+  }
+
   // Show shimmer while loading and no data yet
   if (derived.isLoadingWeekData && derived.weekData.weeks.isEmpty()) {
     ChartShimmer(derived.useCompactHeight)
     return
   }
 
-  val state = derived.state
   val habitsState = derived.habitsState
   val chartScrollState = rememberScrollState()
 
@@ -306,7 +632,9 @@ internal fun StatsWeeklyChart(
   dispatch: (HabitsAction) -> Unit
 ) {
   val state = derived.state
-  if (state.activityMode != ActivityMode.Posts) {
+
+  // Skip for non-Posts mode or Week view (only 1 bar makes no sense)
+  if (state.activityMode != ActivityMode.Posts || state.range is ActivityRange.Week) {
     return
   }
 

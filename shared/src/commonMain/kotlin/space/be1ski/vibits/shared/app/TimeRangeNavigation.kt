@@ -170,7 +170,9 @@ private fun MemosTabContent(
     MemosScreen.Stats -> PostsScreen(
       memos = memos,
       range = activityRange,
-      demoMode = appState.appMode == AppMode.Demo
+      demoMode = appState.appMode == AppMode.Demo,
+      postsListExpanded = appState.postsListExpanded,
+      onPostsListExpandedChange = { appState.postsListExpanded = it }
     )
     MemosScreen.Feed -> FeedScreen(
       memos = memos,
