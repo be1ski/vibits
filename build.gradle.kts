@@ -88,5 +88,7 @@ tasks.register<Copy>("installGitHooks") {
   description = "Installs git pre-commit hook"
   from("scripts/pre-commit")
   into(".git/hooks")
-  fileMode = 0b111101101 // 755
+  filePermissions {
+    unix("rwxr-xr-x")
+  }
 }
