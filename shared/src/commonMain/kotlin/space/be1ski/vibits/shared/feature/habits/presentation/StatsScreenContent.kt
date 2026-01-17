@@ -605,7 +605,7 @@ internal fun StatsMainChart(
     )
   } else {
     val showTimeline = state.range is ActivityRange.Quarter || state.range is ActivityRange.Year
-    val showWeekStartHeaders = state.range is ActivityRange.Month
+    val useCalendarLayout = state.range is ActivityRange.Month
     ContributionGrid(
       state = ContributionGridState(
         weekData = derived.weekData,
@@ -614,12 +614,11 @@ internal fun StatsMainChart(
         selectedWeekStart = if (state.activityMode == ActivityMode.Posts) habitsState.selectedWeek?.startDate else null,
         isActiveSelection = habitsState.activeSelectionId == "main",
         scrollState = chartScrollState,
-        showWeekdayLegend = derived.showWeekdayLegend,
+        showWeekdayLegend = derived.showWeekdayLegend && !useCalendarLayout,
         showAllWeekdayLabels = true,
         compactHeight = derived.useCompactHeight,
         showTimeline = showTimeline,
-        showWeekStartHeaders = showWeekStartHeaders,
-        showDayNumbers = false,
+        calendarLayout = useCalendarLayout,
         today = derived.today,
         demoMode = state.demoMode
       ),
@@ -638,8 +637,11 @@ internal fun StatsWeeklyChart(
 ) {
   val state = derived.state
 
-  // Skip for non-Posts mode or Week view (only 1 bar makes no sense)
-  if (state.activityMode != ActivityMode.Posts || state.range is ActivityRange.Week) {
+  // Skip for non-Posts mode, Week view (only 1 bar), or Month view (calendar layout)
+  if (state.activityMode != ActivityMode.Posts ||
+    state.range is ActivityRange.Week ||
+    state.range is ActivityRange.Month
+  ) {
     return
   }
 
