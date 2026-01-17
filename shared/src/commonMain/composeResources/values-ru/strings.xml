@@ -3,6 +3,7 @@
     <string name="action_cancel">Отмена</string>
     <string name="action_clear">Очистить</string>
     <string name="action_close">Закрыть</string>
+    <string name="action_copied">Скопировано</string>
     <string name="action_configure_habits">Настроить привычки</string>
     <string name="action_create">Создать</string>
     <string name="action_create_memo">Создать заметку</string>
@@ -54,9 +55,13 @@
     <string name="label_activity">Активность</string>
     <string name="label_app_mode">Режим приложения</string>
     <string name="label_base_url">Base URL</string>
+    <string name="label_credentials">Учётные данные</string>
     <string name="label_demo_mode">Демо-режим</string>
+    <string name="label_environment">Окружение</string>
     <string name="label_habits_config">Конфигурация привычек</string>
+    <string name="label_memos_db">База заметок</string>
     <string name="label_storage">Хранилище</string>
+    <string name="label_version">Версия</string>
     <string name="label_success_rate">Успешность</string>
     <string name="label_today">Сегодня</string>
 

@@ -1,6 +1,7 @@
 package space.be1ski.vibits.shared.feature.settings.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,16 +24,30 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_cancel
 import space.be1ski.vibits.shared.action_clear
+import space.be1ski.vibits.shared.action_copied
 import space.be1ski.vibits.shared.action_close
 import space.be1ski.vibits.shared.action_reset
 import space.be1ski.vibits.shared.action_reset_app
@@ -53,7 +68,11 @@ import space.be1ski.vibits.shared.hint_base_url
 import space.be1ski.vibits.shared.label_access_token
 import space.be1ski.vibits.shared.label_app_mode
 import space.be1ski.vibits.shared.label_base_url
+import space.be1ski.vibits.shared.label_credentials
+import space.be1ski.vibits.shared.label_environment
+import space.be1ski.vibits.shared.label_memos_db
 import space.be1ski.vibits.shared.label_storage
+import space.be1ski.vibits.shared.label_version
 import space.be1ski.vibits.shared.mode_demo_title
 import space.be1ski.vibits.shared.mode_offline_title
 import space.be1ski.vibits.shared.mode_online_title
@@ -122,6 +141,7 @@ private fun SettingsDialogBody(
         onValueChange = { dispatch(SettingsAction.UpdateBaseUrl(it)) },
         label = { Text(stringResource(Res.string.label_base_url)) },
         placeholder = { Text(stringResource(Res.string.hint_base_url)) },
+        singleLine = true,
         modifier = Modifier.fillMaxWidth()
       )
       TextField(
@@ -129,11 +149,9 @@ private fun SettingsDialogBody(
         onValueChange = { dispatch(SettingsAction.UpdateToken(it)) },
         label = { Text(stringResource(Res.string.label_access_token)) },
         visualTransformation = PasswordVisualTransformation(),
+        singleLine = true,
         modifier = Modifier.fillMaxWidth()
       )
-    }
-    state.appDetails?.let { appDetails ->
-      AppDetailsSection(appDetails, state.appMode)
     }
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
       TextButton(onClick = { dispatch(SettingsAction.OpenLogs) }, modifier = Modifier.weight(1f)) {
@@ -142,6 +160,9 @@ private fun SettingsDialogBody(
       TextButton(onClick = { dispatch(SettingsAction.RequestReset) }, modifier = Modifier.weight(1f)) {
         Text(stringResource(Res.string.action_reset_app))
       }
+    }
+    state.appDetails?.let { appDetails ->
+      AppDetailsSection(appDetails, state.appMode)
     }
   }
 }
@@ -187,40 +208,103 @@ private fun AppModeSelector(
   }
 }
 
+private const val TOAST_DURATION_MS = 1500L
+
+@Suppress("DEPRECATION")
 @Composable
 private fun AppDetailsSection(appDetails: AppDetails, appMode: AppMode) {
-  val labelStyle = MaterialTheme.typography.labelSmall.copy(
-    color = MaterialTheme.colorScheme.onSurfaceVariant
-  )
+  val clipboardManager = LocalClipboardManager.current
+  val scope = rememberCoroutineScope()
+  var copiedKey by remember { mutableStateOf<String?>(null) }
+  val copiedLabel = stringResource(Res.string.action_copied)
 
-  Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-    Text(
-      text = stringResource(Res.string.format_app_version, appDetails.version),
-      style = MaterialTheme.typography.bodySmall
-    )
+  val onCopy: (String, String) -> Unit = { key, value ->
+    clipboardManager.setText(AnnotatedString(value))
+    copiedKey = key
+    scope.launch {
+      delay(TOAST_DURATION_MS)
+      if (copiedKey == key) copiedKey = null
+    }
+  }
+
+  Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
     if (appMode != AppMode.Demo) {
-      Text(
-        text = stringResource(Res.string.format_environment, appDetails.environment),
-        style = labelStyle
+      CopyableInfoRow(
+        label = stringResource(Res.string.label_environment),
+        value = appDetails.environment,
+        isCopied = copiedKey == "environment",
+        copiedLabel = copiedLabel,
+        onCopy = { onCopy("environment", it) }
       )
       if (appMode == AppMode.Offline) {
-        Text(
-          text = stringResource(Res.string.format_offline_storage, shortenPath(appDetails.offlineStorage)),
-          style = labelStyle,
-          maxLines = 1
+        CopyableInfoRow(
+          label = stringResource(Res.string.label_storage),
+          value = appDetails.offlineStorage,
+          displayValue = shortenPath(appDetails.offlineStorage),
+          isCopied = copiedKey == "storage",
+          copiedLabel = copiedLabel,
+          onCopy = { onCopy("storage", it) }
         )
       } else {
-        Text(
-          text = stringResource(Res.string.format_credentials, appDetails.credentialsStore),
-          style = labelStyle,
-          maxLines = 1
+        CopyableInfoRow(
+          label = stringResource(Res.string.label_credentials),
+          value = appDetails.credentialsStore,
+          isCopied = copiedKey == "credentials",
+          copiedLabel = copiedLabel,
+          onCopy = { onCopy("credentials", it) }
         )
-        Text(
-          text = stringResource(Res.string.format_memos_db, shortenPath(appDetails.memosDatabase)),
-          style = labelStyle,
-          maxLines = 1
+        CopyableInfoRow(
+          label = stringResource(Res.string.label_memos_db),
+          value = appDetails.memosDatabase,
+          displayValue = shortenPath(appDetails.memosDatabase),
+          isCopied = copiedKey == "memosDb",
+          copiedLabel = copiedLabel,
+          onCopy = { onCopy("memosDb", it) }
         )
       }
+    }
+    CopyableInfoRow(
+      label = stringResource(Res.string.label_version),
+      value = appDetails.version,
+      isCopied = copiedKey == "version",
+      copiedLabel = copiedLabel,
+      onCopy = { onCopy("version", it) }
+    )
+  }
+}
+
+@Suppress("LongParameterList")
+@Composable
+private fun CopyableInfoRow(
+  label: String,
+  value: String,
+  displayValue: String = value,
+  isCopied: Boolean,
+  copiedLabel: String,
+  onCopy: (String) -> Unit
+) {
+  Row(
+    horizontalArrangement = Arrangement.spacedBy(4.dp),
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier.clickable { onCopy(value) }
+  ) {
+    Text(
+      text = buildAnnotatedString {
+        append("$label: ")
+        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+          append(displayValue)
+        }
+      },
+      style = MaterialTheme.typography.bodySmall,
+      color = MaterialTheme.colorScheme.onSurfaceVariant,
+      maxLines = 1
+    )
+    if (isCopied) {
+      Text(
+        text = copiedLabel,
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.primary
+      )
     }
   }
 }
