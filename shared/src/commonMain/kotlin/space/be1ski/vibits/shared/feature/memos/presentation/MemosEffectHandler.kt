@@ -30,7 +30,7 @@ class MemosEffectHandler(
         }
 
         is MemosEffect.LoadRemoteMemos -> {
-          Log.d(TAG, "Loading remote memos")
+          Log.d(TAG, "Loading memos")
           runCatching { useCases.loadMemos() }
             .onSuccess { memos -> emit(MemosAction.MemosLoaded(memos)) }
             .onFailure { error ->
