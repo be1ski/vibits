@@ -74,7 +74,7 @@ private fun rememberStatsScreenDerived(
   val showWeekdayLegend = range is ActivityRange.Week ||
     range is ActivityRange.Month ||
     range is ActivityRange.Quarter
-  val useCompactHeight = range is ActivityRange.Year && !isDesktop
+  val useCompactHeight = (range is ActivityRange.Year || range is ActivityRange.Month) && !isDesktop
   val collapseHabits = activityMode == ActivityMode.Habits && range is ActivityRange.Year
   val showLast7DaysMatrix = activityMode == ActivityMode.Habits &&
     range is ActivityRange.Week &&

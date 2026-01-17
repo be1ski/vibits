@@ -23,6 +23,7 @@ data class ContributionGridState(
   val showAllWeekdayLabels: Boolean = false,
   val compactHeight: Boolean = false,
   val showTimeline: Boolean = false,
+  val showWeekStartHeaders: Boolean = false,
   val showDayNumbers: Boolean = false,
   val today: LocalDate? = null,
   val habitColor: Long? = null,
