@@ -2,26 +2,15 @@ package space.be1ski.vibits.shared.feature.auth.domain.usecase
 
 import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.shared.core.logging.Log
-import space.be1ski.vibits.shared.feature.memos.data.remote.MemosApi
+import space.be1ski.vibits.shared.feature.memos.data.remote.MemosApiClient
 
 private const val TAG = "ValidateCreds"
 
-fun interface ValidateCredentials {
-  suspend operator fun invoke(
-    baseUrl: String,
-    token: String,
-  ): Result<Unit>
-}
-
-/**
- * Use case that validates credentials by making a test API request.
- * Returns true if credentials are valid, false otherwise.
- */
 @Inject
 class ValidateCredentialsUseCase(
-  private val memosApi: MemosApi,
-) : ValidateCredentials {
-  override suspend operator fun invoke(
+  private val memosApi: MemosApiClient,
+) {
+  suspend operator fun invoke(
     baseUrl: String,
     token: String,
   ): Result<Unit> {
