@@ -7,10 +7,12 @@ import space.be1ski.vibits.shared.app.data.AndroidContextHolder
 /**
  * Android implementation backed by SharedPreferences.
  */
-actual class PreferencesStore {
+actual fun createPreferencesStore(): PreferencesStore = AndroidPreferencesStore()
+
+class AndroidPreferencesStore : PreferencesStore {
   private val prefsName = "memos_prefs"
 
-  actual fun load(): LocalUserPreferences {
+  override fun load(): LocalUserPreferences {
     val defaultTab = LocalUserPreferences.DEFAULT_TIME_RANGE_TAB
     val defaultLanguage = LocalUserPreferences.DEFAULT_LANGUAGE
     val defaultTheme = LocalUserPreferences.DEFAULT_THEME
@@ -36,7 +38,7 @@ actual class PreferencesStore {
     )
   }
 
-  actual fun save(preferences: LocalUserPreferences) {
+  override fun save(preferences: LocalUserPreferences) {
     if (!AndroidContextHolder.isReady()) {
       return
     }
