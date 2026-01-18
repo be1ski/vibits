@@ -5,11 +5,13 @@ import androidx.core.content.FileProvider
 import space.be1ski.vibits.shared.app.data.AndroidContextHolder
 import java.io.File
 
+actual fun createFileExporter(): FileExporter = AndroidFileExporter()
+
 /**
  * Android implementation that shares files via system share sheet.
  */
-actual class FileExporter {
-  actual fun export(
+private class AndroidFileExporter : FileExporter {
+  override fun export(
     fileName: String,
     content: String,
   ): String? =
