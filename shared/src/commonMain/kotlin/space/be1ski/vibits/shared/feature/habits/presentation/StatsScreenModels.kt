@@ -57,4 +57,6 @@ internal data class StatsScreenDerivedState(
   val timeZone: TimeZone,
   val successRateData: SuccessRateData?,
   val periodPosts: List<Memo>,
+  /** Date when habits were first configured (null if no config). */
+  val configStartDate: LocalDate? = null,
 )
