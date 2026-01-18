@@ -8,12 +8,14 @@ import space.be1ski.vibits.shared.feature.memos.data.local.MemoDatabaseConstruct
 import space.be1ski.vibits.shared.feature.memos.data.local.MemoEntityMapper
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
-actual open class MemoCache {
+actual fun createMemoCache(): MemoCache = DesktopMemoCache()
+
+private class DesktopMemoCache : MemoCache {
   private val database: MemoDatabase by lazy { createDatabase() }
 
-  actual open suspend fun readMemos(): List<Memo> = database.memoDao().loadAll().map(MemoEntityMapper::toDomain)
+  override suspend fun readMemos(): List<Memo> = database.memoDao().loadAll().map(MemoEntityMapper::toDomain)
 
-  actual open suspend fun replaceMemos(memos: List<Memo>) {
+  override suspend fun replaceMemos(memos: List<Memo>) {
     val dao = database.memoDao()
     dao.clearAll()
     if (memos.isNotEmpty()) {
@@ -21,15 +23,15 @@ actual open class MemoCache {
     }
   }
 
-  actual open suspend fun upsertMemo(memo: Memo) {
+  override suspend fun upsertMemo(memo: Memo) {
     database.memoDao().upsert(MemoEntityMapper.toEntity(memo))
   }
 
-  actual open suspend fun deleteMemo(name: String) {
+  override suspend fun deleteMemo(name: String) {
     database.memoDao().deleteByName(name)
   }
 
-  actual open suspend fun clear() {
+  override suspend fun clear() {
     database.memoDao().clearAll()
   }
 

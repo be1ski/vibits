@@ -32,7 +32,7 @@ class FakeCredentialsRepository(
 
 class FakeMemoCache(
   private var memos: List<Memo> = emptyList(),
-) : MemoCache() {
+) : MemoCache {
   var replaceCalls: Int = 0
     private set
   var upserted: Memo? = null

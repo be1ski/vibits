@@ -23,7 +23,7 @@ import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_refresh
 import space.be1ski.vibits.shared.app_name
-import space.be1ski.vibits.shared.core.platform.currentLocalDate
+import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.core.ui.ActivityRange
