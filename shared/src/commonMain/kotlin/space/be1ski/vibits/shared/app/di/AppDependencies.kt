@@ -5,10 +5,10 @@ import space.be1ski.vibits.shared.core.platform.LocaleProvider
 import space.be1ski.vibits.shared.domain.usecase.LoadAppDetailsUseCase
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
+import space.be1ski.vibits.shared.feature.habits.di.HabitsDependencies
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.memos.di.MemosDependencies
-import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.FixInvalidOnlineModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.LoadAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
@@ -50,7 +50,7 @@ class VibitsAppDependencies(
   val loadAppMode: LoadAppModeUseCase,
   val calculateSuccessRate: CalculateSuccessRateUseCase,
   val buildActivityData: BuildActivityDataUseCase,
-  val memosRepository: MemosRepository,
+  val habitsDependencies: HabitsDependencies,
   val memosDependencies: MemosDependencies,
   val settingsDependencies: SettingsDependencies,
 )

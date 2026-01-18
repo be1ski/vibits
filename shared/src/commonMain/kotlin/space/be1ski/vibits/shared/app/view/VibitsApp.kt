@@ -97,7 +97,7 @@ fun VibitsApp(
   val habitsFeature =
     remember {
       createHabitsFeature(
-        memosRepository = dependencies.memosRepository,
+        dependencies = dependencies.habitsDependencies,
         onRefresh = { dispatchMemos(MemosAction.LoadMemos) },
       )
     }
