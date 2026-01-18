@@ -3,10 +3,13 @@ package space.be1ski.vibits.shared.test
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
+import space.be1ski.vibits.shared.feature.memos.data.remote.dto.ListMemosResponseDto
+import space.be1ski.vibits.shared.feature.memos.data.remote.dto.MemoDto
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
+import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.shared.feature.settings.domain.model.UserPreferences
 import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
@@ -137,5 +140,110 @@ class FakePreferencesRepository(
   override fun save(preferences: UserPreferences) {
     stored = preferences
     saveCalls += 1
+  }
+}
+
+// Fake Use Cases for EffectHandler tests
+
+class FakeValidateCredentialsUseCase(
+  private val result: Result<Unit> = Result.success(Unit),
+) {
+  var invokedWith: Pair<String, String>? = null
+    private set
+
+  suspend operator fun invoke(
+    baseUrl: String,
+    token: String,
+  ): Result<Unit> {
+    invokedWith = baseUrl to token
+    return result
+  }
+}
+
+class FakeModeAwareMemosRepository : MemosRepository {
+  var clearCacheOnModeChangeCalls: Int = 0
+    private set
+
+  override suspend fun listMemos(): List<Memo> = emptyList()
+
+  override suspend fun cachedMemos(): List<Memo> = emptyList()
+
+  override suspend fun updateMemo(
+    name: String,
+    content: String,
+  ): Memo = Memo()
+
+  override suspend fun createMemo(content: String): Memo = Memo()
+
+  override suspend fun deleteMemo(name: String) {}
+
+  suspend fun clearCacheOnModeChange() {
+    clearCacheOnModeChangeCalls++
+  }
+}
+
+/**
+ * Fake MemosApi for testing ValidateCredentialsUseCase.
+ */
+class FakeMemosApi(
+  var listMemosResult: Result<ListMemosResponseDto> = Result.success(ListMemosResponseDto()),
+) {
+  var listMemosCalls: Int = 0
+    private set
+
+  suspend fun listMemos(
+    baseUrl: String,
+    token: String,
+    pageSize: Int,
+    pageToken: String?,
+  ): ListMemosResponseDto {
+    listMemosCalls++
+    return listMemosResult.getOrThrow()
+  }
+}
+
+/**
+ * Fake DemoMemosRepository for testing ResetAppUseCase.
+ */
+class FakeDemoMemosRepository : MemosRepository {
+  var resetCalls: Int = 0
+    private set
+
+  fun reset() {
+    resetCalls++
+  }
+
+  override suspend fun listMemos(): List<Memo> = emptyList()
+
+  override suspend fun cachedMemos(): List<Memo> = emptyList()
+
+  override suspend fun updateMemo(
+    name: String,
+    content: String,
+  ): Memo = Memo()
+
+  override suspend fun createMemo(content: String): Memo = Memo()
+
+  override suspend fun deleteMemo(name: String) {}
+}
+
+/**
+ * Fake LocaleProvider for testing SaveLanguageUseCase.
+ */
+class FakeLocaleProvider(
+  private val systemLocale: String = "en",
+  private val requiresRestart: Boolean = false,
+) {
+  var configureLocaleCalls: Int = 0
+    private set
+  var lastConfiguredLanguage: AppLanguage? = null
+    private set
+
+  fun getSystemLocale(): String = systemLocale
+
+  fun configureLocale(language: AppLanguage): Boolean {
+    configureLocaleCalls++
+    lastConfiguredLanguage = language
+    return requiresRestart
   }
 }
