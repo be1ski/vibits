@@ -16,9 +16,9 @@ ignore:
   # Test utilities
   - "**/commonTest/**"
   # Platform-specific code (expect/actual declarations)
-  - "**/core/platform/**"
+  - "**/platform/**"
+  # Compose UI theming
   - "**/core/ui/**"
-  - "**/data/platform/**"
 
 comment:
   layout: "reach, diff, flags, files"
