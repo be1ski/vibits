@@ -1,8 +1,9 @@
-package space.be1ski.vibits.shared.feature.habits.presentation.components
+package space.be1ski.vibits.shared.feature.habits.domain.usecase
 
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo
+import space.be1ski.vibits.shared.feature.habits.domain.model.DayBuildContext
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.habits.domain.model.RangeBounds
@@ -12,7 +13,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class BuildDayDataTest {
+class BuildDayDataUseCaseTest {
+  private val useCase = BuildDayDataUseCase()
   private val today = LocalDate(2024, 1, 15)
   private val configDate = LocalDate(2024, 1, 10)
   private val habits = listOf(HabitConfig(tag = "#habits/test", label = "Test"))
@@ -23,7 +25,7 @@ class BuildDayDataTest {
   @Test
   fun `when date is today then isClickable is true`() {
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = today,
         bounds = bounds,
         mode = ActivityMode.HABITS,
@@ -33,7 +35,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertTrue(result.isClickable)
   }
@@ -41,7 +43,7 @@ class BuildDayDataTest {
   @Test
   fun `when date is before today but after config then isClickable is true`() {
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2024, 1, 12),
         bounds = bounds,
         mode = ActivityMode.HABITS,
@@ -51,7 +53,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertTrue(result.isClickable)
   }
@@ -59,7 +61,7 @@ class BuildDayDataTest {
   @Test
   fun `when date is in the future then isClickable is false`() {
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2024, 1, 20),
         bounds = bounds,
         mode = ActivityMode.HABITS,
@@ -69,7 +71,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertFalse(result.isClickable)
   }
@@ -77,7 +79,7 @@ class BuildDayDataTest {
   @Test
   fun `when date is before config start date then isClickable is false`() {
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2024, 1, 5),
         bounds = bounds,
         mode = ActivityMode.HABITS,
@@ -87,7 +89,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertFalse(result.isClickable)
   }
@@ -95,7 +97,7 @@ class BuildDayDataTest {
   @Test
   fun `when config timeline is empty then isClickable is true`() {
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2024, 1, 12),
         bounds = bounds,
         mode = ActivityMode.POSTS,
@@ -105,7 +107,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertTrue(result.isClickable)
   }
@@ -113,7 +115,7 @@ class BuildDayDataTest {
   @Test
   fun `when date equals config start date then isClickable is true`() {
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = configDate,
         bounds = bounds,
         mode = ActivityMode.HABITS,
@@ -123,7 +125,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertTrue(result.isClickable)
   }
@@ -133,7 +135,7 @@ class BuildDayDataTest {
   @Test
   fun `when date is within bounds then inRange is true`() {
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2024, 1, 15),
         bounds = bounds,
         mode = ActivityMode.HABITS,
@@ -143,7 +145,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertTrue(result.inRange)
   }
@@ -151,7 +153,7 @@ class BuildDayDataTest {
   @Test
   fun `when date is before bounds start then inRange is false`() {
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2023, 12, 31),
         bounds = bounds,
         mode = ActivityMode.HABITS,
@@ -161,7 +163,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertFalse(result.inRange)
   }
@@ -169,7 +171,7 @@ class BuildDayDataTest {
   @Test
   fun `when date is after bounds end then inRange is false`() {
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2024, 2, 1),
         bounds = bounds,
         mode = ActivityMode.HABITS,
@@ -179,7 +181,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertFalse(result.inRange)
   }
@@ -187,7 +189,7 @@ class BuildDayDataTest {
   @Test
   fun `when date equals bounds start then inRange is true`() {
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2024, 1, 1),
         bounds = bounds,
         mode = ActivityMode.HABITS,
@@ -197,7 +199,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertTrue(result.inRange)
   }
@@ -205,7 +207,7 @@ class BuildDayDataTest {
   @Test
   fun `when date equals bounds end then inRange is true`() {
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2024, 1, 31),
         bounds = bounds,
         mode = ActivityMode.HABITS,
@@ -215,7 +217,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertTrue(result.inRange)
   }
@@ -226,7 +228,7 @@ class BuildDayDataTest {
   fun `when habit is completed in dailyMemo then count is 1`() {
     val dailyMemo = DailyMemoInfo(name = "daily", content = "#habits/test done!")
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2024, 1, 12),
         bounds = bounds,
         mode = ActivityMode.HABITS,
@@ -236,7 +238,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertEquals(1, result.count)
     assertEquals(1f, result.completionRatio)
@@ -245,7 +247,7 @@ class BuildDayDataTest {
   @Test
   fun `when no dailyMemo for date then count is 0`() {
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2024, 1, 12),
         bounds = bounds,
         mode = ActivityMode.HABITS,
@@ -255,7 +257,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertEquals(0, result.count)
     assertEquals(0f, result.completionRatio)
@@ -265,7 +267,7 @@ class BuildDayDataTest {
   fun `when habit tag not in dailyMemo then count is 0`() {
     val dailyMemo = DailyMemoInfo(name = "daily", content = "just some text without habits")
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2024, 1, 12),
         bounds = bounds,
         mode = ActivityMode.HABITS,
@@ -275,7 +277,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertEquals(0, result.count)
   }
@@ -304,7 +306,7 @@ class BuildDayDataTest {
       )
     val dailyMemo = DailyMemoInfo(name = "daily", content = "#habits/exercise #habits/reading")
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2024, 1, 12),
         bounds = bounds,
         mode = ActivityMode.HABITS,
@@ -314,7 +316,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertEquals(2, result.count)
     assertEquals(3, result.totalHabits)
@@ -326,7 +328,7 @@ class BuildDayDataTest {
   @Test
   fun `when mode is POSTS then count comes from counts map`() {
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2024, 1, 12),
         bounds = bounds,
         mode = ActivityMode.POSTS,
@@ -336,7 +338,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertEquals(5, result.count)
   }
@@ -344,7 +346,7 @@ class BuildDayDataTest {
   @Test
   fun `when mode is POSTS and no count for date then count is 0`() {
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2024, 1, 12),
         bounds = bounds,
         mode = ActivityMode.POSTS,
@@ -354,7 +356,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertEquals(0, result.count)
   }
@@ -362,7 +364,7 @@ class BuildDayDataTest {
   @Test
   fun `when mode is POSTS then totalHabits is 0`() {
     val context =
-      DayDataContext(
+      DayBuildContext(
         date = LocalDate(2024, 1, 12),
         bounds = bounds,
         mode = ActivityMode.POSTS,
@@ -372,7 +374,7 @@ class BuildDayDataTest {
         today = today,
       )
 
-    val result = buildDayData(context)
+    val result = useCase(context)
 
     assertEquals(0, result.totalHabits)
   }

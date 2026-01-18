@@ -14,11 +14,14 @@ import space.be1ski.vibits.shared.core.platform.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.Indent
+import space.be1ski.vibits.shared.feature.habits.domain.model.findDayByDate
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractDailyMemosUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.GetPeriodPostsUseCase
+import space.be1ski.vibits.shared.feature.habits.presentation.components.ActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.habits.presentation.components.HabitsConfigDialog
-import space.be1ski.vibits.shared.feature.habits.presentation.components.findDailyMemoForDate
-import space.be1ski.vibits.shared.feature.habits.presentation.components.habitsConfigForDate
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberHabitsConfigTimeline
 
@@ -29,11 +32,13 @@ import space.be1ski.vibits.shared.feature.habits.presentation.components.remembe
 fun StatsScreen(
   state: StatsScreenState,
   calculateSuccessRate: CalculateSuccessRateUseCase,
+  buildActivityDataUseCase: BuildActivityDataUseCase,
+  cache: ActivityWeekDataCache,
   habitsState: HabitsState = HabitsState(),
   onHabitsAction: (HabitsAction) -> Unit = {},
   onPostsListExpandedChange: (Boolean) -> Unit = {},
 ) {
-  val derived = rememberStatsScreenDerived(state, habitsState, calculateSuccessRate)
+  val derived = rememberStatsScreenDerived(state, habitsState, calculateSuccessRate, buildActivityDataUseCase, cache)
   StatsScreenContent(derived, onHabitsAction, onPostsListExpandedChange)
   StatsScreenDialogs(derived, onHabitsAction)
 }
@@ -44,6 +49,8 @@ private fun rememberStatsScreenDerived(
   state: StatsScreenState,
   habitsState: HabitsState,
   calculateSuccessRate: CalculateSuccessRateUseCase,
+  buildActivityDataUseCase: BuildActivityDataUseCase,
+  cache: ActivityWeekDataCache,
 ): StatsScreenDerivedState {
   val memos = state.memos
   val range = state.range
@@ -57,11 +64,11 @@ private fun rememberStatsScreenDerived(
   val today = remember { currentLocalDate() }
   val todayMemo =
     remember(memos, timeZone, today) {
-      findDailyMemoForDate(memos, timeZone, today)
+      ExtractDailyMemosUseCase.forDate(memos, timeZone, today)
     }
   val todayConfig =
     remember(habitsConfigTimeline, today) {
-      habitsConfigForDate(habitsConfigTimeline, today)?.habits.orEmpty()
+      ExtractHabitsConfigUseCase.forDate(habitsConfigTimeline, today)?.habits.orEmpty()
     }
   val todayDay =
     remember(todayConfig, todayMemo, today) {
@@ -71,7 +78,7 @@ private fun rememberStatsScreenDerived(
         dailyMemo = todayMemo,
       )
     }
-  val weekDataState = rememberActivityWeekData(memos, range, activityMode, today)
+  val weekDataState = rememberActivityWeekData(memos, range, activityMode, today, buildActivityDataUseCase, cache)
   val weekData = weekDataState.data
   val isLoadingWeekData = weekDataState.isLoading
   val showWeekdayLegend =
@@ -90,7 +97,7 @@ private fun rememberStatsScreenDerived(
       currentHabitsConfig.isNotEmpty()
   val selectedDay =
     remember(weekData.weeks, habitsState.selectedDate) {
-      habitsState.selectedDate?.let { date -> findDayByDate(weekData, date) }
+      habitsState.selectedDate?.let { date -> weekData.findDayByDate(date) }
     }
   val configStartDate =
     remember(habitsConfigTimeline) {

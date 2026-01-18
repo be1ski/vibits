@@ -1,6 +1,11 @@
 build:
   maxIssues: 0
 
+complexity:
+  LongParameterList:
+    ignoreAnnotated:
+      - Composable
+
 naming:
   FunctionNaming:
     ignoreAnnotated:

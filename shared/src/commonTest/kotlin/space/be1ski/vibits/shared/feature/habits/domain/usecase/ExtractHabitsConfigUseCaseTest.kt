@@ -11,7 +11,6 @@ import kotlin.test.assertNull
 import kotlin.time.Instant as KtInstant
 
 class ExtractHabitsConfigUseCaseTest {
-  private val useCase = ExtractHabitsConfigUseCase()
   private val timeZone = TimeZone.UTC
 
   @Test
@@ -22,7 +21,7 @@ class ExtractHabitsConfigUseCaseTest {
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
-    val result = useCase(listOf(memo), timeZone)
+    val result = ExtractHabitsConfigUseCase(listOf(memo), timeZone)
 
     assertEquals(1, result.size)
     assertEquals(2, result.first().habits.size)
@@ -36,7 +35,7 @@ class ExtractHabitsConfigUseCaseTest {
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
-    val result = useCase(listOf(memo), timeZone)
+    val result = ExtractHabitsConfigUseCase(listOf(memo), timeZone)
 
     assertEquals(1, result.size)
     assertEquals(1, result.first().habits.size)
@@ -50,7 +49,7 @@ class ExtractHabitsConfigUseCaseTest {
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
-    val result = useCase(listOf(memo), timeZone)
+    val result = ExtractHabitsConfigUseCase(listOf(memo), timeZone)
 
     assertEquals(0, result.size)
   }
@@ -68,7 +67,7 @@ class ExtractHabitsConfigUseCaseTest {
         createTime = KtInstant.parse("2024-01-10T10:00:00Z"),
       )
 
-    val result = useCase(listOf(memo1, memo2), timeZone)
+    val result = ExtractHabitsConfigUseCase(listOf(memo1, memo2), timeZone)
 
     assertEquals(2, result.size)
     assertEquals(LocalDate(2024, 1, 10), result.first().date)
@@ -84,7 +83,7 @@ class ExtractHabitsConfigUseCaseTest {
         createConfigEntry(LocalDate(2024, 1, 20)),
       )
 
-    val result = useCase.forDate(entries, LocalDate(2024, 1, 15))
+    val result = ExtractHabitsConfigUseCase.forDate(entries, LocalDate(2024, 1, 15))
 
     assertNotNull(result)
     assertEquals(LocalDate(2024, 1, 10), result.date)
@@ -98,7 +97,7 @@ class ExtractHabitsConfigUseCaseTest {
         createConfigEntry(LocalDate(2024, 1, 15)),
       )
 
-    val result = useCase.forDate(entries, LocalDate(2024, 1, 15))
+    val result = ExtractHabitsConfigUseCase.forDate(entries, LocalDate(2024, 1, 15))
 
     assertNotNull(result)
     assertEquals(LocalDate(2024, 1, 15), result.date)
@@ -111,7 +110,7 @@ class ExtractHabitsConfigUseCaseTest {
         createConfigEntry(LocalDate(2024, 2, 1)),
       )
 
-    val result = useCase.forDate(entries, LocalDate(2024, 1, 15))
+    val result = ExtractHabitsConfigUseCase.forDate(entries, LocalDate(2024, 1, 15))
 
     assertNull(result)
   }
@@ -124,7 +123,7 @@ class ExtractHabitsConfigUseCaseTest {
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
-    val result = useCase(listOf(memo), timeZone)
+    val result = ExtractHabitsConfigUseCase(listOf(memo), timeZone)
 
     assertEquals(1, result.size)
     assertEquals(2, result.first().habits.size)
