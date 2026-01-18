@@ -6,6 +6,8 @@ import space.be1ski.vibits.shared.feature.memos.data.platform.OfflineMemoStorage
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 class ExporterTest {
   @Test
@@ -53,19 +55,55 @@ class ExporterTest {
 
     assertTrue(result is ExportResult.Failure)
   }
+
+  @Test
+  fun `when exportLogs then generates file name with logs prefix and txt extension`() {
+    val fakeFileExporter = FakeFileExporter(exportResult = "/path/to/file")
+    val fakeStorage = FakeOfflineMemoStorage()
+    val fakeClock = FakeClock(Instant.parse("2024-01-15T10:30:45.123Z"))
+    val exporter = Exporter(fakeFileExporter, fakeStorage, fakeClock)
+
+    exporter.exportLogs()
+
+    assertEquals("logs_2024-01-15T10-30-45.txt", fakeFileExporter.lastFileName)
+  }
+
+  @Test
+  fun `when exportMemos then generates file name with memos prefix and json extension`() {
+    val fakeFileExporter = FakeFileExporter(exportResult = "/path/to/file")
+    val fakeStorage = FakeOfflineMemoStorage()
+    val fakeClock = FakeClock(Instant.parse("2024-01-15T10:30:45.123Z"))
+    val exporter = Exporter(fakeFileExporter, fakeStorage, fakeClock)
+
+    exporter.exportMemos()
+
+    assertEquals("memos_2024-01-15T10-30-45.json", fakeFileExporter.lastFileName)
+  }
 }
 
 private class FakeFileExporter(
   private val exportResult: String?,
 ) : FileExporter {
+  var lastFileName: String? = null
+    private set
+
   override fun export(
     fileName: String,
     content: String,
-  ): String? = exportResult
+  ): String? {
+    lastFileName = fileName
+    return exportResult
+  }
 }
 
 private class FakeOfflineMemoStorage : OfflineMemoStorage {
   override fun load(): OfflineMemosFileDto = OfflineMemosFileDto()
 
   override fun save(data: OfflineMemosFileDto) = Unit
+}
+
+private class FakeClock(
+  private val fixedInstant: Instant,
+) : Clock {
+  override fun now(): Instant = fixedInstant
 }
