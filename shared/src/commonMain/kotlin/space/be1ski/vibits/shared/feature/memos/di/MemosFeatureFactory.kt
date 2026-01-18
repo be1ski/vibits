@@ -1,8 +1,12 @@
-package space.be1ski.vibits.shared.feature.memos.presentation
+package space.be1ski.vibits.shared.feature.memos.di
 
 import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.core.elm.FeatureImpl
-import space.be1ski.vibits.shared.feature.memos.di.MemosDependencies
+import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.MemosEffect
+import space.be1ski.vibits.shared.feature.memos.presentation.MemosEffectHandler
+import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
+import space.be1ski.vibits.shared.feature.memos.presentation.memosReducer
 
 fun createMemosFeature(
   dependencies: MemosDependencies,

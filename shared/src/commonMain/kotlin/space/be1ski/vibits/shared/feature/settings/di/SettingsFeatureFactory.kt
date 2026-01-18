@@ -1,10 +1,14 @@
-package space.be1ski.vibits.shared.feature.settings.presentation
+package space.be1ski.vibits.shared.feature.settings.di
 
 import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.core.elm.FeatureImpl
 import space.be1ski.vibits.shared.domain.model.app.AppDetails
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
-import space.be1ski.vibits.shared.feature.settings.di.SettingsDependencies
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffect
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffectHandler
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsState
+import space.be1ski.vibits.shared.feature.settings.presentation.settingsReducer
 
 fun createSettingsFeature(
   dependencies: SettingsDependencies,

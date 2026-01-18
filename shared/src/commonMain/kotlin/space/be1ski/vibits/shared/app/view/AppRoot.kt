@@ -13,11 +13,11 @@ import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.core.platform.ProvideDateFormatter
 import space.be1ski.vibits.shared.core.ui.theme.VibitsTheme
 import space.be1ski.vibits.shared.core.ui.theme.rememberSystemDarkTheme
+import space.be1ski.vibits.shared.feature.mode.di.createModeSelectionFeature
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionAction
 import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionEffect
 import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionState
-import space.be1ski.vibits.shared.feature.mode.presentation.createModeSelectionFeature
 import space.be1ski.vibits.shared.feature.mode.view.ModeSelectionScreen
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme

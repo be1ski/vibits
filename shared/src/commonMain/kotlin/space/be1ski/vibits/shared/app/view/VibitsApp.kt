@@ -34,6 +34,7 @@ import space.be1ski.vibits.shared.app.di.VibitsAppDependencies
 import space.be1ski.vibits.shared.core.platform.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.Indent
+import space.be1ski.vibits.shared.feature.habits.di.createHabitsFeature
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.EarliestMemoDateUseCase
@@ -41,14 +42,14 @@ import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractDailyMemo
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
-import space.be1ski.vibits.shared.feature.habits.presentation.createHabitsFeature
 import space.be1ski.vibits.shared.feature.habits.view.buildHabitDay
 import space.be1ski.vibits.shared.feature.habits.view.components.ActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.habits.view.components.rememberHabitsConfigTimeline
+import space.be1ski.vibits.shared.feature.memos.di.createMemosFeature
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
-import space.be1ski.vibits.shared.feature.memos.presentation.createMemosFeature
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
+import space.be1ski.vibits.shared.feature.settings.di.createSettingsFeature
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
@@ -56,7 +57,6 @@ import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveTimeRangeT
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.TimeRangeScreen
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffect
-import space.be1ski.vibits.shared.feature.settings.presentation.createSettingsFeature
 import space.be1ski.vibits.shared.feature.settings.view.SettingsDialog
 
 @Suppress("LongMethod", "LongParameterList")
