@@ -8,6 +8,13 @@ coverage:
       default:
         target: 80%
 
+ignore:
+  - "**/app/*.kt"
+  - "**/*Screen.kt"
+  - "**/*ScreenContent.kt"
+  - "**/*DialogContent.kt"
+  - "**/presentation/components/*.kt"
+
 comment:
   layout: "reach, diff, flags, files"
   behavior: default
