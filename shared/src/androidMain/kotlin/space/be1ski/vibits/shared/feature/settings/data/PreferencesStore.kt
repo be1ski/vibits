@@ -2,7 +2,7 @@ package space.be1ski.vibits.shared.feature.settings.data
 
 import android.content.Context
 import androidx.core.content.edit
-import space.be1ski.vibits.shared.data.local.AndroidContextHolder
+import space.be1ski.vibits.shared.app.data.AndroidContextHolder
 
 /**
  * Android implementation backed by SharedPreferences.

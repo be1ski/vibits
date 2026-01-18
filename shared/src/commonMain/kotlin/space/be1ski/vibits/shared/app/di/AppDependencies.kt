@@ -1,8 +1,8 @@
 package space.be1ski.vibits.shared.app.di
 
 import dev.zacsweers.metro.Inject
+import space.be1ski.vibits.shared.app.domain.usecase.LoadAppDetailsUseCase
 import space.be1ski.vibits.shared.core.platform.LocaleProvider
-import space.be1ski.vibits.shared.domain.usecase.LoadAppDetailsUseCase
 import space.be1ski.vibits.shared.feature.habits.di.HabitsDependencies
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase

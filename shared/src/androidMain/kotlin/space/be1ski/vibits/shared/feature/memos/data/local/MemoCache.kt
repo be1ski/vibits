@@ -1,7 +1,7 @@
 package space.be1ski.vibits.shared.feature.memos.data.local
 
 import androidx.room.Room
-import space.be1ski.vibits.shared.data.local.AndroidContextHolder
+import space.be1ski.vibits.shared.app.data.AndroidContextHolder
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 /**

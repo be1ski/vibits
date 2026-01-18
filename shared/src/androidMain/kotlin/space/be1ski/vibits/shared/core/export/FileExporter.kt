@@ -2,7 +2,7 @@ package space.be1ski.vibits.shared.core.export
 
 import android.content.Intent
 import androidx.core.content.FileProvider
-import space.be1ski.vibits.shared.data.local.AndroidContextHolder
+import space.be1ski.vibits.shared.app.data.AndroidContextHolder
 import java.io.File
 
 /**
