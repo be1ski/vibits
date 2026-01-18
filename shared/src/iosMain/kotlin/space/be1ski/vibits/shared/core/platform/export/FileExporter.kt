@@ -11,12 +11,14 @@ import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSUserDomainMask
 import platform.Foundation.create
 
+actual fun createFileExporter(): FileExporter = IosFileExporter()
+
 /**
  * iOS implementation that saves files to Documents directory.
  */
-actual class FileExporter {
+private class IosFileExporter : FileExporter {
   @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
-  actual fun export(
+  override fun export(
     fileName: String,
     content: String,
   ): String? =
