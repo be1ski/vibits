@@ -4,9 +4,10 @@ import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.core.elm.FeatureImpl
 import space.be1ski.vibits.shared.domain.model.app.AppDetails
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
+import space.be1ski.vibits.shared.feature.settings.di.SettingsDependencies
 
 fun createSettingsFeature(
-  useCases: SettingsUseCases,
+  dependencies: SettingsDependencies,
   initialMode: AppMode,
   appDetails: AppDetails,
   initialState: SettingsState = SettingsState(),
@@ -18,5 +19,13 @@ fun createSettingsFeature(
         appDetails = appDetails,
       ),
     reducer = settingsReducer,
-    effectHandler = SettingsEffectHandler(useCases),
+    effectHandler =
+      SettingsEffectHandler(
+        validateCredentials = dependencies.validateCredentials,
+        switchAppMode = dependencies.switchAppMode,
+        saveCredentials = dependencies.saveCredentials,
+        resetApp = dependencies.resetApp,
+        saveLanguage = dependencies.saveLanguage,
+        saveTheme = dependencies.saveTheme,
+      ),
   )

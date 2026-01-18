@@ -7,14 +7,14 @@ import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUse
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
+import space.be1ski.vibits.shared.feature.memos.di.MemosDependencies
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosUseCases
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.FixInvalidOnlineModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.LoadAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
+import space.be1ski.vibits.shared.feature.settings.di.SettingsDependencies
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.LoadPreferencesUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveTimeRangeTabUseCase
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsUseCases
 
 /**
  * Single entry point for all app dependencies.
@@ -51,6 +51,6 @@ class VibitsAppDependencies(
   val calculateSuccessRate: CalculateSuccessRateUseCase,
   val buildActivityData: BuildActivityDataUseCase,
   val memosRepository: MemosRepository,
-  val memosUseCases: MemosUseCases,
-  val settingsUseCases: SettingsUseCases,
+  val memosDependencies: MemosDependencies,
+  val settingsDependencies: SettingsDependencies,
 )
