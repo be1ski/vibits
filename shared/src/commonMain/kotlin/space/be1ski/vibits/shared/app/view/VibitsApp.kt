@@ -28,7 +28,7 @@ import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_create_memo
 import space.be1ski.vibits.shared.action_track_today
 import space.be1ski.vibits.shared.app.di.AppDependencies
-import space.be1ski.vibits.shared.core.platform.currentLocalDate
+import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.di.createHabitsFeature
