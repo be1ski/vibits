@@ -6,7 +6,9 @@ import space.be1ski.vibits.shared.app.data.AndroidContextHolder
 import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemosFileDto
 import java.io.File
 
-actual class OfflineMemoStorage {
+actual fun createOfflineMemoStorage(): OfflineMemoStorage = AndroidOfflineMemoStorage()
+
+private class AndroidOfflineMemoStorage : OfflineMemoStorage {
   private val fileName = "memos.json"
   private val json =
     Json {
@@ -14,7 +16,7 @@ actual class OfflineMemoStorage {
       prettyPrint = true
     }
 
-  actual fun load(): OfflineMemosFileDto {
+  override fun load(): OfflineMemosFileDto {
     val file = getFile()?.takeIf { it.exists() } ?: return OfflineMemosFileDto()
     return runCatching {
       val content = file.readText()
@@ -22,7 +24,7 @@ actual class OfflineMemoStorage {
     }.getOrDefault(OfflineMemosFileDto())
   }
 
-  actual fun save(data: OfflineMemosFileDto) {
+  override fun save(data: OfflineMemosFileDto) {
     val file = getFile() ?: return
     runCatching {
       file.parentFile?.mkdirs()

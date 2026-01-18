@@ -1,5 +1,6 @@
 [versions]
 activityCompose = "1.12.2"
+atomicfu = "0.28.0"
 appcompat = "1.7.1"
 ktlint = "14.0.1"
 ktlintLib = "1.7.1"
@@ -21,6 +22,7 @@ lifecycleRuntimeKtx = "2.10.0"
 material = "1.13.0"
 room = "2.8.4"
 serialization = "1.9.0"
+slf4j = "2.0.17"
 sqliteBundled = "2.6.2"
 
 [libraries]
@@ -37,6 +39,7 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "sqliteBundled" }
+kotlinx-atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu", version.ref = "atomicfu" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
@@ -52,6 +55,7 @@ ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref =
 ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 material-components = { group = "com.google.android.material", name = "material", version.ref = "material" }
+slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 

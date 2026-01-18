@@ -5,7 +5,9 @@ import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemosFileDto
 import java.io.File
 import java.nio.file.Paths
 
-actual class OfflineMemoStorage {
+actual fun createOfflineMemoStorage(): OfflineMemoStorage = DesktopOfflineMemoStorage()
+
+private class DesktopOfflineMemoStorage : OfflineMemoStorage {
   private val fileName = "memos.json"
   private val json =
     Json {
@@ -13,7 +15,7 @@ actual class OfflineMemoStorage {
       prettyPrint = true
     }
 
-  actual fun load(): OfflineMemosFileDto {
+  override fun load(): OfflineMemosFileDto {
     val file = getFile()
     if (!file.exists()) {
       return OfflineMemosFileDto()
@@ -24,7 +26,7 @@ actual class OfflineMemoStorage {
     }.getOrDefault(OfflineMemosFileDto())
   }
 
-  actual fun save(data: OfflineMemosFileDto) {
+  override fun save(data: OfflineMemosFileDto) {
     val file = getFile()
     runCatching {
       file.parentFile?.mkdirs()

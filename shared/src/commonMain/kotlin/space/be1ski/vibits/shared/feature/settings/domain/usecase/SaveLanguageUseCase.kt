@@ -1,7 +1,7 @@
 package space.be1ski.vibits.shared.feature.settings.domain.usecase
 
 import dev.zacsweers.metro.Inject
-import space.be1ski.vibits.shared.core.platform.LocaleProvider
+import space.be1ski.vibits.shared.core.platform.locale.LocaleProvider
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
 
