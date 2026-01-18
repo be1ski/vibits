@@ -14,6 +14,21 @@ internal enum class MemosScreen {
   FEED,
 }
 
+private const val MULTIPLIER_A = 2
+private const val MULTIPLIER_B = 3
+
+// Test function without tests - should trigger Codecov failure
+internal fun calculateTestValue(
+  a: Int,
+  b: Int,
+): Int {
+  return if (a > b) {
+    a * MULTIPLIER_A
+  } else {
+    b * MULTIPLIER_B
+  }
+}
+
 internal class VibitsAppUiState(
   currentDate: LocalDate,
   initialHabitsTimeRangeTab: TimeRangeTab = TimeRangeTab.WEEKS,
