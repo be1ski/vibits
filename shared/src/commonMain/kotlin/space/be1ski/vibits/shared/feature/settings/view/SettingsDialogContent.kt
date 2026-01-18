@@ -62,13 +62,13 @@ import space.be1ski.vibits.shared.action_reset
 import space.be1ski.vibits.shared.action_reset_app
 import space.be1ski.vibits.shared.action_save
 import space.be1ski.vibits.shared.action_view_logs
+import space.be1ski.vibits.shared.app.data.ExportResult
+import space.be1ski.vibits.shared.app.data.Exporter
+import space.be1ski.vibits.shared.app.domain.model.AppDetails
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.logging.LogLevel
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.SegmentedSelector
-import space.be1ski.vibits.shared.data.export.ExportResult
-import space.be1ski.vibits.shared.data.export.Exporter
-import space.be1ski.vibits.shared.domain.model.app.AppDetails
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme

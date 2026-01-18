@@ -2,7 +2,7 @@ package space.be1ski.vibits.shared.feature.memos.data.local
 
 import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import space.be1ski.vibits.shared.data.local.DesktopStoragePaths
+import space.be1ski.vibits.shared.app.data.DesktopStoragePaths
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 /**

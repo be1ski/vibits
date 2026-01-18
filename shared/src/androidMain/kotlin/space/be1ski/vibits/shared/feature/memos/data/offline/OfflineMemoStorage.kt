@@ -2,7 +2,7 @@ package space.be1ski.vibits.shared.feature.memos.data.offline
 
 import android.os.Environment
 import kotlinx.serialization.json.Json
-import space.be1ski.vibits.shared.data.local.AndroidContextHolder
+import space.be1ski.vibits.shared.app.data.AndroidContextHolder
 import java.io.File
 
 /**
