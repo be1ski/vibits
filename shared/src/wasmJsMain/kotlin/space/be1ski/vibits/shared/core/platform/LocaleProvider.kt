@@ -1,3 +1,5 @@
+@file:OptIn(kotlin.js.ExperimentalWasmJsInterop::class)
+
 package space.be1ski.vibits.shared.core.platform
 
 import kotlinx.browser.window
