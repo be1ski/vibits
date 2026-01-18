@@ -5,13 +5,19 @@ import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 
 /**
  * Web implementation.
- * Requires page reload for changes to take effect.
+ * Uses window.__customLocale to override navigator.languages at runtime.
  */
 actual class LocaleProvider {
   actual fun getSystemLocale(): String = window.navigator.language.substringBefore("-")
 
   actual fun configureLocale(language: AppLanguage): Boolean {
-    // Web requires page reload to apply language changes
-    return language != AppLanguage.SYSTEM
+    setCustomLocale(language.localeCode)
+    // Return false - no restart needed on web with the navigator override
+    return false
   }
+}
+
+@Suppress("UNUSED_PARAMETER")
+private fun setCustomLocale(locale: String?) {
+  js("window.__customLocale = locale")
 }

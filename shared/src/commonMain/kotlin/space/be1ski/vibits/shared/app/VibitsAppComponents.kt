@@ -87,6 +87,7 @@ internal fun MemosHeader(
 internal fun MemosBottomNavigation(
   appState: VibitsAppUiState,
   onClearSelection: () -> Unit,
+  onFeedScrollToTop: () -> Unit,
 ) {
   NavigationBar {
     NavigationBarItem(
@@ -129,7 +130,11 @@ internal fun MemosBottomNavigation(
       selected = appState.selectedScreen == MemosScreen.FEED,
       onClick = {
         onClearSelection()
-        appState.selectedScreen = MemosScreen.FEED
+        if (appState.selectedScreen == MemosScreen.FEED) {
+          onFeedScrollToTop()
+        } else {
+          appState.selectedScreen = MemosScreen.FEED
+        }
       },
       icon = {
         Icon(
