@@ -3,6 +3,7 @@ package space.be1ski.vibits.shared.feature.memos.data.offline
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.shared.app.di.AppScope
+import space.be1ski.vibits.shared.feature.memos.data.platform.OfflineMemoStorage
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import kotlin.time.Clock

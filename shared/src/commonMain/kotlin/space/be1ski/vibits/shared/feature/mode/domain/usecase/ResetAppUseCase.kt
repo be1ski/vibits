@@ -5,7 +5,7 @@ import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.shared.feature.memos.data.demo.DemoMemosRepository
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
+import space.be1ski.vibits.shared.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab

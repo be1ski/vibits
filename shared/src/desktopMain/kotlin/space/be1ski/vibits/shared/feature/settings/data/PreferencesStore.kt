@@ -6,10 +6,12 @@ import java.util.prefs.Preferences
 /**
  * Desktop implementation backed by Preferences API.
  */
-actual class PreferencesStore {
+actual fun createPreferencesStore(): PreferencesStore = DesktopPreferencesStore()
+
+class DesktopPreferencesStore : PreferencesStore {
   private val prefs = Preferences.userRoot().node(DesktopStoragePaths.preferencesNode())
 
-  actual fun load(): LocalUserPreferences {
+  override fun load(): LocalUserPreferences {
     val defaultTab = LocalUserPreferences.DEFAULT_TIME_RANGE_TAB
     val defaultLanguage = LocalUserPreferences.DEFAULT_LANGUAGE
     val defaultTheme = LocalUserPreferences.DEFAULT_THEME
@@ -26,7 +28,7 @@ actual class PreferencesStore {
     )
   }
 
-  actual fun save(preferences: LocalUserPreferences) {
+  override fun save(preferences: LocalUserPreferences) {
     prefs.put("ui_habits_time_range_tab", preferences.habitsTimeRangeTab)
     prefs.put("ui_posts_time_range_tab", preferences.postsTimeRangeTab)
     prefs.put("ui_language", preferences.language)

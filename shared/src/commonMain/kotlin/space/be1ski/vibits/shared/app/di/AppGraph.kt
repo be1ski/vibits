@@ -5,14 +5,15 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.createGraph
 import io.ktor.client.HttpClient
-import space.be1ski.vibits.shared.app.data.AppDetailsProvider
-import space.be1ski.vibits.shared.core.network.createHttpClient
+import space.be1ski.vibits.shared.core.platform.AppDetailsProvider
 import space.be1ski.vibits.shared.core.platform.LocaleProvider
-import space.be1ski.vibits.shared.feature.auth.data.CredentialsStore
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
-import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemoStorage
-import space.be1ski.vibits.shared.feature.mode.data.AppModeStore
+import space.be1ski.vibits.shared.core.platform.createHttpClient
+import space.be1ski.vibits.shared.feature.auth.data.platform.CredentialsStore
+import space.be1ski.vibits.shared.feature.memos.data.platform.MemoCache
+import space.be1ski.vibits.shared.feature.memos.data.platform.OfflineMemoStorage
+import space.be1ski.vibits.shared.feature.mode.data.platform.AppModeStore
 import space.be1ski.vibits.shared.feature.settings.data.PreferencesStore
+import space.be1ski.vibits.shared.feature.settings.data.createPreferencesStore
 
 /**
  * Metro dependency graph for the application.
@@ -47,7 +48,7 @@ abstract class AppGraph {
 
   @Provides
   @SingleIn(AppScope::class)
-  fun preferencesStore(): PreferencesStore = PreferencesStore()
+  fun preferencesStore(): PreferencesStore = createPreferencesStore()
 
   @Provides
   @SingleIn(AppScope::class)

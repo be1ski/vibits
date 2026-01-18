@@ -9,9 +9,16 @@ coverage:
         target: 80%
 
 ignore:
+  # DI modules (generated bindings)
   - "**/di/**"
+  # UI components (Compose views)
   - "**/view/**"
+  # Test utilities
   - "**/commonTest/**"
+  # Platform-specific code (expect/actual declarations)
+  - "**/core/platform/**"
+  - "**/core/ui/**"
+  - "**/data/platform/**"
 
 comment:
   layout: "reach, diff, flags, files"
