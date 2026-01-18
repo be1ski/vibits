@@ -19,6 +19,8 @@ ignore:
   - "**/platform/**"
   # Compose UI theming
   - "**/core/ui/**"
+  # Room database (requires instrumentation tests)
+  - "**/roomMain/**"
 
 comment:
   layout: "reach, diff, flags, files"
