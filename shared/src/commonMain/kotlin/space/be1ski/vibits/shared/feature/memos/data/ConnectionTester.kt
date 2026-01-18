@@ -7,7 +7,12 @@ import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.memos.data.remote.MemosApi
 
-fun interface ConnectionTester : suspend (String, String) -> Result<Unit>
+fun interface ConnectionTester {
+  suspend operator fun invoke(
+    baseUrl: String,
+    token: String,
+  ): Result<Unit>
+}
 
 private const val TAG = "ConnectionTester"
 

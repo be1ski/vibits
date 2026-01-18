@@ -112,12 +112,12 @@ We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
 - **Avoid meaningless suffixes** like `Info`, `Data`, `Model`, `Object` in class names — they add no semantic value. Use descriptive names that reflect purpose (e.g., `AppDetails` not `AppInfo`, `Credentials` not `CredentialsData`).
 - **When extending a class, verify the name still fits.** If you add a field that changes the class's scope (e.g., adding `version` to `StorageInfo`), rename the class to reflect its new purpose.
 - **Interface/Implementation naming:** Use classic naming: `Foo` for interface, `FooImpl` for implementation. Never use inconsistent patterns like `FooAction` interface with `FooActioner` implementation. Specific implementations can have descriptive names (e.g., `DemoMemosRepository`, `OfflineMemosRepository` for `MemosRepository`). Variable names must match types: `connectionTester: ConnectionTester`, not `testConnection: ConnectionTester`.
-- **Single-method interfaces (fun interface):** For interfaces with a single method that have DI-provided implementations, use shorthand `fun interface` syntax extending the function type:
+- **Single-method interfaces (fun interface):** For interfaces with a single method that have DI-provided implementations, use `fun interface` with explicit method signature:
   ```kotlin
-  // Interface with shorthand syntax (no named params in function type)
-  fun interface ConnectionTester : suspend (String, String) -> Result<Unit>
+  fun interface ConnectionTester {
+    suspend operator fun invoke(baseUrl: String, token: String): Result<Unit>
+  }
 
-  // Implementation with named params
   @Inject
   @SingleIn(AppScope::class)
   @ContributesBinding(AppScope::class)
@@ -125,7 +125,7 @@ We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
     override suspend fun invoke(baseUrl: String, token: String): Result<Unit> { ... }
   }
   ```
-  Note: Named parameters in function types as supertypes are not supported in Kotlin, so use positional types in the interface. The implementation's `invoke` method provides the named parameters.
+  Note: Avoid shorthand `fun interface Foo : (String, String) -> Result` — it loses parameter names and hurts readability.
   This pattern is for single-purpose functional interfaces with DI. Do NOT use it for: multi-method interfaces, platform-specific interfaces with `expect/actual`, or repository interfaces.
 - Avoid `!!`; keep composables small and focused.
 - **No unnecessary default values.** Don't add default parameter values that nobody uses — required parameters catch missing arguments at compile time.
