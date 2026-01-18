@@ -64,6 +64,7 @@ import space.be1ski.vibits.shared.action_save
 import space.be1ski.vibits.shared.action_view_logs
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.logging.LogLevel
+import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.SegmentedSelector
 import space.be1ski.vibits.shared.data.export.ExportResult
 import space.be1ski.vibits.shared.data.export.Exporter
@@ -405,7 +406,7 @@ private fun LanguageDropdown(
           Icon(
             Icons.Default.KeyboardArrowDown,
             contentDescription = null,
-            modifier = Modifier.size(18.dp),
+            modifier = Modifier.padding(start = Indent.x3s).size(18.dp),
           )
         }
       }

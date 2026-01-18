@@ -1,6 +1,7 @@
 package space.be1ski.vibits.shared.app
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
@@ -49,6 +50,7 @@ internal fun SwipeableTabContent(
   onHabitsAction: (HabitsAction) -> Unit,
   calculateSuccessRate: CalculateSuccessRateUseCase,
   dispatchMemos: (MemosAction) -> Unit = {},
+  feedListState: LazyListState,
 ) {
   if (appState.selectedScreen == MemosScreen.FEED) {
     FeedScreen(
@@ -58,6 +60,7 @@ internal fun SwipeableTabContent(
       enablePullRefresh = !isDesktop,
       onMemoClick = { memo -> beginEditMemo(appState, memo) },
       onDeleteMemo = { memo -> dispatchMemos(MemosAction.DeleteMemo(memo.name)) },
+      listState = feedListState,
     )
     return
   }

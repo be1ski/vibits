@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddTask
 import androidx.compose.material.icons.filled.Edit
@@ -20,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.Res
@@ -217,9 +219,18 @@ private fun VibitsAppContent(
       buildHabitDay(date = today, habitsConfig = todayConfig, dailyMemo = todayMemo)
     }
 
+  val feedListState = rememberLazyListState()
+  val scope = rememberCoroutineScope()
+
   val onClearSelection =
     remember(onHabitsAction) {
       { onHabitsAction(HabitsAction.ClearSelection) }
+    }
+  val onFeedScrollToTop: () -> Unit =
+    remember(feedListState, scope) {
+      {
+        scope.launch { feedListState.animateScrollToItem(0) }
+      }
     }
   val onShowCreateMemoDialog =
     remember(appState) {
@@ -284,7 +295,7 @@ private fun VibitsAppContent(
       }
     },
     bottomBar = {
-      MemosBottomNavigation(appState, onClearSelection)
+      MemosBottomNavigation(appState, onClearSelection, onFeedScrollToTop)
     },
   ) { padding ->
     val selectedTab =
@@ -340,6 +351,7 @@ private fun VibitsAppContent(
         onHabitsAction = onHabitsAction,
         calculateSuccessRate = calculateSuccessRate,
         dispatchMemos = dispatchMemos,
+        feedListState = feedListState,
       )
     }
   }
