@@ -402,12 +402,14 @@ private fun LanguageDropdown(
           shape = SegmentedButtonDefaults.itemShape(index = 0, count = 1),
           icon = {},
         ) {
-          Text(getLanguageLabel(selectedLanguage))
-          Icon(
-            Icons.Default.KeyboardArrowDown,
-            contentDescription = null,
-            modifier = Modifier.padding(start = Indent.x3s).size(18.dp),
-          )
+          Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(getLanguageLabel(selectedLanguage))
+            Icon(
+              Icons.Default.KeyboardArrowDown,
+              contentDescription = null,
+              modifier = Modifier.padding(start = Indent.x3s).size(18.dp),
+            )
+          }
         }
       }
       DropdownMenu(
