@@ -14,6 +14,10 @@ import space.be1ski.vibits.shared.feature.settings.domain.repository.Preferences
 
 private const val TAG = "ResetApp"
 
+fun interface ResetApp {
+  suspend operator fun invoke()
+}
+
 /**
  * Use case for resetting app to initial state.
  * Clears mode selection, cache, credentials, preferences, and demo data,
@@ -26,8 +30,8 @@ class ResetAppUseCase(
   private val credentialsRepository: CredentialsRepository,
   private val preferencesRepository: PreferencesRepository,
   private val demoMemosRepository: DemoMemosRepository,
-) {
-  suspend operator fun invoke() {
+) : ResetApp {
+  override suspend operator fun invoke() {
     Log.i(TAG, "Resetting app to initial state...")
     memoCache.clear()
     credentialsRepository.save(Credentials(baseUrl = "", token = ""))

@@ -25,11 +25,11 @@ fun createSettingsFeature(
     reducer = settingsReducer,
     effectHandler =
       SettingsEffectHandler(
-        validateCredentials = { baseUrl, token -> dependencies.validateCredentials(baseUrl, token) },
-        switchAppMode = { mode -> dependencies.switchAppMode(mode) },
-        saveCredentials = { credentials -> dependencies.saveCredentials(credentials) },
-        resetApp = { dependencies.resetApp() },
-        saveLanguage = { language -> dependencies.saveLanguage(language) },
-        saveTheme = { theme -> dependencies.saveTheme(theme) },
+        validateCredentials = dependencies.validateCredentials,
+        switchAppMode = dependencies.switchAppMode,
+        saveCredentials = dependencies.saveCredentials,
+        resetApp = dependencies.resetApp,
+        saveLanguage = dependencies.saveLanguage,
+        saveTheme = dependencies.saveTheme,
       ),
   )
