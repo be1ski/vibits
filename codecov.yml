@@ -9,6 +9,7 @@ coverage:
         target: 80%
 
 ignore:
+  - "**/di/**"
   - "**/view/**"
 
 comment:
