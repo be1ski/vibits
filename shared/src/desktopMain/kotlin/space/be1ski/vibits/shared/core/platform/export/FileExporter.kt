@@ -3,11 +3,13 @@ package space.be1ski.vibits.shared.core.platform.export
 import java.io.File
 import java.nio.file.Paths
 
+actual fun createFileExporter(): FileExporter = DesktopFileExporter()
+
 /**
  * Desktop implementation that saves files to ~/Documents/Vibits folder.
  */
-actual class FileExporter {
-  actual fun export(
+private class DesktopFileExporter : FileExporter {
+  override fun export(
     fileName: String,
     content: String,
   ): String? =

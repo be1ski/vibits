@@ -11,11 +11,13 @@ import org.w3c.files.BlobPropertyBag
 @Suppress("UNUSED_PARAMETER")
 private fun createBlobParts(content: String): JsArray<JsAny?> = js("([content])")
 
+actual fun createFileExporter(): FileExporter = WasmFileExporter()
+
 /**
  * Web implementation that triggers a browser download.
  */
-actual class FileExporter {
-  actual fun export(
+private class WasmFileExporter : FileExporter {
+  override fun export(
     fileName: String,
     content: String,
   ): String? =
