@@ -1,6 +1,8 @@
 package space.be1ski.vibits.shared.feature.memos.data.offline
 
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import kotlin.time.Clock
@@ -13,6 +15,7 @@ import kotlin.uuid.Uuid
  * Stores memos in local JSON file.
  */
 @Inject
+@SingleIn(AppScope::class)
 class OfflineMemosRepository(
   private val storage: OfflineMemoStorage,
 ) : MemosRepository {

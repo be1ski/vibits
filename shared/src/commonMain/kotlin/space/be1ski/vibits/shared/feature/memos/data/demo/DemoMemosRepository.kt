@@ -1,5 +1,8 @@
 package space.be1ski.vibits.shared.feature.memos.data.demo
 
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import kotlin.time.Clock
@@ -10,6 +13,8 @@ import kotlin.uuid.Uuid
  * In-memory repository for demo mode.
  * All changes are stored in memory and reset when demo mode is toggled.
  */
+@Inject
+@SingleIn(AppScope::class)
 class DemoMemosRepository : MemosRepository {
   private val memos = mutableListOf<Memo>()
   private var initialized = false

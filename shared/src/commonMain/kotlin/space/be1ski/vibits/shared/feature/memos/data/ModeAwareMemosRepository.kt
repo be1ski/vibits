@@ -1,6 +1,9 @@
 package space.be1ski.vibits.shared.feature.memos.data
 
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.memos.data.demo.DemoMemosRepository
 import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
@@ -17,6 +20,8 @@ private const val TAG = "ModeAwareRepo"
  * Clears cache when switching modes to ensure data isolation.
  */
 @Inject
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
 class ModeAwareMemosRepository(
   private val appModeRepository: AppModeRepository,
   private val onlineRepository: MemosRepositoryImpl,
