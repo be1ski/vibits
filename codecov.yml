@@ -11,6 +11,7 @@ coverage:
 ignore:
   - "**/di/**"
   - "**/view/**"
+  - "**/*FeatureFactory.kt"
 
 comment:
   layout: "reach, diff, flags, files"
