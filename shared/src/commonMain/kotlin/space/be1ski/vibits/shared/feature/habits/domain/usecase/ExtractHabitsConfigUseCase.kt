@@ -10,7 +10,7 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
  * Extracts habits configuration entries from memos.
  * Config memos are identified by #habits/config or #habits_config tags.
  */
-class ExtractHabitsConfigUseCase {
+object ExtractHabitsConfigUseCase {
   operator fun invoke(
     memos: List<Memo>,
     timeZone: TimeZone,
@@ -20,8 +20,8 @@ class ExtractHabitsConfigUseCase {
         if (!memo.content.contains("#habits/config") && !memo.content.contains("#habits_config")) {
           return@mapNotNull null
         }
-        val instant = ExtractDailyMemosUseCase.parseMemoInstant(memo) ?: return@mapNotNull null
-        val date = ExtractDailyMemosUseCase.parseMemoDate(memo, timeZone) ?: return@mapNotNull null
+        val instant = parseMemoInstant(memo) ?: return@mapNotNull null
+        val date = parseMemoDate(memo, timeZone) ?: return@mapNotNull null
         val lines =
           memo.content
             .lineSequence()
