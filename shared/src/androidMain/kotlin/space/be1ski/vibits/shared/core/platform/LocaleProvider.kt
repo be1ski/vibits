@@ -9,10 +9,12 @@ import java.util.Locale
  * Android implementation using AppCompatDelegate for per-app language settings.
  */
 actual class LocaleProvider {
-  actual fun getSystemLocale(): String = Locale.getDefault().language
+  private val originalSystemLocale: Locale = Locale.getDefault()
+
+  actual fun getSystemLocale(): String = originalSystemLocale.language
 
   actual fun configureLocale(language: AppLanguage): Boolean {
-    val locale = language.localeCode?.let { Locale.forLanguageTag(it) } ?: Locale.getDefault()
+    val locale = language.localeCode?.let { Locale.forLanguageTag(it) } ?: originalSystemLocale
     Locale.setDefault(locale)
 
     val localeList =
