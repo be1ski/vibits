@@ -34,10 +34,10 @@ Habit tracker powered by [Memos](https://github.com/usememos/memos). Kotlin Mult
 
 ## CI/CD
 
-One-click release → builds all platforms in parallel:
+[One-click release](https://github.com/be1ski/vibits/actions/workflows/release.yml) → builds all platforms in parallel:
 - **Android APK** → GitHub Releases + Firebase App Distribution
 - **macOS DMG / Windows MSI** → GitHub Releases
-- **Web** → GitHub Releases + [GitHub Pages](https://be1ski.github.io/vibits/)
+- **Web** → GitHub Releases + GitHub Pages
 
 ## Modules
 
