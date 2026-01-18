@@ -2,10 +2,20 @@ package space.be1ski.vibits.shared.feature.settings.presentation
 
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
+import space.be1ski.vibits.shared.core.platform.locale.LocaleProvider
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
+import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
+import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
+import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveLanguageUseCase
+import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveThemeUseCase
+import space.be1ski.vibits.shared.test.FakeAppModeRepository
+import space.be1ski.vibits.shared.test.FakeCredentialsRepository
+import space.be1ski.vibits.shared.test.FakeMemosApiClient
+import space.be1ski.vibits.shared.test.FakePreferencesRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -14,7 +24,7 @@ class SettingsEffectHandlerTest {
   @Test
   fun `ValidateCredentials emits ValidationSucceeded on success`() =
     runTest {
-      val handler = createHandler(validateResult = Result.success(Unit))
+      val handler = createHandler()
 
       val actions =
         handler(
@@ -31,7 +41,8 @@ class SettingsEffectHandlerTest {
   @Test
   fun `ValidateCredentials emits ValidationFailed on failure`() =
     runTest {
-      val handler = createHandler(validateResult = Result.failure(Exception("Connection failed")))
+      val api = FakeMemosApiClient(listMemosResult = Result.failure(Exception("Connection failed")))
+      val handler = createHandler(memosApi = api)
 
       val actions =
         handler(
@@ -49,79 +60,61 @@ class SettingsEffectHandlerTest {
   @Test
   fun `SwitchMode saves mode and emits ModeSwitched`() =
     runTest {
-      var switchedMode: AppMode? = null
-      val handler =
-        createHandler(
-          switchAppMode = { switchedMode = it },
-        )
+      val appModeRepo = FakeAppModeRepository(initial = AppMode.ONLINE)
+      val handler = createHandler(appModeRepository = appModeRepo)
 
       val actions = handler(SettingsEffect.SwitchMode(mode = AppMode.OFFLINE)).toList()
 
       assertEquals(listOf(SettingsAction.ModeSwitched), actions)
-      assertEquals(AppMode.OFFLINE, switchedMode)
+      assertEquals(AppMode.OFFLINE, appModeRepo.storedMode)
     }
 
   @Test
   fun `SaveCredentials saves to repository`() =
     runTest {
-      var savedCredentials: Credentials? = null
-      val handler =
-        createHandler(
-          saveCredentials = { savedCredentials = it },
-        )
+      val credentialsRepo = FakeCredentialsRepository()
+      val handler = createHandler(credentialsRepository = credentialsRepo)
 
       handler(
         SettingsEffect.SaveCredentials(baseUrl = "https://saved.com", token = "saved-token"),
       ).toList()
 
-      assertEquals("https://saved.com", savedCredentials?.baseUrl)
-      assertEquals("saved-token", savedCredentials?.token)
+      assertEquals("https://saved.com", credentialsRepo.stored.baseUrl)
+      assertEquals("saved-token", credentialsRepo.stored.token)
     }
 
   @Test
   fun `ResetApp resets and emits ResetCompleted`() =
     runTest {
-      var resetCalled = false
-      val handler =
-        createHandler(
-          resetApp = { resetCalled = true },
-        )
+      val appModeRepo = FakeAppModeRepository(initial = AppMode.ONLINE)
+      val handler = createHandler(appModeRepository = appModeRepo)
 
       val actions = handler(SettingsEffect.ResetApp).toList()
 
       assertEquals(listOf(SettingsAction.ResetCompleted), actions)
-      assertTrue(resetCalled)
+      assertEquals(AppMode.NOT_SELECTED, appModeRepo.storedMode)
     }
 
   @Test
   fun `SaveLanguage calls saveLanguage function`() =
     runTest {
-      var savedLanguage: AppLanguage? = null
-      val handler =
-        createHandler(
-          saveLanguage = {
-            savedLanguage = it
-            false
-          },
-        )
+      val prefsRepo = FakePreferencesRepository()
+      val handler = createHandler(preferencesRepository = prefsRepo)
 
       handler(SettingsEffect.SaveLanguage(language = AppLanguage.ENGLISH)).toList()
 
-      assertEquals(AppLanguage.ENGLISH, savedLanguage)
+      assertEquals(AppLanguage.ENGLISH, prefsRepo.stored.language)
     }
 
   @Test
   fun `SaveTheme calls saveTheme function`() =
     runTest {
-      var savedTheme: AppTheme? = null
-      val handler =
-        createHandler(
-          saveTheme = { savedTheme = it },
-        )
+      val prefsRepo = FakePreferencesRepository()
+      val handler = createHandler(preferencesRepository = prefsRepo)
 
       handler(SettingsEffect.SaveTheme(theme = AppTheme.DARK)).toList()
 
-      assertEquals(AppTheme.DARK, savedTheme)
+      assertEquals(AppTheme.DARK, prefsRepo.stored.theme)
     }
 
   @Test
@@ -157,20 +150,18 @@ class SettingsEffectHandlerTest {
     }
 
   private fun createHandler(
-    validateResult: Result<Unit> = Result.success(Unit),
-    switchAppMode: suspend (AppMode) -> Unit = {},
-    saveCredentials: (Credentials) -> Unit = {},
-    resetApp: suspend () -> Unit = {},
-    saveLanguage: (AppLanguage) -> Boolean = { false },
-    saveTheme: (AppTheme) -> Unit = {},
+    memosApi: FakeMemosApiClient = FakeMemosApiClient(),
+    appModeRepository: FakeAppModeRepository = FakeAppModeRepository(),
+    credentialsRepository: FakeCredentialsRepository = FakeCredentialsRepository(),
+    preferencesRepository: FakePreferencesRepository = FakePreferencesRepository(),
   ): SettingsEffectHandler {
     return SettingsEffectHandler(
-      validateCredentials = { _, _ -> validateResult },
-      switchAppMode = switchAppMode,
-      saveCredentials = saveCredentials,
-      resetApp = resetApp,
-      saveLanguage = saveLanguage,
-      saveTheme = saveTheme,
+      validateCredentials = ValidateCredentialsUseCase(memosApi),
+      switchAppMode = SwitchAppModeUseCase(appModeRepository),
+      saveCredentials = SaveCredentialsUseCase(credentialsRepository),
+      resetApp = ResetAppUseCase(appModeRepository, credentialsRepository, preferencesRepository),
+      saveLanguage = SaveLanguageUseCase(preferencesRepository, LocaleProvider()),
+      saveTheme = SaveThemeUseCase(preferencesRepository),
     )
   }
 }
