@@ -9,8 +9,9 @@ coverage:
         target: 80%
 
 ignore:
-  - "**/presentation/**"
-  - "**/app/**"
+  - "**/di/**"
+  - "**/view/**"
+  - "**/*EffectHandler.kt"
 
 comment:
   layout: "reach, diff, flags, files"

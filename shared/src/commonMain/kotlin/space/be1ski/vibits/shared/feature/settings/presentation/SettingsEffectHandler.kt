@@ -6,11 +6,22 @@ import kotlinx.coroutines.flow.flow
 import space.be1ski.vibits.shared.core.elm.EffectHandler
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
+import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
+import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
+import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveLanguageUseCase
+import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveThemeUseCase
 
 private const val TAG = "SettingsEffect"
 
 class SettingsEffectHandler(
-  private val useCases: SettingsUseCases,
+  private val validateCredentials: ValidateCredentialsUseCase,
+  private val switchAppMode: SwitchAppModeUseCase,
+  private val saveCredentials: SaveCredentialsUseCase,
+  private val resetApp: ResetAppUseCase,
+  private val saveLanguage: SaveLanguageUseCase,
+  private val saveTheme: SaveThemeUseCase,
 ) : EffectHandler<SettingsEffect, SettingsAction> {
   override fun invoke(effect: SettingsEffect): Flow<SettingsAction> =
     when (effect) {
@@ -33,8 +44,7 @@ class SettingsEffectHandler(
   private fun handleValidateCredentials(effect: SettingsEffect.ValidateCredentials): Flow<SettingsAction> =
     flow {
       Log.d(TAG, "Validating credentials")
-      useCases
-        .validateCredentials(effect.baseUrl, effect.token)
+      validateCredentials(effect.baseUrl, effect.token)
         .onSuccess { emit(SettingsAction.ValidationSucceeded) }
         .onFailure { emit(SettingsAction.ValidationFailed("connection_failed")) }
     }
@@ -42,32 +52,32 @@ class SettingsEffectHandler(
   private fun handleSwitchMode(effect: SettingsEffect.SwitchMode): Flow<SettingsAction> =
     flow {
       Log.i(TAG, "Switching mode to ${effect.mode}")
-      useCases.switchAppMode(effect.mode)
+      switchAppMode(effect.mode)
       emit(SettingsAction.ModeSwitched)
     }
 
   private fun handleSaveCredentials(effect: SettingsEffect.SaveCredentials): Flow<SettingsAction> =
     flow {
       Log.d(TAG, "Saving credentials")
-      useCases.saveCredentials(Credentials(effect.baseUrl, effect.token))
+      saveCredentials(Credentials(effect.baseUrl, effect.token))
     }
 
   private fun handleResetApp(): Flow<SettingsAction> =
     flow {
       Log.i(TAG, "Resetting app")
-      useCases.resetApp()
+      resetApp()
       emit(SettingsAction.ResetCompleted)
     }
 
   private fun handleSaveLanguage(effect: SettingsEffect.SaveLanguage): Flow<SettingsAction> =
     emptyFlow<SettingsAction>().also {
       Log.i(TAG, "Language changed to ${effect.language}")
-      useCases.saveLanguage(effect.language)
+      saveLanguage(effect.language)
     }
 
   private fun handleSaveTheme(effect: SettingsEffect.SaveTheme): Flow<SettingsAction> =
     emptyFlow<SettingsAction>().also {
       Log.i(TAG, "Theme changed to ${effect.theme}")
-      useCases.saveTheme(effect.theme)
+      saveTheme(effect.theme)
     }
 }
