@@ -19,7 +19,7 @@ We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
 - Use `@Provides` in `AppGraph` only for platform-specific classes (expect/actual).
 - Use `@Binds` to bind implementations to interfaces.
 - Scope singletons with `@SingleIn(AppScope::class)`.
-- **Use `@Inject` only when needed.** Stateless use cases (pure functions) don't need DI — instantiate dependencies as private properties. Add `@Inject` when the class depends on repositories, network, or other infrastructure that needs mocking.
+- **Use `@Inject` only when needed.** Pure functions don't need DI — test them directly with inputs/outputs. Add `@Inject` when the class has side effects (network, DB, files) that require mocking in tests.
 
 ## Build, Test, and Development Commands
 
