@@ -28,7 +28,9 @@ import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.Indent
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
+import space.be1ski.vibits.shared.feature.habits.presentation.components.ActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.presentation.components.rememberHabitsConfigTimeline
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
@@ -152,9 +154,11 @@ internal fun rememberSuccessRate(
   memos: List<Memo>,
   activityRange: ActivityRange,
   calculateSuccessRate: CalculateSuccessRateUseCase,
+  buildActivityDataUseCase: BuildActivityDataUseCase,
+  cache: ActivityWeekDataCache,
 ): Float? {
   val today = remember { currentLocalDate() }
-  val weekDataState = rememberActivityWeekData(memos, activityRange, ActivityMode.HABITS, today)
+  val weekDataState = rememberActivityWeekData(memos, activityRange, ActivityMode.HABITS, today, buildActivityDataUseCase, cache)
   val weekData = weekDataState.data
   val habitsTimeline = rememberHabitsConfigTimeline(memos)
   val configStartDate = remember(habitsTimeline) { habitsTimeline.firstOrNull()?.date }

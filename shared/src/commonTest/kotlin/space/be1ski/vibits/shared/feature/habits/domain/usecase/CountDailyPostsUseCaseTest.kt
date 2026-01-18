@@ -9,7 +9,6 @@ import kotlin.test.assertEquals
 import kotlin.time.Instant as KtInstant
 
 class CountDailyPostsUseCaseTest {
-  private val useCase = CountDailyPostsUseCase()
   private val timeZone = TimeZone.UTC
 
   @Test
@@ -26,7 +25,7 @@ class CountDailyPostsUseCaseTest {
         end = LocalDate(2024, 1, 16),
       )
 
-    val result = useCase(memos, timeZone, bounds)
+    val result = CountDailyPostsUseCase(memos, timeZone, bounds)
 
     assertEquals(2, result[LocalDate(2024, 1, 15)])
     assertEquals(1, result[LocalDate(2024, 1, 16)])
@@ -45,7 +44,7 @@ class CountDailyPostsUseCaseTest {
         end = LocalDate(2024, 1, 20),
       )
 
-    val result = useCase(memos, timeZone, bounds)
+    val result = CountDailyPostsUseCase(memos, timeZone, bounds)
 
     assertEquals(null, result[LocalDate(2024, 1, 14)])
     assertEquals(1, result[LocalDate(2024, 1, 15)])
@@ -64,7 +63,7 @@ class CountDailyPostsUseCaseTest {
         end = LocalDate(2024, 1, 20),
       )
 
-    val result = useCase(memos, timeZone, bounds)
+    val result = CountDailyPostsUseCase(memos, timeZone, bounds)
 
     assertEquals(1, result[LocalDate(2024, 1, 15)])
     assertEquals(null, result[LocalDate(2024, 1, 21)])
@@ -78,7 +77,7 @@ class CountDailyPostsUseCaseTest {
         end = LocalDate(2024, 1, 20),
       )
 
-    val result = useCase(emptyList(), timeZone, bounds)
+    val result = CountDailyPostsUseCase(emptyList(), timeZone, bounds)
 
     assertEquals(0, result.size)
   }
@@ -96,7 +95,7 @@ class CountDailyPostsUseCaseTest {
         end = LocalDate(2024, 1, 20),
       )
 
-    val result = useCase(memos, timeZone, bounds)
+    val result = CountDailyPostsUseCase(memos, timeZone, bounds)
 
     assertEquals(1, result[LocalDate(2024, 1, 15)])
     assertEquals(1, result[LocalDate(2024, 1, 20)])

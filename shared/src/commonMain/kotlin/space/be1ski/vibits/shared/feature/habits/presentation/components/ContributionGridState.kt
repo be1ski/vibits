@@ -2,7 +2,6 @@ package space.be1ski.vibits.shared.feature.habits.presentation.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,10 +17,11 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractDailyMemosUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 private val emptyWeekData = ActivityWeekData(weeks = emptyList(), maxDaily = 0, maxWeekly = 0)
-private val buildActivityDataUseCase = BuildActivityDataUseCase()
 
 /**
  * Result of [rememberActivityWeekData] with loading state.
@@ -84,25 +84,20 @@ class ActivityWeekDataCache {
 }
 
 /**
- * CompositionLocal for [ActivityWeekDataCache].
- * Provided at app level, survives tab switches and recomposition.
- */
-val LocalActivityWeekDataCache = compositionLocalOf { ActivityWeekDataCache() }
-
-/**
  * Memoized builder for [ActivityWeekData].
  * Pre-extracts config and daily memos (cached by memos only), then builds range-dependent data.
  * Computation runs in background thread; caches results per range for instant switching.
- * Uses cache from [LocalActivityWeekDataCache] that survives tab switches.
  */
+@Suppress("LongParameterList")
 @Composable
 fun rememberActivityWeekData(
   memos: List<Memo>,
   range: ActivityRange,
   mode: ActivityMode,
   today: LocalDate,
+  buildActivityDataUseCase: BuildActivityDataUseCase,
+  cache: ActivityWeekDataCache,
 ): ActivityWeekDataState {
-  val cache = LocalActivityWeekDataCache.current
   val timeZone = remember { TimeZone.currentSystemDefault() }
   // These are cached by memos only - won't recompute on range change
   val configTimeline = rememberHabitsConfigTimeline(memos)
@@ -125,7 +120,15 @@ fun rememberActivityWeekData(
   LaunchedEffect(cacheVersion, range, mode) {
     val result =
       withContext(Dispatchers.Default) {
-        buildActivityWeekData(configTimeline, dailyMemos, timeZone, memos, range, mode, today)
+        buildActivityDataUseCase.buildWeekData(
+          configTimeline = configTimeline,
+          dailyMemos = dailyMemos,
+          timeZone = timeZone,
+          memos = memos,
+          range = range,
+          mode = mode,
+          today = today,
+        )
       }
     cache.put(memos, range, mode, result)
     currentData = result
@@ -142,7 +145,7 @@ fun rememberActivityWeekData(
 fun rememberHabitsConfigTimeline(memos: List<Memo>): List<HabitsConfigEntry> {
   val timeZone = remember { TimeZone.currentSystemDefault() }
   return remember(memos, timeZone) {
-    buildActivityDataUseCase.extractConfigTimeline(memos, timeZone)
+    ExtractHabitsConfigUseCase(memos, timeZone)
   }
 }
 
@@ -153,7 +156,7 @@ fun rememberHabitsConfigTimeline(memos: List<Memo>): List<HabitsConfigEntry> {
 fun rememberDailyMemos(memos: List<Memo>): Map<LocalDate, DailyMemoInfo> {
   val timeZone = remember { TimeZone.currentSystemDefault() }
   return remember(memos, timeZone) {
-    buildActivityDataUseCase.extractDailyMemos(memos, timeZone)
+    ExtractDailyMemosUseCase(memos, timeZone)
   }
 }
 
@@ -176,27 +179,3 @@ internal fun calculateLayout(
   val contentWidth = columnSize * safeColumns + totalSpacing
   return ChartLayout(columnSize = columnSize, contentWidth = contentWidth, useScroll = useScroll)
 }
-
-/**
- * Builds the chart dataset for a given [range].
- * Delegates to domain use case.
- */
-@Suppress("LongParameterList")
-private fun buildActivityWeekData(
-  configTimeline: List<HabitsConfigEntry>,
-  dailyMemos: Map<LocalDate, DailyMemoInfo>,
-  timeZone: TimeZone,
-  memos: List<Memo>,
-  range: ActivityRange,
-  mode: ActivityMode,
-  today: LocalDate,
-): ActivityWeekData =
-  buildActivityDataUseCase.buildWeekData(
-    configTimeline = configTimeline,
-    dailyMemos = dailyMemos,
-    timeZone = timeZone,
-    memos = memos,
-    range = range,
-    mode = mode,
-    today = today,
-  )

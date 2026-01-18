@@ -19,7 +19,11 @@ We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
 - Use `@Provides` in `AppGraph` only for platform-specific classes (expect/actual).
 - Use `@Binds` to bind implementations to interfaces.
 - Scope singletons with `@SingleIn(AppScope::class)`.
-- **Use cases:** `object` for stateless without dependencies; `@Inject class` with dependencies; `interface` + `@Inject impl` + `@Binds` for abstraction.
+- **Use cases:**
+  - Stateless use cases without dependencies: use `object` with `operator fun invoke`. Example: `FilterPostsUseCase(memos)`.
+  - Use cases with dependencies: use `@Inject class` with `operator fun invoke`.
+  - Simple pure utility functions (e.g., date calculations): use top-level functions in `*Utils.kt` files.
+  - Operations on data classes: use extension functions in `*Extensions.kt` files.
 
 ## Build, Test, and Development Commands
 

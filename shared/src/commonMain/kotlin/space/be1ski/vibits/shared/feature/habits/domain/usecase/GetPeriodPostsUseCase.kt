@@ -21,8 +21,7 @@ class GetPeriodPostsUseCase {
     timeZone: TimeZone,
   ): List<Memo> {
     val (start, end) = rangeBounds(range)
-    return CountDailyPostsUseCase
-      .filterPosts(memos)
+    return FilterPostsUseCase(memos)
       .filter { memo ->
         val instant = memo.createTime ?: memo.updateTime ?: return@filter false
         val date = instant.toLocalDateTime(timeZone).date

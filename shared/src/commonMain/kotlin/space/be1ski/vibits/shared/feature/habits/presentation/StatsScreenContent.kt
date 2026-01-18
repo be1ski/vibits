@@ -61,16 +61,17 @@ import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.CountDailyPostsUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.model.findDayByDate
+import space.be1ski.vibits.shared.feature.habits.domain.model.forHabit
+import space.be1ski.vibits.shared.feature.habits.domain.model.lastSevenDays
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.FilterPostsUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.components.ChartDimens
 import space.be1ski.vibits.shared.feature.habits.presentation.components.ContributionGrid
 import space.be1ski.vibits.shared.feature.habits.presentation.components.ContributionGridState
 import space.be1ski.vibits.shared.feature.habits.presentation.components.WeeklyBarChart
 import space.be1ski.vibits.shared.feature.habits.presentation.components.WeeklyBarChartState
-import space.be1ski.vibits.shared.feature.habits.presentation.components.activityWeekDataForHabit
 import space.be1ski.vibits.shared.feature.habits.presentation.components.calculateLayout
-import space.be1ski.vibits.shared.feature.habits.presentation.components.habitsConfigForDate
-import space.be1ski.vibits.shared.feature.habits.presentation.components.lastSevenDays
 import space.be1ski.vibits.shared.feature.habits.presentation.components.localizedLabel
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.format_habits_progress
@@ -551,7 +552,7 @@ internal fun StatsMainChart(
   // For Posts/Week show time-of-day heatmap instead of contribution grid
   if (state.activityMode == ActivityMode.POSTS && state.range is ActivityRange.Week) {
     WeeklyPostsHeatmap(
-      memos = CountDailyPostsUseCase.filterPosts(state.memos),
+      memos = FilterPostsUseCase(state.memos),
       weekStart = state.range.startDate,
       timeZone = derived.timeZone,
       compactHeight = derived.useCompactHeight,
@@ -587,7 +588,7 @@ internal fun StatsMainChart(
   val onEditRequested =
     remember(dispatch, derived.habitsConfigTimeline) {
       { day: ContributionDay ->
-        val config = habitsConfigForDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
+        val config = ExtractHabitsConfigUseCase.forDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
         dispatch(HabitsAction.OpenEditor(day, config))
       }
     }
@@ -600,7 +601,7 @@ internal fun StatsMainChart(
         }
       }
     LastSevenDaysMatrix(
-      days = lastSevenDays(derived.weekData),
+      days = derived.weekData.lastSevenDays(),
       habits = derived.currentHabitsConfig,
       compactHeight = derived.useCompactHeight,
       demoMode = state.demoMode,
@@ -731,11 +732,11 @@ private fun HabitActivitySection(
 ) {
   val habitWeekData =
     remember(state.baseWeekData, state.habit) {
-      activityWeekDataForHabit(state.baseWeekData, state.habit)
+      state.baseWeekData.forHabit(state.habit)
     }
   val selectedDay =
     remember(habitWeekData.weeks, state.habit, state.selectedDate) {
-      state.selectedDate?.let { date -> findDayByDate(habitWeekData, date) }
+      state.selectedDate?.let { date -> habitWeekData.findDayByDate(date) }
     }
   val chartScrollState = rememberScrollState()
 

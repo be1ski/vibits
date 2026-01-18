@@ -1,8 +1,6 @@
 package space.be1ski.vibits.shared.feature.habits.presentation.components
 
 import kotlinx.datetime.LocalDate
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.DateCalculationsUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.startOfWeek as domainStartOfWeek
 
-private val dateCalculationsUseCase = DateCalculationsUseCase()
-
-internal fun startOfWeek(date: LocalDate): LocalDate = dateCalculationsUseCase.startOfWeek(date)
+internal fun startOfWeek(date: LocalDate): LocalDate = domainStartOfWeek(date)

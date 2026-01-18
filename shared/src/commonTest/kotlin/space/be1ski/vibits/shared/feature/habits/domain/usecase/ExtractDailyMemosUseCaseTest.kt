@@ -10,7 +10,6 @@ import kotlin.test.assertNull
 import kotlin.time.Instant as KtInstant
 
 class ExtractDailyMemosUseCaseTest {
-  private val useCase = ExtractDailyMemosUseCase()
   private val timeZone = TimeZone.UTC
 
   @Test
@@ -21,7 +20,7 @@ class ExtractDailyMemosUseCaseTest {
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
-    val result = useCase(listOf(memo), timeZone)
+    val result = ExtractDailyMemosUseCase(listOf(memo), timeZone)
 
     assertEquals(1, result.size)
     assertNotNull(result[LocalDate(2024, 1, 15)])
@@ -35,7 +34,7 @@ class ExtractDailyMemosUseCaseTest {
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
-    val result = useCase(listOf(memo), timeZone)
+    val result = ExtractDailyMemosUseCase(listOf(memo), timeZone)
 
     assertEquals(1, result.size)
     assertNotNull(result[LocalDate(2024, 1, 15)])
@@ -49,7 +48,7 @@ class ExtractDailyMemosUseCaseTest {
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
-    val result = useCase(listOf(memo), timeZone)
+    val result = ExtractDailyMemosUseCase(listOf(memo), timeZone)
 
     assertEquals(0, result.size)
   }
@@ -62,7 +61,7 @@ class ExtractDailyMemosUseCaseTest {
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
-    val result = useCase(listOf(memo), timeZone)
+    val result = ExtractDailyMemosUseCase(listOf(memo), timeZone)
 
     assertNotNull(result[LocalDate(2024, 2, 20)])
     assertNull(result[LocalDate(2024, 1, 15)])
@@ -76,7 +75,7 @@ class ExtractDailyMemosUseCaseTest {
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
-    val result = useCase.forDate(listOf(memo), timeZone, LocalDate(2024, 1, 15))
+    val result = ExtractDailyMemosUseCase.forDate(listOf(memo), timeZone, LocalDate(2024, 1, 15))
 
     assertNotNull(result)
     assertEquals("#daily 2024-01-15\n- task", result.content)
@@ -90,7 +89,7 @@ class ExtractDailyMemosUseCaseTest {
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
-    val result = useCase.forDate(listOf(memo), timeZone, LocalDate(2024, 1, 20))
+    val result = ExtractDailyMemosUseCase.forDate(listOf(memo), timeZone, LocalDate(2024, 1, 20))
 
     assertNull(result)
   }
@@ -99,7 +98,7 @@ class ExtractDailyMemosUseCaseTest {
   fun `parseDailyDateFromContent extracts date correctly`() {
     val content = "#habits/daily 2024-03-25\n- some task"
 
-    val result = ExtractDailyMemosUseCase.parseDailyDateFromContent(content)
+    val result = parseDailyDateFromContent(content)
 
     assertEquals(LocalDate(2024, 3, 25), result)
   }
@@ -108,7 +107,7 @@ class ExtractDailyMemosUseCaseTest {
   fun `parseDailyDateFromContent returns null for content without date`() {
     val content = "#daily\n- some task"
 
-    val result = ExtractDailyMemosUseCase.parseDailyDateFromContent(content)
+    val result = parseDailyDateFromContent(content)
 
     assertNull(result)
   }
@@ -117,7 +116,7 @@ class ExtractDailyMemosUseCaseTest {
   fun `parseDailyDateFromContent returns null for non-daily content`() {
     val content = "Regular content 2024-01-15"
 
-    val result = ExtractDailyMemosUseCase.parseDailyDateFromContent(content)
+    val result = parseDailyDateFromContent(content)
 
     assertNull(result)
   }
@@ -130,7 +129,7 @@ class ExtractDailyMemosUseCaseTest {
         createTime = KtInstant.parse("2024-05-10T15:30:00Z"),
       )
 
-    val result = ExtractDailyMemosUseCase.parseMemoDate(memo, timeZone)
+    val result = parseMemoDate(memo, timeZone)
 
     assertEquals(LocalDate(2024, 5, 10), result)
   }
@@ -144,7 +143,7 @@ class ExtractDailyMemosUseCaseTest {
         updateTime = KtInstant.parse("2024-01-15T15:00:00Z"),
       )
 
-    val result = ExtractDailyMemosUseCase.parseMemoInstant(memo)
+    val result = parseMemoInstant(memo)
 
     assertEquals(KtInstant.parse("2024-01-15T15:00:00Z"), result)
   }

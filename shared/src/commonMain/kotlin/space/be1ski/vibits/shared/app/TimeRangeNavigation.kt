@@ -20,12 +20,14 @@ import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.Indent
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
 import space.be1ski.vibits.shared.feature.habits.presentation.StatsScreen
 import space.be1ski.vibits.shared.feature.habits.presentation.StatsScreenState
+import space.be1ski.vibits.shared.feature.habits.presentation.components.ActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.habits.presentation.components.quarterIndex
 import space.be1ski.vibits.shared.feature.habits.presentation.components.startOfWeek
 import space.be1ski.vibits.shared.feature.memos.presentation.FeedScreen
@@ -49,6 +51,8 @@ internal fun SwipeableTabContent(
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit,
   calculateSuccessRate: CalculateSuccessRateUseCase,
+  buildActivityDataUseCase: BuildActivityDataUseCase,
+  cache: ActivityWeekDataCache,
   dispatchMemos: (MemosAction) -> Unit = {},
   feedListState: LazyListState,
 ) {
@@ -83,6 +87,8 @@ internal fun SwipeableTabContent(
       habitsState = habitsState,
       onHabitsAction = onHabitsAction,
       calculateSuccessRate = calculateSuccessRate,
+      buildActivityDataUseCase = buildActivityDataUseCase,
+      cache = cache,
     )
   }
 }
@@ -97,6 +103,8 @@ private fun SwipeablePagerContent(
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit,
   calculateSuccessRate: CalculateSuccessRateUseCase,
+  buildActivityDataUseCase: BuildActivityDataUseCase,
+  cache: ActivityWeekDataCache,
 ) {
   val activityRange = activityRangeForState(appState)
   val currentDelta =
@@ -154,6 +162,8 @@ private fun SwipeablePagerContent(
       habitsState = habitsState,
       onHabitsAction = onHabitsAction,
       calculateSuccessRate = calculateSuccessRate,
+      buildActivityDataUseCase = buildActivityDataUseCase,
+      cache = cache,
     )
   }
 }
@@ -167,6 +177,8 @@ private fun MemosTabContent(
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit,
   calculateSuccessRate: CalculateSuccessRateUseCase,
+  buildActivityDataUseCase: BuildActivityDataUseCase,
+  cache: ActivityWeekDataCache,
 ) {
   val memos = memosState.memos
   when (appState.selectedScreen) {
@@ -182,6 +194,8 @@ private fun MemosTabContent(
             demoMode = appState.appMode == AppMode.DEMO,
           ),
         calculateSuccessRate = calculateSuccessRate,
+        buildActivityDataUseCase = buildActivityDataUseCase,
+        cache = cache,
         habitsState = habitsState,
         onHabitsAction = onHabitsAction,
       )
@@ -191,6 +205,8 @@ private fun MemosTabContent(
         range = activityRange,
         demoMode = appState.appMode == AppMode.DEMO,
         calculateSuccessRate = calculateSuccessRate,
+        buildActivityDataUseCase = buildActivityDataUseCase,
+        cache = cache,
         postsListExpanded = appState.postsListExpanded,
         onPostsListExpandedChange = { appState.postsListExpanded = it },
       )
