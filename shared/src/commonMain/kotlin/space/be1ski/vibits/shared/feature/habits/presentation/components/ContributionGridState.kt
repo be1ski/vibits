@@ -34,6 +34,7 @@ internal data class DayDataContext(
   val configTimeline: List<HabitsConfigEntry>,
   val dailyMemos: Map<LocalDate, DailyMemoInfo>,
   val counts: Map<LocalDate, Int>,
+  val today: LocalDate,
 )
 
 internal data class HabitSelectionState(
@@ -122,6 +123,7 @@ fun rememberActivityWeekData(
   memos: List<Memo>,
   range: ActivityRange,
   mode: ActivityMode,
+  today: LocalDate,
 ): ActivityWeekDataState {
   val cache = LocalActivityWeekDataCache.current
   val timeZone = remember { TimeZone.currentSystemDefault() }
@@ -146,7 +148,7 @@ fun rememberActivityWeekData(
   LaunchedEffect(cacheVersion, range, mode) {
     val result =
       withContext(Dispatchers.Default) {
-        buildActivityWeekData(configTimeline, dailyMemos, timeZone, memos, range, mode)
+        buildActivityWeekData(configTimeline, dailyMemos, timeZone, memos, range, mode, today)
       }
     cache.put(memos, range, mode, result)
     currentData = result
@@ -210,6 +212,7 @@ private fun buildActivityWeekData(
   memos: List<Memo>,
   range: ActivityRange,
   mode: ActivityMode,
+  today: LocalDate,
 ): ActivityWeekData {
   val bounds = rangeBounds(range)
   val effectiveConfigTimeline = if (mode == ActivityMode.HABITS) configTimeline else emptyList()
@@ -229,6 +232,7 @@ private fun buildActivityWeekData(
             configTimeline = effectiveConfigTimeline,
             dailyMemos = dailyMemos,
             counts = counts,
+            today = today,
           ),
         )
       }
