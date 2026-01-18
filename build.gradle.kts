@@ -85,6 +85,8 @@ tasks.register("checkAll") {
     ":shared:compileKotlinDesktop",
     ":shared:desktopTest",
     ":androidApp:compileDebugKotlin",
+    ":desktopApp:compileKotlinDesktop",
+    ":webApp:compileKotlinWasmJs",
   )
 }
 
