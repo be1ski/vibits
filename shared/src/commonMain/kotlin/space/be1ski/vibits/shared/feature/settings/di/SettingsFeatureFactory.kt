@@ -25,7 +25,7 @@ fun createSettingsFeature(
     reducer = settingsReducer,
     effectHandler =
       SettingsEffectHandler(
-        validateCredentials = dependencies.validateCredentials,
+        connectionTester = dependencies.connectionTester,
         switchAppMode = dependencies.switchAppMode,
         saveCredentials = dependencies.saveCredentials,
         resetApp = dependencies.resetApp,
