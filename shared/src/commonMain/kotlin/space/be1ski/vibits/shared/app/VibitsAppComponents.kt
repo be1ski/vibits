@@ -153,10 +153,10 @@ internal fun rememberSuccessRate(
   activityRange: ActivityRange,
   calculateSuccessRate: CalculateSuccessRateUseCase,
 ): Float? {
-  val weekDataState = rememberActivityWeekData(memos, activityRange, ActivityMode.HABITS)
+  val today = remember { currentLocalDate() }
+  val weekDataState = rememberActivityWeekData(memos, activityRange, ActivityMode.HABITS, today)
   val weekData = weekDataState.data
   val habitsTimeline = rememberHabitsConfigTimeline(memos)
-  val today = remember { currentLocalDate() }
   val configStartDate = remember(habitsTimeline) { habitsTimeline.firstOrNull()?.date }
   val data =
     remember(weekData, activityRange, today, configStartDate) {

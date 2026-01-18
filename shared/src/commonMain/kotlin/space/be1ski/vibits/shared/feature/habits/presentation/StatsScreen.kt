@@ -71,7 +71,7 @@ private fun rememberStatsScreenDerived(
         dailyMemo = todayMemo,
       )
     }
-  val weekDataState = rememberActivityWeekData(memos, range, activityMode)
+  val weekDataState = rememberActivityWeekData(memos, range, activityMode, today)
   val weekData = weekDataState.data
   val isLoadingWeekData = weekDataState.isLoading
   val showWeekdayLegend =

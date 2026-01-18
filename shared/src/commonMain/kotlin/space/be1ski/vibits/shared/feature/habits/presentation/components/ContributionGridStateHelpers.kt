@@ -21,6 +21,10 @@ internal fun buildDayData(context: DayDataContext): ContributionDay {
   val totalHabits = if (habitState.useHabits) habitsForDay.size else 0
   val ratio = completionRatio(totalHabits, completed)
   val inRange = context.date >= context.bounds.start && context.date <= context.bounds.end
+  val configStartDate = context.configTimeline.firstOrNull()?.date
+  val isFuture = context.date > context.today
+  val isBeforeConfig = configStartDate != null && context.date < configStartDate
+  val isClickable = !isFuture && !isBeforeConfig
   return ContributionDay(
     date = context.date,
     count = completed,
@@ -29,6 +33,7 @@ internal fun buildDayData(context: DayDataContext): ContributionDay {
     habitStatuses = habitState.habitStatuses,
     dailyMemo = dailyMemo,
     inRange = inRange,
+    isClickable = isClickable,
   )
 }
 
