@@ -20,4 +20,6 @@ data class ContributionDay(
   val dailyMemo: DailyMemoInfo?,
   /** True if the day is within the requested range. */
   val inRange: Boolean,
+  /** True if the day can be clicked to toggle habits (not future, not before config). */
+  val isClickable: Boolean = true,
 )
