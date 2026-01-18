@@ -44,7 +44,6 @@ import space.be1ski.vibits.shared.nav_habits
 import space.be1ski.vibits.shared.nav_memos
 import space.be1ski.vibits.shared.nav_settings
 
-@Suppress("LongParameterList")
 @Composable
 internal fun MemosHeader(
   memosState: MemosState,

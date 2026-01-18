@@ -95,6 +95,11 @@ Use `@Suppress` annotations only when the lint rule doesn't apply (e.g., `LongPa
 - Use auto-merge with squash (`gh pr merge --auto --squash --delete-branch`).
 - Commit messages: imperative, concise, single topic (e.g., "Simplify README").
 - PR titles: use English only (no Cyrillic or other non-ASCII characters).
+- **PR descriptions must be in English and detailed:**
+  - Summary section explaining what changed and why
+  - For refactoring: describe the before/after patterns with code examples
+  - List new/deleted/modified files for significant changes
+  - Include test plan with checkboxes
 - Pre-commit hook runs `checkAll` automatically — no manual checks needed.
 
 ## CI/CD

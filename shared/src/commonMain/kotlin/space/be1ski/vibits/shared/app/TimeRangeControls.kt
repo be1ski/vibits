@@ -43,7 +43,6 @@ import space.be1ski.vibits.shared.time_years
 private val navigateActivityRangeUseCase = NavigateActivityRangeUseCase()
 private const val WEEK_END_OFFSET = 6
 
-@Suppress("LongParameterList")
 @Composable
 internal fun TimeRangeControls(
   selectedTab: TimeRangeTab,

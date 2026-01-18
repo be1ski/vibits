@@ -88,7 +88,6 @@ class ActivityWeekDataCache {
  * Pre-extracts config and daily memos (cached by memos only), then builds range-dependent data.
  * Computation runs in background thread; caches results per range for instant switching.
  */
-@Suppress("LongParameterList")
 @Composable
 fun rememberActivityWeekData(
   memos: List<Memo>,

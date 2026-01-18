@@ -41,7 +41,6 @@ private val navigateRange = NavigateActivityRangeUseCase()
 private const val PAGER_CENTER_PAGE = 500
 private const val MONTHS_PER_QUARTER = 3
 
-@Suppress("LongParameterList")
 @Composable
 internal fun SwipeableTabContent(
   memosState: MemosState,
@@ -93,7 +92,6 @@ internal fun SwipeableTabContent(
   }
 }
 
-@Suppress("LongParameterList")
 @Composable
 private fun SwipeablePagerContent(
   memosState: MemosState,
@@ -168,7 +166,6 @@ private fun SwipeablePagerContent(
   }
 }
 
-@Suppress("LongParameterList")
 @Composable
 private fun MemosTabContent(
   memosState: MemosState,

@@ -28,7 +28,6 @@ import space.be1ski.vibits.shared.feature.habits.presentation.components.remembe
 /**
  * Stats tab with activity charts.
  */
-@Suppress("LongParameterList")
 @Composable
 fun StatsScreen(
   state: StatsScreenState,

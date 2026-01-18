@@ -310,7 +310,6 @@ private fun HeatmapDayHeaders(
   }
 }
 
-@Suppress("LongParameterList")
 @Composable
 private fun HeatmapTimeBlocks(
   countMatrix: Array<IntArray>,
