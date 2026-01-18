@@ -128,6 +128,7 @@ private fun rememberStatsScreenDerived(
     timeZone = timeZone,
     successRateData = successRateData,
     periodPosts = periodPosts,
+    configStartDate = configStartDate,
   )
 }
 
