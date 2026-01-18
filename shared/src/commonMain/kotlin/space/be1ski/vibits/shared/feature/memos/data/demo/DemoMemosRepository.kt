@@ -9,20 +9,12 @@ import kotlin.time.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-/**
- * In-memory repository for demo mode.
- * All changes are stored in memory and reset when demo mode is toggled.
- */
 @Inject
 @SingleIn(AppScope::class)
 class DemoMemosRepository : MemosRepository {
   private val memos = mutableListOf<Memo>()
   private var initialized = false
 
-  /**
-   * Resets the repository to initial demo data.
-   * Called when entering demo mode to ensure fresh data.
-   */
   fun reset() {
     memos.clear()
     memos.addAll(DemoDataGenerator.generateDemoMemos())

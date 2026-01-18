@@ -5,9 +5,6 @@ import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUse
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
 
-/**
- * Dependencies for ModeSelectionFeature.
- */
 @Inject
 class ModeSelectionDependencies(
   val validateCredentials: ValidateCredentialsUseCase,

@@ -3,8 +3,8 @@ package space.be1ski.vibits.shared.test
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.shared.feature.memos.data.platform.MemoCache
+import space.be1ski.vibits.shared.feature.memos.data.remote.MemosApiClient
 import space.be1ski.vibits.shared.feature.memos.data.remote.dto.ListMemosResponseDto
-import space.be1ski.vibits.shared.feature.memos.data.remote.dto.MemoDto
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
@@ -143,55 +143,13 @@ class FakePreferencesRepository(
   }
 }
 
-// Fake Use Cases for EffectHandler tests
-
-class FakeValidateCredentialsUseCase(
-  private val result: Result<Unit> = Result.success(Unit),
-) {
-  var invokedWith: Pair<String, String>? = null
-    private set
-
-  suspend operator fun invoke(
-    baseUrl: String,
-    token: String,
-  ): Result<Unit> {
-    invokedWith = baseUrl to token
-    return result
-  }
-}
-
-class FakeModeAwareMemosRepository : MemosRepository {
-  var clearCacheOnModeChangeCalls: Int = 0
-    private set
-
-  override suspend fun listMemos(): List<Memo> = emptyList()
-
-  override suspend fun cachedMemos(): List<Memo> = emptyList()
-
-  override suspend fun updateMemo(
-    name: String,
-    content: String,
-  ): Memo = Memo()
-
-  override suspend fun createMemo(content: String): Memo = Memo()
-
-  override suspend fun deleteMemo(name: String) {}
-
-  suspend fun clearCacheOnModeChange() {
-    clearCacheOnModeChangeCalls++
-  }
-}
-
-/**
- * Fake MemosApi for testing ValidateCredentialsUseCase.
- */
-class FakeMemosApi(
+class FakeMemosApiClient(
   var listMemosResult: Result<ListMemosResponseDto> = Result.success(ListMemosResponseDto()),
-) {
+) : MemosApiClient {
   var listMemosCalls: Int = 0
     private set
 
-  suspend fun listMemos(
+  override suspend fun listMemos(
     baseUrl: String,
     token: String,
     pageSize: Int,
@@ -202,34 +160,6 @@ class FakeMemosApi(
   }
 }
 
-/**
- * Fake DemoMemosRepository for testing ResetAppUseCase.
- */
-class FakeDemoMemosRepository : MemosRepository {
-  var resetCalls: Int = 0
-    private set
-
-  fun reset() {
-    resetCalls++
-  }
-
-  override suspend fun listMemos(): List<Memo> = emptyList()
-
-  override suspend fun cachedMemos(): List<Memo> = emptyList()
-
-  override suspend fun updateMemo(
-    name: String,
-    content: String,
-  ): Memo = Memo()
-
-  override suspend fun createMemo(content: String): Memo = Memo()
-
-  override suspend fun deleteMemo(name: String) {}
-}
-
-/**
- * Fake LocaleProvider for testing SaveLanguageUseCase.
- */
 class FakeLocaleProvider(
   private val systemLocale: String = "en",
   private val requiresRestart: Boolean = false,

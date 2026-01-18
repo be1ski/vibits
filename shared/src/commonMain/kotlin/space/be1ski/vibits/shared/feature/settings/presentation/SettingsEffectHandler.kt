@@ -6,22 +6,22 @@ import kotlinx.coroutines.flow.flow
 import space.be1ski.vibits.shared.core.elm.EffectHandler
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentials
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentials
-import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetApp
-import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppMode
-import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveLanguage
-import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveTheme
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
+import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
+import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
+import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveLanguageUseCase
+import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveThemeUseCase
 
 private const val TAG = "SettingsEffect"
 
 class SettingsEffectHandler(
-  private val validateCredentials: ValidateCredentials,
-  private val switchAppMode: SwitchAppMode,
-  private val saveCredentials: SaveCredentials,
-  private val resetApp: ResetApp,
-  private val saveLanguage: SaveLanguage,
-  private val saveTheme: SaveTheme,
+  private val validateCredentials: ValidateCredentialsUseCase,
+  private val switchAppMode: SwitchAppModeUseCase,
+  private val saveCredentials: SaveCredentialsUseCase,
+  private val resetApp: ResetAppUseCase,
+  private val saveLanguage: SaveLanguageUseCase,
+  private val saveTheme: SaveThemeUseCase,
 ) : EffectHandler<SettingsEffect, SettingsAction> {
   override fun invoke(effect: SettingsEffect): Flow<SettingsAction> =
     when (effect) {

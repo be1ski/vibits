@@ -15,10 +15,6 @@ import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeReposito
 
 private const val TAG = "ModeAwareRepo"
 
-/**
- * Repository that delegates to online, offline, or demo implementation based on current mode.
- * Clears cache when switching modes to ensure data isolation.
- */
 @Inject
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
@@ -59,14 +55,6 @@ class ModeAwareMemosRepository(
 
   override suspend fun deleteMemo(name: String) {
     currentRepository().deleteMemo(name)
-  }
-
-  /**
-   * Clears Room cache when mode changes to ensure data isolation between modes.
-   */
-  suspend fun clearCacheOnModeChange() {
-    Log.i(TAG, "Clearing cache on mode change")
-    memoCache.clear()
   }
 
   private suspend fun checkModeChange() {
