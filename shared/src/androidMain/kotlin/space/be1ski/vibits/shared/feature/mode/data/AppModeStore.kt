@@ -2,7 +2,7 @@ package space.be1ski.vibits.shared.feature.mode.data
 
 import android.content.Context
 import androidx.core.content.edit
-import space.be1ski.vibits.shared.data.local.AndroidContextHolder
+import space.be1ski.vibits.shared.app.data.AndroidContextHolder
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
 /**
