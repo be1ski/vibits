@@ -33,6 +33,18 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Override navigator.languages to support runtime locale changes
+      var originalLanguages = Object.getOwnPropertyDescriptor(Navigator.prototype, "languages");
+      Object.defineProperty(Navigator.prototype, "languages", {
+        get: function() {
+          if (window.__customLocale) {
+            return [window.__customLocale];
+          }
+          return originalLanguages.get.call(this);
+        }
+      });
+    </script>
     <script src="vibits.js"></script>
   </body>
 </html>
