@@ -605,6 +605,7 @@ internal fun StatsMainChart(
       compactHeight = derived.useCompactHeight,
       demoMode = state.demoMode,
       today = derived.today,
+      configStartDate = derived.configStartDate,
       onHabitClick = onSingleHabitToggle,
     )
   } else {
@@ -776,6 +777,7 @@ private fun LastSevenDaysMatrix(
   compactHeight: Boolean,
   demoMode: Boolean,
   today: kotlinx.datetime.LocalDate,
+  configStartDate: kotlinx.datetime.LocalDate?,
   onHabitClick: (day: ContributionDay, habitTag: String, habitLabel: String) -> Unit = { _, _, _ -> },
 ) {
   if (days.isEmpty() || habits.isEmpty()) {
@@ -820,6 +822,8 @@ private fun LastSevenDaysMatrix(
           days.forEach { day ->
             val done = day.habitStatuses.firstOrNull { status -> status.tag == habit.tag }?.done == true
             val isFuture = day.date > today
+            val isBeforeConfig = configStartDate != null && day.date < configStartDate
+            val isClickable = !isFuture && !isBeforeConfig
             val baseColor =
               if (done) {
                 androidx.compose.ui.graphics
@@ -827,14 +831,14 @@ private fun LastSevenDaysMatrix(
               } else {
                 pendingColor
               }
-            val cellColor = if (isFuture) baseColor.copy(alpha = 0.3f) else baseColor
+            val cellColor = if (!isClickable) baseColor.copy(alpha = 0.3f) else baseColor
             Box(
               modifier =
                 Modifier
                   .size(cellSize)
                   .background(cellColor, shape = MaterialTheme.shapes.extraSmall)
                   .then(
-                    if (!isFuture) {
+                    if (isClickable) {
                       Modifier.clickable { onHabitClick(day, habit.tag, habit.label) }
                     } else {
                       Modifier
