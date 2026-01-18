@@ -11,6 +11,7 @@ coverage:
 ignore:
   - "**/di/**"
   - "**/view/**"
+  - "**/*EffectHandler.kt"
 
 comment:
   layout: "reach, diff, flags, files"
