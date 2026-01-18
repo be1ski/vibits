@@ -158,4 +158,15 @@ class LogTest {
 
       assertTrue(Log.logs.isNotEmpty())
     }
+
+  @Test
+  fun `when logs exceed max limit then oldest are removed`() {
+    repeat(510) { i ->
+      Log.d("Tag", "Message $i")
+    }
+
+    val logs = Log.logs
+    assertTrue(logs.size <= 500)
+    assertEquals("Message 509", logs.first().message)
+  }
 }
