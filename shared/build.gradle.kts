@@ -89,8 +89,9 @@ kotlin {
       dependsOn(roomMain)
       dependencies {
         implementation(libs.androidx.sqlite.bundled)
-        implementation(libs.ktor.client.cio)
         implementation(libs.kotlinx.coroutines.swing)
+        implementation(libs.ktor.client.cio)
+        implementation(libs.slf4j.simple)
       }
     }
     val iosMain by creating {

@@ -22,6 +22,7 @@ lifecycleRuntimeKtx = "2.10.0"
 material = "1.13.0"
 room = "2.8.4"
 serialization = "1.9.0"
+slf4j = "2.0.17"
 sqliteBundled = "2.6.2"
 
 [libraries]
@@ -54,6 +55,7 @@ ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref =
 ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 material-components = { group = "com.google.android.material", name = "material", version.ref = "material" }
+slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 

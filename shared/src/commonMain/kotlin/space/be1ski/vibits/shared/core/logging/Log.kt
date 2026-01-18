@@ -69,8 +69,7 @@ object Log : SynchronizedObject() {
       }
     }
 
-    // Also print to stdout for terminal debugging
-    println("${entry.level.name.first()} | $tag | $message")
+    platformLog(level, tag, message)
   }
 
   fun clear() {
