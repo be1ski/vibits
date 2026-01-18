@@ -92,6 +92,38 @@ Use `@Suppress` annotations only when the lint rule doesn't apply (e.g., `LongPa
 - PR titles: use English only (no Cyrillic or other non-ASCII characters).
 - Pre-commit hook runs `checkAll` automatically — no manual checks needed.
 
+## CI/CD
+
+### CI Workflow
+
+Runs automatically on push to `main` and on pull requests:
+- Runs `./gradlew checkAll` (ktlint, detekt, compile, tests)
+- Generates coverage report and uploads to Codecov
+- Uploads test results as artifacts
+
+### Release Workflow
+
+Builds and publishes all platforms in parallel. Run manually:
+
+```bash
+gh workflow run Release
+```
+
+What it does:
+1. Auto-increments patch version (v1.0.39 → v1.0.40)
+2. Creates GitHub release with auto-generated notes
+3. Builds in parallel:
+   - **Android APK** → uploads to GitHub Release + Firebase App Distribution
+   - **macOS DMG** → uploads to GitHub Release
+   - **Windows MSI** → uploads to GitHub Release
+   - **Web** → uploads tarball to GitHub Release + deploys to GitHub Pages
+
+Monitor release progress:
+```bash
+gh run list --workflow=Release --limit=1
+gh run watch <run-id>
+```
+
 ## Security & Configuration Tips
 
 - Do not commit tokens or secrets; use the app UI to store credentials locally.
