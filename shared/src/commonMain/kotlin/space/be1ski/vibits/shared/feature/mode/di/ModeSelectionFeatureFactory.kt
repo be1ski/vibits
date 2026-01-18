@@ -17,7 +17,7 @@ fun createModeSelectionFeature(
     reducer = modeSelectionReducer,
     effectHandler =
       ModeSelectionEffectHandler(
-        validateCredentials = dependencies.validateCredentials,
+        connectionTester = dependencies.connectionTester,
         saveCredentials = dependencies.saveCredentials,
         saveAppMode = dependencies.saveAppMode,
       ),

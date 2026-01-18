@@ -7,13 +7,13 @@ import space.be1ski.vibits.shared.core.elm.EffectHandler
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
+import space.be1ski.vibits.shared.feature.memos.data.ConnectionTester
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
 
 private const val TAG = "ModeEffect"
 
 class ModeSelectionEffectHandler(
-  private val validateCredentials: ValidateCredentialsUseCase,
+  private val connectionTester: ConnectionTester,
   private val saveCredentials: SaveCredentialsUseCase,
   private val saveAppMode: SaveAppModeUseCase,
 ) : EffectHandler<ModeSelectionEffect, ModeSelectionAction> {
@@ -28,8 +28,8 @@ class ModeSelectionEffectHandler(
 
   private fun handleValidateCredentials(effect: ModeSelectionEffect.ValidateCredentials): Flow<ModeSelectionAction> =
     flow {
-      Log.d(TAG, "Validating credentials")
-      validateCredentials(effect.baseUrl, effect.token)
+      Log.d(TAG, "Testing connection")
+      connectionTester(effect.baseUrl, effect.token)
         .onSuccess { emit(ModeSelectionAction.ValidationSucceeded) }
         .onFailure { emit(ModeSelectionAction.ValidationFailed) }
     }

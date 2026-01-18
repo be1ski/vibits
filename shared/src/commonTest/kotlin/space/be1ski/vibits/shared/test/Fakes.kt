@@ -3,8 +3,6 @@ package space.be1ski.vibits.shared.test
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.shared.feature.memos.data.platform.MemoCache
-import space.be1ski.vibits.shared.feature.memos.data.remote.MemosApiClient
-import space.be1ski.vibits.shared.feature.memos.data.remote.dto.ListMemosResponseDto
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
@@ -140,23 +138,6 @@ class FakePreferencesRepository(
   override fun save(preferences: UserPreferences) {
     stored = preferences
     saveCalls += 1
-  }
-}
-
-class FakeMemosApiClient(
-  var listMemosResult: Result<ListMemosResponseDto> = Result.success(ListMemosResponseDto()),
-) : MemosApiClient {
-  var listMemosCalls: Int = 0
-    private set
-
-  override suspend fun listMemos(
-    baseUrl: String,
-    token: String,
-    pageSize: Int,
-    pageToken: String?,
-  ): ListMemosResponseDto {
-    listMemosCalls++
-    return listMemosResult.getOrThrow()
   }
 }
 

@@ -7,7 +7,7 @@ import space.be1ski.vibits.shared.core.elm.EffectHandler
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
+import space.be1ski.vibits.shared.feature.memos.data.ConnectionTester
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveLanguageUseCase
@@ -16,7 +16,7 @@ import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveThemeUseCa
 private const val TAG = "SettingsEffect"
 
 class SettingsEffectHandler(
-  private val validateCredentials: ValidateCredentialsUseCase,
+  private val connectionTester: ConnectionTester,
   private val switchAppMode: SwitchAppModeUseCase,
   private val saveCredentials: SaveCredentialsUseCase,
   private val resetApp: ResetAppUseCase,
@@ -43,8 +43,8 @@ class SettingsEffectHandler(
 
   private fun handleValidateCredentials(effect: SettingsEffect.ValidateCredentials): Flow<SettingsAction> =
     flow {
-      Log.d(TAG, "Validating credentials")
-      validateCredentials(effect.baseUrl, effect.token)
+      Log.d(TAG, "Testing connection")
+      connectionTester(effect.baseUrl, effect.token)
         .onSuccess { emit(SettingsAction.ValidationSucceeded) }
         .onFailure { emit(SettingsAction.ValidationFailed("connection_failed")) }
     }
