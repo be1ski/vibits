@@ -1,244 +1,200 @@
 package space.be1ski.vibits.shared.feature.mode.presentation
 
+import space.be1ski.vibits.shared.core.elm.test
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertIs
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 class ModeSelectionReducerTest {
-  // Dialog lifecycle tests
+  @Test
+  fun `when ShowCredentialsDialog then shows dialog and clears error`() =
+    modeSelectionReducer.test(ModeSelectionState(error = ModeSelectionError.FILL_ALL_FIELDS)) {
+      send(ModeSelectionAction.ShowCredentialsDialog)
+
+      assertState { showCredentialsDialog && error == null }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when ShowCredentialsDialog then shows dialog and clears error`() {
-    val state = ModeSelectionState(error = ModeSelectionError.FILL_ALL_FIELDS)
-
-    val (newState, effects) = modeSelectionReducer(ModeSelectionAction.ShowCredentialsDialog, state)
-
-    assertTrue(newState.showCredentialsDialog)
-    assertNull(newState.error)
-    assertTrue(effects.isEmpty())
-  }
-
-  @Test
-  fun `when DismissCredentialsDialog then hides dialog and resets state`() {
-    val state =
+  fun `when DismissCredentialsDialog then hides dialog and resets state`() =
+    modeSelectionReducer.test(
       ModeSelectionState(
         showCredentialsDialog = true,
         baseUrl = "https://api.com",
         token = "secret",
         isValidating = true,
         error = ModeSelectionError.CONNECTION_FAILED,
-      )
+      ),
+    ) {
+      send(ModeSelectionAction.DismissCredentialsDialog)
 
-    val (newState, effects) = modeSelectionReducer(ModeSelectionAction.DismissCredentialsDialog, state)
-
-    assertFalse(newState.showCredentialsDialog)
-    assertEquals("", newState.baseUrl)
-    assertEquals("", newState.token)
-    assertFalse(newState.isValidating)
-    assertNull(newState.error)
-    assertTrue(effects.isEmpty())
-  }
-
-  // Credentials input tests
-
-  @Test
-  fun `when UpdateBaseUrl then updates baseUrl and clears error`() {
-    val state = ModeSelectionState(error = ModeSelectionError.FILL_ALL_FIELDS)
-
-    val (newState, effects) =
-      modeSelectionReducer(
-        ModeSelectionAction.UpdateBaseUrl("https://new.api.com"),
-        state,
-      )
-
-    assertEquals("https://new.api.com", newState.baseUrl)
-    assertNull(newState.error)
-    assertTrue(effects.isEmpty())
-  }
+      assertState {
+        !showCredentialsDialog &&
+          baseUrl == "" &&
+          token == "" &&
+          !isValidating &&
+          error == null
+      }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when UpdateToken then updates token and clears error`() {
-    val state = ModeSelectionState(error = ModeSelectionError.FILL_ALL_FIELDS)
+  fun `when UpdateBaseUrl then updates baseUrl and clears error`() =
+    modeSelectionReducer.test(ModeSelectionState(error = ModeSelectionError.FILL_ALL_FIELDS)) {
+      send(ModeSelectionAction.UpdateBaseUrl("https://new.api.com"))
 
-    val (newState, effects) =
-      modeSelectionReducer(
-        ModeSelectionAction.UpdateToken("new-token"),
-        state,
-      )
-
-    assertEquals("new-token", newState.token)
-    assertNull(newState.error)
-    assertTrue(effects.isEmpty())
-  }
-
-  // Submit tests
+      assertState { baseUrl == "https://new.api.com" && error == null }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when Submit with empty credentials then shows error`() {
-    val state = ModeSelectionState(baseUrl = "", token = "")
+  fun `when UpdateToken then updates token and clears error`() =
+    modeSelectionReducer.test(ModeSelectionState(error = ModeSelectionError.FILL_ALL_FIELDS)) {
+      send(ModeSelectionAction.UpdateToken("new-token"))
 
-    val (newState, effects) = modeSelectionReducer(ModeSelectionAction.Submit, state)
-
-    assertEquals(ModeSelectionError.FILL_ALL_FIELDS, newState.error)
-    assertFalse(newState.isValidating)
-    assertTrue(effects.isEmpty())
-  }
+      assertState { token == "new-token" && error == null }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when Submit with blank baseUrl then shows error`() {
-    val state = ModeSelectionState(baseUrl = "  ", token = "token123")
+  fun `when Submit with empty credentials then shows error`() =
+    modeSelectionReducer.test(ModeSelectionState(baseUrl = "", token = "")) {
+      send(ModeSelectionAction.Submit)
 
-    val (newState, effects) = modeSelectionReducer(ModeSelectionAction.Submit, state)
-
-    assertEquals(ModeSelectionError.FILL_ALL_FIELDS, newState.error)
-    assertTrue(effects.isEmpty())
-  }
-
-  @Test
-  fun `when Submit with blank token then shows error`() {
-    val state = ModeSelectionState(baseUrl = "https://api.com", token = "  ")
-
-    val (newState, effects) = modeSelectionReducer(ModeSelectionAction.Submit, state)
-
-    assertEquals(ModeSelectionError.FILL_ALL_FIELDS, newState.error)
-    assertTrue(effects.isEmpty())
-  }
+      assertState { error == ModeSelectionError.FILL_ALL_FIELDS && !isValidating }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when Submit with valid credentials then starts validation`() {
-    val state = ModeSelectionState(baseUrl = "https://api.com", token = "token123")
+  fun `when Submit with blank baseUrl then shows error`() =
+    modeSelectionReducer.test(ModeSelectionState(baseUrl = "  ", token = "token123")) {
+      send(ModeSelectionAction.Submit)
 
-    val (newState, effects) = modeSelectionReducer(ModeSelectionAction.Submit, state)
-
-    assertTrue(newState.isValidating)
-    assertNull(newState.error)
-    assertEquals(1, effects.size)
-    val effect = effects.first()
-    assertIs<ModeSelectionEffect.ValidateCredentials>(effect)
-    assertEquals("https://api.com", effect.baseUrl)
-    assertEquals("token123", effect.token)
-  }
+      assertState { error == ModeSelectionError.FILL_ALL_FIELDS }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when Submit then trims credentials before validation`() {
-    val state = ModeSelectionState(baseUrl = "  https://api.com  ", token = "  token123  ")
+  fun `when Submit with blank token then shows error`() =
+    modeSelectionReducer.test(ModeSelectionState(baseUrl = "https://api.com", token = "  ")) {
+      send(ModeSelectionAction.Submit)
 
-    val (_, effects) = modeSelectionReducer(ModeSelectionAction.Submit, state)
-
-    val effect = effects.first()
-    assertIs<ModeSelectionEffect.ValidateCredentials>(effect)
-    assertEquals("https://api.com", effect.baseUrl)
-    assertEquals("token123", effect.token)
-  }
-
-  // Validation response tests
+      assertState { error == ModeSelectionError.FILL_ALL_FIELDS }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when ValidationSucceeded then closes dialog saves and notifies`() {
-    val state =
+  fun `when Submit with valid credentials then starts validation`() =
+    modeSelectionReducer.test(ModeSelectionState(baseUrl = "https://api.com", token = "token123")) {
+      send(ModeSelectionAction.Submit)
+
+      assertState { isValidating && error == null }
+      val effect = assertHasEffect<ModeSelectionEffect.ValidateCredentials>()
+      assertEquals("https://api.com", effect.baseUrl)
+      assertEquals("token123", effect.token)
+    }
+
+  @Test
+  fun `when Submit then trims credentials before validation`() =
+    modeSelectionReducer.test(
+      ModeSelectionState(
+        baseUrl = "  https://api.com  ",
+        token = "  token123  ",
+      ),
+    ) {
+      send(ModeSelectionAction.Submit)
+
+      val effect = assertHasEffect<ModeSelectionEffect.ValidateCredentials>()
+      assertEquals("https://api.com", effect.baseUrl)
+      assertEquals("token123", effect.token)
+    }
+
+  @Test
+  fun `when ValidationSucceeded then closes dialog saves and notifies`() =
+    modeSelectionReducer.test(
       ModeSelectionState(
         showCredentialsDialog = true,
         baseUrl = "https://api.com",
         token = "token123",
         isValidating = true,
-      )
+      ),
+    ) {
+      send(ModeSelectionAction.ValidationSucceeded)
 
-    val (newState, effects) = modeSelectionReducer(ModeSelectionAction.ValidationSucceeded, state)
-
-    assertFalse(newState.showCredentialsDialog)
-    assertFalse(newState.isValidating)
-    assertEquals("", newState.baseUrl)
-    assertEquals("", newState.token)
-    assertNull(newState.error)
-    assertEquals(3, effects.size)
-    assertIs<ModeSelectionEffect.SaveCredentials>(effects[0])
-    assertIs<ModeSelectionEffect.SaveMode>(effects[1])
-    assertIs<ModeSelectionEffect.NotifyModeSelected>(effects[2])
-  }
+      assertState {
+        !showCredentialsDialog &&
+          !isValidating &&
+          baseUrl == "" &&
+          token == "" &&
+          error == null
+      }
+      assertEffectCount(3)
+      assertHasEffect<ModeSelectionEffect.SaveCredentials>()
+      assertHasEffect<ModeSelectionEffect.SaveMode>()
+      assertHasEffect<ModeSelectionEffect.NotifyModeSelected>()
+    }
 
   @Test
-  fun `when ValidationSucceeded then saves trimmed credentials`() {
-    val state =
+  fun `when ValidationSucceeded then saves trimmed credentials`() =
+    modeSelectionReducer.test(
       ModeSelectionState(
         showCredentialsDialog = true,
         baseUrl = "  https://api.com  ",
         token = "  token123  ",
         isValidating = true,
-      )
+      ),
+    ) {
+      send(ModeSelectionAction.ValidationSucceeded)
 
-    val (_, effects) = modeSelectionReducer(ModeSelectionAction.ValidationSucceeded, state)
-
-    val saveEffect = effects[0]
-    assertIs<ModeSelectionEffect.SaveCredentials>(saveEffect)
-    assertEquals("https://api.com", saveEffect.baseUrl)
-    assertEquals("token123", saveEffect.token)
-  }
-
-  @Test
-  fun `when ValidationSucceeded then saves ONLINE mode`() {
-    val state = ModeSelectionState(isValidating = true)
-
-    val (_, effects) = modeSelectionReducer(ModeSelectionAction.ValidationSucceeded, state)
-
-    val saveModeEffect = effects[1]
-    assertIs<ModeSelectionEffect.SaveMode>(saveModeEffect)
-    assertEquals(AppMode.ONLINE, saveModeEffect.mode)
-
-    val notifyEffect = effects[2]
-    assertIs<ModeSelectionEffect.NotifyModeSelected>(notifyEffect)
-    assertEquals(AppMode.ONLINE, notifyEffect.mode)
-  }
+      val saveEffect = assertHasEffect<ModeSelectionEffect.SaveCredentials>()
+      assertEquals("https://api.com", saveEffect.baseUrl)
+      assertEquals("token123", saveEffect.token)
+    }
 
   @Test
-  fun `when ValidationFailed then stops validating and shows error`() {
-    val state = ModeSelectionState(isValidating = true)
+  fun `when ValidationSucceeded then saves ONLINE mode`() =
+    modeSelectionReducer.test(ModeSelectionState(isValidating = true)) {
+      send(ModeSelectionAction.ValidationSucceeded)
 
-    val (newState, effects) = modeSelectionReducer(ModeSelectionAction.ValidationFailed, state)
+      val saveModeEffect = assertHasEffect<ModeSelectionEffect.SaveMode>()
+      assertEquals(AppMode.ONLINE, saveModeEffect.mode)
 
-    assertFalse(newState.isValidating)
-    assertEquals(ModeSelectionError.CONNECTION_FAILED, newState.error)
-    assertTrue(effects.isEmpty())
-  }
-
-  // Mode selection tests
-
-  @Test
-  fun `when SelectMode OFFLINE then saves and notifies`() {
-    val (newState, effects) =
-      modeSelectionReducer(
-        ModeSelectionAction.SelectMode(AppMode.OFFLINE),
-        ModeSelectionState(),
-      )
-
-    assertEquals(2, effects.size)
-    val saveModeEffect = effects[0]
-    assertIs<ModeSelectionEffect.SaveMode>(saveModeEffect)
-    assertEquals(AppMode.OFFLINE, saveModeEffect.mode)
-
-    val notifyEffect = effects[1]
-    assertIs<ModeSelectionEffect.NotifyModeSelected>(notifyEffect)
-    assertEquals(AppMode.OFFLINE, notifyEffect.mode)
-  }
+      val notifyEffect = assertHasEffect<ModeSelectionEffect.NotifyModeSelected>()
+      assertEquals(AppMode.ONLINE, notifyEffect.mode)
+    }
 
   @Test
-  fun `when SelectMode DEMO then saves and notifies`() {
-    val (_, effects) =
-      modeSelectionReducer(
-        ModeSelectionAction.SelectMode(AppMode.DEMO),
-        ModeSelectionState(),
-      )
+  fun `when ValidationFailed then stops validating and shows error`() =
+    modeSelectionReducer.test(ModeSelectionState(isValidating = true)) {
+      send(ModeSelectionAction.ValidationFailed)
 
-    assertEquals(2, effects.size)
-    val saveModeEffect = effects[0]
-    assertIs<ModeSelectionEffect.SaveMode>(saveModeEffect)
-    assertEquals(AppMode.DEMO, saveModeEffect.mode)
+      assertState { !isValidating && error == ModeSelectionError.CONNECTION_FAILED }
+      assertNoEffects()
+    }
 
-    val notifyEffect = effects[1]
-    assertIs<ModeSelectionEffect.NotifyModeSelected>(notifyEffect)
-    assertEquals(AppMode.DEMO, notifyEffect.mode)
-  }
+  @Test
+  fun `when SelectMode OFFLINE then saves and notifies`() =
+    modeSelectionReducer.test(ModeSelectionState()) {
+      send(ModeSelectionAction.SelectMode(AppMode.OFFLINE))
+
+      assertEffectCount(2)
+      val saveModeEffect = assertHasEffect<ModeSelectionEffect.SaveMode>()
+      assertEquals(AppMode.OFFLINE, saveModeEffect.mode)
+
+      val notifyEffect = assertHasEffect<ModeSelectionEffect.NotifyModeSelected>()
+      assertEquals(AppMode.OFFLINE, notifyEffect.mode)
+    }
+
+  @Test
+  fun `when SelectMode DEMO then saves and notifies`() =
+    modeSelectionReducer.test(ModeSelectionState()) {
+      send(ModeSelectionAction.SelectMode(AppMode.DEMO))
+
+      assertEffectCount(2)
+      val saveModeEffect = assertHasEffect<ModeSelectionEffect.SaveMode>()
+      assertEquals(AppMode.DEMO, saveModeEffect.mode)
+
+      val notifyEffect = assertHasEffect<ModeSelectionEffect.NotifyModeSelected>()
+      assertEquals(AppMode.DEMO, notifyEffect.mode)
+    }
 }
