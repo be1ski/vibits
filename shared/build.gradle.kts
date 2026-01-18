@@ -3,11 +3,11 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
-  alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.android.kotlin.multiplatform.library)
-  alias(libs.plugins.kotlin.serialization)
-  alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.compose.multiplatform)
+  alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.ksp)
   alias(libs.plugins.metro)
   jacoco
@@ -54,13 +54,14 @@ kotlin {
         implementation(compose.runtime)
         implementation(compose.ui)
         implementation(compose.components.resources)
+        implementation(libs.kotlinx.atomicfu)
+        implementation(libs.kotlinx.coroutines.core)
+        implementation(libs.kotlinx.datetime)
+        implementation(libs.kotlinx.serialization.json)
         implementation(libs.ktor.client.content.negotiation)
         implementation(libs.ktor.client.core)
         implementation(libs.ktor.client.logging)
         implementation(libs.ktor.serialization.kotlinx.json)
-        implementation(libs.kotlinx.coroutines.core)
-        implementation(libs.kotlinx.datetime)
-        implementation(libs.kotlinx.serialization.json)
       }
     }
     val roomMain by creating {

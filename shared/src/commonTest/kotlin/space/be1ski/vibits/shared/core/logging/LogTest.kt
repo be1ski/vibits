@@ -1,5 +1,9 @@
 package space.be1ski.vibits.shared.core.logging
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -117,4 +121,41 @@ class LogTest {
     val entry = Log.logs.first()
     assertTrue(entry.timestamp.isNotEmpty())
   }
+
+  @Test
+  fun `when concurrent writes then no data loss`() =
+    runTest {
+      val count = 100
+      val jobs =
+        (1..count).map { i ->
+          launch(Dispatchers.Default) {
+            Log.d("Tag$i", "Message $i")
+          }
+        }
+      jobs.joinAll()
+
+      assertEquals(count, Log.logs.size)
+    }
+
+  @Test
+  fun `when concurrent read and write then no crash`() =
+    runTest {
+      repeat(50) {
+        Log.d("Initial", "Message $it")
+      }
+
+      val jobs =
+        (1..100).map { i ->
+          launch(Dispatchers.Default) {
+            if (i % 2 == 0) {
+              Log.d("Writer", "Message $i")
+            } else {
+              Log.logs // Read operation
+            }
+          }
+        }
+      jobs.joinAll()
+
+      assertTrue(Log.logs.isNotEmpty())
+    }
 }

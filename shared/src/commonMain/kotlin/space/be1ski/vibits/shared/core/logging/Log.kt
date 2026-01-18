@@ -1,18 +1,20 @@
 package space.be1ski.vibits.shared.core.logging
 
-import androidx.compose.runtime.mutableStateListOf
+import kotlinx.atomicfu.locks.SynchronizedObject
+import kotlinx.atomicfu.locks.synchronized
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 
 /**
- * Simple in-memory log storage for debugging.
+ * Thread-safe in-memory log storage for debugging.
  */
-object Log {
+object Log : SynchronizedObject() {
   private const val MAX_LOGS = 500
 
-  private val _logs = mutableStateListOf<LogEntry>()
-  val logs: List<LogEntry> get() = _logs.toList()
+  private val _logs = mutableListOf<LogEntry>()
+  val logs: List<LogEntry>
+    get() = synchronized(this) { _logs.toList() }
 
   fun d(
     tag: String,
@@ -60,9 +62,11 @@ object Log {
         .toLocalDateTime(TimeZone.currentSystemDefault())
     val entry = LogEntry(timestamp.toString(), level, tag, message)
 
-    _logs.add(0, entry)
-    while (_logs.size > MAX_LOGS) {
-      _logs.removeLastOrNull()
+    synchronized(this) {
+      _logs.add(0, entry)
+      while (_logs.size > MAX_LOGS) {
+        _logs.removeLastOrNull()
+      }
     }
 
     // Also print to stdout for terminal debugging
@@ -70,12 +74,16 @@ object Log {
   }
 
   fun clear() {
-    _logs.clear()
+    synchronized(this) {
+      _logs.clear()
+    }
   }
 
   fun export(): String =
-    _logs.joinToString("\n") { entry ->
-      "${entry.timestamp} ${entry.level.name.first()}/$entry.tag: ${entry.message}"
+    synchronized(this) {
+      _logs.joinToString("\n") { entry ->
+        "${entry.timestamp} ${entry.level.name.first()}/$entry.tag: ${entry.message}"
+      }
     }
 }
 
