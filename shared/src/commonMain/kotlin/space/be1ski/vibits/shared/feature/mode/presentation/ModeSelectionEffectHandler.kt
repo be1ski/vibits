@@ -6,14 +6,16 @@ import kotlinx.coroutines.flow.flow
 import space.be1ski.vibits.shared.core.elm.EffectHandler
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
-import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentials
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentials
+import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppMode
 
 private const val TAG = "ModeEffect"
 
 class ModeSelectionEffectHandler(
-  private val validateCredentials: suspend (String, String) -> Result<Unit>,
-  private val saveCredentials: (Credentials) -> Unit,
-  private val saveAppMode: (AppMode) -> Unit,
+  private val validateCredentials: ValidateCredentials,
+  private val saveCredentials: SaveCredentials,
+  private val saveAppMode: SaveAppMode,
 ) : EffectHandler<ModeSelectionEffect, ModeSelectionAction> {
   override fun invoke(effect: ModeSelectionEffect): Flow<ModeSelectionAction> =
     when (effect) {

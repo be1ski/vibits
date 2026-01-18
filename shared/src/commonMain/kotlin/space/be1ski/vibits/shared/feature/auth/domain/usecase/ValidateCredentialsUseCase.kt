@@ -6,6 +6,13 @@ import space.be1ski.vibits.shared.feature.memos.data.remote.MemosApi
 
 private const val TAG = "ValidateCreds"
 
+fun interface ValidateCredentials {
+  suspend operator fun invoke(
+    baseUrl: String,
+    token: String,
+  ): Result<Unit>
+}
+
 /**
  * Use case that validates credentials by making a test API request.
  * Returns true if credentials are valid, false otherwise.
@@ -13,8 +20,8 @@ private const val TAG = "ValidateCreds"
 @Inject
 class ValidateCredentialsUseCase(
   private val memosApi: MemosApi,
-) {
-  suspend operator fun invoke(
+) : ValidateCredentials {
+  override suspend operator fun invoke(
     baseUrl: String,
     token: String,
   ): Result<Unit> {

@@ -5,6 +5,10 @@ import space.be1ski.vibits.shared.core.platform.LocaleProvider
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
 
+fun interface SaveLanguage {
+  operator fun invoke(language: AppLanguage): Boolean
+}
+
 /**
  * Saves the selected language preference and configures the locale.
  * @return true if a restart is required for the change to take effect
@@ -13,8 +17,8 @@ import space.be1ski.vibits.shared.feature.settings.domain.repository.Preferences
 class SaveLanguageUseCase(
   private val preferencesRepository: PreferencesRepository,
   private val localeProvider: LocaleProvider,
-) {
-  operator fun invoke(language: AppLanguage): Boolean {
+) : SaveLanguage {
+  override operator fun invoke(language: AppLanguage): Boolean {
     val currentPrefs = preferencesRepository.load()
     val updatedPrefs = currentPrefs.copy(language = language)
     preferencesRepository.save(updatedPrefs)
