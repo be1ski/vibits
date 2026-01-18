@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.core.platform
+package space.be1ski.vibits.shared.core.export
 
 import java.io.File
 import java.nio.file.Paths

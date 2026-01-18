@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.core.platform
+package space.be1ski.vibits.shared.app.data
 
 import space.be1ski.vibits.shared.app.data.DesktopStoragePaths
 import space.be1ski.vibits.shared.app.domain.model.AppDetails

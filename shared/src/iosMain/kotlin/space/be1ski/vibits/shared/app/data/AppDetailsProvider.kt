@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.core.platform
+package space.be1ski.vibits.shared.app.data
 
 import platform.Foundation.NSBundle
 import platform.Foundation.NSDocumentDirectory

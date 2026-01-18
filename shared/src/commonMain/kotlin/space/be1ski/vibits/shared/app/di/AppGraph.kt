@@ -5,10 +5,10 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.createGraph
 import io.ktor.client.HttpClient
-import space.be1ski.vibits.shared.core.platform.AppDetailsProvider
-import space.be1ski.vibits.shared.core.platform.FileExporter
+import space.be1ski.vibits.shared.app.data.AppDetailsProvider
+import space.be1ski.vibits.shared.core.export.FileExporter
+import space.be1ski.vibits.shared.core.network.createHttpClient
 import space.be1ski.vibits.shared.core.platform.LocaleProvider
-import space.be1ski.vibits.shared.core.platform.createHttpClient
 import space.be1ski.vibits.shared.feature.auth.data.platform.CredentialsStore
 import space.be1ski.vibits.shared.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.shared.feature.memos.data.platform.OfflineMemoStorage

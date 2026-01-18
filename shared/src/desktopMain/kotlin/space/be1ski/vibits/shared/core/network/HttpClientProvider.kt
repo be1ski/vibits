@@ -1,18 +1,20 @@
-package space.be1ski.vibits.shared.core.platform
+package space.be1ski.vibits.shared.core.network
 
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.js.Js
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 /**
- * Creates a JS [HttpClient] configured for the Memos API.
+ * Desktop-specific HTTP client configuration.
  */
 actual fun createHttpClient(): HttpClient =
-  HttpClient(Js) {
+  HttpClient(CIO) {
     install(ContentNegotiation) {
       json(
         Json {
@@ -22,6 +24,13 @@ actual fun createHttpClient(): HttpClient =
       )
     }
     install(Logging) {
+      logger =
+        object : Logger {
+          override fun log(message: String) {
+            println("HTTP | $message")
+          }
+        }
       level = LogLevel.INFO
+      sanitizeHeader { it == HttpHeaders.Authorization }
     }
   }

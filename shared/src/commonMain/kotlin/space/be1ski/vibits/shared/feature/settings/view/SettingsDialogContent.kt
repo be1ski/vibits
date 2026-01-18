@@ -65,9 +65,9 @@ import space.be1ski.vibits.shared.action_view_logs
 import space.be1ski.vibits.shared.app.data.ExportResult
 import space.be1ski.vibits.shared.app.data.Exporter
 import space.be1ski.vibits.shared.app.domain.model.AppDetails
+import space.be1ski.vibits.shared.core.export.FileExporter
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.logging.LogLevel
-import space.be1ski.vibits.shared.core.platform.FileExporter
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.SegmentedSelector
 import space.be1ski.vibits.shared.feature.memos.data.platform.createOfflineMemoStorage

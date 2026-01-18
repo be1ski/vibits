@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.core.platform
+package space.be1ski.vibits.shared.core.export
 
 /**
  * Platform-specific file exporter that saves content to Downloads/Documents folder.

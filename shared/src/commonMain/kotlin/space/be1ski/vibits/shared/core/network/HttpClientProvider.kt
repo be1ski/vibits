@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.core.platform
+package space.be1ski.vibits.shared.core.network
 
 import io.ktor.client.HttpClient
 

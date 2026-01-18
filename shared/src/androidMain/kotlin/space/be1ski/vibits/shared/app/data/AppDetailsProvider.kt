@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.core.platform
+package space.be1ski.vibits.shared.app.data
 
 import android.os.Environment
 import space.be1ski.vibits.shared.app.data.AndroidContextHolder

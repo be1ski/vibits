@@ -1,6 +1,6 @@
 @file:OptIn(kotlin.js.ExperimentalWasmJsInterop::class)
 
-package space.be1ski.vibits.shared.core.platform
+package space.be1ski.vibits.shared.core.export
 
 import kotlinx.browser.document
 import org.w3c.dom.HTMLAnchorElement
