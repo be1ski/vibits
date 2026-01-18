@@ -1,5 +1,7 @@
 package space.be1ski.vibits.shared.feature.memos.data.remote
 
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
@@ -12,6 +14,7 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
+import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.memos.data.remote.dto.CreateMemoRequestDto
 import space.be1ski.vibits.shared.feature.memos.data.remote.dto.ListMemosResponseDto
@@ -20,6 +23,8 @@ import space.be1ski.vibits.shared.feature.memos.data.remote.dto.UpdateMemoReques
 
 private const val TAG = "MemosApi"
 
+@Inject
+@SingleIn(AppScope::class)
 @Suppress("TooGenericExceptionCaught")
 class MemosApi(
   private val httpClient: HttpClient,

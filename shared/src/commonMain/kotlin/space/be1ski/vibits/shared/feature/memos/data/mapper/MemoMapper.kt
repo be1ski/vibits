@@ -1,5 +1,8 @@
 package space.be1ski.vibits.shared.feature.memos.data.mapper
 
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.feature.memos.data.remote.dto.MemoDto
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import kotlin.time.Instant
@@ -7,6 +10,8 @@ import kotlin.time.Instant
 /**
  * Maps network memo DTOs into domain models.
  */
+@Inject
+@SingleIn(AppScope::class)
 class MemoMapper {
   private companion object {
     const val EPOCH_SECONDS_LENGTH = 10
