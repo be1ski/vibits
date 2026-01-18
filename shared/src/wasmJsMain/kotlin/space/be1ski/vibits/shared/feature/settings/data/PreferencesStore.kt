@@ -10,8 +10,10 @@ private const val KEY_THEME = "vibits_theme"
 /**
  * Web implementation storing preferences in localStorage.
  */
-actual class PreferencesStore {
-  actual fun load(): LocalUserPreferences {
+actual fun createPreferencesStore(): PreferencesStore = WasmPreferencesStore()
+
+class WasmPreferencesStore : PreferencesStore {
+  override fun load(): LocalUserPreferences {
     val defaultTab = LocalUserPreferences.DEFAULT_TIME_RANGE_TAB
     val defaultLanguage = LocalUserPreferences.DEFAULT_LANGUAGE
     val defaultTheme = LocalUserPreferences.DEFAULT_THEME
@@ -27,7 +29,7 @@ actual class PreferencesStore {
     )
   }
 
-  actual fun save(preferences: LocalUserPreferences) {
+  override fun save(preferences: LocalUserPreferences) {
     localStorage.setItem(KEY_HABITS_TAB, preferences.habitsTimeRangeTab)
     localStorage.setItem(KEY_POSTS_TAB, preferences.postsTimeRangeTab)
     localStorage.setItem(KEY_LANGUAGE, preferences.language)

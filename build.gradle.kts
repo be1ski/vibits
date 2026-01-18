@@ -25,6 +25,10 @@ subprojects {
     apply(plugin = "io.gitlab.arturbosch.detekt")
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
   }
+  plugins.withId("com.android.application") {
+    apply(plugin = "io.gitlab.arturbosch.detekt")
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+  }
 
   plugins.withId("org.jlleitschuh.gradle.ktlint") {
     extensions.configure<KtlintExtension> {
@@ -71,13 +75,16 @@ tasks.register("checkAll") {
     ":shared:ktlintIosMainSourceSetCheck",
     ":desktopApp:ktlintCheck",
     ":webApp:ktlintCheck",
+    ":androidApp:ktlintCheck",
     // detekt
     ":shared:detekt",
     ":desktopApp:detekt",
     ":webApp:detekt",
+    ":androidApp:detekt",
     // compile and test
     ":shared:compileKotlinDesktop",
     ":shared:desktopTest",
+    ":androidApp:compileDebugKotlin",
   )
 }
 

@@ -5,8 +5,8 @@ import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
 import space.be1ski.vibits.shared.feature.memos.data.mapper.MemoMapper
+import space.be1ski.vibits.shared.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.shared.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.shared.feature.memos.data.remote.MemosPagination
 import space.be1ski.vibits.shared.feature.memos.domain.config.MemosDefaults

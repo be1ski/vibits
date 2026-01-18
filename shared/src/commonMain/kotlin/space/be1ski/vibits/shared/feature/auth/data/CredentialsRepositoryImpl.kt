@@ -5,6 +5,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.core.logging.Log
+import space.be1ski.vibits.shared.feature.auth.data.platform.CredentialsStore
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
 

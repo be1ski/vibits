@@ -5,10 +5,12 @@ import platform.Foundation.NSUserDefaults
 /**
  * iOS implementation backed by NSUserDefaults.
  */
-actual class PreferencesStore {
+actual fun createPreferencesStore(): PreferencesStore = IosPreferencesStore()
+
+class IosPreferencesStore : PreferencesStore {
   private val defaults = NSUserDefaults.standardUserDefaults
 
-  actual fun load(): LocalUserPreferences {
+  override fun load(): LocalUserPreferences {
     val defaultTab = LocalUserPreferences.DEFAULT_TIME_RANGE_TAB
     val defaultLanguage = LocalUserPreferences.DEFAULT_LANGUAGE
     val defaultTheme = LocalUserPreferences.DEFAULT_THEME
@@ -25,7 +27,7 @@ actual class PreferencesStore {
     )
   }
 
-  actual fun save(preferences: LocalUserPreferences) {
+  override fun save(preferences: LocalUserPreferences) {
     defaults.setObject(preferences.habitsTimeRangeTab, forKey = "ui_habits_time_range_tab")
     defaults.setObject(preferences.postsTimeRangeTab, forKey = "ui_posts_time_range_tab")
     defaults.setObject(preferences.language, forKey = "ui_language")

@@ -6,8 +6,8 @@ import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.memos.data.demo.DemoMemosRepository
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
 import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemosRepository
+import space.be1ski.vibits.shared.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode

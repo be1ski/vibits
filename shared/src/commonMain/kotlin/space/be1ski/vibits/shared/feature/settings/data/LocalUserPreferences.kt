@@ -17,8 +17,14 @@ data class LocalUserPreferences(
   }
 }
 
-expect class PreferencesStore() {
+/**
+ * Platform-specific preferences storage.
+ * Stored in SharedPreferences (Android), Preferences API (Desktop), NSUserDefaults (iOS), localStorage (WASM).
+ */
+interface PreferencesStore {
   fun load(): LocalUserPreferences
 
   fun save(preferences: LocalUserPreferences)
 }
+
+expect fun createPreferencesStore(): PreferencesStore
