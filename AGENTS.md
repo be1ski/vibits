@@ -35,6 +35,8 @@ We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
 - **Avoid meaningless suffixes** like `Info`, `Data`, `Model`, `Object` in class names — they add no semantic value. Use descriptive names that reflect purpose (e.g., `AppDetails` not `AppInfo`, `Credentials` not `CredentialsData`).
 - **When extending a class, verify the name still fits.** If you add a field that changes the class's scope (e.g., adding `version` to `StorageInfo`), rename the class to reflect its new purpose.
 - Avoid `!!`; keep composables small and focused.
+- **No unnecessary default values.** Don't add default parameter values that nobody uses — required parameters catch missing arguments at compile time.
+- **Use design system values.** Use `Indent` object values instead of hardcoding dp. If a value doesn't exist, add it to the design system.
 - **Self-documenting code over comments.** Don't add KDoc/comments that restate function names or obvious logic.
 - Prefer clean refactors over quick reuse: avoid introducing or keeping code smells, and leave the codebase cleaner than you found it.
 - Keep Gradle dependencies and `gradle/libs.versions.toml` entries alphabetically sorted within each block.
