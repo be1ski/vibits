@@ -1,5 +1,6 @@
 package space.be1ski.vibits.shared.feature.memos.data.remote
 
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import io.ktor.client.HttpClient
@@ -23,13 +24,23 @@ import space.be1ski.vibits.shared.feature.memos.data.remote.dto.UpdateMemoReques
 
 private const val TAG = "MemosApi"
 
+interface MemosApiClient {
+  suspend fun listMemos(
+    baseUrl: String,
+    token: String,
+    pageSize: Int,
+    pageToken: String?,
+  ): ListMemosResponseDto
+}
+
 @Inject
 @SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
 @Suppress("TooGenericExceptionCaught")
 class MemosApi(
   private val httpClient: HttpClient,
-) {
-  suspend fun listMemos(
+) : MemosApiClient {
+  override suspend fun listMemos(
     baseUrl: String,
     token: String,
     pageSize: Int,

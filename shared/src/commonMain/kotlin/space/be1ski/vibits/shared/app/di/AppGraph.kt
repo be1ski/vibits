@@ -19,10 +19,6 @@ import space.be1ski.vibits.shared.feature.mode.data.platform.AppModeStore
 import space.be1ski.vibits.shared.feature.settings.data.PreferencesStore
 import space.be1ski.vibits.shared.feature.settings.data.createPreferencesStore
 
-/**
- * Metro dependency graph for the application.
- * Only expect/actual classes need @Provides here - all other bindings use @ContributesBinding.
- */
 @SingleIn(AppScope::class)
 @DependencyGraph(AppScope::class)
 abstract class AppGraph {
@@ -37,7 +33,6 @@ abstract class AppGraph {
     }
   }
 
-  // Infrastructure - expect/actual classes need @Provides
   @Provides
   @SingleIn(AppScope::class)
   fun httpClient(): HttpClient = createHttpClient()

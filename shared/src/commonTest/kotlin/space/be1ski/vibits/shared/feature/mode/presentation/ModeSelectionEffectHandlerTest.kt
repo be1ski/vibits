@@ -2,8 +2,13 @@ package space.be1ski.vibits.shared.feature.mode.presentation
 
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
+import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
+import space.be1ski.vibits.shared.test.FakeAppModeRepository
+import space.be1ski.vibits.shared.test.FakeCredentialsRepository
+import space.be1ski.vibits.shared.test.FakeMemosApiClient
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -12,7 +17,7 @@ class ModeSelectionEffectHandlerTest {
   @Test
   fun `ValidateCredentials emits ValidationSucceeded on success`() =
     runTest {
-      val handler = createHandler(validateResult = Result.success(Unit))
+      val handler = createHandler()
 
       val actions =
         handler(
@@ -25,7 +30,8 @@ class ModeSelectionEffectHandlerTest {
   @Test
   fun `ValidateCredentials emits ValidationFailed on failure`() =
     runTest {
-      val handler = createHandler(validateResult = Result.failure(Exception("Connection failed")))
+      val api = FakeMemosApiClient(listMemosResult = Result.failure(Exception("Connection failed")))
+      val handler = createHandler(memosApi = api)
 
       val actions =
         handler(
@@ -38,32 +44,26 @@ class ModeSelectionEffectHandlerTest {
   @Test
   fun `SaveCredentials calls saveCredentials function`() =
     runTest {
-      var savedCredentials: Credentials? = null
-      val handler =
-        createHandler(
-          saveCredentials = { savedCredentials = it },
-        )
+      val credentialsRepo = FakeCredentialsRepository()
+      val handler = createHandler(credentialsRepository = credentialsRepo)
 
       handler(
         ModeSelectionEffect.SaveCredentials(baseUrl = "https://saved.com", token = "saved-token"),
       ).toList()
 
-      assertEquals("https://saved.com", savedCredentials?.baseUrl)
-      assertEquals("saved-token", savedCredentials?.token)
+      assertEquals("https://saved.com", credentialsRepo.stored.baseUrl)
+      assertEquals("saved-token", credentialsRepo.stored.token)
     }
 
   @Test
   fun `SaveMode calls saveAppMode function`() =
     runTest {
-      var savedMode: AppMode? = null
-      val handler =
-        createHandler(
-          saveAppMode = { savedMode = it },
-        )
+      val appModeRepo = FakeAppModeRepository()
+      val handler = createHandler(appModeRepository = appModeRepo)
 
       handler(ModeSelectionEffect.SaveMode(mode = AppMode.OFFLINE)).toList()
 
-      assertEquals(AppMode.OFFLINE, savedMode)
+      assertEquals(AppMode.OFFLINE, appModeRepo.storedMode)
     }
 
   @Test
@@ -80,14 +80,14 @@ class ModeSelectionEffectHandlerTest {
     }
 
   private fun createHandler(
-    validateResult: Result<Unit> = Result.success(Unit),
-    saveCredentials: (Credentials) -> Unit = {},
-    saveAppMode: (AppMode) -> Unit = {},
+    memosApi: FakeMemosApiClient = FakeMemosApiClient(),
+    credentialsRepository: FakeCredentialsRepository = FakeCredentialsRepository(),
+    appModeRepository: FakeAppModeRepository = FakeAppModeRepository(),
   ): ModeSelectionEffectHandler {
     return ModeSelectionEffectHandler(
-      validateCredentials = { _, _ -> validateResult },
-      saveCredentials = saveCredentials,
-      saveAppMode = saveAppMode,
+      validateCredentials = ValidateCredentialsUseCase(memosApi),
+      saveCredentials = SaveCredentialsUseCase(credentialsRepository),
+      saveAppMode = SaveAppModeUseCase(appModeRepository),
     )
   }
 }
