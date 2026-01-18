@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.shared.core.platform.locale.LocaleProvider
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
-import space.be1ski.vibits.shared.feature.auth.domain.usecase.ValidateCredentialsUseCase
+import space.be1ski.vibits.shared.feature.memos.data.ConnectionTester
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
@@ -14,7 +14,6 @@ import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveLanguageUs
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveThemeUseCase
 import space.be1ski.vibits.shared.test.FakeAppModeRepository
 import space.be1ski.vibits.shared.test.FakeCredentialsRepository
-import space.be1ski.vibits.shared.test.FakeMemosApiClient
 import space.be1ski.vibits.shared.test.FakePreferencesRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -41,8 +40,7 @@ class SettingsEffectHandlerTest {
   @Test
   fun `ValidateCredentials emits ValidationFailed on failure`() =
     runTest {
-      val api = FakeMemosApiClient(listMemosResult = Result.failure(Exception("Connection failed")))
-      val handler = createHandler(memosApi = api)
+      val handler = createHandler(connectionResult = Result.failure(Exception("Connection failed")))
 
       val actions =
         handler(
@@ -150,13 +148,13 @@ class SettingsEffectHandlerTest {
     }
 
   private fun createHandler(
-    memosApi: FakeMemosApiClient = FakeMemosApiClient(),
+    connectionResult: Result<Unit> = Result.success(Unit),
     appModeRepository: FakeAppModeRepository = FakeAppModeRepository(),
     credentialsRepository: FakeCredentialsRepository = FakeCredentialsRepository(),
     preferencesRepository: FakePreferencesRepository = FakePreferencesRepository(),
   ): SettingsEffectHandler {
     return SettingsEffectHandler(
-      validateCredentials = ValidateCredentialsUseCase(memosApi),
+      connectionTester = ConnectionTester { _, _ -> connectionResult },
       switchAppMode = SwitchAppModeUseCase(appModeRepository),
       saveCredentials = SaveCredentialsUseCase(credentialsRepository),
       resetApp = ResetAppUseCase(appModeRepository, credentialsRepository, preferencesRepository),

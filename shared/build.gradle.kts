@@ -3,10 +3,10 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
+  alias(libs.plugins.kotlin.multiplatform) // must be first
   alias(libs.plugins.android.kotlin.multiplatform.library)
   alias(libs.plugins.compose.multiplatform)
   alias(libs.plugins.kotlin.compose)
-  alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.ksp)
   alias(libs.plugins.metro)
@@ -19,7 +19,6 @@ kotlin {
     compileSdk = 36
     minSdk = 31
 
-    // Enable Android resources support for Compose Multiplatform resources
     androidResources {
       enable = true
     }
@@ -47,13 +46,13 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
+        implementation(compose.components.resources)
         implementation(compose.foundation)
         implementation(compose.material)
         implementation(compose.material3)
         implementation(compose.materialIconsExtended)
         implementation(compose.runtime)
         implementation(compose.ui)
-        implementation(compose.components.resources)
         implementation(libs.kotlinx.atomicfu)
         implementation(libs.kotlinx.coroutines.core)
         implementation(libs.kotlinx.datetime)
