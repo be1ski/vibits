@@ -23,7 +23,8 @@ We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
   - Stateless use cases without dependencies: use `object` with `operator fun invoke`. Example: `FilterPostsUseCase(memos)`.
   - Use cases with dependencies: use `@Inject class` with `operator fun invoke`.
   - Simple pure utility functions (e.g., date calculations): use top-level functions in `*Utils.kt` files.
-  - Operations on data classes: use extension functions in `*Extensions.kt` files.
+  - Operations on data classes: use extension functions in the same file as the data class.
+- **Feature dependencies:** Instead of passing many parameters through composables, create a `*Dependencies` class (e.g., `HabitsDependencies`) that bundles all dependencies for a feature. Use `@Inject` so Metro wires it automatically. See `AppDependencies` for reference.
 
 ## Build, Test, and Development Commands
 
