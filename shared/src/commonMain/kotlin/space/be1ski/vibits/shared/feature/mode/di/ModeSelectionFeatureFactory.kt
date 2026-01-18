@@ -17,8 +17,8 @@ fun createModeSelectionFeature(
     reducer = modeSelectionReducer,
     effectHandler =
       ModeSelectionEffectHandler(
-        validateCredentials = { baseUrl, token -> dependencies.validateCredentials(baseUrl, token) },
-        saveCredentials = { credentials -> dependencies.saveCredentials(credentials) },
-        saveAppMode = { mode -> dependencies.saveAppMode(mode) },
+        validateCredentials = dependencies.validateCredentials,
+        saveCredentials = dependencies.saveCredentials,
+        saveAppMode = dependencies.saveAppMode,
       ),
   )

@@ -8,6 +8,10 @@ import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeReposito
 
 private const val TAG = "SwitchMode"
 
+fun interface SwitchAppMode {
+  suspend operator fun invoke(mode: AppMode)
+}
+
 /**
  * Use case for switching app mode with cache invalidation.
  */
@@ -15,8 +19,8 @@ private const val TAG = "SwitchMode"
 class SwitchAppModeUseCase(
   private val appModeRepository: AppModeRepository,
   private val modeAwareMemosRepository: ModeAwareMemosRepository,
-) {
-  suspend operator fun invoke(mode: AppMode) {
+) : SwitchAppMode {
+  override suspend operator fun invoke(mode: AppMode) {
     val currentMode = appModeRepository.loadMode()
     if (currentMode != mode) {
       Log.i(TAG, "Switching mode: $currentMode -> $mode")
