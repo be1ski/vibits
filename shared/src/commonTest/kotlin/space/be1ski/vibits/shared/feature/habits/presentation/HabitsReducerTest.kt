@@ -1,6 +1,7 @@
 package space.be1ski.vibits.shared.feature.habits.presentation
 
 import kotlinx.datetime.LocalDate
+import space.be1ski.vibits.shared.core.elm.test
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo
@@ -9,10 +10,6 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.HabitStatus
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertIs
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 class HabitsReducerTest {
   private val testDay =
@@ -36,417 +33,318 @@ class HabitsReducerTest {
       HabitConfig("#habits/reading", "Reading"),
     )
 
-  // OpenEditor tests
+  @Test
+  fun `when OpenEditor then sets editor state`() =
+    habitsReducer.test(HabitsState()) {
+      send(HabitsAction.OpenEditor(testDay, testConfig))
+
+      assertState {
+        editorDay == testDay &&
+          editorConfig == testConfig &&
+          editorSelections.isNotEmpty() &&
+          editorError == null
+      }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when OpenEditor then sets editor state`() {
-    val (newState, effects) =
-      habitsReducer(
-        HabitsAction.OpenEditor(testDay, testConfig),
-        HabitsState(),
-      )
+  fun `when OpenEditor with existing memo then sets editorExisting`() =
+    habitsReducer.test(HabitsState()) {
+      val dayWithMemo = testDay.copy(dailyMemo = DailyMemoInfo("memos/1", "content"))
 
-    assertEquals(testDay, newState.editorDay)
-    assertEquals(testConfig, newState.editorConfig)
-    assertTrue(newState.editorSelections.isNotEmpty())
-    assertNull(newState.editorError)
-    assertTrue(effects.isEmpty())
-  }
+      send(HabitsAction.OpenEditor(dayWithMemo, testConfig))
+
+      assertState { editorExisting?.name == "memos/1" }
+    }
 
   @Test
-  fun `when OpenEditor with existing memo then sets editorExisting`() {
-    val dayWithMemo = testDay.copy(dailyMemo = DailyMemoInfo("memos/1", "content"))
-
-    val (newState, _) =
-      habitsReducer(
-        HabitsAction.OpenEditor(dayWithMemo, testConfig),
-        HabitsState(),
-      )
-
-    assertEquals("memos/1", newState.editorExisting?.name)
-  }
-
-  // CloseEditor tests
-
-  @Test
-  fun `when CloseEditor then clears editor state`() {
-    val state =
+  fun `when CloseEditor then clears editor state`() =
+    habitsReducer.test(
       HabitsState(
         editorDay = testDay,
         editorConfig = testConfig,
         editorSelections = mapOf("#habits/exercise" to true),
         editorError = "some error",
         showDeleteConfirm = true,
-      )
+      ),
+    ) {
+      send(HabitsAction.CloseEditor)
 
-    val (newState, effects) = habitsReducer(HabitsAction.CloseEditor, state)
-
-    assertNull(newState.editorDay)
-    assertTrue(newState.editorConfig.isEmpty())
-    assertTrue(newState.editorSelections.isEmpty())
-    assertNull(newState.editorError)
-    assertFalse(newState.showDeleteConfirm)
-    assertTrue(effects.isEmpty())
-  }
-
-  // ToggleHabit tests
-
-  @Test
-  fun `when ToggleHabit then updates selection`() {
-    val state =
-      HabitsState(
-        editorSelections = mapOf("#habits/exercise" to false),
-      )
-
-    val (newState, effects) =
-      habitsReducer(
-        HabitsAction.ToggleHabit("#habits/exercise", true),
-        state,
-      )
-
-    assertEquals(true, newState.editorSelections["#habits/exercise"])
-    assertTrue(effects.isEmpty())
-  }
-
-  // ConfirmEditor tests
+      assertState {
+        editorDay == null &&
+          editorConfig.isEmpty() &&
+          editorSelections.isEmpty() &&
+          editorError == null &&
+          !showDeleteConfirm
+      }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when ConfirmEditor with no selection and existing memo then shows delete confirm`() {
-    val state =
+  fun `when ToggleHabit then updates selection`() =
+    habitsReducer.test(HabitsState(editorSelections = mapOf("#habits/exercise" to false))) {
+      send(HabitsAction.ToggleHabit("#habits/exercise", true))
+
+      assertState { editorSelections["#habits/exercise"] == true }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ConfirmEditor with no selection and existing memo then shows delete confirm`() =
+    habitsReducer.test(
       HabitsState(
         editorDay = testDay,
         editorConfig = testConfig,
         editorSelections = mapOf("#habits/exercise" to false),
         editorExisting = DailyMemoInfo("memos/1", "content"),
-      )
+      ),
+    ) {
+      send(HabitsAction.ConfirmEditor)
 
-    val (newState, effects) = habitsReducer(HabitsAction.ConfirmEditor, state)
-
-    assertTrue(newState.showDeleteConfirm)
-    assertTrue(effects.isEmpty())
-  }
+      assertState { showDeleteConfirm }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when ConfirmEditor with no selection and no existing memo then shows error`() {
-    val state =
+  fun `when ConfirmEditor with no selection and no existing memo then shows error`() =
+    habitsReducer.test(
       HabitsState(
         editorDay = testDay,
         editorConfig = testConfig,
         editorSelections = mapOf("#habits/exercise" to false),
         editorExisting = null,
-      )
+      ),
+    ) {
+      send(HabitsAction.ConfirmEditor)
 
-    val (newState, effects) = habitsReducer(HabitsAction.ConfirmEditor, state)
-
-    assertEquals("Select at least one habit.", newState.editorError)
-    assertTrue(effects.isEmpty())
-  }
+      assertState { editorError == "Select at least one habit." }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when ConfirmEditor with selection and no existing memo then emits CreateMemo`() {
-    val state =
+  fun `when ConfirmEditor with selection and no existing memo then emits CreateMemo`() =
+    habitsReducer.test(
       HabitsState(
         editorDay = testDay,
         editorConfig = testConfig,
         editorSelections = mapOf("#habits/exercise" to true),
-      )
+      ),
+    ) {
+      send(HabitsAction.ConfirmEditor)
 
-    val (newState, effects) = habitsReducer(HabitsAction.ConfirmEditor, state)
-
-    assertTrue(newState.isLoading)
-    assertEquals(1, effects.size)
-    assertIs<HabitsEffect.CreateMemo>(effects.first())
-  }
+      assertState { isLoading }
+      assertHasEffect<HabitsEffect.CreateMemo>()
+    }
 
   @Test
-  fun `when ConfirmEditor with selection and existing memo then emits UpdateMemo`() {
-    val state =
+  fun `when ConfirmEditor with selection and existing memo then emits UpdateMemo`() =
+    habitsReducer.test(
       HabitsState(
         editorDay = testDay,
         editorConfig = testConfig,
         editorSelections = mapOf("#habits/exercise" to true),
         editorExisting = DailyMemoInfo("memos/1", "old content"),
-      )
+      ),
+    ) {
+      send(HabitsAction.ConfirmEditor)
 
-    val (newState, effects) = habitsReducer(HabitsAction.ConfirmEditor, state)
-
-    assertTrue(newState.isLoading)
-    assertEquals(1, effects.size)
-    val effect = effects.first()
-    assertIs<HabitsEffect.UpdateMemo>(effect)
-    assertEquals("memos/1", effect.name)
-  }
-
-  // Delete flow tests
+      assertState { isLoading }
+      val effect = assertHasEffect<HabitsEffect.UpdateMemo>()
+      assertEquals("memos/1", effect.name)
+    }
 
   @Test
-  fun `when RequestDelete then shows delete confirm`() {
-    val (newState, effects) =
-      habitsReducer(
-        HabitsAction.RequestDelete,
-        HabitsState(),
-      )
+  fun `when RequestDelete then shows delete confirm`() =
+    habitsReducer.test(HabitsState()) {
+      send(HabitsAction.RequestDelete)
 
-    assertTrue(newState.showDeleteConfirm)
-    assertTrue(effects.isEmpty())
-  }
+      assertState { showDeleteConfirm }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when ConfirmDelete then emits DeleteMemo effect`() {
-    val state =
-      HabitsState(
-        editorExisting = DailyMemoInfo("memos/1", "content"),
-      )
+  fun `when ConfirmDelete then emits DeleteMemo effect`() =
+    habitsReducer.test(HabitsState(editorExisting = DailyMemoInfo("memos/1", "content"))) {
+      send(HabitsAction.ConfirmDelete)
 
-    val (newState, effects) = habitsReducer(HabitsAction.ConfirmDelete, state)
-
-    assertTrue(newState.isLoading)
-    assertEquals(1, effects.size)
-    val effect = effects.first()
-    assertIs<HabitsEffect.DeleteMemo>(effect)
-    assertEquals("memos/1", effect.name)
-  }
+      assertState { isLoading }
+      val effect = assertHasEffect<HabitsEffect.DeleteMemo>()
+      assertEquals("memos/1", effect.name)
+    }
 
   @Test
-  fun `when CancelDelete then hides delete confirm`() {
-    val state = HabitsState(showDeleteConfirm = true)
+  fun `when CancelDelete then hides delete confirm`() =
+    habitsReducer.test(HabitsState(showDeleteConfirm = true)) {
+      send(HabitsAction.CancelDelete)
 
-    val (newState, effects) = habitsReducer(HabitsAction.CancelDelete, state)
-
-    assertFalse(newState.showDeleteConfirm)
-    assertTrue(effects.isEmpty())
-  }
-
-  // Selection tests
+      assertState { !showDeleteConfirm }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when SelectDay then updates selection state`() {
-    val (newState, _) =
-      habitsReducer(
-        HabitsAction.SelectDay(testDay, "section-1"),
-        HabitsState(),
-      )
+  fun `when SelectDay then updates selection state`() =
+    habitsReducer.test(HabitsState()) {
+      send(HabitsAction.SelectDay(testDay, "section-1"))
 
-    assertEquals(testDay.date, newState.selectedDate)
-    assertEquals("section-1", newState.activeSelectionId)
-  }
+      assertState { selectedDate == testDay.date && activeSelectionId == "section-1" }
+    }
 
   @Test
-  fun `when SelectWeek then updates selected week`() {
-    val week =
-      ActivityWeek(
-        startDate = LocalDate(2024, 1, 15),
-        days = emptyList(),
-        weeklyCount = 0,
-      )
+  fun `when SelectWeek then updates selected week`() =
+    habitsReducer.test(HabitsState()) {
+      val week = ActivityWeek(startDate = LocalDate(2024, 1, 15), days = emptyList(), weeklyCount = 0)
 
-    val (newState, _) = habitsReducer(HabitsAction.SelectWeek(week), HabitsState())
+      send(HabitsAction.SelectWeek(week))
 
-    assertEquals(week, newState.selectedWeek)
-  }
+      assertState { selectedWeek == week }
+    }
 
   @Test
-  fun `when ClearSelection then clears all selection state`() {
-    val state =
+  fun `when ClearSelection then clears all selection state`() =
+    habitsReducer.test(
       HabitsState(
         selectedDate = LocalDate(2024, 1, 15),
         selectedWeek = ActivityWeek(LocalDate(2024, 1, 15), emptyList(), 0),
         activeSelectionId = "section-1",
-      )
+      ),
+    ) {
+      send(HabitsAction.ClearSelection)
 
-    val (newState, _) = habitsReducer(HabitsAction.ClearSelection, state)
-
-    assertNull(newState.selectedDate)
-    assertNull(newState.selectedWeek)
-    assertNull(newState.activeSelectionId)
-  }
-
-  // API response tests
+      assertState { selectedDate == null && selectedWeek == null && activeSelectionId == null }
+    }
 
   @Test
-  fun `when MemoCreated then clears editor and emits refresh`() {
-    val state =
+  fun `when MemoCreated then clears editor and emits refresh`() =
+    habitsReducer.test(
       HabitsState(
         isLoading = true,
         editorDay = testDay,
         editorConfig = testConfig,
-      )
+      ),
+    ) {
+      send(HabitsAction.MemoCreated(Memo(name = "memos/1")))
 
-    val (newState, effects) =
-      habitsReducer(
-        HabitsAction.MemoCreated(Memo(name = "memos/1")),
-        state,
-      )
-
-    assertFalse(newState.isLoading)
-    assertNull(newState.editorDay)
-    assertTrue(newState.editorConfig.isEmpty())
-    assertEquals(1, effects.size)
-    assertIs<HabitsEffect.RefreshMemos>(effects.first())
-  }
+      assertState { !isLoading && editorDay == null && editorConfig.isEmpty() }
+      assertEffects(HabitsEffect.RefreshMemos)
+    }
 
   @Test
-  fun `when MemoDeleted then clears editor and emits refresh`() {
-    val state =
+  fun `when MemoUpdated then clears editor and emits refresh`() =
+    habitsReducer.test(HabitsState(isLoading = true, editorDay = testDay)) {
+      send(HabitsAction.MemoUpdated(Memo(name = "memos/1")))
+
+      assertState { !isLoading && editorDay == null }
+      assertEffects(HabitsEffect.RefreshMemos)
+    }
+
+  @Test
+  fun `when MemoDeleted then clears editor and emits refresh`() =
+    habitsReducer.test(
       HabitsState(
         isLoading = true,
         editorDay = testDay,
         showDeleteConfirm = true,
-      )
+      ),
+    ) {
+      send(HabitsAction.MemoDeleted("memos/1"))
 
-    val (newState, effects) =
-      habitsReducer(
-        HabitsAction.MemoDeleted("memos/1"),
-        state,
-      )
-
-    assertFalse(newState.isLoading)
-    assertNull(newState.editorDay)
-    assertFalse(newState.showDeleteConfirm)
-    assertEquals(1, effects.size)
-    assertIs<HabitsEffect.RefreshMemos>(effects.first())
-  }
+      assertState { !isLoading && editorDay == null && !showDeleteConfirm }
+      assertEffects(HabitsEffect.RefreshMemos)
+    }
 
   @Test
-  fun `when MemoOperationFailed then sets error and stops loading`() {
-    val state = HabitsState(isLoading = true)
+  fun `when MemoOperationFailed then sets error and stops loading`() =
+    habitsReducer.test(HabitsState(isLoading = true)) {
+      send(HabitsAction.MemoOperationFailed("Network error"))
 
-    val (newState, effects) =
-      habitsReducer(
-        HabitsAction.MemoOperationFailed("Network error"),
-        state,
-      )
-
-    assertFalse(newState.isLoading)
-    assertEquals("Network error", newState.editorError)
-    assertTrue(effects.isEmpty())
-  }
-
-  // Config dialog tests
+      assertState { !isLoading && editorError == "Network error" }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when OpenConfigDialog then shows dialog with editable habits`() {
-    val (newState, effects) =
-      habitsReducer(
-        HabitsAction.OpenConfigDialog(testConfig),
-        HabitsState(),
-      )
+  fun `when OpenConfigDialog then shows dialog with editable habits`() =
+    habitsReducer.test(HabitsState()) {
+      send(HabitsAction.OpenConfigDialog(testConfig))
 
-    assertTrue(newState.showConfigDialog)
-    assertEquals(2, newState.editingHabits.size)
-    assertEquals("Exercise", newState.editingHabits.first().label)
-    assertTrue(effects.isEmpty())
-  }
+      assertState { showConfigDialog && editingHabits.size == 2 && editingHabits.first().label == "Exercise" }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when CloseConfigDialog then hides dialog and clears habits`() {
-    val state =
+  fun `when CloseConfigDialog then hides dialog and clears habits`() =
+    habitsReducer.test(
       HabitsState(
         showConfigDialog = true,
         editingHabits = listOf(EditableHabit("1", "#habits/test", "Test", 0xFF0000L)),
-      )
+      ),
+    ) {
+      send(HabitsAction.CloseConfigDialog)
 
-    val (newState, effects) = habitsReducer(HabitsAction.CloseConfigDialog, state)
-
-    assertFalse(newState.showConfigDialog)
-    assertTrue(newState.editingHabits.isEmpty())
-    assertTrue(effects.isEmpty())
-  }
-
-  @Test
-  fun `when AddHabit then adds new empty habit`() {
-    val state = HabitsState(editingHabits = emptyList())
-
-    val (newState, effects) = habitsReducer(HabitsAction.AddHabit, state)
-
-    assertEquals(1, newState.editingHabits.size)
-    assertEquals("", newState.editingHabits.first().label)
-    assertTrue(effects.isEmpty())
-  }
+      assertState { !showConfigDialog && editingHabits.isEmpty() }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when UpdateHabitLabel then updates label and normalizes tag`() {
-    val habit = EditableHabit("habit_1", "", "", 0xFF0000L)
-    val state = HabitsState(editingHabits = listOf(habit))
+  fun `when AddHabit then adds new empty habit`() =
+    habitsReducer.test(HabitsState(editingHabits = emptyList())) {
+      send(HabitsAction.AddHabit)
 
-    val (newState, effects) =
-      habitsReducer(
-        HabitsAction.UpdateHabitLabel("habit_1", "Morning Run"),
-        state,
-      )
-
-    assertEquals("Morning Run", newState.editingHabits.first().label)
-    assertEquals("#habits/Morning_Run", newState.editingHabits.first().tag)
-    assertTrue(effects.isEmpty())
-  }
+      assertState { editingHabits.size == 1 && editingHabits.first().label == "" }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when UpdateHabitColor then updates color`() {
-    val habit = EditableHabit("habit_1", "#habits/test", "Test", 0xFF0000L)
-    val state = HabitsState(editingHabits = listOf(habit))
+  fun `when UpdateHabitLabel then updates label and normalizes tag`() =
+    habitsReducer.test(
+      HabitsState(editingHabits = listOf(EditableHabit("habit_1", "", "", 0xFF0000L))),
+    ) {
+      send(HabitsAction.UpdateHabitLabel("habit_1", "Morning Run"))
 
-    val (newState, effects) =
-      habitsReducer(
-        HabitsAction.UpdateHabitColor("habit_1", 0x00FF00L),
-        state,
-      )
-
-    assertEquals(0x00FF00L, newState.editingHabits.first().color)
-    assertTrue(effects.isEmpty())
-  }
-
-  @Test
-  fun `when DeleteHabit then removes habit from list`() {
-    val habits =
-      listOf(
-        EditableHabit("habit_1", "#habits/a", "A", 0xFF0000L),
-        EditableHabit("habit_2", "#habits/b", "B", 0x00FF00L),
-      )
-    val state = HabitsState(editingHabits = habits)
-
-    val (newState, effects) =
-      habitsReducer(
-        HabitsAction.DeleteHabit("habit_1"),
-        state,
-      )
-
-    assertEquals(1, newState.editingHabits.size)
-    assertEquals("habit_2", newState.editingHabits.first().id)
-    assertTrue(effects.isEmpty())
-  }
+      assertState {
+        editingHabits.first().label == "Morning Run" &&
+          editingHabits.first().tag == "#habits/Morning_Run"
+      }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when SaveConfigDialog then emits CreateMemo with config content`() {
-    val habits =
-      listOf(
-        EditableHabit("habit_1", "#habits/exercise", "Exercise", 0xFF0000L),
-      )
-    val state = HabitsState(editingHabits = habits)
+  fun `when UpdateHabitColor then updates color`() =
+    habitsReducer.test(
+      HabitsState(editingHabits = listOf(EditableHabit("habit_1", "#habits/test", "Test", 0xFF0000L))),
+    ) {
+      send(HabitsAction.UpdateHabitColor("habit_1", 0x00FF00L))
 
-    val (newState, effects) = habitsReducer(HabitsAction.SaveConfigDialog, state)
-
-    assertTrue(newState.isLoading)
-    assertEquals(1, effects.size)
-    assertIs<HabitsEffect.CreateMemo>(effects.first())
-  }
+      assertState { editingHabits.first().color == 0x00FF00L }
+      assertNoEffects()
+    }
 
   @Test
-  fun `when MemoUpdated then clears editor and emits refresh`() {
-    val state =
+  fun `when DeleteHabit then removes habit from list`() =
+    habitsReducer.test(
       HabitsState(
-        isLoading = true,
-        editorDay = testDay,
-      )
+        editingHabits =
+          listOf(
+            EditableHabit("habit_1", "#habits/a", "A", 0xFF0000L),
+            EditableHabit("habit_2", "#habits/b", "B", 0x00FF00L),
+          ),
+      ),
+    ) {
+      send(HabitsAction.DeleteHabit("habit_1"))
 
-    val (newState, effects) =
-      habitsReducer(
-        HabitsAction.MemoUpdated(Memo(name = "memos/1")),
-        state,
-      )
+      assertState { editingHabits.size == 1 && editingHabits.first().id == "habit_2" }
+      assertNoEffects()
+    }
 
-    assertFalse(newState.isLoading)
-    assertNull(newState.editorDay)
-    assertEquals(1, effects.size)
-    assertIs<HabitsEffect.RefreshMemos>(effects.first())
-  }
+  @Test
+  fun `when SaveConfigDialog then emits CreateMemo with config content`() =
+    habitsReducer.test(
+      HabitsState(
+        editingHabits = listOf(EditableHabit("habit_1", "#habits/exercise", "Exercise", 0xFF0000L)),
+      ),
+    ) {
+      send(HabitsAction.SaveConfigDialog)
+
+      assertState { isLoading }
+      assertHasEffect<HabitsEffect.CreateMemo>()
+    }
 }
