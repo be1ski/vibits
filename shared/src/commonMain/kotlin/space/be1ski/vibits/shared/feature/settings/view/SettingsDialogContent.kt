@@ -67,8 +67,10 @@ import space.be1ski.vibits.shared.app.data.Exporter
 import space.be1ski.vibits.shared.app.domain.model.AppDetails
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.logging.LogLevel
+import space.be1ski.vibits.shared.core.platform.FileExporter
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.SegmentedSelector
+import space.be1ski.vibits.shared.feature.memos.data.platform.createOfflineMemoStorage
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
@@ -504,7 +506,7 @@ private fun ActionsRow(
   var exportStatus by remember { mutableStateOf<String?>(null) }
   val exportFailedMsg = stringResource(Res.string.msg_export_failed)
   val exportSuccessTemplate = stringResource(Res.string.msg_export_success, "%s")
-  val exporter = remember { Exporter() }
+  val exporter = remember { Exporter(FileExporter(), createOfflineMemoStorage()) }
 
   val onExport: (ExportResult) -> Unit = { result ->
     exportExpanded = false

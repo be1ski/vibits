@@ -6,11 +6,14 @@ import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.createGraph
 import io.ktor.client.HttpClient
 import space.be1ski.vibits.shared.core.platform.AppDetailsProvider
+import space.be1ski.vibits.shared.core.platform.FileExporter
 import space.be1ski.vibits.shared.core.platform.LocaleProvider
 import space.be1ski.vibits.shared.core.platform.createHttpClient
 import space.be1ski.vibits.shared.feature.auth.data.platform.CredentialsStore
 import space.be1ski.vibits.shared.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.shared.feature.memos.data.platform.OfflineMemoStorage
+import space.be1ski.vibits.shared.feature.memos.data.platform.createMemoCache
+import space.be1ski.vibits.shared.feature.memos.data.platform.createOfflineMemoStorage
 import space.be1ski.vibits.shared.feature.mode.data.platform.AppModeStore
 import space.be1ski.vibits.shared.feature.settings.data.PreferencesStore
 import space.be1ski.vibits.shared.feature.settings.data.createPreferencesStore
@@ -44,7 +47,7 @@ abstract class AppGraph {
 
   @Provides
   @SingleIn(AppScope::class)
-  fun memoCache(): MemoCache = MemoCache()
+  fun memoCache(): MemoCache = createMemoCache()
 
   @Provides
   @SingleIn(AppScope::class)
@@ -64,5 +67,9 @@ abstract class AppGraph {
 
   @Provides
   @SingleIn(AppScope::class)
-  fun offlineMemoStorage(): OfflineMemoStorage = OfflineMemoStorage()
+  fun offlineMemoStorage(): OfflineMemoStorage = createOfflineMemoStorage()
+
+  @Provides
+  @SingleIn(AppScope::class)
+  fun fileExporter(): FileExporter = FileExporter()
 }

@@ -1,5 +1,6 @@
 package space.be1ski.vibits.shared.feature.memos.data.platform
 
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
@@ -15,7 +16,9 @@ import platform.Foundation.create
 import platform.Foundation.stringWithContentsOfFile
 import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemosFileDto
 
-actual class OfflineMemoStorage {
+actual fun createOfflineMemoStorage(): OfflineMemoStorage = IosOfflineMemoStorage()
+
+private class IosOfflineMemoStorage : OfflineMemoStorage {
   private val fileName = "memos.json"
   private val json =
     Json {
@@ -24,7 +27,7 @@ actual class OfflineMemoStorage {
     }
 
   @OptIn(ExperimentalForeignApi::class)
-  actual fun load(): OfflineMemosFileDto {
+  override fun load(): OfflineMemosFileDto {
     val fileManager = NSFileManager.defaultManager
     val path =
       getFilePath()?.takeIf { fileManager.fileExistsAtPath(it) }
@@ -35,8 +38,8 @@ actual class OfflineMemoStorage {
     }.getOrDefault(OfflineMemosFileDto())
   }
 
-  @OptIn(ExperimentalForeignApi::class, kotlinx.cinterop.BetaInteropApi::class)
-  actual fun save(data: OfflineMemosFileDto) {
+  @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
+  override fun save(data: OfflineMemosFileDto) {
     val path = getFilePath() ?: return
     runCatching {
       val content = json.encodeToString(OfflineMemosFileDto.serializer(), data)

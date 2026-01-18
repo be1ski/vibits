@@ -13,8 +13,8 @@ import kotlin.time.Clock
  */
 @Inject
 class Exporter(
-  private val fileExporter: FileExporter = FileExporter(),
-  private val offlineMemoStorage: OfflineMemoStorage = OfflineMemoStorage(),
+  private val fileExporter: FileExporter,
+  private val offlineMemoStorage: OfflineMemoStorage,
 ) {
   private val json =
     Json {
