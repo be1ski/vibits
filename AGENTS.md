@@ -17,7 +17,7 @@ Features are autonomous and isolated units that can be run separately and disabl
 
 ```
 feature/<name>/
-  di/                 # Dependency containers (*Dependencies.kt)
+  di/                 # Dependencies containers and FeatureFactory
   domain/
     model/            # Domain models and types
     usecase/          # Business logic (use cases)
@@ -35,9 +35,10 @@ feature/<name>/
   - `*Feature.kt` — State, Action, Effect sealed classes
   - `*Reducer.kt` — Pure state transitions
   - `*EffectHandler.kt` — Side effects (API calls, DB operations)
-  - `*FeatureFactory.kt` — Feature instantiation with dependencies
 - **view/** — Compose UI only. Screens, components, dialogs. Excluded from unit test coverage.
-- **di/** — Dependency containers for passing groups of dependencies through composable chains.
+- **di/** — Dependency containers and feature factories:
+  - `*Dependencies.kt` — Transport containers for composable dependency passing
+  - `*FeatureFactory.kt` — Feature instantiation with dependencies
 
 ### Dependencies Pattern
 
