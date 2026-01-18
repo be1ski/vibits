@@ -11,7 +11,7 @@ coverage:
 ignore:
   - "**/di/**"
   - "**/view/**"
-  - "**/*EffectHandler.kt"
+  - "**/commonTest/**"
 
 comment:
   layout: "reach, diff, flags, files"
