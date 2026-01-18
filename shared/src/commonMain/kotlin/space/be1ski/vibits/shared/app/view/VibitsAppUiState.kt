@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.app
+package space.be1ski.vibits.shared.app.view
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

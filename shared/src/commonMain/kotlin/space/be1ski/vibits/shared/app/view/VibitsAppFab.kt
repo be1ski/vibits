@@ -2,8 +2,6 @@
 
 package space.be1ski.vibits.shared.app.view
 
-import space.be1ski.vibits.shared.app.MemosScreen
-
 internal enum class MemosFabMode {
   HABITS,
   MEMO,
