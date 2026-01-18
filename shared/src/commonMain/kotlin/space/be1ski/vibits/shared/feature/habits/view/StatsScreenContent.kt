@@ -53,7 +53,7 @@ import space.be1ski.vibits.shared.action_configure_habits
 import space.be1ski.vibits.shared.action_hide_memos
 import space.be1ski.vibits.shared.action_show_memos
 import space.be1ski.vibits.shared.action_track
-import space.be1ski.vibits.shared.core.platform.LocalDateFormatter
+import space.be1ski.vibits.shared.core.platform.date.LocalDateFormatter
 import space.be1ski.vibits.shared.core.ui.ActivityMode
 import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.Indent

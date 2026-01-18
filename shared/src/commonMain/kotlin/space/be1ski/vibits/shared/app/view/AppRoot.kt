@@ -10,7 +10,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import space.be1ski.vibits.shared.app.di.AppDependencies
 import space.be1ski.vibits.shared.core.elm.Feature
-import space.be1ski.vibits.shared.core.platform.ProvideDateFormatter
+import space.be1ski.vibits.shared.core.platform.date.ProvideDateFormatter
 import space.be1ski.vibits.shared.core.ui.theme.VibitsTheme
 import space.be1ski.vibits.shared.core.ui.theme.rememberSystemDarkTheme
 import space.be1ski.vibits.shared.feature.mode.di.createModeSelectionFeature

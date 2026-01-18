@@ -39,8 +39,8 @@ import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_cancel
 import space.be1ski.vibits.shared.action_delete
-import space.be1ski.vibits.shared.core.platform.DateFormatter
-import space.be1ski.vibits.shared.core.platform.LocalDateFormatter
+import space.be1ski.vibits.shared.core.platform.date.DateFormatter
+import space.be1ski.vibits.shared.core.platform.date.LocalDateFormatter
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.title_delete_memo
