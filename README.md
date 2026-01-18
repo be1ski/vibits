@@ -32,9 +32,12 @@ Habit tracker powered by [Memos](https://github.com/usememos/memos). Kotlin Mult
 ./gradlew :desktopApp:packageMsi                    # Windows MSI
 ```
 
-## CI
+## CI/CD
 
-One-click release → builds all platforms in parallel → uploads to [Releases](https://github.com/be1ski/vibits/releases)
+One-click release → builds all platforms in parallel:
+- **Android APK** → GitHub Releases + Firebase App Distribution
+- **macOS DMG / Windows MSI** → GitHub Releases
+- **Web** → GitHub Releases + [GitHub Pages](https://be1ski.github.io/vibits/)
 
 ## Modules
 
