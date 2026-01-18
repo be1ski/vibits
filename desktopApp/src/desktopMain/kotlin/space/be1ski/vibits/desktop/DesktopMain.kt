@@ -4,8 +4,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import space.be1ski.vibits.shared.app.AppRoot
 import space.be1ski.vibits.shared.app.di.AppGraph
+import space.be1ski.vibits.shared.app.view.AppRoot
 
 fun main() =
   application {
