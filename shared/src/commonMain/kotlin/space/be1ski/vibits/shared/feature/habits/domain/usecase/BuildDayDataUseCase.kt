@@ -12,9 +12,7 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.HabitStatus
 /**
  * Use case for building a single ContributionDay from context.
  */
-class BuildDayDataUseCase(
-  private val extractHabitsConfigUseCase: ExtractHabitsConfigUseCase = ExtractHabitsConfigUseCase(),
-) {
+class BuildDayDataUseCase {
   operator fun invoke(context: DayBuildContext): ContributionDay {
     val dailyMemo = context.dailyMemos[context.date]
     val habitsForDay = habitsForDay(context)
@@ -40,12 +38,8 @@ class BuildDayDataUseCase(
   }
 
   private fun habitsForDay(context: DayBuildContext): List<HabitConfig> {
-    val configForDay =
-      if (context.mode == ActivityMode.HABITS) {
-        extractHabitsConfigUseCase.forDate(context.configTimeline, context.date)
-      } else {
-        null
-      }
+    if (context.mode != ActivityMode.HABITS) return emptyList()
+    val configForDay = context.configTimeline.lastOrNull { it.date <= context.date }
     return configForDay?.habits.orEmpty()
   }
 

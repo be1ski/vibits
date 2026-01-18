@@ -24,13 +24,13 @@ private const val DAYS_IN_WEEK = 7
 /**
  * Use case for building and filtering activity data.
  */
-class BuildActivityDataUseCase(
-  private val buildDayDataUseCase: BuildDayDataUseCase = BuildDayDataUseCase(),
-  private val dateCalculationsUseCase: DateCalculationsUseCase = DateCalculationsUseCase(),
-  private val extractDailyMemosUseCase: ExtractDailyMemosUseCase = ExtractDailyMemosUseCase(),
-  private val countDailyPostsUseCase: CountDailyPostsUseCase = CountDailyPostsUseCase(),
-  private val extractHabitsConfigUseCase: ExtractHabitsConfigUseCase = ExtractHabitsConfigUseCase(),
-) {
+class BuildActivityDataUseCase {
+  private val buildDayDataUseCase = BuildDayDataUseCase()
+  private val dateCalculationsUseCase = DateCalculationsUseCase()
+  private val extractDailyMemosUseCase = ExtractDailyMemosUseCase()
+  private val countDailyPostsUseCase = CountDailyPostsUseCase()
+  private val extractHabitsConfigUseCase = ExtractHabitsConfigUseCase()
+
   /**
    * Returns the last 7 in-range days from activity data.
    */
