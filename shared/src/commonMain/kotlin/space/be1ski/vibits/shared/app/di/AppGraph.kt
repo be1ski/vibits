@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.di
+package space.be1ski.vibits.shared.app.di
 
 import dev.zacsweers.metro.Binds
 import dev.zacsweers.metro.DependencyGraph
@@ -6,7 +6,6 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.createGraph
 import io.ktor.client.HttpClient
-import space.be1ski.vibits.shared.app.di.AppDependencies
 import space.be1ski.vibits.shared.core.network.createHttpClient
 import space.be1ski.vibits.shared.core.platform.LocaleProvider
 import space.be1ski.vibits.shared.data.local.AppDetailsProvider

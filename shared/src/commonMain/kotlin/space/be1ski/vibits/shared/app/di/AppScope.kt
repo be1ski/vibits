@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.di
+package space.be1ski.vibits.shared.app.di
 
 /**
  * Scope marker for application-level singletons.
