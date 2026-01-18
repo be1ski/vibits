@@ -11,6 +11,77 @@ Vibits is a habit tracker powered by Memos, built with Kotlin Multiplatform (KMP
 
 Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if any) live under module `src/.../res`.
 
+## Feature Architecture
+
+Features are autonomous and isolated units that can be run separately and disabled easily. Each feature follows this package structure:
+
+```
+feature/<name>/
+  di/                 # Dependencies containers and FeatureFactory
+  domain/
+    model/            # Domain models and types
+    usecase/          # Business logic (use cases)
+    repository/       # Repository interfaces
+  data/               # Repository implementations, DTOs, mappers
+  presentation/       # TEA components (Feature, Reducer, EffectHandler)
+  view/               # Compose UI (screens, components, dialogs)
+```
+
+### Layer Responsibilities
+
+- **domain/** — Pure business logic. No UI or framework dependencies.
+- **data/** — Data layer implementations (repositories, API clients, caching).
+- **presentation/** — The Elm Architecture (TEA) components:
+  - `*Feature.kt` — State, Action, Effect sealed classes
+  - `*Reducer.kt` — Pure state transitions
+  - `*EffectHandler.kt` — Side effects (API calls, DB operations)
+- **view/** — Compose UI only. Screens, components, dialogs. Excluded from unit test coverage.
+- **di/** — Dependency containers and feature factories:
+  - `*Dependencies.kt` — Transport containers for composable dependency passing
+  - `*FeatureFactory.kt` — Feature instantiation with dependencies
+
+### Dependencies Pattern
+
+`*Dependencies` classes are **transport containers** for passing groups of dependencies through the composable hierarchy. They should NOT be used directly in consumers.
+
+**In `di/` package** — define the container:
+```kotlin
+@Inject
+class SettingsDependencies(
+  val validateCredentials: ValidateCredentialsUseCase,
+  val switchAppMode: SwitchAppModeUseCase,
+  val saveCredentials: SaveCredentialsUseCase,
+)
+```
+
+**In consumers (EffectHandler, Factory)** — inject individual dependencies, not the container:
+```kotlin
+// CORRECT: Individual dependencies in constructor
+class SettingsEffectHandler(
+  private val validateCredentials: ValidateCredentialsUseCase,
+  private val switchAppMode: SwitchAppModeUseCase,
+  private val saveCredentials: SaveCredentialsUseCase,
+) : EffectHandler<...>
+
+// In Factory: unpack Dependencies into individual params
+fun createSettingsFeature(dependencies: SettingsDependencies) =
+  FeatureImpl(
+    effectHandler = SettingsEffectHandler(
+      validateCredentials = dependencies.validateCredentials,
+      switchAppMode = dependencies.switchAppMode,
+      saveCredentials = dependencies.saveCredentials,
+    ),
+  )
+```
+
+**WRONG: Using Dependencies directly in consumer:**
+```kotlin
+// DON'T DO THIS
+class SettingsEffectHandler(
+  private val deps: SettingsDependencies,  // Bad: consumer knows about container
+)
+```
+
 ## Dependency Injection (Metro)
 
 We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
