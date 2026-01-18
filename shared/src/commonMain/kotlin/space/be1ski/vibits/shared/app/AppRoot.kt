@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import space.be1ski.vibits.shared.core.platform.ProvideDateFormatter
 import space.be1ski.vibits.shared.core.ui.theme.VibitsTheme
 import space.be1ski.vibits.shared.core.ui.theme.rememberSystemDarkTheme
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
@@ -24,14 +25,7 @@ fun AppRoot(dependencies: AppDependencies) {
   var appMode by remember { mutableStateOf(dependencies.fixInvalidOnlineMode()) }
   var appTheme by remember { mutableStateOf(initialPrefs.theme) }
   var appLanguage by remember { mutableStateOf(initialPrefs.language) }
-
-  val systemDarkTheme = rememberSystemDarkTheme()
-  val darkTheme =
-    when (appTheme) {
-      AppTheme.SYSTEM -> systemDarkTheme
-      AppTheme.LIGHT -> false
-      AppTheme.DARK -> true
-    }
+  val darkTheme = resolveDarkTheme(appTheme)
 
   // ModeSelectionFeature
   val modeSelectionFeature =
@@ -63,25 +57,37 @@ fun AppRoot(dependencies: AppDependencies) {
 
   // Use key to force full recomposition when language changes
   key(appLanguage) {
-    VibitsTheme(darkTheme = darkTheme) {
-      when (appMode) {
-        AppMode.NOT_SELECTED -> {
-          ModeSelectionScreen(feature = modeSelectionFeature)
-        }
-        AppMode.ONLINE, AppMode.OFFLINE, AppMode.DEMO -> {
-          VibitsApp(
-            dependencies = dependencies.vibitsApp,
-            currentTheme = appTheme,
-            currentLanguage = appLanguage,
-            onResetApp = { appMode = AppMode.NOT_SELECTED },
-            onThemeChanged = { theme -> appTheme = theme },
-            onLanguageChanged = { language ->
-              dependencies.localeProvider.configureLocale(language)
-              appLanguage = language
-            },
-          )
+    ProvideDateFormatter {
+      VibitsTheme(darkTheme = darkTheme) {
+        when (appMode) {
+          AppMode.NOT_SELECTED -> {
+            ModeSelectionScreen(feature = modeSelectionFeature)
+          }
+          AppMode.ONLINE, AppMode.OFFLINE, AppMode.DEMO -> {
+            VibitsApp(
+              dependencies = dependencies.vibitsApp,
+              currentTheme = appTheme,
+              currentLanguage = appLanguage,
+              onResetApp = { appMode = AppMode.NOT_SELECTED },
+              onThemeChanged = { theme -> appTheme = theme },
+              onLanguageChanged = { language ->
+                dependencies.localeProvider.configureLocale(language)
+                appLanguage = language
+              },
+            )
+          }
         }
       }
     }
+  }
+}
+
+@Composable
+private fun resolveDarkTheme(theme: AppTheme): Boolean {
+  val systemDarkTheme = rememberSystemDarkTheme()
+  return when (theme) {
+    AppTheme.SYSTEM -> systemDarkTheme
+    AppTheme.LIGHT -> false
+    AppTheme.DARK -> true
   }
 }
