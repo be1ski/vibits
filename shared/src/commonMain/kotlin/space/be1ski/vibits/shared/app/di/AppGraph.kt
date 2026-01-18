@@ -7,6 +7,7 @@ import dev.zacsweers.metro.createGraph
 import io.ktor.client.HttpClient
 import space.be1ski.vibits.shared.core.platform.app.AppDetailsProvider
 import space.be1ski.vibits.shared.core.platform.export.FileExporter
+import space.be1ski.vibits.shared.core.platform.export.createFileExporter
 import space.be1ski.vibits.shared.core.platform.locale.LocaleProvider
 import space.be1ski.vibits.shared.core.platform.network.createHttpClient
 import space.be1ski.vibits.shared.feature.auth.data.platform.CredentialsStore
@@ -71,5 +72,5 @@ abstract class AppGraph {
 
   @Provides
   @SingleIn(AppScope::class)
-  fun fileExporter(): FileExporter = FileExporter()
+  fun fileExporter(): FileExporter = createFileExporter()
 }

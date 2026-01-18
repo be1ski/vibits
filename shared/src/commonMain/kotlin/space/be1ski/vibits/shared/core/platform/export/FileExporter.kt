@@ -4,7 +4,7 @@ package space.be1ski.vibits.shared.core.platform.export
  * Platform-specific file exporter that saves content to Downloads/Documents folder.
  * Returns the file path on success or null on failure.
  */
-expect class FileExporter() {
+interface FileExporter {
   /**
    * Export text content to a file.
    * @param fileName The name of the file (e.g., "logs.txt", "memos.json")
@@ -16,3 +16,5 @@ expect class FileExporter() {
     content: String,
   ): String?
 }
+
+expect fun createFileExporter(): FileExporter

@@ -15,6 +15,7 @@ import kotlin.time.Clock
 class Exporter(
   private val fileExporter: FileExporter,
   private val offlineMemoStorage: OfflineMemoStorage,
+  private val clock: Clock = Clock.System,
 ) {
   private val json =
     Json {
@@ -58,7 +59,7 @@ class Exporter(
     extension: String,
   ): String {
     val timestamp =
-      Clock.System
+      clock
         .now()
         .toString()
         .replace(":", "-")
