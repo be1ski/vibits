@@ -40,7 +40,7 @@ fun AppRoot(dependencies: AppDependencies) {
           AppMode.NOT_SELECTED -> ModeSelectionScreen(feature = modeSelectionFeature)
           AppMode.ONLINE, AppMode.OFFLINE, AppMode.DEMO -> {
             VibitsApp(
-              dependencies = dependencies.vibitsApp,
+              dependencies = dependencies,
               currentTheme = appTheme,
               currentLanguage = appLanguage,
               onResetApp = {
@@ -69,11 +69,7 @@ private fun rememberModeSelectionFeature(
 ): Feature<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect> {
   val feature =
     remember {
-      createModeSelectionFeature(
-        validateCredentials = dependencies.modeSelection.validateCredentials,
-        saveCredentials = dependencies.modeSelection.saveCredentials,
-        saveAppMode = dependencies.modeSelection.saveAppMode,
-      )
+      createModeSelectionFeature(dependencies = dependencies.modeSelectionDependencies)
     }
   val scope = rememberCoroutineScope()
   LaunchedEffect(feature) { feature.launchIn(scope) }
