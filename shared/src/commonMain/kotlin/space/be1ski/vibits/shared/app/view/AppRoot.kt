@@ -8,7 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import space.be1ski.vibits.shared.app.AppDependencies
+import space.be1ski.vibits.shared.app.di.AppDependencies
 import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.core.platform.ProvideDateFormatter
 import space.be1ski.vibits.shared.core.ui.theme.VibitsTheme

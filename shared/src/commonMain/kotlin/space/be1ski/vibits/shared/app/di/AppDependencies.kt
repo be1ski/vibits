@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.app
+package space.be1ski.vibits.shared.app.di
 
 import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.shared.core.platform.LocaleProvider
@@ -24,7 +24,7 @@ class AppDependencies(
   val localeProvider: LocaleProvider,
   val loadPreferences: LoadPreferencesUseCase,
   val fixInvalidOnlineMode: FixInvalidOnlineModeUseCase,
-  val modeSelection: ModeSelectionUseCases,
+  val modeSelection: ModeSelectionDependencies,
   val vibitsApp: VibitsAppDependencies,
 )
 
@@ -32,7 +32,7 @@ class AppDependencies(
  * Dependencies for ModeSelectionFeature.
  */
 @Inject
-class ModeSelectionUseCases(
+class ModeSelectionDependencies(
   val validateCredentials: ValidateCredentialsUseCase,
   val saveCredentials: SaveCredentialsUseCase,
   val saveAppMode: SaveAppModeUseCase,
