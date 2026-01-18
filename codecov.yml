@@ -8,6 +8,10 @@ coverage:
       default:
         target: 80%
 
+ignore:
+  - "**/presentation/**"
+  - "**/app/**"
+
 comment:
   layout: "reach, diff, flags, files"
   behavior: default

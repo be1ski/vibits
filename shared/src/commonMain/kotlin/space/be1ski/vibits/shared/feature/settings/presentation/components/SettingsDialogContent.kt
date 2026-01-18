@@ -338,7 +338,6 @@ private fun AppDetailsSection(
   }
 }
 
-@Suppress("LongParameterList")
 @Composable
 private fun CopyableInfoRow(
   label: String,

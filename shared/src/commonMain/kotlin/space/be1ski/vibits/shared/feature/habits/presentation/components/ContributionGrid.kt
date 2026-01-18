@@ -89,7 +89,6 @@ private const val HABIT_COLOR_LIGHT_RATIO = 0.3f
 /**
  * Renders GitHub-style daily activity grid for the provided [state].
  */
-@Suppress("LongParameterList")
 @Composable
 fun ContributionGrid(
   state: ContributionGridState,

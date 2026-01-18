@@ -72,7 +72,6 @@ private fun AutoSizeText(
  * @param optionLabel Composable function to get display label for each option
  * @param enabled Whether the selector is enabled
  */
-@Suppress("LongParameterList")
 @Composable
 fun <T> SegmentedSelector(
   label: String,
