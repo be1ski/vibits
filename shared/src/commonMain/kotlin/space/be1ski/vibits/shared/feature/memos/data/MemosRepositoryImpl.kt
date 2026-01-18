@@ -1,6 +1,8 @@
 package space.be1ski.vibits.shared.feature.memos.data
 
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
@@ -17,6 +19,7 @@ private const val TAG = "MemosRepository"
  * Repository implementation that loads memos from the network and caches them locally.
  */
 @Inject
+@SingleIn(AppScope::class)
 class MemosRepositoryImpl(
   private val memosApi: MemosApi,
   private val memoMapper: MemoMapper,

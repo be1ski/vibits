@@ -1,6 +1,9 @@
 package space.be1ski.vibits.shared.feature.settings.data
 
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
@@ -14,6 +17,8 @@ private const val TAG = "Preferences"
  * Repository implementation backed by platform preferences storage.
  */
 @Inject
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
 class PreferencesRepositoryImpl(
   private val preferencesStore: PreferencesStore,
 ) : PreferencesRepository {
