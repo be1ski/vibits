@@ -2,7 +2,7 @@ package space.be1ski.vibits.shared.test
 
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoCache
+import space.be1ski.vibits.shared.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.shared.feature.memos.data.remote.dto.ListMemosResponseDto
 import space.be1ski.vibits.shared.feature.memos.data.remote.dto.MemoDto
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
