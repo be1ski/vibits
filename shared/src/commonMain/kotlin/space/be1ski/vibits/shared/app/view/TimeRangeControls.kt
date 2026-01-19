@@ -27,31 +27,32 @@ import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_next
 import space.be1ski.vibits.shared.action_previous
+import space.be1ski.vibits.shared.app.domain.model.ActivityRange
+import space.be1ski.vibits.shared.app.domain.model.SuccessRateLevel
+import space.be1ski.vibits.shared.app.domain.usecase.GetSuccessRateLevelUseCase
 import space.be1ski.vibits.shared.core.platform.date.LocalDateFormatter
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
-import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.shared.time_months
 import space.be1ski.vibits.shared.time_quarters
 import space.be1ski.vibits.shared.time_weeks
 import space.be1ski.vibits.shared.time_years
 
-private val navigateActivityRangeUseCase = NavigateActivityRangeUseCase()
 private const val WEEK_END_OFFSET = 6
 
 @Composable
 internal fun TimeRangeControls(
   selectedTab: TimeRangeTab,
-  selectedRange: ActivityRange,
-  currentRange: ActivityRange,
-  minRange: ActivityRange?,
+  rangeLabel: String,
   successRate: Float? = null,
+  canGoBack: Boolean,
+  canGoForward: Boolean,
   onTabChange: (TimeRangeTab) -> Unit,
-  onRangeChange: (ActivityRange) -> Unit,
+  onNavigateBack: () -> Unit,
+  onNavigateForward: () -> Unit,
 ) {
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
     PrimaryScrollableTabRow(selectedTabIndex = selectedTab.ordinal, edgePadding = 0.dp) {
@@ -77,32 +78,31 @@ internal fun TimeRangeControls(
       )
     }
     TimeRangeNavigator(
-      selectedRange = selectedRange,
-      currentRange = currentRange,
-      minRange = minRange,
+      rangeLabel = rangeLabel,
       successRate = successRate,
-      onRangeChange = onRangeChange,
+      canGoBack = canGoBack,
+      canGoForward = canGoForward,
+      onNavigateBack = onNavigateBack,
+      onNavigateForward = onNavigateForward,
     )
   }
 }
 
 @Composable
 private fun TimeRangeNavigator(
-  selectedRange: ActivityRange,
-  currentRange: ActivityRange,
-  minRange: ActivityRange?,
+  rangeLabel: String,
   successRate: Float?,
-  onRangeChange: (ActivityRange) -> Unit,
+  canGoBack: Boolean,
+  canGoForward: Boolean,
+  onNavigateBack: () -> Unit,
+  onNavigateForward: () -> Unit,
 ) {
-  val label = rangeLabel(selectedRange)
-  val canGoForward = isBeforeRange(selectedRange, currentRange)
-  val canGoBack = minRange?.let { isBeforeRange(it, selectedRange) } ?: true
   Box(
     modifier = Modifier.fillMaxWidth(),
     contentAlignment = Alignment.Center,
   ) {
     IconButton(
-      onClick = { onRangeChange(shiftRange(selectedRange, -1)) },
+      onClick = onNavigateBack,
       enabled = canGoBack,
       modifier = Modifier.align(Alignment.CenterStart),
     ) {
@@ -112,13 +112,13 @@ private fun TimeRangeNavigator(
       horizontalArrangement = Arrangement.spacedBy(Indent.s),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      Text(label, style = MaterialTheme.typography.titleSmall)
+      Text(rangeLabel, style = MaterialTheme.typography.titleSmall)
       successRate?.let { rate ->
         SuccessRateBadge(rate)
       }
     }
     IconButton(
-      onClick = { onRangeChange(shiftRange(selectedRange, 1)) },
+      onClick = onNavigateForward,
       enabled = canGoForward,
       modifier = Modifier.align(Alignment.CenterEnd),
     ) {
@@ -128,7 +128,7 @@ private fun TimeRangeNavigator(
 }
 
 @Composable
-private fun rangeLabel(range: ActivityRange): String {
+internal fun formatRangeLabel(range: ActivityRange): String {
   val formatter = LocalDateFormatter.current
   return when (range) {
     is ActivityRange.Week -> {
@@ -142,25 +142,11 @@ private fun rangeLabel(range: ActivityRange): String {
   }
 }
 
-private fun isBeforeRange(
-  selectedRange: ActivityRange,
-  currentRange: ActivityRange,
-): Boolean = navigateActivityRangeUseCase.isBefore(selectedRange, currentRange)
-
-private fun shiftRange(
-  range: ActivityRange,
-  delta: Int,
-): ActivityRange = navigateActivityRangeUseCase(range, delta)
-
 @Composable
 private fun SuccessRateBadge(rate: Float) {
   val percent = (rate * PERCENT_MULTIPLIER).toInt()
-  val color =
-    when {
-      rate >= GREEN_THRESHOLD -> AppColors.statusGreen.resolve()
-      rate >= YELLOW_THRESHOLD -> AppColors.statusYellow.resolve()
-      else -> AppColors.statusRed.resolve()
-    }
+  val level = GetSuccessRateLevelUseCase(rate)
+  val color = colorForLevel(level)
   Box(
     modifier =
       Modifier
@@ -175,9 +161,15 @@ private fun SuccessRateBadge(rate: Float) {
   }
 }
 
+@Composable
+private fun colorForLevel(level: SuccessRateLevel) =
+  when (level) {
+    SuccessRateLevel.GOOD -> AppColors.statusGreen.resolve()
+    SuccessRateLevel.MEDIUM -> AppColors.statusYellow.resolve()
+    SuccessRateLevel.BAD -> AppColors.statusRed.resolve()
+  }
+
 private const val PERCENT_MULTIPLIER = 100
-private const val GREEN_THRESHOLD = 0.8f
-private const val YELLOW_THRESHOLD = 0.5f
 private const val BADGE_ALPHA = 0.2f
 private val BADGE_CORNER_RADIUS = 4.dp
 private val BADGE_PADDING_H = 6.dp

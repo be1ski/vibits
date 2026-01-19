@@ -2,8 +2,11 @@ package space.be1ski.vibits.shared.app.view
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import space.be1ski.vibits.shared.app.presentation.AppAction
+import space.be1ski.vibits.shared.app.presentation.AppState
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
@@ -13,6 +16,7 @@ import space.be1ski.vibits.shared.feature.settings.presentation.SettingsState
 @Composable
 internal fun FeatureCoordinator(
   features: AppFeatures,
+  appState: AppState,
   memosState: MemosState,
   settingsState: SettingsState,
   currentLanguage: AppLanguage,
@@ -21,26 +25,16 @@ internal fun FeatureCoordinator(
   onThemeChanged: (AppTheme) -> Unit,
   onLanguageChanged: (AppLanguage) -> Unit,
 ) {
+  val dispatchApp = features.app::send
   val dispatchMemos = features.memos::send
 
-  // Handle settings effects
+  // Cross-feature coordination via Settings notifications
   LaunchedEffect(features.settings) {
     features.settings.effects.collect { effect ->
       when (effect) {
-        is SettingsEffect.NotifyModeChanged -> {
-          features.appState.appMode = effect.newMode
-          dispatchMemos(MemosAction.LoadMemos)
-        }
-        is SettingsEffect.NotifyResetCompleted -> onResetApp()
-        is SettingsEffect.NotifyCredentialsSaved -> {
-          dispatchMemos(MemosAction.UpdateBaseUrl(effect.baseUrl))
-          dispatchMemos(MemosAction.UpdateToken(effect.token))
-          dispatchMemos(MemosAction.LoadMemos)
-        }
-        is SettingsEffect.NotifyThemeChanged -> onThemeChanged(effect.theme)
-        is SettingsEffect.NotifyLanguageChanged -> onLanguageChanged(effect.language)
-        is SettingsEffect.NotifyDialogClosed -> Unit
-        else -> Unit
+        is SettingsEffect.Notification ->
+          handleNotification(effect, dispatchApp, dispatchMemos, onResetApp, onThemeChanged, onLanguageChanged)
+        is SettingsEffect.Command -> Unit
       }
     }
   }
@@ -52,7 +46,7 @@ internal fun FeatureCoordinator(
         SettingsAction.Open(
           baseUrl = memosState.baseUrl,
           token = memosState.token,
-          appMode = features.appState.appMode,
+          appMode = appState.appMode,
           language = currentLanguage,
           theme = currentTheme,
         ),
@@ -60,5 +54,43 @@ internal fun FeatureCoordinator(
     }
   }
 
-  SyncAutoLoad(memosState, features.appState, dispatchMemos)
+  // Auto-load memos on app start
+  LaunchedEffect(memosState.credentialsMode, appState.autoLoaded, memosState.isLoading, appState.appMode) {
+    val skipCredentialsCheck = appState.appMode == AppMode.DEMO || appState.appMode == AppMode.OFFLINE
+    val shouldAutoLoad =
+      !memosState.credentialsMode &&
+        !appState.autoLoaded &&
+        !memosState.isLoading &&
+        (skipCredentialsCheck || memosState.hasCredentials)
+    if (shouldAutoLoad) {
+      dispatchApp(AppAction.MarkAutoLoaded)
+      dispatchMemos(MemosAction.LoadMemos)
+    }
+  }
+}
+
+@Suppress("LongParameterList")
+private fun handleNotification(
+  effect: SettingsEffect.Notification,
+  dispatchApp: (AppAction) -> Unit,
+  dispatchMemos: (MemosAction) -> Unit,
+  onResetApp: () -> Unit,
+  onThemeChanged: (AppTheme) -> Unit,
+  onLanguageChanged: (AppLanguage) -> Unit,
+) {
+  when (effect) {
+    is SettingsEffect.Notification.ModeChanged -> {
+      dispatchApp(AppAction.SetAppMode(effect.newMode))
+      dispatchMemos(MemosAction.LoadMemos)
+    }
+    is SettingsEffect.Notification.ResetCompleted -> onResetApp()
+    is SettingsEffect.Notification.CredentialsSaved -> {
+      dispatchMemos(MemosAction.UpdateBaseUrl(effect.baseUrl))
+      dispatchMemos(MemosAction.UpdateToken(effect.token))
+      dispatchMemos(MemosAction.LoadMemos)
+    }
+    is SettingsEffect.Notification.ThemeChanged -> onThemeChanged(effect.theme)
+    is SettingsEffect.Notification.LanguageChanged -> onLanguageChanged(effect.language)
+    is SettingsEffect.Notification.DialogClosed -> Unit
+  }
 }

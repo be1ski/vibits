@@ -39,7 +39,7 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect> =
             showLogsDialog = false,
           )
         }
-        effect(SettingsEffect.NotifyDialogClosed)
+        effect(SettingsEffect.Notification.DialogClosed)
       }
 
       is SettingsAction.Dismiss -> {
@@ -52,7 +52,7 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect> =
             showLogsDialog = false,
           )
         }
-        effect(SettingsEffect.NotifyDialogClosed)
+        effect(SettingsEffect.Notification.DialogClosed)
       }
 
       // Credentials - just update local state, save on Save action
@@ -83,13 +83,13 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect> =
       is SettingsAction.ValidationSucceeded -> {
         // Validation succeeded - save all settings and close dialog
         state { copy(isValidating = false, isOpen = false, pendingSave = false, appMode = AppMode.ONLINE) }
-        effect(SettingsEffect.SaveCredentials(state.editBaseUrl, state.editToken))
-        effect(SettingsEffect.SwitchMode(AppMode.ONLINE))
-        effect(SettingsEffect.SaveLanguage(state.selectedLanguage))
-        effect(SettingsEffect.SaveTheme(state.selectedTheme))
-        effect(SettingsEffect.NotifyLanguageChanged(state.selectedLanguage))
-        effect(SettingsEffect.NotifyThemeChanged(state.selectedTheme))
-        effect(SettingsEffect.NotifyCredentialsSaved(state.editBaseUrl, state.editToken))
+        effect(SettingsEffect.Command.SaveCredentials(state.editBaseUrl, state.editToken))
+        effect(SettingsEffect.Command.SwitchMode(AppMode.ONLINE))
+        effect(SettingsEffect.Command.SaveLanguage(state.selectedLanguage))
+        effect(SettingsEffect.Command.SaveTheme(state.selectedTheme))
+        effect(SettingsEffect.Notification.LanguageChanged(state.selectedLanguage))
+        effect(SettingsEffect.Notification.ThemeChanged(state.selectedTheme))
+        effect(SettingsEffect.Notification.CredentialsSaved(state.editBaseUrl, state.editToken))
       }
 
       is SettingsAction.ValidationFailed -> {
@@ -97,7 +97,7 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect> =
       }
 
       is SettingsAction.ModeSwitched -> {
-        effect(SettingsEffect.NotifyModeChanged(state.appMode))
+        effect(SettingsEffect.Notification.ModeChanged(state.appMode))
       }
 
       // Reset flow
@@ -107,7 +107,7 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect> =
 
       is SettingsAction.ConfirmReset -> {
         state { copy(showResetConfirmation = false, isResetting = true) }
-        effect(SettingsEffect.ResetApp)
+        effect(SettingsEffect.Command.ResetApp)
       }
 
       is SettingsAction.CancelReset -> {
@@ -116,7 +116,7 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect> =
 
       is SettingsAction.ResetCompleted -> {
         state { copy(isOpen = false, isResetting = false) }
-        effect(SettingsEffect.NotifyResetCompleted)
+        effect(SettingsEffect.Notification.ResetCompleted)
       }
 
       // Logs
@@ -138,18 +138,18 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect> =
           } else {
             // Validate before saving in Online mode
             state { copy(isValidating = true, validationError = null, pendingSave = true) }
-            effect(SettingsEffect.ValidateCredentials(baseUrl, token, AppMode.ONLINE))
+            effect(SettingsEffect.Command.ValidateCredentials(baseUrl, token, AppMode.ONLINE))
           }
         } else {
           // Save all settings and close dialog
           state { copy(isOpen = false) }
-          effect(SettingsEffect.SaveCredentials(state.editBaseUrl, state.editToken))
-          effect(SettingsEffect.SwitchMode(state.appMode))
-          effect(SettingsEffect.SaveLanguage(state.selectedLanguage))
-          effect(SettingsEffect.SaveTheme(state.selectedTheme))
-          effect(SettingsEffect.NotifyLanguageChanged(state.selectedLanguage))
-          effect(SettingsEffect.NotifyThemeChanged(state.selectedTheme))
-          effect(SettingsEffect.NotifyCredentialsSaved(state.editBaseUrl, state.editToken))
+          effect(SettingsEffect.Command.SaveCredentials(state.editBaseUrl, state.editToken))
+          effect(SettingsEffect.Command.SwitchMode(state.appMode))
+          effect(SettingsEffect.Command.SaveLanguage(state.selectedLanguage))
+          effect(SettingsEffect.Command.SaveTheme(state.selectedTheme))
+          effect(SettingsEffect.Notification.LanguageChanged(state.selectedLanguage))
+          effect(SettingsEffect.Notification.ThemeChanged(state.selectedTheme))
+          effect(SettingsEffect.Notification.CredentialsSaved(state.editBaseUrl, state.editToken))
         }
       }
     }
