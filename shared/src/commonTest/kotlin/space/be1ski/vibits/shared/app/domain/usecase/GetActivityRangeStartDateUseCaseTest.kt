@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 
 class GetActivityRangeStartDateUseCaseTest {
   @Test
-  fun `returns week start date`() {
+  fun `when Week range then returns week start date`() {
     val range = ActivityRange.Week(startDate = LocalDate(2024, 1, 8))
 
     val result = GetActivityRangeStartDateUseCase(range)
@@ -17,7 +17,7 @@ class GetActivityRangeStartDateUseCaseTest {
   }
 
   @Test
-  fun `returns first day of month`() {
+  fun `when Month range then returns first day of month`() {
     val range = ActivityRange.Month(year = 2024, month = Month.MARCH)
 
     val result = GetActivityRangeStartDateUseCase(range)
@@ -26,7 +26,7 @@ class GetActivityRangeStartDateUseCaseTest {
   }
 
   @Test
-  fun `returns first day of Q1`() {
+  fun `when Q1 range then returns first day of Q1`() {
     val range = ActivityRange.Quarter(year = 2024, index = 1)
 
     val result = GetActivityRangeStartDateUseCase(range)
@@ -35,7 +35,7 @@ class GetActivityRangeStartDateUseCaseTest {
   }
 
   @Test
-  fun `returns first day of Q2`() {
+  fun `when Q2 range then returns first day of Q2`() {
     val range = ActivityRange.Quarter(year = 2024, index = 2)
 
     val result = GetActivityRangeStartDateUseCase(range)
@@ -44,7 +44,7 @@ class GetActivityRangeStartDateUseCaseTest {
   }
 
   @Test
-  fun `returns first day of Q3`() {
+  fun `when Q3 range then returns first day of Q3`() {
     val range = ActivityRange.Quarter(year = 2024, index = 3)
 
     val result = GetActivityRangeStartDateUseCase(range)
@@ -53,7 +53,7 @@ class GetActivityRangeStartDateUseCaseTest {
   }
 
   @Test
-  fun `returns first day of Q4`() {
+  fun `when Q4 range then returns first day of Q4`() {
     val range = ActivityRange.Quarter(year = 2024, index = 4)
 
     val result = GetActivityRangeStartDateUseCase(range)
@@ -62,7 +62,7 @@ class GetActivityRangeStartDateUseCaseTest {
   }
 
   @Test
-  fun `returns first day of year`() {
+  fun `when Year range then returns first day of year`() {
     val range = ActivityRange.Year(year = 2024)
 
     val result = GetActivityRangeStartDateUseCase(range)

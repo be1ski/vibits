@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 
 class AdjustDateForTabChangeUseCaseTest {
   @Test
-  fun `returns same date when switching to larger granularity`() {
+  fun `when switching to larger granularity then returns same date`() {
     val date = LocalDate(2024, 3, 15)
 
     val result = AdjustDateForTabChangeUseCase(date, TimeRangeTab.WEEKS, TimeRangeTab.MONTHS)
@@ -16,7 +16,7 @@ class AdjustDateForTabChangeUseCaseTest {
   }
 
   @Test
-  fun `returns same date when switching to same granularity`() {
+  fun `when switching to same granularity then returns same date`() {
     val date = LocalDate(2024, 3, 15)
 
     val result = AdjustDateForTabChangeUseCase(date, TimeRangeTab.MONTHS, TimeRangeTab.MONTHS)
@@ -25,7 +25,7 @@ class AdjustDateForTabChangeUseCaseTest {
   }
 
   @Test
-  fun `returns same date when old tab is WEEKS`() {
+  fun `when old tab is WEEKS then returns same date`() {
     val date = LocalDate(2024, 3, 15)
 
     val result = AdjustDateForTabChangeUseCase(date, TimeRangeTab.WEEKS, TimeRangeTab.WEEKS)
@@ -34,7 +34,7 @@ class AdjustDateForTabChangeUseCaseTest {
   }
 
   @Test
-  fun `returns end of month when switching from MONTHS to WEEKS`() {
+  fun `when switching from MONTHS to WEEKS then returns end of month`() {
     val date = LocalDate(2024, 3, 15)
 
     val result = AdjustDateForTabChangeUseCase(date, TimeRangeTab.MONTHS, TimeRangeTab.WEEKS)
@@ -43,7 +43,7 @@ class AdjustDateForTabChangeUseCaseTest {
   }
 
   @Test
-  fun `returns end of quarter when switching from QUARTERS to WEEKS`() {
+  fun `when switching from QUARTERS to WEEKS then returns end of quarter`() {
     val date = LocalDate(2024, 2, 15) // Q1
 
     val result = AdjustDateForTabChangeUseCase(date, TimeRangeTab.QUARTERS, TimeRangeTab.WEEKS)
@@ -52,7 +52,7 @@ class AdjustDateForTabChangeUseCaseTest {
   }
 
   @Test
-  fun `returns end of quarter when switching from QUARTERS to MONTHS`() {
+  fun `when switching from QUARTERS to MONTHS then returns end of quarter`() {
     val date = LocalDate(2024, 5, 15) // Q2
 
     val result = AdjustDateForTabChangeUseCase(date, TimeRangeTab.QUARTERS, TimeRangeTab.MONTHS)
@@ -61,7 +61,7 @@ class AdjustDateForTabChangeUseCaseTest {
   }
 
   @Test
-  fun `returns end of year when switching from YEARS to WEEKS`() {
+  fun `when switching from YEARS to WEEKS then returns end of year`() {
     val date = LocalDate(2024, 3, 15)
 
     val result = AdjustDateForTabChangeUseCase(date, TimeRangeTab.YEARS, TimeRangeTab.WEEKS)
@@ -70,7 +70,7 @@ class AdjustDateForTabChangeUseCaseTest {
   }
 
   @Test
-  fun `returns end of year when switching from YEARS to MONTHS`() {
+  fun `when switching from YEARS to MONTHS then returns end of year`() {
     val date = LocalDate(2024, 3, 15)
 
     val result = AdjustDateForTabChangeUseCase(date, TimeRangeTab.YEARS, TimeRangeTab.MONTHS)
@@ -79,7 +79,7 @@ class AdjustDateForTabChangeUseCaseTest {
   }
 
   @Test
-  fun `returns end of year when switching from YEARS to QUARTERS`() {
+  fun `when switching from YEARS to QUARTERS then returns end of year`() {
     val date = LocalDate(2024, 3, 15)
 
     val result = AdjustDateForTabChangeUseCase(date, TimeRangeTab.YEARS, TimeRangeTab.QUARTERS)

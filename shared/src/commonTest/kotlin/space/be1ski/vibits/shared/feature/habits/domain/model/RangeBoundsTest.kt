@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 
 class RangeBoundsTest {
   @Test
-  fun `rangeBounds for Week returns 7 day range`() {
+  fun `when Week range then returns 7 day range`() {
     val startDate = LocalDate(2024, Month.JANUARY, 15)
     val range = ActivityRange.Week(startDate)
 
@@ -19,7 +19,7 @@ class RangeBoundsTest {
   }
 
   @Test
-  fun `rangeBounds for Month returns full month`() {
+  fun `when Month range then returns full month`() {
     val range = ActivityRange.Month(2024, Month.FEBRUARY)
 
     val result = rangeBounds(range)
@@ -29,7 +29,7 @@ class RangeBoundsTest {
   }
 
   @Test
-  fun `rangeBounds for Quarter 1 returns Jan-Mar`() {
+  fun `when Quarter 1 then returns Jan-Mar`() {
     val range = ActivityRange.Quarter(2024, 1)
 
     val result = rangeBounds(range)
@@ -39,7 +39,7 @@ class RangeBoundsTest {
   }
 
   @Test
-  fun `rangeBounds for Quarter 2 returns Apr-Jun`() {
+  fun `when Quarter 2 then returns Apr-Jun`() {
     val range = ActivityRange.Quarter(2024, 2)
 
     val result = rangeBounds(range)
@@ -49,7 +49,7 @@ class RangeBoundsTest {
   }
 
   @Test
-  fun `rangeBounds for Quarter 3 returns Jul-Sep`() {
+  fun `when Quarter 3 then returns Jul-Sep`() {
     val range = ActivityRange.Quarter(2024, 3)
 
     val result = rangeBounds(range)
@@ -59,7 +59,7 @@ class RangeBoundsTest {
   }
 
   @Test
-  fun `rangeBounds for Quarter 4 returns Oct-Dec`() {
+  fun `when Quarter 4 then returns Oct-Dec`() {
     val range = ActivityRange.Quarter(2024, 4)
 
     val result = rangeBounds(range)
@@ -69,7 +69,7 @@ class RangeBoundsTest {
   }
 
   @Test
-  fun `rangeBounds for Year returns full year`() {
+  fun `when Year range then returns full year`() {
     val range = ActivityRange.Year(2024)
 
     val result = rangeBounds(range)
