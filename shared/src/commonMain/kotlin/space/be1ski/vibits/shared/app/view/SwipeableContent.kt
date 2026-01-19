@@ -6,9 +6,11 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDate
@@ -93,6 +95,7 @@ internal fun SwipeableTabContent(
   }
 }
 
+@Suppress("LongMethod")
 @Composable
 private fun SwipeablePagerContent(
   memosState: MemosState,
@@ -108,6 +111,7 @@ private fun SwipeablePagerContent(
   cache: ActivityWeekDataCache,
 ) {
   val activityRange = activityRangeForAppState(appState)
+  val currentActivityRange by rememberUpdatedState(activityRange)
   val currentDelta =
     remember(activityRange, currentRange) {
       navigateRange.calculateDelta(currentRange, activityRange)
@@ -140,7 +144,7 @@ private fun SwipeablePagerContent(
     snapshotFlow { pagerState.settledPage }.collect { page ->
       val delta = page + minDelta
       val newRange = navigateRange(currentRange, delta)
-      if (newRange != activityRangeForAppState(appState)) {
+      if (newRange != currentActivityRange) {
         onAppAction(AppAction.SetActivityRange(newRange))
         onHabitsAction(HabitsAction.ClearSelection)
       }
