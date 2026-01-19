@@ -22,13 +22,14 @@ import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_refresh
-import space.be1ski.vibits.shared.app.view.model.MemosScreen
-import space.be1ski.vibits.shared.app.view.model.VibitsAppUiState
+import space.be1ski.vibits.shared.app.domain.model.ActivityMode
+import space.be1ski.vibits.shared.app.domain.model.ActivityRange
+import space.be1ski.vibits.shared.app.domain.model.Screen
+import space.be1ski.vibits.shared.app.presentation.AppAction
+import space.be1ski.vibits.shared.app.presentation.AppState
 import space.be1ski.vibits.shared.app_name
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.platform.isDesktop
-import space.be1ski.vibits.shared.core.ui.ActivityMode
-import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
@@ -49,7 +50,7 @@ import space.be1ski.vibits.shared.nav_settings
 @Composable
 internal fun MemosHeader(
   memosState: MemosState,
-  appState: VibitsAppUiState,
+  appState: AppState,
   dispatchMemos: (MemosAction) -> Unit,
   dispatchSettings: (SettingsAction) -> Unit,
   language: AppLanguage,
@@ -88,19 +89,20 @@ internal fun MemosHeader(
 
 @Composable
 internal fun MemosBottomNavigation(
-  appState: VibitsAppUiState,
+  appState: AppState,
+  onAppAction: (AppAction) -> Unit,
   onClearSelection: () -> Unit,
   onFeedScrollToTop: () -> Unit,
 ) {
   NavigationBar {
     NavigationBarItem(
-      selected = appState.selectedScreen == MemosScreen.HABITS,
+      selected = appState.selectedScreen == Screen.HABITS,
       onClick = {
         onClearSelection()
-        if (appState.selectedScreen == MemosScreen.HABITS) {
-          resetToHome(appState, currentLocalDate())
+        if (appState.selectedScreen == Screen.HABITS) {
+          onAppAction(AppAction.ResetToHome(currentLocalDate()))
         } else {
-          appState.selectedScreen = MemosScreen.HABITS
+          onAppAction(AppAction.SelectScreen(Screen.HABITS))
         }
       },
       icon = {
@@ -112,13 +114,13 @@ internal fun MemosBottomNavigation(
       label = { Text(stringResource(Res.string.nav_habits)) },
     )
     NavigationBarItem(
-      selected = appState.selectedScreen == MemosScreen.STATS,
+      selected = appState.selectedScreen == Screen.STATS,
       onClick = {
         onClearSelection()
-        if (appState.selectedScreen == MemosScreen.STATS) {
-          resetToHome(appState, currentLocalDate())
+        if (appState.selectedScreen == Screen.STATS) {
+          onAppAction(AppAction.ResetToHome(currentLocalDate()))
         } else {
-          appState.selectedScreen = MemosScreen.STATS
+          onAppAction(AppAction.SelectScreen(Screen.STATS))
         }
       },
       icon = {
@@ -130,13 +132,13 @@ internal fun MemosBottomNavigation(
       label = { Text(stringResource(Res.string.nav_memos)) },
     )
     NavigationBarItem(
-      selected = appState.selectedScreen == MemosScreen.FEED,
+      selected = appState.selectedScreen == Screen.FEED,
       onClick = {
         onClearSelection()
-        if (appState.selectedScreen == MemosScreen.FEED) {
+        if (appState.selectedScreen == Screen.FEED) {
           onFeedScrollToTop()
         } else {
-          appState.selectedScreen = MemosScreen.FEED
+          onAppAction(AppAction.SelectScreen(Screen.FEED))
         }
       },
       icon = {

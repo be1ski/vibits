@@ -1,18 +1,7 @@
-package space.be1ski.vibits.shared.core.ui
+package space.be1ski.vibits.shared.app.domain.model
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month as CalendarMonth
-
-/**
- * Activity visualization modes.
- */
-enum class ActivityMode {
-  /** Habit completion based on #habits/daily + #habits/config. */
-  HABITS,
-
-  /** Raw post count per day. */
-  POSTS,
-}
 
 /**
  * Range selection for activity charts.
