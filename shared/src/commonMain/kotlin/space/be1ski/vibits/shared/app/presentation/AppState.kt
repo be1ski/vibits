@@ -1,7 +1,7 @@
 package space.be1ski.vibits.shared.app.presentation
 
 import kotlinx.datetime.LocalDate
-import space.be1ski.vibits.shared.app.view.model.MemosScreen
+import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 
@@ -10,7 +10,7 @@ import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
  */
 internal data class AppState(
   val appMode: AppMode = AppMode.NOT_SELECTED,
-  val selectedScreen: MemosScreen = MemosScreen.HABITS,
+  val selectedScreen: Screen = Screen.HABITS,
   val habitsTimeRangeTab: TimeRangeTab = TimeRangeTab.WEEKS,
   val postsTimeRangeTab: TimeRangeTab = TimeRangeTab.WEEKS,
   val periodStartDate: LocalDate,
@@ -20,8 +20,8 @@ internal data class AppState(
   val currentTimeRangeTab: TimeRangeTab
     get() =
       when (selectedScreen) {
-        MemosScreen.HABITS -> habitsTimeRangeTab
-        MemosScreen.STATS -> postsTimeRangeTab
-        MemosScreen.FEED -> habitsTimeRangeTab
+        Screen.HABITS -> habitsTimeRangeTab
+        Screen.STATS -> postsTimeRangeTab
+        Screen.FEED -> habitsTimeRangeTab
       }
 }

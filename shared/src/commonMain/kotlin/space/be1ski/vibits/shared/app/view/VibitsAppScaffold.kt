@@ -29,11 +29,9 @@ import space.be1ski.vibits.shared.action_create_memo
 import space.be1ski.vibits.shared.action_track_today
 import space.be1ski.vibits.shared.app.di.AppDependencies
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
+import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.app.presentation.AppAction
 import space.be1ski.vibits.shared.app.presentation.AppState
-import space.be1ski.vibits.shared.app.view.model.MemosFabMode
-import space.be1ski.vibits.shared.app.view.model.MemosScreen
-import space.be1ski.vibits.shared.app.view.model.memosFabModeForScreen
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
@@ -42,6 +40,7 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.EarliestMemoDateUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractDailyMemosUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
 import space.be1ski.vibits.shared.feature.habits.view.buildHabitDay
@@ -73,9 +72,20 @@ internal fun VibitsAppScaffold(
   val habitsTimeline = rememberHabitsConfigTimeline(memosState.memos)
   val todayData = rememberTodayData(habitsTimeline, memosState.memos, timeZone, today)
 
+  val activityRange = activityRangeForAppState(appState)
   val feedListState = rememberLazyListState()
   val scope = rememberCoroutineScope()
-  val callbacks = rememberScaffoldCallbacks(appState, onAppAction, onHabitsAction, onMemosAction, feedListState, scope, todayData)
+  val callbacks =
+    rememberScaffoldCallbacks(
+      appState,
+      activityRange,
+      onAppAction,
+      onHabitsAction,
+      onMemosAction,
+      feedListState,
+      scope,
+      todayData,
+    )
 
   Scaffold(
     floatingActionButton = { AppFab(appState, todayData, callbacks) },
@@ -89,6 +99,7 @@ internal fun VibitsAppScaffold(
       memosState = memosState,
       habitsState = habitsState,
       habitsTimeline = habitsTimeline,
+      activityRange = activityRange,
       timeZone = timeZone,
       today = today,
       callbacks = callbacks,
@@ -126,6 +137,7 @@ private fun rememberTodayData(
   return TodayData(config = todayConfig, day = todayDay)
 }
 
+@Suppress("LongParameterList")
 internal class ScaffoldCallbacks(
   val onClearSelection: () -> Unit,
   val onFeedScrollToTop: () -> Unit,
@@ -133,11 +145,17 @@ internal class ScaffoldCallbacks(
   val onOpenTodayEditor: () -> Unit,
   val onRangeChange: (ActivityRange) -> Unit,
   val onTabChange: (TimeRangeTab) -> Unit,
+  val onNavigateBack: () -> Unit,
+  val onNavigateForward: () -> Unit,
 )
 
+private val navigateActivityRange = NavigateActivityRangeUseCase()
+
+@Suppress("LongMethod")
 @Composable
 private fun rememberScaffoldCallbacks(
   appState: AppState,
+  activityRange: ActivityRange,
   onAppAction: (AppAction) -> Unit,
   onHabitsAction: (HabitsAction) -> Unit,
   onMemosAction: (MemosAction) -> Unit,
@@ -173,10 +191,26 @@ private fun rememberScaffoldCallbacks(
       { newTab: TimeRangeTab ->
         onHabitsAction(HabitsAction.ClearSelection)
         when (appState.selectedScreen) {
-          MemosScreen.HABITS -> onAppAction(AppAction.ChangeHabitsTab(appState.habitsTimeRangeTab, newTab))
-          MemosScreen.STATS -> onAppAction(AppAction.ChangePostsTab(appState.postsTimeRangeTab, newTab))
-          MemosScreen.FEED -> {}
+          Screen.HABITS -> onAppAction(AppAction.ChangeHabitsTab(appState.habitsTimeRangeTab, newTab))
+          Screen.STATS -> onAppAction(AppAction.ChangePostsTab(appState.postsTimeRangeTab, newTab))
+          Screen.FEED -> {}
         }
+      }
+    }
+  val onNavigateBack =
+    remember(onHabitsAction, onAppAction, activityRange) {
+      {
+        val newRange = navigateActivityRange(activityRange, -1)
+        onHabitsAction(HabitsAction.ClearSelection)
+        onAppAction(AppAction.SetActivityRange(newRange))
+      }
+    }
+  val onNavigateForward =
+    remember(onHabitsAction, onAppAction, activityRange) {
+      {
+        val newRange = navigateActivityRange(activityRange, 1)
+        onHabitsAction(HabitsAction.ClearSelection)
+        onAppAction(AppAction.SetActivityRange(newRange))
       }
     }
   return ScaffoldCallbacks(
@@ -186,6 +220,8 @@ private fun rememberScaffoldCallbacks(
     onOpenTodayEditor = onOpenTodayEditor,
     onRangeChange = onRangeChange,
     onTabChange = onTabChange,
+    onNavigateBack = onNavigateBack,
+    onNavigateForward = onNavigateForward,
   )
 }
 
@@ -195,17 +231,17 @@ private fun AppFab(
   todayData: TodayData,
   callbacks: ScaffoldCallbacks,
 ) {
-  when (memosFabModeForScreen(appState.selectedScreen)) {
-    MemosFabMode.MEMO -> {
-      FloatingActionButton(onClick = callbacks.onShowCreateMemoDialog) {
-        Icon(Icons.Filled.Edit, contentDescription = stringResource(Res.string.action_create_memo))
-      }
-    }
-    MemosFabMode.HABITS -> {
+  when (appState.selectedScreen) {
+    Screen.HABITS -> {
       if (todayData.config.isNotEmpty() && todayData.day != null) {
         FloatingActionButton(onClick = callbacks.onOpenTodayEditor) {
           Icon(Icons.Filled.AddTask, contentDescription = stringResource(Res.string.action_track_today))
         }
+      }
+    }
+    else -> {
+      FloatingActionButton(onClick = callbacks.onShowCreateMemoDialog) {
+        Icon(Icons.Filled.Edit, contentDescription = stringResource(Res.string.action_create_memo))
       }
     }
   }
@@ -221,6 +257,7 @@ private fun ScaffoldContent(
   memosState: MemosState,
   habitsState: HabitsState,
   habitsTimeline: List<HabitsConfigEntry>,
+  activityRange: ActivityRange,
   timeZone: TimeZone,
   today: LocalDate,
   callbacks: ScaffoldCallbacks,
@@ -230,9 +267,10 @@ private fun ScaffoldContent(
 ) {
   val selectedTab = appState.currentTimeRangeTab
   val currentRange = currentRangeForTab(selectedTab, today)
-  val activityRange = activityRangeForAppState(appState)
   val earliestDate = remember(memosState.memos) { EarliestMemoDateUseCase(memosState.memos, timeZone) }
   val minRange = minRangeForTab(selectedTab, earliestDate)
+  val canGoBack = minRange?.let { navigateActivityRange.isBefore(it, activityRange) } ?: true
+  val canGoForward = navigateActivityRange.isBefore(activityRange, currentRange)
 
   Column(
     modifier = Modifier.padding(padding).padding(Indent.m).fillMaxSize(),
@@ -248,7 +286,7 @@ private fun ScaffoldContent(
     )
     memosState.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
 
-    if (appState.selectedScreen != MemosScreen.FEED) {
+    if (appState.selectedScreen != Screen.FEED) {
       val successRate =
         rememberSuccessRateIfNeeded(
           appState,
@@ -260,12 +298,13 @@ private fun ScaffoldContent(
         )
       TimeRangeControls(
         selectedTab = selectedTab,
-        selectedRange = activityRange,
-        currentRange = currentRange,
-        minRange = minRange,
+        rangeLabel = formatRangeLabel(activityRange),
         successRate = successRate,
+        canGoBack = canGoBack,
+        canGoForward = canGoForward,
         onTabChange = callbacks.onTabChange,
-        onRangeChange = callbacks.onRangeChange,
+        onNavigateBack = callbacks.onNavigateBack,
+        onNavigateForward = callbacks.onNavigateForward,
       )
     }
 
@@ -295,7 +334,7 @@ private fun rememberSuccessRateIfNeeded(
   dependencies: AppDependencies,
   cache: space.be1ski.vibits.shared.feature.habits.view.components.ActivityWeekDataCache,
 ): Float? {
-  val isHabitsScreen = appState.selectedScreen == MemosScreen.HABITS
+  val isHabitsScreen = appState.selectedScreen == Screen.HABITS
   val hasHabits = remember(habitsTimeline) { habitsTimeline.lastOrNull()?.habits?.isNotEmpty() == true }
   val shouldCalculate = isHabitsScreen && hasHabits
   return if (shouldCalculate) {

@@ -27,7 +27,7 @@ class SettingsEffectHandlerTest {
 
       val actions =
         handler(
-          SettingsEffect.ValidateCredentials(
+          SettingsEffect.Command.ValidateCredentials(
             baseUrl = "https://test.com",
             token = "token",
             targetMode = AppMode.ONLINE,
@@ -44,7 +44,7 @@ class SettingsEffectHandlerTest {
 
       val actions =
         handler(
-          SettingsEffect.ValidateCredentials(
+          SettingsEffect.Command.ValidateCredentials(
             baseUrl = "https://test.com",
             token = "token",
             targetMode = AppMode.ONLINE,
@@ -61,7 +61,7 @@ class SettingsEffectHandlerTest {
       val appModeRepo = FakeAppModeRepository(initial = AppMode.ONLINE)
       val handler = createHandler(appModeRepository = appModeRepo)
 
-      val actions = handler(SettingsEffect.SwitchMode(mode = AppMode.OFFLINE)).toList()
+      val actions = handler(SettingsEffect.Command.SwitchMode(mode = AppMode.OFFLINE)).toList()
 
       assertEquals(listOf(SettingsAction.ModeSwitched), actions)
       assertEquals(AppMode.OFFLINE, appModeRepo.storedMode)
@@ -74,7 +74,7 @@ class SettingsEffectHandlerTest {
       val handler = createHandler(credentialsRepository = credentialsRepo)
 
       handler(
-        SettingsEffect.SaveCredentials(baseUrl = "https://saved.com", token = "saved-token"),
+        SettingsEffect.Command.SaveCredentials(baseUrl = "https://saved.com", token = "saved-token"),
       ).toList()
 
       assertEquals("https://saved.com", credentialsRepo.stored.baseUrl)
@@ -87,7 +87,7 @@ class SettingsEffectHandlerTest {
       val appModeRepo = FakeAppModeRepository(initial = AppMode.ONLINE)
       val handler = createHandler(appModeRepository = appModeRepo)
 
-      val actions = handler(SettingsEffect.ResetApp).toList()
+      val actions = handler(SettingsEffect.Command.ResetApp).toList()
 
       assertEquals(listOf(SettingsAction.ResetCompleted), actions)
       assertEquals(AppMode.NOT_SELECTED, appModeRepo.storedMode)
@@ -99,7 +99,7 @@ class SettingsEffectHandlerTest {
       val prefsRepo = FakePreferencesRepository()
       val handler = createHandler(preferencesRepository = prefsRepo)
 
-      handler(SettingsEffect.SaveLanguage(language = AppLanguage.ENGLISH)).toList()
+      handler(SettingsEffect.Command.SaveLanguage(language = AppLanguage.ENGLISH)).toList()
 
       assertEquals(AppLanguage.ENGLISH, prefsRepo.stored.language)
     }
@@ -110,7 +110,7 @@ class SettingsEffectHandlerTest {
       val prefsRepo = FakePreferencesRepository()
       val handler = createHandler(preferencesRepository = prefsRepo)
 
-      handler(SettingsEffect.SaveTheme(theme = AppTheme.DARK)).toList()
+      handler(SettingsEffect.Command.SaveTheme(theme = AppTheme.DARK)).toList()
 
       assertEquals(AppTheme.DARK, prefsRepo.stored.theme)
     }
@@ -122,22 +122,22 @@ class SettingsEffectHandlerTest {
 
       val notifyModeActions =
         handler(
-          SettingsEffect.NotifyModeChanged(newMode = AppMode.OFFLINE),
+          SettingsEffect.Notification.ModeChanged(newMode = AppMode.OFFLINE),
         ).toList()
-      val notifyResetActions = handler(SettingsEffect.NotifyResetCompleted).toList()
+      val notifyResetActions = handler(SettingsEffect.Notification.ResetCompleted).toList()
       val notifyCredentialsActions =
         handler(
-          SettingsEffect.NotifyCredentialsSaved(baseUrl = "url", token = "token"),
+          SettingsEffect.Notification.CredentialsSaved(baseUrl = "url", token = "token"),
         ).toList()
       val notifyLanguageActions =
         handler(
-          SettingsEffect.NotifyLanguageChanged(language = AppLanguage.ENGLISH),
+          SettingsEffect.Notification.LanguageChanged(language = AppLanguage.ENGLISH),
         ).toList()
       val notifyThemeActions =
         handler(
-          SettingsEffect.NotifyThemeChanged(theme = AppTheme.DARK),
+          SettingsEffect.Notification.ThemeChanged(theme = AppTheme.DARK),
         ).toList()
-      val notifyDialogActions = handler(SettingsEffect.NotifyDialogClosed).toList()
+      val notifyDialogActions = handler(SettingsEffect.Notification.DialogClosed).toList()
 
       assertTrue(notifyModeActions.isEmpty())
       assertTrue(notifyResetActions.isEmpty())

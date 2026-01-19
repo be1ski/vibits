@@ -2,7 +2,7 @@ package space.be1ski.vibits.shared.app.presentation
 
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
-import space.be1ski.vibits.shared.app.view.model.MemosScreen
+import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 
@@ -12,7 +12,7 @@ import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 internal sealed interface AppAction {
   // Navigation
   data class SelectScreen(
-    val screen: MemosScreen,
+    val screen: Screen,
   ) : AppAction
 
   data class SetHabitsTimeRangeTab(

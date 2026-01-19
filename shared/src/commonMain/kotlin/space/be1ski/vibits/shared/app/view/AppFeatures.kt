@@ -32,7 +32,6 @@ internal class AppFeatures(
   val memos: Feature<MemosAction, MemosState, MemosEffect>,
   val habits: Feature<HabitsAction, HabitsState, HabitsEffect>,
   val settings: Feature<SettingsAction, SettingsState, SettingsEffect>,
-  val appDetails: AppDetails,
   val cache: ActivityWeekDataCache,
 )
 
@@ -87,13 +86,12 @@ internal fun rememberAppFeatures(dependencies: AppDependencies): AppFeatures {
     settingsFeature.launchIn(scope)
   }
 
-  return remember(appFeature, memosFeature, habitsFeature, settingsFeature, appDetails, cache) {
+  return remember(appFeature, memosFeature, habitsFeature, settingsFeature, cache) {
     AppFeatures(
       app = appFeature,
       memos = memosFeature,
       habits = habitsFeature,
       settings = settingsFeature,
-      appDetails = appDetails,
       cache = cache,
     )
   }

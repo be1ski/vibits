@@ -1,8 +1,8 @@
 package space.be1ski.vibits.shared.app.presentation
 
+import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.app.domain.usecase.AdjustDateForTabChangeUseCase
 import space.be1ski.vibits.shared.app.domain.usecase.GetActivityRangeStartDateUseCase
-import space.be1ski.vibits.shared.app.view.model.MemosScreen
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
@@ -50,9 +50,9 @@ internal val appReducer: Reducer<AppAction, AppState, AppEffect> =
       is AppAction.ResetToHome -> {
         state {
           when (selectedScreen) {
-            MemosScreen.HABITS -> copy(periodStartDate = action.today, habitsTimeRangeTab = TimeRangeTab.WEEKS)
-            MemosScreen.STATS -> copy(periodStartDate = action.today, postsTimeRangeTab = TimeRangeTab.WEEKS)
-            MemosScreen.FEED -> copy(periodStartDate = action.today)
+            Screen.HABITS -> copy(periodStartDate = action.today, habitsTimeRangeTab = TimeRangeTab.WEEKS)
+            Screen.STATS -> copy(periodStartDate = action.today, postsTimeRangeTab = TimeRangeTab.WEEKS)
+            Screen.FEED -> copy(periodStartDate = action.today)
           }
         }
       }

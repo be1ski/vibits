@@ -24,9 +24,9 @@ import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_refresh
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
+import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.app.presentation.AppAction
 import space.be1ski.vibits.shared.app.presentation.AppState
-import space.be1ski.vibits.shared.app.view.model.MemosScreen
 import space.be1ski.vibits.shared.app_name
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.platform.isDesktop
@@ -96,13 +96,13 @@ internal fun MemosBottomNavigation(
 ) {
   NavigationBar {
     NavigationBarItem(
-      selected = appState.selectedScreen == MemosScreen.HABITS,
+      selected = appState.selectedScreen == Screen.HABITS,
       onClick = {
         onClearSelection()
-        if (appState.selectedScreen == MemosScreen.HABITS) {
+        if (appState.selectedScreen == Screen.HABITS) {
           onAppAction(AppAction.ResetToHome(currentLocalDate()))
         } else {
-          onAppAction(AppAction.SelectScreen(MemosScreen.HABITS))
+          onAppAction(AppAction.SelectScreen(Screen.HABITS))
         }
       },
       icon = {
@@ -114,13 +114,13 @@ internal fun MemosBottomNavigation(
       label = { Text(stringResource(Res.string.nav_habits)) },
     )
     NavigationBarItem(
-      selected = appState.selectedScreen == MemosScreen.STATS,
+      selected = appState.selectedScreen == Screen.STATS,
       onClick = {
         onClearSelection()
-        if (appState.selectedScreen == MemosScreen.STATS) {
+        if (appState.selectedScreen == Screen.STATS) {
           onAppAction(AppAction.ResetToHome(currentLocalDate()))
         } else {
-          onAppAction(AppAction.SelectScreen(MemosScreen.STATS))
+          onAppAction(AppAction.SelectScreen(Screen.STATS))
         }
       },
       icon = {
@@ -132,13 +132,13 @@ internal fun MemosBottomNavigation(
       label = { Text(stringResource(Res.string.nav_memos)) },
     )
     NavigationBarItem(
-      selected = appState.selectedScreen == MemosScreen.FEED,
+      selected = appState.selectedScreen == Screen.FEED,
       onClick = {
         onClearSelection()
-        if (appState.selectedScreen == MemosScreen.FEED) {
+        if (appState.selectedScreen == Screen.FEED) {
           onFeedScrollToTop()
         } else {
-          onAppAction(AppAction.SelectScreen(MemosScreen.FEED))
+          onAppAction(AppAction.SelectScreen(Screen.FEED))
         }
       },
       icon = {

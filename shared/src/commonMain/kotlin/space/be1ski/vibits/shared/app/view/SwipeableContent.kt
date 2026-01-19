@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
+import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.app.presentation.AppAction
 import space.be1ski.vibits.shared.app.presentation.AppState
-import space.be1ski.vibits.shared.app.view.model.MemosScreen
 import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
@@ -54,7 +54,7 @@ internal fun SwipeableTabContent(
   dispatchMemos: (MemosAction) -> Unit = {},
   feedListState: LazyListState,
 ) {
-  if (appState.selectedScreen == MemosScreen.FEED) {
+  if (appState.selectedScreen == Screen.FEED) {
     FeedScreen(
       memos = memosState.memos,
       isRefreshing = memosState.isLoading,
@@ -69,9 +69,9 @@ internal fun SwipeableTabContent(
 
   val selectedTab =
     when (appState.selectedScreen) {
-      MemosScreen.HABITS -> appState.habitsTimeRangeTab
-      MemosScreen.STATS -> appState.postsTimeRangeTab
-      MemosScreen.FEED -> appState.habitsTimeRangeTab
+      Screen.HABITS -> appState.habitsTimeRangeTab
+      Screen.STATS -> appState.postsTimeRangeTab
+      Screen.FEED -> appState.habitsTimeRangeTab
     }
 
   // Key the entire pager on selectedTab to force re-initialization when tab changes
@@ -186,7 +186,7 @@ private fun MemosTabContent(
 ) {
   val memos = memosState.memos
   when (appState.selectedScreen) {
-    MemosScreen.HABITS ->
+    Screen.HABITS ->
       StatsScreen(
         state =
           StatsScreenState(
@@ -203,7 +203,7 @@ private fun MemosTabContent(
         habitsState = habitsState,
         onHabitsAction = onHabitsAction,
       )
-    MemosScreen.STATS ->
+    Screen.STATS ->
       PostsScreen(
         memos = memos,
         range = activityRange,
@@ -214,7 +214,7 @@ private fun MemosTabContent(
         postsListExpanded = appState.postsListExpanded,
         onPostsListExpandedChange = { onAppAction(AppAction.SetPostsListExpanded(it)) },
       )
-    MemosScreen.FEED ->
+    Screen.FEED ->
       FeedScreen(
         memos = memos,
         isRefreshing = memosState.isLoading,
