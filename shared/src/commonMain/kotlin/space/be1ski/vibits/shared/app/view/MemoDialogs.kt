@@ -13,6 +13,7 @@ import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_cancel
 import space.be1ski.vibits.shared.action_create
 import space.be1ski.vibits.shared.action_save
+import space.be1ski.vibits.shared.app.view.model.VibitsAppUiState
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.hint_write_memo

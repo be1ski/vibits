@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.app.view
+package space.be1ski.vibits.shared.app.view.model
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,12 +7,6 @@ import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
-
-internal enum class MemosScreen {
-  HABITS,
-  STATS,
-  FEED,
-}
 
 internal class VibitsAppUiState(
   currentDate: LocalDate,
