@@ -5,51 +5,59 @@ import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 
 sealed interface SettingsEffect {
-  // Async operations (handled by EffectHandler)
-  data class ValidateCredentials(
-    val baseUrl: String,
-    val token: String,
-    val targetMode: AppMode,
-  ) : SettingsEffect
+  /**
+   * Commands handled by SettingsEffectHandler (async operations).
+   */
+  sealed interface Command : SettingsEffect {
+    data class ValidateCredentials(
+      val baseUrl: String,
+      val token: String,
+      val targetMode: AppMode,
+    ) : Command
 
-  data class SwitchMode(
-    val mode: AppMode,
-  ) : SettingsEffect
+    data class SwitchMode(
+      val mode: AppMode,
+    ) : Command
 
-  data class SaveCredentials(
-    val baseUrl: String,
-    val token: String,
-  ) : SettingsEffect
+    data class SaveCredentials(
+      val baseUrl: String,
+      val token: String,
+    ) : Command
 
-  data object ResetApp : SettingsEffect
+    data object ResetApp : Command
 
-  data class SaveLanguage(
-    val language: AppLanguage,
-  ) : SettingsEffect
+    data class SaveLanguage(
+      val language: AppLanguage,
+    ) : Command
 
-  data class SaveTheme(
-    val theme: AppTheme,
-  ) : SettingsEffect
+    data class SaveTheme(
+      val theme: AppTheme,
+    ) : Command
+  }
 
-  // Parent notifications (observed by VibitsApp)
-  data class NotifyModeChanged(
-    val newMode: AppMode,
-  ) : SettingsEffect
+  /**
+   * Notifications observed by FeatureCoordinator for cross-feature coordination.
+   */
+  sealed interface Notification : SettingsEffect {
+    data class ModeChanged(
+      val newMode: AppMode,
+    ) : Notification
 
-  data object NotifyResetCompleted : SettingsEffect
+    data object ResetCompleted : Notification
 
-  data class NotifyCredentialsSaved(
-    val baseUrl: String,
-    val token: String,
-  ) : SettingsEffect
+    data class CredentialsSaved(
+      val baseUrl: String,
+      val token: String,
+    ) : Notification
 
-  data class NotifyLanguageChanged(
-    val language: AppLanguage,
-  ) : SettingsEffect
+    data class LanguageChanged(
+      val language: AppLanguage,
+    ) : Notification
 
-  data class NotifyThemeChanged(
-    val theme: AppTheme,
-  ) : SettingsEffect
+    data class ThemeChanged(
+      val theme: AppTheme,
+    ) : Notification
 
-  data object NotifyDialogClosed : SettingsEffect
+    data object DialogClosed : Notification
+  }
 }

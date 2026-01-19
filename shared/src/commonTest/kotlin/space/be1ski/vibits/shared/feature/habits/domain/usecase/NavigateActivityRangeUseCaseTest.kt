@@ -2,7 +2,7 @@ package space.be1ski.vibits.shared.feature.habits.domain.usecase
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
-import space.be1ski.vibits.shared.core.ui.ActivityRange
+import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

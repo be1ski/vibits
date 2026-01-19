@@ -18,12 +18,14 @@ fun VibitsApp(
   onLanguageChanged: (AppLanguage) -> Unit = {},
 ) {
   val features = rememberAppFeatures(dependencies)
+  val appState by features.app.state.collectAsState()
   val memosState by features.memos.state.collectAsState()
   val habitsState by features.habits.state.collectAsState()
   val settingsState by features.settings.state.collectAsState()
 
   FeatureCoordinator(
     features = features,
+    appState = appState,
     memosState = memosState,
     settingsState = settingsState,
     currentLanguage = currentLanguage,
@@ -36,6 +38,7 @@ fun VibitsApp(
   VibitsAppScaffold(
     features = features,
     dependencies = dependencies,
+    appState = appState,
     memosState = memosState,
     habitsState = habitsState,
     currentLanguage = currentLanguage,
@@ -43,6 +46,6 @@ fun VibitsApp(
   )
 
   SettingsDialog(state = settingsState, dispatch = features.settings::send)
-  MemoCreateDialog(features.appState, features.memos::send)
-  MemoEditDialog(features.appState, features.memos::send)
+  MemoCreateDialog(state = memosState, dispatch = features.memos::send)
+  MemoEditDialog(state = memosState, dispatch = features.memos::send)
 }

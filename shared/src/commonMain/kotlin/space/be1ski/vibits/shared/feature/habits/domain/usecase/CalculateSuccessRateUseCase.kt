@@ -2,7 +2,7 @@ package space.be1ski.vibits.shared.feature.habits.domain.usecase
 
 import dev.zacsweers.metro.Inject
 import kotlinx.datetime.LocalDate
-import space.be1ski.vibits.shared.core.ui.ActivityRange
+import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.domain.model.SuccessRateData
 import space.be1ski.vibits.shared.feature.habits.domain.model.rangeBounds

@@ -5,8 +5,8 @@ import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
-import space.be1ski.vibits.shared.core.ui.ActivityMode
-import space.be1ski.vibits.shared.core.ui.ActivityRange
+import space.be1ski.vibits.shared.app.domain.model.ActivityMode
+import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo

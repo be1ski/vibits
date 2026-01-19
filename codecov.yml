@@ -21,6 +21,10 @@ ignore:
   - "**/core/ui/**"
   # Room database (requires instrumentation tests)
   - "**/roomMain/**"
+  # TEA data classes (no logic to test)
+  - "**/presentation/*State.kt"
+  - "**/presentation/*Action.kt"
+  - "**/presentation/*Effect.kt"
 
 comment:
   layout: "reach, diff, flags, files"

@@ -2,8 +2,8 @@ package space.be1ski.vibits.shared.feature.habits.domain.usecase
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import space.be1ski.vibits.shared.core.ui.ActivityMode
-import space.be1ski.vibits.shared.core.ui.ActivityRange
+import space.be1ski.vibits.shared.app.domain.model.ActivityMode
+import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import kotlin.test.Test
 import kotlin.test.assertEquals

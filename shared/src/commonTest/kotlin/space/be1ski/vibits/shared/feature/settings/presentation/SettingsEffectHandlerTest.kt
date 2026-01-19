@@ -21,13 +21,13 @@ import kotlin.test.assertTrue
 
 class SettingsEffectHandlerTest {
   @Test
-  fun `ValidateCredentials emits ValidationSucceeded on success`() =
+  fun `when ValidateCredentials succeeds then emits ValidationSucceeded`() =
     runTest {
       val handler = createHandler()
 
       val actions =
         handler(
-          SettingsEffect.ValidateCredentials(
+          SettingsEffect.Command.ValidateCredentials(
             baseUrl = "https://test.com",
             token = "token",
             targetMode = AppMode.ONLINE,
@@ -38,13 +38,13 @@ class SettingsEffectHandlerTest {
     }
 
   @Test
-  fun `ValidateCredentials emits ValidationFailed on failure`() =
+  fun `when ValidateCredentials fails then emits ValidationFailed`() =
     runTest {
       val handler = createHandler(connectionResult = Result.failure(Exception("Connection failed")))
 
       val actions =
         handler(
-          SettingsEffect.ValidateCredentials(
+          SettingsEffect.Command.ValidateCredentials(
             baseUrl = "https://test.com",
             token = "token",
             targetMode = AppMode.ONLINE,
@@ -56,25 +56,25 @@ class SettingsEffectHandlerTest {
     }
 
   @Test
-  fun `SwitchMode saves mode and emits ModeSwitched`() =
+  fun `when SwitchMode then saves mode and emits ModeSwitched`() =
     runTest {
       val appModeRepo = FakeAppModeRepository(initial = AppMode.ONLINE)
       val handler = createHandler(appModeRepository = appModeRepo)
 
-      val actions = handler(SettingsEffect.SwitchMode(mode = AppMode.OFFLINE)).toList()
+      val actions = handler(SettingsEffect.Command.SwitchMode(mode = AppMode.OFFLINE)).toList()
 
       assertEquals(listOf(SettingsAction.ModeSwitched), actions)
       assertEquals(AppMode.OFFLINE, appModeRepo.storedMode)
     }
 
   @Test
-  fun `SaveCredentials saves to repository`() =
+  fun `when SaveCredentials then saves to repository`() =
     runTest {
       val credentialsRepo = FakeCredentialsRepository()
       val handler = createHandler(credentialsRepository = credentialsRepo)
 
       handler(
-        SettingsEffect.SaveCredentials(baseUrl = "https://saved.com", token = "saved-token"),
+        SettingsEffect.Command.SaveCredentials(baseUrl = "https://saved.com", token = "saved-token"),
       ).toList()
 
       assertEquals("https://saved.com", credentialsRepo.stored.baseUrl)
@@ -82,62 +82,62 @@ class SettingsEffectHandlerTest {
     }
 
   @Test
-  fun `ResetApp resets and emits ResetCompleted`() =
+  fun `when ResetApp then resets and emits ResetCompleted`() =
     runTest {
       val appModeRepo = FakeAppModeRepository(initial = AppMode.ONLINE)
       val handler = createHandler(appModeRepository = appModeRepo)
 
-      val actions = handler(SettingsEffect.ResetApp).toList()
+      val actions = handler(SettingsEffect.Command.ResetApp).toList()
 
       assertEquals(listOf(SettingsAction.ResetCompleted), actions)
       assertEquals(AppMode.NOT_SELECTED, appModeRepo.storedMode)
     }
 
   @Test
-  fun `SaveLanguage calls saveLanguage function`() =
+  fun `when SaveLanguage then saves language to repository`() =
     runTest {
       val prefsRepo = FakePreferencesRepository()
       val handler = createHandler(preferencesRepository = prefsRepo)
 
-      handler(SettingsEffect.SaveLanguage(language = AppLanguage.ENGLISH)).toList()
+      handler(SettingsEffect.Command.SaveLanguage(language = AppLanguage.ENGLISH)).toList()
 
       assertEquals(AppLanguage.ENGLISH, prefsRepo.stored.language)
     }
 
   @Test
-  fun `SaveTheme calls saveTheme function`() =
+  fun `when SaveTheme then saves theme to repository`() =
     runTest {
       val prefsRepo = FakePreferencesRepository()
       val handler = createHandler(preferencesRepository = prefsRepo)
 
-      handler(SettingsEffect.SaveTheme(theme = AppTheme.DARK)).toList()
+      handler(SettingsEffect.Command.SaveTheme(theme = AppTheme.DARK)).toList()
 
       assertEquals(AppTheme.DARK, prefsRepo.stored.theme)
     }
 
   @Test
-  fun `Notification effects return empty flow`() =
+  fun `when Notification effect then returns empty flow`() =
     runTest {
       val handler = createHandler()
 
       val notifyModeActions =
         handler(
-          SettingsEffect.NotifyModeChanged(newMode = AppMode.OFFLINE),
+          SettingsEffect.Notification.ModeChanged(newMode = AppMode.OFFLINE),
         ).toList()
-      val notifyResetActions = handler(SettingsEffect.NotifyResetCompleted).toList()
+      val notifyResetActions = handler(SettingsEffect.Notification.ResetCompleted).toList()
       val notifyCredentialsActions =
         handler(
-          SettingsEffect.NotifyCredentialsSaved(baseUrl = "url", token = "token"),
+          SettingsEffect.Notification.CredentialsSaved(baseUrl = "url", token = "token"),
         ).toList()
       val notifyLanguageActions =
         handler(
-          SettingsEffect.NotifyLanguageChanged(language = AppLanguage.ENGLISH),
+          SettingsEffect.Notification.LanguageChanged(language = AppLanguage.ENGLISH),
         ).toList()
       val notifyThemeActions =
         handler(
-          SettingsEffect.NotifyThemeChanged(theme = AppTheme.DARK),
+          SettingsEffect.Notification.ThemeChanged(theme = AppTheme.DARK),
         ).toList()
-      val notifyDialogActions = handler(SettingsEffect.NotifyDialogClosed).toList()
+      val notifyDialogActions = handler(SettingsEffect.Notification.DialogClosed).toList()
 
       assertTrue(notifyModeActions.isEmpty())
       assertTrue(notifyResetActions.isEmpty())

@@ -36,6 +36,30 @@ sealed interface MemosAction {
     val name: String,
   ) : MemosAction
 
+  // Create dialog
+  data object ShowCreateDialog : MemosAction
+
+  data class UpdateCreateContent(
+    val content: String,
+  ) : MemosAction
+
+  data object DismissCreateDialog : MemosAction
+
+  data object ConfirmCreateDialog : MemosAction
+
+  // Edit dialog
+  data class ShowEditDialog(
+    val memo: Memo,
+  ) : MemosAction
+
+  data class UpdateEditContent(
+    val content: String,
+  ) : MemosAction
+
+  data object DismissEditDialog : MemosAction
+
+  data object ConfirmEditDialog : MemosAction
+
   // Internal responses
   data class MemosLoaded(
     val memos: List<Memo>,

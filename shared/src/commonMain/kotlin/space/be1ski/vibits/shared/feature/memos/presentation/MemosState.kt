@@ -13,6 +13,13 @@ data class MemosState(
   val baseUrl: String = "",
   val token: String = "",
   val isOfflineMode: Boolean = false,
+  // Create dialog
+  val showCreateDialog: Boolean = false,
+  val createDialogContent: String = "",
+  // Edit dialog
+  val showEditDialog: Boolean = false,
+  val editDialogContent: String = "",
+  val editDialogMemo: Memo? = null,
 ) {
   val hasCredentials: Boolean get() = baseUrl.isNotBlank() && token.isNotBlank()
   val needsCredentials: Boolean get() = !isOfflineMode && !hasCredentials

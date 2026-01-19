@@ -94,6 +94,55 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
       is MemosAction.OperationFailed -> {
         state { copy(isLoading = false, errorMessage = action.error) }
       }
+
+      // Create dialog
+      is MemosAction.ShowCreateDialog -> {
+        state { copy(showCreateDialog = true, createDialogContent = "") }
+      }
+
+      is MemosAction.UpdateCreateContent -> {
+        state { copy(createDialogContent = action.content) }
+      }
+
+      is MemosAction.DismissCreateDialog -> {
+        state { copy(showCreateDialog = false, createDialogContent = "") }
+      }
+
+      is MemosAction.ConfirmCreateDialog -> {
+        val content = state.createDialogContent.trim()
+        if (content.isNotBlank()) {
+          state { copy(showCreateDialog = false, createDialogContent = "", isLoading = true) }
+          effect(MemosEffect.CreateMemo(content))
+        }
+      }
+
+      // Edit dialog
+      is MemosAction.ShowEditDialog -> {
+        state {
+          copy(
+            showEditDialog = true,
+            editDialogContent = action.memo.content,
+            editDialogMemo = action.memo,
+          )
+        }
+      }
+
+      is MemosAction.UpdateEditContent -> {
+        state { copy(editDialogContent = action.content) }
+      }
+
+      is MemosAction.DismissEditDialog -> {
+        state { copy(showEditDialog = false, editDialogContent = "", editDialogMemo = null) }
+      }
+
+      is MemosAction.ConfirmEditDialog -> {
+        val memo = state.editDialogMemo
+        val content = state.editDialogContent.trim()
+        if (memo != null && content.isNotBlank()) {
+          state { copy(showEditDialog = false, editDialogContent = "", editDialogMemo = null, isLoading = true) }
+          effect(MemosEffect.UpdateMemo(memo.name, content))
+        }
+      }
     }
   }
 

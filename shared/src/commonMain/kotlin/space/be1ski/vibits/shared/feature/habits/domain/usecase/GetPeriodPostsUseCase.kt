@@ -5,7 +5,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
-import space.be1ski.vibits.shared.core.ui.ActivityRange
+import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 private const val DAYS_IN_WEEK = 7

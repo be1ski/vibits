@@ -183,4 +183,116 @@ class MemosReducerTest {
 
       assertState { memos.first().name == "memos/new" && memos.last().name == "memos/old" }
     }
+
+  @Test
+  fun `when LoadMemos in offline mode then does not emit SaveCredentials`() =
+    memosReducer.test(MemosState(baseUrl = "https://api.com", token = "token", isOfflineMode = true)) {
+      send(MemosAction.LoadMemos)
+
+      assertState { isLoading }
+      assertEffectCount(1)
+      assertHasEffect<MemosEffect.LoadRemoteMemos>()
+    }
+
+  @Test
+  fun `when ShowCreateDialog then opens dialog with empty content`() =
+    memosReducer.test(MemosState()) {
+      send(MemosAction.ShowCreateDialog)
+
+      assertState { showCreateDialog && createDialogContent == "" }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when UpdateCreateContent then updates create dialog content`() =
+    memosReducer.test(MemosState(showCreateDialog = true)) {
+      send(MemosAction.UpdateCreateContent("New content"))
+
+      assertState { createDialogContent == "New content" }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when DismissCreateDialog then closes dialog and clears content`() =
+    memosReducer.test(MemosState(showCreateDialog = true, createDialogContent = "Some content")) {
+      send(MemosAction.DismissCreateDialog)
+
+      assertState { !showCreateDialog && createDialogContent == "" }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ConfirmCreateDialog with content then closes dialog and emits CreateMemo`() =
+    memosReducer.test(MemosState(showCreateDialog = true, createDialogContent = "  New memo  ")) {
+      send(MemosAction.ConfirmCreateDialog)
+
+      assertState { !showCreateDialog && createDialogContent == "" && isLoading }
+      val effect = assertHasEffect<MemosEffect.CreateMemo>()
+      assertEquals("New memo", effect.content)
+    }
+
+  @Test
+  fun `when ConfirmCreateDialog with blank content then does nothing`() =
+    memosReducer.test(MemosState(showCreateDialog = true, createDialogContent = "   ")) {
+      send(MemosAction.ConfirmCreateDialog)
+
+      assertState { showCreateDialog && createDialogContent == "   " }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ShowEditDialog then opens dialog with memo content`() =
+    memosReducer.test(MemosState()) {
+      send(MemosAction.ShowEditDialog(testMemo))
+
+      assertState { showEditDialog && editDialogContent == testMemo.content && editDialogMemo == testMemo }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when UpdateEditContent then updates edit dialog content`() =
+    memosReducer.test(MemosState(showEditDialog = true, editDialogMemo = testMemo)) {
+      send(MemosAction.UpdateEditContent("Updated content"))
+
+      assertState { editDialogContent == "Updated content" }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when DismissEditDialog then closes dialog and clears state`() =
+    memosReducer.test(MemosState(showEditDialog = true, editDialogContent = "Content", editDialogMemo = testMemo)) {
+      send(MemosAction.DismissEditDialog)
+
+      assertState { !showEditDialog && editDialogContent == "" && editDialogMemo == null }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ConfirmEditDialog with content then closes dialog and emits UpdateMemo`() =
+    memosReducer.test(MemosState(showEditDialog = true, editDialogContent = "  Updated  ", editDialogMemo = testMemo)) {
+      send(MemosAction.ConfirmEditDialog)
+
+      assertState { !showEditDialog && editDialogContent == "" && editDialogMemo == null && isLoading }
+      val effect = assertHasEffect<MemosEffect.UpdateMemo>()
+      assertEquals(testMemo.name, effect.name)
+      assertEquals("Updated", effect.content)
+    }
+
+  @Test
+  fun `when ConfirmEditDialog with blank content then does nothing`() =
+    memosReducer.test(MemosState(showEditDialog = true, editDialogContent = "   ", editDialogMemo = testMemo)) {
+      send(MemosAction.ConfirmEditDialog)
+
+      assertState { showEditDialog }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ConfirmEditDialog with null memo then does nothing`() =
+    memosReducer.test(MemosState(showEditDialog = true, editDialogContent = "Content", editDialogMemo = null)) {
+      send(MemosAction.ConfirmEditDialog)
+
+      assertState { showEditDialog }
+      assertNoEffects()
+    }
 }
