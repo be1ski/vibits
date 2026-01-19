@@ -2,6 +2,7 @@ package space.be1ski.vibits.shared.app.view
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import space.be1ski.vibits.shared.app.view.model.VibitsAppUiState
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode

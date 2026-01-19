@@ -1,6 +1,4 @@
-@file:Suppress("MatchingDeclarationName", "ktlint:standard:filename")
-
-package space.be1ski.vibits.shared.app.view
+package space.be1ski.vibits.shared.app.view.model
 
 internal enum class MemosFabMode {
   HABITS,
