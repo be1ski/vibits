@@ -2,8 +2,11 @@ package space.be1ski.vibits.shared.app.view
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import space.be1ski.vibits.shared.app.presentation.AppAction
+import space.be1ski.vibits.shared.app.presentation.AppState
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
@@ -13,6 +16,7 @@ import space.be1ski.vibits.shared.feature.settings.presentation.SettingsState
 @Composable
 internal fun FeatureCoordinator(
   features: AppFeatures,
+  appState: AppState,
   memosState: MemosState,
   settingsState: SettingsState,
   currentLanguage: AppLanguage,
@@ -21,6 +25,7 @@ internal fun FeatureCoordinator(
   onThemeChanged: (AppTheme) -> Unit,
   onLanguageChanged: (AppLanguage) -> Unit,
 ) {
+  val dispatchApp = features.app::send
   val dispatchMemos = features.memos::send
 
   // Handle settings effects
@@ -28,7 +33,7 @@ internal fun FeatureCoordinator(
     features.settings.effects.collect { effect ->
       when (effect) {
         is SettingsEffect.NotifyModeChanged -> {
-          features.appState.appMode = effect.newMode
+          dispatchApp(AppAction.SetAppMode(effect.newMode))
           dispatchMemos(MemosAction.LoadMemos)
         }
         is SettingsEffect.NotifyResetCompleted -> onResetApp()
@@ -52,7 +57,7 @@ internal fun FeatureCoordinator(
         SettingsAction.Open(
           baseUrl = memosState.baseUrl,
           token = memosState.token,
-          appMode = features.appState.appMode,
+          appMode = appState.appMode,
           language = currentLanguage,
           theme = currentTheme,
         ),
@@ -60,5 +65,5 @@ internal fun FeatureCoordinator(
     }
   }
 
-  SyncAutoLoad(memosState, features.appState, dispatchMemos)
+  SyncAutoLoad(appState, memosState, dispatchApp, dispatchMemos)
 }

@@ -1,7 +1,7 @@
 package space.be1ski.vibits.shared.feature.habits.domain.usecase
 
 import dev.zacsweers.metro.Inject
-import space.be1ski.vibits.shared.core.ui.ActivityMode
+import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.feature.habits.domain.buildHabitStatuses
 import space.be1ski.vibits.shared.feature.habits.domain.extractHabitTagsFromContent
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay

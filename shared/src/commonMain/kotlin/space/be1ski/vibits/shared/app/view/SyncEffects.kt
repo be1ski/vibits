@@ -2,16 +2,18 @@ package space.be1ski.vibits.shared.app.view
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import space.be1ski.vibits.shared.app.view.model.VibitsAppUiState
+import space.be1ski.vibits.shared.app.presentation.AppAction
+import space.be1ski.vibits.shared.app.presentation.AppState
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
 @Composable
 internal fun SyncAutoLoad(
+  appState: AppState,
   memosState: MemosState,
-  appState: VibitsAppUiState,
-  dispatch: (MemosAction) -> Unit,
+  dispatchApp: (AppAction) -> Unit,
+  dispatchMemos: (MemosAction) -> Unit,
 ) {
   LaunchedEffect(memosState.credentialsMode, appState.autoLoaded, memosState.isLoading, appState.appMode) {
     val skipCredentialsCheck = appState.appMode == AppMode.DEMO || appState.appMode == AppMode.OFFLINE
@@ -21,8 +23,8 @@ internal fun SyncAutoLoad(
         !memosState.isLoading &&
         (skipCredentialsCheck || memosState.hasCredentials)
     if (shouldAutoLoad) {
-      appState.autoLoaded = true
-      dispatch(MemosAction.LoadMemos)
+      dispatchApp(AppAction.MarkAutoLoaded)
+      dispatchMemos(MemosAction.LoadMemos)
     }
   }
 }

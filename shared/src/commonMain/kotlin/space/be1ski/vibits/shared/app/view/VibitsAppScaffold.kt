@@ -28,12 +28,13 @@ import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_create_memo
 import space.be1ski.vibits.shared.action_track_today
 import space.be1ski.vibits.shared.app.di.AppDependencies
+import space.be1ski.vibits.shared.app.domain.model.ActivityRange
+import space.be1ski.vibits.shared.app.presentation.AppAction
+import space.be1ski.vibits.shared.app.presentation.AppState
 import space.be1ski.vibits.shared.app.view.model.MemosFabMode
 import space.be1ski.vibits.shared.app.view.model.MemosScreen
-import space.be1ski.vibits.shared.app.view.model.VibitsAppUiState
 import space.be1ski.vibits.shared.app.view.model.memosFabModeForScreen
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
-import space.be1ski.vibits.shared.core.ui.ActivityRange
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
@@ -51,20 +52,21 @@ import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
-import space.be1ski.vibits.shared.feature.settings.domain.usecase.TimeRangeScreen
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
 
 @Composable
 internal fun VibitsAppScaffold(
   features: AppFeatures,
   dependencies: AppDependencies,
+  appState: AppState,
   memosState: MemosState,
   habitsState: HabitsState,
   currentLanguage: AppLanguage,
   currentTheme: AppTheme,
 ) {
-  val appState = features.appState
+  val onAppAction = features.app::send
   val onHabitsAction = features.habits::send
+  val onMemosAction = features.memos::send
 
   val timeZone = remember { TimeZone.currentSystemDefault() }
   val today = currentLocalDate()
@@ -73,16 +75,17 @@ internal fun VibitsAppScaffold(
 
   val feedListState = rememberLazyListState()
   val scope = rememberCoroutineScope()
-  val callbacks = rememberScaffoldCallbacks(appState, onHabitsAction, feedListState, scope, todayData, dependencies)
+  val callbacks = rememberScaffoldCallbacks(appState, onAppAction, onHabitsAction, onMemosAction, feedListState, scope, todayData)
 
   Scaffold(
     floatingActionButton = { AppFab(appState, todayData, callbacks) },
-    bottomBar = { MemosBottomNavigation(appState, callbacks.onClearSelection, callbacks.onFeedScrollToTop) },
+    bottomBar = { MemosBottomNavigation(appState, onAppAction, callbacks.onClearSelection, callbacks.onFeedScrollToTop) },
   ) { padding ->
     ScaffoldContent(
       padding = padding,
       features = features,
       dependencies = dependencies,
+      appState = appState,
       memosState = memosState,
       habitsState = habitsState,
       habitsTimeline = habitsTimeline,
@@ -134,12 +137,13 @@ internal class ScaffoldCallbacks(
 
 @Composable
 private fun rememberScaffoldCallbacks(
-  appState: VibitsAppUiState,
+  appState: AppState,
+  onAppAction: (AppAction) -> Unit,
   onHabitsAction: (HabitsAction) -> Unit,
+  onMemosAction: (MemosAction) -> Unit,
   feedListState: LazyListState,
   scope: CoroutineScope,
   todayData: TodayData,
-  dependencies: AppDependencies,
 ): ScaffoldCallbacks {
   val onClearSelection = remember(onHabitsAction) { { onHabitsAction(HabitsAction.ClearSelection) } }
   val onFeedScrollToTop: () -> Unit =
@@ -149,7 +153,7 @@ private fun rememberScaffoldCallbacks(
         Unit
       }
     }
-  val onShowCreateMemoDialog = remember(appState) { { appState.showCreateMemoDialog = true } }
+  val onShowCreateMemoDialog = remember(onMemosAction) { { onMemosAction(MemosAction.ShowCreateDialog) } }
   val onOpenTodayEditor: () -> Unit =
     remember(onHabitsAction, todayData) {
       {
@@ -158,17 +162,21 @@ private fun rememberScaffoldCallbacks(
       }
     }
   val onRangeChange =
-    remember(onHabitsAction, appState) {
+    remember(onHabitsAction, onAppAction) {
       { range: ActivityRange ->
         onHabitsAction(HabitsAction.ClearSelection)
-        updateTimeRangeState(appState, range)
+        onAppAction(AppAction.SetActivityRange(range))
       }
     }
   val onTabChange =
-    remember(onHabitsAction, appState, dependencies.saveTimeRangeTab) {
+    remember(onHabitsAction, onAppAction, appState) {
       { newTab: TimeRangeTab ->
         onHabitsAction(HabitsAction.ClearSelection)
-        handleTabChange(appState, newTab, dependencies)
+        when (appState.selectedScreen) {
+          MemosScreen.HABITS -> onAppAction(AppAction.ChangeHabitsTab(appState.habitsTimeRangeTab, newTab))
+          MemosScreen.STATS -> onAppAction(AppAction.ChangePostsTab(appState.postsTimeRangeTab, newTab))
+          MemosScreen.FEED -> {}
+        }
       }
     }
   return ScaffoldCallbacks(
@@ -181,29 +189,9 @@ private fun rememberScaffoldCallbacks(
   )
 }
 
-private fun handleTabChange(
-  appState: VibitsAppUiState,
-  newTab: TimeRangeTab,
-  dependencies: AppDependencies,
-) {
-  when (appState.selectedScreen) {
-    MemosScreen.HABITS -> {
-      adjustDateForTabChange(appState, appState.habitsTimeRangeTab, newTab)
-      appState.habitsTimeRangeTab = newTab
-      dependencies.saveTimeRangeTab(TimeRangeScreen.HABITS, newTab)
-    }
-    MemosScreen.STATS -> {
-      adjustDateForTabChange(appState, appState.postsTimeRangeTab, newTab)
-      appState.postsTimeRangeTab = newTab
-      dependencies.saveTimeRangeTab(TimeRangeScreen.POSTS, newTab)
-    }
-    MemosScreen.FEED -> {}
-  }
-}
-
 @Composable
 private fun AppFab(
-  appState: VibitsAppUiState,
+  appState: AppState,
   todayData: TodayData,
   callbacks: ScaffoldCallbacks,
 ) {
@@ -229,6 +217,7 @@ private fun ScaffoldContent(
   padding: PaddingValues,
   features: AppFeatures,
   dependencies: AppDependencies,
+  appState: AppState,
   memosState: MemosState,
   habitsState: HabitsState,
   habitsTimeline: List<HabitsConfigEntry>,
@@ -239,15 +228,9 @@ private fun ScaffoldContent(
   currentTheme: AppTheme,
   feedListState: LazyListState,
 ) {
-  val appState = features.appState
-  val selectedTab =
-    when (appState.selectedScreen) {
-      MemosScreen.HABITS -> appState.habitsTimeRangeTab
-      MemosScreen.STATS -> appState.postsTimeRangeTab
-      MemosScreen.FEED -> appState.habitsTimeRangeTab
-    }
+  val selectedTab = appState.currentTimeRangeTab
   val currentRange = currentRangeForTab(selectedTab, today)
-  val activityRange = activityRangeForState(appState)
+  val activityRange = activityRangeForAppState(appState)
   val earliestDate = remember(memosState.memos) { EarliestMemoDateUseCase(memosState.memos, timeZone) }
   val minRange = minRangeForTab(selectedTab, earliestDate)
 
@@ -293,6 +276,7 @@ private fun ScaffoldContent(
       minRange = minRange,
       habitsState = habitsState,
       onHabitsAction = features.habits::send,
+      onAppAction = features.app::send,
       calculateSuccessRate = dependencies.calculateSuccessRate,
       buildActivityDataUseCase = dependencies.buildActivityData,
       cache = features.cache,
@@ -304,7 +288,7 @@ private fun ScaffoldContent(
 
 @Composable
 private fun rememberSuccessRateIfNeeded(
-  appState: VibitsAppUiState,
+  appState: AppState,
   habitsTimeline: List<HabitsConfigEntry>,
   memos: List<Memo>,
   activityRange: ActivityRange,

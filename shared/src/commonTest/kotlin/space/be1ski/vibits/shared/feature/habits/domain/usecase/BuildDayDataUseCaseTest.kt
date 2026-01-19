@@ -1,7 +1,7 @@
 package space.be1ski.vibits.shared.feature.habits.domain.usecase
 
 import kotlinx.datetime.LocalDate
-import space.be1ski.vibits.shared.core.ui.ActivityMode
+import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.shared.feature.habits.domain.model.DayBuildContext
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig

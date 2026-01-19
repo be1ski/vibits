@@ -5,8 +5,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import space.be1ski.vibits.shared.app.di.AppDependencies
+import space.be1ski.vibits.shared.app.di.createAppFeature
 import space.be1ski.vibits.shared.app.domain.model.AppDetails
-import space.be1ski.vibits.shared.app.view.model.VibitsAppUiState
+import space.be1ski.vibits.shared.app.presentation.AppAction
+import space.be1ski.vibits.shared.app.presentation.AppEffect
+import space.be1ski.vibits.shared.app.presentation.AppState
 import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.feature.habits.di.createHabitsFeature
@@ -25,10 +28,10 @@ import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffect
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsState
 
 internal class AppFeatures(
+  val app: Feature<AppAction, AppState, AppEffect>,
   val memos: Feature<MemosAction, MemosState, MemosEffect>,
   val habits: Feature<HabitsAction, HabitsState, HabitsEffect>,
   val settings: Feature<SettingsAction, SettingsState, SettingsEffect>,
-  val appState: VibitsAppUiState,
   val appDetails: AppDetails,
   val cache: ActivityWeekDataCache,
 )
@@ -40,13 +43,15 @@ internal fun rememberAppFeatures(dependencies: AppDependencies): AppFeatures {
   val appDetails = remember { dependencies.loadAppDetails() }
   val cache = remember { ActivityWeekDataCache() }
 
-  val appState =
+  val appFeature =
     remember {
-      VibitsAppUiState(
+      createAppFeature(
+        saveTimeRangeTab = dependencies.saveTimeRangeTab,
+        initialMode = initialMode,
         currentDate = currentLocalDate(),
-        initialHabitsTimeRangeTab = initialPrefs.habitsTimeRangeTab,
-        initialPostsTimeRangeTab = initialPrefs.postsTimeRangeTab,
-      ).also { it.appMode = initialMode }
+        initialHabitsTab = initialPrefs.habitsTimeRangeTab,
+        initialPostsTab = initialPrefs.postsTimeRangeTab,
+      )
     }
 
   val memosFeature =
@@ -76,17 +81,18 @@ internal fun rememberAppFeatures(dependencies: AppDependencies): AppFeatures {
 
   val scope = rememberCoroutineScope()
   LaunchedEffect(Unit) {
+    appFeature.launchIn(scope)
     memosFeature.launchIn(scope)
     habitsFeature.launchIn(scope)
     settingsFeature.launchIn(scope)
   }
 
-  return remember(memosFeature, habitsFeature, settingsFeature, appState, appDetails, cache) {
+  return remember(appFeature, memosFeature, habitsFeature, settingsFeature, appDetails, cache) {
     AppFeatures(
+      app = appFeature,
       memos = memosFeature,
       habits = habitsFeature,
       settings = settingsFeature,
-      appState = appState,
       appDetails = appDetails,
       cache = cache,
     )
