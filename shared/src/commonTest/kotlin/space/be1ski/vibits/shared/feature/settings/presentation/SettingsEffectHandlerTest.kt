@@ -21,7 +21,7 @@ import kotlin.test.assertTrue
 
 class SettingsEffectHandlerTest {
   @Test
-  fun `ValidateCredentials emits ValidationSucceeded on success`() =
+  fun `when ValidateCredentials succeeds then emits ValidationSucceeded`() =
     runTest {
       val handler = createHandler()
 
@@ -38,7 +38,7 @@ class SettingsEffectHandlerTest {
     }
 
   @Test
-  fun `ValidateCredentials emits ValidationFailed on failure`() =
+  fun `when ValidateCredentials fails then emits ValidationFailed`() =
     runTest {
       val handler = createHandler(connectionResult = Result.failure(Exception("Connection failed")))
 
@@ -56,7 +56,7 @@ class SettingsEffectHandlerTest {
     }
 
   @Test
-  fun `SwitchMode saves mode and emits ModeSwitched`() =
+  fun `when SwitchMode then saves mode and emits ModeSwitched`() =
     runTest {
       val appModeRepo = FakeAppModeRepository(initial = AppMode.ONLINE)
       val handler = createHandler(appModeRepository = appModeRepo)
@@ -68,7 +68,7 @@ class SettingsEffectHandlerTest {
     }
 
   @Test
-  fun `SaveCredentials saves to repository`() =
+  fun `when SaveCredentials then saves to repository`() =
     runTest {
       val credentialsRepo = FakeCredentialsRepository()
       val handler = createHandler(credentialsRepository = credentialsRepo)
@@ -82,7 +82,7 @@ class SettingsEffectHandlerTest {
     }
 
   @Test
-  fun `ResetApp resets and emits ResetCompleted`() =
+  fun `when ResetApp then resets and emits ResetCompleted`() =
     runTest {
       val appModeRepo = FakeAppModeRepository(initial = AppMode.ONLINE)
       val handler = createHandler(appModeRepository = appModeRepo)
@@ -94,7 +94,7 @@ class SettingsEffectHandlerTest {
     }
 
   @Test
-  fun `SaveLanguage calls saveLanguage function`() =
+  fun `when SaveLanguage then saves language to repository`() =
     runTest {
       val prefsRepo = FakePreferencesRepository()
       val handler = createHandler(preferencesRepository = prefsRepo)
@@ -105,7 +105,7 @@ class SettingsEffectHandlerTest {
     }
 
   @Test
-  fun `SaveTheme calls saveTheme function`() =
+  fun `when SaveTheme then saves theme to repository`() =
     runTest {
       val prefsRepo = FakePreferencesRepository()
       val handler = createHandler(preferencesRepository = prefsRepo)
@@ -116,7 +116,7 @@ class SettingsEffectHandlerTest {
     }
 
   @Test
-  fun `Notification effects return empty flow`() =
+  fun `when Notification effect then returns empty flow`() =
     runTest {
       val handler = createHandler()
 
