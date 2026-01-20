@@ -7,10 +7,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Dp
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
@@ -36,6 +39,8 @@ data class ActivityWeekDataState(
  * Clears automatically when memos list changes (by reference).
  * Exposes [version] to trigger LaunchedEffect restart when memos reference changes.
  */
+@Inject
+@SingleIn(AppScope::class)
 class ActivityWeekDataCache {
   private var lastMemos: List<Memo>? = null
   private val cache = mutableMapOf<Pair<ActivityRange, ActivityMode>, ActivityWeekData>()

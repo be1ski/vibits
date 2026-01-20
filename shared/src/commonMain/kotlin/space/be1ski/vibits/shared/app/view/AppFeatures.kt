@@ -16,7 +16,6 @@ import space.be1ski.vibits.shared.feature.habits.di.createHabitsFeature
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsEffect
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
-import space.be1ski.vibits.shared.feature.habits.view.components.ActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.memos.di.createMemosFeature
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosEffect
@@ -32,7 +31,6 @@ internal class AppFeatures(
   val memos: Feature<MemosAction, MemosState, MemosEffect>,
   val habits: Feature<HabitsAction, HabitsState, HabitsEffect>,
   val settings: Feature<SettingsAction, SettingsState, SettingsEffect>,
-  val cache: ActivityWeekDataCache,
 )
 
 @Composable
@@ -40,7 +38,6 @@ internal fun rememberAppFeatures(dependencies: AppDependencies): AppFeatures {
   val initialPrefs = remember { dependencies.loadPreferences() }
   val initialMode = remember { dependencies.loadAppMode() }
   val appDetails = remember { dependencies.loadAppDetails() }
-  val cache = remember { ActivityWeekDataCache() }
 
   val appFeature =
     remember {
@@ -86,13 +83,12 @@ internal fun rememberAppFeatures(dependencies: AppDependencies): AppFeatures {
     settingsFeature.launchIn(scope)
   }
 
-  return remember(appFeature, memosFeature, habitsFeature, settingsFeature, cache) {
+  return remember(appFeature, memosFeature, habitsFeature, settingsFeature) {
     AppFeatures(
       app = appFeature,
       memos = memosFeature,
       habits = habitsFeature,
       settings = settingsFeature,
-      cache = cache,
     )
   }
 }

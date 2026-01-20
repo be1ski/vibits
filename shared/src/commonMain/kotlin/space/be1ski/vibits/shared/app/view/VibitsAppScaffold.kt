@@ -294,7 +294,6 @@ private fun ScaffoldContent(
           memosState.memos,
           activityRange,
           dependencies,
-          features.cache,
         )
       TimeRangeControls(
         selectedTab = selectedTab,
@@ -318,7 +317,7 @@ private fun ScaffoldContent(
       onAppAction = features.app::send,
       calculateSuccessRate = dependencies.calculateSuccessRate,
       buildActivityDataUseCase = dependencies.buildActivityData,
-      cache = features.cache,
+      cache = dependencies.activityWeekDataCache,
       dispatchMemos = features.memos::send,
       feedListState = feedListState,
     )
@@ -332,13 +331,18 @@ private fun rememberSuccessRateIfNeeded(
   memos: List<Memo>,
   activityRange: ActivityRange,
   dependencies: AppDependencies,
-  cache: space.be1ski.vibits.shared.feature.habits.view.components.ActivityWeekDataCache,
 ): Float? {
   val isHabitsScreen = appState.selectedScreen == Screen.HABITS
   val hasHabits = remember(habitsTimeline) { habitsTimeline.lastOrNull()?.habits?.isNotEmpty() == true }
   val shouldCalculate = isHabitsScreen && hasHabits
   return if (shouldCalculate) {
-    rememberSuccessRate(memos, activityRange, dependencies.calculateSuccessRate, dependencies.buildActivityData, cache)
+    rememberSuccessRate(
+      memos,
+      activityRange,
+      dependencies.calculateSuccessRate,
+      dependencies.buildActivityData,
+      dependencies.activityWeekDataCache,
+    )
   } else {
     null
   }
