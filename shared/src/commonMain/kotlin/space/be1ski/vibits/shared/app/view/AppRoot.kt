@@ -34,7 +34,11 @@ fun AppRoot(dependencies: AppDependencies) {
   var appLanguage by remember { mutableStateOf(initialPrefs.language) }
   var featuresVersion by remember { mutableIntStateOf(0) }
   val darkTheme = resolveDarkTheme(appTheme)
-  val modeSelectionFeature = rememberModeSelectionFeature(dependencies) { appMode = it }
+  val modeSelectionFeature =
+    rememberModeSelectionFeature(dependencies) {
+      featuresVersion++
+      appMode = it
+    }
   val features = rememberAppFeatures(featuresVersion)
 
   key(appLanguage) {
