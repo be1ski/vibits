@@ -64,12 +64,35 @@ class CalculateActivityRangeDeltaUseCaseTest {
   }
 
   @Test
-  fun `when range types differ then returns zero`() {
+  fun `when week compared with non-week then returns zero`() {
     val week = ActivityRange.Week(startDate = LocalDate(2024, 1, 8))
     val month = ActivityRange.Month(year = 2024, month = Month.JANUARY)
 
     assertEquals(0, CalculateActivityRangeDeltaUseCase(week, month))
-    assertEquals(0, CalculateActivityRangeDeltaUseCase(month, week))
+  }
+
+  @Test
+  fun `when month compared with non-month then returns zero`() {
+    val month = ActivityRange.Month(year = 2024, month = Month.JANUARY)
+    val quarter = ActivityRange.Quarter(year = 2024, index = 1)
+
+    assertEquals(0, CalculateActivityRangeDeltaUseCase(month, quarter))
+  }
+
+  @Test
+  fun `when quarter compared with non-quarter then returns zero`() {
+    val quarter = ActivityRange.Quarter(year = 2024, index = 1)
+    val year = ActivityRange.Year(year = 2024)
+
+    assertEquals(0, CalculateActivityRangeDeltaUseCase(quarter, year))
+  }
+
+  @Test
+  fun `when year compared with non-year then returns zero`() {
+    val year = ActivityRange.Year(year = 2024)
+    val week = ActivityRange.Week(startDate = LocalDate(2024, 1, 8))
+
+    assertEquals(0, CalculateActivityRangeDeltaUseCase(year, week))
   }
 
   @Test
