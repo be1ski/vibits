@@ -12,7 +12,7 @@ class CountDailyPostsUseCaseTest {
   private val timeZone = TimeZone.UTC
 
   @Test
-  fun `counts posts per day within bounds`() {
+  fun `when posts are within bounds then counts them per day`() {
     val memos =
       listOf(
         createMemo(KtInstant.parse("2024-01-15T10:00:00Z")),
@@ -32,7 +32,7 @@ class CountDailyPostsUseCaseTest {
   }
 
   @Test
-  fun `excludes posts before start date`() {
+  fun `when post is before start date then excludes it`() {
     val memos =
       listOf(
         createMemo(KtInstant.parse("2024-01-14T10:00:00Z")),
@@ -51,7 +51,7 @@ class CountDailyPostsUseCaseTest {
   }
 
   @Test
-  fun `excludes posts after end date`() {
+  fun `when post is after end date then excludes it`() {
     val memos =
       listOf(
         createMemo(KtInstant.parse("2024-01-15T10:00:00Z")),
@@ -70,7 +70,7 @@ class CountDailyPostsUseCaseTest {
   }
 
   @Test
-  fun `returns empty map for empty memos`() {
+  fun `when memos list is empty then returns empty map`() {
     val bounds =
       RangeBounds(
         start = LocalDate(2024, 1, 15),
@@ -83,7 +83,7 @@ class CountDailyPostsUseCaseTest {
   }
 
   @Test
-  fun `includes posts on boundary dates`() {
+  fun `when posts are on boundary dates then includes them`() {
     val memos =
       listOf(
         createMemo(KtInstant.parse("2024-01-15T00:00:00Z")),

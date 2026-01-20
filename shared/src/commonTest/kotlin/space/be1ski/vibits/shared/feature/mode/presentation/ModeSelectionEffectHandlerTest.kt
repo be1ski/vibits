@@ -14,7 +14,7 @@ import kotlin.test.assertTrue
 
 class ModeSelectionEffectHandlerTest {
   @Test
-  fun `ValidateCredentials emits ValidationSucceeded on success`() =
+  fun `when ValidateCredentials effect succeeds then emits ValidationSucceeded`() =
     runTest {
       val handler = createHandler()
 
@@ -27,7 +27,7 @@ class ModeSelectionEffectHandlerTest {
     }
 
   @Test
-  fun `ValidateCredentials emits ValidationFailed on failure`() =
+  fun `when ValidateCredentials effect fails then emits ValidationFailed`() =
     runTest {
       val handler = createHandler(connectionResult = Result.failure(Exception("Connection failed")))
 
@@ -40,7 +40,7 @@ class ModeSelectionEffectHandlerTest {
     }
 
   @Test
-  fun `SaveCredentials calls saveCredentials function`() =
+  fun `when SaveCredentials effect then saves to repository`() =
     runTest {
       val credentialsRepo = FakeCredentialsRepository()
       val handler = createHandler(credentialsRepository = credentialsRepo)
@@ -54,7 +54,7 @@ class ModeSelectionEffectHandlerTest {
     }
 
   @Test
-  fun `SaveMode calls saveAppMode function`() =
+  fun `when SaveMode effect then saves mode to repository`() =
     runTest {
       val appModeRepo = FakeAppModeRepository()
       val handler = createHandler(appModeRepository = appModeRepo)
@@ -65,7 +65,7 @@ class ModeSelectionEffectHandlerTest {
     }
 
   @Test
-  fun `NotifyModeSelected returns empty flow`() =
+  fun `when NotifyModeSelected effect then returns empty flow`() =
     runTest {
       val handler = createHandler()
 

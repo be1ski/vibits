@@ -55,7 +55,7 @@ import space.be1ski.vibits.shared.action_show_memos
 import space.be1ski.vibits.shared.action_track
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
-import space.be1ski.vibits.shared.core.platform.date.LocalDateFormatter
+import space.be1ski.vibits.shared.core.platform.date.DateFormatter
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
@@ -236,6 +236,7 @@ private fun WeeklyPostsHeatmap(
   weekStart: kotlinx.datetime.LocalDate,
   timeZone: TimeZone,
   compactHeight: Boolean,
+  formatter: DateFormatter,
 ) {
   val weekEnd = weekStart.plus(DatePeriod(days = DAYS_IN_WEEK - 1))
   val countMatrix = rememberPostCountMatrix(memos, weekStart, weekEnd, timeZone)
@@ -263,7 +264,7 @@ private fun WeeklyPostsHeatmap(
     val cellSize = layout.columnSize
 
     Column(verticalArrangement = Arrangement.spacedBy(spacing)) {
-      HeatmapDayHeaders(weekStart, cellSize, labelWidth, spacing)
+      HeatmapDayHeaders(weekStart, cellSize, labelWidth, spacing, formatter)
       HeatmapTimeBlocks(countMatrix, maxCount, timeBlockLabels, cellSize, labelWidth, spacing)
       HeatmapDayNumbers(weekStart, cellSize, labelWidth, spacing)
     }
@@ -298,8 +299,8 @@ private fun HeatmapDayHeaders(
   cellSize: androidx.compose.ui.unit.Dp,
   labelWidth: androidx.compose.ui.unit.Dp,
   spacing: androidx.compose.ui.unit.Dp,
+  formatter: DateFormatter,
 ) {
-  val formatter = LocalDateFormatter.current
   Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
     Spacer(modifier = Modifier.width(labelWidth))
     for (dayOffset in 0 until DAYS_IN_WEEK) {
@@ -406,7 +407,7 @@ internal fun StatsCollapsiblePosts(
             .verticalScroll(rememberScrollState()),
       ) {
         posts.forEachIndexed { index, memo ->
-          CompactPostRow(memo = memo, timeZone = derived.timeZone)
+          CompactPostRow(memo = memo, timeZone = derived.timeZone, formatter = derived.dateFormatter)
           if (index < posts.lastIndex) {
             HorizontalDivider(
               modifier = Modifier.padding(vertical = Indent.x2s),
@@ -426,8 +427,8 @@ private const val DIVIDER_ALPHA = 0.5f
 private fun CompactPostRow(
   memo: Memo,
   timeZone: TimeZone,
+  formatter: DateFormatter,
 ) {
-  val formatter = LocalDateFormatter.current
   val instant = memo.createTime ?: memo.updateTime
   val dateLabel =
     instant?.let {
@@ -556,6 +557,7 @@ internal fun StatsMainChart(
       weekStart = state.range.startDate,
       timeZone = derived.timeZone,
       compactHeight = derived.useCompactHeight,
+      formatter = derived.dateFormatter,
     )
     return
   }
@@ -605,6 +607,7 @@ internal fun StatsMainChart(
       habits = derived.currentHabitsConfig,
       compactHeight = derived.useCompactHeight,
       demoMode = state.demoMode,
+      formatter = derived.dateFormatter,
       onHabitClick = onSingleHabitToggle,
     )
   } else {
@@ -628,6 +631,7 @@ internal fun StatsMainChart(
           today = derived.today,
           demoMode = state.demoMode,
         ),
+      dateFormatter = derived.dateFormatter,
       onDaySelected = onDaySelected,
       onClearSelection = onClearSelection,
       onEditRequested = onEditRequested,
@@ -718,6 +722,7 @@ internal fun StatsHabitSections(
           today = derived.today,
           habitColor = habit.color,
         ),
+      dateFormatter = derived.dateFormatter,
       onDaySelected = onDaySelected,
       onClearSelection = onClearSelection,
     )
@@ -727,6 +732,7 @@ internal fun StatsHabitSections(
 @Composable
 private fun HabitActivitySection(
   state: HabitActivitySectionState,
+  dateFormatter: DateFormatter,
   onDaySelected: (ContributionDay) -> Unit,
   onClearSelection: () -> Unit,
 ) {
@@ -762,25 +768,26 @@ private fun HabitActivitySection(
           habitColor = state.habitColor,
           demoMode = state.demoMode,
         ),
+      dateFormatter = dateFormatter,
       onDaySelected = onDaySelected,
       onClearSelection = onClearSelection,
     )
   }
 }
 
-@Suppress("LongMethod", "LongParameterList")
+@Suppress("LongMethod")
 @Composable
 private fun LastSevenDaysMatrix(
   days: List<ContributionDay>,
   habits: List<HabitConfig>,
   compactHeight: Boolean,
   demoMode: Boolean,
+  formatter: DateFormatter,
   onHabitClick: (day: ContributionDay, habitTag: String, habitLabel: String) -> Unit = { _, _, _ -> },
 ) {
   if (days.isEmpty() || habits.isEmpty()) {
     return
   }
-  val formatter = LocalDateFormatter.current
   BoxWithConstraints {
     val labelWidth = HABIT_LABEL_WIDTH
     val spacing = ChartDimens.spacing(compactHeight)

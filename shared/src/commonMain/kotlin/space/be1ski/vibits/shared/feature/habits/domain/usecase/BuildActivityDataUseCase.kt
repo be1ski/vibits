@@ -12,7 +12,6 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.shared.feature.habits.domain.model.DayBuildContext
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
-import space.be1ski.vibits.shared.feature.habits.domain.model.rangeBounds
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 private const val DAYS_IN_WEEK = 7
@@ -37,7 +36,7 @@ class BuildActivityDataUseCase(
     mode: ActivityMode,
     today: LocalDate,
   ): ActivityWeekData {
-    val bounds = rangeBounds(range)
+    val bounds = GetRangeBoundsUseCase(range)
     val effectiveConfigTimeline = if (mode == ActivityMode.HABITS) configTimeline else emptyList()
     val counts =
       if (mode == ActivityMode.POSTS) CountDailyPostsUseCase(memos, timeZone, bounds) else emptyMap()

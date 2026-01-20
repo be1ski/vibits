@@ -4,6 +4,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
+import space.be1ski.vibits.shared.core.platform.date.DateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
@@ -39,6 +40,7 @@ internal data class HabitActivitySectionState(
   val habitColor: Long? = null,
 )
 
+@Suppress("LongParameterList")
 internal data class StatsScreenDerivedState(
   val state: StatsScreenState,
   val habitsState: HabitsState,
@@ -58,6 +60,7 @@ internal data class StatsScreenDerivedState(
   val timeZone: TimeZone,
   val successRateData: SuccessRateData?,
   val periodPosts: List<Memo>,
+  val dateFormatter: DateFormatter,
   /** Date when habits were first configured (null if no config). */
   val configStartDate: LocalDate? = null,
 )

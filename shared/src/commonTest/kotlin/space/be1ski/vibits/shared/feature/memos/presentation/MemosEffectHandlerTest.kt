@@ -19,7 +19,7 @@ import kotlin.test.assertTrue
 
 class MemosEffectHandlerTest {
   @Test
-  fun `LoadCredentials emits CredentialsLoaded`() =
+  fun `when LoadCredentials effect then emits CredentialsLoaded`() =
     runTest {
       val credentialsRepo =
         FakeCredentialsRepository(
@@ -36,7 +36,7 @@ class MemosEffectHandlerTest {
     }
 
   @Test
-  fun `SaveCredentials saves to repository`() =
+  fun `when SaveCredentials effect then saves to repository`() =
     runTest {
       val credentialsRepo = FakeCredentialsRepository()
       val handler = createHandler(credentialsRepository = credentialsRepo)
@@ -50,7 +50,7 @@ class MemosEffectHandlerTest {
     }
 
   @Test
-  fun `LoadCachedMemos emits CachedMemosLoaded on success`() =
+  fun `when LoadCachedMemos effect succeeds then emits CachedMemosLoaded`() =
     runTest {
       val expectedMemos = listOf(Memo(name = "memos/1", content = "cached"))
       val memosRepo =
@@ -65,7 +65,7 @@ class MemosEffectHandlerTest {
     }
 
   @Test
-  fun `LoadRemoteMemos emits MemosLoaded on success`() =
+  fun `when LoadRemoteMemos effect succeeds then emits MemosLoaded`() =
     runTest {
       val expectedMemos = listOf(Memo(name = "memos/1", content = "remote"))
       val memosRepo =
@@ -80,7 +80,7 @@ class MemosEffectHandlerTest {
     }
 
   @Test
-  fun `LoadRemoteMemos emits OperationFailed on failure`() =
+  fun `when LoadRemoteMemos effect fails then emits OperationFailed`() =
     runTest {
       val memosRepo =
         FakeMemosRepository().apply {
@@ -96,7 +96,7 @@ class MemosEffectHandlerTest {
     }
 
   @Test
-  fun `CreateMemo emits MemoCreated on success`() =
+  fun `when CreateMemo effect succeeds then emits MemoCreated`() =
     runTest {
       val expectedMemo = Memo(name = "memos/new", content = "new content")
       val memosRepo =
@@ -111,7 +111,7 @@ class MemosEffectHandlerTest {
     }
 
   @Test
-  fun `CreateMemo emits OperationFailed on failure`() =
+  fun `when CreateMemo effect fails then emits OperationFailed`() =
     runTest {
       val memosRepo =
         FakeMemosRepository().apply {
@@ -126,7 +126,7 @@ class MemosEffectHandlerTest {
     }
 
   @Test
-  fun `UpdateMemo emits MemoUpdated on success`() =
+  fun `when UpdateMemo effect succeeds then emits MemoUpdated`() =
     runTest {
       val expectedMemo = Memo(name = "memos/1", content = "updated")
       val memosRepo =
@@ -144,7 +144,7 @@ class MemosEffectHandlerTest {
     }
 
   @Test
-  fun `UpdateMemo emits OperationFailed on failure`() =
+  fun `when UpdateMemo effect fails then emits OperationFailed`() =
     runTest {
       val memosRepo =
         FakeMemosRepository().apply {
@@ -161,7 +161,7 @@ class MemosEffectHandlerTest {
     }
 
   @Test
-  fun `DeleteMemo emits MemoDeleted on success`() =
+  fun `when DeleteMemo effect succeeds then emits MemoDeleted`() =
     runTest {
       val memosRepo =
         FakeMemosRepository().apply {
@@ -175,7 +175,7 @@ class MemosEffectHandlerTest {
     }
 
   @Test
-  fun `DeleteMemo emits OperationFailed on failure`() =
+  fun `when DeleteMemo effect fails then emits OperationFailed`() =
     runTest {
       val memosRepo =
         FakeMemosRepository().apply {

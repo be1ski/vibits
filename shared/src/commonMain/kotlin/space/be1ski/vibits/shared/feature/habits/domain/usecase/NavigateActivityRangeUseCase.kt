@@ -2,21 +2,16 @@ package space.be1ski.vibits.shared.feature.habits.domain.usecase
 
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.Month
 import kotlinx.datetime.plus
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 
 private const val DAYS_IN_WEEK = 7
 private const val QUARTERS_IN_YEAR = 4
-private const val MONTHS_IN_YEAR = 12
 
 /**
- * Handles navigation and comparison of activity ranges.
+ * Shifts an activity range by delta units (positive = forward, negative = backward).
  */
-class NavigateActivityRangeUseCase {
-  /**
-   * Shifts an activity range by [delta] units (positive = forward, negative = backward).
-   */
+object NavigateActivityRangeUseCase {
   operator fun invoke(
     range: ActivityRange,
     delta: Int,
@@ -40,77 +35,10 @@ class NavigateActivityRangeUseCase {
       is ActivityRange.Year -> ActivityRange.Year(range.year + delta)
     }
 
-  /**
-   * Checks if [range] is before [other].
-   */
-  fun isBefore(
-    range: ActivityRange,
-    other: ActivityRange,
-  ): Boolean =
-    when (range) {
-      is ActivityRange.Week ->
-        other is ActivityRange.Week &&
-          range.startDate < other.startDate
-      is ActivityRange.Month ->
-        other is ActivityRange.Month &&
-          compareYearMonth(range.year, range.month, other.year, other.month) < 0
-      is ActivityRange.Quarter ->
-        other is ActivityRange.Quarter &&
-          compareYearQuarter(range.year, range.index, other.year, other.index) < 0
-      is ActivityRange.Year -> other is ActivityRange.Year && range.year < other.year
-    }
-
-  /**
-   * Calculates the number of periods between [from] and [to].
-   * Returns positive if [to] is after [from], negative otherwise.
-   */
-  fun calculateDelta(
-    from: ActivityRange,
-    to: ActivityRange,
-  ): Int =
-    when (from) {
-      is ActivityRange.Week ->
-        if (to is ActivityRange.Week) {
-          (to.startDate.toEpochDays() - from.startDate.toEpochDays()).toInt() / DAYS_IN_WEEK
-        } else {
-          0
-        }
-      is ActivityRange.Month ->
-        if (to is ActivityRange.Month) {
-          (to.year - from.year) * MONTHS_IN_YEAR + (to.month.ordinal - from.month.ordinal)
-        } else {
-          0
-        }
-      is ActivityRange.Quarter ->
-        if (to is ActivityRange.Quarter) {
-          (to.year - from.year) * QUARTERS_IN_YEAR + (to.index - from.index)
-        } else {
-          0
-        }
-      is ActivityRange.Year ->
-        if (to is ActivityRange.Year) {
-          to.year - from.year
-        } else {
-          0
-        }
-    }
-
-  private fun compareYearMonth(
-    year: Int,
-    month: Month,
-    otherYear: Int,
-    otherMonth: Month,
-  ): Int = if (year != otherYear) year - otherYear else month.ordinal - otherMonth.ordinal
-
-  private fun compareYearQuarter(
-    year: Int,
-    quarter: Int,
-    otherYear: Int,
-    otherQuarter: Int,
-  ): Int = if (year != otherYear) year - otherYear else quarter - otherQuarter
-
-  @Suppress("SameParameterValue") // Standard math utility, kept generic for clarity
-  private fun floorDiv(value: Int, divisor: Int): Int {
+  private fun floorDiv(
+    value: Int,
+    divisor: Int,
+  ): Int {
     var result = value / divisor
     if (value xor divisor < 0 && value % divisor != 0) {
       result -= 1
@@ -118,8 +46,10 @@ class NavigateActivityRangeUseCase {
     return result
   }
 
-  @Suppress("SameParameterValue") // Standard math utility, kept generic for clarity
-  private fun floorMod(value: Int, divisor: Int): Int {
+  private fun floorMod(
+    value: Int,
+    divisor: Int,
+  ): Int {
     val mod = value % divisor
     return if (mod < 0) mod + divisor else mod
   }
