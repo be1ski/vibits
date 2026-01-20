@@ -31,6 +31,7 @@ import space.be1ski.vibits.shared.app.di.AppDependencies
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.app.presentation.AppAction
+import space.be1ski.vibits.shared.app.presentation.AppFeatures
 import space.be1ski.vibits.shared.app.presentation.AppState
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.Indent
