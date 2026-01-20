@@ -4,20 +4,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import space.be1ski.vibits.shared.app.di.AppDependencies
+import space.be1ski.vibits.shared.app.presentation.AppFeatures
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.view.SettingsDialog
 
 @Composable
-fun VibitsApp(
+internal fun VibitsApp(
   dependencies: AppDependencies,
+  features: AppFeatures,
   currentTheme: AppTheme,
   currentLanguage: AppLanguage,
   onResetApp: () -> Unit = {},
   onThemeChanged: (AppTheme) -> Unit = {},
   onLanguageChanged: (AppLanguage) -> Unit = {},
 ) {
-  val features = rememberAppFeatures(dependencies)
   val appState by features.app.state.collectAsState()
   val memosState by features.memos.state.collectAsState()
   val habitsState by features.habits.state.collectAsState()

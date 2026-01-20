@@ -17,7 +17,7 @@ class BuildActivityDataUseCaseTest {
     )
 
   @Test
-  fun `buildWeekData returns weeks for given range`() {
+  fun `when range is week then buildWeekData returns 7 days`() {
     val range = ActivityRange.Week(startDate = LocalDate(2024, 1, 15))
     val today = LocalDate(2024, 1, 20)
     val timeZone = TimeZone.UTC
@@ -43,7 +43,7 @@ class BuildActivityDataUseCaseTest {
   }
 
   @Test
-  fun `buildWeekData calculates maxDaily correctly`() {
+  fun `when memos exist then maxDaily is calculated correctly`() {
     val range = ActivityRange.Week(startDate = LocalDate(2024, 1, 15))
     val today = LocalDate(2024, 1, 20)
     val timeZone = TimeZone.UTC
@@ -70,7 +70,7 @@ class BuildActivityDataUseCaseTest {
   }
 
   @Test
-  fun `buildWeekData returns empty weeks when bounds are invalid`() {
+  fun `when mode is HABITS and no config then returns empty weeks`() {
     val range = ActivityRange.Week(startDate = LocalDate(2024, 1, 15))
     val today = LocalDate(2024, 1, 20)
     val timeZone = TimeZone.UTC

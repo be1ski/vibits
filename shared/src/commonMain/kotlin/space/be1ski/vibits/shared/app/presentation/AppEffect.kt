@@ -5,7 +5,7 @@ import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 /**
  * Side effects for the App coordinator feature.
  */
-internal sealed interface AppEffect {
+sealed interface AppEffect {
   data class SaveHabitsTimeRangeTab(
     val tab: TimeRangeTab,
   ) : AppEffect

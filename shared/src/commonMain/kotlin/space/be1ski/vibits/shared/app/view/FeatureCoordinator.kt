@@ -3,6 +3,7 @@ package space.be1ski.vibits.shared.app.view
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import space.be1ski.vibits.shared.app.presentation.AppAction
+import space.be1ski.vibits.shared.app.presentation.AppFeatures
 import space.be1ski.vibits.shared.app.presentation.AppState
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
@@ -39,9 +40,10 @@ internal fun FeatureCoordinator(
     }
   }
 
-  // Auto-open settings when credentials required
-  LaunchedEffect(memosState.credentialsMode, settingsState.isOpen) {
-    if (memosState.credentialsMode && !settingsState.isOpen) {
+  // Auto-open settings when credentials required (skip for DEMO/OFFLINE modes)
+  LaunchedEffect(memosState.credentialsMode, settingsState.isOpen, appState.appMode) {
+    val skipCredentialsCheck = appState.appMode == AppMode.DEMO || appState.appMode == AppMode.OFFLINE
+    if (!skipCredentialsCheck && memosState.credentialsMode && !settingsState.isOpen) {
       features.settings.send(
         SettingsAction.Open(
           baseUrl = memosState.baseUrl,

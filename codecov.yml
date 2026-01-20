@@ -25,6 +25,7 @@ ignore:
   - "**/presentation/*State.kt"
   - "**/presentation/*Action.kt"
   - "**/presentation/*Effect.kt"
+  - "**/presentation/*Features.kt"
 
 comment:
   layout: "reach, diff, flags, files"

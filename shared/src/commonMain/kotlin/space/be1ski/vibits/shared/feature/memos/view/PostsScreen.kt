@@ -3,6 +3,7 @@ package space.be1ski.vibits.shared.feature.memos.view
 import androidx.compose.runtime.Composable
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
+import space.be1ski.vibits.shared.core.platform.date.DateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.habits.view.StatsScreen
@@ -21,6 +22,7 @@ fun PostsScreen(
   calculateSuccessRate: CalculateSuccessRateUseCase,
   buildActivityDataUseCase: BuildActivityDataUseCase,
   cache: ActivityWeekDataCache,
+  dateFormatter: DateFormatter,
   postsListExpanded: Boolean = false,
   onPostsListExpandedChange: (Boolean) -> Unit = {},
 ) {
@@ -38,6 +40,7 @@ fun PostsScreen(
     calculateSuccessRate = calculateSuccessRate,
     buildActivityDataUseCase = buildActivityDataUseCase,
     cache = cache,
+    dateFormatter = dateFormatter,
     onPostsListExpandedChange = onPostsListExpandedChange,
   )
 }

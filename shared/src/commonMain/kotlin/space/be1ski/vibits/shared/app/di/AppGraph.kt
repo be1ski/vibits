@@ -5,6 +5,9 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.createGraph
 import io.ktor.client.HttpClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import space.be1ski.vibits.shared.core.platform.app.AppDetailsProvider
 import space.be1ski.vibits.shared.core.platform.export.FileExporter
 import space.be1ski.vibits.shared.core.platform.export.createFileExporter
@@ -23,13 +26,22 @@ import space.be1ski.vibits.shared.feature.settings.data.createPreferencesStore
 @DependencyGraph(AppScope::class)
 abstract class AppGraph {
   abstract val appDependencies: AppDependencies
+  abstract val appFeaturesFactory: AppFeaturesFactory
+  abstract val appCoroutineScope: CoroutineScope
 
   companion object {
     private var instance: AppGraph? = null
 
-    fun createAppDependencies(): AppDependencies {
-      val graph = instance ?: createGraph<AppGraph>().also { instance = it }
-      return graph.appDependencies
+    private fun getGraph(): AppGraph = instance ?: createGraph<AppGraph>().also { instance = it }
+
+    fun createAppDependencies(): AppDependencies = getGraph().appDependencies
+
+    fun getFeaturesFactory(): AppFeaturesFactory = getGraph().appFeaturesFactory
+
+    fun getAppScope(): CoroutineScope = getGraph().appCoroutineScope
+
+    fun resetGraph() {
+      instance = null
     }
   }
 
@@ -68,4 +80,8 @@ abstract class AppGraph {
   @Provides
   @SingleIn(AppScope::class)
   fun fileExporter(): FileExporter = createFileExporter()
+
+  @Provides
+  @SingleIn(AppScope::class)
+  fun appCoroutineScope(): CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 }
