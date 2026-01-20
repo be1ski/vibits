@@ -30,7 +30,7 @@ import space.be1ski.vibits.shared.action_previous
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.SuccessRateLevel
 import space.be1ski.vibits.shared.app.domain.usecase.GetSuccessRateLevelUseCase
-import space.be1ski.vibits.shared.core.platform.date.LocalDateFormatter
+import space.be1ski.vibits.shared.core.platform.date.DateFormatter
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
@@ -127,10 +127,11 @@ private fun TimeRangeNavigator(
   }
 }
 
-@Composable
-internal fun formatRangeLabel(range: ActivityRange): String {
-  val formatter = LocalDateFormatter.current
-  return when (range) {
+internal fun formatRangeLabel(
+  range: ActivityRange,
+  formatter: DateFormatter,
+): String =
+  when (range) {
     is ActivityRange.Week -> {
       val endDate = range.startDate.plus(DatePeriod(days = WEEK_END_OFFSET))
       val currentYear = currentLocalDate().year
@@ -140,7 +141,6 @@ internal fun formatRangeLabel(range: ActivityRange): String {
     is ActivityRange.Quarter -> "Q${range.index} ${range.year}"
     is ActivityRange.Year -> range.year.toString()
   }
-}
 
 @Composable
 private fun SuccessRateBadge(rate: Float) {

@@ -8,7 +8,7 @@ import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 /**
  * State for the App coordinator feature.
  */
-internal data class AppState(
+data class AppState(
   val appMode: AppMode = AppMode.NOT_SELECTED,
   val selectedScreen: Screen = Screen.HABITS,
   val habitsTimeRangeTab: TimeRangeTab = TimeRangeTab.WEEKS,

@@ -1,8 +1,6 @@
 package space.be1ski.vibits.shared.core.platform.date
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
@@ -30,110 +28,36 @@ import space.be1ski.vibits.shared.month_nov
 import space.be1ski.vibits.shared.month_oct
 import space.be1ski.vibits.shared.month_sep
 
-/**
- * CompositionLocal for accessing DateFormatter with localized strings.
- */
-val LocalDateFormatter = compositionLocalOf { DateFormatter() }
+private const val MONTH_FALLBACK_LENGTH = 3
+private const val DAY_FALLBACK_LENGTH = 2
 
 /**
- * Provides DateFormatter with localized strings to the composition.
- */
-@Composable
-fun ProvideDateFormatter(content: @Composable () -> Unit) {
-  val formatter = rememberDateFormatter()
-  CompositionLocalProvider(LocalDateFormatter provides formatter) {
-    content()
-  }
-}
-
-@Composable
-private fun rememberDateFormatter(): DateFormatter {
-  val monthsShort =
-    listOf(
-      stringResource(Res.string.month_jan),
-      stringResource(Res.string.month_feb),
-      stringResource(Res.string.month_mar),
-      stringResource(Res.string.month_apr),
-      stringResource(Res.string.month_may),
-      stringResource(Res.string.month_jun),
-      stringResource(Res.string.month_jul),
-      stringResource(Res.string.month_aug),
-      stringResource(Res.string.month_sep),
-      stringResource(Res.string.month_oct),
-      stringResource(Res.string.month_nov),
-      stringResource(Res.string.month_dec),
-    )
-  val daysOfWeek =
-    listOf(
-      stringResource(Res.string.day_mon),
-      stringResource(Res.string.day_tue),
-      stringResource(Res.string.day_wed),
-      stringResource(Res.string.day_thu),
-      stringResource(Res.string.day_fri),
-      stringResource(Res.string.day_sat),
-      stringResource(Res.string.day_sun),
-    )
-  return remember(monthsShort, daysOfWeek) {
-    DateFormatter(monthsShort, daysOfWeek)
-  }
-}
-
-/**
- * Centralized date formatting with localized strings.
+ * Date formatter using localized strings from Compose Resources.
+ * Create via [rememberDateFormatter] composable.
  */
 class DateFormatter(
-  private val monthsShort: List<String> = emptyList(),
-  private val daysOfWeek: List<String> = emptyList(),
+  private val months: Map<Month, String>,
+  private val days: Map<DayOfWeek, String>,
 ) {
-  /**
-   * Short month name: "Jan", "Feb", "Mar"
-   */
-  fun monthShort(month: Month): String = monthsShort.getOrNull(month.ordinal) ?: fallbackMonthShort(month)
+  fun monthShort(month: Month): String = months[month] ?: month.name.take(MONTH_FALLBACK_LENGTH)
 
-  /**
-   * Single letter month initial: "J", "F", "M"
-   */
+  fun dayOfWeekShort(day: DayOfWeek): String = days[day] ?: day.name.take(DAY_FALLBACK_LENGTH)
+
   fun monthInitial(month: Month): String = monthShort(month).take(1)
 
-  /**
-   * Short day of week: "Mo", "Tu", "We"
-   */
-  fun dayOfWeekShort(day: DayOfWeek): String = daysOfWeek.getOrNull(day.ordinal) ?: fallbackDayOfWeekShort(day)
-
-  private fun fallbackDayOfWeekShort(day: DayOfWeek): String =
-    day.name
-      .take(SHORT_DAY_LENGTH)
-      .lowercase()
-      .replaceFirstChar { it.uppercase() }
-
-  /**
-   * Month and day: "Jan 15"
-   */
   fun monthDay(date: LocalDate): String = "${monthShort(date.month)} ${date.day}"
 
-  /**
-   * Full date with time: "2026-01-17 14:30"
-   */
   fun dateTime(dateTime: LocalDateTime): String {
     val hour = dateTime.hour.toString().padStart(2, '0')
     val minute = dateTime.minute.toString().padStart(2, '0')
     return "${dateTime.date} $hour:$minute"
   }
 
-  /**
-   * Compact date with time: "17/1 14:30"
-   */
   fun compactDateTime(dateTime: LocalDateTime): String {
     val minute = dateTime.minute.toString().padStart(2, '0')
     return "${dateTime.date.day}/${dateTime.date.month.ordinal + 1} ${dateTime.hour}:$minute"
   }
 
-  /**
-   * Week range label with smart year display:
-   * - Current year: "Jan 8 - Jan 14"
-   * - Past/future year (same): "Jan 8 - Jan 14 (2024)"
-   * - Cross-year: "Dec 30, 2024 – Jan 5, 2025"
-   */
   fun weekRange(
     start: LocalDate,
     end: LocalDate,
@@ -148,13 +72,58 @@ class DateFormatter(
       "${monthDay(start)}, ${start.year} – ${monthDay(end)}, ${end.year}"
     }
   }
-
-  private fun fallbackMonthShort(month: Month): String =
-    month.name
-      .take(SHORT_MONTH_LENGTH)
-      .lowercase()
-      .replaceFirstChar { it.uppercase() }
 }
 
-private const val SHORT_MONTH_LENGTH = 3
-private const val SHORT_DAY_LENGTH = 2
+@Composable
+fun rememberDateFormatter(): DateFormatter {
+  val jan = stringResource(Res.string.month_jan)
+  val feb = stringResource(Res.string.month_feb)
+  val mar = stringResource(Res.string.month_mar)
+  val apr = stringResource(Res.string.month_apr)
+  val may = stringResource(Res.string.month_may)
+  val jun = stringResource(Res.string.month_jun)
+  val jul = stringResource(Res.string.month_jul)
+  val aug = stringResource(Res.string.month_aug)
+  val sep = stringResource(Res.string.month_sep)
+  val oct = stringResource(Res.string.month_oct)
+  val nov = stringResource(Res.string.month_nov)
+  val dec = stringResource(Res.string.month_dec)
+
+  val mon = stringResource(Res.string.day_mon)
+  val tue = stringResource(Res.string.day_tue)
+  val wed = stringResource(Res.string.day_wed)
+  val thu = stringResource(Res.string.day_thu)
+  val fri = stringResource(Res.string.day_fri)
+  val sat = stringResource(Res.string.day_sat)
+  val sun = stringResource(Res.string.day_sun)
+
+  return remember(jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec, mon, tue, wed, thu, fri, sat, sun) {
+    DateFormatter(
+      months =
+        mapOf(
+          Month.JANUARY to jan,
+          Month.FEBRUARY to feb,
+          Month.MARCH to mar,
+          Month.APRIL to apr,
+          Month.MAY to may,
+          Month.JUNE to jun,
+          Month.JULY to jul,
+          Month.AUGUST to aug,
+          Month.SEPTEMBER to sep,
+          Month.OCTOBER to oct,
+          Month.NOVEMBER to nov,
+          Month.DECEMBER to dec,
+        ),
+      days =
+        mapOf(
+          DayOfWeek.MONDAY to mon,
+          DayOfWeek.TUESDAY to tue,
+          DayOfWeek.WEDNESDAY to wed,
+          DayOfWeek.THURSDAY to thu,
+          DayOfWeek.FRIDAY to fri,
+          DayOfWeek.SATURDAY to sat,
+          DayOfWeek.SUNDAY to sun,
+        ),
+    )
+  }
+}

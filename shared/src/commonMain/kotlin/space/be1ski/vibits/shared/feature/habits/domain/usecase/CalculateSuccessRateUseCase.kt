@@ -5,7 +5,6 @@ import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.domain.model.SuccessRateData
-import space.be1ski.vibits.shared.feature.habits.domain.model.rangeBounds
 
 /**
  * Calculates success rate for habits within a given time range.
@@ -18,7 +17,7 @@ class CalculateSuccessRateUseCase {
     today: LocalDate,
     configStartDate: LocalDate? = null,
   ): SuccessRateData {
-    val bounds = rangeBounds(range)
+    val bounds = GetRangeBoundsUseCase(range)
     val effectiveStart =
       if (configStartDate != null && configStartDate > bounds.start) {
         configStartDate

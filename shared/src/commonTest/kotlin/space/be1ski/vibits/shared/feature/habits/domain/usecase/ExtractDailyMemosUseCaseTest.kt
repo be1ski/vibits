@@ -13,7 +13,7 @@ class ExtractDailyMemosUseCaseTest {
   private val timeZone = TimeZone.UTC
 
   @Test
-  fun `extracts daily memos with habits daily tag`() {
+  fun `when memo has habits daily tag then extracts it`() {
     val memo =
       createMemo(
         content = "#habits/daily 2024-01-15\n- completed task",
@@ -27,7 +27,7 @@ class ExtractDailyMemosUseCaseTest {
   }
 
   @Test
-  fun `extracts daily memos with daily tag`() {
+  fun `when memo has daily tag then extracts it`() {
     val memo =
       createMemo(
         content = "#daily 2024-01-15\n- completed task",
@@ -41,7 +41,7 @@ class ExtractDailyMemosUseCaseTest {
   }
 
   @Test
-  fun `ignores non-daily memos`() {
+  fun `when memo has no daily tag then ignores it`() {
     val memo =
       createMemo(
         content = "Regular memo without daily tag",
@@ -54,7 +54,7 @@ class ExtractDailyMemosUseCaseTest {
   }
 
   @Test
-  fun `parses date from content when available`() {
+  fun `when content has date then uses content date instead of createTime`() {
     val memo =
       createMemo(
         content = "#daily 2024-02-20\n- task",
@@ -68,7 +68,7 @@ class ExtractDailyMemosUseCaseTest {
   }
 
   @Test
-  fun `forDate returns memo for specific date`() {
+  fun `when forDate called with existing date then returns memo`() {
     val memo =
       createMemo(
         content = "#daily 2024-01-15\n- task",
@@ -82,7 +82,7 @@ class ExtractDailyMemosUseCaseTest {
   }
 
   @Test
-  fun `forDate returns null for non-existing date`() {
+  fun `when forDate called with non-existing date then returns null`() {
     val memo =
       createMemo(
         content = "#daily 2024-01-15\n- task",
@@ -95,7 +95,7 @@ class ExtractDailyMemosUseCaseTest {
   }
 
   @Test
-  fun `parseDailyDateFromContent extracts date correctly`() {
+  fun `when content has daily tag with date then parseDailyDateFromContent extracts it`() {
     val content = "#habits/daily 2024-03-25\n- some task"
 
     val result = parseDailyDateFromContent(content)
@@ -104,7 +104,7 @@ class ExtractDailyMemosUseCaseTest {
   }
 
   @Test
-  fun `parseDailyDateFromContent returns null for content without date`() {
+  fun `when content has daily tag without date then parseDailyDateFromContent returns null`() {
     val content = "#daily\n- some task"
 
     val result = parseDailyDateFromContent(content)
@@ -113,7 +113,7 @@ class ExtractDailyMemosUseCaseTest {
   }
 
   @Test
-  fun `parseDailyDateFromContent returns null for non-daily content`() {
+  fun `when content has no daily tag then parseDailyDateFromContent returns null`() {
     val content = "Regular content 2024-01-15"
 
     val result = parseDailyDateFromContent(content)
@@ -122,7 +122,7 @@ class ExtractDailyMemosUseCaseTest {
   }
 
   @Test
-  fun `parseMemoDate extracts date from memo timestamp`() {
+  fun `when memo has createTime then parseMemoDate extracts date`() {
     val memo =
       createMemo(
         content = "any content",
@@ -135,7 +135,7 @@ class ExtractDailyMemosUseCaseTest {
   }
 
   @Test
-  fun `parseMemoInstant prefers updateTime over createTime`() {
+  fun `when memo has updateTime then parseMemoInstant prefers it over createTime`() {
     val memo =
       createMemo(
         content = "any content",

@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
 
 class HabitsEffectHandlerTest {
   @Test
-  fun `CreateMemo emits MemoCreated on success`() =
+  fun `when CreateMemo effect succeeds then emits MemoCreated`() =
     runTest {
       val expectedMemo = Memo(name = "memos/1", content = "test")
       val repository =
@@ -26,7 +26,7 @@ class HabitsEffectHandlerTest {
     }
 
   @Test
-  fun `CreateMemo emits MemoOperationFailed on failure`() =
+  fun `when CreateMemo effect fails then emits MemoOperationFailed`() =
     runTest {
       val repository =
         FakeMemosRepository().apply {
@@ -42,7 +42,7 @@ class HabitsEffectHandlerTest {
     }
 
   @Test
-  fun `UpdateMemo emits MemoUpdated on success`() =
+  fun `when UpdateMemo effect succeeds then emits MemoUpdated`() =
     runTest {
       val expectedMemo = Memo(name = "memos/1", content = "updated")
       val repository =
@@ -61,7 +61,7 @@ class HabitsEffectHandlerTest {
     }
 
   @Test
-  fun `UpdateMemo emits MemoOperationFailed on failure`() =
+  fun `when UpdateMemo effect fails then emits MemoOperationFailed`() =
     runTest {
       val repository =
         FakeMemosRepository().apply {
@@ -79,7 +79,7 @@ class HabitsEffectHandlerTest {
     }
 
   @Test
-  fun `DeleteMemo emits MemoDeleted on success`() =
+  fun `when DeleteMemo effect succeeds then emits MemoDeleted`() =
     runTest {
       val repository =
         FakeMemosRepository().apply {
@@ -94,7 +94,7 @@ class HabitsEffectHandlerTest {
     }
 
   @Test
-  fun `DeleteMemo emits MemoOperationFailed on failure`() =
+  fun `when DeleteMemo effect fails then emits MemoOperationFailed`() =
     runTest {
       val repository =
         FakeMemosRepository().apply {
@@ -109,7 +109,7 @@ class HabitsEffectHandlerTest {
     }
 
   @Test
-  fun `RefreshMemos calls onRefresh callback`() =
+  fun `when RefreshMemos effect then calls onRefresh callback`() =
     runTest {
       var refreshCalled = false
       val handler = createHandler(onRefresh = { refreshCalled = true })

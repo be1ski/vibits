@@ -13,7 +13,7 @@ class BuildHabitDayUseCaseTest {
   private val useCase = BuildHabitDayUseCase()
 
   @Test
-  fun `returns null when habitsConfig is empty`() {
+  fun `when habitsConfig is empty then returns null`() {
     val date = LocalDate(2024, 1, 15)
     val dailyMemo = DailyMemoInfo(name = "test", content = "content")
 
@@ -23,7 +23,7 @@ class BuildHabitDayUseCaseTest {
   }
 
   @Test
-  fun `builds day with completed habits`() {
+  fun `when all habits completed then completionRatio is 1`() {
     val date = LocalDate(2024, 1, 15)
     val habitsConfig =
       listOf(
@@ -47,7 +47,7 @@ class BuildHabitDayUseCaseTest {
   }
 
   @Test
-  fun `builds day with partial completion`() {
+  fun `when some habits completed then completionRatio is partial`() {
     val date = LocalDate(2024, 1, 15)
     val habitsConfig =
       listOf(
@@ -70,7 +70,7 @@ class BuildHabitDayUseCaseTest {
   }
 
   @Test
-  fun `builds day with no completed habits`() {
+  fun `when no habits completed then completionRatio is 0`() {
     val date = LocalDate(2024, 1, 15)
     val habitsConfig =
       listOf(
@@ -91,7 +91,7 @@ class BuildHabitDayUseCaseTest {
   }
 
   @Test
-  fun `builds day without daily memo`() {
+  fun `when dailyMemo is null then returns day with zero completion`() {
     val date = LocalDate(2024, 1, 15)
     val habitsConfig =
       listOf(
@@ -108,7 +108,7 @@ class BuildHabitDayUseCaseTest {
   }
 
   @Test
-  fun `stores habit statuses correctly`() {
+  fun `when habit is in content then habitStatus is done`() {
     val date = LocalDate(2024, 1, 15)
     val habitsConfig =
       listOf(
@@ -136,7 +136,7 @@ class BuildHabitDayUseCaseTest {
   }
 
   @Test
-  fun `clamps completion ratio to valid range`() {
+  fun `when completionRatio calculated then it is clamped to 0-1 range`() {
     val date = LocalDate(2024, 1, 15)
     val habitsConfig =
       listOf(

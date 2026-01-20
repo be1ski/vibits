@@ -9,7 +9,7 @@ import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 /**
  * Actions for the App coordinator feature.
  */
-internal sealed interface AppAction {
+sealed interface AppAction {
   // Navigation
   data class SelectScreen(
     val screen: Screen,
