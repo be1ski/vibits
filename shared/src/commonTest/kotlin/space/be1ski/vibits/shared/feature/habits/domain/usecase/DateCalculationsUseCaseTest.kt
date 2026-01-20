@@ -14,7 +14,7 @@ class DateCalculationsUseCaseTest {
   private val timeZone = TimeZone.UTC
 
   @Test
-  fun `startOfWeek returns Monday for Monday`() {
+  fun `when date is Monday then startOfWeek returns same date`() {
     val monday = LocalDate(2024, 1, 8)
 
     val result = startOfWeek(monday)
@@ -24,7 +24,7 @@ class DateCalculationsUseCaseTest {
   }
 
   @Test
-  fun `startOfWeek returns Monday for Wednesday`() {
+  fun `when date is Wednesday then startOfWeek returns Monday`() {
     val wednesday = LocalDate(2024, 1, 10)
     val expectedMonday = LocalDate(2024, 1, 8)
 
@@ -35,7 +35,7 @@ class DateCalculationsUseCaseTest {
   }
 
   @Test
-  fun `startOfWeek returns Monday for Sunday`() {
+  fun `when date is Sunday then startOfWeek returns Monday`() {
     val sunday = LocalDate(2024, 1, 14)
     val expectedMonday = LocalDate(2024, 1, 8)
 
@@ -46,7 +46,7 @@ class DateCalculationsUseCaseTest {
   }
 
   @Test
-  fun `startOfWeek handles year boundary`() {
+  fun `when date crosses year boundary then startOfWeek returns correct Monday`() {
     val thursday = LocalDate(2024, 1, 4)
     val expectedMonday = LocalDate(2024, 1, 1)
 
@@ -56,42 +56,42 @@ class DateCalculationsUseCaseTest {
   }
 
   @Test
-  fun `quarterIndex returns 1 for January`() {
+  fun `when month is Q1 then quarterIndex returns 1`() {
     assertEquals(1, quarterIndex(Month.JANUARY))
     assertEquals(1, quarterIndex(Month.FEBRUARY))
     assertEquals(1, quarterIndex(Month.MARCH))
   }
 
   @Test
-  fun `quarterIndex returns 2 for Q2 months`() {
+  fun `when month is Q2 then quarterIndex returns 2`() {
     assertEquals(2, quarterIndex(Month.APRIL))
     assertEquals(2, quarterIndex(Month.MAY))
     assertEquals(2, quarterIndex(Month.JUNE))
   }
 
   @Test
-  fun `quarterIndex returns 3 for Q3 months`() {
+  fun `when month is Q3 then quarterIndex returns 3`() {
     assertEquals(3, quarterIndex(Month.JULY))
     assertEquals(3, quarterIndex(Month.AUGUST))
     assertEquals(3, quarterIndex(Month.SEPTEMBER))
   }
 
   @Test
-  fun `quarterIndex returns 4 for Q4 months`() {
+  fun `when month is Q4 then quarterIndex returns 4`() {
     assertEquals(4, quarterIndex(Month.OCTOBER))
     assertEquals(4, quarterIndex(Month.NOVEMBER))
     assertEquals(4, quarterIndex(Month.DECEMBER))
   }
 
   @Test
-  fun `quarterIndex for date delegates to month`() {
+  fun `when date is in May then quarterIndex returns 2`() {
     val date = LocalDate(2024, 5, 15)
 
     assertEquals(2, quarterIndex(date))
   }
 
   @Test
-  fun `earliestMemoDate returns earliest date from content`() {
+  fun `when memos have dates in content then returns earliest content date`() {
     val memos =
       listOf(
         createMemo("#daily 2024-03-15", KtInstant.parse("2024-01-10T10:00:00Z")),
@@ -104,7 +104,7 @@ class DateCalculationsUseCaseTest {
   }
 
   @Test
-  fun `earliestMemoDate uses memo date when no date in content`() {
+  fun `when memos have no date in content then returns earliest memo createTime`() {
     val memos =
       listOf(
         createMemo("Regular content", KtInstant.parse("2024-01-10T10:00:00Z")),
@@ -117,7 +117,7 @@ class DateCalculationsUseCaseTest {
   }
 
   @Test
-  fun `earliestMemoDate returns null for empty list`() {
+  fun `when memos list is empty then returns null`() {
     val result = EarliestMemoDateUseCase(emptyList(), timeZone)
 
     assertNull(result)

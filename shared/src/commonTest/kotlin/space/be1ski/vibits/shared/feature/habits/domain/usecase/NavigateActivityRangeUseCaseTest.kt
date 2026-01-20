@@ -5,200 +5,82 @@ import kotlinx.datetime.Month
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 class NavigateActivityRangeUseCaseTest {
-  private val useCase = NavigateActivityRangeUseCase()
-
   @Test
-  fun `shifts week forward by one`() {
+  fun `when delta is 1 for week then shifts forward by 7 days`() {
     val range = ActivityRange.Week(startDate = LocalDate(2024, 1, 8))
 
-    val result = useCase(range, 1)
+    val result = NavigateActivityRangeUseCase(range, 1)
 
     assertEquals(LocalDate(2024, 1, 15), (result as ActivityRange.Week).startDate)
   }
 
   @Test
-  fun `shifts week backward by one`() {
+  fun `when delta is -1 for week then shifts backward by 7 days`() {
     val range = ActivityRange.Week(startDate = LocalDate(2024, 1, 15))
 
-    val result = useCase(range, -1)
+    val result = NavigateActivityRangeUseCase(range, -1)
 
     assertEquals(LocalDate(2024, 1, 8), (result as ActivityRange.Week).startDate)
   }
 
   @Test
-  fun `shifts month forward by one`() {
+  fun `when delta is 1 for month then shifts to next month`() {
     val range = ActivityRange.Month(year = 2024, month = Month.JANUARY)
 
-    val result = useCase(range, 1)
+    val result = NavigateActivityRangeUseCase(range, 1)
 
     assertEquals(2024, (result as ActivityRange.Month).year)
     assertEquals(Month.FEBRUARY, result.month)
   }
 
   @Test
-  fun `shifts month forward across year boundary`() {
+  fun `when delta is 1 for December then shifts to January of next year`() {
     val range = ActivityRange.Month(year = 2024, month = Month.DECEMBER)
 
-    val result = useCase(range, 1)
+    val result = NavigateActivityRangeUseCase(range, 1)
 
     assertEquals(2025, (result as ActivityRange.Month).year)
     assertEquals(Month.JANUARY, result.month)
   }
 
   @Test
-  fun `shifts quarter forward by one`() {
+  fun `when delta is 1 for quarter then shifts to next quarter`() {
     val range = ActivityRange.Quarter(year = 2024, index = 1)
 
-    val result = useCase(range, 1)
+    val result = NavigateActivityRangeUseCase(range, 1)
 
     assertEquals(2024, (result as ActivityRange.Quarter).year)
     assertEquals(2, result.index)
   }
 
   @Test
-  fun `shifts quarter forward across year boundary`() {
+  fun `when delta is 1 for Q4 then shifts to Q1 of next year`() {
     val range = ActivityRange.Quarter(year = 2024, index = 4)
 
-    val result = useCase(range, 1)
+    val result = NavigateActivityRangeUseCase(range, 1)
 
     assertEquals(2025, (result as ActivityRange.Quarter).year)
     assertEquals(1, result.index)
   }
 
   @Test
-  fun `shifts year forward by one`() {
+  fun `when delta is -1 for Q1 then shifts to Q4 of previous year`() {
+    val range = ActivityRange.Quarter(year = 2024, index = 1)
+
+    val result = NavigateActivityRangeUseCase(range, -1)
+
+    assertEquals(2023, (result as ActivityRange.Quarter).year)
+    assertEquals(4, result.index)
+  }
+
+  @Test
+  fun `when delta is 1 for year then shifts to next year`() {
     val range = ActivityRange.Year(year = 2024)
 
-    val result = useCase(range, 1)
+    val result = NavigateActivityRangeUseCase(range, 1)
 
     assertEquals(2025, (result as ActivityRange.Year).year)
-  }
-
-  @Test
-  fun `isBefore returns true for earlier week`() {
-    val earlier = ActivityRange.Week(startDate = LocalDate(2024, 1, 1))
-    val later = ActivityRange.Week(startDate = LocalDate(2024, 1, 8))
-
-    assertTrue(useCase.isBefore(earlier, later))
-    assertFalse(useCase.isBefore(later, earlier))
-  }
-
-  @Test
-  fun `isBefore returns true for earlier month`() {
-    val earlier = ActivityRange.Month(year = 2024, month = Month.JANUARY)
-    val later = ActivityRange.Month(year = 2024, month = Month.MARCH)
-
-    assertTrue(useCase.isBefore(earlier, later))
-    assertFalse(useCase.isBefore(later, earlier))
-  }
-
-  @Test
-  fun `isBefore returns true for earlier quarter`() {
-    val earlier = ActivityRange.Quarter(year = 2024, index = 1)
-    val later = ActivityRange.Quarter(year = 2024, index = 3)
-
-    assertTrue(useCase.isBefore(earlier, later))
-    assertFalse(useCase.isBefore(later, earlier))
-  }
-
-  @Test
-  fun `isBefore returns true for earlier year`() {
-    val earlier = ActivityRange.Year(year = 2023)
-    val later = ActivityRange.Year(year = 2024)
-
-    assertTrue(useCase.isBefore(earlier, later))
-    assertFalse(useCase.isBefore(later, earlier))
-  }
-
-  @Test
-  fun `isBefore returns false for same range`() {
-    val range = ActivityRange.Week(startDate = LocalDate(2024, 1, 8))
-
-    assertFalse(useCase.isBefore(range, range))
-  }
-
-  @Test
-  fun `isBefore returns false for different range types`() {
-    val week = ActivityRange.Week(startDate = LocalDate(2024, 1, 8))
-    val month = ActivityRange.Month(year = 2024, month = Month.JANUARY)
-
-    assertFalse(useCase.isBefore(week, month))
-    assertFalse(useCase.isBefore(month, week))
-  }
-
-  @Test
-  fun `calculateDelta returns positive for forward weeks`() {
-    val from = ActivityRange.Week(startDate = LocalDate(2024, 1, 1))
-    val to = ActivityRange.Week(startDate = LocalDate(2024, 1, 15))
-
-    assertEquals(2, useCase.calculateDelta(from, to))
-  }
-
-  @Test
-  fun `calculateDelta returns negative for backward weeks`() {
-    val from = ActivityRange.Week(startDate = LocalDate(2024, 1, 15))
-    val to = ActivityRange.Week(startDate = LocalDate(2024, 1, 1))
-
-    assertEquals(-2, useCase.calculateDelta(from, to))
-  }
-
-  @Test
-  fun `calculateDelta returns correct delta for months`() {
-    val from = ActivityRange.Month(year = 2024, month = Month.JANUARY)
-    val to = ActivityRange.Month(year = 2024, month = Month.APRIL)
-
-    assertEquals(3, useCase.calculateDelta(from, to))
-  }
-
-  @Test
-  fun `calculateDelta returns correct delta for months across years`() {
-    val from = ActivityRange.Month(year = 2023, month = Month.NOVEMBER)
-    val to = ActivityRange.Month(year = 2024, month = Month.FEBRUARY)
-
-    assertEquals(3, useCase.calculateDelta(from, to))
-  }
-
-  @Test
-  fun `calculateDelta returns correct delta for quarters`() {
-    val from = ActivityRange.Quarter(year = 2024, index = 1)
-    val to = ActivityRange.Quarter(year = 2024, index = 4)
-
-    assertEquals(3, useCase.calculateDelta(from, to))
-  }
-
-  @Test
-  fun `calculateDelta returns correct delta for quarters across years`() {
-    val from = ActivityRange.Quarter(year = 2023, index = 3)
-    val to = ActivityRange.Quarter(year = 2024, index = 2)
-
-    assertEquals(3, useCase.calculateDelta(from, to))
-  }
-
-  @Test
-  fun `calculateDelta returns correct delta for years`() {
-    val from = ActivityRange.Year(year = 2020)
-    val to = ActivityRange.Year(year = 2024)
-
-    assertEquals(4, useCase.calculateDelta(from, to))
-  }
-
-  @Test
-  fun `calculateDelta returns zero for different range types`() {
-    val week = ActivityRange.Week(startDate = LocalDate(2024, 1, 8))
-    val month = ActivityRange.Month(year = 2024, month = Month.JANUARY)
-
-    assertEquals(0, useCase.calculateDelta(week, month))
-    assertEquals(0, useCase.calculateDelta(month, week))
-  }
-
-  @Test
-  fun `calculateDelta returns zero for same range`() {
-    val range = ActivityRange.Week(startDate = LocalDate(2024, 1, 8))
-
-    assertEquals(0, useCase.calculateDelta(range, range))
   }
 }

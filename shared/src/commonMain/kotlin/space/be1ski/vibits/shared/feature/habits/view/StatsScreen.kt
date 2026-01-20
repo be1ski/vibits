@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
+import space.be1ski.vibits.shared.core.platform.date.DateFormatter
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.domain.model.findDayByDate
@@ -36,11 +37,13 @@ fun StatsScreen(
   calculateSuccessRate: CalculateSuccessRateUseCase,
   buildActivityDataUseCase: BuildActivityDataUseCase,
   cache: ActivityWeekDataCache,
+  dateFormatter: DateFormatter,
   habitsState: HabitsState = HabitsState(),
   onHabitsAction: (HabitsAction) -> Unit = {},
   onPostsListExpandedChange: (Boolean) -> Unit = {},
 ) {
-  val derived = rememberStatsScreenDerived(state, habitsState, calculateSuccessRate, buildActivityDataUseCase, cache)
+  val derived =
+    rememberStatsScreenDerived(state, habitsState, calculateSuccessRate, buildActivityDataUseCase, cache, dateFormatter)
   StatsScreenContent(derived, onHabitsAction, onPostsListExpandedChange)
   StatsScreenDialogs(derived, onHabitsAction)
 }
@@ -53,6 +56,7 @@ private fun rememberStatsScreenDerived(
   calculateSuccessRate: CalculateSuccessRateUseCase,
   buildActivityDataUseCase: BuildActivityDataUseCase,
   cache: ActivityWeekDataCache,
+  dateFormatter: DateFormatter,
 ): StatsScreenDerivedState {
   val memos = state.memos
   val range = state.range
@@ -137,6 +141,7 @@ private fun rememberStatsScreenDerived(
     timeZone = timeZone,
     successRateData = successRateData,
     periodPosts = periodPosts,
+    dateFormatter = dateFormatter,
     configStartDate = configStartDate,
   )
 }

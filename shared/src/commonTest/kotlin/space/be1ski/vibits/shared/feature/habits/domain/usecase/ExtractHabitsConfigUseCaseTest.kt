@@ -14,7 +14,7 @@ class ExtractHabitsConfigUseCaseTest {
   private val timeZone = TimeZone.UTC
 
   @Test
-  fun `extracts habits config with config tag`() {
+  fun `when memo has config tag then extracts habits`() {
     val memo =
       createMemo(
         content = "#habits/config\n- [ ] exercise\n- [ ] reading",
@@ -28,7 +28,7 @@ class ExtractHabitsConfigUseCaseTest {
   }
 
   @Test
-  fun `extracts habits config with habits_config tag`() {
+  fun `when memo has habits_config tag then extracts habits`() {
     val memo =
       createMemo(
         content = "#habits_config\n- [ ] meditation",
@@ -42,7 +42,7 @@ class ExtractHabitsConfigUseCaseTest {
   }
 
   @Test
-  fun `ignores non-config memos`() {
+  fun `when memo has no config tag then ignores it`() {
     val memo =
       createMemo(
         content = "Regular memo",
@@ -55,7 +55,7 @@ class ExtractHabitsConfigUseCaseTest {
   }
 
   @Test
-  fun `sorts config entries by date`() {
+  fun `when multiple configs exist then sorts by date`() {
     val memo1 =
       createMemo(
         content = "#habits/config\n- [ ] task1",
@@ -75,7 +75,7 @@ class ExtractHabitsConfigUseCaseTest {
   }
 
   @Test
-  fun `forDate returns most recent config before date`() {
+  fun `when forDate called then returns most recent config before date`() {
     val entries =
       listOf(
         createConfigEntry(LocalDate(2024, 1, 1)),
@@ -90,7 +90,7 @@ class ExtractHabitsConfigUseCaseTest {
   }
 
   @Test
-  fun `forDate returns config on exact date`() {
+  fun `when forDate called with exact config date then returns that config`() {
     val entries =
       listOf(
         createConfigEntry(LocalDate(2024, 1, 1)),
@@ -104,7 +104,7 @@ class ExtractHabitsConfigUseCaseTest {
   }
 
   @Test
-  fun `forDate returns null when no config before date`() {
+  fun `when forDate called with date before all configs then returns null`() {
     val entries =
       listOf(
         createConfigEntry(LocalDate(2024, 2, 1)),
@@ -116,7 +116,7 @@ class ExtractHabitsConfigUseCaseTest {
   }
 
   @Test
-  fun `deduplicates habits by tag`() {
+  fun `when config has duplicate habits then deduplicates by tag`() {
     val memo =
       createMemo(
         content = "#habits/config\n- [ ] exercise\n- [ ] exercise\n- [ ] reading",

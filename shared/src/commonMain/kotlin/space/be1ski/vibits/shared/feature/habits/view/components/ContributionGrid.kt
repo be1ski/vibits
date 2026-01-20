@@ -49,7 +49,7 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.Res
-import space.be1ski.vibits.shared.core.platform.date.LocalDateFormatter
+import space.be1ski.vibits.shared.core.platform.date.DateFormatter
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.hoverAware
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
@@ -92,6 +92,7 @@ private const val HABIT_COLOR_LIGHT_RATIO = 0.3f
 @Composable
 fun ContributionGrid(
   state: ContributionGridState,
+  dateFormatter: DateFormatter,
   onDaySelected: (ContributionDay) -> Unit,
   onClearSelection: () -> Unit,
   onEditRequested: ((ContributionDay) -> Unit)? = null,
@@ -103,7 +104,7 @@ fun ContributionGrid(
     interaction.tooltip = null
   }
   Column(modifier = modifier) {
-    ContributionGridLayout(state, onDaySelected, onClearSelection, interaction)
+    ContributionGridLayout(state, dateFormatter, onDaySelected, onClearSelection, interaction)
     ContributionGridTooltip(state, interaction, onEditRequested, onCreateRequested)
   }
 }
@@ -126,6 +127,7 @@ private data class ContributionGridLayoutState(
 @Composable
 private fun ContributionGridLayout(
   state: ContributionGridState,
+  dateFormatter: DateFormatter,
   onDaySelected: (ContributionDay) -> Unit,
   onClearSelection: () -> Unit,
   interaction: ContributionGridInteractionState,
@@ -151,7 +153,7 @@ private fun ContributionGridLayout(
     if (state.calendarLayout) {
       CalendarGridLayout(state, onDaySelected, interaction, maxWidth)
     } else {
-      ContributionGridContent(state, onDaySelected, interaction, maxWidth)
+      ContributionGridContent(state, dateFormatter, onDaySelected, interaction, maxWidth)
     }
   }
 }
@@ -159,6 +161,7 @@ private fun ContributionGridLayout(
 @Composable
 private fun BoxWithConstraintsScope.ContributionGridContent(
   state: ContributionGridState,
+  dateFormatter: DateFormatter,
   onDaySelected: (ContributionDay) -> Unit,
   interaction: ContributionGridInteractionState,
   maxWidth: Dp,
@@ -180,10 +183,9 @@ private fun BoxWithConstraintsScope.ContributionGridContent(
       spacing = spacing,
       maxColumnSize = maxCell,
     )
-  val formatter = LocalDateFormatter.current
   val timelineLabels =
-    remember(state.weekData.weeks, state.range, formatter) {
-      if (state.showTimeline) buildTimelineLabels(state.weekData.weeks, state.range, formatter) else emptyList()
+    remember(state.weekData.weeks, state.range) {
+      if (state.showTimeline) buildTimelineLabels(state.weekData.weeks, state.range, dateFormatter) else emptyList()
     }
   val headerLabels =
     remember(state.weekData.weeks, state.showWeekStartHeaders) {

@@ -40,7 +40,6 @@ import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.action_cancel
 import space.be1ski.vibits.shared.action_delete
 import space.be1ski.vibits.shared.core.platform.date.DateFormatter
-import space.be1ski.vibits.shared.core.platform.date.LocalDateFormatter
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.title_delete_memo
@@ -53,6 +52,7 @@ import space.be1ski.vibits.shared.title_delete_memo
 @Composable
 fun FeedScreen(
   memos: List<Memo>,
+  dateFormatter: DateFormatter,
   isRefreshing: Boolean = false,
   onRefresh: () -> Unit = {},
   enablePullRefresh: Boolean = true,
@@ -62,7 +62,6 @@ fun FeedScreen(
 ) {
   var memoToDelete by remember { mutableStateOf<Memo?>(null) }
   val timeZone = TimeZone.currentSystemDefault()
-  val formatter = LocalDateFormatter.current
   val pullRefreshState = rememberPullRefreshState(isRefreshing, onRefresh)
   val containerModifier =
     if (enablePullRefresh) {
@@ -92,7 +91,7 @@ fun FeedScreen(
               modifier = Modifier.weight(1f),
               verticalArrangement = Arrangement.spacedBy(Indent.x2s),
             ) {
-              val dateLabel = memoDateLabel(memo, timeZone, formatter)
+              val dateLabel = memoDateLabel(memo, timeZone, dateFormatter)
               if (dateLabel.isNotBlank()) {
                 Text(dateLabel, style = MaterialTheme.typography.labelSmall)
               }

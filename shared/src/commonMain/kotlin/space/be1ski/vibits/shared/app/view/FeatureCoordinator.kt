@@ -40,9 +40,10 @@ internal fun FeatureCoordinator(
     }
   }
 
-  // Auto-open settings when credentials required
-  LaunchedEffect(memosState.credentialsMode, settingsState.isOpen) {
-    if (memosState.credentialsMode && !settingsState.isOpen) {
+  // Auto-open settings when credentials required (skip for DEMO/OFFLINE modes)
+  LaunchedEffect(memosState.credentialsMode, settingsState.isOpen, appState.appMode) {
+    val skipCredentialsCheck = appState.appMode == AppMode.DEMO || appState.appMode == AppMode.OFFLINE
+    if (!skipCredentialsCheck && memosState.credentialsMode && !settingsState.isOpen) {
       features.settings.send(
         SettingsAction.Open(
           baseUrl = memosState.baseUrl,

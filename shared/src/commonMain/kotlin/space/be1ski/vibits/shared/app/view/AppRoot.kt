@@ -13,7 +13,6 @@ import space.be1ski.vibits.shared.app.di.AppDependencies
 import space.be1ski.vibits.shared.app.di.AppGraph
 import space.be1ski.vibits.shared.app.presentation.AppFeatures
 import space.be1ski.vibits.shared.core.elm.Feature
-import space.be1ski.vibits.shared.core.platform.date.ProvideDateFormatter
 import space.be1ski.vibits.shared.core.ui.theme.VibitsTheme
 import space.be1ski.vibits.shared.core.ui.theme.rememberSystemDarkTheme
 import space.be1ski.vibits.shared.feature.mode.di.createModeSelectionFeature
@@ -39,31 +38,29 @@ fun AppRoot(dependencies: AppDependencies) {
   val features = rememberAppFeatures(featuresVersion)
 
   key(appLanguage) {
-    ProvideDateFormatter {
-      VibitsTheme(darkTheme = darkTheme) {
-        when (appMode) {
-          AppMode.NOT_SELECTED -> ModeSelectionScreen(feature = modeSelectionFeature)
-          AppMode.ONLINE, AppMode.OFFLINE, AppMode.DEMO -> {
-            VibitsApp(
-              dependencies = dependencies,
-              features = features,
-              currentTheme = appTheme,
-              currentLanguage = appLanguage,
-              onResetApp = {
-                appTheme = AppTheme.SYSTEM
-                appLanguage = AppLanguage.SYSTEM
-                dependencies.localeProvider.configureLocale(AppLanguage.SYSTEM)
-                AppGraph.resetGraph()
-                featuresVersion++
-                appMode = AppMode.NOT_SELECTED
-              },
-              onThemeChanged = { appTheme = it },
-              onLanguageChanged = {
-                dependencies.localeProvider.configureLocale(it)
-                appLanguage = it
-              },
-            )
-          }
+    VibitsTheme(darkTheme = darkTheme) {
+      when (appMode) {
+        AppMode.NOT_SELECTED -> ModeSelectionScreen(feature = modeSelectionFeature)
+        AppMode.ONLINE, AppMode.OFFLINE, AppMode.DEMO -> {
+          VibitsApp(
+            dependencies = dependencies,
+            features = features,
+            currentTheme = appTheme,
+            currentLanguage = appLanguage,
+            onResetApp = {
+              appTheme = AppTheme.SYSTEM
+              appLanguage = AppLanguage.SYSTEM
+              dependencies.localeProvider.configureLocale(AppLanguage.SYSTEM)
+              AppGraph.resetGraph()
+              featuresVersion++
+              appMode = AppMode.NOT_SELECTED
+            },
+            onThemeChanged = { appTheme = it },
+            onLanguageChanged = {
+              dependencies.localeProvider.configureLocale(it)
+              appLanguage = it
+            },
+          )
         }
       }
     }
