@@ -1,6 +1,6 @@
 [versions]
 activityCompose = "1.12.2"
-atomicfu = "0.29.0"
+atomicfu = "0.30.0"
 appcompat = "1.7.1"
 ktlint = "14.0.1"
 ktlintLib = "1.7.1"
@@ -21,7 +21,7 @@ ktor = "3.3.3"
 lifecycleRuntimeKtx = "2.10.0"
 material = "1.13.0"
 room = "2.8.4"
-serialization = "1.9.0"
+serialization = "1.10.0"
 slf4j = "2.0.17"
 sqliteBundled = "2.6.2"
 
