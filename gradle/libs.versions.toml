@@ -1,6 +1,6 @@
 [versions]
 activityCompose = "1.12.2"
-atomicfu = "0.30.0"
+atomicfu = "0.31.0"
 appcompat = "1.7.1"
 ktlint = "14.0.1"
 ktlintLib = "1.7.1"
