@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.memos.data.local
+package space.be1ski.vibits.shared.feature.memos.data.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
