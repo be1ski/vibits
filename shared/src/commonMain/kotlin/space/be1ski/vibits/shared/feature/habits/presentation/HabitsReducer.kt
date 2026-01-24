@@ -2,10 +2,10 @@ package space.be1ski.vibits.shared.feature.habits.presentation
 
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
+import space.be1ski.vibits.shared.core.ui.theme.DefaultHabitColor
 import space.be1ski.vibits.shared.feature.habits.domain.buildDailyContent
 import space.be1ski.vibits.shared.feature.habits.domain.buildHabitsConfigContentFromList
 import space.be1ski.vibits.shared.feature.habits.domain.buildHabitsEditorSelections
-import space.be1ski.vibits.shared.feature.habits.domain.model.DEFAULT_HABIT_COLOR
 import space.be1ski.vibits.shared.feature.habits.domain.normalizeHabitTag
 import kotlin.random.Random
 
@@ -107,7 +107,7 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
             id = newId,
             tag = "",
             label = "",
-            color = DEFAULT_HABIT_COLOR,
+            color = DefaultHabitColor,
           )
         state { copy(editingHabits = editingHabits + newHabit) }
       }
