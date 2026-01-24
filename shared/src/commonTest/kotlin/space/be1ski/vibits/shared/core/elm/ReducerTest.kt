@@ -88,7 +88,7 @@ class ReducerTest {
   }
 
   @Test
-  fun `when same input then same output (purity)`() {
+  fun `when same input then same output - purity`() {
     val state = CounterState(count = 5)
     val action = CounterAction.Add(3)
 

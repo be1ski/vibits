@@ -26,9 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.Res
-import space.be1ski.vibits.shared.action_cancel
-import space.be1ski.vibits.shared.action_save
 import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
@@ -36,19 +33,22 @@ import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionAction
 import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionEffect
 import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionError
 import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionState
-import space.be1ski.vibits.shared.hint_base_url
-import space.be1ski.vibits.shared.label_access_token
-import space.be1ski.vibits.shared.label_base_url
-import space.be1ski.vibits.shared.mode_demo_desc
-import space.be1ski.vibits.shared.mode_demo_title
-import space.be1ski.vibits.shared.mode_offline_desc
-import space.be1ski.vibits.shared.mode_offline_title
-import space.be1ski.vibits.shared.mode_online_desc
-import space.be1ski.vibits.shared.mode_online_title
-import space.be1ski.vibits.shared.mode_select_subtitle
-import space.be1ski.vibits.shared.mode_select_title
-import space.be1ski.vibits.shared.msg_connection_failed
-import space.be1ski.vibits.shared.msg_fill_all_fields
+import space.be1ski.vibits.shared.generated.Res
+import space.be1ski.vibits.shared.generated.action_cancel
+import space.be1ski.vibits.shared.generated.action_save
+import space.be1ski.vibits.shared.generated.hint_base_url
+import space.be1ski.vibits.shared.generated.label_access_token
+import space.be1ski.vibits.shared.generated.label_base_url
+import space.be1ski.vibits.shared.generated.mode_demo_desc
+import space.be1ski.vibits.shared.generated.mode_demo_title
+import space.be1ski.vibits.shared.generated.mode_offline_desc
+import space.be1ski.vibits.shared.generated.mode_offline_title
+import space.be1ski.vibits.shared.generated.mode_online_desc
+import space.be1ski.vibits.shared.generated.mode_online_title
+import space.be1ski.vibits.shared.generated.mode_select_subtitle
+import space.be1ski.vibits.shared.generated.mode_select_title
+import space.be1ski.vibits.shared.generated.msg_connection_failed
+import space.be1ski.vibits.shared.generated.msg_fill_all_fields
 
 @Composable
 fun ModeSelectionScreen(feature: Feature<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect>) {

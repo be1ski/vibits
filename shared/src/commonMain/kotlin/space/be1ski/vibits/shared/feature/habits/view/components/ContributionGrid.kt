@@ -48,24 +48,24 @@ import androidx.compose.ui.window.PopupPositionProvider
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.Res
 import space.be1ski.vibits.shared.core.platform.date.DateFormatter
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.hoverAware
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
-import space.be1ski.vibits.shared.day_fri
-import space.be1ski.vibits.shared.day_mon
-import space.be1ski.vibits.shared.day_sat
-import space.be1ski.vibits.shared.day_sun
-import space.be1ski.vibits.shared.day_thu
-import space.be1ski.vibits.shared.day_tue
-import space.be1ski.vibits.shared.day_wed
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
-import space.be1ski.vibits.shared.format_tooltip_habits
-import space.be1ski.vibits.shared.format_tooltip_memos
-import space.be1ski.vibits.shared.title_create_day
-import space.be1ski.vibits.shared.title_edit_day
+import space.be1ski.vibits.shared.generated.Res
+import space.be1ski.vibits.shared.generated.day_fri
+import space.be1ski.vibits.shared.generated.day_mon
+import space.be1ski.vibits.shared.generated.day_sat
+import space.be1ski.vibits.shared.generated.day_sun
+import space.be1ski.vibits.shared.generated.day_thu
+import space.be1ski.vibits.shared.generated.day_tue
+import space.be1ski.vibits.shared.generated.day_wed
+import space.be1ski.vibits.shared.generated.format_tooltip_habits
+import space.be1ski.vibits.shared.generated.format_tooltip_memos
+import space.be1ski.vibits.shared.generated.title_create_day
+import space.be1ski.vibits.shared.generated.title_edit_day
 
 internal object ChartDimens {
   val legendWidth = LEGEND_WIDTH_DP.dp

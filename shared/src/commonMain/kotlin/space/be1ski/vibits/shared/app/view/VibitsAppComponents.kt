@@ -20,14 +20,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.Res
-import space.be1ski.vibits.shared.action_refresh
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.app.presentation.AppAction
 import space.be1ski.vibits.shared.app.presentation.AppState
-import space.be1ski.vibits.shared.app_name
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.Indent
@@ -42,10 +39,13 @@ import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
-import space.be1ski.vibits.shared.nav_feed
-import space.be1ski.vibits.shared.nav_habits
-import space.be1ski.vibits.shared.nav_memos
-import space.be1ski.vibits.shared.nav_settings
+import space.be1ski.vibits.shared.generated.Res
+import space.be1ski.vibits.shared.generated.action_refresh
+import space.be1ski.vibits.shared.generated.app_name
+import space.be1ski.vibits.shared.generated.nav_feed
+import space.be1ski.vibits.shared.generated.nav_habits
+import space.be1ski.vibits.shared.generated.nav_memos
+import space.be1ski.vibits.shared.generated.nav_settings
 
 @Composable
 internal fun MemosHeader(
