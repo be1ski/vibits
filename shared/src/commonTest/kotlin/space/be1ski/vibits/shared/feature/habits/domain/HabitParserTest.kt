@@ -265,6 +265,12 @@ class HabitParserTest {
     assertNull(parseHexColor(""))
   }
 
+  @Test
+  fun `when hex color is 8 digits with alpha then parses correctly`() {
+    val result = parseHexColor("#80FF5733")
+    assertEquals(0x80FF5733L, result)
+  }
+
   // formatHexColor tests
 
   @Test
