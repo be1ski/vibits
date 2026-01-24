@@ -11,6 +11,48 @@ Vibits is a habit tracker powered by Memos, built with Kotlin Multiplatform (KMP
 
 Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if any) live under module `src/.../res`.
 
+## Package Organization Rules
+
+The project follows strict package organization to maintain clean architecture and enable automatic test coverage exclusions:
+
+### Core Packages
+
+- **`core.platform.*`** — Platform-specific code (expect/actual declarations):
+  - `core.platform.locale.LocaleProvider`
+  - `core.platform.storage.KeyValueStore`
+  - `core.platform.logging.platformLog`
+  - All expect/actual interfaces and implementations
+  - **Excluded from coverage** (untestable in unit tests)
+
+- **`core.ui.*`** — UI layer with Compose code:
+  - `core.ui.theme.*` — Theming, colors, typography
+  - `core.ui.date.DateFormatter` — UI helpers with @Composable functions
+  - Any code containing @Composable functions
+  - **Excluded from coverage** (@Composable cannot be unit tested)
+
+- **`core.*` (other)** — Pure business logic:
+  - Must not contain @Composable functions
+  - Must not contain expect/actual declarations
+  - Should be fully testable with unit tests
+
+### Feature Data Layer
+
+Within `feature/<name>/data/`:
+
+- **`data/room/`** — Room database implementations (platform-specific):
+  - DAO interfaces, entities, database classes
+  - Excluded from coverage (platform-specific, tested via integration tests)
+
+- **`data/platform/`** — Platform-specific data implementations:
+  - expect/actual storage implementations
+  - Platform-specific caches
+  - Excluded from coverage
+
+- **`data/` (root)** — Testable repository implementations:
+  - Repository implementations with business logic
+  - DTOs and mappers
+  - Should have comprehensive unit tests
+
 ## Feature Architecture
 
 Features are autonomous and isolated units that can be run separately and disabled easily. Each feature follows this package structure:
@@ -23,6 +65,8 @@ feature/<name>/
     usecase/          # Business logic (use cases)
     repository/       # Repository interfaces
   data/               # Repository implementations, DTOs, mappers
+    platform/         # Platform-specific implementations (expect/actual)
+    room/             # Room database (DAO, entities, database)
   presentation/       # TEA components (Feature, Reducer, EffectHandler)
   view/               # Compose UI (screens, components, dialogs)
 ```
@@ -30,7 +74,12 @@ feature/<name>/
 ### Layer Responsibilities
 
 - **domain/** — Pure business logic. No UI or framework dependencies.
-- **data/** — Data layer implementations (repositories, API clients, caching).
+- **data/** — Data layer implementations:
+  - Repository implementations with business logic
+  - DTOs and mappers
+  - API clients
+  - **data/platform/** — Platform-specific implementations (expect/actual)
+  - **data/room/** — Room database implementations (DAO, entities)
 - **presentation/** — The Elm Architecture (TEA) components:
   - `*Feature.kt` — State, Action, Effect sealed classes
   - `*Reducer.kt` — Pure state transitions
@@ -131,6 +180,11 @@ We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
 - **No unnecessary default values.** Don't add default parameter values that nobody uses — required parameters catch missing arguments at compile time.
 - **Use design system values.** Use `Indent` object values instead of hardcoding dp. If a value doesn't exist, add it to the design system.
 - **Self-documenting code over comments.** Don't add KDoc/comments that restate function names or obvious logic.
+- **Package placement matters for coverage:**
+  - @Composable functions must be in `*.ui.*` or `*.view.*` packages
+  - expect/actual declarations must be in `*.platform.*` packages
+  - Pure business logic must not contain @Composable or expect/actual
+  - When moving code between packages, verify coverage impact
 - Prefer clean refactors over quick reuse: avoid introducing or keeping code smells, and leave the codebase cleaner than you found it.
 - Keep Gradle dependencies and `gradle/libs.versions.toml` entries alphabetically sorted within each block.
 
@@ -148,7 +202,9 @@ We follow TDD for business logic and aim for high coverage.
 
 - Run shared unit tests: `./gradlew :shared:desktopTest`
 - Run iOS simulator tests: `./gradlew :shared:iosSimulatorArm64Test`
-- Coverage reports: `./gradlew :shared:koverHtmlReport` (opens at `shared/build/reports/kover/html/index.html`)
+- Coverage reports:
+  - HTML: `./gradlew :shared:koverHtmlReport` (opens at `shared/build/reports/kover/html/index.html`)
+  - XML (for CI): `./gradlew :shared:koverXmlReport` (outputs to `shared/build/reports/kover/report.xml`)
 
 ### Test Organization
 
@@ -166,6 +222,37 @@ Tests must stay useful and up-to-date. Follow these rules:
 3. **New features need tests.** Every new public API should have corresponding tests.
 4. **Test behavior, not implementation.** Focus on what code does, not how it does it.
 
+### Coverage Guidelines
+
+We maintain **~95% test coverage** using Kover. Coverage is automatically measured and reported to Codecov on every PR.
+
+**What is excluded from coverage:**
+- **TEA architecture classes:** `*State`, `*Action`, `*Effect`, `*Features` (data classes)
+- **DI modules:** `*.di.*` (dependency wiring)
+- **Generated code:** `*.generated.*` (Compose resources, Metro factories)
+- **Platform-specific code:** `*.platform.*` (expect/actual declarations)
+- **Room database:** `*.room.*` (platform-specific persistence)
+- **UI layer:** `*.ui.*`, `*.view.*` (Compose UI, @Composable functions)
+- **DTOs:** `*Dto` (serialization data classes)
+
+**What must be tested:**
+- Domain logic (use cases, business rules)
+- Repository implementations with business logic
+- Pure functions and utilities
+- Data transformations and mappers
+
+**Important rules:**
+- UI code (@Composable functions) belongs in `*.ui.*` or `*.view.*` packages
+- expect/actual code belongs in `*.platform.*` packages
+- Pure business logic must not contain @Composable or expect/actual
+- When moving code, verify it doesn't affect coverage exclusions
+
+Check coverage locally:
+```bash
+./gradlew :shared:koverHtmlReport
+open shared/build/reports/kover/html/index.html
+```
+
 ## Linting & Formatting
 
 **Pre-commit hook handles all checks automatically.** Install it once with `./gradlew installGitHooks`.
@@ -181,13 +268,16 @@ Use `@Suppress` annotations only when the lint rule doesn't apply (e.g., `LongPa
 
 - Create a feature branch, push, and open a PR.
 - Use auto-merge with squash (`gh pr merge --auto --squash --delete-branch`).
+- **When user requests changes to existing PR:** amend commits and force-push to the same branch. Do NOT close and recreate PRs.
 - Commit messages: imperative, concise, single topic (e.g., "Simplify README").
 - PR titles: use English only (no Cyrillic or other non-ASCII characters).
-- **PR descriptions must be in English and detailed:**
-  - Summary section explaining what changed and why
-  - For refactoring: describe the before/after patterns with code examples
-  - List new/deleted/modified files for significant changes
-  - Include test plan with checkboxes
+- **PR descriptions must be concise and focused:**
+  - Brief summary explaining what changed and why
+  - Changes section with bullet points of what was added/updated/deleted
+  - For refactoring: short before/after comparison (code snippets if needed)
+  - Test plan with checkboxes only if relevant
+  - **NO unnecessary headers, footers, badges, or promotional content**
+  - Keep it clean and to the point
 - Pre-commit hook runs `checkAll` automatically — no manual checks needed.
 
 ## CI/CD
