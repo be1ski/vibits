@@ -131,6 +131,76 @@ class MemosApiTest {
       )
     }
 
+  @Test
+  fun `when updateMemo fails then throws exception`() =
+    runTest {
+      val client =
+        HttpClient(MockEngine { throw RuntimeException("Network error") }) {
+          install(ContentNegotiation) {
+            json()
+          }
+        }
+
+      val api = MemosApi(client)
+      try {
+        api.updateMemo(
+          baseUrl = "https://example.com",
+          token = "token",
+          name = "memos/1",
+          content = "Updated",
+        )
+        kotlin.test.fail("Should throw exception")
+      } catch (e: RuntimeException) {
+        assertEquals("Network error", e.message)
+      }
+    }
+
+  @Test
+  fun `when createMemo fails then throws exception`() =
+    runTest {
+      val client =
+        HttpClient(MockEngine { throw RuntimeException("Network error") }) {
+          install(ContentNegotiation) {
+            json()
+          }
+        }
+
+      val api = MemosApi(client)
+      try {
+        api.createMemo(
+          baseUrl = "https://example.com",
+          token = "token",
+          content = "Content",
+        )
+        kotlin.test.fail("Should throw exception")
+      } catch (e: RuntimeException) {
+        assertEquals("Network error", e.message)
+      }
+    }
+
+  @Test
+  fun `when deleteMemo fails then throws exception`() =
+    runTest {
+      val client =
+        HttpClient(MockEngine { throw RuntimeException("Network error") }) {
+          install(ContentNegotiation) {
+            json()
+          }
+        }
+
+      val api = MemosApi(client)
+      try {
+        api.deleteMemo(
+          baseUrl = "https://example.com",
+          token = "token",
+          name = "memos/1",
+        )
+        kotlin.test.fail("Should throw exception")
+      } catch (e: RuntimeException) {
+        assertEquals("Network error", e.message)
+      }
+    }
+
   private fun clientWithHandler(
     handler: suspend MockRequestHandleScope.(HttpRequestData) -> io.ktor.client.request.HttpResponseData,
   ): HttpClient =
