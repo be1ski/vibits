@@ -1,4 +1,3 @@
-import org.gradle.testing.jacoco.tasks.JacocoReport
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
@@ -10,7 +9,7 @@ plugins {
   alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.ksp)
   alias(libs.plugins.metro)
-  jacoco
+  alias(libs.plugins.kover)
 }
 
 kotlin {
@@ -112,7 +111,7 @@ kotlin {
 }
 
 compose.resources {
-  packageOfResClass = "space.be1ski.vibits.shared"
+  packageOfResClass = "space.be1ski.vibits.shared.generated"
 }
 
 dependencies {
@@ -129,18 +128,41 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().con
   }
 }
 
-tasks.register<JacocoReport>("jacocoDesktopTestReport") {
-  dependsOn("desktopTest")
-  executionData.setFrom(fileTree(layout.buildDirectory).include("jacoco/desktopTest.exec"))
-  classDirectories.setFrom(
-    fileTree(layout.buildDirectory.dir("classes/kotlin/desktop")) {
-      exclude("**/BuildConfig.*")
-    },
-  )
-  sourceDirectories.setFrom(files("src/commonMain/kotlin", "src/desktopMain/kotlin"))
+kover {
+  currentProject {
+    sources {
+      excludedSourceSets.addAll("androidMain", "iosMain", "wasmJsMain", "roomMain")
+    }
+  }
   reports {
-    html.required.set(true)
-    xml.required.set(true)
-    csv.required.set(false)
+    filters {
+      excludes {
+        classes(
+          // TEA data classes (State/Action/Effect/Features)
+          "*State",
+          "*State$*",
+          "*Action",
+          "*Action$*",
+          "*Effect",
+          "*Effect$*",
+          "*Features",
+          "*Features$*",
+          // DI modules
+          "*.di.*",
+          // View/UI components
+          "*.view.*",
+          // Platform-specific code (expect/actual)
+          "*.platform.*",
+        )
+        packages(
+          // Generated Compose Resources
+          "space.be1ski.vibits.shared.generated",
+          // Core UI (Compose theming and components)
+          "space.be1ski.vibits.shared.core.ui",
+          // Platform packages
+          "space.be1ski.vibits.shared.core.platform",
+        )
+      }
+    }
   }
 }

@@ -27,13 +27,13 @@ jobs:
         run: ./gradlew checkAll
 
       - name: Generate coverage report
-        run: ./gradlew :shared:jacocoDesktopTestReport
+        run: ./gradlew :shared:koverXmlReport
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: shared/build/reports/jacoco/jacocoDesktopTestReport/jacocoDesktopTestReport.xml
+          files: shared/build/reports/kover/report.xml
           fail_ci_if_error: false
 
       - name: Upload test results

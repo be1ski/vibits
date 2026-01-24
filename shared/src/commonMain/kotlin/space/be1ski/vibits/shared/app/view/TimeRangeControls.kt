@@ -24,9 +24,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.plus
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.Res
-import space.be1ski.vibits.shared.action_next
-import space.be1ski.vibits.shared.action_previous
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.SuccessRateLevel
 import space.be1ski.vibits.shared.app.domain.usecase.GetSuccessRateLevelUseCase
@@ -36,10 +33,13 @@ import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
-import space.be1ski.vibits.shared.time_months
-import space.be1ski.vibits.shared.time_quarters
-import space.be1ski.vibits.shared.time_weeks
-import space.be1ski.vibits.shared.time_years
+import space.be1ski.vibits.shared.generated.Res
+import space.be1ski.vibits.shared.generated.action_next
+import space.be1ski.vibits.shared.generated.action_previous
+import space.be1ski.vibits.shared.generated.time_months
+import space.be1ski.vibits.shared.generated.time_quarters
+import space.be1ski.vibits.shared.generated.time_weeks
+import space.be1ski.vibits.shared.generated.time_years
 
 private const val WEEK_END_OFFSET = 6
 
