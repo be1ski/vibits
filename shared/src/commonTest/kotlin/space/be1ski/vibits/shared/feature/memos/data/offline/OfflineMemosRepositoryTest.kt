@@ -154,6 +154,49 @@ class OfflineMemosRepositoryTest {
     }
 
   @Test
+  fun `when updateMemo among multiple memos then preserves others`() =
+    runTest {
+      val storage =
+        FakeOfflineMemoStorage(
+          initial =
+            OfflineMemosFileDto(
+              memos =
+                listOf(
+                  OfflineMemoDto(name = "memos/1", content = "First"),
+                  OfflineMemoDto(name = "memos/2", content = "Second"),
+                  OfflineMemoDto(name = "memos/3", content = "Third"),
+                ),
+            ),
+        )
+      val repository = OfflineMemosRepository(storage)
+
+      repository.updateMemo("memos/2", "Updated second")
+
+      assertEquals(3, storage.saved?.memos?.size)
+      assertEquals(
+        "First",
+        storage.saved
+          ?.memos
+          ?.get(0)
+          ?.content,
+      )
+      assertEquals(
+        "Updated second",
+        storage.saved
+          ?.memos
+          ?.get(1)
+          ?.content,
+      )
+      assertEquals(
+        "Third",
+        storage.saved
+          ?.memos
+          ?.get(2)
+          ?.content,
+      )
+    }
+
+  @Test
   fun `when updateMemo with nonexistent name then returns fallback memo`() =
     runTest {
       val storage =

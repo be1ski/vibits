@@ -22,9 +22,6 @@ import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.Res
-import space.be1ski.vibits.shared.action_create_memo
-import space.be1ski.vibits.shared.action_track_today
 import space.be1ski.vibits.shared.app.di.AppDependencies
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.Screen
@@ -43,6 +40,9 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
+import space.be1ski.vibits.shared.generated.Res
+import space.be1ski.vibits.shared.generated.action_create_memo
+import space.be1ski.vibits.shared.generated.action_track_today
 
 @Composable
 internal fun VibitsAppScaffold(

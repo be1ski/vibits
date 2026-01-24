@@ -2,16 +2,16 @@ package space.be1ski.vibits.shared.feature.habits.view.components
 
 import androidx.compose.runtime.Composable
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.Res
-import space.be1ski.vibits.shared.demo_habit_early_sleep
-import space.be1ski.vibits.shared.demo_habit_exercise
-import space.be1ski.vibits.shared.demo_habit_learning
-import space.be1ski.vibits.shared.demo_habit_meditation
-import space.be1ski.vibits.shared.demo_habit_no_sugar
-import space.be1ski.vibits.shared.demo_habit_reading
-import space.be1ski.vibits.shared.demo_habit_walking
-import space.be1ski.vibits.shared.demo_habit_water
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.vibits.shared.generated.Res
+import space.be1ski.vibits.shared.generated.demo_habit_early_sleep
+import space.be1ski.vibits.shared.generated.demo_habit_exercise
+import space.be1ski.vibits.shared.generated.demo_habit_learning
+import space.be1ski.vibits.shared.generated.demo_habit_meditation
+import space.be1ski.vibits.shared.generated.demo_habit_no_sugar
+import space.be1ski.vibits.shared.generated.demo_habit_reading
+import space.be1ski.vibits.shared.generated.demo_habit_walking
+import space.be1ski.vibits.shared.generated.demo_habit_water
 
 /**
  * Returns localized label for demo habits when in demo mode.

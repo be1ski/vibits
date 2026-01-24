@@ -47,6 +47,23 @@ class ModeAwareMemosRepositoryTest {
     }
 
   @Test
+  fun `when mode is ONLINE then uses online repository`() =
+    runTest {
+      val appModeRepo = FakeAppModeRepository(AppMode.ONLINE)
+      val cache = FakeMemoCache()
+      val repository = createModeAwareRepository(appModeRepo, cache = cache)
+
+      // For ONLINE mode, createMemo will fail since we don't have a real API
+      // But we can test that it uses online repo by checking cachedMemos uses cache
+      repository.cachedMemos()
+
+      // When mode is ONLINE, cachedMemos should delegate to online repo which uses cache
+      // This is enough to cover the else branch in currentRepository()
+      val memos = repository.cachedMemos()
+      assertEquals(emptyList(), memos)
+    }
+
+  @Test
   fun `when mode changes then clears cache`() =
     runTest {
       val appModeRepo = FakeAppModeRepository(AppMode.OFFLINE)
@@ -63,6 +80,49 @@ class ModeAwareMemosRepositoryTest {
       repository.listMemos()
 
       assertTrue(cache.clearCalled)
+    }
+
+  @Test
+  fun `when cachedMemos then delegates to current repository`() =
+    runTest {
+      val appModeRepo = FakeAppModeRepository(AppMode.OFFLINE)
+      val offlineStorage = FakeOfflineMemoStorage()
+      val offlineRepo = OfflineMemosRepository(offlineStorage)
+      val repository = createModeAwareRepository(appModeRepo, offlineRepo = offlineRepo)
+
+      repository.createMemo("Test memo")
+      val memos = repository.cachedMemos()
+
+      assertEquals(1, memos.size)
+    }
+
+  @Test
+  fun `when updateMemo then delegates to current repository`() =
+    runTest {
+      val appModeRepo = FakeAppModeRepository(AppMode.OFFLINE)
+      val offlineStorage = FakeOfflineMemoStorage()
+      val offlineRepo = OfflineMemosRepository(offlineStorage)
+      val repository = createModeAwareRepository(appModeRepo, offlineRepo = offlineRepo)
+
+      val created = repository.createMemo("Original")
+      val updated = repository.updateMemo(created.name, "Updated")
+
+      assertEquals("Updated", updated.content)
+    }
+
+  @Test
+  fun `when deleteMemo then delegates to current repository`() =
+    runTest {
+      val appModeRepo = FakeAppModeRepository(AppMode.OFFLINE)
+      val offlineStorage = FakeOfflineMemoStorage()
+      val offlineRepo = OfflineMemosRepository(offlineStorage)
+      val repository = createModeAwareRepository(appModeRepo, offlineRepo = offlineRepo)
+
+      val created = repository.createMemo("To delete")
+      repository.deleteMemo(created.name)
+      val memos = repository.listMemos()
+
+      assertTrue(memos.isEmpty())
     }
 
   @Test

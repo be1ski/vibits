@@ -148,6 +148,21 @@ class ExtractDailyMemosUseCaseTest {
     assertEquals(KtInstant.parse("2024-01-15T15:00:00Z"), result)
   }
 
+  @Test
+  fun `when daily memo has no date in content and no timestamp then skips it`() {
+    val memo =
+      Memo(
+        name = "memos/test",
+        content = "#daily\n- task",
+        createTime = null,
+        updateTime = null,
+      )
+
+    val result = ExtractDailyMemosUseCase(listOf(memo), timeZone)
+
+    assertEquals(0, result.size)
+  }
+
   private fun createMemo(
     content: String,
     createTime: KtInstant,

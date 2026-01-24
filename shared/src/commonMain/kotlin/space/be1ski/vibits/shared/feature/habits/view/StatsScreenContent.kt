@@ -48,11 +48,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.Res
-import space.be1ski.vibits.shared.action_configure_habits
-import space.be1ski.vibits.shared.action_hide_memos
-import space.be1ski.vibits.shared.action_show_memos
-import space.be1ski.vibits.shared.action_track
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.core.platform.date.DateFormatter
@@ -75,17 +70,22 @@ import space.be1ski.vibits.shared.feature.habits.view.components.WeeklyBarChartS
 import space.be1ski.vibits.shared.feature.habits.view.components.calculateLayout
 import space.be1ski.vibits.shared.feature.habits.view.components.localizedLabel
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
-import space.be1ski.vibits.shared.format_habits_progress
-import space.be1ski.vibits.shared.format_memos_count
-import space.be1ski.vibits.shared.format_memos_today
-import space.be1ski.vibits.shared.hint_add_habits_config
-import space.be1ski.vibits.shared.label_activity
-import space.be1ski.vibits.shared.label_habits_config
-import space.be1ski.vibits.shared.label_time_day
-import space.be1ski.vibits.shared.label_time_evening
-import space.be1ski.vibits.shared.label_time_morning
-import space.be1ski.vibits.shared.label_time_night
-import space.be1ski.vibits.shared.msg_no_habits_yet
+import space.be1ski.vibits.shared.generated.Res
+import space.be1ski.vibits.shared.generated.action_configure_habits
+import space.be1ski.vibits.shared.generated.action_hide_memos
+import space.be1ski.vibits.shared.generated.action_show_memos
+import space.be1ski.vibits.shared.generated.action_track
+import space.be1ski.vibits.shared.generated.format_habits_progress
+import space.be1ski.vibits.shared.generated.format_memos_count
+import space.be1ski.vibits.shared.generated.format_memos_today
+import space.be1ski.vibits.shared.generated.hint_add_habits_config
+import space.be1ski.vibits.shared.generated.label_activity
+import space.be1ski.vibits.shared.generated.label_habits_config
+import space.be1ski.vibits.shared.generated.label_time_day
+import space.be1ski.vibits.shared.generated.label_time_evening
+import space.be1ski.vibits.shared.generated.label_time_morning
+import space.be1ski.vibits.shared.generated.label_time_night
+import space.be1ski.vibits.shared.generated.msg_no_habits_yet
 
 @Composable
 internal fun StatsInfoCard(

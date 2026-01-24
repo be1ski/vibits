@@ -7,26 +7,26 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.Res
-import space.be1ski.vibits.shared.day_fri
-import space.be1ski.vibits.shared.day_mon
-import space.be1ski.vibits.shared.day_sat
-import space.be1ski.vibits.shared.day_sun
-import space.be1ski.vibits.shared.day_thu
-import space.be1ski.vibits.shared.day_tue
-import space.be1ski.vibits.shared.day_wed
-import space.be1ski.vibits.shared.month_apr
-import space.be1ski.vibits.shared.month_aug
-import space.be1ski.vibits.shared.month_dec
-import space.be1ski.vibits.shared.month_feb
-import space.be1ski.vibits.shared.month_jan
-import space.be1ski.vibits.shared.month_jul
-import space.be1ski.vibits.shared.month_jun
-import space.be1ski.vibits.shared.month_mar
-import space.be1ski.vibits.shared.month_may
-import space.be1ski.vibits.shared.month_nov
-import space.be1ski.vibits.shared.month_oct
-import space.be1ski.vibits.shared.month_sep
+import space.be1ski.vibits.shared.generated.Res
+import space.be1ski.vibits.shared.generated.day_fri
+import space.be1ski.vibits.shared.generated.day_mon
+import space.be1ski.vibits.shared.generated.day_sat
+import space.be1ski.vibits.shared.generated.day_sun
+import space.be1ski.vibits.shared.generated.day_thu
+import space.be1ski.vibits.shared.generated.day_tue
+import space.be1ski.vibits.shared.generated.day_wed
+import space.be1ski.vibits.shared.generated.month_apr
+import space.be1ski.vibits.shared.generated.month_aug
+import space.be1ski.vibits.shared.generated.month_dec
+import space.be1ski.vibits.shared.generated.month_feb
+import space.be1ski.vibits.shared.generated.month_jan
+import space.be1ski.vibits.shared.generated.month_jul
+import space.be1ski.vibits.shared.generated.month_jun
+import space.be1ski.vibits.shared.generated.month_mar
+import space.be1ski.vibits.shared.generated.month_may
+import space.be1ski.vibits.shared.generated.month_nov
+import space.be1ski.vibits.shared.generated.month_oct
+import space.be1ski.vibits.shared.generated.month_sep
 
 private const val MONTH_FALLBACK_LENGTH = 3
 private const val DAY_FALLBACK_LENGTH = 2
