@@ -3,9 +3,9 @@ package space.be1ski.vibits.shared.feature.memos.data.platform
 import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import space.be1ski.vibits.shared.app.data.DesktopStoragePaths
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoDatabase
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoDatabaseConstructor
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoEntityMapper
+import space.be1ski.vibits.shared.feature.memos.data.room.MemoDatabase
+import space.be1ski.vibits.shared.feature.memos.data.room.MemoDatabaseConstructor
+import space.be1ski.vibits.shared.feature.memos.data.room.MemoEntityMapper
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 actual fun createMemoCache(): MemoCache = DesktopMemoCache()

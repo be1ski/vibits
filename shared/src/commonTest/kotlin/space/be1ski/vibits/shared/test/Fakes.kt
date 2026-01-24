@@ -7,7 +7,6 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
-import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.shared.feature.settings.domain.model.UserPreferences
 import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
@@ -138,23 +137,5 @@ class FakePreferencesRepository(
   override fun save(preferences: UserPreferences) {
     stored = preferences
     saveCalls += 1
-  }
-}
-
-class FakeLocaleProvider(
-  private val systemLocale: String = "en",
-  private val requiresRestart: Boolean = false,
-) {
-  var configureLocaleCalls: Int = 0
-    private set
-  var lastConfiguredLanguage: AppLanguage? = null
-    private set
-
-  fun getSystemLocale(): String = systemLocale
-
-  fun configureLocale(language: AppLanguage): Boolean {
-    configureLocaleCalls++
-    lastConfiguredLanguage = language
-    return requiresRestart
   }
 }

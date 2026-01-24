@@ -153,6 +153,11 @@ kover {
           "*.view.*",
           // Platform-specific code (expect/actual)
           "*.platform.*",
+          // Room database (platform-specific persistence layer)
+          "*.room.*",
+          // Data layer - DTO serialization classes
+          "*Dto",
+          "*Dto$*",
         )
         packages(
           // Generated Compose Resources
