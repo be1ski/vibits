@@ -347,4 +347,105 @@ class HabitsReducerTest {
       assertState { isLoading }
       assertHasEffect<HabitsEffect.CreateMemo>()
     }
+
+  @Test
+  fun `when RequestSingleHabitToggle then sets single toggle state`() =
+    habitsReducer.test(HabitsState()) {
+      send(HabitsAction.RequestSingleHabitToggle(testDay, "#habits/exercise", "Exercise", testConfig))
+
+      assertState {
+        singleToggleDay == testDay &&
+          singleToggleHabitTag == "#habits/exercise" &&
+          singleToggleHabitLabel == "Exercise" &&
+          singleToggleConfig == testConfig
+      }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ConfirmSingleHabitToggle with no selection and existing memo then deletes memo`() =
+    habitsReducer.test(
+      HabitsState(
+        singleToggleDay = testDay.copy(dailyMemo = DailyMemoInfo("memos/1", "content")),
+        singleToggleHabitTag = "#habits/exercise",
+        singleToggleConfig = testConfig,
+      ),
+    ) {
+      send(HabitsAction.ConfirmSingleHabitToggle)
+
+      assertState { isLoading }
+      val effect = assertHasEffect<HabitsEffect.DeleteMemo>()
+      assertEquals("memos/1", effect.name)
+    }
+
+  @Test
+  fun `when ConfirmSingleHabitToggle with selection and no existing memo then creates memo`() =
+    habitsReducer.test(
+      HabitsState(
+        singleToggleDay = testDay.copy(dailyMemo = null),
+        singleToggleHabitTag = "#habits/reading",
+        singleToggleConfig = testConfig,
+      ),
+    ) {
+      send(HabitsAction.ConfirmSingleHabitToggle)
+
+      assertState { isLoading }
+      assertHasEffect<HabitsEffect.CreateMemo>()
+    }
+
+  @Test
+  fun `when ConfirmSingleHabitToggle with selection and existing memo then updates memo`() =
+    habitsReducer.test(
+      HabitsState(
+        singleToggleDay = testDay.copy(dailyMemo = DailyMemoInfo("memos/1", "old")),
+        singleToggleHabitTag = "#habits/reading",
+        singleToggleConfig = testConfig,
+      ),
+    ) {
+      send(HabitsAction.ConfirmSingleHabitToggle)
+
+      assertState { isLoading }
+      val effect = assertHasEffect<HabitsEffect.UpdateMemo>()
+      assertEquals("memos/1", effect.name)
+    }
+
+  @Test
+  fun `when ConfirmSingleHabitToggle toggles off last habit with no memo then just closes`() =
+    habitsReducer.test(
+      HabitsState(
+        singleToggleDay =
+          testDay.copy(
+            habitStatuses = listOf(HabitStatus("#habits/ex", "Ex", done = true)),
+            dailyMemo = null,
+          ),
+        singleToggleHabitTag = "#habits/ex",
+        singleToggleConfig = listOf(HabitConfig("#habits/ex", "Ex")),
+      ),
+    ) {
+      send(HabitsAction.ConfirmSingleHabitToggle)
+
+      assertState { singleToggleDay == null && singleToggleHabitTag == null }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when CancelSingleHabitToggle then clears single toggle state`() =
+    habitsReducer.test(
+      HabitsState(
+        singleToggleDay = testDay,
+        singleToggleHabitTag = "#habits/exercise",
+        singleToggleHabitLabel = "Exercise",
+        singleToggleConfig = testConfig,
+      ),
+    ) {
+      send(HabitsAction.CancelSingleHabitToggle)
+
+      assertState {
+        singleToggleDay == null &&
+          singleToggleHabitTag == null &&
+          singleToggleHabitLabel == null &&
+          singleToggleConfig.isEmpty()
+      }
+      assertNoEffects()
+    }
 }
