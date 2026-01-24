@@ -27,7 +27,7 @@ import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.SuccessRateLevel
 import space.be1ski.vibits.shared.app.domain.usecase.GetSuccessRateLevelUseCase
-import space.be1ski.vibits.shared.core.platform.date.DateFormatter
+import space.be1ski.vibits.shared.core.date.DateFormatter
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
