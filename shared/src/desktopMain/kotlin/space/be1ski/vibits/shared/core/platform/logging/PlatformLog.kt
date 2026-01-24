@@ -1,6 +1,7 @@
-package space.be1ski.vibits.shared.core.logging
+package space.be1ski.vibits.shared.core.platform.logging
 
 import org.slf4j.LoggerFactory
+import space.be1ski.vibits.shared.core.logging.LogLevel
 
 private val logger = LoggerFactory.getLogger("Vibits")
 
