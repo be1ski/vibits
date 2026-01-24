@@ -1,7 +1,7 @@
-package space.be1ski.vibits.shared.feature.memos.data.local
+package space.be1ski.vibits.shared.feature.memos.data.room
 
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoEntity
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoEntityMapper
+import space.be1ski.vibits.shared.feature.memos.data.room.MemoEntity
+import space.be1ski.vibits.shared.feature.memos.data.room.MemoEntityMapper
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import kotlin.test.Test
 import kotlin.test.assertEquals

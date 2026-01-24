@@ -2,9 +2,9 @@ package space.be1ski.vibits.shared.feature.memos.data.platform
 
 import androidx.room.Room
 import space.be1ski.vibits.shared.app.data.AndroidContextHolder
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoDao
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoDatabase
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoEntityMapper
+import space.be1ski.vibits.shared.feature.memos.data.room.MemoDao
+import space.be1ski.vibits.shared.feature.memos.data.room.MemoDatabase
+import space.be1ski.vibits.shared.feature.memos.data.room.MemoEntityMapper
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 actual fun createMemoCache(): MemoCache = AndroidMemoCache()

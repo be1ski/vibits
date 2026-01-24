@@ -6,9 +6,9 @@ import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSUserDomainMask
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoDatabase
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoDatabaseConstructor
-import space.be1ski.vibits.shared.feature.memos.data.local.MemoEntityMapper
+import space.be1ski.vibits.shared.feature.memos.data.room.MemoDatabase
+import space.be1ski.vibits.shared.feature.memos.data.room.MemoDatabaseConstructor
+import space.be1ski.vibits.shared.feature.memos.data.room.MemoEntityMapper
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 actual fun createMemoCache(): MemoCache = IosMemoCache()
