@@ -45,13 +45,13 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(compose.components.resources)
-        implementation(compose.foundation)
-        implementation(compose.material)
-        implementation(compose.material3)
-        implementation(compose.materialIconsExtended)
-        implementation(compose.runtime)
-        implementation(compose.ui)
+        implementation(libs.compose.foundation)
+        implementation(libs.compose.material)
+        implementation(libs.compose.material.icons.extended)
+        implementation(libs.compose.material3)
+        implementation(libs.compose.resources)
+        implementation(libs.compose.runtime)
+        implementation(libs.compose.ui)
         implementation(libs.kotlinx.atomicfu)
         implementation(libs.kotlinx.coroutines.core)
         implementation(libs.kotlinx.datetime)
