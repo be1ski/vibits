@@ -13,6 +13,7 @@ import space.be1ski.vibits.shared.core.platform.export.FileExporter
 import space.be1ski.vibits.shared.core.platform.export.createFileExporter
 import space.be1ski.vibits.shared.core.platform.locale.LocaleProvider
 import space.be1ski.vibits.shared.core.platform.network.createHttpClient
+import space.be1ski.vibits.shared.core.platform.storage.createKeyValueStore
 import space.be1ski.vibits.shared.feature.auth.data.platform.CredentialsStore
 import space.be1ski.vibits.shared.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.shared.feature.memos.data.platform.OfflineMemoStorage
@@ -20,7 +21,7 @@ import space.be1ski.vibits.shared.feature.memos.data.platform.createMemoCache
 import space.be1ski.vibits.shared.feature.memos.data.platform.createOfflineMemoStorage
 import space.be1ski.vibits.shared.feature.mode.data.platform.AppModeStore
 import space.be1ski.vibits.shared.feature.settings.data.PreferencesStore
-import space.be1ski.vibits.shared.feature.settings.data.createPreferencesStore
+import space.be1ski.vibits.shared.feature.settings.data.PreferencesStoreImpl
 
 @SingleIn(AppScope::class)
 @DependencyGraph(AppScope::class)
@@ -59,7 +60,7 @@ abstract class AppGraph {
 
   @Provides
   @SingleIn(AppScope::class)
-  fun preferencesStore(): PreferencesStore = createPreferencesStore()
+  fun preferencesStore(): PreferencesStore = PreferencesStoreImpl(createKeyValueStore())
 
   @Provides
   @SingleIn(AppScope::class)

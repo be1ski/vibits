@@ -22,6 +22,7 @@ fun VibitsTheme(
   darkTheme: Boolean = rememberSystemDarkTheme(),
   content: @Composable () -> Unit,
 ) {
+  ConfigureSystemBars(darkTheme)
   val colorScheme = if (darkTheme) darkColorScheme() else lightColorScheme()
 
   CompositionLocalProvider(LocalDarkTheme provides darkTheme) {
