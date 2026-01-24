@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.memos.data.local
+package space.be1ski.vibits.shared.feature.memos.data.room
 
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import kotlin.time.Instant
