@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.core.platform.date
+package space.be1ski.vibits.shared.core.date
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
