@@ -148,7 +148,7 @@ We follow TDD for business logic and aim for high coverage.
 
 - Run shared unit tests: `./gradlew :shared:desktopTest`
 - Run iOS simulator tests: `./gradlew :shared:iosSimulatorArm64Test`
-- Coverage reports: `./gradlew :shared:jacocoDesktopTestReport`
+- Coverage reports: `./gradlew :shared:koverHtmlReport` (opens at `shared/build/reports/kover/html/index.html`)
 
 ### Test Organization
 
