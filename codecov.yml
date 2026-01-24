@@ -2,30 +2,11 @@ coverage:
   status:
     project:
       default:
-        target: auto
+        target: 90%
         threshold: 1%
     patch:
       default:
         target: 80%
-
-ignore:
-  # DI modules (generated bindings)
-  - "**/di/**"
-  # UI components (Compose views)
-  - "**/view/**"
-  # Test utilities
-  - "**/commonTest/**"
-  # Platform-specific code (expect/actual declarations)
-  - "**/platform/**"
-  # Compose UI theming
-  - "**/core/ui/**"
-  # Room database (requires instrumentation tests)
-  - "**/roomMain/**"
-  # TEA data classes (no logic to test)
-  - "**/presentation/*State.kt"
-  - "**/presentation/*Action.kt"
-  - "**/presentation/*Effect.kt"
-  - "**/presentation/*Features.kt"
 
 comment:
   layout: "reach, diff, flags, files"
