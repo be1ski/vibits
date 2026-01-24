@@ -9,6 +9,7 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
+import space.be1ski.vibits.shared.feature.habits.domain.model.StreakData
 import space.be1ski.vibits.shared.feature.habits.domain.model.SuccessRateData
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
@@ -59,6 +60,7 @@ internal data class StatsScreenDerivedState(
   val today: LocalDate,
   val timeZone: TimeZone,
   val successRateData: SuccessRateData?,
+  val streakData: StreakData?,
   val periodPosts: List<Memo>,
   val dateFormatter: DateFormatter,
   /** Date when habits were first configured (null if no config). */

@@ -5,6 +5,7 @@ import space.be1ski.vibits.shared.app.domain.usecase.LoadAppDetailsUseCase
 import space.be1ski.vibits.shared.core.platform.locale.LocaleProvider
 import space.be1ski.vibits.shared.feature.habits.di.HabitsDependencies
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateStreakUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.habits.view.components.ActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.memos.di.MemosDependencies
@@ -28,6 +29,7 @@ class AppDependencies(
   val loadAppDetails: LoadAppDetailsUseCase,
   val loadAppMode: LoadAppModeUseCase,
   val calculateSuccessRate: CalculateSuccessRateUseCase,
+  val calculateStreak: CalculateStreakUseCase,
   val buildActivityData: BuildActivityDataUseCase,
   val activityWeekDataCache: ActivityWeekDataCache,
   val modeSelectionDependencies: ModeSelectionDependencies,

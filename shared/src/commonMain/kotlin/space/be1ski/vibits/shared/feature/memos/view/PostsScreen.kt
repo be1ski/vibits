@@ -5,6 +5,7 @@ import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateStreakUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.habits.view.StatsScreen
 import space.be1ski.vibits.shared.feature.habits.view.StatsScreenState
@@ -20,6 +21,7 @@ fun PostsScreen(
   range: ActivityRange,
   demoMode: Boolean,
   calculateSuccessRate: CalculateSuccessRateUseCase,
+  calculateStreak: CalculateStreakUseCase,
   buildActivityDataUseCase: BuildActivityDataUseCase,
   cache: ActivityWeekDataCache,
   dateFormatter: DateFormatter,
@@ -38,6 +40,7 @@ fun PostsScreen(
         postsListExpanded = postsListExpanded,
       ),
     calculateSuccessRate = calculateSuccessRate,
+    calculateStreak = calculateStreak,
     buildActivityDataUseCase = buildActivityDataUseCase,
     cache = cache,
     dateFormatter = dateFormatter,

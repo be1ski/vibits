@@ -104,8 +104,20 @@ internal fun StatsInfoCard(
 
   if (todayTotal == 0) return
 
+  val streakText =
+    derived.streakData?.let { streak ->
+      when {
+        streak.current > 0 && streak.best > streak.current ->
+          "🔥 ${streak.current} day streak (best: ${streak.best})"
+        streak.current > 0 ->
+          "🔥 ${streak.current} day streak"
+        else -> null
+      }
+    }
+
   StatsInfoCardLayout(
     primaryText = stringResource(Res.string.format_habits_progress, todayDone, todayTotal),
+    secondaryText = streakText,
     actions = {
       IconButton(
         onClick = { dispatch(HabitsAction.OpenConfigDialog(derived.currentHabitsConfig)) },

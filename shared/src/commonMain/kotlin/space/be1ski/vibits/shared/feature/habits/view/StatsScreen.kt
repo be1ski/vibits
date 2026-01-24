@@ -17,6 +17,7 @@ import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.model.findDayByDate
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateStreakUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractDailyMemosUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
@@ -35,6 +36,7 @@ import space.be1ski.vibits.shared.feature.habits.view.components.rememberHabitsC
 fun StatsScreen(
   state: StatsScreenState,
   calculateSuccessRate: CalculateSuccessRateUseCase,
+  calculateStreak: CalculateStreakUseCase,
   buildActivityDataUseCase: BuildActivityDataUseCase,
   cache: ActivityWeekDataCache,
   dateFormatter: DateFormatter,
@@ -43,17 +45,18 @@ fun StatsScreen(
   onPostsListExpandedChange: (Boolean) -> Unit = {},
 ) {
   val derived =
-    rememberStatsScreenDerived(state, habitsState, calculateSuccessRate, buildActivityDataUseCase, cache, dateFormatter)
+    rememberStatsScreenDerived(state, habitsState, calculateSuccessRate, calculateStreak, buildActivityDataUseCase, cache, dateFormatter)
   StatsScreenContent(derived, onHabitsAction, onPostsListExpandedChange)
   StatsScreenDialogs(derived, onHabitsAction)
 }
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable
 private fun rememberStatsScreenDerived(
   state: StatsScreenState,
   habitsState: HabitsState,
   calculateSuccessRate: CalculateSuccessRateUseCase,
+  calculateStreak: CalculateStreakUseCase,
   buildActivityDataUseCase: BuildActivityDataUseCase,
   cache: ActivityWeekDataCache,
   dateFormatter: DateFormatter,
@@ -117,6 +120,14 @@ private fun rememberStatsScreenDerived(
         null
       }
     }
+  val streakData =
+    remember(weekData, activityMode, currentHabitsConfig, configStartDate) {
+      if (activityMode == ActivityMode.HABITS && currentHabitsConfig.isNotEmpty()) {
+        calculateStreak(weekData, today, configStartDate)
+      } else {
+        null
+      }
+    }
   val getPeriodPosts = remember { GetPeriodPostsUseCase() }
   val periodPosts =
     remember(memos, range, timeZone) {
@@ -140,6 +151,7 @@ private fun rememberStatsScreenDerived(
     today = today,
     timeZone = timeZone,
     successRateData = successRateData,
+    streakData = streakData,
     periodPosts = periodPosts,
     dateFormatter = dateFormatter,
     configStartDate = configStartDate,

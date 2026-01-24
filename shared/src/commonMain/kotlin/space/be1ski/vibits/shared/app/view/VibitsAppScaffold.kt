@@ -183,6 +183,7 @@ private fun ScaffoldContent(
       onHabitsAction = features.habits::send,
       onAppAction = features.app::send,
       calculateSuccessRate = dependencies.calculateSuccessRate,
+      calculateStreak = dependencies.calculateStreak,
       buildActivityDataUseCase = dependencies.buildActivityData,
       cache = dependencies.activityWeekDataCache,
       dateFormatter = dateFormatter,

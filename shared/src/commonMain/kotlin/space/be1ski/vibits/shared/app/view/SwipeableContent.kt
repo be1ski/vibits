@@ -24,6 +24,7 @@ import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateActivityRangeDeltaUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateStreakUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
@@ -52,6 +53,7 @@ internal fun SwipeableTabContent(
   onHabitsAction: (HabitsAction) -> Unit,
   onAppAction: (AppAction) -> Unit,
   calculateSuccessRate: CalculateSuccessRateUseCase,
+  calculateStreak: CalculateStreakUseCase,
   buildActivityDataUseCase: BuildActivityDataUseCase,
   cache: ActivityWeekDataCache,
   dateFormatter: DateFormatter,
@@ -92,6 +94,7 @@ internal fun SwipeableTabContent(
       onAppAction = onAppAction,
       onMemosAction = dispatchMemos,
       calculateSuccessRate = calculateSuccessRate,
+      calculateStreak = calculateStreak,
       buildActivityDataUseCase = buildActivityDataUseCase,
       cache = cache,
       dateFormatter = dateFormatter,
@@ -111,6 +114,7 @@ private fun SwipeablePagerContent(
   onAppAction: (AppAction) -> Unit,
   onMemosAction: (MemosAction) -> Unit,
   calculateSuccessRate: CalculateSuccessRateUseCase,
+  calculateStreak: CalculateStreakUseCase,
   buildActivityDataUseCase: BuildActivityDataUseCase,
   cache: ActivityWeekDataCache,
   dateFormatter: DateFormatter,
@@ -174,6 +178,7 @@ private fun SwipeablePagerContent(
       onAppAction = onAppAction,
       onMemosAction = onMemosAction,
       calculateSuccessRate = calculateSuccessRate,
+      calculateStreak = calculateStreak,
       buildActivityDataUseCase = buildActivityDataUseCase,
       cache = cache,
       dateFormatter = dateFormatter,
@@ -191,6 +196,7 @@ private fun MemosTabContent(
   onAppAction: (AppAction) -> Unit,
   onMemosAction: (MemosAction) -> Unit,
   calculateSuccessRate: CalculateSuccessRateUseCase,
+  calculateStreak: CalculateStreakUseCase,
   buildActivityDataUseCase: BuildActivityDataUseCase,
   cache: ActivityWeekDataCache,
   dateFormatter: DateFormatter,
@@ -209,6 +215,7 @@ private fun MemosTabContent(
             demoMode = appState.appMode == AppMode.DEMO,
           ),
         calculateSuccessRate = calculateSuccessRate,
+        calculateStreak = calculateStreak,
         buildActivityDataUseCase = buildActivityDataUseCase,
         cache = cache,
         dateFormatter = dateFormatter,
@@ -221,6 +228,7 @@ private fun MemosTabContent(
         range = activityRange,
         demoMode = appState.appMode == AppMode.DEMO,
         calculateSuccessRate = calculateSuccessRate,
+        calculateStreak = calculateStreak,
         buildActivityDataUseCase = buildActivityDataUseCase,
         cache = cache,
         dateFormatter = dateFormatter,

@@ -65,6 +65,8 @@
     <string name="format_memos_in_month">%1$d memos in %2$s</string>
     <string name="format_memos_in_quarter">%1$d memos in %2$s</string>
     <string name="format_memos_in_year">%1$d memos in %2$d</string>
+    <string name="format_streak_current">🔥 %1$d day streak</string>
+    <string name="format_streak_with_best">🔥 %1$d day streak (best: %2$d)</string>
     <string name="action_show_memos">Show memos</string>
     <string name="action_hide_memos">Hide memos</string>
     <string name="action_write">Write</string>
