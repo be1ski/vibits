@@ -164,8 +164,6 @@ kover {
           "space.be1ski.vibits.shared.generated",
           // Core UI (Compose theming and components)
           "space.be1ski.vibits.shared.core.ui",
-          // Platform packages
-          "space.be1ski.vibits.shared.core.platform",
         )
       }
     }
