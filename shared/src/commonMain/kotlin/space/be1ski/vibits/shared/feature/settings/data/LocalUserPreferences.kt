@@ -16,15 +16,3 @@ data class LocalUserPreferences(
     val DEFAULT_THEME = AppTheme.SYSTEM.name
   }
 }
-
-/**
- * Platform-specific preferences storage.
- * Stored in SharedPreferences (Android), Preferences API (Desktop), NSUserDefaults (iOS), localStorage (WASM).
- */
-interface PreferencesStore {
-  fun load(): LocalUserPreferences
-
-  fun save(preferences: LocalUserPreferences)
-}
-
-expect fun createPreferencesStore(): PreferencesStore
