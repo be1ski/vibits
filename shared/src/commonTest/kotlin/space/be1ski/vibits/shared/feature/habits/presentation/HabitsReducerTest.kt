@@ -154,6 +154,20 @@ class HabitsReducerTest {
     }
 
   @Test
+  fun `when ConfirmEditor with null editorDay then does nothing`() =
+    habitsReducer.test(
+      HabitsState(
+        editorDay = null,
+        editorConfig = testConfig,
+        editorSelections = mapOf("#habits/exercise" to true),
+      ),
+    ) {
+      send(HabitsAction.ConfirmEditor)
+
+      assertNoEffects()
+    }
+
+  @Test
   fun `when RequestDelete then shows delete confirm`() =
     habitsReducer.test(HabitsState()) {
       send(HabitsAction.RequestDelete)
@@ -170,6 +184,15 @@ class HabitsReducerTest {
       assertState { isLoading }
       val effect = assertHasEffect<HabitsEffect.DeleteMemo>()
       assertEquals("memos/1", effect.name)
+    }
+
+  @Test
+  fun `when ConfirmDelete with null editorExisting then does nothing`() =
+    habitsReducer.test(HabitsState(editorExisting = null)) {
+      send(HabitsAction.ConfirmDelete)
+
+      assertState { !isLoading }
+      assertNoEffects()
     }
 
   @Test
@@ -308,6 +331,26 @@ class HabitsReducerTest {
     }
 
   @Test
+  fun `when UpdateHabitLabel for non-matching id then keeps other habits unchanged`() =
+    habitsReducer.test(
+      HabitsState(
+        editingHabits =
+          listOf(
+            EditableHabit("habit_1", "#habits/a", "A", 0xFF0000L),
+            EditableHabit("habit_2", "#habits/b", "B", 0x00FF00L),
+          ),
+      ),
+    ) {
+      send(HabitsAction.UpdateHabitLabel("habit_1", "Updated A"))
+
+      assertState {
+        editingHabits[0].label == "Updated A" &&
+          editingHabits[1].label == "B" &&
+          editingHabits[1].tag == "#habits/b"
+      }
+    }
+
+  @Test
   fun `when UpdateHabitColor then updates color`() =
     habitsReducer.test(
       HabitsState(editingHabits = listOf(EditableHabit("habit_1", "#habits/test", "Test", 0xFF0000L))),
@@ -316,6 +359,25 @@ class HabitsReducerTest {
 
       assertState { editingHabits.first().color == 0x00FF00L }
       assertNoEffects()
+    }
+
+  @Test
+  fun `when UpdateHabitColor for non-matching id then keeps other habits unchanged`() =
+    habitsReducer.test(
+      HabitsState(
+        editingHabits =
+          listOf(
+            EditableHabit("habit_1", "#habits/a", "A", 0xFF0000L),
+            EditableHabit("habit_2", "#habits/b", "B", 0x00FF00L),
+          ),
+      ),
+    ) {
+      send(HabitsAction.UpdateHabitColor("habit_1", 0xFFFFFFFL))
+
+      assertState {
+        editingHabits[0].color == 0xFFFFFFFL &&
+          editingHabits[1].color == 0x00FF00L
+      }
     }
 
   @Test
@@ -346,6 +408,26 @@ class HabitsReducerTest {
 
       assertState { isLoading }
       assertHasEffect<HabitsEffect.CreateMemo>()
+    }
+
+  @Test
+  fun `when SaveConfigDialog with blank habits then filters them out`() =
+    habitsReducer.test(
+      HabitsState(
+        editingHabits =
+          listOf(
+            EditableHabit("habit_1", "#habits/exercise", "Exercise", 0xFF0000L),
+            EditableHabit("habit_2", "", "", 0x00FF00L),
+            EditableHabit("habit_3", "#habits/reading", "Reading", 0x0000FFL),
+          ),
+      ),
+    ) {
+      send(HabitsAction.SaveConfigDialog)
+
+      val effect = assertHasEffect<HabitsEffect.CreateMemo>()
+      assertEquals(true, effect.content.contains("Exercise"))
+      assertEquals(true, effect.content.contains("Reading"))
+      assertEquals(false, effect.content.contains("habit_2"))
     }
 
   @Test
@@ -425,6 +507,34 @@ class HabitsReducerTest {
       send(HabitsAction.ConfirmSingleHabitToggle)
 
       assertState { singleToggleDay == null && singleToggleHabitTag == null }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ConfirmSingleHabitToggle with null day then does nothing`() =
+    habitsReducer.test(
+      HabitsState(
+        singleToggleDay = null,
+        singleToggleHabitTag = "#habits/ex",
+        singleToggleConfig = testConfig,
+      ),
+    ) {
+      send(HabitsAction.ConfirmSingleHabitToggle)
+
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ConfirmSingleHabitToggle with null habit tag then does nothing`() =
+    habitsReducer.test(
+      HabitsState(
+        singleToggleDay = testDay,
+        singleToggleHabitTag = null,
+        singleToggleConfig = testConfig,
+      ),
+    ) {
+      send(HabitsAction.ConfirmSingleHabitToggle)
+
       assertNoEffects()
     }
 
