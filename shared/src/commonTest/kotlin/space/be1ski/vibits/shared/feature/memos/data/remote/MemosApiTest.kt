@@ -134,72 +134,49 @@ class MemosApiTest {
   @Test
   fun `when updateMemo fails then throws exception`() =
     runTest {
-      val client =
-        HttpClient(MockEngine { throw RuntimeException("Network error") }) {
-          install(ContentNegotiation) {
-            json()
-          }
+      val api = apiWithFailingClient()
+
+      val error =
+        kotlin.test.assertFailsWith<RuntimeException> {
+          api.updateMemo("https://example.com", "token", "memos/1", "Updated")
         }
 
-      val api = MemosApi(client)
-      try {
-        api.updateMemo(
-          baseUrl = "https://example.com",
-          token = "token",
-          name = "memos/1",
-          content = "Updated",
-        )
-        kotlin.test.fail("Should throw exception")
-      } catch (e: RuntimeException) {
-        assertEquals("Network error", e.message)
-      }
+      assertEquals("Network error", error.message)
     }
 
   @Test
   fun `when createMemo fails then throws exception`() =
     runTest {
-      val client =
-        HttpClient(MockEngine { throw RuntimeException("Network error") }) {
-          install(ContentNegotiation) {
-            json()
-          }
+      val api = apiWithFailingClient()
+
+      val error =
+        kotlin.test.assertFailsWith<RuntimeException> {
+          api.createMemo("https://example.com", "token", "Content")
         }
 
-      val api = MemosApi(client)
-      try {
-        api.createMemo(
-          baseUrl = "https://example.com",
-          token = "token",
-          content = "Content",
-        )
-        kotlin.test.fail("Should throw exception")
-      } catch (e: RuntimeException) {
-        assertEquals("Network error", e.message)
-      }
+      assertEquals("Network error", error.message)
     }
 
   @Test
   fun `when deleteMemo fails then throws exception`() =
     runTest {
-      val client =
-        HttpClient(MockEngine { throw RuntimeException("Network error") }) {
-          install(ContentNegotiation) {
-            json()
-          }
+      val api = apiWithFailingClient()
+
+      val error =
+        kotlin.test.assertFailsWith<RuntimeException> {
+          api.deleteMemo("https://example.com", "token", "memos/1")
         }
 
-      val api = MemosApi(client)
-      try {
-        api.deleteMemo(
-          baseUrl = "https://example.com",
-          token = "token",
-          name = "memos/1",
-        )
-        kotlin.test.fail("Should throw exception")
-      } catch (e: RuntimeException) {
-        assertEquals("Network error", e.message)
-      }
+      assertEquals("Network error", error.message)
     }
+
+  private fun apiWithFailingClient(): MemosApi {
+    val client =
+      HttpClient(MockEngine { throw RuntimeException("Network error") }) {
+        install(ContentNegotiation) { json() }
+      }
+    return MemosApi(client)
+  }
 
   private fun clientWithHandler(
     handler: suspend MockRequestHandleScope.(HttpRequestData) -> io.ktor.client.request.HttpResponseData,
