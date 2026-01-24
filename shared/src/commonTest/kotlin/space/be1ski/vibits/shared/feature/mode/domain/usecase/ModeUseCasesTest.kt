@@ -85,6 +85,52 @@ class ResetAppUseCaseTest {
   }
 }
 
+class SwitchAppModeUseCaseTest {
+  @Test
+  fun `when mode is different then saves new mode`() {
+    val repository = FakeAppModeRepository(initial = AppMode.NOT_SELECTED)
+    val useCase = SwitchAppModeUseCase(repository)
+
+    useCase(AppMode.ONLINE)
+
+    assertEquals(AppMode.ONLINE, repository.storedMode)
+    assertEquals(1, repository.saveCalls)
+  }
+
+  @Test
+  fun `when mode is same then does not save`() {
+    val repository = FakeAppModeRepository(initial = AppMode.OFFLINE)
+    val useCase = SwitchAppModeUseCase(repository)
+
+    useCase(AppMode.OFFLINE)
+
+    assertEquals(AppMode.OFFLINE, repository.storedMode)
+    assertEquals(0, repository.saveCalls)
+  }
+
+  @Test
+  fun `when switching from Demo to Online then saves`() {
+    val repository = FakeAppModeRepository(initial = AppMode.DEMO)
+    val useCase = SwitchAppModeUseCase(repository)
+
+    useCase(AppMode.ONLINE)
+
+    assertEquals(AppMode.ONLINE, repository.storedMode)
+    assertEquals(1, repository.saveCalls)
+  }
+
+  @Test
+  fun `when switching from Online to Offline then saves`() {
+    val repository = FakeAppModeRepository(initial = AppMode.ONLINE)
+    val useCase = SwitchAppModeUseCase(repository)
+
+    useCase(AppMode.OFFLINE)
+
+    assertEquals(AppMode.OFFLINE, repository.storedMode)
+    assertEquals(1, repository.saveCalls)
+  }
+}
+
 class FixInvalidOnlineModeUseCaseTest {
   private fun createUseCase(
     initialMode: AppMode = AppMode.NOT_SELECTED,
