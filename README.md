@@ -13,6 +13,24 @@ Habit tracker powered by [Memos](https://github.com/usememos/memos). Kotlin Mult
 **Modes:** Online (Memos sync) · Offline · Demo<br>
 **Localization:** 🇬🇧 🇪🇸 🇨🇳 🇮🇳 🇸🇦 🇧🇷 🇷🇺 🇺🇦 🇧🇾 🇰🇿 🇺🇿 🇬🇪 🇦🇿 🇰🇬 🇹🇯 🇷🇴 🇹🇲 🇯🇵 🇩🇪 🇫🇷
 
+## Features
+
+- **Cross-platform**: Single codebase for Android, iOS, Desktop (macOS/Windows/Linux), and Web (WASM)
+- **Flexible sync**: Work online with Memos backend, offline mode, or try the demo
+- **TEA architecture**: The Elm Architecture for predictable state management
+- **Type-safe DI**: Compile-time dependency injection with [Metro](https://zacsweers.github.io/metro/)
+- **Multi-language**: 17+ language translations built-in
+- **High code sharing**: ~95% of code shared across all platforms
+
+## Tech Stack
+
+- **UI**: Compose Multiplatform
+- **Networking**: Ktor Client
+- **Serialization**: kotlinx.serialization
+- **DI**: Metro (compile-time)
+- **Architecture**: TEA (The Elm Architecture)
+- **Testing**: kotlin.test + JaCoCo coverage
+
 ## Run
 
 ```
@@ -52,3 +70,12 @@ webApp/      — Web entry (WASM)
 ## Architecture
 
 TEA (The Elm Architecture) · ~95% shared code
+
+## Contributing
+
+See [AGENTS.md](AGENTS.md) for detailed development guidelines including:
+- Feature architecture and module structure
+- Dependency injection patterns
+- Testing guidelines and TDD practices
+- Code style conventions
+- CI/CD workflows
