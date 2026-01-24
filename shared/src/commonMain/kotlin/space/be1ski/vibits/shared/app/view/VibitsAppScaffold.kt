@@ -27,10 +27,10 @@ import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.app.presentation.AppFeatures
 import space.be1ski.vibits.shared.app.presentation.AppState
-import space.be1ski.vibits.shared.core.date.DateFormatter
-import space.be1ski.vibits.shared.core.date.rememberDateFormatter
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.Indent
+import space.be1ski.vibits.shared.core.ui.date.DateFormatter
+import space.be1ski.vibits.shared.core.ui.date.rememberDateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.EarliestMemoDateUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.IsActivityRangeBeforeUseCase

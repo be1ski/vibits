@@ -3,7 +3,7 @@ package space.be1ski.vibits.shared.feature.habits.view.components
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
-import space.be1ski.vibits.shared.core.date.DateFormatter
+import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
 
 internal fun buildTimelineLabels(

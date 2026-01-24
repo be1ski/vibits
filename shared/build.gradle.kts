@@ -149,21 +149,19 @@ kover {
           "*Features$*",
           // DI modules
           "*.di.*",
-          // View/UI components
-          "*.view.*",
+          // Generated code (Compose Resources, etc.)
+          "*.generated.*",
           // Platform-specific code (expect/actual)
           "*.platform.*",
           // Room database (platform-specific persistence layer)
           "*.room.*",
+          // UI layer (Compose components, theming, etc.)
+          "*.ui.*",
+          // View/UI components
+          "*.view.*",
           // Data layer - DTO serialization classes
           "*Dto",
           "*Dto$*",
-        )
-        packages(
-          // Generated Compose Resources
-          "space.be1ski.vibits.shared.generated",
-          // Core UI (Compose theming and components)
-          "space.be1ski.vibits.shared.core.ui",
         )
       }
     }
