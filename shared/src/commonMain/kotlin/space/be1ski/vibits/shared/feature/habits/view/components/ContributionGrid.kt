@@ -48,8 +48,8 @@ import androidx.compose.ui.window.PopupPositionProvider
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.core.date.DateFormatter
 import space.be1ski.vibits.shared.core.ui.Indent
+import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.core.ui.hoverAware
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
