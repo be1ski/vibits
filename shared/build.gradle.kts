@@ -43,6 +43,7 @@ kotlin {
   }
 
   sourceSets {
+    @Suppress("DEPRECATION")
     val commonMain by getting {
       dependencies {
         implementation(compose.components.resources)
