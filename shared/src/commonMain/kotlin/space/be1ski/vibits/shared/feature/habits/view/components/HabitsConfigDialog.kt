@@ -35,7 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.core.ui.Indent
-import space.be1ski.vibits.shared.feature.habits.domain.model.HABIT_COLORS
+import space.be1ski.vibits.shared.core.ui.theme.HabitColors
 import space.be1ski.vibits.shared.feature.habits.presentation.EditableHabit
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
@@ -146,7 +146,7 @@ private fun HabitConfigItem(
         horizontalArrangement = Arrangement.spacedBy(Indent.xs),
         verticalArrangement = Arrangement.spacedBy(Indent.xs),
       ) {
-        HABIT_COLORS.forEach { color ->
+        HabitColors.forEach { color ->
           ColorCircle(
             color = color,
             isSelected = habit.color == color,
