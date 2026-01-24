@@ -160,7 +160,7 @@ internal fun rememberSuccessRate(
   buildActivityDataUseCase: BuildActivityDataUseCase,
   cache: ActivityWeekDataCache,
 ): Float? {
-  val today = remember { currentLocalDate() }
+  val today = currentLocalDate()
   val weekDataState = rememberActivityWeekData(memos, activityRange, ActivityMode.HABITS, today, buildActivityDataUseCase, cache)
   val weekData = weekDataState.data
   val habitsTimeline = rememberHabitsConfigTimeline(memos)
