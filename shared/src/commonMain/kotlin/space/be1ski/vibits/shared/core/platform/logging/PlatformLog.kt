@@ -1,4 +1,6 @@
-package space.be1ski.vibits.shared.core.logging
+package space.be1ski.vibits.shared.core.platform.logging
+
+import space.be1ski.vibits.shared.core.logging.LogLevel
 
 /**
  * Platform-specific log output.
