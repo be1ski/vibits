@@ -153,6 +153,14 @@ kover {
           "*.view.*",
           // Platform-specific code (expect/actual)
           "*.platform.*",
+          // Data layer - specific thin DI wrappers
+          "space.be1ski.vibits.shared.feature.auth.data.CredentialsRepositoryImpl",
+          "space.be1ski.vibits.shared.feature.auth.data.CredentialsRepositoryImpl$*",
+          "space.be1ski.vibits.shared.feature.mode.data.AppModeRepositoryImpl",
+          "space.be1ski.vibits.shared.feature.mode.data.AppModeRepositoryImpl$*",
+          // Data layer - DTO serialization classes
+          "*Dto",
+          "*Dto$*",
         )
         packages(
           // Generated Compose Resources
@@ -161,6 +169,8 @@ kover {
           "space.be1ski.vibits.shared.core.ui",
           // Platform packages
           "space.be1ski.vibits.shared.core.platform",
+          // Room database (roomMain sourceset exclusion doesn't work fully)
+          "space.be1ski.vibits.shared.feature.memos.data.local",
         )
       }
     }
