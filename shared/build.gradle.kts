@@ -111,7 +111,7 @@ kotlin {
 }
 
 compose.resources {
-  packageOfResClass = "space.be1ski.vibits.shared"
+  packageOfResClass = "space.be1ski.vibits.shared.generated"
 }
 
 dependencies {
@@ -138,15 +138,6 @@ kover {
     filters {
       excludes {
         classes(
-          // Generated Compose Resources in root package
-          "space.be1ski.vibits.shared.ActualResourceCollectors*",
-          "space.be1ski.vibits.shared.ExpectResourceCollectors*",
-          "space.be1ski.vibits.shared.Res*",
-          "space.be1ski.vibits.shared.String*",
-          "space.be1ski.vibits.shared.Drawable*",
-          "space.be1ski.vibits.shared.Font*",
-          "space.be1ski.vibits.shared.Plurals*",
-          "space.be1ski.vibits.shared.Array*",
           // TEA data classes (State/Action/Effect/Features)
           "*State",
           "*State$*",
@@ -160,10 +151,16 @@ kover {
           "*.di.*",
           // View/UI components
           "*.view.*",
+          // Platform-specific code (expect/actual)
+          "*.platform.*",
         )
         packages(
+          // Generated Compose Resources
+          "space.be1ski.vibits.shared.generated",
           // Core UI (Compose theming and components)
           "space.be1ski.vibits.shared.core.ui",
+          // Platform packages
+          "space.be1ski.vibits.shared.core.platform",
         )
       }
     }

@@ -34,16 +34,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.Res
-import space.be1ski.vibits.shared.action_cancel
-import space.be1ski.vibits.shared.action_save
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.domain.model.HABIT_COLORS
 import space.be1ski.vibits.shared.feature.habits.presentation.EditableHabit
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
-import space.be1ski.vibits.shared.hint_habit_name
-import space.be1ski.vibits.shared.label_habits_config
+import space.be1ski.vibits.shared.generated.Res
+import space.be1ski.vibits.shared.generated.action_cancel
+import space.be1ski.vibits.shared.generated.action_save
+import space.be1ski.vibits.shared.generated.hint_habit_name
+import space.be1ski.vibits.shared.generated.label_habits_config
 
 private val COLOR_CIRCLE_SIZE = 24.dp
 private val SELECTED_BORDER_WIDTH = 2.dp

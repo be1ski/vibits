@@ -9,15 +9,15 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.Res
-import space.be1ski.vibits.shared.action_cancel
-import space.be1ski.vibits.shared.action_create
-import space.be1ski.vibits.shared.action_save
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
-import space.be1ski.vibits.shared.hint_write_memo
-import space.be1ski.vibits.shared.title_edit_memo
-import space.be1ski.vibits.shared.title_new_memo
+import space.be1ski.vibits.shared.generated.Res
+import space.be1ski.vibits.shared.generated.action_cancel
+import space.be1ski.vibits.shared.generated.action_create
+import space.be1ski.vibits.shared.generated.action_save
+import space.be1ski.vibits.shared.generated.hint_write_memo
+import space.be1ski.vibits.shared.generated.title_edit_memo
+import space.be1ski.vibits.shared.generated.title_new_memo
 
 @Composable
 internal fun MemoCreateDialog(

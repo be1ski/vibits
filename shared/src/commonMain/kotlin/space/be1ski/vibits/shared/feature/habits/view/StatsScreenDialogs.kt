@@ -12,23 +12,23 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.Res
-import space.be1ski.vibits.shared.action_cancel
-import space.be1ski.vibits.shared.action_create
-import space.be1ski.vibits.shared.action_delete
-import space.be1ski.vibits.shared.action_update
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
 import space.be1ski.vibits.shared.feature.habits.view.components.localizedLabel
-import space.be1ski.vibits.shared.msg_delete_day_confirm
-import space.be1ski.vibits.shared.msg_mark_done_confirm
-import space.be1ski.vibits.shared.msg_mark_not_done_confirm
-import space.be1ski.vibits.shared.title_create_day
-import space.be1ski.vibits.shared.title_delete_day
-import space.be1ski.vibits.shared.title_mark_done
-import space.be1ski.vibits.shared.title_mark_not_done
-import space.be1ski.vibits.shared.title_update_day
+import space.be1ski.vibits.shared.generated.Res
+import space.be1ski.vibits.shared.generated.action_cancel
+import space.be1ski.vibits.shared.generated.action_create
+import space.be1ski.vibits.shared.generated.action_delete
+import space.be1ski.vibits.shared.generated.action_update
+import space.be1ski.vibits.shared.generated.msg_delete_day_confirm
+import space.be1ski.vibits.shared.generated.msg_mark_done_confirm
+import space.be1ski.vibits.shared.generated.msg_mark_not_done_confirm
+import space.be1ski.vibits.shared.generated.title_create_day
+import space.be1ski.vibits.shared.generated.title_delete_day
+import space.be1ski.vibits.shared.generated.title_mark_done
+import space.be1ski.vibits.shared.generated.title_mark_not_done
+import space.be1ski.vibits.shared.generated.title_update_day
 
 @Composable
 internal fun HabitEditorDialog(
