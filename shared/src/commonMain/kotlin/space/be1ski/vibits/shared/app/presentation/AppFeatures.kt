@@ -1,5 +1,6 @@
 package space.be1ski.vibits.shared.app.presentation
 
+import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsEffect

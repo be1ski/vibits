@@ -13,7 +13,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.app.presentation.AppState
+import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
