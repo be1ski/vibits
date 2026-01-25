@@ -41,7 +41,8 @@ import space.be1ski.vibits.shared.core.ui.SegmentedSelector
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
-import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
+import space.be1ski.vibits.shared.feature.memos.domain.model.isConfigPost
+import space.be1ski.vibits.shared.feature.memos.domain.model.isTrackingPost
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.FilterMemosByTypeUseCase
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_cancel
@@ -56,7 +57,7 @@ import space.be1ski.vibits.shared.generated.title_delete_memo
 /**
  * Feed tab showing the raw memos list.
  */
-@Suppress("LongParameterList", "LongMethod")
+@Suppress("LongParameterList", "LongMethod", "CyclomaticComplexMethod")
 @OptIn(androidx.compose.material.ExperimentalMaterialApi::class)
 @Composable
 fun FeedScreen(
@@ -125,19 +126,13 @@ fun FeedScreen(
                 modifier = Modifier.weight(1f).padding(start = Indent.s),
                 verticalArrangement = Arrangement.spacedBy(Indent.x2s),
               ) {
-                val isConfigMemo =
-                  memo.content.contains(PostTags.HABITS_CONFIG) ||
-                    memo.content.contains(PostTags.HABITS_CONFIG_ALT)
-
-                if (isConfigMemo) {
-                  HabitsConfigCard(memo = memo, dateFormatter = dateFormatter, demoMode = demoMode)
-                } else {
-                  val dateLabel = memoDateLabel(memo, timeZone, dateFormatter)
-                  if (dateLabel.isNotBlank()) {
-                    Text(dateLabel, style = MaterialTheme.typography.labelSmall)
-                  }
-                  Text(memo.content, style = MaterialTheme.typography.bodyMedium)
-                }
+                MemoCardContent(
+                  memo = memo,
+                  allMemos = memos,
+                  dateFormatter = dateFormatter,
+                  timeZone = timeZone,
+                  demoMode = demoMode,
+                )
               }
               if (onDeleteMemo != null) {
                 IconButton(
@@ -184,6 +179,31 @@ fun FeedScreen(
         }
       },
     )
+  }
+}
+
+@Composable
+private fun MemoCardContent(
+  memo: Memo,
+  allMemos: List<Memo>,
+  dateFormatter: DateFormatter,
+  timeZone: TimeZone,
+  demoMode: Boolean,
+) {
+  when {
+    memo.isConfigPost -> {
+      HabitsConfigCard(memo = memo, dateFormatter = dateFormatter, demoMode = demoMode)
+    }
+    memo.isTrackingPost -> {
+      HabitsTrackingCard(memo = memo, allMemos = allMemos, dateFormatter = dateFormatter, demoMode = demoMode)
+    }
+    else -> {
+      val dateLabel = memoDateLabel(memo, timeZone, dateFormatter)
+      if (dateLabel.isNotBlank()) {
+        Text(dateLabel, style = MaterialTheme.typography.labelSmall)
+      }
+      Text(memo.content, style = MaterialTheme.typography.bodyMedium)
+    }
   }
 }
 
