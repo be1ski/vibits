@@ -8,4 +8,8 @@ object PostTags {
   const val HABITS_CONFIG_ALT = "#habits_config"
   const val HABITS_DAILY = "#habits/daily"
   const val DAILY = "#daily"
+
+  // Tag prefixes used for parsing and normalization
+  const val HABITS_PREFIX = "#habits/"
+  const val HABIT_PREFIX = "#habit/"
 }
