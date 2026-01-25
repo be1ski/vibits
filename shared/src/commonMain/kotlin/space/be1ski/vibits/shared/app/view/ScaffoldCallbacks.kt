@@ -55,7 +55,7 @@ internal fun rememberScaffoldCallbacks(
   val onOpenTodayEditor =
     remember(onHabitsAction, todayData) {
       {
-        todayData.day?.let { onHabitsAction(HabitsAction.OpenEditor(it, todayData.config)) }
+        todayData.day?.let { onHabitsAction(HabitsAction.OpenEditor(day = it, config = todayData.config)) }
         Unit
       }
     }

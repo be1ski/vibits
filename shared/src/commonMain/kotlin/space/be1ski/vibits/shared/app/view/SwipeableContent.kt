@@ -14,6 +14,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.Screen
@@ -25,6 +26,7 @@ import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateActivityRangeDeltaUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
@@ -33,6 +35,9 @@ import space.be1ski.vibits.shared.feature.habits.view.StatsScreenState
 import space.be1ski.vibits.shared.feature.habits.view.components.ActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.habits.view.components.quarterIndex
 import space.be1ski.vibits.shared.feature.habits.view.components.startOfWeek
+import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
+import space.be1ski.vibits.shared.feature.memos.domain.usecase.ClassifyPostTypeUseCase
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
 import space.be1ski.vibits.shared.feature.memos.view.FeedScreen
@@ -67,7 +72,15 @@ internal fun SwipeableTabContent(
       isRefreshing = memosState.isLoading,
       onRefresh = {},
       enablePullRefresh = !isDesktop,
-      onMemoClick = { memo -> dispatchMemos(MemosAction.ShowEditDialog(memo)) },
+      demoMode = appState.isDemoMode,
+      onMemoClick = { memo ->
+        handleMemoClick(
+          memo = memo,
+          memos = memosState.memos,
+          onMemosAction = dispatchMemos,
+          onHabitsAction = onHabitsAction,
+        )
+      },
       onDeleteMemo = { memo -> dispatchMemos(MemosAction.DeleteMemo(memo.name)) },
       listState = feedListState,
     )
@@ -208,7 +221,7 @@ private fun MemosTabContent(
             activityMode = ActivityMode.HABITS,
             useVerticalScroll = true,
             enablePullRefresh = false,
-            demoMode = appState.appMode == AppMode.DEMO,
+            demoMode = appState.isDemoMode,
           ),
         calculateSuccessRate = calculateSuccessRate,
         buildActivityDataUseCase = buildActivityDataUseCase,
@@ -221,7 +234,7 @@ private fun MemosTabContent(
       PostsScreen(
         memos = memos,
         range = activityRange,
-        demoMode = appState.appMode == AppMode.DEMO,
+        demoMode = appState.isDemoMode,
         calculateSuccessRate = calculateSuccessRate,
         buildActivityDataUseCase = buildActivityDataUseCase,
         cache = cache,
@@ -238,7 +251,15 @@ private fun MemosTabContent(
         isRefreshing = memosState.isLoading,
         onRefresh = {},
         enablePullRefresh = !isDesktop,
-        onMemoClick = { memo -> onMemosAction(MemosAction.ShowEditDialog(memo)) },
+        demoMode = appState.isDemoMode,
+        onMemoClick = { memo ->
+          handleMemoClick(
+            memo = memo,
+            memos = memosState.memos,
+            onMemosAction = onMemosAction,
+            onHabitsAction = onHabitsAction,
+          )
+        },
       )
   }
 }
@@ -276,5 +297,29 @@ internal fun minRangeForTab(
     TimeRangeTab.MONTHS -> ActivityRange.Month(earliestDate.year, earliestDate.month)
     TimeRangeTab.QUARTERS -> ActivityRange.Quarter(earliestDate.year, quarterIndex(earliestDate))
     TimeRangeTab.YEARS -> ActivityRange.Year(earliestDate.year)
+  }
+}
+
+private fun handleMemoClick(
+  memo: Memo,
+  memos: List<Memo>,
+  onMemosAction: (MemosAction) -> Unit,
+  onHabitsAction: (HabitsAction) -> Unit,
+) {
+  val postType = ClassifyPostTypeUseCase(memo)
+  val timeZone = TimeZone.currentSystemDefault()
+  val configEntries = ExtractHabitsConfigUseCase(memos, timeZone)
+  val currentConfig = configEntries.lastOrNull()?.habits ?: emptyList()
+
+  when (postType) {
+    PostFilter.CONFIG -> {
+      onHabitsAction(HabitsAction.OpenConfigDialog(currentConfig, existingMemo = memo))
+    }
+    PostFilter.HABIT_TRACKING -> {
+      onHabitsAction(HabitsAction.OpenEditor(config = currentConfig, memo = memo))
+    }
+    else -> {
+      onMemosAction(MemosAction.ShowEditDialog(memo))
+    }
   }
 }

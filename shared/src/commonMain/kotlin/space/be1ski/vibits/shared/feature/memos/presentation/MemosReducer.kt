@@ -153,7 +153,7 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
 
 private fun sortedMemos(memos: List<Memo>): List<Memo> =
   memos.sortedByDescending { memo ->
-    memo.updateTime?.toEpochMilliseconds()
-      ?: memo.createTime?.toEpochMilliseconds()
+    memo.createTime?.toEpochMilliseconds()
+      ?: memo.updateTime?.toEpochMilliseconds()
       ?: Long.MIN_VALUE
   }

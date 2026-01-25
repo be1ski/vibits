@@ -3,6 +3,7 @@ package space.be1ski.vibits.shared.feature.habits.domain.usecase
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -33,7 +34,7 @@ class BuildHabitDayUseCaseTest {
     val dailyMemo =
       DailyMemoInfo(
         name = "test",
-        content = "#daily 2024-01-15\n#habits/exercise\n#habits/reading",
+        content = "${PostTags.DAILY} 2024-01-15\n#habits/exercise\n#habits/reading",
       )
 
     val result = useCase(date, habitsConfig, dailyMemo)
@@ -58,7 +59,7 @@ class BuildHabitDayUseCaseTest {
     val dailyMemo =
       DailyMemoInfo(
         name = "test",
-        content = "#daily 2024-01-15\n#habits/exercise",
+        content = "${PostTags.DAILY} 2024-01-15\n#habits/exercise",
       )
 
     val result = useCase(date, habitsConfig, dailyMemo)
@@ -79,7 +80,7 @@ class BuildHabitDayUseCaseTest {
     val dailyMemo =
       DailyMemoInfo(
         name = "test",
-        content = "#daily 2024-01-15",
+        content = "${PostTags.DAILY} 2024-01-15",
       )
 
     val result = useCase(date, habitsConfig, dailyMemo)
@@ -118,7 +119,7 @@ class BuildHabitDayUseCaseTest {
     val dailyMemo =
       DailyMemoInfo(
         name = "test",
-        content = "#daily\n#habits/exercise",
+        content = "${PostTags.DAILY}\n#habits/exercise",
       )
 
     val result = useCase(date, habitsConfig, dailyMemo)
