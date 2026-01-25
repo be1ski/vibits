@@ -24,7 +24,6 @@ import space.be1ski.vibits.shared.feature.habits.domain.usecase.GetPeriodPostsUs
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
 import space.be1ski.vibits.shared.feature.habits.view.components.ActivityWeekDataCache
-import space.be1ski.vibits.shared.feature.habits.view.components.HabitsConfigDialog
 import space.be1ski.vibits.shared.feature.habits.view.components.rememberActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.view.components.rememberHabitsConfigTimeline
 
@@ -180,8 +179,6 @@ private fun StatsScreenDialogs(
   derived: StatsScreenDerivedState,
   dispatch: (HabitsAction) -> Unit,
 ) {
-  HabitEditorDialog(derived, dispatch)
   EmptyDeleteDialog(derived, dispatch)
   SingleHabitToggleDialog(derived, dispatch)
-  HabitsConfigDialog(derived.habitsState, dispatch)
 }

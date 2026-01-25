@@ -1,6 +1,8 @@
 <resources>
     <!-- Actions -->
     <string name="action_cancel">Anulare</string>
+    <string name="action_create_new_config">Create New Config (Recommended)</string>
+    <string name="action_edit_anyway">Edit Anyway</string>
     <string name="action_clear">Curăță</string>
     <string name="action_close">Închide</string>
     <string name="action_copied">Copiat</string>
@@ -107,7 +109,9 @@
     <string name="filter_regular">Obișnuite</string>
 
     <!-- Messages -->
+    <string name="format_active_since">Active since %1$s</string>
     <string name="msg_connection_failed">Conexiune eșuată</string>
+    <string name="msg_edit_config_warning">You're about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn't exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
     <string name="msg_delete_day_confirm">Niciun obicei selectat. Înregistrarea zilnică va fi ștearsă.</string>
     <string name="msg_fill_all_fields">Completați toate câmpurile</string>
     <string name="msg_no_habits_yet">Niciun obicei configurat încă.</string>
@@ -181,6 +185,7 @@
     <string name="title_create_day">Creează zi</string>
     <string name="title_delete_day">Șterge ziua?</string>
     <string name="title_delete_memo">Șterge nota?</string>
+    <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">Editează ziua</string>
     <string name="title_edit_memo">Editează nota</string>
     <string name="title_logs">Loguri (%1$d)</string>

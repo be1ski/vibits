@@ -3,6 +3,7 @@ package space.be1ski.vibits.shared.feature.habits.domain
 import space.be1ski.vibits.shared.core.ui.theme.DefaultHabitColor
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitStatus
+import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 
 /**
  * Parses a single line from a habits config memo.
@@ -22,7 +23,12 @@ fun parseHabitConfigLine(line: String): HabitConfig? {
       1 -> {
         val raw = parts.first()
         val tag = normalizeHabitTag(raw)
-        val lbl = if (raw.startsWith("#habits/") || raw.startsWith("#habit/")) labelFromTag(tag) else raw
+        val lbl =
+          if (raw.startsWith(PostTags.HABITS_PREFIX) || raw.startsWith(PostTags.HABIT_PREFIX)) {
+            labelFromTag(tag)
+          } else {
+            raw
+          }
         Triple(lbl, tag, DefaultHabitColor)
       }
       2 -> {
@@ -64,19 +70,19 @@ fun formatHexColor(color: Long): String {
 }
 
 /**
- * Normalizes a raw habit tag to the canonical #habits/name format.
+ * Normalizes a raw habit tag to the canonical PostTags.HABITS_PREFIX format.
  */
 fun normalizeHabitTag(raw: String): String {
   val trimmed = raw.trim()
-  val withoutPrefix = trimmed.removePrefix("#habits/").removePrefix("#habit/")
+  val withoutPrefix = trimmed.removePrefix(PostTags.HABITS_PREFIX).removePrefix(PostTags.HABIT_PREFIX)
   val sanitized = withoutPrefix.replace("\\s+".toRegex(), "_")
-  return "#habits/$sanitized"
+  return "${PostTags.HABITS_PREFIX}$sanitized"
 }
 
 /**
  * Extracts a human-readable label from a habit tag.
  */
-fun labelFromTag(tag: String): String = tag.removePrefix("#habits/").removePrefix("#habit/").replace('_', ' ')
+fun labelFromTag(tag: String): String = tag.removePrefix(PostTags.HABITS_PREFIX).removePrefix(PostTags.HABIT_PREFIX).replace('_', ' ')
 
 /**
  * Builds habit statuses for a day given the memo content and habit configurations.
@@ -132,15 +138,16 @@ fun extractCompletedHabits(
 }
 
 /**
- * Extracts all habit tags from content (excluding #habits/daily marker).
+ * Extracts all habit tags from content (excluding PostTags.HABITS_DAILY marker).
  */
 fun extractHabitTagsFromContent(content: String?): Set<String> {
   if (content.isNullOrBlank()) {
     return emptySet()
   }
-  return Regex("#habits/[^\\s]+")
+  val habitTagPattern = "${PostTags.HABITS_PREFIX}[^\\s]+"
+  return Regex(habitTagPattern)
     .findAll(content)
     .map { it.value }
-    .filterNot { it.equals("#habits/daily", ignoreCase = true) || it.startsWith("#habits/daily") }
+    .filterNot { it.equals(PostTags.HABITS_DAILY, ignoreCase = true) || it.startsWith(PostTags.HABITS_DAILY) }
     .toSet()
 }

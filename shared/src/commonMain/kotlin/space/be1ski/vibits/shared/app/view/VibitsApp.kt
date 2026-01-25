@@ -49,4 +49,5 @@ internal fun VibitsApp(
   SettingsDialog(state = settingsState, dispatch = features.settings::send)
   MemoCreateDialog(state = memosState, dispatch = features.memos::send)
   MemoEditDialog(state = memosState, dispatch = features.memos::send)
+  HabitsDialogs(appState = appState, habitsState = habitsState, dispatch = features.habits::send)
 }

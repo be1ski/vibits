@@ -121,7 +121,7 @@ internal fun StatsInfoCard(
       Button(
         onClick = {
           val day = derived.todayDay ?: return@Button
-          dispatch(HabitsAction.OpenEditor(day, derived.todayConfig))
+          dispatch(HabitsAction.OpenEditor(day = day, config = derived.todayConfig))
         },
       ) {
         Text(stringResource(Res.string.action_track))
@@ -591,7 +591,7 @@ internal fun StatsMainChart(
     remember(dispatch, derived.habitsConfigTimeline) {
       { day: ContributionDay ->
         val config = ExtractHabitsConfigUseCase.forDate(derived.habitsConfigTimeline, day.date)?.habits.orEmpty()
-        dispatch(HabitsAction.OpenEditor(day, config))
+        dispatch(HabitsAction.OpenEditor(day = day, config = config))
       }
     }
 

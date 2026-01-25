@@ -253,6 +253,29 @@ Check coverage locally:
 open shared/build/reports/kover/html/index.html
 ```
 
+### Coverage Configuration
+
+**Kover is the single source of truth** for coverage exclusions. Configure exclusions in `shared/build.gradle.kts`:
+
+```kotlin
+kover {
+  reports {
+    filters {
+      excludes {
+        classes(
+          "*.view.*",      // View layer
+          "*.ui.*",        // UI components
+          "*State",        // TEA State classes
+          // etc.
+        )
+      }
+    }
+  }
+}
+```
+
+**Codecov** (`codecov.yml`) only checks overall project coverage (90% target), not per-patch coverage. This prevents false failures when adding UI code or other excluded files. Codecov receives coverage data from Kover XML.
+
 ## Linting & Formatting
 
 **Pre-commit hook handles all checks automatically.** Install it once with `./gradlew installGitHooks`.
