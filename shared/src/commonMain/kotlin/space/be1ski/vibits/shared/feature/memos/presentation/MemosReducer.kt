@@ -45,6 +45,10 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
         effect(MemosEffect.LoadCachedMemos)
       }
 
+      is MemosAction.ResetForModeChange -> {
+        state { copy(memos = emptyList(), initialDataLoaded = false, isLoading = false) }
+      }
+
       // Filtering
       is MemosAction.ChangePostFilter -> {
         state { copy(activePostFilter = action.filter) }

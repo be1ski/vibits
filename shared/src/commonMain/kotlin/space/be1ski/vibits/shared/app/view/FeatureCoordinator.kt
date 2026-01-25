@@ -83,6 +83,7 @@ private fun handleNotification(
   when (effect) {
     is SettingsEffect.Notification.ModeChanged -> {
       dispatchApp(AppAction.SetAppMode(effect.newMode))
+      dispatchMemos(MemosAction.ResetForModeChange)
       dispatchMemos(MemosAction.LoadMemos)
     }
     is SettingsEffect.Notification.ResetCompleted -> onResetApp()

@@ -3,6 +3,8 @@ package space.be1ski.vibits.shared.app.view
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -107,11 +109,16 @@ private fun AppWithLoadingScreen(
 
 @Composable
 private fun LoadingScreen() {
-  Box(
+  Surface(
     modifier = Modifier.fillMaxSize(),
-    contentAlignment = Alignment.Center,
+    color = MaterialTheme.colorScheme.background,
   ) {
-    CircularProgressIndicator()
+    Box(
+      modifier = Modifier.fillMaxSize(),
+      contentAlignment = Alignment.Center,
+    ) {
+      CircularProgressIndicator()
+    }
   }
 }
 

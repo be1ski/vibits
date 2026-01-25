@@ -13,6 +13,7 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
 
 private const val TAG = "ModeEffect"
+private const val LOG_URL_MAX_LENGTH = 20
 
 class ModeSelectionEffectHandler(
   private val connectionTester: ConnectionTester,
@@ -61,8 +62,10 @@ class ModeSelectionEffectHandler(
 
   private fun handleUseStoredCredentials(): Flow<ModeSelectionAction> =
     flow {
+      // Ensure credentials are loaded from local config (in case of app reset)
+      initializeCredentialsFromEnv()
       val credentials = loadCredentials()
-      Log.d(TAG, "Using stored credentials")
+      Log.d(TAG, "Using stored credentials: baseUrl=${credentials.baseUrl.take(LOG_URL_MAX_LENGTH)}")
       connectionTester(credentials.baseUrl, credentials.token)
         .onSuccess { emit(ModeSelectionAction.ValidationSucceeded) }
         .onFailure { emit(ModeSelectionAction.ValidationFailed) }
