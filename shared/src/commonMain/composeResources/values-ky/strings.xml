@@ -80,11 +80,6 @@
 
     <!-- Labels -->
     <string name="label_access_token">Кирүү токени</string>
-    <string name="label_language">Тил</string>
-    <string name="label_time_night">Түн</string>
-    <string name="label_time_morning">Эртең</string>
-    <string name="label_time_day">Күн</string>
-    <string name="label_time_evening">Кеч</string>
     <string name="label_activity">Активдүүлүк</string>
     <string name="label_app_mode">Колдонмо режими</string>
     <string name="label_base_url">Base URL</string>
@@ -92,11 +87,24 @@
     <string name="label_demo_mode">Демо режим</string>
     <string name="label_environment">Чөйрө</string>
     <string name="label_habits_config">Адаттар конфигурациясы</string>
+    <string name="label_language">Тил</string>
     <string name="label_memos_db">Жазуулар базасы</string>
+    <string name="label_post_filter">Чыпка</string>
     <string name="label_storage">Сактагыч</string>
-    <string name="label_version">Версия</string>
     <string name="label_success_rate">Ийгилик деңгээли</string>
+    <string name="label_theme">Тема</string>
+    <string name="label_time_day">Күн</string>
+    <string name="label_time_evening">Кеч</string>
+    <string name="label_time_morning">Эртең</string>
+    <string name="label_time_night">Түн</string>
     <string name="label_today">Бүгүн</string>
+    <string name="label_version">Версия</string>
+
+    <!-- Filter options -->
+    <string name="filter_all">Баары</string>
+    <string name="filter_config">Жөндөөлөр</string>
+    <string name="filter_habit_tracking">Белгилер</string>
+    <string name="filter_regular">Кадимки</string>
 
     <!-- Messages -->
     <string name="msg_connection_failed">Байланыш катасы</string>
@@ -135,7 +143,6 @@
     <string name="language_turkmen">Türkmen</string>
 
     <!-- Theme selection -->
-    <string name="label_theme">Тема</string>
     <string name="theme_system">Тутумдук</string>
     <string name="theme_light">Жарык</string>
     <string name="theme_dark">Караңгы</string>

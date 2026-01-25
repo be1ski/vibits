@@ -80,11 +80,6 @@
 
     <!-- Labels -->
     <string name="label_access_token">Токен доступу</string>
-    <string name="label_language">Мова</string>
-    <string name="label_time_night">Ніч</string>
-    <string name="label_time_morning">Ранок</string>
-    <string name="label_time_day">День</string>
-    <string name="label_time_evening">Вечір</string>
     <string name="label_activity">Активність</string>
     <string name="label_app_mode">Режим додатку</string>
     <string name="label_base_url">Base URL</string>
@@ -92,11 +87,23 @@
     <string name="label_demo_mode">Демо-режим</string>
     <string name="label_environment">Середовище</string>
     <string name="label_habits_config">Конфігурація звичок</string>
+    <string name="label_language">Мова</string>
     <string name="label_memos_db">База нотаток</string>
+    <string name="label_post_filter">Фільтр</string>
     <string name="label_storage">Сховище</string>
-    <string name="label_version">Версія</string>
     <string name="label_success_rate">Успішність</string>
+    <string name="label_time_day">День</string>
+    <string name="label_time_evening">Вечір</string>
+    <string name="label_time_morning">Ранок</string>
+    <string name="label_time_night">Ніч</string>
     <string name="label_today">Сьогодні</string>
+    <string name="label_version">Версія</string>
+
+    <!-- Filter options -->
+    <string name="filter_all">Всі</string>
+    <string name="filter_config">Налаштування</string>
+    <string name="filter_habit_tracking">Відмітки</string>
+    <string name="filter_regular">Звичайні</string>
 
     <!-- Messages -->
     <string name="msg_connection_failed">Помилка підключення</string>

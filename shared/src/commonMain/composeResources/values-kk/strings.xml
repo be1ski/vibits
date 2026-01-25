@@ -80,11 +80,6 @@
 
     <!-- Labels -->
     <string name="label_access_token">Қол жеткізу токені</string>
-    <string name="label_language">Тіл</string>
-    <string name="label_time_night">Түн</string>
-    <string name="label_time_morning">Таң</string>
-    <string name="label_time_day">Күн</string>
-    <string name="label_time_evening">Кеш</string>
     <string name="label_activity">Белсенділік</string>
     <string name="label_app_mode">Қолданба режимі</string>
     <string name="label_base_url">Base URL</string>
@@ -92,11 +87,23 @@
     <string name="label_demo_mode">Демо режим</string>
     <string name="label_environment">Орта</string>
     <string name="label_habits_config">Әдеттер конфигурациясы</string>
+    <string name="label_language">Тіл</string>
     <string name="label_memos_db">Жазбалар базасы</string>
+    <string name="label_post_filter">Сүзгі</string>
     <string name="label_storage">Сақтау орны</string>
-    <string name="label_version">Нұсқа</string>
     <string name="label_success_rate">Сәттілік деңгейі</string>
+    <string name="label_time_day">Күн</string>
+    <string name="label_time_evening">Кеш</string>
+    <string name="label_time_morning">Таң</string>
+    <string name="label_time_night">Түн</string>
     <string name="label_today">Бүгін</string>
+    <string name="label_version">Нұсқа</string>
+
+    <!-- Filter options -->
+    <string name="filter_all">Барлығы</string>
+    <string name="filter_config">Баптаулар</string>
+    <string name="filter_habit_tracking">Белгілер</string>
+    <string name="filter_regular">Қарапайым</string>
 
     <!-- Messages -->
     <string name="msg_connection_failed">Қосылу қатесі</string>

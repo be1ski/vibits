@@ -80,11 +80,6 @@
 
     <!-- Labels -->
     <string name="label_access_token">Giriş tokeni</string>
-    <string name="label_language">Dil</string>
-    <string name="label_time_night">Gecə</string>
-    <string name="label_time_morning">Səhər</string>
-    <string name="label_time_day">Gündüz</string>
-    <string name="label_time_evening">Axşam</string>
     <string name="label_activity">Fəaliyyət</string>
     <string name="label_app_mode">Tətbiq rejimi</string>
     <string name="label_base_url">Base URL</string>
@@ -92,11 +87,24 @@
     <string name="label_demo_mode">Demo rejim</string>
     <string name="label_environment">Mühit</string>
     <string name="label_habits_config">Vərdiş konfiqurasiyası</string>
+    <string name="label_language">Dil</string>
     <string name="label_memos_db">Qeydlər bazası</string>
+    <string name="label_post_filter">Filtr</string>
     <string name="label_storage">Yaddaş</string>
-    <string name="label_version">Versiya</string>
     <string name="label_success_rate">Uğur dərəcəsi</string>
+    <string name="label_theme">Tema</string>
+    <string name="label_time_day">Gündüz</string>
+    <string name="label_time_evening">Axşam</string>
+    <string name="label_time_morning">Səhər</string>
+    <string name="label_time_night">Gecə</string>
     <string name="label_today">Bu gün</string>
+    <string name="label_version">Versiya</string>
+
+    <!-- Filter options -->
+    <string name="filter_all">Hamısı</string>
+    <string name="filter_config">Tənzimləmələr</string>
+    <string name="filter_habit_tracking">İşarələr</string>
+    <string name="filter_regular">Adi</string>
 
     <!-- Messages -->
     <string name="msg_connection_failed">Əlaqə xətası</string>
@@ -135,7 +143,6 @@
     <string name="language_turkmen">Türkmen</string>
 
     <!-- Theme selection -->
-    <string name="label_theme">Tema</string>
     <string name="theme_system">Sistem</string>
     <string name="theme_light">Açıq</string>
     <string name="theme_dark">Tünd</string>

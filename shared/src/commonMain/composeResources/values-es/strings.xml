@@ -80,11 +80,6 @@
 
     <!-- Labels -->
     <string name="label_access_token">Token de acceso</string>
-    <string name="label_language">Idioma</string>
-    <string name="label_time_night">Noche</string>
-    <string name="label_time_morning">Mañana</string>
-    <string name="label_time_day">Día</string>
-    <string name="label_time_evening">Tarde</string>
     <string name="label_activity">Actividad</string>
     <string name="label_app_mode">Modo de app</string>
     <string name="label_base_url">URL base</string>
@@ -92,11 +87,24 @@
     <string name="label_demo_mode">Modo demo</string>
     <string name="label_environment">Entorno</string>
     <string name="label_habits_config">Configuración de hábitos</string>
+    <string name="label_language">Idioma</string>
     <string name="label_memos_db">Base de notas</string>
+    <string name="label_post_filter">Filtro</string>
     <string name="label_storage">Almacenamiento</string>
-    <string name="label_version">Versión</string>
     <string name="label_success_rate">Tasa de éxito</string>
+    <string name="label_theme">Tema</string>
+    <string name="label_time_day">Día</string>
+    <string name="label_time_evening">Tarde</string>
+    <string name="label_time_morning">Mañana</string>
+    <string name="label_time_night">Noche</string>
     <string name="label_today">Hoy</string>
+    <string name="label_version">Versión</string>
+
+    <!-- Filter options -->
+    <string name="filter_all">Todos</string>
+    <string name="filter_config">Configuración</string>
+    <string name="filter_habit_tracking">Seguimiento</string>
+    <string name="filter_regular">Normales</string>
 
     <!-- Messages -->
     <string name="msg_connection_failed">Error de conexión</string>
@@ -135,7 +143,6 @@
     <string name="language_turkmen">Türkmen</string>
 
     <!-- Theme selection -->
-    <string name="label_theme">Tema</string>
     <string name="theme_system">Sistema</string>
     <string name="theme_light">Claro</string>
     <string name="theme_dark">Oscuro</string>

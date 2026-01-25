@@ -80,11 +80,6 @@
 
     <!-- Labels -->
     <string name="label_access_token">წვდომის ტოკენი</string>
-    <string name="label_language">ენა</string>
-    <string name="label_time_night">ღამე</string>
-    <string name="label_time_morning">დილა</string>
-    <string name="label_time_day">დღე</string>
-    <string name="label_time_evening">საღამო</string>
     <string name="label_activity">აქტივობა</string>
     <string name="label_app_mode">აპის რეჟიმი</string>
     <string name="label_base_url">Base URL</string>
@@ -92,11 +87,24 @@
     <string name="label_demo_mode">დემო რეჟიმი</string>
     <string name="label_environment">გარემო</string>
     <string name="label_habits_config">ჩვევების კონფიგურაცია</string>
+    <string name="label_language">ენა</string>
     <string name="label_memos_db">ჩანაწერების ბაზა</string>
+    <string name="label_post_filter">ფილტრი</string>
     <string name="label_storage">საცავი</string>
-    <string name="label_version">ვერსია</string>
     <string name="label_success_rate">წარმატების მაჩვენებელი</string>
+    <string name="label_theme">თემა</string>
+    <string name="label_time_day">დღე</string>
+    <string name="label_time_evening">საღამო</string>
+    <string name="label_time_morning">დილა</string>
+    <string name="label_time_night">ღამე</string>
     <string name="label_today">დღეს</string>
+    <string name="label_version">ვერსია</string>
+
+    <!-- Filter options -->
+    <string name="filter_all">ყველა</string>
+    <string name="filter_config">პარამეტრები</string>
+    <string name="filter_habit_tracking">ნიშნები</string>
+    <string name="filter_regular">ჩვეულებრივი</string>
 
     <!-- Messages -->
     <string name="msg_connection_failed">კავშირის შეცდომა</string>
@@ -135,7 +143,6 @@
     <string name="language_turkmen">Türkmen</string>
 
     <!-- Theme selection -->
-    <string name="label_theme">თემა</string>
     <string name="theme_system">სისტემური</string>
     <string name="theme_light">ნათელი</string>
     <string name="theme_dark">მუქი</string>
