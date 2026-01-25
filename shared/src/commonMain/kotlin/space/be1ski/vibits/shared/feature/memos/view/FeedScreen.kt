@@ -69,6 +69,7 @@ fun FeedScreen(
   enablePullRefresh: Boolean = true,
   onMemoClick: (Memo) -> Unit = {},
   onDeleteMemo: ((Memo) -> Unit)? = null,
+  demoMode: Boolean = false,
   listState: LazyListState = rememberLazyListState(),
 ) {
   var memoToDelete by remember { mutableStateOf<Memo?>(null) }
@@ -129,7 +130,7 @@ fun FeedScreen(
                     memo.content.contains(PostTags.HABITS_CONFIG_ALT)
 
                 if (isConfigMemo) {
-                  HabitsConfigCard(memo = memo, dateFormatter = dateFormatter)
+                  HabitsConfigCard(memo = memo, dateFormatter = dateFormatter, demoMode = demoMode)
                 } else {
                   val dateLabel = memoDateLabel(memo, timeZone, dateFormatter)
                   if (dateLabel.isNotBlank()) {

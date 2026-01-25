@@ -47,6 +47,8 @@ class DateFormatter(
 
   fun monthDay(date: LocalDate): String = "${monthShort(date.month)} ${date.day}"
 
+  fun monthDayYear(date: LocalDate): String = "${monthShort(date.month)} ${date.day}, ${date.year}"
+
   fun dateTime(dateTime: LocalDateTime): String {
     val hour = dateTime.hour.toString().padStart(2, '0')
     val minute = dateTime.minute.toString().padStart(2, '0')

@@ -72,6 +72,7 @@ internal fun SwipeableTabContent(
       isRefreshing = memosState.isLoading,
       onRefresh = {},
       enablePullRefresh = !isDesktop,
+      demoMode = appState.appMode == AppMode.DEMO,
       onMemoClick = { memo ->
         handleMemoClick(
           memo = memo,
@@ -250,6 +251,7 @@ private fun MemosTabContent(
         isRefreshing = memosState.isLoading,
         onRefresh = {},
         enablePullRefresh = !isDesktop,
+        demoMode = appState.appMode == AppMode.DEMO,
         onMemoClick = { memo ->
           handleMemoClick(
             memo = memo,

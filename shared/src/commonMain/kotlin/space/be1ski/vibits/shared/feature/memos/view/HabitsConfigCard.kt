@@ -21,6 +21,7 @@ import kotlinx.datetime.toLocalDateTime
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.parseHabitConfigLine
+import space.be1ski.vibits.shared.feature.habits.view.components.localizedLabel
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 
@@ -28,6 +29,7 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 internal fun HabitsConfigCard(
   memo: Memo,
   dateFormatter: DateFormatter,
+  demoMode: Boolean = false,
 ) {
   val timeZone = TimeZone.currentSystemDefault()
   val habits =
@@ -45,7 +47,7 @@ internal fun HabitsConfigCard(
     if (instant != null) {
       val date = instant.toLocalDateTime(timeZone).date
       Text(
-        text = "Active since ${dateFormatter.monthDay(date)}",
+        text = "Active since ${dateFormatter.monthDayYear(date)}",
         style = MaterialTheme.typography.labelSmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
       )
@@ -66,7 +68,7 @@ internal fun HabitsConfigCard(
         )
         Column(modifier = Modifier.weight(1f)) {
           Text(
-            text = habit.label,
+            text = habit.localizedLabel(demoMode),
             style = MaterialTheme.typography.bodyLarge,
           )
           Text(
