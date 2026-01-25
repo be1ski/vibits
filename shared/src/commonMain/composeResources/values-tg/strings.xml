@@ -80,11 +80,6 @@
 
     <!-- Labels -->
     <string name="label_access_token">Токени дастрасӣ</string>
-    <string name="label_language">Забон</string>
-    <string name="label_time_night">Шаб</string>
-    <string name="label_time_morning">Субҳ</string>
-    <string name="label_time_day">Рӯз</string>
-    <string name="label_time_evening">Бегоҳ</string>
     <string name="label_activity">Фаъолият</string>
     <string name="label_app_mode">Режими барнома</string>
     <string name="label_base_url">Base URL</string>
@@ -92,11 +87,24 @@
     <string name="label_demo_mode">Режими намоишӣ</string>
     <string name="label_environment">Муҳит</string>
     <string name="label_habits_config">Конфигуратсияи одатҳо</string>
+    <string name="label_language">Забон</string>
     <string name="label_memos_db">Базаи ёддоштҳо</string>
+    <string name="label_post_filter">Филтр</string>
     <string name="label_storage">Анбор</string>
-    <string name="label_version">Версия</string>
     <string name="label_success_rate">Дараҷаи муваффақият</string>
+    <string name="label_theme">Мавзуъ</string>
+    <string name="label_time_day">Рӯз</string>
+    <string name="label_time_evening">Бегоҳ</string>
+    <string name="label_time_morning">Субҳ</string>
+    <string name="label_time_night">Шаб</string>
     <string name="label_today">Имрӯз</string>
+    <string name="label_version">Версия</string>
+
+    <!-- Filter options -->
+    <string name="filter_all">Ҳама</string>
+    <string name="filter_config">Танзимот</string>
+    <string name="filter_habit_tracking">Аломатҳо</string>
+    <string name="filter_regular">Оддӣ</string>
 
     <!-- Messages -->
     <string name="msg_connection_failed">Хатои пайвастшавӣ</string>
@@ -135,7 +143,6 @@
     <string name="language_turkmen">Türkmen</string>
 
     <!-- Theme selection -->
-    <string name="label_theme">Мавзуъ</string>
     <string name="theme_system">Системавӣ</string>
     <string name="theme_light">Равшан</string>
     <string name="theme_dark">Торик</string>

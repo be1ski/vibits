@@ -80,11 +80,6 @@
 
     <!-- Labels -->
     <string name="label_access_token">Zugriffstoken</string>
-    <string name="label_language">Sprache</string>
-    <string name="label_time_night">Nacht</string>
-    <string name="label_time_morning">Morgen</string>
-    <string name="label_time_day">Tag</string>
-    <string name="label_time_evening">Abend</string>
     <string name="label_activity">Aktivität</string>
     <string name="label_app_mode">App-Modus</string>
     <string name="label_base_url">Basis-URL</string>
@@ -92,11 +87,24 @@
     <string name="label_demo_mode">Demo-Modus</string>
     <string name="label_environment">Umgebung</string>
     <string name="label_habits_config">Gewohnheits-Konfiguration</string>
+    <string name="label_language">Sprache</string>
     <string name="label_memos_db">Notizen-DB</string>
+    <string name="label_post_filter">Filter</string>
     <string name="label_storage">Speicher</string>
-    <string name="label_version">Version</string>
     <string name="label_success_rate">Erfolgsrate</string>
+    <string name="label_theme">Design</string>
+    <string name="label_time_day">Tag</string>
+    <string name="label_time_evening">Abend</string>
+    <string name="label_time_morning">Morgen</string>
+    <string name="label_time_night">Nacht</string>
     <string name="label_today">Heute</string>
+    <string name="label_version">Version</string>
+
+    <!-- Filter options -->
+    <string name="filter_all">Alle</string>
+    <string name="filter_config">Einstellungen</string>
+    <string name="filter_habit_tracking">Tracking</string>
+    <string name="filter_regular">Normal</string>
 
     <!-- Messages -->
     <string name="msg_connection_failed">Verbindung fehlgeschlagen</string>
@@ -135,7 +143,6 @@
     <string name="language_turkmen">Türkmen</string>
 
     <!-- Theme selection -->
-    <string name="label_theme">Design</string>
     <string name="theme_system">System</string>
     <string name="theme_light">Hell</string>
     <string name="theme_dark">Dunkel</string>

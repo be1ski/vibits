@@ -80,11 +80,6 @@
 
     <!-- Labels -->
     <string name="label_access_token">Token de acces</string>
-    <string name="label_language">Limbă</string>
-    <string name="label_time_night">Noapte</string>
-    <string name="label_time_morning">Dimineață</string>
-    <string name="label_time_day">Zi</string>
-    <string name="label_time_evening">Seară</string>
     <string name="label_activity">Activitate</string>
     <string name="label_app_mode">Mod aplicație</string>
     <string name="label_base_url">Base URL</string>
@@ -92,11 +87,24 @@
     <string name="label_demo_mode">Mod demo</string>
     <string name="label_environment">Mediu</string>
     <string name="label_habits_config">Configurare obiceiuri</string>
+    <string name="label_language">Limbă</string>
     <string name="label_memos_db">Baza de date note</string>
+    <string name="label_post_filter">Filtru</string>
     <string name="label_storage">Stocare</string>
-    <string name="label_version">Versiune</string>
     <string name="label_success_rate">Rată de succes</string>
+    <string name="label_theme">Temă</string>
+    <string name="label_time_day">Zi</string>
+    <string name="label_time_evening">Seară</string>
+    <string name="label_time_morning">Dimineață</string>
+    <string name="label_time_night">Noapte</string>
     <string name="label_today">Astăzi</string>
+    <string name="label_version">Versiune</string>
+
+    <!-- Filter options -->
+    <string name="filter_all">Toate</string>
+    <string name="filter_config">Configurări</string>
+    <string name="filter_habit_tracking">Marcaje</string>
+    <string name="filter_regular">Obișnuite</string>
 
     <!-- Messages -->
     <string name="msg_connection_failed">Conexiune eșuată</string>
@@ -135,7 +143,6 @@
     <string name="language_turkmen">Türkmen</string>
 
     <!-- Theme selection -->
-    <string name="label_theme">Temă</string>
     <string name="theme_system">Sistem</string>
     <string name="theme_light">Deschis</string>
     <string name="theme_dark">Întunecat</string>

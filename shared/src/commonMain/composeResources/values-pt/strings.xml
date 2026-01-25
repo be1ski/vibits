@@ -80,11 +80,6 @@
 
     <!-- Labels -->
     <string name="label_access_token">Token de acesso</string>
-    <string name="label_language">Idioma</string>
-    <string name="label_time_night">Noite</string>
-    <string name="label_time_morning">Manhã</string>
-    <string name="label_time_day">Dia</string>
-    <string name="label_time_evening">Tarde</string>
     <string name="label_activity">Atividade</string>
     <string name="label_app_mode">Modo do app</string>
     <string name="label_base_url">URL base</string>
@@ -92,11 +87,24 @@
     <string name="label_demo_mode">Modo demo</string>
     <string name="label_environment">Ambiente</string>
     <string name="label_habits_config">Configuração de hábitos</string>
+    <string name="label_language">Idioma</string>
     <string name="label_memos_db">Banco de notas</string>
+    <string name="label_post_filter">Filtro</string>
     <string name="label_storage">Armazenamento</string>
-    <string name="label_version">Versão</string>
     <string name="label_success_rate">Taxa de sucesso</string>
+    <string name="label_theme">Tema</string>
+    <string name="label_time_day">Dia</string>
+    <string name="label_time_evening">Tarde</string>
+    <string name="label_time_morning">Manhã</string>
+    <string name="label_time_night">Noite</string>
     <string name="label_today">Hoje</string>
+    <string name="label_version">Versão</string>
+
+    <!-- Filter options -->
+    <string name="filter_all">Todos</string>
+    <string name="filter_config">Configurações</string>
+    <string name="filter_habit_tracking">Registros</string>
+    <string name="filter_regular">Normais</string>
 
     <!-- Messages -->
     <string name="msg_connection_failed">Falha na conexão</string>
@@ -135,7 +143,6 @@
     <string name="language_turkmen">Türkmen</string>
 
     <!-- Theme selection -->
-    <string name="label_theme">Tema</string>
     <string name="theme_system">Sistema</string>
     <string name="theme_light">Claro</string>
     <string name="theme_dark">Escuro</string>
