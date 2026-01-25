@@ -7,7 +7,9 @@
     <string name="action_configure_habits">Настроить привычки</string>
     <string name="action_create">Создать</string>
     <string name="action_create_memo">Создать заметку</string>
+    <string name="action_create_new_config">Создать новый конфиг (рекомендуется)</string>
     <string name="action_delete">Удалить</string>
+    <string name="action_edit_anyway">Все равно редактировать</string>
     <string name="action_hide_details">Скрыть детали</string>
     <string name="action_next">Вперед</string>
     <string name="action_previous">Назад</string>
@@ -53,6 +55,7 @@
     <string name="month_dec">Дек</string>
 
     <!-- Format strings -->
+    <string name="format_active_since">Активно с %1$s</string>
     <string name="format_app_version">Версия: %1$s</string>
     <string name="format_credentials">Креденшелы: %1$s</string>
     <string name="format_environment">Окружение: %1$s</string>
@@ -108,6 +111,7 @@
     <!-- Messages -->
     <string name="msg_connection_failed">Ошибка подключения</string>
     <string name="msg_delete_day_confirm">Привычки не выбраны. Запись за этот день будет удалена.</string>
+    <string name="msg_edit_config_warning">Вы собираетесь перезаписать существующий конфиг. Это повлияет на все исторические данные.\n\nРедактирование старого конфига не рекомендуется, так как это изменит отображение прошлых данных. Например, если вы добавите новую привычку, все прошлые дни покажут её как "не выполненную", хотя её тогда еще не существовало.\n\nЛучшая практика: Создайте новый конфиг. Ваши исторические данные сохранят старый конфиг, а новые данные будут использовать новый конфиг.</string>
     <string name="msg_fill_all_fields">Заполните все поля</string>
     <string name="msg_no_habits_yet">Привычки еще не настроены.</string>
     <string name="msg_no_logs">Логов пока нет</string>
@@ -180,6 +184,7 @@
     <string name="title_create_day">Создать день</string>
     <string name="title_delete_day">Удалить день?</string>
     <string name="title_delete_memo">Удалить заметку?</string>
+    <string name="title_edit_config_warning">Редактировать существующий конфиг?</string>
     <string name="title_edit_day">Изменить день</string>
     <string name="title_edit_memo">Редактировать заметку</string>
     <string name="title_logs">Логи (%1$d)</string>

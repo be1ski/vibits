@@ -49,7 +49,9 @@ class DemoMemosRepository : MemosRepository {
       memos[index] = updated
       updated
     } else {
-      Memo(name = name, content = content, updateTime = now)
+      val memo = Memo(name = name, content = content, createTime = now, updateTime = now)
+      memos.add(0, memo)
+      memo
     }
   }
 

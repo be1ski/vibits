@@ -7,6 +7,7 @@ import space.be1ski.vibits.shared.feature.habits.domain.buildHabitsEditorSelecti
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitStatus
+import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -30,7 +31,7 @@ class HabitContentBuilderTest {
 
     val result = buildDailyContent(date, config, selections)
 
-    assertTrue(result.contains("#habits/daily 2024-01-15"))
+    assertTrue(result.contains("${PostTags.HABITS_DAILY} 2024-01-15"))
     assertTrue(result.contains("#habits/exercise"))
     assertTrue(!result.contains("#habits/reading"))
   }
@@ -43,7 +44,7 @@ class HabitContentBuilderTest {
 
     val result = buildDailyContent(date, config, selections)
 
-    assertEquals("#habits/daily 2024-01-15\n\n", result)
+    assertEquals("${PostTags.HABITS_DAILY} 2024-01-15\n\n", result)
   }
 
   @Test
@@ -148,7 +149,7 @@ class HabitContentBuilderTest {
 
     val result = buildHabitsConfigContentFromList(entries)
 
-    assertTrue(result.startsWith("#habits/config\n\n"))
+    assertTrue(result.startsWith("${PostTags.HABITS_CONFIG}\n\n"))
     assertTrue(result.contains("Exercise | #habits/exercise | #4CAF50"))
     assertTrue(result.contains("Reading | #habits/reading | #2196F3"))
   }
@@ -157,6 +158,6 @@ class HabitContentBuilderTest {
   fun `when entries empty then returns only header`() {
     val result = buildHabitsConfigContentFromList(emptyList())
 
-    assertEquals("#habits/config\n\n", result)
+    assertEquals("${PostTags.HABITS_CONFIG}\n\n", result)
   }
 }

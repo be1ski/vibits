@@ -1,12 +1,18 @@
 package space.be1ski.vibits.shared.feature.habits.presentation
 
+import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.core.ui.theme.DefaultHabitColor
 import space.be1ski.vibits.shared.feature.habits.domain.buildDailyContent
+import space.be1ski.vibits.shared.feature.habits.domain.buildHabitStatuses
 import space.be1ski.vibits.shared.feature.habits.domain.buildHabitsConfigContentFromList
 import space.be1ski.vibits.shared.feature.habits.domain.buildHabitsEditorSelections
+import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
+import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.shared.feature.habits.domain.normalizeHabitTag
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.parseDailyDateFromContent
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.parseMemoDate
 import kotlin.random.Random
 
 /**
@@ -17,13 +23,37 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
   reducer { action, state ->
     when (action) {
       is HabitsAction.OpenEditor -> {
-        val selections = buildHabitsEditorSelections(action.day, action.config)
+        val day =
+          when {
+            action.day != null -> action.day
+            action.memo != null -> {
+              val timeZone = TimeZone.currentSystemDefault()
+              val date =
+                parseDailyDateFromContent(action.memo.content)
+                  ?: parseMemoDate(action.memo, timeZone)
+                  ?: return@reducer
+              val habitStatuses = buildHabitStatuses(action.memo.content, action.config)
+              val completedCount = habitStatuses.count { it.done }
+              ContributionDay(
+                date = date,
+                count = completedCount,
+                totalHabits = action.config.size,
+                completionRatio = if (action.config.isNotEmpty()) completedCount.toFloat() / action.config.size else 0f,
+                habitStatuses = habitStatuses,
+                dailyMemo = DailyMemoInfo(name = action.memo.name, content = action.memo.content),
+                inRange = true,
+                isClickable = true,
+              )
+            }
+            else -> return@reducer
+          }
+        val selections = buildHabitsEditorSelections(day, action.config)
         state {
           copy(
-            editorDay = action.day,
+            editorDay = day,
             editorConfig = action.config,
             editorSelections = selections,
-            editorExisting = action.day.dailyMemo,
+            editorExisting = day.dailyMemo,
             editorError = null,
             showDeleteConfirm = false,
           )
@@ -93,11 +123,11 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
           action.currentConfig.mapIndexed { index, config ->
             EditableHabit.fromHabitConfig(config, "habit_$index")
           }
-        state { copy(showConfigDialog = true, editingHabits = editableHabits) }
+        state { copy(showConfigDialog = true, editingHabits = editableHabits, editingConfigMemo = action.existingMemo) }
       }
 
       is HabitsAction.CloseConfigDialog -> {
-        state { copy(showConfigDialog = false, editingHabits = emptyList()) }
+        state { copy(showConfigDialog = false, editingHabits = emptyList(), editingConfigMemo = null) }
       }
 
       is HabitsAction.AddHabit -> {
@@ -116,7 +146,7 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
         val updated =
           state.editingHabits.map { habit ->
             if (habit.id == action.id) {
-              habit.copy(label = action.label, tag = normalizeHabitTag(action.label))
+              habit.copy(label = action.label)
             } else {
               habit
             }
@@ -146,8 +176,59 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
           state.editingHabits
             .filter { it.label.isNotBlank() }
             .map { it.toHabitConfig() }
-        val content = buildHabitsConfigContentFromList(validHabits)
-        state { copy(isLoading = true) }
+        val existingMemo = state.editingConfigMemo
+        if (existingMemo != null) {
+          state {
+            copy(
+              showEditConfigWarning = true,
+              pendingConfigEdit = validHabits,
+              showConfigDialog = false,
+            )
+          }
+        } else {
+          val content = buildHabitsConfigContentFromList(validHabits)
+          state { copy(isLoading = true) }
+          effect(HabitsEffect.CreateMemo(content))
+        }
+      }
+
+      is HabitsAction.DismissEditConfigWarning -> {
+        state {
+          copy(
+            showEditConfigWarning = false,
+            showConfigDialog = false,
+            editingHabits = emptyList(),
+            editingConfigMemo = null,
+            pendingConfigEdit = emptyList(),
+            pendingConfigMemo = null,
+          )
+        }
+      }
+
+      is HabitsAction.ConfirmEditExistingConfig -> {
+        val content = buildHabitsConfigContentFromList(state.pendingConfigEdit)
+        val existingMemo = state.editingConfigMemo ?: return@reducer
+        state {
+          copy(
+            showEditConfigWarning = false,
+            isLoading = true,
+            pendingConfigEdit = emptyList(),
+            pendingConfigMemo = null,
+          )
+        }
+        effect(HabitsEffect.UpdateMemo(existingMemo.name, content))
+      }
+
+      is HabitsAction.CreateNewConfigInstead -> {
+        val content = buildHabitsConfigContentFromList(state.pendingConfigEdit)
+        state {
+          copy(
+            showEditConfigWarning = false,
+            isLoading = true,
+            pendingConfigEdit = emptyList(),
+            pendingConfigMemo = null,
+          )
+        }
         effect(HabitsEffect.CreateMemo(content))
       }
 
