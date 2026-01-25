@@ -7,15 +7,12 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
-import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.shared.feature.habits.domain.model.DayBuildContext
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
-
-private const val TAG = "BuildActivityData"
 
 private const val DAYS_IN_WEEK = 7
 
@@ -39,16 +36,6 @@ class BuildActivityDataUseCase(
     mode: ActivityMode,
     today: LocalDate,
   ): ActivityWeekData {
-    Log.d(TAG, "buildWeekData: mode=$mode, configTimeline=${configTimeline.size} entries, dailyMemos=${dailyMemos.size} days")
-    if (mode == ActivityMode.HABITS) {
-      configTimeline.forEach { entry ->
-        Log.d(TAG, "  Config entry at ${entry.date}: ${entry.habits.size} habits")
-        entry.habits.forEach { habit ->
-          Log.d(TAG, "    - ${habit.label} | ${habit.tag}")
-        }
-      }
-    }
-
     val bounds = GetRangeBoundsUseCase(range)
     val effectiveConfigTimeline = if (mode == ActivityMode.HABITS) configTimeline else emptyList()
     val counts =
@@ -83,8 +70,6 @@ class BuildActivityDataUseCase(
     }
     val maxDaily = weeks.maxOfOrNull { week -> week.days.maxOfOrNull { it.count } ?: 0 } ?: 0
     val maxWeekly = weeks.maxOfOrNull { it.weeklyCount } ?: 0
-    val result = ActivityWeekData(weeks = weeks, maxDaily = maxDaily, maxWeekly = maxWeekly)
-    Log.d(TAG, "buildWeekData result: ${result.weeks.size} weeks, maxDaily=$maxDaily, maxWeekly=$maxWeekly")
-    return result
+    return ActivityWeekData(weeks = weeks, maxDaily = maxDaily, maxWeekly = maxWeekly)
   }
 }

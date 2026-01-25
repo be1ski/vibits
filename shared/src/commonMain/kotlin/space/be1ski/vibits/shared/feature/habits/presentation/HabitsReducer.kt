@@ -3,7 +3,6 @@ package space.be1ski.vibits.shared.feature.habits.presentation
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
-import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.ui.theme.DefaultHabitColor
 import space.be1ski.vibits.shared.feature.habits.domain.buildDailyContent
 import space.be1ski.vibits.shared.feature.habits.domain.buildHabitStatuses
@@ -15,8 +14,6 @@ import space.be1ski.vibits.shared.feature.habits.domain.normalizeHabitTag
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.parseDailyDateFromContent
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.parseMemoDate
 import kotlin.random.Random
-
-private const val TAG = "HabitsReducer"
 
 /**
  * Pure reducer for the Habits feature.
@@ -122,7 +119,6 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
       }
 
       is HabitsAction.OpenConfigDialog -> {
-        Log.d(TAG, "OpenConfigDialog: ${action.currentConfig.size} habits, existingMemo=${action.existingMemo?.name}")
         val editableHabits =
           action.currentConfig.mapIndexed { index, config ->
             EditableHabit.fromHabitConfig(config, "habit_$index")
@@ -184,20 +180,12 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
           state.editingHabits
             .filter { it.label.isNotBlank() }
             .map { it.toHabitConfig() }
-        Log.d(TAG, "SaveConfigDialog: ${validHabits.size} valid habits")
-        validHabits.forEach { habit ->
-          Log.d(TAG, "  Habit: ${habit.label} | ${habit.tag} | ${habit.color}")
-        }
         val content = buildHabitsConfigContentFromList(validHabits)
         val existingMemo = state.editingConfigMemo
-        Log.d(TAG, "existingMemo: ${existingMemo?.name ?: "null"}")
-        Log.d(TAG, "Config content to save:\n$content")
         state { copy(isLoading = true) }
         if (existingMemo != null) {
-          Log.d(TAG, "Updating existing config memo: ${existingMemo.name}")
           effect(HabitsEffect.UpdateMemo(existingMemo.name, content))
         } else {
-          Log.d(TAG, "Creating new config memo")
           effect(HabitsEffect.CreateMemo(content))
         }
       }

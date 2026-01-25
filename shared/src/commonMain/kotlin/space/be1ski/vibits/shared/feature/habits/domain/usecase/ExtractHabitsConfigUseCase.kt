@@ -3,13 +3,10 @@ package space.be1ski.vibits.shared.feature.habits.domain.usecase
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.habits.domain.parseHabitConfigLine
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
-
-private const val TAG = "ExtractHabitsConfig"
 
 /**
  * Extracts habits configuration entries from memos.
@@ -20,7 +17,6 @@ object ExtractHabitsConfigUseCase {
     memos: List<Memo>,
     timeZone: TimeZone,
   ): List<HabitsConfigEntry> {
-    Log.d(TAG, "Extracting habits config from ${memos.size} memos")
     val entries =
       memos.mapNotNull { memo ->
         if (!memo.content.contains(PostTags.HABITS_CONFIG) &&
@@ -28,8 +24,6 @@ object ExtractHabitsConfigUseCase {
         ) {
           return@mapNotNull null
         }
-        Log.d(TAG, "Found config memo: ${memo.name}")
-        Log.d(TAG, "Config content:\n${memo.content}")
         // Use createTime for config memos to keep date stable when content is edited
         val instant = memo.createTime ?: return@mapNotNull null
         val date = instant.toLocalDateTime(timeZone).date
@@ -44,15 +38,11 @@ object ExtractHabitsConfigUseCase {
             .mapNotNull { line -> parseHabitConfigLine(line) }
             .distinctBy { it.tag }
             .toList()
-        Log.d(TAG, "Parsed ${habits.size} habits from config: ${habits.map { it.tag }}")
         HabitsConfigEntry(date = date, habits = habits, memo = memo) to instant
       }
-    val result =
-      entries
-        .sortedBy { it.second.toEpochMilliseconds() }
-        .map { it.first }
-    Log.d(TAG, "Returning ${result.size} config entries")
-    return result
+    return entries
+      .sortedBy { it.second.toEpochMilliseconds() }
+      .map { it.first }
   }
 
   /**
