@@ -18,7 +18,10 @@ fun createModeSelectionFeature(
     effectHandler =
       ModeSelectionEffectHandler(
         connectionTester = dependencies.connectionTester,
+        initializeCredentialsFromEnv = dependencies.initializeCredentialsFromEnv,
+        loadCredentials = dependencies.loadCredentials,
         saveCredentials = dependencies.saveCredentials,
         saveAppMode = dependencies.saveAppMode,
       ),
+    initialEffects = listOf(ModeSelectionEffect.InitializeFromLocalConfig),
   )

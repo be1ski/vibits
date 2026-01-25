@@ -7,6 +7,23 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 val modeSelectionReducer: Reducer<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect> =
   reducer { action, state ->
     when (action) {
+      is ModeSelectionAction.StoredCredentialsFound -> {
+        state { copy(hasStoredCredentials = true, showQuickOnlineDialog = true) }
+      }
+
+      is ModeSelectionAction.StoredCredentialsNotFound -> {
+        state { copy(hasStoredCredentials = false) }
+      }
+
+      is ModeSelectionAction.DismissQuickOnlineDialog -> {
+        state { copy(showQuickOnlineDialog = false) }
+      }
+
+      is ModeSelectionAction.UseStoredCredentials -> {
+        state { copy(showQuickOnlineDialog = false, isValidating = true) }
+        effect(ModeSelectionEffect.UseStoredCredentialsWithValidation)
+      }
+
       is ModeSelectionAction.ShowCredentialsDialog -> {
         state { copy(showCredentialsDialog = true, error = null) }
       }
@@ -52,7 +69,10 @@ val modeSelectionReducer: Reducer<ModeSelectionAction, ModeSelectionState, ModeS
             error = null,
           )
         }
-        effect(ModeSelectionEffect.SaveCredentials(state.baseUrl.trim(), state.token.trim()))
+        // Only save credentials if they were manually entered
+        if (state.baseUrl.isNotBlank() && state.token.isNotBlank()) {
+          effect(ModeSelectionEffect.SaveCredentials(state.baseUrl.trim(), state.token.trim()))
+        }
         effect(ModeSelectionEffect.SaveMode(AppMode.ONLINE))
         effect(ModeSelectionEffect.NotifyModeSelected(AppMode.ONLINE))
       }

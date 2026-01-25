@@ -81,9 +81,23 @@ class ModeSelectionEffectHandlerTest {
     connectionResult: Result<Unit> = Result.success(Unit),
     credentialsRepository: FakeCredentialsRepository = FakeCredentialsRepository(),
     appModeRepository: FakeAppModeRepository = FakeAppModeRepository(),
+    localConfigProvider: space.be1ski.vibits.shared.core.platform.env.LocalConfigProvider =
+      space.be1ski.vibits.shared.test
+        .createFakeLocalConfigProvider(),
   ): ModeSelectionEffectHandler {
     return ModeSelectionEffectHandler(
       connectionTester = ConnectionTester { _, _ -> connectionResult },
+      initializeCredentialsFromEnv =
+        space.be1ski.vibits.shared.feature.auth.domain.usecase.InitializeCredentialsFromEnvUseCase(
+          loadCredentials =
+            space.be1ski.vibits.shared.feature.auth.domain.usecase
+              .LoadCredentialsUseCase(credentialsRepository),
+          saveCredentials = SaveCredentialsUseCase(credentialsRepository),
+          localConfigProvider = localConfigProvider,
+        ),
+      loadCredentials =
+        space.be1ski.vibits.shared.feature.auth.domain.usecase
+          .LoadCredentialsUseCase(credentialsRepository),
       saveCredentials = SaveCredentialsUseCase(credentialsRepository),
       saveAppMode = SaveAppModeUseCase(appModeRepository),
     )

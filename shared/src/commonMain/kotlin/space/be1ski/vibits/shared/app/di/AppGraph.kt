@@ -9,6 +9,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import space.be1ski.vibits.shared.core.platform.app.AppDetailsProvider
+import space.be1ski.vibits.shared.core.platform.env.LocalConfigProvider
+import space.be1ski.vibits.shared.core.platform.env.createLocalConfigProvider
 import space.be1ski.vibits.shared.core.platform.export.FileExporter
 import space.be1ski.vibits.shared.core.platform.export.createFileExporter
 import space.be1ski.vibits.shared.core.platform.locale.LocaleProvider
@@ -23,12 +25,14 @@ import space.be1ski.vibits.shared.feature.mode.data.platform.AppModeStore
 import space.be1ski.vibits.shared.feature.settings.data.PreferencesStore
 import space.be1ski.vibits.shared.feature.settings.data.PreferencesStoreImpl
 
+@Suppress("TooManyFunctions")
 @SingleIn(AppScope::class)
 @DependencyGraph(AppScope::class)
 abstract class AppGraph {
   abstract val appDependencies: AppDependencies
   abstract val appFeaturesFactory: AppFeaturesFactory
   abstract val appCoroutineScope: CoroutineScope
+  abstract val appInitializer: space.be1ski.vibits.shared.app.AppInitializer
 
   companion object {
     private var instance: AppGraph? = null
@@ -40,6 +44,10 @@ abstract class AppGraph {
     fun getFeaturesFactory(): AppFeaturesFactory = getGraph().appFeaturesFactory
 
     fun getAppScope(): CoroutineScope = getGraph().appCoroutineScope
+
+    fun initializeApp() {
+      getGraph().appInitializer()
+    }
 
     fun resetGraph() {
       instance = null
@@ -81,6 +89,10 @@ abstract class AppGraph {
   @Provides
   @SingleIn(AppScope::class)
   fun fileExporter(): FileExporter = createFileExporter()
+
+  @Provides
+  @SingleIn(AppScope::class)
+  fun localConfigProvider(): LocalConfigProvider = createLocalConfigProvider()
 
   @Provides
   @SingleIn(AppScope::class)
