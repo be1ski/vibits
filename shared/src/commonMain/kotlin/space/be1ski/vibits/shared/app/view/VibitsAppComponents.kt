@@ -22,9 +22,9 @@ import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
+import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.app.presentation.AppAction
-import space.be1ski.vibits.shared.app.presentation.AppState
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.Indent

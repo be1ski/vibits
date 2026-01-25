@@ -17,9 +17,9 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
+import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.app.presentation.AppAction
-import space.be1ski.vibits.shared.app.presentation.AppState
 import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
