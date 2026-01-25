@@ -18,12 +18,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.parseHabitConfigLine
 import space.be1ski.vibits.shared.feature.habits.view.components.localizedLabel
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
+import space.be1ski.vibits.shared.generated.Res
+import space.be1ski.vibits.shared.generated.format_active_since
 
 @Composable
 internal fun HabitsConfigCard(
@@ -47,7 +50,7 @@ internal fun HabitsConfigCard(
     if (instant != null) {
       val date = instant.toLocalDateTime(timeZone).date
       Text(
-        text = "Active since ${dateFormatter.monthDayYear(date)}",
+        text = stringResource(Res.string.format_active_since, dateFormatter.monthDayYear(date)),
         style = MaterialTheme.typography.labelSmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
       )

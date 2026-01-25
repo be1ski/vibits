@@ -55,6 +55,7 @@
     <string name="month_dec">Дек</string>
 
     <!-- Format strings -->
+    <string name="format_active_since">Активно с %1$s</string>
     <string name="format_app_version">Версия: %1$s</string>
     <string name="format_credentials">Креденшелы: %1$s</string>
     <string name="format_environment">Окружение: %1$s</string>

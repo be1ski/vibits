@@ -34,7 +34,7 @@ internal fun HabitsDialogs(
   habitsState: HabitsState,
   dispatch: (HabitsAction) -> Unit,
 ) {
-  val demoMode = appState.appMode == AppMode.DEMO
+  val demoMode = appState.isDemoMode
   EditConfigWarningDialog(habitsState, dispatch)
   HabitsConfigDialog(habitsState, demoMode, dispatch)
   HabitEditorDialog(appState, habitsState, dispatch)
@@ -49,7 +49,7 @@ private fun HabitEditorDialog(
   if (!habitsState.isEditorOpen) {
     return
   }
-  val demoMode = appState.appMode == AppMode.DEMO
+  val demoMode = appState.isDemoMode
   AlertDialog(
     onDismissRequest = { dispatch(HabitsAction.CloseEditor) },
     title = {

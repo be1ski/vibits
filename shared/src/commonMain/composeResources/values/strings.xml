@@ -55,6 +55,7 @@
     <string name="month_dec">Dec</string>
 
     <!-- Format strings -->
+    <string name="format_active_since">Active since %1$s</string>
     <string name="format_app_version">Version: %1$s</string>
     <string name="format_credentials">Credentials: %1$s</string>
     <string name="format_environment">Environment: %1$s</string>
