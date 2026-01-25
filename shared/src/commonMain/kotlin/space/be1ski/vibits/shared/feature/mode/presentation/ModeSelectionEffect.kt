@@ -4,6 +4,12 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
 sealed interface ModeSelectionEffect {
   // Async operations (handled by EffectHandler)
+  data object InitializeFromLocalConfig : ModeSelectionEffect
+
+  data object CheckStoredCredentials : ModeSelectionEffect
+
+  data object UseStoredCredentialsWithValidation : ModeSelectionEffect
+
   data class ValidateCredentials(
     val baseUrl: String,
     val token: String,

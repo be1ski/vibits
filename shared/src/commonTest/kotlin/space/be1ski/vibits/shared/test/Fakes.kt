@@ -1,5 +1,6 @@
 package space.be1ski.vibits.shared.test
 
+import space.be1ski.vibits.shared.core.platform.env.LocalConfigProvider
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.shared.feature.memos.data.platform.MemoCache
@@ -139,3 +140,6 @@ class FakePreferencesRepository(
     saveCalls += 1
   }
 }
+
+fun createFakeLocalConfigProvider(config: Map<String, String> = emptyMap()): LocalConfigProvider =
+  LocalConfigProvider { key -> config[key] }

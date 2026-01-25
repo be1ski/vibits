@@ -162,6 +162,9 @@
     <string name="mode_offline_desc">サーバー接続なしでローカルにデータを保存</string>
     <string name="mode_demo_title">デモ</string>
     <string name="mode_demo_desc">サンプルデータでアプリを試す</string>
+    <string name="mode_quick_online_title">認証情報が見つかりました</string>
+    <string name="mode_quick_online_desc">保存された認証情報が検出されました。それらを使用して素早く接続しますか？</string>
+    <string name="action_use_saved">保存済みを使用</string>
 
     <!-- Navigation -->
     <string name="nav_feed">フィード</string>

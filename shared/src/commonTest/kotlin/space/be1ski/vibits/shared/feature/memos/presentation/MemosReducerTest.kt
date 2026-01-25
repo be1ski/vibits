@@ -84,7 +84,7 @@ class MemosReducerTest {
     memosReducer.test(MemosState()) {
       send(MemosAction.CachedMemosLoaded(listOf(testMemo)))
 
-      assertState { memos.size == 1 && memos.first().name == testMemo.name }
+      assertState { memos.size == 1 && memos.first().name == testMemo.name && initialDataLoaded }
       assertNoEffects()
     }
 
@@ -98,11 +98,38 @@ class MemosReducerTest {
     }
 
   @Test
+  fun `when CachedMemosLoaded with empty cache in offline mode then marks as loaded`() =
+    memosReducer.test(MemosState(isOfflineMode = true)) {
+      send(MemosAction.CachedMemosLoaded(emptyList()))
+
+      assertState { memos.isEmpty() && initialDataLoaded }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when CachedMemosLoaded with empty cache in online mode then loads from server`() =
+    memosReducer.test(MemosState(isOfflineMode = false)) {
+      send(MemosAction.CachedMemosLoaded(emptyList()))
+
+      assertState { memos.isEmpty() && !initialDataLoaded && isLoading }
+      assertEffects(MemosEffect.LoadRemoteMemos)
+    }
+
+  @Test
+  fun `when ResetForModeChange then clears memos and resets initialDataLoaded`() =
+    memosReducer.test(MemosState(memos = listOf(testMemo), initialDataLoaded = true, isLoading = true)) {
+      send(MemosAction.ResetForModeChange)
+
+      assertState { memos.isEmpty() && !initialDataLoaded && !isLoading }
+      assertNoEffects()
+    }
+
+  @Test
   fun `when MemosLoaded then updates memos and stops loading`() =
     memosReducer.test(MemosState(isLoading = true, errorMessage = "old error")) {
       send(MemosAction.MemosLoaded(listOf(testMemo)))
 
-      assertState { memos.size == 1 && !isLoading && errorMessage == null }
+      assertState { memos.size == 1 && !isLoading && errorMessage == null && initialDataLoaded }
       assertNoEffects()
     }
 

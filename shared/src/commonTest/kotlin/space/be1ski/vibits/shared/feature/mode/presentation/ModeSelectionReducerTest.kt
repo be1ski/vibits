@@ -197,4 +197,60 @@ class ModeSelectionReducerTest {
       val notifyEffect = assertHasEffect<ModeSelectionEffect.NotifyModeSelected>()
       assertEquals(AppMode.DEMO, notifyEffect.mode)
     }
+
+  @Test
+  fun `when StoredCredentialsFound then sets flag and shows quick online dialog`() =
+    modeSelectionReducer.test(ModeSelectionState()) {
+      send(ModeSelectionAction.StoredCredentialsFound)
+
+      assertState { hasStoredCredentials && showQuickOnlineDialog }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when StoredCredentialsNotFound then clears flag`() =
+    modeSelectionReducer.test(ModeSelectionState(hasStoredCredentials = true)) {
+      send(ModeSelectionAction.StoredCredentialsNotFound)
+
+      assertState { !hasStoredCredentials }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when DismissQuickOnlineDialog then hides dialog`() =
+    modeSelectionReducer.test(ModeSelectionState(showQuickOnlineDialog = true)) {
+      send(ModeSelectionAction.DismissQuickOnlineDialog)
+
+      assertState { !showQuickOnlineDialog }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when UseStoredCredentials then closes dialog and starts validation`() =
+    modeSelectionReducer.test(ModeSelectionState(showQuickOnlineDialog = true)) {
+      send(ModeSelectionAction.UseStoredCredentials)
+
+      assertState { !showQuickOnlineDialog && isValidating }
+      assertEffects(ModeSelectionEffect.UseStoredCredentialsWithValidation)
+    }
+
+  @Test
+  fun `when ValidationSucceeded with empty state then does not save credentials`() =
+    modeSelectionReducer.test(ModeSelectionState(isValidating = true)) {
+      send(ModeSelectionAction.ValidationSucceeded)
+
+      assertState { !isValidating && baseUrl == "" && token == "" }
+      assertEffectCount(2)
+      assertHasEffect<ModeSelectionEffect.SaveMode>()
+      assertHasEffect<ModeSelectionEffect.NotifyModeSelected>()
+    }
+
+  @Test
+  fun `when SelectMode then closes quick online dialog`() =
+    modeSelectionReducer.test(ModeSelectionState(showQuickOnlineDialog = true)) {
+      send(ModeSelectionAction.SelectMode(AppMode.DEMO))
+
+      assertState { !showQuickOnlineDialog }
+      assertEffectCount(2)
+    }
 }
