@@ -212,6 +212,7 @@ We follow TDD for business logic and aim for high coverage.
 - Desktop-specific tests in `shared/src/desktopTest`.
 - Android-specific tests belong under `androidApp/src/test` or `androidApp/src/androidTest`.
 - Test names use backticks with `when ... then ...` phrasing.
+- **Hardcode strings in tests.** Use literal string values instead of constants like `PostTags.HABITS_CONFIG`. Tests should verify real behavior with real data, not automatically adjust when constants change.
 
 ### Avoiding Test Rot
 

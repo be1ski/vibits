@@ -8,28 +8,28 @@ import kotlin.test.assertTrue
 class MemoTest {
   @Test
   fun `when memo has habits config tag then postType is CONFIG`() {
-    val memo = Memo(content = "${PostTags.HABITS_CONFIG}\nExercise | #habits/exercise")
+    val memo = Memo(content = "#habits/config\nExercise | #habits/exercise")
 
     assertEquals(PostFilter.CONFIG, memo.postType)
   }
 
   @Test
   fun `when memo has habits config alt tag then postType is CONFIG`() {
-    val memo = Memo(content = "${PostTags.HABITS_CONFIG_ALT}\nExercise | #habits/exercise")
+    val memo = Memo(content = "#habits_config\nExercise | #habits/exercise")
 
     assertEquals(PostFilter.CONFIG, memo.postType)
   }
 
   @Test
   fun `when memo has habits daily tag then postType is HABIT_TRACKING`() {
-    val memo = Memo(content = "${PostTags.HABITS_DAILY} 2024-01-15\n#habits/exercise")
+    val memo = Memo(content = "#habits/daily 2024-01-15\n#habits/exercise")
 
     assertEquals(PostFilter.HABIT_TRACKING, memo.postType)
   }
 
   @Test
   fun `when memo has daily tag then postType is HABIT_TRACKING`() {
-    val memo = Memo(content = "${PostTags.DAILY} 2024-01-15\n#habits/exercise")
+    val memo = Memo(content = "#daily 2024-01-15\n#habits/exercise")
 
     assertEquals(PostFilter.HABIT_TRACKING, memo.postType)
   }
@@ -43,7 +43,7 @@ class MemoTest {
 
   @Test
   fun `when memo is config post then isConfigPost is true`() {
-    val memo = Memo(content = "${PostTags.HABITS_CONFIG}\nExercise | #habits/exercise")
+    val memo = Memo(content = "#habits/config\nExercise | #habits/exercise")
 
     assertTrue(memo.isConfigPost)
     assertFalse(memo.isTrackingPost)
@@ -52,7 +52,7 @@ class MemoTest {
 
   @Test
   fun `when memo is tracking post then isTrackingPost is true`() {
-    val memo = Memo(content = "${PostTags.HABITS_DAILY} 2024-01-15\n#habits/exercise")
+    val memo = Memo(content = "#habits/daily 2024-01-15\n#habits/exercise")
 
     assertFalse(memo.isConfigPost)
     assertTrue(memo.isTrackingPost)
@@ -77,14 +77,14 @@ class MemoTest {
 
   @Test
   fun `when memo is config post then canDeleteFromFeed is false`() {
-    val memo = Memo(content = "${PostTags.HABITS_CONFIG}\nExercise | #habits/exercise")
+    val memo = Memo(content = "#habits/config\nExercise | #habits/exercise")
 
     assertFalse(memo.canDeleteFromFeed)
   }
 
   @Test
   fun `when memo is tracking post then canDeleteFromFeed is false`() {
-    val memo = Memo(content = "${PostTags.HABITS_DAILY} 2024-01-15\n#habits/exercise")
+    val memo = Memo(content = "#habits/daily 2024-01-15\n#habits/exercise")
 
     assertFalse(memo.canDeleteFromFeed)
   }
