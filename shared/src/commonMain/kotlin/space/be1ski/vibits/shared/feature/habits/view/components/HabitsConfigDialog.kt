@@ -175,12 +175,8 @@ private fun HabitLabelEditor(
     TextField(
       value = displayLabel,
       onValueChange = { newValue ->
-        if (demoMode && !isEditing) {
-          isEditing = true
-          onLabelChange(habit.label)
-        } else {
-          onLabelChange(newValue)
-        }
+        isEditing = true
+        onLabelChange(newValue)
       },
       modifier = Modifier.weight(1f),
       placeholder = { Text(stringResource(Res.string.hint_habit_name)) },
