@@ -1,7 +1,11 @@
 package space.be1ski.vibits.shared.app.view
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
@@ -9,6 +13,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import space.be1ski.vibits.shared.app.di.AppDependencies
 import space.be1ski.vibits.shared.app.di.AppGraph
 import space.be1ski.vibits.shared.app.presentation.AppFeatures
@@ -46,11 +52,11 @@ fun AppRoot(dependencies: AppDependencies) {
       when (appMode) {
         AppMode.NOT_SELECTED -> ModeSelectionScreen(feature = modeSelectionFeature)
         AppMode.ONLINE, AppMode.OFFLINE, AppMode.DEMO -> {
-          VibitsApp(
+          AppWithLoadingScreen(
             dependencies = dependencies,
             features = features,
-            currentTheme = appTheme,
-            currentLanguage = appLanguage,
+            appTheme = appTheme,
+            appLanguage = appLanguage,
             onResetApp = {
               appTheme = AppTheme.SYSTEM
               appLanguage = AppLanguage.SYSTEM
@@ -68,6 +74,44 @@ fun AppRoot(dependencies: AppDependencies) {
         }
       }
     }
+  }
+}
+
+@Composable
+private fun AppWithLoadingScreen(
+  dependencies: AppDependencies,
+  features: AppFeatures,
+  appTheme: AppTheme,
+  appLanguage: AppLanguage,
+  onResetApp: () -> Unit,
+  onThemeChanged: (AppTheme) -> Unit,
+  onLanguageChanged: (AppLanguage) -> Unit,
+) {
+  val memosState by features.memos.state.collectAsState()
+
+  if (!memosState.initialDataLoaded) {
+    // Show loading screen while initial data is loading
+    LoadingScreen()
+  } else {
+    VibitsApp(
+      dependencies = dependencies,
+      features = features,
+      currentTheme = appTheme,
+      currentLanguage = appLanguage,
+      onResetApp = onResetApp,
+      onThemeChanged = onThemeChanged,
+      onLanguageChanged = onLanguageChanged,
+    )
+  }
+}
+
+@Composable
+private fun LoadingScreen() {
+  Box(
+    modifier = Modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center,
+  ) {
+    CircularProgressIndicator()
   }
 }
 

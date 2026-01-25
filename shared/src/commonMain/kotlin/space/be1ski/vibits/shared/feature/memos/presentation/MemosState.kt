@@ -15,6 +15,7 @@ data class MemosState(
   val token: String = "",
   val isOfflineMode: Boolean = false,
   val activePostFilter: PostFilter = PostFilter.ALL,
+  val initialDataLoaded: Boolean = false,
   // Create dialog
   val showCreateDialog: Boolean = false,
   val createDialogContent: String = "",

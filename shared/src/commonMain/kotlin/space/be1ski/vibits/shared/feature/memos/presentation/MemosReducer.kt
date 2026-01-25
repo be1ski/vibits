@@ -58,16 +58,26 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
 
         if (action.memos.isNotEmpty()) {
           // Cache has data, use it
-          state { copy(memos = sortedMemos(action.memos)) }
+          state { copy(memos = sortedMemos(action.memos), initialDataLoaded = true) }
         } else if (!state.isOfflineMode) {
           // Cache is empty and we're online - load from server immediately
           state { copy(isLoading = true) }
           effect(MemosEffect.LoadRemoteMemos)
+        } else {
+          // Offline mode with no cache - mark as loaded
+          state { copy(initialDataLoaded = true) }
         }
       }
 
       is MemosAction.MemosLoaded -> {
-        state { copy(memos = sortedMemos(action.memos), isLoading = false, errorMessage = null) }
+        state {
+          copy(
+            memos = sortedMemos(action.memos),
+            isLoading = false,
+            errorMessage = null,
+            initialDataLoaded = true,
+          )
+        }
       }
 
       // CRUD
