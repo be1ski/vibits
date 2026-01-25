@@ -3,6 +3,16 @@ package space.be1ski.vibits.shared.feature.mode.presentation
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
 sealed interface ModeSelectionAction {
+  // Stored credentials check
+  data object StoredCredentialsFound : ModeSelectionAction
+
+  data object StoredCredentialsNotFound : ModeSelectionAction
+
+  // Quick online dialog
+  data object DismissQuickOnlineDialog : ModeSelectionAction
+
+  data object UseStoredCredentials : ModeSelectionAction
+
   // Dialog lifecycle
   data object ShowCredentialsDialog : ModeSelectionAction
 

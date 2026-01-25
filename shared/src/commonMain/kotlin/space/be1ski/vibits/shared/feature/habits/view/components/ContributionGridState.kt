@@ -36,7 +36,8 @@ data class ActivityWeekDataState(
 
 /**
  * Runtime cache for ActivityWeekData.
- * Clears automatically when memos list changes (by reference).
+ * When memos list changes, saves snapshot of old cache before clearing.
+ * Snapshot is used to prevent UI flashing while recalculating new data.
  * Exposes [version] to trigger LaunchedEffect restart when memos reference changes.
  */
 @Inject
@@ -44,6 +45,7 @@ data class ActivityWeekDataState(
 class ActivityWeekDataCache {
   private var lastMemos: List<Memo>? = null
   private val cache = mutableMapOf<Pair<ActivityRange, ActivityMode>, ActivityWeekData>()
+  private var snapshot = mutableMapOf<Pair<ActivityRange, ActivityMode>, ActivityWeekData>()
 
   /**
    * Increments when memos reference changes.
@@ -59,12 +61,22 @@ class ActivityWeekDataCache {
   ): ActivityWeekData? {
     val sameRef = memos === lastMemos
     if (!sameRef) {
+      // Save snapshot before clearing to prevent UI flashing
+      snapshot = cache.toMutableMap()
       cache.clear()
       lastMemos = memos
       version++
-      return null
     }
-    return cache[range to mode]
+    // Return from cache if available, otherwise from snapshot
+    return cache[range to mode] ?: snapshot[range to mode]
+  }
+
+  fun isFresh(
+    memos: List<Memo>,
+    range: ActivityRange,
+    mode: ActivityMode,
+  ): Boolean {
+    return memos === lastMemos && cache.containsKey(range to mode)
   }
 
   fun put(
@@ -74,15 +86,19 @@ class ActivityWeekDataCache {
     data: ActivityWeekData,
   ) {
     if (memos !== lastMemos) {
+      snapshot = cache.toMutableMap()
       cache.clear()
       lastMemos = memos
       version++
     }
     cache[range to mode] = data
+    // Clear snapshot for this key once new data is ready
+    snapshot.remove(range to mode)
   }
 
   fun clear() {
     cache.clear()
+    snapshot.clear()
     lastMemos = null
     version++
   }
@@ -92,6 +108,7 @@ class ActivityWeekDataCache {
  * Memoized builder for [ActivityWeekData].
  * Pre-extracts config and daily memos (cached by memos only), then builds range-dependent data.
  * Computation runs in background thread; caches results per range for instant switching.
+ * Never shows loading state for background recalculation to prevent UI flashing.
  */
 @Composable
 fun rememberActivityWeekData(
@@ -107,21 +124,23 @@ fun rememberActivityWeekData(
   val configTimeline = rememberHabitsConfigTimeline(memos)
   val dailyMemos = rememberDailyMemos(memos)
 
-  // Check cache SYNCHRONOUSLY on every composition
-  // This ensures we pick up cached data even if local state got reset during recomposition
+  // CRITICAL: Capture cacheVersion first, then get data
+  // This ensures remember() key matches the data we're initializing with
+  val cacheVersion = cache.version
   val cachedData = cache.get(memos, range, mode)
 
-  // If cache has data, return immediately - no shimmer needed
-  if (cachedData != null) {
-    return ActivityWeekDataState(data = cachedData, isLoading = false)
+  // Always use remember to hold current data, initializing with cached/snapshot data
+  var currentData by remember(cacheVersion, range, mode) {
+    mutableStateOf(cachedData ?: emptyWeekData)
   }
 
-  // Cache miss - need to load in background
-  val cacheVersion = cache.version
-  var currentData by remember(cacheVersion, range, mode) { mutableStateOf(emptyWeekData) }
-  var isLoading by remember(cacheVersion, range, mode) { mutableStateOf(true) }
-
+  // Trigger background recalculation if data is not fresh
   LaunchedEffect(cacheVersion, range, mode) {
+    // Skip if we already have fresh data in main cache
+    if (cache.isFresh(memos, range, mode)) {
+      return@LaunchedEffect
+    }
+
     val result =
       withContext(Dispatchers.Default) {
         buildActivityDataUseCase.buildWeekData(
@@ -136,10 +155,9 @@ fun rememberActivityWeekData(
       }
     cache.put(memos, range, mode, result)
     currentData = result
-    isLoading = false
   }
 
-  return ActivityWeekDataState(data = currentData, isLoading = isLoading)
+  return ActivityWeekDataState(data = currentData, isLoading = false)
 }
 
 /**

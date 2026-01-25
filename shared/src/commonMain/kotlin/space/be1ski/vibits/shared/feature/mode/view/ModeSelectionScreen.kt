@@ -36,6 +36,7 @@ import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionState
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_cancel
 import space.be1ski.vibits.shared.generated.action_save
+import space.be1ski.vibits.shared.generated.action_use_saved
 import space.be1ski.vibits.shared.generated.hint_base_url
 import space.be1ski.vibits.shared.generated.label_access_token
 import space.be1ski.vibits.shared.generated.label_base_url
@@ -45,6 +46,8 @@ import space.be1ski.vibits.shared.generated.mode_offline_desc
 import space.be1ski.vibits.shared.generated.mode_offline_title
 import space.be1ski.vibits.shared.generated.mode_online_desc
 import space.be1ski.vibits.shared.generated.mode_online_title
+import space.be1ski.vibits.shared.generated.mode_quick_online_desc
+import space.be1ski.vibits.shared.generated.mode_quick_online_title
 import space.be1ski.vibits.shared.generated.mode_select_subtitle
 import space.be1ski.vibits.shared.generated.mode_select_title
 import space.be1ski.vibits.shared.generated.msg_connection_failed
@@ -103,12 +106,55 @@ fun ModeSelectionScreen(feature: Feature<ModeSelectionAction, ModeSelectionState
     )
   }
 
+  if (state.showQuickOnlineDialog) {
+    QuickOnlineDialog(
+      state = state,
+      dispatch = dispatch,
+    )
+  }
+
   if (state.showCredentialsDialog) {
     CredentialsSetupDialog(
       state = state,
       dispatch = dispatch,
     )
   }
+}
+
+@Composable
+private fun QuickOnlineDialog(
+  state: ModeSelectionState,
+  dispatch: (ModeSelectionAction) -> Unit,
+) {
+  AlertDialog(
+    onDismissRequest = { if (!state.isValidating) dispatch(ModeSelectionAction.DismissQuickOnlineDialog) },
+    title = { Text(stringResource(Res.string.mode_quick_online_title)) },
+    text = { Text(stringResource(Res.string.mode_quick_online_desc)) },
+    confirmButton = {
+      Button(
+        onClick = { dispatch(ModeSelectionAction.UseStoredCredentials) },
+        enabled = !state.isValidating,
+      ) {
+        if (state.isValidating) {
+          CircularProgressIndicator(
+            modifier = Modifier.size(16.dp),
+            strokeWidth = 2.dp,
+            color = MaterialTheme.colorScheme.onPrimary,
+          )
+        } else {
+          Text(stringResource(Res.string.action_use_saved))
+        }
+      }
+    },
+    dismissButton = {
+      TextButton(
+        onClick = { dispatch(ModeSelectionAction.DismissQuickOnlineDialog) },
+        enabled = !state.isValidating,
+      ) {
+        Text(stringResource(Res.string.action_cancel))
+      }
+    },
+  )
 }
 
 @Suppress("LongMethod")

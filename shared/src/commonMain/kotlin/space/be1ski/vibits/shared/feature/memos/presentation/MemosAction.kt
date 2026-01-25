@@ -23,6 +23,8 @@ sealed interface MemosAction {
 
   data object LoadCachedMemos : MemosAction
 
+  data object ResetForModeChange : MemosAction
+
   // Filtering
   data class ChangePostFilter(
     val filter: PostFilter,

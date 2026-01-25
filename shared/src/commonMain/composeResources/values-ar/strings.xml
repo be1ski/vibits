@@ -162,6 +162,9 @@
     <string name="mode_offline_desc">تخزين البيانات محليًا بدون اتصال بالخادم</string>
     <string name="mode_demo_title">تجريبي</string>
     <string name="mode_demo_desc">جرب التطبيق مع بيانات نموذجية</string>
+    <string name="mode_quick_online_title">تم العثور على بيانات الاعتماد</string>
+    <string name="mode_quick_online_desc">تم اكتشاف بيانات اعتماد محفوظة. استخدامها للاتصال بسرعة؟</string>
+    <string name="action_use_saved">استخدام المحفوظة</string>
 
     <!-- Navigation -->
     <string name="nav_feed">الرئيسية</string>
