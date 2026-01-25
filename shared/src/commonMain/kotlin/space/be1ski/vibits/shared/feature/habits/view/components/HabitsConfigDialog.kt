@@ -51,6 +51,7 @@ private val SELECTED_BORDER_WIDTH = 2.dp
 @Composable
 internal fun HabitsConfigDialog(
   habitsState: HabitsState,
+  demoMode: Boolean = false,
   dispatch: (HabitsAction) -> Unit,
 ) {
   if (!habitsState.showConfigDialog) {
@@ -60,7 +61,7 @@ internal fun HabitsConfigDialog(
   AlertDialog(
     onDismissRequest = { dispatch(HabitsAction.CloseConfigDialog) },
     title = { Text(stringResource(Res.string.label_habits_config)) },
-    text = { HabitsConfigDialogContent(habitsState, dispatch) },
+    text = { HabitsConfigDialogContent(habitsState, demoMode, dispatch) },
     confirmButton = {
       Button(onClick = { dispatch(HabitsAction.SaveConfigDialog) }) {
         Text(stringResource(Res.string.action_save))
@@ -77,6 +78,7 @@ internal fun HabitsConfigDialog(
 @Composable
 private fun HabitsConfigDialogContent(
   habitsState: HabitsState,
+  demoMode: Boolean,
   dispatch: (HabitsAction) -> Unit,
 ) {
   Column(
@@ -86,6 +88,7 @@ private fun HabitsConfigDialogContent(
     habitsState.editingHabits.forEach { habit ->
       HabitConfigItem(
         habit = habit,
+        demoMode = demoMode,
         onLabelChange = { dispatch(HabitsAction.UpdateHabitLabel(habit.id, it)) },
         onColorChange = { dispatch(HabitsAction.UpdateHabitColor(habit.id, it)) },
         onDelete = { dispatch(HabitsAction.DeleteHabit(habit.id)) },
@@ -106,10 +109,13 @@ private fun HabitsConfigDialogContent(
 @Composable
 private fun HabitConfigItem(
   habit: EditableHabit,
+  demoMode: Boolean,
   onLabelChange: (String) -> Unit,
   onColorChange: (Long) -> Unit,
   onDelete: () -> Unit,
 ) {
+  val displayLabel = habit.toHabitConfig().localizedLabel(demoMode)
+
   OutlinedCard(modifier = Modifier.fillMaxWidth()) {
     Column(
       modifier = Modifier.padding(Indent.s),
@@ -127,11 +133,17 @@ private fun HabitConfigItem(
               .background(Color(habit.color)),
         )
         TextField(
-          value = habit.label,
-          onValueChange = onLabelChange,
+          value = displayLabel,
+          onValueChange =
+            if (demoMode) {
+              {}
+            } else {
+              onLabelChange
+            },
           modifier = Modifier.weight(1f),
           placeholder = { Text(stringResource(Res.string.hint_habit_name)) },
           singleLine = true,
+          readOnly = demoMode,
         )
         IconButton(onClick = onDelete) {
           Icon(

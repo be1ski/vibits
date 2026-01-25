@@ -33,7 +33,8 @@ internal fun HabitsDialogs(
   habitsState: HabitsState,
   dispatch: (HabitsAction) -> Unit,
 ) {
-  HabitsConfigDialog(habitsState, dispatch)
+  val demoMode = appState.appMode == AppMode.DEMO
+  HabitsConfigDialog(habitsState, demoMode, dispatch)
   HabitEditorDialog(appState, habitsState, dispatch)
 }
 
