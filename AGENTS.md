@@ -191,7 +191,7 @@ We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
 ## Localization
 
 - **Never hardcode user-facing strings.** All text displayed to users must use string resources from `composeResources/values/strings.xml`.
-- **Always add translations immediately.** When adding a new string resource, add the Russian translation in `values-ru/strings.xml` at the same time.
+- **Always add translations for ALL supported locales immediately.** When adding a new string resource, add proper native translations to all locale files in `composeResources/values-*/strings.xml`. Use professional native translations, not English fallbacks.
 - String resource names use `snake_case` with semantic prefixes: `action_`, `label_`, `msg_`, `title_`, `hint_`, `format_`, etc.
 
 ## Testing Guidelines
@@ -212,6 +212,7 @@ We follow TDD for business logic and aim for high coverage.
 - Desktop-specific tests in `shared/src/desktopTest`.
 - Android-specific tests belong under `androidApp/src/test` or `androidApp/src/androidTest`.
 - Test names use backticks with `when ... then ...` phrasing.
+- **Hardcode strings in tests.** Use literal string values instead of constants like `PostTags.HABITS_CONFIG`. Tests should verify real behavior with real data, not automatically adjust when constants change.
 
 ### Avoiding Test Rot
 

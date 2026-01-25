@@ -8,7 +8,6 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.habits.domain.model.RangeBounds
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
-import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -19,7 +18,7 @@ class BuildDayDataUseCaseTest {
   private val today = LocalDate(2024, 1, 15)
   private val configDate = LocalDate(2024, 1, 10)
   private val habits = listOf(HabitConfig(tag = "#habits/test", label = "Test"))
-  private val configMemo = Memo(name = "config", content = "${PostTags.HABITS_CONFIG}\nTest | #habits/test")
+  private val configMemo = Memo(name = "config", content = "#habits/config\nTest | #habits/test")
   private val configEntry = HabitsConfigEntry(date = configDate, habits = habits, memo = configMemo)
   private val bounds = RangeBounds(start = LocalDate(2024, 1, 1), end = LocalDate(2024, 1, 31))
 
@@ -299,7 +298,7 @@ class BuildDayDataUseCaseTest {
           Memo(
             name = "config",
             content =
-              "${PostTags.HABITS_CONFIG}\n" +
+              "#habits/config\n" +
                 "Exercise | #habits/exercise\n" +
                 "Reading | #habits/reading\n" +
                 "Meditation | #habits/meditation",

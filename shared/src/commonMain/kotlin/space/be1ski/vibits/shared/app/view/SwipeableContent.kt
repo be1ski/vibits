@@ -23,6 +23,7 @@ import space.be1ski.vibits.shared.app.presentation.AppState
 import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
+import space.be1ski.vibits.shared.feature.habits.domain.parseConfigFromContent
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateActivityRangeDeltaUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
@@ -313,7 +314,9 @@ private fun handleMemoClick(
 
   when (postType) {
     PostFilter.CONFIG -> {
-      onHabitsAction(HabitsAction.OpenConfigDialog(currentConfig, existingMemo = memo))
+      // Parse config from the clicked memo using domain logic
+      val clickedConfig = parseConfigFromContent(memo.content)
+      onHabitsAction(HabitsAction.OpenConfigDialog(clickedConfig, existingMemo = memo))
     }
     PostFilter.HABIT_TRACKING -> {
       onHabitsAction(HabitsAction.OpenEditor(config = currentConfig, memo = memo))

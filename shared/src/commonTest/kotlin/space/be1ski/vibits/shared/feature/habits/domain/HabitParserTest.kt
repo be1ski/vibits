@@ -7,9 +7,9 @@ import space.be1ski.vibits.shared.feature.habits.domain.formatHexColor
 import space.be1ski.vibits.shared.feature.habits.domain.labelFromTag
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.normalizeHabitTag
+import space.be1ski.vibits.shared.feature.habits.domain.parseConfigFromContent
 import space.be1ski.vibits.shared.feature.habits.domain.parseHabitConfigLine
 import space.be1ski.vibits.shared.feature.habits.domain.parseHexColor
-import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -143,7 +143,7 @@ class HabitParserTest {
   fun `when content has no checkboxes then extracts tags directly`() {
     val content =
       """
-      ${PostTags.HABITS_DAILY} 2024-01-15
+      #habits/daily 2024-01-15
 
       #habits/exercise
       #habits/meditation
@@ -193,7 +193,7 @@ class HabitParserTest {
 
   @Test
   fun `when content has daily tag then excludes it`() {
-    val content = "${PostTags.HABITS_DAILY} 2024-01-15 #habits/exercise"
+    val content = "#habits/daily 2024-01-15 #habits/exercise"
 
     val result = extractHabitTagsFromContent(content)
 
@@ -289,5 +289,91 @@ class HabitParserTest {
   fun `when color has leading zeros then pads correctly`() {
     val result = formatHexColor(0x000033L)
     assertEquals("#000033", result)
+  }
+
+  // parseConfigFromContent tests
+
+  @Test
+  fun `when content is config memo then parses all habits`() {
+    val content =
+      """
+      #habits/config
+      Exercise | #habits/exercise | #4CAF50
+      Reading | #habits/reading | #FF5733
+      Meditation
+      """.trimIndent()
+
+    val result = parseConfigFromContent(content)
+
+    assertEquals(3, result.size)
+    assertEquals("Exercise", result[0].label)
+    assertEquals("#habits/exercise", result[0].tag)
+    assertEquals(0xFF4CAF50L, result[0].color)
+    assertEquals("Reading", result[1].label)
+    assertEquals("#habits/reading", result[1].tag)
+    assertEquals(0xFFFF5733L, result[1].color)
+    assertEquals("Meditation", result[2].label)
+    assertEquals("#habits/Meditation", result[2].tag)
+  }
+
+  @Test
+  fun `when content is config memo with alt tag then parses habits`() {
+    val content =
+      """
+      #habits_config
+      Exercise | #habits/exercise
+      """.trimIndent()
+
+    val result = parseConfigFromContent(content)
+
+    assertEquals(1, result.size)
+    assertEquals("Exercise", result[0].label)
+    assertEquals("#habits/exercise", result[0].tag)
+  }
+
+  @Test
+  fun `when content is not config memo then returns empty list`() {
+    val content =
+      """
+      #habits/daily 2024-01-15
+      #habits/exercise
+      """.trimIndent()
+
+    val result = parseConfigFromContent(content)
+
+    assertTrue(result.isEmpty())
+  }
+
+  @Test
+  fun `when content has duplicate tags then keeps only first occurrence`() {
+    val content =
+      """
+      #habits/config
+      Exercise | #habits/exercise | #4CAF50
+      Different Label | #habits/exercise | #FF5733
+      """.trimIndent()
+
+    val result = parseConfigFromContent(content)
+
+    assertEquals(1, result.size)
+    assertEquals("Exercise", result[0].label)
+    assertEquals("#habits/exercise", result[0].tag)
+    assertEquals(0xFF4CAF50L, result[0].color)
+  }
+
+  @Test
+  fun `when content has blank lines then ignores them`() {
+    val content =
+      """
+      #habits/config
+
+      Exercise | #habits/exercise
+
+      Reading | #habits/reading
+      """.trimIndent()
+
+    val result = parseConfigFromContent(content)
+
+    assertEquals(2, result.size)
   }
 }
