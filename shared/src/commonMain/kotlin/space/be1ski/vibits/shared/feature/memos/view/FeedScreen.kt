@@ -41,6 +41,7 @@ import space.be1ski.vibits.shared.core.ui.SegmentedSelector
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
+import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.FilterMemosByTypeUseCase
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_cancel
@@ -123,11 +124,19 @@ fun FeedScreen(
                 modifier = Modifier.weight(1f).padding(start = Indent.s),
                 verticalArrangement = Arrangement.spacedBy(Indent.x2s),
               ) {
-                val dateLabel = memoDateLabel(memo, timeZone, dateFormatter)
-                if (dateLabel.isNotBlank()) {
-                  Text(dateLabel, style = MaterialTheme.typography.labelSmall)
+                val isConfigMemo =
+                  memo.content.contains(PostTags.HABITS_CONFIG) ||
+                    memo.content.contains(PostTags.HABITS_CONFIG_ALT)
+
+                if (isConfigMemo) {
+                  HabitsConfigCard(memo = memo, dateFormatter = dateFormatter)
+                } else {
+                  val dateLabel = memoDateLabel(memo, timeZone, dateFormatter)
+                  if (dateLabel.isNotBlank()) {
+                    Text(dateLabel, style = MaterialTheme.typography.labelSmall)
+                  }
+                  Text(memo.content, style = MaterialTheme.typography.bodyMedium)
                 }
-                Text(memo.content, style = MaterialTheme.typography.bodyMedium)
               }
               if (onDeleteMemo != null) {
                 IconButton(
