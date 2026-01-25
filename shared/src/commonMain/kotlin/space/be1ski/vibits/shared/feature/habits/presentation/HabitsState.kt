@@ -7,6 +7,7 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.vibits.shared.feature.habits.domain.normalizeHabitTag
 
 /**
  * Editable habit entry for the config dialog.
@@ -17,7 +18,10 @@ data class EditableHabit(
   val label: String,
   val color: Long,
 ) {
-  fun toHabitConfig(): HabitConfig = HabitConfig(tag = tag, label = label, color = color)
+  fun toHabitConfig(): HabitConfig {
+    val finalTag = if (tag.isBlank()) normalizeHabitTag(label) else tag
+    return HabitConfig(tag = finalTag, label = label, color = color)
+  }
 
   companion object {
     fun fromHabitConfig(

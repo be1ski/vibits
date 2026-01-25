@@ -325,7 +325,7 @@ class HabitsReducerTest {
     }
 
   @Test
-  fun `when UpdateHabitLabel then updates label and normalizes tag`() =
+  fun `when UpdateHabitLabel then updates label only`() =
     habitsReducer.test(
       HabitsState(editingHabits = listOf(EditableHabit("habit_1", "", "", 0xFF0000L))),
     ) {
@@ -333,10 +333,37 @@ class HabitsReducerTest {
 
       assertState {
         editingHabits.first().label == "Morning Run" &&
-          editingHabits.first().tag == "#habits/Morning_Run"
+          editingHabits.first().tag == ""
       }
       assertNoEffects()
     }
+
+  @Test
+  fun `when toHabitConfig with empty tag then generates tag from label`() {
+    val editable = EditableHabit("habit_1", "", "Morning Run", 0xFF0000L)
+    val config = editable.toHabitConfig()
+
+    assertEquals("#habits/Morning_Run", config.tag)
+    assertEquals("Morning Run", config.label)
+  }
+
+  @Test
+  fun `when toHabitConfig with existing tag then keeps the tag`() {
+    val editable = EditableHabit("habit_1", "#habits/custom", "Morning Run", 0xFF0000L)
+    val config = editable.toHabitConfig()
+
+    assertEquals("#habits/custom", config.tag)
+    assertEquals("Morning Run", config.label)
+  }
+
+  @Test
+  fun `when toHabitConfig with cyrillic label then generates correct tag`() {
+    val editable = EditableHabit("habit_1", "", "фывфывфывфыв", 0xFF0000L)
+    val config = editable.toHabitConfig()
+
+    assertEquals("#habits/фывфывфывфыв", config.tag)
+    assertEquals("фывфывфывфыв", config.label)
+  }
 
   @Test
   fun `when UpdateHabitLabel for non-matching id then keeps other habits unchanged`() =

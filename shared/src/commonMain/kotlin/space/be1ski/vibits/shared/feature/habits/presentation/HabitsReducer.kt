@@ -146,11 +146,7 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
         val updated =
           state.editingHabits.map { habit ->
             if (habit.id == action.id) {
-              if (habit.tag.isBlank()) {
-                habit.copy(label = action.label, tag = normalizeHabitTag(action.label))
-              } else {
-                habit.copy(label = action.label)
-              }
+              habit.copy(label = action.label)
             } else {
               habit
             }

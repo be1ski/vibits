@@ -105,6 +105,11 @@ class HabitParserTest {
     assertEquals("#habits/morning_run", normalizeHabitTag("morning   run"))
   }
 
+  @Test
+  fun `when tag has cyrillic characters then preserves them`() {
+    assertEquals("#habits/фывфывфывфыв", normalizeHabitTag("фывфывфывфыв"))
+  }
+
   // labelFromTag tests
 
   @Test
