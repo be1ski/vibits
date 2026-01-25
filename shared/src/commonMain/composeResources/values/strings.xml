@@ -7,7 +7,9 @@
     <string name="action_configure_habits">Configure habits</string>
     <string name="action_create">Create</string>
     <string name="action_create_memo">Create memo</string>
+    <string name="action_create_new_config">Create New Config (Recommended)</string>
     <string name="action_delete">Delete</string>
+    <string name="action_edit_anyway">Edit Anyway</string>
     <string name="action_hide_details">Hide habit details</string>
     <string name="action_next">Next</string>
     <string name="action_previous">Previous</string>
@@ -108,6 +110,7 @@
     <!-- Messages -->
     <string name="msg_connection_failed">Connection failed</string>
     <string name="msg_delete_day_confirm">No habits selected. The daily entry will be deleted.</string>
+    <string name="msg_edit_config_warning">You\'re about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn\'t exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
     <string name="msg_fill_all_fields">Please fill in all fields</string>
     <string name="msg_no_habits_yet">No habits configured yet.</string>
     <string name="msg_no_logs">No logs yet</string>
@@ -181,6 +184,7 @@
     <string name="title_create_day">Create day</string>
     <string name="title_delete_day">Delete day?</string>
     <string name="title_delete_memo">Delete memo?</string>
+    <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">Edit day</string>
     <string name="title_edit_memo">Edit memo</string>
     <string name="title_logs">Logs (%1$d)</string>

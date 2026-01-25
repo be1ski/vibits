@@ -33,6 +33,14 @@ class HabitsReducerTest {
       HabitConfig("#habits/reading", "Reading"),
     )
 
+  private val testConfigMemo =
+    Memo(
+      name = "memos/config_old",
+      content = "#habits/config\\n\\nexercise | #habits/exercise | #4CAF50\\nreading | #habits/reading | #2196F3",
+      createTime = null,
+      updateTime = null,
+    )
+
   @Test
   fun `when OpenEditor then sets editor state`() =
     habitsReducer.test(HabitsState()) {
@@ -557,5 +565,133 @@ class HabitsReducerTest {
           singleToggleConfig.isEmpty()
       }
       assertNoEffects()
+    }
+
+  @Test
+  fun `when OpenConfigDialog with existing memo then opens dialog for editing`() =
+    habitsReducer.test(HabitsState()) {
+      send(HabitsAction.OpenConfigDialog(testConfig, testConfigMemo))
+
+      assertState {
+        showConfigDialog &&
+          editingHabits.size == 2 &&
+          editingConfigMemo == testConfigMemo &&
+          !showEditConfigWarning
+      }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when OpenConfigDialog without existing memo then opens dialog for new config`() =
+    habitsReducer.test(HabitsState()) {
+      send(HabitsAction.OpenConfigDialog(testConfig, existingMemo = null))
+
+      assertState {
+        showConfigDialog &&
+          editingHabits.size == 2 &&
+          editingConfigMemo == null &&
+          !showEditConfigWarning
+      }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when SaveConfigDialog with existing memo then shows warning`() =
+    habitsReducer.test(
+      HabitsState(
+        showConfigDialog = true,
+        editingHabits =
+          listOf(
+            EditableHabit("1", "#habits/exercise", "Exercise", 0xFF4CAF50L),
+            EditableHabit("2", "#habits/reading", "Reading", 0xFF2196F3L),
+          ),
+        editingConfigMemo = testConfigMemo,
+      ),
+    ) {
+      send(HabitsAction.SaveConfigDialog)
+
+      assertState {
+        showEditConfigWarning &&
+          !showConfigDialog &&
+          pendingConfigEdit.size == 2
+      }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when SaveConfigDialog without existing memo then creates new config`() =
+    habitsReducer.test(
+      HabitsState(
+        showConfigDialog = true,
+        editingHabits =
+          listOf(
+            EditableHabit("1", "#habits/exercise", "Exercise", 0xFF4CAF50L),
+          ),
+        editingConfigMemo = null,
+      ),
+    ) {
+      send(HabitsAction.SaveConfigDialog)
+
+      assertState { isLoading }
+      assertHasEffect<HabitsEffect.CreateMemo>()
+    }
+
+  @Test
+  fun `when DismissEditConfigWarning then closes everything`() =
+    habitsReducer.test(
+      HabitsState(
+        showEditConfigWarning = true,
+        pendingConfigEdit = testConfig,
+        editingConfigMemo = testConfigMemo,
+      ),
+    ) {
+      send(HabitsAction.DismissEditConfigWarning)
+
+      assertState {
+        !showEditConfigWarning &&
+          !showConfigDialog &&
+          pendingConfigEdit.isEmpty() &&
+          editingHabits.isEmpty() &&
+          editingConfigMemo == null
+      }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ConfirmEditExistingConfig then updates existing config`() =
+    habitsReducer.test(
+      HabitsState(
+        showEditConfigWarning = true,
+        pendingConfigEdit = testConfig,
+        editingConfigMemo = testConfigMemo,
+      ),
+    ) {
+      send(HabitsAction.ConfirmEditExistingConfig)
+
+      assertState {
+        !showEditConfigWarning &&
+          isLoading &&
+          pendingConfigEdit.isEmpty()
+      }
+      assertHasEffect<HabitsEffect.UpdateMemo>()
+    }
+
+  @Test
+  fun `when CreateNewConfigInstead then creates new config`() =
+    habitsReducer.test(
+      HabitsState(
+        showEditConfigWarning = true,
+        pendingConfigEdit = testConfig,
+        editingConfigMemo = testConfigMemo,
+      ),
+    ) {
+      send(HabitsAction.CreateNewConfigInstead)
+
+      assertState {
+        !showEditConfigWarning &&
+          isLoading &&
+          pendingConfigEdit.isEmpty()
+      }
+      assertHasEffect<HabitsEffect.CreateMemo>()
     }
 }

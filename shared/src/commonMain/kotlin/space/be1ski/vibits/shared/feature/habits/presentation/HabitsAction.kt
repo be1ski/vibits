@@ -58,6 +58,13 @@ sealed interface HabitsAction {
 
   data object SaveConfigDialog : HabitsAction
 
+  // Edit existing config warning
+  data object DismissEditConfigWarning : HabitsAction
+
+  data object ConfirmEditExistingConfig : HabitsAction
+
+  data object CreateNewConfigInstead : HabitsAction
+
   // Single habit toggle (quick toggle from matrix)
   data class RequestSingleHabitToggle(
     val day: ContributionDay,

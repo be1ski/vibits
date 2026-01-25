@@ -180,14 +180,60 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
           state.editingHabits
             .filter { it.label.isNotBlank() }
             .map { it.toHabitConfig() }
-        val content = buildHabitsConfigContentFromList(validHabits)
         val existingMemo = state.editingConfigMemo
-        state { copy(isLoading = true) }
         if (existingMemo != null) {
-          effect(HabitsEffect.UpdateMemo(existingMemo.name, content))
+          state {
+            copy(
+              showEditConfigWarning = true,
+              pendingConfigEdit = validHabits,
+              showConfigDialog = false,
+            )
+          }
         } else {
+          val content = buildHabitsConfigContentFromList(validHabits)
+          state { copy(isLoading = true) }
           effect(HabitsEffect.CreateMemo(content))
         }
+      }
+
+      is HabitsAction.DismissEditConfigWarning -> {
+        state {
+          copy(
+            showEditConfigWarning = false,
+            showConfigDialog = false,
+            editingHabits = emptyList(),
+            editingConfigMemo = null,
+            pendingConfigEdit = emptyList(),
+            pendingConfigMemo = null,
+          )
+        }
+      }
+
+      is HabitsAction.ConfirmEditExistingConfig -> {
+        val content = buildHabitsConfigContentFromList(state.pendingConfigEdit)
+        val existingMemo = state.editingConfigMemo ?: return@reducer
+        state {
+          copy(
+            showEditConfigWarning = false,
+            isLoading = true,
+            pendingConfigEdit = emptyList(),
+            pendingConfigMemo = null,
+          )
+        }
+        effect(HabitsEffect.UpdateMemo(existingMemo.name, content))
+      }
+
+      is HabitsAction.CreateNewConfigInstead -> {
+        val content = buildHabitsConfigContentFromList(state.pendingConfigEdit)
+        state {
+          copy(
+            showEditConfigWarning = false,
+            isLoading = true,
+            pendingConfigEdit = emptyList(),
+            pendingConfigMemo = null,
+          )
+        }
+        effect(HabitsEffect.CreateMemo(content))
       }
 
       is HabitsAction.RequestSingleHabitToggle -> {

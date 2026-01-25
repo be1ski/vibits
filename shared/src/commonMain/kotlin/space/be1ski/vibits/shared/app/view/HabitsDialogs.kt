@@ -16,6 +16,7 @@ import space.be1ski.vibits.shared.app.presentation.AppState
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
+import space.be1ski.vibits.shared.feature.habits.view.components.EditConfigWarningDialog
 import space.be1ski.vibits.shared.feature.habits.view.components.HabitsConfigDialog
 import space.be1ski.vibits.shared.feature.habits.view.components.localizedLabel
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
@@ -34,6 +35,7 @@ internal fun HabitsDialogs(
   dispatch: (HabitsAction) -> Unit,
 ) {
   val demoMode = appState.appMode == AppMode.DEMO
+  EditConfigWarningDialog(habitsState, dispatch)
   HabitsConfigDialog(habitsState, demoMode, dispatch)
   HabitEditorDialog(appState, habitsState, dispatch)
 }
