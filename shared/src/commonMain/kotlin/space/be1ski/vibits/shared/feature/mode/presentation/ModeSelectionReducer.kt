@@ -60,6 +60,11 @@ val modeSelectionReducer: Reducer<ModeSelectionAction, ModeSelectionState, ModeS
       }
 
       is ModeSelectionAction.ValidationSucceeded -> {
+        // Capture credentials before clearing state
+        val wasManuallyEntered = state.baseUrl.isNotBlank() && state.token.isNotBlank()
+        val capturedBaseUrl = state.baseUrl.trim()
+        val capturedToken = state.token.trim()
+
         state {
           copy(
             showCredentialsDialog = false,
@@ -70,8 +75,8 @@ val modeSelectionReducer: Reducer<ModeSelectionAction, ModeSelectionState, ModeS
           )
         }
         // Only save credentials if they were manually entered
-        if (state.baseUrl.isNotBlank() && state.token.isNotBlank()) {
-          effect(ModeSelectionEffect.SaveCredentials(state.baseUrl.trim(), state.token.trim()))
+        if (wasManuallyEntered) {
+          effect(ModeSelectionEffect.SaveCredentials(capturedBaseUrl, capturedToken))
         }
         effect(ModeSelectionEffect.SaveMode(AppMode.ONLINE))
         effect(ModeSelectionEffect.NotifyModeSelected(AppMode.ONLINE))
@@ -82,6 +87,7 @@ val modeSelectionReducer: Reducer<ModeSelectionAction, ModeSelectionState, ModeS
       }
 
       is ModeSelectionAction.SelectMode -> {
+        state { copy(showQuickOnlineDialog = false) }
         effect(ModeSelectionEffect.SaveMode(action.mode))
         effect(ModeSelectionEffect.NotifyModeSelected(action.mode))
       }

@@ -162,6 +162,9 @@
     <string name="mode_offline_desc">本地存储数据，无需服务器连接</string>
     <string name="mode_demo_title">演示</string>
     <string name="mode_demo_desc">使用示例数据体验应用</string>
+    <string name="mode_quick_online_title">找到凭证</string>
+    <string name="mode_quick_online_desc">检测到已保存的凭证。使用它们快速连接？</string>
+    <string name="action_use_saved">使用已保存</string>
 
     <!-- Navigation -->
     <string name="nav_feed">动态</string>
