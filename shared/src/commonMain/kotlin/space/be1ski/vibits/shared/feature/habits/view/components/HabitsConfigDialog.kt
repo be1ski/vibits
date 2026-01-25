@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.theme.HabitColors
+import space.be1ski.vibits.shared.feature.habits.domain.model.isDemoHabit
 import space.be1ski.vibits.shared.feature.habits.presentation.EditableHabit
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
@@ -153,13 +154,9 @@ private fun HabitLabelEditor(
   onLabelChange: (String) -> Unit,
   onDelete: () -> Unit,
 ) {
-  var isEditing by remember { mutableStateOf(false) }
-  val displayLabel =
-    if (demoMode && !isEditing) {
-      habit.toHabitConfig().localizedLabel(demoMode)
-    } else {
-      habit.label
-    }
+  val habitConfig = habit.toHabitConfig()
+  val isDemoHabit = demoMode && habitConfig.isDemoHabit()
+  val displayLabel = if (isDemoHabit) habitConfig.localizedLabel(demoMode) else habit.label
 
   Row(
     verticalAlignment = Alignment.CenterVertically,
@@ -174,13 +171,11 @@ private fun HabitLabelEditor(
     )
     TextField(
       value = displayLabel,
-      onValueChange = { newValue ->
-        isEditing = true
-        onLabelChange(newValue)
-      },
+      onValueChange = onLabelChange,
       modifier = Modifier.weight(1f),
       placeholder = { Text(stringResource(Res.string.hint_habit_name)) },
       singleLine = true,
+      enabled = !isDemoHabit,
     )
     IconButton(onClick = onDelete) {
       Icon(
