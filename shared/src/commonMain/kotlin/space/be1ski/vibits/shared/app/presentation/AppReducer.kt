@@ -1,5 +1,6 @@
 package space.be1ski.vibits.shared.app.presentation
 
+import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.app.domain.usecase.AdjustDateForTabChangeUseCase
 import space.be1ski.vibits.shared.app.domain.usecase.GetActivityRangeStartDateUseCase

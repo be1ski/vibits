@@ -3,6 +3,7 @@ package space.be1ski.vibits.shared.app.presentation
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
+import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.core.elm.test
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
