@@ -114,6 +114,7 @@
     <string name="msg_edit_config_warning">You're about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn't exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
     <string name="msg_delete_config_warning">Tem certeza de que deseja excluir esta configuração? Isso removerá permanentemente a publicação de configuração de suas notas.</string>
     <string name="msg_delete_day_confirm">Nenhum hábito selecionado. A entrada diária será excluída.</string>
+    <string name="msg_delete_day_warning">Tem certeza de que deseja excluir a entrada deste dia? Isso removerá permanentemente a publicação de rastreamento das suas notas.</string>
     <string name="msg_fill_all_fields">Por favor, preencha todos os campos</string>
     <string name="msg_no_habits_yet">Nenhum hábito configurado ainda.</string>
     <string name="msg_no_logs">Sem logs ainda</string>

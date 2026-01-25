@@ -114,6 +114,7 @@
     <string name="msg_edit_config_warning">You're about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn't exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
     <string name="msg_delete_config_warning">Bu konfigurasiýany öçürmek isleýärsiňizmi? Bu ýazgy postyny ýazgylardan hemişelik aýyrar.</string>
     <string name="msg_delete_day_confirm">Endik saýlanmady. Gündelik ýazgy öçüriler.</string>
+    <string name="msg_delete_day_warning">Bu günüň ýazgysyny öçürmek isleýärsiňizmi? Bu yzarlamak ýazgysyny belliklerňizden hemişelik aýyrar.</string>
     <string name="msg_fill_all_fields">Ähli meýdanlary dolduryň</string>
     <string name="msg_no_habits_yet">Endikler heniz düzülmedi.</string>
     <string name="msg_no_logs">Loglar heniz ýok</string>

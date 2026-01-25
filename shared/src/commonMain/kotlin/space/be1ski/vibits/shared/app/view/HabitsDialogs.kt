@@ -26,7 +26,7 @@ import space.be1ski.vibits.shared.generated.action_cancel
 import space.be1ski.vibits.shared.generated.action_create
 import space.be1ski.vibits.shared.generated.action_delete
 import space.be1ski.vibits.shared.generated.action_update
-import space.be1ski.vibits.shared.generated.msg_delete_day_confirm
+import space.be1ski.vibits.shared.generated.msg_delete_day_warning
 import space.be1ski.vibits.shared.generated.title_create_day
 import space.be1ski.vibits.shared.generated.title_delete_day
 import space.be1ski.vibits.shared.generated.title_update_day
@@ -146,7 +146,7 @@ private fun DeleteDayConfirmDialog(
   AlertDialog(
     onDismissRequest = { dispatch(HabitsAction.CancelDelete) },
     title = { Text(stringResource(Res.string.title_delete_day)) },
-    text = { Text(stringResource(Res.string.msg_delete_day_confirm)) },
+    text = { Text(stringResource(Res.string.msg_delete_day_warning)) },
     confirmButton = {
       Button(
         onClick = { dispatch(HabitsAction.ConfirmDelete) },

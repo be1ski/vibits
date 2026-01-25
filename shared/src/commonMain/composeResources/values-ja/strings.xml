@@ -114,6 +114,7 @@
     <string name="msg_edit_config_warning">You're about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn't exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
     <string name="msg_delete_config_warning">この設定を削除してもよろしいですか？これにより、メモから設定投稿が完全に削除されます。</string>
     <string name="msg_delete_day_confirm">習慣が選択されていません。この日のエントリは削除されます。</string>
+    <string name="msg_delete_day_warning">この日のエントリーを削除してもよろしいですか？トラッキング投稿がメモから完全に削除されます。</string>
     <string name="msg_fill_all_fields">すべての項目を入力してください</string>
     <string name="msg_no_habits_yet">まだ習慣が設定されていません。</string>
     <string name="msg_no_logs">ログがありません</string>

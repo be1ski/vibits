@@ -24,6 +24,7 @@ import kotlinx.datetime.toLocalDateTime
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.extractCompletedHabits
+import space.be1ski.vibits.shared.feature.habits.domain.extractDateFromTrackingContent
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.habits.view.components.localizedLabel
@@ -37,25 +38,30 @@ internal fun HabitsTrackingCard(
   demoMode: Boolean = false,
 ) {
   val timeZone = TimeZone.currentSystemDefault()
-  val instant = memo.createTime ?: memo.updateTime
-  if (instant == null) {
+
+  // Extract date from tracking memo content
+  val trackedDate = extractDateFromTrackingContent(memo.content)
+  if (trackedDate == null) {
+    // Fallback to plain text if date cannot be extracted
+    val instant = memo.createTime ?: memo.updateTime
+    if (instant != null) {
+      val dateTime = instant.toLocalDateTime(timeZone)
+      val dateLabel = dateFormatter.dateTime(dateTime)
+      if (dateLabel.isNotBlank()) {
+        Text(dateLabel, style = MaterialTheme.typography.labelSmall)
+      }
+    }
     Text(memo.content, style = MaterialTheme.typography.bodyMedium)
     return
   }
 
-  val dateTime = instant.toLocalDateTime(timeZone)
-  val date = dateTime.date
-
   // Get active config for this date
   val configEntries = ExtractHabitsConfigUseCase(allMemos, timeZone)
-  val activeConfig = ExtractHabitsConfigUseCase.forDate(configEntries, date)?.habits ?: emptyList()
+  val activeConfig = ExtractHabitsConfigUseCase.forDate(configEntries, trackedDate)?.habits ?: emptyList()
 
   if (activeConfig.isEmpty()) {
     // Fallback to plain text if no config found
-    val dateLabel = dateFormatter.dateTime(dateTime)
-    if (dateLabel.isNotBlank()) {
-      Text(dateLabel, style = MaterialTheme.typography.labelSmall)
-    }
+    Text(dateFormatter.monthDay(trackedDate), style = MaterialTheme.typography.labelSmall)
     Text(memo.content, style = MaterialTheme.typography.bodyMedium)
     return
   }
@@ -65,23 +71,21 @@ internal fun HabitsTrackingCard(
   val completedHabits = activeConfig.filter { it.tag in completedTags }
 
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
-    // Date/time header with progress
+    // Date header with progress
     Row(
       horizontalArrangement = Arrangement.SpaceBetween,
       modifier = Modifier.fillMaxWidth(),
     ) {
       Text(
-        text = dateFormatter.dateTime(dateTime),
+        text = dateFormatter.monthDay(trackedDate),
         style = MaterialTheme.typography.labelSmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
       )
-      if (activeConfig.isNotEmpty()) {
-        Text(
-          text = "${completedHabits.size}/${activeConfig.size}",
-          style = MaterialTheme.typography.labelSmall,
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-      }
+      Text(
+        text = "${completedHabits.size}/${activeConfig.size}",
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+      )
     }
 
     // Completed habits list
