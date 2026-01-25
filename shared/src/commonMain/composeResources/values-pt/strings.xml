@@ -112,7 +112,7 @@
     <string name="format_active_since">Active since %1$s</string>
     <string name="msg_connection_failed">Falha na conexão</string>
     <string name="msg_edit_config_warning">You're about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn't exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
-    <string name="msg_delete_config_warning">Are you sure you want to delete this config? This will permanently remove the configuration post from your memos.</string>
+    <string name="msg_delete_config_warning">Tem certeza de que deseja excluir esta configuração? Isso removerá permanentemente a publicação de configuração de suas notas.</string>
     <string name="msg_delete_day_confirm">Nenhum hábito selecionado. A entrada diária será excluída.</string>
     <string name="msg_fill_all_fields">Por favor, preencha todos os campos</string>
     <string name="msg_no_habits_yet">Nenhum hábito configurado ainda.</string>
@@ -184,7 +184,7 @@
 
     <!-- Titles -->
     <string name="title_create_day">Criar dia</string>
-    <string name="title_delete_config">Delete config?</string>
+    <string name="title_delete_config">Excluir configuração?</string>
     <string name="title_delete_day">Excluir dia?</string>
     <string name="title_delete_memo">Excluir nota?</string>
     <string name="title_edit_config_warning">Edit Existing Config?</string>

@@ -112,7 +112,7 @@
     <string name="format_active_since">自 %1$s 起生效</string>
     <string name="msg_connection_failed">连接失败</string>
     <string name="msg_edit_config_warning">您即将编辑现有配置。这将影响所有历史数据。\n\n不建议编辑旧配置，因为它会改变过去数据的显示方式。例如，如果您添加新习惯，所有过去的日期都会显示为"未完成"，即使当时它还不存在。\n\n最佳实践：创建新配置。您的历史数据将保留旧配置，新数据将使用新配置。</string>
-    <string name="msg_delete_config_warning">Are you sure you want to delete this config? This will permanently remove the configuration post from your memos.</string>
+    <string name="msg_delete_config_warning">您确定要删除此配置吗？这将永久删除您备忘录中的配置帖子。</string>
     <string name="msg_delete_day_confirm">未选择任何习惯。该日记录将被删除。</string>
     <string name="msg_fill_all_fields">请填写所有字段</string>
     <string name="msg_no_habits_yet">尚未配置任何习惯。</string>
@@ -184,7 +184,7 @@
 
     <!-- Titles -->
     <string name="title_create_day">创建日记录</string>
-    <string name="title_delete_config">Delete config?</string>
+    <string name="title_delete_config">删除配置？</string>
     <string name="title_delete_day">删除日记录？</string>
     <string name="title_delete_memo">删除备忘？</string>
     <string name="title_edit_config_warning">编辑现有配置？</string>

@@ -112,7 +112,7 @@
     <string name="format_active_since">Active since %1$s</string>
     <string name="msg_connection_failed">कनेक्शन विफल</string>
     <string name="msg_edit_config_warning">You're about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn't exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
-    <string name="msg_delete_config_warning">Are you sure you want to delete this config? This will permanently remove the configuration post from your memos.</string>
+    <string name="msg_delete_config_warning">क्या आप वाकई इस कॉन्फ़िग को हटाना चाहते हैं? यह आपके मेमो से कॉन्फ़िगरेशन पोस्ट को स्थायी रूप से हटा देगा।</string>
     <string name="msg_delete_day_confirm">कोई आदत चयनित नहीं। दैनिक प्रविष्टि हटा दी जाएगी।</string>
     <string name="msg_fill_all_fields">कृपया सभी फ़ील्ड भरें</string>
     <string name="msg_no_habits_yet">अभी तक कोई आदत कॉन्फ़िगर नहीं।</string>
@@ -184,7 +184,7 @@
 
     <!-- Titles -->
     <string name="title_create_day">दिन बनाएं</string>
-    <string name="title_delete_config">Delete config?</string>
+    <string name="title_delete_config">कॉन्फ़िग हटाएं?</string>
     <string name="title_delete_day">दिन हटाएं?</string>
     <string name="title_delete_memo">मेमो हटाएं?</string>
     <string name="title_edit_config_warning">Edit Existing Config?</string>
