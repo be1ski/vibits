@@ -80,11 +80,6 @@
 
     <!-- Labels -->
     <string name="label_access_token">访问令牌</string>
-    <string name="label_language">语言</string>
-    <string name="label_time_night">夜晚</string>
-    <string name="label_time_morning">早晨</string>
-    <string name="label_time_day">白天</string>
-    <string name="label_time_evening">傍晚</string>
     <string name="label_activity">活动</string>
     <string name="label_app_mode">应用模式</string>
     <string name="label_base_url">服务器地址</string>
@@ -92,11 +87,24 @@
     <string name="label_demo_mode">演示模式</string>
     <string name="label_environment">环境</string>
     <string name="label_habits_config">习惯配置</string>
+    <string name="label_language">语言</string>
     <string name="label_memos_db">备忘数据库</string>
+    <string name="label_post_filter">筛选</string>
     <string name="label_storage">存储</string>
-    <string name="label_version">版本</string>
     <string name="label_success_rate">成功率</string>
+    <string name="label_theme">主题</string>
+    <string name="label_time_day">白天</string>
+    <string name="label_time_evening">傍晚</string>
+    <string name="label_time_morning">早晨</string>
+    <string name="label_time_night">夜晚</string>
     <string name="label_today">今天</string>
+    <string name="label_version">版本</string>
+
+    <!-- Filter options -->
+    <string name="filter_all">全部</string>
+    <string name="filter_config">配置</string>
+    <string name="filter_habit_tracking">记录</string>
+    <string name="filter_regular">普通</string>
 
     <!-- Messages -->
     <string name="msg_connection_failed">连接失败</string>
@@ -135,7 +143,6 @@
     <string name="language_turkmen">Türkmen</string>
 
     <!-- Theme selection -->
-    <string name="label_theme">主题</string>
     <string name="theme_system">系统</string>
     <string name="theme_light">浅色</string>
     <string name="theme_dark">深色</string>
