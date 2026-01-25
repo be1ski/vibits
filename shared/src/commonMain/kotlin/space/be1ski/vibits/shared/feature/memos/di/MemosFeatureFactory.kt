@@ -19,10 +19,13 @@ fun createMemosFeature(
   return FeatureImpl(
     initialState =
       initialState.copy(
-        baseUrl = creds.baseUrl,
-        token = creds.token,
+        content =
+          initialState.content.copy(
+            baseUrl = creds.baseUrl,
+            token = creds.token,
+            isOfflineMode = isOfflineMode,
+          ),
         credentialsMode = needsCredentials,
-        isOfflineMode = isOfflineMode,
       ),
     reducer = memosReducer,
     effectHandler =

@@ -2,6 +2,7 @@ package space.be1ski.vibits.shared.feature.memos.presentation
 
 import space.be1ski.vibits.shared.core.elm.test
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.memos.domain.model.MemosContent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Instant
@@ -53,7 +54,7 @@ class MemosReducerTest {
 
   @Test
   fun `when LoadMemos without credentials then shows error`() =
-    memosReducer.test(MemosState(baseUrl = "", token = "")) {
+    memosReducer.test(MemosState(content = MemosContent(baseUrl = "", token = ""))) {
       send(MemosAction.LoadMemos)
 
       assertState { credentialsMode && errorMessage == "Base URL and token are required." }
@@ -62,7 +63,7 @@ class MemosReducerTest {
 
   @Test
   fun `when LoadMemos with credentials then starts loading and emits effects`() =
-    memosReducer.test(MemosState(baseUrl = "https://api.com", token = "token123")) {
+    memosReducer.test(MemosState(content = MemosContent(baseUrl = "https://api.com", token = "token123"))) {
       send(MemosAction.LoadMemos)
 
       assertState { isLoading && !credentialsMode && errorMessage == null }
@@ -90,7 +91,7 @@ class MemosReducerTest {
 
   @Test
   fun `when CachedMemosLoaded with existing memos then ignores cached`() =
-    memosReducer.test(MemosState(memos = listOf(testMemo.copy(name = "memos/existing")))) {
+    memosReducer.test(MemosState(content = MemosContent(memos = listOf(testMemo.copy(name = "memos/existing"))))) {
       send(MemosAction.CachedMemosLoaded(listOf(testMemo)))
 
       assertState { memos.size == 1 && memos.first().name == "memos/existing" }
@@ -139,7 +140,7 @@ class MemosReducerTest {
 
   @Test
   fun `when MemoCreated then adds memo and stops loading`() =
-    memosReducer.test(MemosState(isLoading = true, memos = listOf(testMemo))) {
+    memosReducer.test(MemosState(content = MemosContent(memos = listOf(testMemo)), isLoading = true)) {
       send(MemosAction.MemoCreated(Memo(name = "memos/2", content = "New")))
 
       assertState { memos.size == 2 && !isLoading }
@@ -148,7 +149,7 @@ class MemosReducerTest {
 
   @Test
   fun `when MemoUpdated then updates memo in list and stops loading`() =
-    memosReducer.test(MemosState(isLoading = true, memos = listOf(testMemo))) {
+    memosReducer.test(MemosState(content = MemosContent(memos = listOf(testMemo)), isLoading = true)) {
       send(MemosAction.MemoUpdated(testMemo.copy(content = "Updated content")))
 
       assertState { memos.size == 1 && memos.first().content == "Updated content" && !isLoading }
@@ -157,7 +158,7 @@ class MemosReducerTest {
 
   @Test
   fun `when MemoDeleted then removes memo from list and stops loading`() =
-    memosReducer.test(MemosState(isLoading = true, memos = listOf(testMemo))) {
+    memosReducer.test(MemosState(content = MemosContent(memos = listOf(testMemo)), isLoading = true)) {
       send(MemosAction.MemoDeleted("memos/1"))
 
       assertState { memos.isEmpty() && !isLoading }
@@ -186,7 +187,9 @@ class MemosReducerTest {
 
   @Test
   fun `when LoadMemos in offline mode then does not emit SaveCredentials`() =
-    memosReducer.test(MemosState(baseUrl = "https://api.com", token = "token", isOfflineMode = true)) {
+    memosReducer.test(
+      MemosState(content = MemosContent(baseUrl = "https://api.com", token = "token", isOfflineMode = true)),
+    ) {
       send(MemosAction.LoadMemos)
 
       assertState { isLoading }
