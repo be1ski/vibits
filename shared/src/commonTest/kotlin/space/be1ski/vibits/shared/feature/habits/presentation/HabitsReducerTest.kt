@@ -36,7 +36,7 @@ class HabitsReducerTest {
   @Test
   fun `when OpenEditor then sets editor state`() =
     habitsReducer.test(HabitsState()) {
-      send(HabitsAction.OpenEditor(testDay, testConfig))
+      send(HabitsAction.OpenEditor(day = testDay, config = testConfig))
 
       assertState {
         editorDay == testDay &&
@@ -52,7 +52,7 @@ class HabitsReducerTest {
     habitsReducer.test(HabitsState()) {
       val dayWithMemo = testDay.copy(dailyMemo = DailyMemoInfo("memos/1", "content"))
 
-      send(HabitsAction.OpenEditor(dayWithMemo, testConfig))
+      send(HabitsAction.OpenEditor(day = dayWithMemo, config = testConfig))
 
       assertState { editorExisting?.name == "memos/1" }
     }

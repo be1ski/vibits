@@ -11,7 +11,8 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 sealed interface HabitsAction {
   // Editor lifecycle
   data class OpenEditor(
-    val day: ContributionDay,
+    val day: ContributionDay? = null,
+    val memo: Memo? = null,
     val config: List<HabitConfig>,
   ) : HabitsAction
 
@@ -34,11 +35,7 @@ sealed interface HabitsAction {
   // Config dialog
   data class OpenConfigDialog(
     val currentConfig: List<HabitConfig>,
-  ) : HabitsAction
-
-  data class OpenConfigDialogFromMemo(
-    val memo: Memo,
-    val currentConfig: List<HabitConfig>,
+    val existingMemo: Memo? = null,
   ) : HabitsAction
 
   data object CloseConfigDialog : HabitsAction

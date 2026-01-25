@@ -305,12 +305,16 @@ private fun handleMemoClick(
   onHabitsAction: (HabitsAction) -> Unit,
 ) {
   val postType = ClassifyPostTypeUseCase(memo)
+  val timeZone = TimeZone.currentSystemDefault()
+  val configEntries = ExtractHabitsConfigUseCase(memos, timeZone)
+  val currentConfig = configEntries.lastOrNull()?.habits ?: emptyList()
+
   when (postType) {
     PostFilter.CONFIG -> {
-      val timeZone = TimeZone.currentSystemDefault()
-      val configEntries = ExtractHabitsConfigUseCase(memos, timeZone)
-      val currentConfig = configEntries.lastOrNull()?.habits ?: emptyList()
-      onHabitsAction(HabitsAction.OpenConfigDialogFromMemo(memo, currentConfig))
+      onHabitsAction(HabitsAction.OpenConfigDialog(currentConfig, existingMemo = memo))
+    }
+    PostFilter.HABIT_TRACKING -> {
+      onHabitsAction(HabitsAction.OpenEditor(config = currentConfig, memo = memo))
     }
     else -> {
       onMemosAction(MemosAction.ShowEditDialog(memo))
