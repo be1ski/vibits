@@ -1,6 +1,8 @@
 <resources>
     <!-- Actions -->
     <string name="action_cancel">取消</string>
+    <string name="action_create_new_config">创建新配置（推荐）</string>
+    <string name="action_edit_anyway">仍然编辑</string>
     <string name="action_clear">清除</string>
     <string name="action_close">关闭</string>
     <string name="action_copied">已复制</string>
@@ -107,7 +109,9 @@
     <string name="filter_regular">普通</string>
 
     <!-- Messages -->
+    <string name="format_active_since">自 %1$s 起生效</string>
     <string name="msg_connection_failed">连接失败</string>
+    <string name="msg_edit_config_warning">您即将编辑现有配置。这将影响所有历史数据。\n\n不建议编辑旧配置，因为它会改变过去数据的显示方式。例如，如果您添加新习惯，所有过去的日期都会显示为"未完成"，即使当时它还不存在。\n\n最佳实践：创建新配置。您的历史数据将保留旧配置，新数据将使用新配置。</string>
     <string name="msg_delete_day_confirm">未选择任何习惯。该日记录将被删除。</string>
     <string name="msg_fill_all_fields">请填写所有字段</string>
     <string name="msg_no_habits_yet">尚未配置任何习惯。</string>
@@ -181,6 +185,7 @@
     <string name="title_create_day">创建日记录</string>
     <string name="title_delete_day">删除日记录？</string>
     <string name="title_delete_memo">删除备忘？</string>
+    <string name="title_edit_config_warning">编辑现有配置？</string>
     <string name="title_edit_day">编辑日记录</string>
     <string name="title_edit_memo">编辑备忘</string>
     <string name="title_logs">日志 (%1$d)</string>
