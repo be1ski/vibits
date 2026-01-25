@@ -80,11 +80,6 @@
 
     <!-- Labels -->
     <string name="label_access_token">Access token</string>
-    <string name="label_language">Language</string>
-    <string name="label_time_night">Night</string>
-    <string name="label_time_morning">Morning</string>
-    <string name="label_time_day">Day</string>
-    <string name="label_time_evening">Evening</string>
     <string name="label_activity">Activity</string>
     <string name="label_app_mode">App mode</string>
     <string name="label_base_url">Base URL</string>
@@ -92,11 +87,23 @@
     <string name="label_demo_mode">Demo mode</string>
     <string name="label_environment">Environment</string>
     <string name="label_habits_config">Habits config</string>
+    <string name="label_language">Language</string>
     <string name="label_memos_db">Memos DB</string>
+    <string name="label_post_filter">Filter posts</string>
     <string name="label_storage">Storage</string>
-    <string name="label_version">Version</string>
     <string name="label_success_rate">Success rate</string>
+    <string name="label_time_day">Day</string>
+    <string name="label_time_evening">Evening</string>
+    <string name="label_time_morning">Morning</string>
+    <string name="label_time_night">Night</string>
     <string name="label_today">Today</string>
+    <string name="label_version">Version</string>
+
+    <!-- Filter options -->
+    <string name="filter_all">All</string>
+    <string name="filter_config">Config</string>
+    <string name="filter_habit_tracking">Tracking</string>
+    <string name="filter_regular">Regular</string>
 
     <!-- Messages -->
     <string name="msg_connection_failed">Connection failed</string>

@@ -1,6 +1,7 @@
 package space.be1ski.vibits.shared.feature.memos.presentation
 
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
 
 /**
  * State for the Memos feature.
@@ -13,6 +14,7 @@ data class MemosState(
   val baseUrl: String = "",
   val token: String = "",
   val isOfflineMode: Boolean = false,
+  val activePostFilter: PostFilter = PostFilter.ALL,
   // Create dialog
   val showCreateDialog: Boolean = false,
   val createDialogContent: String = "",
