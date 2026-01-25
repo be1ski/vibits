@@ -72,7 +72,7 @@ internal fun SwipeableTabContent(
       isRefreshing = memosState.isLoading,
       onRefresh = {},
       enablePullRefresh = !isDesktop,
-      demoMode = appState.appMode == AppMode.DEMO,
+      demoMode = appState.isDemoMode,
       onMemoClick = { memo ->
         handleMemoClick(
           memo = memo,
@@ -221,7 +221,7 @@ private fun MemosTabContent(
             activityMode = ActivityMode.HABITS,
             useVerticalScroll = true,
             enablePullRefresh = false,
-            demoMode = appState.appMode == AppMode.DEMO,
+            demoMode = appState.isDemoMode,
           ),
         calculateSuccessRate = calculateSuccessRate,
         buildActivityDataUseCase = buildActivityDataUseCase,
@@ -234,7 +234,7 @@ private fun MemosTabContent(
       PostsScreen(
         memos = memos,
         range = activityRange,
-        demoMode = appState.appMode == AppMode.DEMO,
+        demoMode = appState.isDemoMode,
         calculateSuccessRate = calculateSuccessRate,
         buildActivityDataUseCase = buildActivityDataUseCase,
         cache = cache,
@@ -251,7 +251,7 @@ private fun MemosTabContent(
         isRefreshing = memosState.isLoading,
         onRefresh = {},
         enablePullRefresh = !isDesktop,
-        demoMode = appState.appMode == AppMode.DEMO,
+        demoMode = appState.isDemoMode,
         onMemoClick = { memo ->
           handleMemoClick(
             memo = memo,
