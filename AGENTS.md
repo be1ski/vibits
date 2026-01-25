@@ -84,6 +84,11 @@ feature/<name>/
   - `*Feature.kt` — State, Action, Effect sealed classes
   - `*Reducer.kt` — Pure state transitions
   - `*EffectHandler.kt` — Side effects (API calls, DB operations)
+  - **`*State` placement rules:**
+    - Pure domain state (only domain models + business logic, no UI concerns) → move to `domain/model/`
+    - Mixed state (domain + UI concerns like dialog flags, loading states, credentials for dialogs) → keep in `presentation/`
+    - When State has computed properties with business logic → add tests regardless of location
+    - Example: `AppState` moved to domain (pure domain), `MemosState` stays in presentation (contains UI concerns)
 - **view/** — Compose UI only. Screens, components, dialogs. Excluded from unit test coverage.
 - **di/** — Dependency containers and feature factories:
   - `*Dependencies.kt` — Transport containers for composable dependency passing
@@ -241,6 +246,7 @@ We maintain **~95% test coverage** using Kover. Coverage is automatically measur
 - Repository implementations with business logic
 - Pure functions and utilities
 - Data transformations and mappers
+- **State classes with computed properties** — even though `*State` is excluded from coverage, test computed properties containing business logic (e.g., `MemosState.hasCredentials`, `AppState.isDemoMode`)
 
 **Important rules:**
 - UI code (@Composable functions) belongs in `*.ui.*` or `*.view.*` packages
