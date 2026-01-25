@@ -253,6 +253,44 @@ Check coverage locally:
 open shared/build/reports/kover/html/index.html
 ```
 
+### Coverage Configuration Synchronization
+
+**CRITICAL:** Coverage exclusions must be kept in sync between Kover and Codecov configurations.
+
+**Why two configs?**
+- **Kover** (`shared/build.gradle.kts`) - generates coverage reports locally and sends XML to Codecov
+- **Codecov** (`codecov.yml`) - analyzes coverage changes in PRs and enforces thresholds
+
+**Why both need exclusions?**
+1. **Kover is source of truth**: If UI code isn't excluded in Kover, it will be included in XML sent to Codecov
+2. **Codecov needs explicit patterns**: Codecov analyzes patch diffs and needs its own ignore patterns
+3. **Different purposes**: Kover excludes from measurement, Codecov excludes from PR checks
+
+**When adding new exclusion patterns:**
+1. Add to Kover first (`shared/build.gradle.kts` → `kover.reports.filters.excludes.classes()`)
+2. Add matching pattern to Codecov (`codecov.yml` → `ignore:`)
+3. Verify locally with `./gradlew :shared:koverHtmlReport` that exclusion works
+4. Verify in PR that Codecov doesn't flag excluded code
+
+**Example patterns:**
+```kotlin
+// Kover (Gradle)
+classes(
+  "*.view.*",      // View layer
+  "*State",        // TEA State classes
+)
+
+// Codecov (YAML)
+ignore:
+  - "**/view/**"   # View layer
+  - "**/*State.kt" # TEA State classes
+```
+
+**If configs diverge:**
+- ❌ Local coverage will differ from CI coverage
+- ❌ PRs may fail Codecov checks for legitimate UI changes
+- ❌ Coverage metrics become unreliable
+
 ## Linting & Formatting
 
 **Pre-commit hook handles all checks automatically.** Install it once with `./gradlew installGitHooks`.
