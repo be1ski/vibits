@@ -37,11 +37,19 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.core.ui.Indent
+import space.be1ski.vibits.shared.core.ui.SegmentedSelector
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
+import space.be1ski.vibits.shared.feature.memos.domain.usecase.FilterMemosByTypeUseCase
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_cancel
 import space.be1ski.vibits.shared.generated.action_delete
+import space.be1ski.vibits.shared.generated.filter_all
+import space.be1ski.vibits.shared.generated.filter_config
+import space.be1ski.vibits.shared.generated.filter_habit_tracking
+import space.be1ski.vibits.shared.generated.filter_regular
+import space.be1ski.vibits.shared.generated.label_post_filter
 import space.be1ski.vibits.shared.generated.title_delete_memo
 
 /**
@@ -53,6 +61,8 @@ import space.be1ski.vibits.shared.generated.title_delete_memo
 fun FeedScreen(
   memos: List<Memo>,
   dateFormatter: DateFormatter,
+  activeFilter: PostFilter = PostFilter.ALL,
+  onFilterChange: (PostFilter) -> Unit = {},
   isRefreshing: Boolean = false,
   onRefresh: () -> Unit = {},
   enablePullRefresh: Boolean = true,
@@ -69,57 +79,80 @@ fun FeedScreen(
     } else {
       Modifier
     }
-  Box(
-    modifier =
-      Modifier
-        .fillMaxSize()
-        .then(containerModifier),
-  ) {
-    LazyColumn(state = listState, verticalArrangement = Arrangement.spacedBy(Indent.s)) {
-      items(memos) { memo ->
-        Card(
-          modifier =
-            Modifier
-              .fillMaxWidth()
-              .clickable { onMemoClick(memo) },
-        ) {
-          Row(
-            modifier = Modifier.padding(start = Indent.s, top = Indent.s, bottom = Indent.s, end = Indent.xs),
-            verticalAlignment = Alignment.Top,
+
+  val filteredMemos = FilterMemosByTypeUseCase(memos, activeFilter)
+
+  Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.padding(horizontal = Indent.s, vertical = Indent.s)) {
+      SegmentedSelector(
+        label = stringResource(Res.string.label_post_filter),
+        options = listOf(PostFilter.ALL, PostFilter.CONFIG, PostFilter.HABIT_TRACKING, PostFilter.REGULAR),
+        selected = activeFilter,
+        onSelect = onFilterChange,
+        optionLabel = { filter ->
+          when (filter) {
+            PostFilter.ALL -> stringResource(Res.string.filter_all)
+            PostFilter.CONFIG -> stringResource(Res.string.filter_config)
+            PostFilter.HABIT_TRACKING -> stringResource(Res.string.filter_habit_tracking)
+            PostFilter.REGULAR -> stringResource(Res.string.filter_regular)
+          }
+        },
+      )
+    }
+
+    Box(
+      modifier =
+        Modifier
+          .fillMaxSize()
+          .then(containerModifier),
+    ) {
+      LazyColumn(state = listState, verticalArrangement = Arrangement.spacedBy(Indent.s)) {
+        items(filteredMemos) { memo ->
+          Card(
+            modifier =
+              Modifier
+                .fillMaxWidth()
+                .clickable { onMemoClick(memo) },
           ) {
-            Column(
-              modifier = Modifier.weight(1f),
-              verticalArrangement = Arrangement.spacedBy(Indent.x2s),
+            Row(
+              modifier = Modifier.padding(start = 0.dp, top = Indent.s, bottom = Indent.s, end = Indent.xs),
+              verticalAlignment = Alignment.Top,
             ) {
-              val dateLabel = memoDateLabel(memo, timeZone, dateFormatter)
-              if (dateLabel.isNotBlank()) {
-                Text(dateLabel, style = MaterialTheme.typography.labelSmall)
-              }
-              Text(memo.content, style = MaterialTheme.typography.bodyMedium)
-            }
-            if (onDeleteMemo != null) {
-              IconButton(
-                onClick = { memoToDelete = memo },
-                modifier = Modifier.size(36.dp),
+              PostTypeIndicator(memo = memo)
+              Column(
+                modifier = Modifier.weight(1f).padding(start = Indent.s),
+                verticalArrangement = Arrangement.spacedBy(Indent.x2s),
               ) {
-                Icon(
-                  imageVector = Icons.Filled.Delete,
-                  contentDescription = stringResource(Res.string.action_delete),
-                  modifier = Modifier.size(18.dp),
-                  tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                val dateLabel = memoDateLabel(memo, timeZone, dateFormatter)
+                if (dateLabel.isNotBlank()) {
+                  Text(dateLabel, style = MaterialTheme.typography.labelSmall)
+                }
+                Text(memo.content, style = MaterialTheme.typography.bodyMedium)
+              }
+              if (onDeleteMemo != null) {
+                IconButton(
+                  onClick = { memoToDelete = memo },
+                  modifier = Modifier.size(36.dp),
+                ) {
+                  Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = stringResource(Res.string.action_delete),
+                    modifier = Modifier.size(18.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                  )
+                }
               }
             }
           }
         }
       }
-    }
-    if (enablePullRefresh) {
-      PullRefreshIndicator(
-        refreshing = isRefreshing,
-        state = pullRefreshState,
-        modifier = Modifier.align(Alignment.TopCenter),
-      )
+      if (enablePullRefresh) {
+        PullRefreshIndicator(
+          refreshing = isRefreshing,
+          state = pullRefreshState,
+          modifier = Modifier.align(Alignment.TopCenter),
+        )
+      }
     }
   }
 
