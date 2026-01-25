@@ -182,6 +182,6 @@ private fun memoDateLabel(
   timeZone: TimeZone,
   formatter: DateFormatter,
 ): String {
-  val instant = memo.updateTime ?: memo.createTime ?: return ""
+  val instant = memo.createTime ?: return ""
   return formatter.dateTime(instant.toLocalDateTime(timeZone))
 }
