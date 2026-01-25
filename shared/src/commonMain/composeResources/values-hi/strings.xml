@@ -80,11 +80,6 @@
 
     <!-- Labels -->
     <string name="label_access_token">एक्सेस टोकन</string>
-    <string name="label_language">भाषा</string>
-    <string name="label_time_night">रात</string>
-    <string name="label_time_morning">सुबह</string>
-    <string name="label_time_day">दिन</string>
-    <string name="label_time_evening">शाम</string>
     <string name="label_activity">गतिविधि</string>
     <string name="label_app_mode">ऐप मोड</string>
     <string name="label_base_url">बेस URL</string>
@@ -92,11 +87,24 @@
     <string name="label_demo_mode">डेमो मोड</string>
     <string name="label_environment">वातावरण</string>
     <string name="label_habits_config">आदत कॉन्फ़िगरेशन</string>
+    <string name="label_language">भाषा</string>
     <string name="label_memos_db">मेमो DB</string>
+    <string name="label_post_filter">फ़िल्टर</string>
     <string name="label_storage">स्टोरेज</string>
-    <string name="label_version">संस्करण</string>
     <string name="label_success_rate">सफलता दर</string>
+    <string name="label_theme">थीम</string>
+    <string name="label_time_day">दिन</string>
+    <string name="label_time_evening">शाम</string>
+    <string name="label_time_morning">सुबह</string>
+    <string name="label_time_night">रात</string>
     <string name="label_today">आज</string>
+    <string name="label_version">संस्करण</string>
+
+    <!-- Filter options -->
+    <string name="filter_all">सभी</string>
+    <string name="filter_config">सेटिंग्स</string>
+    <string name="filter_habit_tracking">ट्रैकिंग</string>
+    <string name="filter_regular">सामान्य</string>
 
     <!-- Messages -->
     <string name="msg_connection_failed">कनेक्शन विफल</string>
@@ -135,7 +143,6 @@
     <string name="language_turkmen">Türkmen</string>
 
     <!-- Theme selection -->
-    <string name="label_theme">थीम</string>
     <string name="theme_system">सिस्टम</string>
     <string name="theme_light">लाइट</string>
     <string name="theme_dark">डार्क</string>
