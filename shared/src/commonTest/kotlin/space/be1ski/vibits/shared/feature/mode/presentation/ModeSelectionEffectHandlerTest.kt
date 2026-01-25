@@ -77,6 +77,104 @@ class ModeSelectionEffectHandlerTest {
       assertTrue(actions.isEmpty())
     }
 
+  @Test
+  fun `when InitializeFromLocalConfig with credentials then emits StoredCredentialsFound`() =
+    runTest {
+      val credentialsRepo = FakeCredentialsRepository()
+      val configProvider =
+        space.be1ski.vibits.shared.test.createFakeLocalConfigProvider(
+          config =
+            mapOf(
+              "memos.baseUrl" to "https://config.com",
+              "memos.token" to "config-token",
+            ),
+        )
+      val handler = createHandler(credentialsRepository = credentialsRepo, localConfigProvider = configProvider)
+
+      val actions = handler(ModeSelectionEffect.InitializeFromLocalConfig).toList()
+
+      assertEquals(listOf(ModeSelectionAction.StoredCredentialsFound), actions)
+    }
+
+  @Test
+  fun `when InitializeFromLocalConfig without credentials then emits StoredCredentialsNotFound`() =
+    runTest {
+      val credentialsRepo = FakeCredentialsRepository()
+      val configProvider =
+        space.be1ski.vibits.shared.test
+          .createFakeLocalConfigProvider(config = emptyMap())
+      val handler = createHandler(credentialsRepository = credentialsRepo, localConfigProvider = configProvider)
+
+      val actions = handler(ModeSelectionEffect.InitializeFromLocalConfig).toList()
+
+      assertEquals(listOf(ModeSelectionAction.StoredCredentialsNotFound), actions)
+    }
+
+  @Test
+  fun `when CheckStoredCredentials with credentials then emits StoredCredentialsFound`() =
+    runTest {
+      val credentialsRepo =
+        FakeCredentialsRepository(
+          initial =
+            space.be1ski.vibits.shared.feature.auth.domain.model.Credentials(
+              baseUrl = "https://existing.com",
+              token = "existing-token",
+            ),
+        )
+      val handler = createHandler(credentialsRepository = credentialsRepo)
+
+      val actions = handler(ModeSelectionEffect.CheckStoredCredentials).toList()
+
+      assertEquals(listOf(ModeSelectionAction.StoredCredentialsFound), actions)
+    }
+
+  @Test
+  fun `when CheckStoredCredentials without credentials then emits StoredCredentialsNotFound`() =
+    runTest {
+      val credentialsRepo = FakeCredentialsRepository()
+      val handler = createHandler(credentialsRepository = credentialsRepo)
+
+      val actions = handler(ModeSelectionEffect.CheckStoredCredentials).toList()
+
+      assertEquals(listOf(ModeSelectionAction.StoredCredentialsNotFound), actions)
+    }
+
+  @Test
+  fun `when UseStoredCredentialsWithValidation succeeds then emits ValidationSucceeded`() =
+    runTest {
+      val credentialsRepo =
+        FakeCredentialsRepository(
+          initial =
+            space.be1ski.vibits.shared.feature.auth.domain.model.Credentials(
+              baseUrl = "https://existing.com",
+              token = "existing-token",
+            ),
+        )
+      val handler = createHandler(credentialsRepository = credentialsRepo)
+
+      val actions = handler(ModeSelectionEffect.UseStoredCredentialsWithValidation).toList()
+
+      assertEquals(listOf(ModeSelectionAction.ValidationSucceeded), actions)
+    }
+
+  @Test
+  fun `when UseStoredCredentialsWithValidation fails then emits ValidationFailed`() =
+    runTest {
+      val credentialsRepo =
+        FakeCredentialsRepository(
+          initial =
+            space.be1ski.vibits.shared.feature.auth.domain.model.Credentials(
+              baseUrl = "https://existing.com",
+              token = "existing-token",
+            ),
+        )
+      val handler = createHandler(connectionResult = Result.failure(Exception("Failed")), credentialsRepository = credentialsRepo)
+
+      val actions = handler(ModeSelectionEffect.UseStoredCredentialsWithValidation).toList()
+
+      assertEquals(listOf(ModeSelectionAction.ValidationFailed), actions)
+    }
+
   private fun createHandler(
     connectionResult: Result<Unit> = Result.success(Unit),
     credentialsRepository: FakeCredentialsRepository = FakeCredentialsRepository(),
