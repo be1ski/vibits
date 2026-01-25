@@ -80,7 +80,6 @@
 
     <!-- Labels -->
     <string name="label_access_token">Токен доступа</string>
-    <string name="label_language">Язык</string>
     <string name="label_activity">Активность</string>
     <string name="label_app_mode">Режим приложения</string>
     <string name="label_base_url">Base URL</string>
@@ -88,11 +87,23 @@
     <string name="label_demo_mode">Демо-режим</string>
     <string name="label_environment">Окружение</string>
     <string name="label_habits_config">Конфигурация привычек</string>
+    <string name="label_language">Язык</string>
     <string name="label_memos_db">База заметок</string>
+    <string name="label_post_filter">Фильтр</string>
     <string name="label_storage">Хранилище</string>
-    <string name="label_version">Версия</string>
     <string name="label_success_rate">Успешность</string>
+    <string name="label_time_day">День</string>
+    <string name="label_time_evening">Вечер</string>
+    <string name="label_time_morning">Утро</string>
+    <string name="label_time_night">Ночь</string>
     <string name="label_today">Сегодня</string>
+    <string name="label_version">Версия</string>
+
+    <!-- Filter options -->
+    <string name="filter_all">Все</string>
+    <string name="filter_config">Настройки</string>
+    <string name="filter_habit_tracking">Отметки</string>
+    <string name="filter_regular">Обычные</string>
 
     <!-- Messages -->
     <string name="msg_connection_failed">Ошибка подключения</string>

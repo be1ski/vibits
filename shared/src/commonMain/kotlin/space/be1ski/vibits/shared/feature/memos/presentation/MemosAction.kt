@@ -1,6 +1,7 @@
 package space.be1ski.vibits.shared.feature.memos.presentation
 
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
 
 /**
  * Actions for the Memos feature.
@@ -21,6 +22,11 @@ sealed interface MemosAction {
   data object LoadMemos : MemosAction
 
   data object LoadCachedMemos : MemosAction
+
+  // Filtering
+  data class ChangePostFilter(
+    val filter: PostFilter,
+  ) : MemosAction
 
   // CRUD
   data class CreateMemo(
