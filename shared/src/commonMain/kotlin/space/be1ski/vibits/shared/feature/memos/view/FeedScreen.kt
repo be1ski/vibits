@@ -41,6 +41,7 @@ import space.be1ski.vibits.shared.core.ui.SegmentedSelector
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
+import space.be1ski.vibits.shared.feature.memos.domain.model.canDeleteFromFeed
 import space.be1ski.vibits.shared.feature.memos.domain.model.isConfigPost
 import space.be1ski.vibits.shared.feature.memos.domain.model.isTrackingPost
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.FilterMemosByTypeUseCase
@@ -134,7 +135,7 @@ fun FeedScreen(
                   demoMode = demoMode,
                 )
               }
-              if (onDeleteMemo != null) {
+              if (onDeleteMemo != null && memo.canDeleteFromFeed) {
                 IconButton(
                   onClick = { memoToDelete = memo },
                   modifier = Modifier.size(36.dp),

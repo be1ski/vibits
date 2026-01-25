@@ -32,3 +32,10 @@ val Memo.isTrackingPost: Boolean
  */
 val Memo.isRegularPost: Boolean
   get() = postType == PostFilter.REGULAR
+
+/**
+ * Returns true if this post can be deleted from the feed.
+ * Config and tracking posts should be deleted from their edit dialogs, not from the feed.
+ */
+val Memo.canDeleteFromFeed: Boolean
+  get() = isRegularPost

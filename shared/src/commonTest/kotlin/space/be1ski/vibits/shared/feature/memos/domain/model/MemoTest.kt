@@ -67,4 +67,25 @@ class MemoTest {
     assertFalse(memo.isTrackingPost)
     assertTrue(memo.isRegularPost)
   }
+
+  @Test
+  fun `when memo is regular post then canDeleteFromFeed is true`() {
+    val memo = Memo(content = "Regular memo content")
+
+    assertTrue(memo.canDeleteFromFeed)
+  }
+
+  @Test
+  fun `when memo is config post then canDeleteFromFeed is false`() {
+    val memo = Memo(content = "${PostTags.HABITS_CONFIG}\nExercise | #habits/exercise")
+
+    assertFalse(memo.canDeleteFromFeed)
+  }
+
+  @Test
+  fun `when memo is tracking post then canDeleteFromFeed is false`() {
+    val memo = Memo(content = "${PostTags.HABITS_DAILY} 2024-01-15\n#habits/exercise")
+
+    assertFalse(memo.canDeleteFromFeed)
+  }
 }
