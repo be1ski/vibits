@@ -28,6 +28,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -114,45 +118,17 @@ private fun HabitConfigItem(
   onColorChange: (Long) -> Unit,
   onDelete: () -> Unit,
 ) {
-  val displayLabel = habit.toHabitConfig().localizedLabel(demoMode)
-
   OutlinedCard(modifier = Modifier.fillMaxWidth()) {
     Column(
       modifier = Modifier.padding(Indent.s),
       verticalArrangement = Arrangement.spacedBy(Indent.xs),
     ) {
-      Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Indent.xs),
-      ) {
-        Box(
-          modifier =
-            Modifier
-              .size(COLOR_CIRCLE_SIZE)
-              .clip(CircleShape)
-              .background(Color(habit.color)),
-        )
-        TextField(
-          value = displayLabel,
-          onValueChange =
-            if (demoMode) {
-              {}
-            } else {
-              onLabelChange
-            },
-          modifier = Modifier.weight(1f),
-          placeholder = { Text(stringResource(Res.string.hint_habit_name)) },
-          singleLine = true,
-          readOnly = demoMode,
-        )
-        IconButton(onClick = onDelete) {
-          Icon(
-            Icons.Filled.Delete,
-            contentDescription = stringResource(Res.string.action_cancel),
-            tint = MaterialTheme.colorScheme.error,
-          )
-        }
-      }
+      HabitLabelEditor(
+        habit = habit,
+        demoMode = demoMode,
+        onLabelChange = onLabelChange,
+        onDelete = onDelete,
+      )
 
       FlowRow(
         horizontalArrangement = Arrangement.spacedBy(Indent.xs),
@@ -166,6 +142,56 @@ private fun HabitConfigItem(
           )
         }
       }
+    }
+  }
+}
+
+@Composable
+private fun HabitLabelEditor(
+  habit: EditableHabit,
+  demoMode: Boolean,
+  onLabelChange: (String) -> Unit,
+  onDelete: () -> Unit,
+) {
+  var isEditing by remember { mutableStateOf(false) }
+  val displayLabel =
+    if (demoMode && !isEditing) {
+      habit.toHabitConfig().localizedLabel(demoMode)
+    } else {
+      habit.label
+    }
+
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(Indent.xs),
+  ) {
+    Box(
+      modifier =
+        Modifier
+          .size(COLOR_CIRCLE_SIZE)
+          .clip(CircleShape)
+          .background(Color(habit.color)),
+    )
+    TextField(
+      value = displayLabel,
+      onValueChange = { newValue ->
+        if (demoMode && !isEditing) {
+          isEditing = true
+          onLabelChange(habit.label)
+        } else {
+          onLabelChange(newValue)
+        }
+      },
+      modifier = Modifier.weight(1f),
+      placeholder = { Text(stringResource(Res.string.hint_habit_name)) },
+      singleLine = true,
+    )
+    IconButton(onClick = onDelete) {
+      Icon(
+        Icons.Filled.Delete,
+        contentDescription = stringResource(Res.string.action_cancel),
+        tint = MaterialTheme.colorScheme.error,
+      )
     }
   }
 }
