@@ -119,6 +119,9 @@ private fun HabitConfigItem(
   onColorChange: (Long) -> Unit,
   onDelete: () -> Unit,
 ) {
+  val habitConfig = habit.toHabitConfig()
+  val isDemoHabit = demoMode && habitConfig.isDemoHabit()
+
   OutlinedCard(modifier = Modifier.fillMaxWidth()) {
     Column(
       modifier = Modifier.padding(Indent.s),
@@ -139,7 +142,7 @@ private fun HabitConfigItem(
           ColorCircle(
             color = color,
             isSelected = habit.color == color,
-            onClick = { onColorChange(color) },
+            onClick = { if (!isDemoHabit) onColorChange(color) },
           )
         }
       }
