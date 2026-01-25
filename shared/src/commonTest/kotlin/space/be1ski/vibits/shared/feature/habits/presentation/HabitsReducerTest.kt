@@ -721,4 +721,57 @@ class HabitsReducerTest {
       }
       assertHasEffect<HabitsEffect.CreateMemo>()
     }
+
+  @Test
+  fun `when RequestDeleteConfig then shows delete confirm`() =
+    habitsReducer.test(HabitsState()) {
+      send(HabitsAction.RequestDeleteConfig)
+
+      assertState { showDeleteConfigConfirm }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ConfirmDeleteConfig then emits DeleteMemo effect`() =
+    habitsReducer.test(
+      HabitsState(
+        editingConfigMemo = testConfigMemo,
+        showDeleteConfigConfirm = true,
+      ),
+    ) {
+      send(HabitsAction.ConfirmDeleteConfig)
+
+      assertState {
+        !showDeleteConfigConfirm &&
+          !showConfigDialog &&
+          editingHabits.isEmpty() &&
+          editingConfigMemo == null &&
+          isLoading
+      }
+      val effect = assertHasEffect<HabitsEffect.DeleteMemo>()
+      assertEquals("memos/config_old", effect.name)
+    }
+
+  @Test
+  fun `when ConfirmDeleteConfig with null editingConfigMemo then does nothing`() =
+    habitsReducer.test(
+      HabitsState(
+        editingConfigMemo = null,
+        showDeleteConfigConfirm = true,
+      ),
+    ) {
+      send(HabitsAction.ConfirmDeleteConfig)
+
+      assertState { !isLoading }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when CancelDeleteConfig then hides delete confirm`() =
+    habitsReducer.test(HabitsState(showDeleteConfigConfirm = true)) {
+      send(HabitsAction.CancelDeleteConfig)
+
+      assertState { !showDeleteConfigConfirm }
+      assertNoEffects()
+    }
 }
