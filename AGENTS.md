@@ -191,7 +191,10 @@ We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
 ## Localization
 
 - **Never hardcode user-facing strings.** All text displayed to users must use string resources from `composeResources/values/strings.xml`.
-- **Always add translations immediately.** When adding a new string resource, add the Russian translation in `values-ru/strings.xml` at the same time.
+- **Always add translations for ALL supported locales immediately.** When adding a new string resource:
+  - Add English in `values/strings.xml`
+  - Add Russian translation in `values-ru/strings.xml`
+  - Add English fallback to all other locales: `values-ar`, `values-az`, `values-be`, `values-de`, `values-es`, `values-fr`, `values-hi`, `values-ja`, `values-ka`, `values-kk`, `values-ky`, `values-pt`, `values-ro`, `values-tg`, `values-tk`, `values-uk`, `values-uz`, `values-zh`
 - String resource names use `snake_case` with semantic prefixes: `action_`, `label_`, `msg_`, `title_`, `hint_`, `format_`, etc.
 
 ## Testing Guidelines

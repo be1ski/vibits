@@ -58,6 +58,7 @@ data class HabitsState(
   val showConfigDialog: Boolean = false,
   val editingHabits: List<EditableHabit> = emptyList(),
   val editingConfigMemo: space.be1ski.vibits.shared.feature.memos.domain.model.Memo? = null,
+  val showDeleteConfigConfirm: Boolean = false,
   // Edit existing config warning
   val showEditConfigWarning: Boolean = false,
   val pendingConfigEdit: List<HabitConfig> = emptyList(),
