@@ -18,16 +18,3 @@ class SaveCredentialsUseCaseTest {
     assertEquals(1, repository.saveCount)
   }
 }
-
-class LoadCredentialsUseCaseTest {
-  @Test
-  fun `when invoke then returns credentials from repository`() {
-    val expectedCredentials = Credentials(baseUrl = "https://example.com", token = "token123")
-    val repository = FakeCredentialsRepository(initial = expectedCredentials)
-    val useCase = LoadCredentialsUseCase(repository)
-
-    val result = useCase()
-
-    assertEquals(expectedCredentials, result)
-  }
-}

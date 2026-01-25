@@ -162,6 +162,9 @@
     <string name="mode_offline_desc">Daten lokal ohne Serververbindung speichern</string>
     <string name="mode_demo_title">Demo</string>
     <string name="mode_demo_desc">App mit Beispieldaten testen</string>
+    <string name="mode_quick_online_title">Anmeldedaten gefunden</string>
+    <string name="mode_quick_online_desc">Gespeicherte Anmeldedaten erkannt. Diese für schnelle Verbindung verwenden?</string>
+    <string name="action_use_saved">Gespeicherte verwenden</string>
 
     <!-- Navigation -->
     <string name="nav_feed">Feed</string>

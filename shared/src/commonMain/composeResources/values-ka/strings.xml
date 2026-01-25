@@ -162,6 +162,9 @@
     <string name="mode_offline_desc">შეინახეთ მონაცემები ლოკალურად სერვერთან კავშირის გარეშე</string>
     <string name="mode_demo_title">დემო</string>
     <string name="mode_demo_desc">სცადეთ აპი სადემონსტრაციო მონაცემებით</string>
+    <string name="mode_quick_online_title">ნაპოვნია უფლებამოსილებები</string>
+    <string name="mode_quick_online_desc">აღმოჩენილია შენახული უფლებამოსილებები. გამოვიყენოთ სწრაფი დაკავშირებისთვის?</string>
+    <string name="action_use_saved">შენახულის გამოყენება</string>
 
     <!-- Navigation -->
     <string name="nav_feed">ფიდი</string>
