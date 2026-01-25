@@ -159,4 +159,67 @@ class HabitContentBuilderTest {
 
     assertEquals("#habits/config\n\n", result)
   }
+
+  // extractDateFromTrackingContent tests
+
+  @Test
+  fun `when valid tracking memo then extracts date`() {
+    val content = "#habits/daily 2024-01-15\n#habits/exercise\n#habits/reading"
+
+    val result = extractDateFromTrackingContent(content)
+
+    assertEquals(LocalDate(2024, 1, 15), result)
+  }
+
+  @Test
+  fun `when tracking memo with only date then extracts date`() {
+    val content = "#habits/daily 2024-12-31"
+
+    val result = extractDateFromTrackingContent(content)
+
+    assertEquals(LocalDate(2024, 12, 31), result)
+  }
+
+  @Test
+  fun `when invalid date format then returns null`() {
+    val content = "#habits/daily not-a-date\n#habits/exercise"
+
+    val result = extractDateFromTrackingContent(content)
+
+    assertEquals(null, result)
+  }
+
+  @Test
+  fun `when empty content then returns null`() {
+    val result = extractDateFromTrackingContent("")
+
+    assertEquals(null, result)
+  }
+
+  @Test
+  fun `when non-tracking content then returns null`() {
+    val content = "Just a regular memo"
+
+    val result = extractDateFromTrackingContent(content)
+
+    assertEquals(null, result)
+  }
+
+  @Test
+  fun `when alternative daily tag then returns null`() {
+    val content = "#daily 2024-01-15\n#habits/exercise"
+
+    val result = extractDateFromTrackingContent(content)
+
+    assertEquals(null, result)
+  }
+
+  @Test
+  fun `when date on second line then returns null`() {
+    val content = "Some text\n#habits/daily 2024-01-15"
+
+    val result = extractDateFromTrackingContent(content)
+
+    assertEquals(null, result)
+  }
 }
