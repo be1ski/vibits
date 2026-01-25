@@ -62,6 +62,8 @@ internal fun SwipeableTabContent(
     FeedScreen(
       memos = memosState.memos,
       dateFormatter = dateFormatter,
+      activeFilter = memosState.activePostFilter,
+      onFilterChange = { filter -> dispatchMemos(MemosAction.ChangePostFilter(filter)) },
       isRefreshing = memosState.isLoading,
       onRefresh = {},
       enablePullRefresh = !isDesktop,
@@ -231,6 +233,8 @@ private fun MemosTabContent(
       FeedScreen(
         memos = memos,
         dateFormatter = dateFormatter,
+        activeFilter = memosState.activePostFilter,
+        onFilterChange = { filter -> onMemosAction(MemosAction.ChangePostFilter(filter)) },
         isRefreshing = memosState.isLoading,
         onRefresh = {},
         enablePullRefresh = !isDesktop,
