@@ -112,7 +112,9 @@
     <string name="format_active_since">Active since %1$s</string>
     <string name="msg_connection_failed">Échec de la connexion</string>
     <string name="msg_edit_config_warning">You're about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn't exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
+    <string name="msg_delete_config_warning">Êtes-vous sûr de vouloir supprimer cette configuration ? Cela supprimera définitivement la publication de configuration de vos notes.</string>
     <string name="msg_delete_day_confirm">Aucune habitude sélectionnée. L\'entrée du jour sera supprimée.</string>
+    <string name="msg_delete_day_warning">Êtes-vous sûr de vouloir supprimer l\'entrée de ce jour ? Cela supprimera définitivement la publication de suivi de vos notes.</string>
     <string name="msg_fill_all_fields">Veuillez remplir tous les champs</string>
     <string name="msg_no_habits_yet">Aucune habitude configurée pour l\'instant.</string>
     <string name="msg_no_logs">Aucun journal pour l\'instant</string>
@@ -183,6 +185,7 @@
 
     <!-- Titles -->
     <string name="title_create_day">Créer un jour</string>
+    <string name="title_delete_config">Supprimer la configuration ?</string>
     <string name="title_delete_day">Supprimer le jour ?</string>
     <string name="title_delete_memo">Supprimer la note ?</string>
     <string name="title_edit_config_warning">Edit Existing Config?</string>

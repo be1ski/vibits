@@ -3,7 +3,6 @@ package space.be1ski.vibits.shared.feature.habits.domain.usecase
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
-import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -17,7 +16,7 @@ class ExtractDailyMemosUseCaseTest {
   fun `when memo has habits daily tag then extracts it`() {
     val memo =
       createMemo(
-        content = "${PostTags.HABITS_DAILY} 2024-01-15\n- completed task",
+        content = "#habits/daily 2024-01-15\n- completed task",
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
@@ -31,7 +30,7 @@ class ExtractDailyMemosUseCaseTest {
   fun `when memo has daily tag then extracts it`() {
     val memo =
       createMemo(
-        content = "${PostTags.DAILY} 2024-01-15\n- completed task",
+        content = "#daily 2024-01-15\n- completed task",
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
@@ -58,7 +57,7 @@ class ExtractDailyMemosUseCaseTest {
   fun `when content has date then uses content date instead of createTime`() {
     val memo =
       createMemo(
-        content = "${PostTags.DAILY} 2024-02-20\n- task",
+        content = "#daily 2024-02-20\n- task",
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
@@ -72,21 +71,21 @@ class ExtractDailyMemosUseCaseTest {
   fun `when forDate called with existing date then returns memo`() {
     val memo =
       createMemo(
-        content = "${PostTags.DAILY} 2024-01-15\n- task",
+        content = "#daily 2024-01-15\n- task",
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
     val result = ExtractDailyMemosUseCase.forDate(listOf(memo), timeZone, LocalDate(2024, 1, 15))
 
     assertNotNull(result)
-    assertEquals("${PostTags.DAILY} 2024-01-15\n- task", result.content)
+    assertEquals("#daily 2024-01-15\n- task", result.content)
   }
 
   @Test
   fun `when forDate called with non-existing date then returns null`() {
     val memo =
       createMemo(
-        content = "${PostTags.DAILY} 2024-01-15\n- task",
+        content = "#daily 2024-01-15\n- task",
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
@@ -97,7 +96,7 @@ class ExtractDailyMemosUseCaseTest {
 
   @Test
   fun `when content has daily tag with date then parseDailyDateFromContent extracts it`() {
-    val content = "${PostTags.HABITS_DAILY} 2024-03-25\n- some task"
+    val content = "#habits/daily 2024-03-25\n- some task"
 
     val result = parseDailyDateFromContent(content)
 
@@ -106,7 +105,7 @@ class ExtractDailyMemosUseCaseTest {
 
   @Test
   fun `when content has daily tag without date then parseDailyDateFromContent returns null`() {
-    val content = "${PostTags.DAILY}\n- some task"
+    val content = "#daily\n- some task"
 
     val result = parseDailyDateFromContent(content)
 
@@ -154,7 +153,7 @@ class ExtractDailyMemosUseCaseTest {
     val memo =
       Memo(
         name = "memos/test",
-        content = "${PostTags.DAILY}\n- task",
+        content = "#daily\n- task",
         createTime = null,
         updateTime = null,
       )

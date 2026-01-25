@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,9 +47,12 @@ import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_cancel
+import space.be1ski.vibits.shared.generated.action_delete
 import space.be1ski.vibits.shared.generated.action_save
 import space.be1ski.vibits.shared.generated.hint_habit_name
 import space.be1ski.vibits.shared.generated.label_habits_config
+import space.be1ski.vibits.shared.generated.msg_delete_config_warning
+import space.be1ski.vibits.shared.generated.title_delete_config
 
 private val COLOR_CIRCLE_SIZE = 24.dp
 private val SELECTED_BORDER_WIDTH = 2.dp
@@ -73,7 +77,50 @@ internal fun HabitsConfigDialog(
       }
     },
     dismissButton = {
-      TextButton(onClick = { dispatch(HabitsAction.CloseConfigDialog) }) {
+      Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs)) {
+        if (habitsState.editingConfigMemo != null) {
+          TextButton(
+            onClick = { dispatch(HabitsAction.RequestDeleteConfig) },
+            colors =
+              ButtonDefaults.textButtonColors(
+                contentColor = MaterialTheme.colorScheme.error,
+              ),
+          ) {
+            Text(stringResource(Res.string.action_delete))
+          }
+        }
+        TextButton(onClick = { dispatch(HabitsAction.CloseConfigDialog) }) {
+          Text(stringResource(Res.string.action_cancel))
+        }
+      }
+    },
+  )
+
+  // Delete confirmation dialog
+  if (habitsState.showDeleteConfigConfirm) {
+    DeleteConfigConfirmDialog(dispatch = dispatch)
+  }
+}
+
+@Composable
+private fun DeleteConfigConfirmDialog(dispatch: (HabitsAction) -> Unit) {
+  AlertDialog(
+    onDismissRequest = { dispatch(HabitsAction.CancelDeleteConfig) },
+    title = { Text(stringResource(Res.string.title_delete_config)) },
+    text = { Text(stringResource(Res.string.msg_delete_config_warning)) },
+    confirmButton = {
+      Button(
+        onClick = { dispatch(HabitsAction.ConfirmDeleteConfig) },
+        colors =
+          ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.error,
+          ),
+      ) {
+        Text(stringResource(Res.string.action_delete))
+      }
+    },
+    dismissButton = {
+      TextButton(onClick = { dispatch(HabitsAction.CancelDeleteConfig) }) {
         Text(stringResource(Res.string.action_cancel))
       }
     },

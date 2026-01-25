@@ -58,6 +58,12 @@ sealed interface HabitsAction {
 
   data object SaveConfigDialog : HabitsAction
 
+  data object RequestDeleteConfig : HabitsAction
+
+  data object ConfirmDeleteConfig : HabitsAction
+
+  data object CancelDeleteConfig : HabitsAction
+
   // Edit existing config warning
   data object DismissEditConfigWarning : HabitsAction
 

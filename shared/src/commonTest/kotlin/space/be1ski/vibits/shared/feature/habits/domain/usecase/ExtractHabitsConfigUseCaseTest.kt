@@ -4,7 +4,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
-import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -18,7 +17,7 @@ class ExtractHabitsConfigUseCaseTest {
   fun `when memo has config tag then extracts habits`() {
     val memo =
       createMemo(
-        content = "${PostTags.HABITS_CONFIG}\n- [ ] exercise\n- [ ] reading",
+        content = "#habits/config\n- [ ] exercise\n- [ ] reading",
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
@@ -32,7 +31,7 @@ class ExtractHabitsConfigUseCaseTest {
   fun `when memo has habits_config tag then extracts habits`() {
     val memo =
       createMemo(
-        content = "${PostTags.HABITS_CONFIG_ALT}\n- [ ] meditation",
+        content = "#habits_config\n- [ ] meditation",
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
@@ -59,12 +58,12 @@ class ExtractHabitsConfigUseCaseTest {
   fun `when multiple configs exist then sorts by date`() {
     val memo1 =
       createMemo(
-        content = "${PostTags.HABITS_CONFIG}\n- [ ] task1",
+        content = "#habits/config\n- [ ] task1",
         createTime = KtInstant.parse("2024-01-20T10:00:00Z"),
       )
     val memo2 =
       createMemo(
-        content = "${PostTags.HABITS_CONFIG}\n- [ ] task2",
+        content = "#habits/config\n- [ ] task2",
         createTime = KtInstant.parse("2024-01-10T10:00:00Z"),
       )
 
@@ -120,7 +119,7 @@ class ExtractHabitsConfigUseCaseTest {
   fun `when config has duplicate habits then deduplicates by tag`() {
     val memo =
       createMemo(
-        content = "${PostTags.HABITS_CONFIG}\n- [ ] exercise\n- [ ] exercise\n- [ ] reading",
+        content = "#habits/config\n- [ ] exercise\n- [ ] exercise\n- [ ] reading",
         createTime = KtInstant.parse("2024-01-15T10:00:00Z"),
       )
 
@@ -145,6 +144,6 @@ class ExtractHabitsConfigUseCaseTest {
     HabitsConfigEntry(
       date = date,
       habits = emptyList(),
-      memo = createMemo(PostTags.HABITS_CONFIG, KtInstant.parse("2024-01-01T00:00:00Z")),
+      memo = createMemo("#habits/config", KtInstant.parse("2024-01-01T00:00:00Z")),
     )
 }

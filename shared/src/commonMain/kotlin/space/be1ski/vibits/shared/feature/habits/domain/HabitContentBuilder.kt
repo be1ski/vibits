@@ -24,6 +24,20 @@ fun buildDailyContent(
   }
 
 /**
+ * Extracts the date from a tracking memo's content.
+ * Returns null if the content is not a valid tracking memo.
+ */
+fun extractDateFromTrackingContent(content: String): LocalDate? {
+  val firstLine = content.lineSequence().firstOrNull()?.trim()
+  if (firstLine == null || !firstLine.startsWith(PostTags.HABITS_DAILY)) {
+    return null
+  }
+
+  val dateString = firstLine.removePrefix(PostTags.HABITS_DAILY).trim()
+  return runCatching { LocalDate.parse(dateString) }.getOrNull()
+}
+
+/**
  * Builds the content for a habits config memo from a list of HabitConfig entries.
  */
 fun buildHabitsConfigContentFromList(entries: List<HabitConfig>): String =

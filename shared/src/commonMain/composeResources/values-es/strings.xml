@@ -112,7 +112,9 @@
     <string name="format_active_since">Activo desde %1$s</string>
     <string name="msg_connection_failed">Error de conexión</string>
     <string name="msg_edit_config_warning">Está a punto de editar una configuración existente. Esto afectará a todos los datos históricos.\n\nNo se recomienda editar una configuración antigua porque cambia la apariencia de sus datos pasados. Por ejemplo, si agrega un nuevo hábito, todos los días pasados lo mostrarán como "no completado" aunque no existiera en ese momento.\n\nMejor práctica: Cree una nueva configuración en su lugar. Sus datos históricos mantendrán la configuración antigua, y los nuevos datos usarán la nueva configuración.</string>
+    <string name="msg_delete_config_warning">¿Estás seguro de que quieres eliminar esta configuración? Esto eliminará permanentemente la publicación de configuración de tus notas.</string>
     <string name="msg_delete_day_confirm">No hay hábitos seleccionados. Se eliminará la entrada del día.</string>
+    <string name="msg_delete_day_warning">¿Estás seguro de que quieres eliminar la entrada de este día? Esto eliminará permanentemente la publicación de seguimiento de tus notas.</string>
     <string name="msg_fill_all_fields">Por favor, complete todos los campos</string>
     <string name="msg_no_habits_yet">Aún no hay hábitos configurados.</string>
     <string name="msg_no_logs">Aún no hay registros</string>
@@ -183,6 +185,7 @@
 
     <!-- Titles -->
     <string name="title_create_day">Crear día</string>
+    <string name="title_delete_config">¿Eliminar configuración?</string>
     <string name="title_delete_day">¿Eliminar día?</string>
     <string name="title_delete_memo">¿Eliminar nota?</string>
     <string name="title_edit_config_warning">¿Editar Configuración Existente?</string>
