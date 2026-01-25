@@ -37,9 +37,9 @@ internal object DemoDataGenerator {
       DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.MEDITATION}", HabitColors[4].toHexString(), 0.60f, 1.0f),
       DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.WATER}", HabitColors[5].toHexString(), 0.90f, 0.95f),
       DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.LEARNING}", HabitColors[6].toHexString(), 0.50f, 0.6f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.WALKING}", HabitColors[1].toHexString(), 0.65f, 1.2f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.WALKING}", HabitColors[8].toHexString(), 0.65f, 1.2f),
       DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.NO_SUGAR}", HabitColors[2].toHexString(), 0.45f, 0.8f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.EARLY_SLEEP}", HabitColors[7].toHexString(), 0.55f, 0.7f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.EARLY_SLEEP}", HabitColors[1].toHexString(), 0.55f, 0.7f),
     )
 
   private const val MONTHS_OF_HISTORY = 18

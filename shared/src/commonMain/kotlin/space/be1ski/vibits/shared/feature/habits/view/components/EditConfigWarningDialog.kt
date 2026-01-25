@@ -2,6 +2,7 @@ package space.be1ski.vibits.shared.feature.habits.view.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -49,12 +50,12 @@ internal fun EditConfigWarningDialog(
       }
     },
     dismissButton = {
-      Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
-        TextButton(onClick = { dispatch(HabitsAction.ConfirmEditExistingConfig) }) {
-          Text(stringResource(Res.string.action_edit_anyway))
-        }
+      Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs)) {
         TextButton(onClick = { dispatch(HabitsAction.DismissEditConfigWarning) }) {
           Text(stringResource(Res.string.action_cancel))
+        }
+        TextButton(onClick = { dispatch(HabitsAction.ConfirmEditExistingConfig) }) {
+          Text(stringResource(Res.string.action_edit_anyway))
         }
       }
     },
