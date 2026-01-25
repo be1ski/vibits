@@ -151,3 +151,21 @@ fun extractHabitTagsFromContent(content: String?): Set<String> {
     .filterNot { it.equals(PostTags.HABITS_DAILY, ignoreCase = true) || it.startsWith(PostTags.HABITS_DAILY) }
     .toSet()
 }
+
+/**
+ * Parses habit configurations from a memo's content.
+ * Returns the list of habits defined in the memo, or empty list if not a config memo.
+ */
+fun parseConfigFromContent(content: String): List<HabitConfig> {
+  if (!content.contains(PostTags.HABITS_CONFIG) && !content.contains(PostTags.HABITS_CONFIG_ALT)) {
+    return emptyList()
+  }
+  return content
+    .lineSequence()
+    .map { it.trim() }
+    .filter { it.isNotBlank() }
+    .filterNot { it.startsWith(PostTags.HABITS_CONFIG) || it.startsWith(PostTags.HABITS_CONFIG_ALT) }
+    .mapNotNull { line -> parseHabitConfigLine(line) }
+    .distinctBy { it.tag }
+    .toList()
+}

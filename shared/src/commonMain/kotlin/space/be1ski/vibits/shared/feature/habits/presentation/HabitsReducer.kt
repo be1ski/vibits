@@ -232,6 +232,28 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
         effect(HabitsEffect.CreateMemo(content))
       }
 
+      is HabitsAction.RequestDeleteConfig -> {
+        state { copy(showDeleteConfigConfirm = true) }
+      }
+
+      is HabitsAction.ConfirmDeleteConfig -> {
+        val existingMemo = state.editingConfigMemo ?: return@reducer
+        state {
+          copy(
+            showDeleteConfigConfirm = false,
+            showConfigDialog = false,
+            editingHabits = emptyList(),
+            editingConfigMemo = null,
+            isLoading = true,
+          )
+        }
+        effect(HabitsEffect.DeleteMemo(existingMemo.name))
+      }
+
+      is HabitsAction.CancelDeleteConfig -> {
+        state { copy(showDeleteConfigConfirm = false) }
+      }
+
       is HabitsAction.RequestSingleHabitToggle -> {
         state {
           copy(

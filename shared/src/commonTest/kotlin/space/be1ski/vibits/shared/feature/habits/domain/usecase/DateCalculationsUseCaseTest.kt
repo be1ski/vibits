@@ -5,7 +5,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
-import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -95,8 +94,8 @@ class DateCalculationsUseCaseTest {
   fun `when memos have dates in content then returns earliest content date`() {
     val memos =
       listOf(
-        createMemo("${PostTags.DAILY} 2024-03-15", KtInstant.parse("2024-01-10T10:00:00Z")),
-        createMemo("${PostTags.DAILY} 2024-01-01", KtInstant.parse("2024-01-15T10:00:00Z")),
+        createMemo("#daily 2024-03-15", KtInstant.parse("2024-01-10T10:00:00Z")),
+        createMemo("#daily 2024-01-01", KtInstant.parse("2024-01-15T10:00:00Z")),
       )
 
     val result = EarliestMemoDateUseCase(memos, timeZone)

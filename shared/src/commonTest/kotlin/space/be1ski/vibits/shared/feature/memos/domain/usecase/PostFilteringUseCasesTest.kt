@@ -2,7 +2,6 @@ package space.be1ski.vibits.shared.feature.memos.domain.usecase
 
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
-import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Instant
@@ -16,7 +15,7 @@ class PostFilteringUseCasesTest {
     val memo =
       Memo(
         name = "test",
-        content = "Some content ${PostTags.HABITS_CONFIG} more text",
+        content = "Some content #habits/config more text",
         createTime = testInstant,
       )
 
@@ -30,7 +29,7 @@ class PostFilteringUseCasesTest {
     val memo =
       Memo(
         name = "test",
-        content = "Content with ${PostTags.HABITS_CONFIG_ALT} tag",
+        content = "Content with #habits_config tag",
         createTime = testInstant,
       )
 
@@ -44,7 +43,7 @@ class PostFilteringUseCasesTest {
     val memo =
       Memo(
         name = "test",
-        content = "Daily log ${PostTags.HABITS_DAILY} completed",
+        content = "Daily log #habits/daily completed",
         createTime = testInstant,
       )
 
@@ -58,7 +57,7 @@ class PostFilteringUseCasesTest {
     val memo =
       Memo(
         name = "test",
-        content = "Today's habits ${PostTags.DAILY}",
+        content = "Today's habits #daily",
         createTime = testInstant,
       )
 
@@ -109,7 +108,7 @@ class PostFilteringUseCasesTest {
     val memo =
       Memo(
         name = "test",
-        content = "${PostTags.HABITS_CONFIG} and ${PostTags.HABITS_DAILY}",
+        content = "#habits/config and #habits/daily",
         createTime = testInstant,
       )
 
@@ -123,8 +122,8 @@ class PostFilteringUseCasesTest {
   fun `when filter is ALL then returns all memos`() {
     val memos =
       listOf(
-        Memo(name = "1", content = PostTags.HABITS_CONFIG, createTime = testInstant),
-        Memo(name = "2", content = PostTags.HABITS_DAILY, createTime = testInstant),
+        Memo(name = "1", content = "#habits/config", createTime = testInstant),
+        Memo(name = "2", content = "#habits/daily", createTime = testInstant),
         Memo(name = "3", content = "regular note", createTime = testInstant),
       )
 
@@ -136,9 +135,9 @@ class PostFilteringUseCasesTest {
 
   @Test
   fun `when filter is CONFIG then returns only config memos`() {
-    val configMemo1 = Memo(name = "1", content = PostTags.HABITS_CONFIG, createTime = testInstant)
-    val configMemo2 = Memo(name = "2", content = PostTags.HABITS_CONFIG_ALT, createTime = testInstant)
-    val trackingMemo = Memo(name = "3", content = PostTags.HABITS_DAILY, createTime = testInstant)
+    val configMemo1 = Memo(name = "1", content = "#habits/config", createTime = testInstant)
+    val configMemo2 = Memo(name = "2", content = "#habits_config", createTime = testInstant)
+    val trackingMemo = Memo(name = "3", content = "#habits/daily", createTime = testInstant)
     val regularMemo = Memo(name = "4", content = "note", createTime = testInstant)
 
     val memos = listOf(configMemo1, trackingMemo, configMemo2, regularMemo)
@@ -151,9 +150,9 @@ class PostFilteringUseCasesTest {
 
   @Test
   fun `when filter is HABIT_TRACKING then returns only tracking memos`() {
-    val trackingMemo1 = Memo(name = "1", content = PostTags.HABITS_DAILY, createTime = testInstant)
-    val trackingMemo2 = Memo(name = "2", content = PostTags.DAILY, createTime = testInstant)
-    val configMemo = Memo(name = "3", content = PostTags.HABITS_CONFIG, createTime = testInstant)
+    val trackingMemo1 = Memo(name = "1", content = "#habits/daily", createTime = testInstant)
+    val trackingMemo2 = Memo(name = "2", content = "#daily", createTime = testInstant)
+    val configMemo = Memo(name = "3", content = "#habits/config", createTime = testInstant)
     val regularMemo = Memo(name = "4", content = "note", createTime = testInstant)
 
     val memos = listOf(trackingMemo1, configMemo, trackingMemo2, regularMemo)
@@ -168,8 +167,8 @@ class PostFilteringUseCasesTest {
   fun `when filter is REGULAR then returns only regular memos`() {
     val regularMemo1 = Memo(name = "1", content = "note 1", createTime = testInstant)
     val regularMemo2 = Memo(name = "2", content = "note 2 #other", createTime = testInstant)
-    val configMemo = Memo(name = "3", content = PostTags.HABITS_CONFIG, createTime = testInstant)
-    val trackingMemo = Memo(name = "4", content = PostTags.DAILY, createTime = testInstant)
+    val configMemo = Memo(name = "3", content = "#habits/config", createTime = testInstant)
+    val trackingMemo = Memo(name = "4", content = "#daily", createTime = testInstant)
 
     val memos = listOf(regularMemo1, configMemo, regularMemo2, trackingMemo)
 
@@ -190,8 +189,8 @@ class PostFilteringUseCasesTest {
   fun `when no memos match filter then returns empty list`() {
     val memos =
       listOf(
-        Memo(name = "1", content = PostTags.HABITS_CONFIG, createTime = testInstant),
-        Memo(name = "2", content = PostTags.HABITS_DAILY, createTime = testInstant),
+        Memo(name = "1", content = "#habits/config", createTime = testInstant),
+        Memo(name = "2", content = "#habits/daily", createTime = testInstant),
       )
 
     val result = FilterMemosByTypeUseCase(memos, PostFilter.REGULAR)
