@@ -8,6 +8,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 import space.be1ski.vibits.shared.feature.habits.domain.labelFromTag
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.Instant
@@ -93,7 +94,7 @@ internal object DemoDataGenerator {
   private fun createConfigMemo(createTime: Instant): Memo {
     val content =
       buildString {
-        appendLine("#habits/config")
+        appendLine(PostTags.HABITS_CONFIG)
         appendLine()
         demoHabits.forEach { habit ->
           val label = labelFromTag(habit.tag)
@@ -115,7 +116,7 @@ internal object DemoDataGenerator {
   ): Memo {
     val content =
       buildString {
-        appendLine("#habits/daily $date")
+        appendLine("${PostTags.HABITS_DAILY} $date")
         appendLine()
         completedHabits.forEach { habit ->
           appendLine(habit.tag)

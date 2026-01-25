@@ -36,6 +36,11 @@ sealed interface HabitsAction {
     val currentConfig: List<HabitConfig>,
   ) : HabitsAction
 
+  data class OpenConfigDialogFromMemo(
+    val memo: Memo,
+    val currentConfig: List<HabitConfig>,
+  ) : HabitsAction
+
   data object CloseConfigDialog : HabitsAction
 
   data object AddHabit : HabitsAction

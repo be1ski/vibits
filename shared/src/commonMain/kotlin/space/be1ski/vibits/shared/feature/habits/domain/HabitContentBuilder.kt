@@ -3,6 +3,7 @@ package space.be1ski.vibits.shared.feature.habits.domain
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 
 /**
  * Builds the content for a daily habits memo.
@@ -13,7 +14,7 @@ fun buildDailyContent(
   selections: Map<HabitTag, IsSelected>,
 ): String =
   buildString {
-    append("#habits/daily ").append(date).append("\n\n")
+    append(PostTags.HABITS_DAILY).append(" ").append(date).append("\n\n")
     habitsConfig.forEach { habit ->
       val done = selections[habit.tag] == true
       if (done) {
@@ -27,7 +28,7 @@ fun buildDailyContent(
  */
 fun buildHabitsConfigContentFromList(entries: List<HabitConfig>): String =
   buildString {
-    append("#habits/config\n\n")
+    append(PostTags.HABITS_CONFIG).append("\n\n")
     entries.forEach { entry ->
       append(entry.label)
         .append(" | ")

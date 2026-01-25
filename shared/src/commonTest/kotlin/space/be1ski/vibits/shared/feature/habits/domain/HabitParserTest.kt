@@ -9,6 +9,7 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.normalizeHabitTag
 import space.be1ski.vibits.shared.feature.habits.domain.parseHabitConfigLine
 import space.be1ski.vibits.shared.feature.habits.domain.parseHexColor
+import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -137,7 +138,7 @@ class HabitParserTest {
   fun `when content has no checkboxes then extracts tags directly`() {
     val content =
       """
-      #habits/daily 2024-01-15
+      ${PostTags.HABITS_DAILY} 2024-01-15
 
       #habits/exercise
       #habits/meditation
@@ -187,7 +188,7 @@ class HabitParserTest {
 
   @Test
   fun `when content has daily tag then excludes it`() {
-    val content = "#habits/daily 2024-01-15 #habits/exercise"
+    val content = "${PostTags.HABITS_DAILY} 2024-01-15 #habits/exercise"
 
     val result = extractHabitTagsFromContent(content)
 

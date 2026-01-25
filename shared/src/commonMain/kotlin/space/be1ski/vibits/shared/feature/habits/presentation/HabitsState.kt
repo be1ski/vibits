@@ -53,6 +53,7 @@ data class HabitsState(
   // Config dialog state
   val showConfigDialog: Boolean = false,
   val editingHabits: List<EditableHabit> = emptyList(),
+  val editingConfigMemo: space.be1ski.vibits.shared.feature.memos.domain.model.Memo? = null,
   // Selection state
   val selectedWeek: ActivityWeek? = null,
   val selectedDate: LocalDate? = null,

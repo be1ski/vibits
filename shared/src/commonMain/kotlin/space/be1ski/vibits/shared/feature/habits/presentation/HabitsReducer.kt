@@ -93,11 +93,19 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
           action.currentConfig.mapIndexed { index, config ->
             EditableHabit.fromHabitConfig(config, "habit_$index")
           }
-        state { copy(showConfigDialog = true, editingHabits = editableHabits) }
+        state { copy(showConfigDialog = true, editingHabits = editableHabits, editingConfigMemo = null) }
+      }
+
+      is HabitsAction.OpenConfigDialogFromMemo -> {
+        val editableHabits =
+          action.currentConfig.mapIndexed { index, config ->
+            EditableHabit.fromHabitConfig(config, "habit_$index")
+          }
+        state { copy(showConfigDialog = true, editingHabits = editableHabits, editingConfigMemo = action.memo) }
       }
 
       is HabitsAction.CloseConfigDialog -> {
-        state { copy(showConfigDialog = false, editingHabits = emptyList()) }
+        state { copy(showConfigDialog = false, editingHabits = emptyList(), editingConfigMemo = null) }
       }
 
       is HabitsAction.AddHabit -> {
@@ -147,8 +155,13 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
             .filter { it.label.isNotBlank() }
             .map { it.toHabitConfig() }
         val content = buildHabitsConfigContentFromList(validHabits)
+        val existingMemo = state.editingConfigMemo
         state { copy(isLoading = true) }
-        effect(HabitsEffect.CreateMemo(content))
+        if (existingMemo != null) {
+          effect(HabitsEffect.UpdateMemo(existingMemo.name, content))
+        } else {
+          effect(HabitsEffect.CreateMemo(content))
+        }
       }
 
       is HabitsAction.RequestSingleHabitToggle -> {
