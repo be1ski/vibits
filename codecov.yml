@@ -8,6 +8,19 @@ coverage:
       default:
         target: 80%
 
+ignore:
+  - "**/di/**"
+  - "**/generated/**"
+  - "**/platform/**"
+  - "**/room/**"
+  - "**/ui/**"
+  - "**/view/**"
+  - "**/*State.kt"
+  - "**/*Action.kt"
+  - "**/*Effect.kt"
+  - "**/*Features.kt"
+  - "**/*Dto.kt"
+
 comment:
   layout: "reach, diff, flags, files"
   behavior: default
