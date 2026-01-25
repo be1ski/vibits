@@ -12,11 +12,11 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
     when (action) {
       // Credentials input
       is MemosAction.UpdateBaseUrl -> {
-        state { copy(content = content.copy(baseUrl = action.value), errorMessage = null) }
+        state { copy(baseUrl = action.value, errorMessage = null) }
       }
 
       is MemosAction.UpdateToken -> {
-        state { copy(content = content.copy(token = action.value), errorMessage = null) }
+        state { copy(token = action.value, errorMessage = null) }
       }
 
       is MemosAction.EditCredentials -> {
@@ -25,7 +25,7 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
       }
 
       is MemosAction.CredentialsLoaded -> {
-        state { copy(content = content.copy(baseUrl = action.baseUrl, token = action.token)) }
+        state { copy(baseUrl = action.baseUrl, token = action.token) }
       }
 
       // Loading
@@ -47,17 +47,17 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
 
       // Filtering
       is MemosAction.ChangePostFilter -> {
-        state { copy(content = content.copy(activePostFilter = action.filter)) }
+        state { copy(activePostFilter = action.filter) }
       }
 
       is MemosAction.CachedMemosLoaded -> {
         if (state.memos.isEmpty() && action.memos.isNotEmpty()) {
-          state { copy(content = content.copy(memos = sortedMemos(action.memos))) }
+          state { copy(memos = sortedMemos(action.memos)) }
         }
       }
 
       is MemosAction.MemosLoaded -> {
-        state { copy(content = content.copy(memos = sortedMemos(action.memos)), isLoading = false, errorMessage = null) }
+        state { copy(memos = sortedMemos(action.memos), isLoading = false, errorMessage = null) }
       }
 
       // CRUD
@@ -78,7 +78,7 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
 
       is MemosAction.MemoCreated -> {
         val updatedMemos = sortedMemos(state.memos + action.memo)
-        state { copy(content = content.copy(memos = updatedMemos), isLoading = false) }
+        state { copy(memos = updatedMemos, isLoading = false) }
       }
 
       is MemosAction.MemoUpdated -> {
@@ -88,12 +88,12 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
               if (memo.name == action.memo.name) action.memo else memo
             },
           )
-        state { copy(content = content.copy(memos = updatedMemos), isLoading = false) }
+        state { copy(memos = updatedMemos, isLoading = false) }
       }
 
       is MemosAction.MemoDeleted -> {
         val updatedMemos = sortedMemos(state.memos.filterNot { it.name == action.name })
-        state { copy(content = content.copy(memos = updatedMemos), isLoading = false) }
+        state { copy(memos = updatedMemos, isLoading = false) }
       }
 
       is MemosAction.OperationFailed -> {
