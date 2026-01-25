@@ -2,6 +2,7 @@ package space.be1ski.vibits.shared.feature.habits.domain.usecase
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.habits.domain.parseHabitConfigLine
@@ -29,8 +30,9 @@ object ExtractHabitsConfigUseCase {
         }
         Log.d(TAG, "Found config memo: ${memo.name}")
         Log.d(TAG, "Config content:\n${memo.content}")
-        val instant = parseMemoInstant(memo) ?: return@mapNotNull null
-        val date = parseMemoDate(memo, timeZone) ?: return@mapNotNull null
+        // Use createTime for config memos to keep date stable when content is edited
+        val instant = memo.createTime ?: return@mapNotNull null
+        val date = instant.toLocalDateTime(timeZone).date
         val lines =
           memo.content
             .lineSequence()
