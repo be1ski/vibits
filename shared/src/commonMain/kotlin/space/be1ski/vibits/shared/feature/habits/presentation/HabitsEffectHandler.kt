@@ -73,25 +73,15 @@ class HabitsEffectHandler(
         }
 
         is HabitsEffect.RefreshMemos -> {
-          Log.d(TAG, "[CACHE-DEBUG] RefreshMemos effect executing, calling onRefresh callback")
+          Log.d(TAG, "Refreshing memos")
           onRefresh()
         }
 
         is HabitsEffect.RunPrewarmAllRanges -> {
-          Log.d(
-            TAG,
-            "[CACHE-DEBUG] RunPrewarmAllRanges effect executing: " +
-              "memos.size=${effect.memos.size}, " +
-              "appMode=${effect.appMode}",
-          )
+          Log.d(TAG, "Prewarming all ranges for AppMode: ${effect.appMode}")
           val results = prewarmAllRanges(effect.memos, effect.appMode)
-          Log.d(TAG, "[CACHE-DEBUG] Prewarm completed: ${results.size} ranges calculated")
           // Emit AFTER withContext (TC-04: avoid Flow invariant violation)
           results.forEach { result ->
-            Log.d(
-              TAG,
-              "[CACHE-DEBUG] Emitting UpdateActivityData for range=${result.range}, mode=${result.mode}",
-            )
             emit(
               HabitsAction.UpdateActivityData(
                 range = result.range,
@@ -103,7 +93,6 @@ class HabitsEffectHandler(
               ),
             )
           }
-          Log.d(TAG, "[CACHE-DEBUG] Emitting PrewarmCompleted")
           emit(HabitsAction.PrewarmCompleted)
         }
 

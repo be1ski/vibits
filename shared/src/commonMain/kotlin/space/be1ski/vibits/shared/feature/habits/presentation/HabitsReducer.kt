@@ -3,7 +3,6 @@ package space.be1ski.vibits.shared.feature.habits.presentation
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
-import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.ui.theme.DefaultHabitColor
 import space.be1ski.vibits.shared.feature.habits.domain.buildDailyContent
 import space.be1ski.vibits.shared.feature.habits.domain.buildHabitStatuses
@@ -15,8 +14,6 @@ import space.be1ski.vibits.shared.feature.habits.domain.normalizeHabitTag
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.parseDailyDateFromContent
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.parseMemoDate
 import kotlin.random.Random
-
-private const val TAG = "HabitsReducer"
 
 /**
  * Pure reducer for the Habits feature.
@@ -351,7 +348,6 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
       }
 
       is HabitsAction.MemoCreated, is HabitsAction.MemoUpdated -> {
-        Log.d(TAG, "[CACHE-DEBUG] ${action::class.simpleName} received, triggering RefreshMemos")
         state {
           copy(
             isLoading = false,
@@ -372,7 +368,6 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
       }
 
       is HabitsAction.MemoDeleted -> {
-        Log.d(TAG, "[CACHE-DEBUG] MemoDeleted received, triggering RefreshMemos")
         state {
           copy(
             isLoading = false,
@@ -406,11 +401,6 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
 
       // Cache management
       is HabitsAction.RequestPrewarmAllRanges -> {
-        Log.d(
-          TAG,
-          "[CACHE-DEBUG] RequestPrewarmAllRanges: memos.size=${action.memos.size}, " +
-            "appMode=${action.appMode}, needsCacheRefresh=${state.needsCacheRefresh}",
-        )
         state {
           copy(
             needsCacheRefresh = false,
@@ -422,11 +412,6 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
 
       is HabitsAction.UpdateActivityData -> {
         val key = ActivityCacheKey(action.range, action.mode, action.appMode)
-        Log.d(
-          TAG,
-          "[CACHE-DEBUG] UpdateActivityData: range=${action.range}, mode=${action.mode}, " +
-            "cacheSize=${state.activityDataCache.size + 1}",
-        )
         state {
           copy(
             activityDataCache =
@@ -438,7 +423,6 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
       }
 
       is HabitsAction.PrewarmCompleted -> {
-        Log.d(TAG, "[CACHE-DEBUG] PrewarmCompleted, setting isInitialLoading=false")
         state {
           copy(
             isInitialLoading = false,

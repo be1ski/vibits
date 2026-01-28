@@ -2,10 +2,8 @@ package space.be1ski.vibits.shared.feature.memos.presentation
 
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
-import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
-private const val TAG = "MemosReducer"
 private const val MILLIS_PER_DAY = 86400000L
 
 /**
@@ -34,11 +32,9 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
 
       // Loading
       is MemosAction.LoadMemos -> {
-        Log.d(TAG, "[CACHE-DEBUG] LoadMemos action received")
         if (state.needsCredentials) {
           state { copy(credentialsMode = true, errorMessage = "Base URL and token are required.") }
         } else {
-          Log.d(TAG, "[CACHE-DEBUG] Starting memos load, triggering LoadRemoteMemos effect")
           state { copy(isLoading = true, errorMessage = null, credentialsMode = false) }
           if (!state.isOfflineMode) {
             effect(MemosEffect.SaveCredentials(state.baseUrl, state.token))
@@ -93,11 +89,6 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
       }
 
       is MemosAction.MemosLoaded -> {
-        Log.d(
-          TAG,
-          "[CACHE-DEBUG] MemosLoaded: ${action.memos.size} memos, " +
-            "new revision=${state.memosRevision + 1}",
-        )
         state {
           copy(
             memos = sortedMemos(action.memos),

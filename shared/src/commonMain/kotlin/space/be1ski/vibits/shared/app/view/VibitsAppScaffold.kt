@@ -101,21 +101,7 @@ internal fun VibitsAppScaffold(
     val shouldPrewarm =
       !habitsState.isInitialLoading &&
         (habitsState.needsCacheRefresh || habitsState.activityDataCache.isEmpty() || revisionChanged)
-    Log.d(
-      "VibitsAppScaffold",
-      "[CACHE-DEBUG] LaunchedEffect triggered: " +
-        "appMode=${appState.appMode}, " +
-        "memosRevision=${memosState.memosRevision}, " +
-        "prevMemosRevision=$prevMemosRevision, " +
-        "revisionChanged=$revisionChanged, " +
-        "needsCacheRefresh=${habitsState.needsCacheRefresh}, " +
-        "isInitialLoading=${habitsState.isInitialLoading}, " +
-        "cacheSize=${habitsState.activityDataCache.size}, " +
-        "memosSize=${memosState.memos.size}, " +
-        "shouldPrewarm=$shouldPrewarm",
-    )
     if (memosState.memos.isNotEmpty() && shouldPrewarm) {
-      Log.d("VibitsAppScaffold", "[CACHE-DEBUG] Sending RequestPrewarmAllRanges with ${memosState.memos.size} memos")
       prevMemosRevision = memosState.memosRevision
       features.habits.send(
         HabitsAction.RequestPrewarmAllRanges(
