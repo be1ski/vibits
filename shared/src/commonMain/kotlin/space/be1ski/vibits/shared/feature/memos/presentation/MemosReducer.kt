@@ -1,8 +1,12 @@
 package space.be1ski.vibits.shared.feature.memos.presentation
 
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
+import space.be1ski.vibits.shared.feature.habits.domain.extractDateFromTrackingContent
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.memos.domain.model.isTrackingPost
 
 /**
  * Pure reducer for the Memos feature.
@@ -47,6 +51,7 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
 
       is MemosAction.ResetForModeChange -> {
         state { copy(memos = emptyList(), initialDataLoaded = false, isLoading = false) }
+        effect(MemosEffect.ClearActivityCache)
       }
 
       // Filtering
@@ -177,6 +182,14 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
 
 private fun sortedMemos(memos: List<Memo>): List<Memo> =
   memos.sortedByDescending { memo ->
+    // For tracking posts, use date from content instead of createTime
+    if (memo.isTrackingPost) {
+      val dateFromContent = extractDateFromTrackingContent(memo.content)
+      if (dateFromContent != null) {
+        val timeZone = TimeZone.currentSystemDefault()
+        return@sortedByDescending dateFromContent.atStartOfDayIn(timeZone).toEpochMilliseconds()
+      }
+    }
     memo.createTime?.toEpochMilliseconds()
       ?: memo.updateTime?.toEpochMilliseconds()
       ?: Long.MIN_VALUE

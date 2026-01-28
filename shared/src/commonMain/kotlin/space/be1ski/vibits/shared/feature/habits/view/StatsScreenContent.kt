@@ -167,7 +167,7 @@ internal fun StatsPostsInfoCard(derived: StatsScreenDerivedState) {
   if (state.activityMode != ActivityMode.POSTS) return
 
   val totalPosts = derived.weekData.weeks.sumOf { it.weeklyCount }
-  val todayPosts = derived.todayDay?.count ?: 0
+  val todayPosts = derived.todayPostsCount
 
   if (totalPosts == 0 && todayPosts == 0) return
 

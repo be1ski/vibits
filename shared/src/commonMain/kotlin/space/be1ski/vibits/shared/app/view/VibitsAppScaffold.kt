@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.app.di.AppDependencies
+import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.domain.model.Screen
@@ -33,9 +33,9 @@ import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.core.ui.date.rememberDateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.EarliestMemoDateUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.IsActivityRangeBeforeUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
-import space.be1ski.vibits.shared.feature.habits.view.components.rememberHabitsConfigTimeline
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
@@ -47,7 +47,6 @@ import space.be1ski.vibits.shared.generated.action_track_today
 @Composable
 internal fun VibitsAppScaffold(
   features: AppFeatures,
-  dependencies: AppDependencies,
   appState: AppState,
   memosState: MemosState,
   habitsState: HabitsState,
@@ -57,7 +56,10 @@ internal fun VibitsAppScaffold(
   val timeZone = remember { TimeZone.currentSystemDefault() }
   val today = currentLocalDate()
   val dateFormatter = rememberDateFormatter()
-  val habitsTimeline = rememberHabitsConfigTimeline(memosState.memos)
+  val habitsTimeline =
+    remember(memosState.memos, timeZone) {
+      ExtractHabitsConfigUseCase(memosState.memos, timeZone)
+    }
   val todayData = rememberTodayData(habitsTimeline, memosState.memos, timeZone, today)
 
   val activityRange = activityRangeForAppState(appState)
@@ -82,11 +84,9 @@ internal fun VibitsAppScaffold(
     ScaffoldContent(
       padding = padding,
       features = features,
-      dependencies = dependencies,
       appState = appState,
       memosState = memosState,
       habitsState = habitsState,
-      habitsTimeline = habitsTimeline,
       activityRange = activityRange,
       timeZone = timeZone,
       today = today,
@@ -125,11 +125,9 @@ private fun AppFab(
 private fun ScaffoldContent(
   padding: PaddingValues,
   features: AppFeatures,
-  dependencies: AppDependencies,
   appState: AppState,
   memosState: MemosState,
   habitsState: HabitsState,
-  habitsTimeline: List<HabitsConfigEntry>,
   activityRange: ActivityRange,
   timeZone: TimeZone,
   today: LocalDate,
@@ -161,7 +159,12 @@ private fun ScaffoldContent(
     memosState.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
 
     if (appState.selectedScreen != Screen.FEED) {
-      val successRate = rememberSuccessRateIfNeeded(appState, habitsTimeline, memosState.memos, activityRange, dependencies)
+      val successRate =
+        if (appState.selectedScreen == Screen.HABITS) {
+          habitsState.getActivityData(activityRange, ActivityMode.HABITS)?.successRate?.rate
+        } else {
+          null
+        }
       TimeRangeControls(
         selectedTab = selectedTab,
         rangeLabel = formatRangeLabel(activityRange, dateFormatter),
@@ -182,36 +185,9 @@ private fun ScaffoldContent(
       habitsState = habitsState,
       onHabitsAction = features.habits::send,
       onAppAction = features.app::send,
-      calculateSuccessRate = dependencies.calculateSuccessRate,
-      buildActivityDataUseCase = dependencies.buildActivityData,
-      cache = dependencies.activityWeekDataCache,
       dateFormatter = dateFormatter,
       dispatchMemos = features.memos::send,
       feedListState = feedListState,
     )
-  }
-}
-
-@Composable
-private fun rememberSuccessRateIfNeeded(
-  appState: AppState,
-  habitsTimeline: List<HabitsConfigEntry>,
-  memos: List<Memo>,
-  activityRange: ActivityRange,
-  dependencies: AppDependencies,
-): Float? {
-  val isHabitsScreen = appState.selectedScreen == Screen.HABITS
-  val hasHabits = remember(habitsTimeline) { habitsTimeline.lastOrNull()?.habits?.isNotEmpty() == true }
-  val shouldCalculate = isHabitsScreen && hasHabits
-  return if (shouldCalculate) {
-    rememberSuccessRate(
-      memos,
-      activityRange,
-      dependencies.calculateSuccessRate,
-      dependencies.buildActivityData,
-      dependencies.activityWeekDataCache,
-    )
-  } else {
-    null
   }
 }

@@ -2,6 +2,9 @@ package space.be1ski.vibits.shared.feature.habits.presentation
 
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildDayDataUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.test.FakeMemosRepository
 import kotlin.test.Test
@@ -125,6 +128,8 @@ class HabitsEffectHandlerTest {
   ): HabitsEffectHandler {
     return HabitsEffectHandler(
       memosRepository = repository,
+      buildActivityDataUseCase = BuildActivityDataUseCase(buildDayDataUseCase = BuildDayDataUseCase()),
+      calculateSuccessRate = CalculateSuccessRateUseCase(),
       onRefresh = onRefresh,
     )
   }

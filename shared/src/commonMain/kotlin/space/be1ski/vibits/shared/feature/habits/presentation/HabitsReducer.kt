@@ -398,5 +398,44 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
           )
         }
       }
+
+      is HabitsAction.UpdateActivityData -> {
+        val key = ActivityCacheKey(action.range, action.mode)
+        val cached =
+          CachedActivityData(
+            weekData = action.weekData,
+            configTimeline = action.configTimeline,
+            successRate = action.successRate,
+          )
+        state {
+          copy(
+            activityDataCache = activityDataCache + (key to cached),
+            isRecalculating = isRecalculating - key,
+          )
+        }
+      }
+
+      is HabitsAction.ChangeRange -> {
+        // No-op: range changes are now handled by InvalidateCache from UI
+        return@reducer
+      }
+
+      is HabitsAction.ChangeMode -> {
+        // No-op: mode changes are now handled by InvalidateCache from UI
+        return@reducer
+      }
+
+      is HabitsAction.InvalidateCache -> {
+        val key = ActivityCacheKey(action.range, action.mode)
+        state {
+          copy(
+            activityDataCache = emptyMap(),
+            isRecalculating = setOf(key),
+            lastRequestedRange = action.range,
+            lastRequestedMode = action.mode,
+          )
+        }
+        effect(HabitsEffect.RecalculateActivityData(action.range, action.mode, action.memos))
+      }
     }
   }

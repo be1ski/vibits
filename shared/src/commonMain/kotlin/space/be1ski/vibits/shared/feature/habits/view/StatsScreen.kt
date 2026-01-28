@@ -7,25 +7,28 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
+import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
+import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
+import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.habits.domain.model.findDayByDate
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractDailyMemosUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.GetPeriodPostsUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.parseMemoDate
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
-import space.be1ski.vibits.shared.feature.habits.view.components.ActivityWeekDataCache
-import space.be1ski.vibits.shared.feature.habits.view.components.rememberActivityWeekData
-import space.be1ski.vibits.shared.feature.habits.view.components.rememberHabitsConfigTimeline
+import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 /**
  * Stats tab with activity charts.
@@ -33,40 +36,129 @@ import space.be1ski.vibits.shared.feature.habits.view.components.rememberHabitsC
 @Composable
 fun StatsScreen(
   state: StatsScreenState,
-  calculateSuccessRate: CalculateSuccessRateUseCase,
-  buildActivityDataUseCase: BuildActivityDataUseCase,
-  cache: ActivityWeekDataCache,
   dateFormatter: DateFormatter,
   habitsState: HabitsState = HabitsState(),
   onHabitsAction: (HabitsAction) -> Unit = {},
   onPostsListExpandedChange: (Boolean) -> Unit = {},
 ) {
-  val derived =
-    rememberStatsScreenDerived(state, habitsState, calculateSuccessRate, buildActivityDataUseCase, cache, dateFormatter)
+  // Trigger recalculation when memos, range, or mode change
+  LaunchedEffect(state.memos, state.range, state.activityMode) {
+    onHabitsAction(HabitsAction.InvalidateCache(state.memos, state.range, state.activityMode))
+  }
+
+  val derived = rememberStatsScreenDerived(state, habitsState, dateFormatter)
   StatsScreenContent(derived, onHabitsAction, onPostsListExpandedChange)
   StatsScreenDialogs(derived, onHabitsAction)
 }
 
-@Suppress("LongMethod")
 @Composable
 private fun rememberStatsScreenDerived(
   state: StatsScreenState,
   habitsState: HabitsState,
-  calculateSuccessRate: CalculateSuccessRateUseCase,
-  buildActivityDataUseCase: BuildActivityDataUseCase,
-  cache: ActivityWeekDataCache,
   dateFormatter: DateFormatter,
 ): StatsScreenDerivedState {
   val memos = state.memos
   val range = state.range
   val activityMode = state.activityMode
-  val habitsConfigTimeline = rememberHabitsConfigTimeline(memos)
-  val currentHabitsConfig =
-    remember(habitsConfigTimeline) {
-      habitsConfigTimeline.lastOrNull()?.habits ?: emptyList()
-    }
   val timeZone = remember { TimeZone.currentSystemDefault() }
   val today = remember { currentLocalDate() }
+
+  val activityData = habitsState.getActivityData(range, activityMode)
+  val weekData = activityData?.weekData ?: ActivityWeekData(emptyList(), 0, 0)
+  val habitsConfigTimeline = activityData?.configTimeline ?: emptyList()
+  val currentHabitsConfig = habitsConfigTimeline.lastOrNull()?.habits ?: emptyList()
+  val successRateData = activityData?.successRate
+  val isLoadingWeekData = habitsState.isDataLoading(range, activityMode)
+
+  val uiFlags = rememberUiFlags(range, activityMode, currentHabitsConfig)
+  val todayData = rememberTodayHabitsData(memos, habitsConfigTimeline, timeZone, today)
+  val postsData = rememberPostsData(memos, range, timeZone, today)
+
+  val selectedDay =
+    remember(weekData.weeks, habitsState.selectedDate) {
+      habitsState.selectedDate?.let { date -> weekData.findDayByDate(date) }
+    }
+
+  val configStartDate =
+    remember(habitsConfigTimeline) {
+      habitsConfigTimeline.firstOrNull()?.date
+    }
+
+  return StatsScreenDerivedState(
+    state = state,
+    habitsState = habitsState,
+    habitsConfigTimeline = habitsConfigTimeline,
+    currentHabitsConfig = currentHabitsConfig,
+    weekData = weekData,
+    isLoadingWeekData = isLoadingWeekData,
+    showWeekdayLegend = uiFlags.showWeekdayLegend,
+    useCompactHeight = uiFlags.useCompactHeight,
+    collapseHabits = uiFlags.collapseHabits,
+    showLast7DaysMatrix = uiFlags.showLast7DaysMatrix,
+    showHabitSections = uiFlags.showHabitSections,
+    selectedDay = selectedDay,
+    todayConfig = todayData.config,
+    todayDay = todayData.day,
+    today = today,
+    timeZone = timeZone,
+    successRateData = successRateData,
+    periodPosts = postsData.periodPosts,
+    todayPostsCount = postsData.todayCount,
+    dateFormatter = dateFormatter,
+    configStartDate = configStartDate,
+  )
+}
+
+private data class UiFlags(
+  val showWeekdayLegend: Boolean,
+  val useCompactHeight: Boolean,
+  val collapseHabits: Boolean,
+  val showLast7DaysMatrix: Boolean,
+  val showHabitSections: Boolean,
+)
+
+@Composable
+private fun rememberUiFlags(
+  range: ActivityRange,
+  activityMode: ActivityMode,
+  currentHabitsConfig: List<HabitConfig>,
+): UiFlags {
+  val showWeekdayLegend =
+    range is ActivityRange.Week ||
+      range is ActivityRange.Month ||
+      range is ActivityRange.Quarter
+  val useCompactHeight = range is ActivityRange.Year || range is ActivityRange.Month
+  val collapseHabits = activityMode == ActivityMode.HABITS && range is ActivityRange.Year
+  val showLast7DaysMatrix =
+    activityMode == ActivityMode.HABITS &&
+      range is ActivityRange.Week &&
+      currentHabitsConfig.isNotEmpty()
+  val showHabitSections =
+    !showLast7DaysMatrix &&
+      activityMode == ActivityMode.HABITS &&
+      currentHabitsConfig.isNotEmpty()
+
+  return UiFlags(
+    showWeekdayLegend = showWeekdayLegend,
+    useCompactHeight = useCompactHeight,
+    collapseHabits = collapseHabits,
+    showLast7DaysMatrix = showLast7DaysMatrix,
+    showHabitSections = showHabitSections,
+  )
+}
+
+private data class TodayHabitsData(
+  val config: List<HabitConfig>,
+  val day: ContributionDay?,
+)
+
+@Composable
+private fun rememberTodayHabitsData(
+  memos: List<Memo>,
+  habitsConfigTimeline: List<HabitsConfigEntry>,
+  timeZone: TimeZone,
+  today: LocalDate,
+): TodayHabitsData {
   val todayMemo =
     remember(memos, timeZone, today) {
       ExtractDailyMemosUseCase.forDate(memos, timeZone, today)
@@ -83,66 +175,34 @@ private fun rememberStatsScreenDerived(
         dailyMemo = todayMemo,
       )
     }
-  val weekDataState = rememberActivityWeekData(memos, range, activityMode, today, buildActivityDataUseCase, cache)
-  val weekData = weekDataState.data
-  val isLoadingWeekData = weekDataState.isLoading
-  val showWeekdayLegend =
-    range is ActivityRange.Week ||
-      range is ActivityRange.Month ||
-      range is ActivityRange.Quarter
-  val useCompactHeight = range is ActivityRange.Year || range is ActivityRange.Month
-  val collapseHabits = activityMode == ActivityMode.HABITS && range is ActivityRange.Year
-  val showLast7DaysMatrix =
-    activityMode == ActivityMode.HABITS &&
-      range is ActivityRange.Week &&
-      currentHabitsConfig.isNotEmpty()
-  val showHabitSections =
-    !showLast7DaysMatrix &&
-      activityMode == ActivityMode.HABITS &&
-      currentHabitsConfig.isNotEmpty()
-  val selectedDay =
-    remember(weekData.weeks, habitsState.selectedDate) {
-      habitsState.selectedDate?.let { date -> weekData.findDayByDate(date) }
-    }
-  val configStartDate =
-    remember(habitsConfigTimeline) {
-      habitsConfigTimeline.firstOrNull()?.date
-    }
-  val successRateData =
-    remember(weekData, range, activityMode, currentHabitsConfig, configStartDate) {
-      if (activityMode == ActivityMode.HABITS && currentHabitsConfig.isNotEmpty()) {
-        calculateSuccessRate(weekData, range, today, configStartDate)
-      } else {
-        null
-      }
-    }
+  return TodayHabitsData(config = todayConfig, day = todayDay)
+}
+
+private data class PostsData(
+  val periodPosts: List<Memo>,
+  val todayCount: Int,
+)
+
+@Composable
+private fun rememberPostsData(
+  memos: List<Memo>,
+  range: ActivityRange,
+  timeZone: TimeZone,
+  today: LocalDate,
+): PostsData {
   val getPeriodPosts = remember { GetPeriodPostsUseCase() }
   val periodPosts =
     remember(memos, range, timeZone) {
       getPeriodPosts(memos, range, timeZone)
     }
-  return StatsScreenDerivedState(
-    state = state,
-    habitsState = habitsState,
-    habitsConfigTimeline = habitsConfigTimeline,
-    currentHabitsConfig = currentHabitsConfig,
-    weekData = weekData,
-    isLoadingWeekData = isLoadingWeekData,
-    showWeekdayLegend = showWeekdayLegend,
-    useCompactHeight = useCompactHeight,
-    collapseHabits = collapseHabits,
-    showLast7DaysMatrix = showLast7DaysMatrix,
-    showHabitSections = showHabitSections,
-    selectedDay = selectedDay,
-    todayConfig = todayConfig,
-    todayDay = todayDay,
-    today = today,
-    timeZone = timeZone,
-    successRateData = successRateData,
-    periodPosts = periodPosts,
-    dateFormatter = dateFormatter,
-    configStartDate = configStartDate,
-  )
+  val todayPostsCount =
+    remember(memos, today, timeZone) {
+      memos.count { memo ->
+        val memoDate = parseMemoDate(memo, timeZone)
+        memoDate == today && !memo.content.contains("#habits")
+      }
+    }
+  return PostsData(periodPosts = periodPosts, todayCount = todayPostsCount)
 }
 
 @Composable

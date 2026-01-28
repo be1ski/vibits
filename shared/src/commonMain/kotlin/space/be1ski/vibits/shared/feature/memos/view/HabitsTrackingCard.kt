@@ -59,16 +59,16 @@ internal fun HabitsTrackingCard(
   val configEntries = ExtractHabitsConfigUseCase(allMemos, timeZone)
   val activeConfig = ExtractHabitsConfigUseCase.forDate(configEntries, trackedDate)?.habits ?: emptyList()
 
-  if (activeConfig.isEmpty()) {
-    // Fallback to plain text if no config found
+  // Extract completed habits from content
+  val completedTags = extractCompletedHabits(memo.content, activeConfig.map { it.tag }.toSet())
+  val completedHabits = activeConfig.filter { it.tag in completedTags }
+
+  // Fallback to plain text if no config found or no habits were tracked
+  if (activeConfig.isEmpty() || completedHabits.isEmpty()) {
     Text(dateFormatter.monthDay(trackedDate), style = MaterialTheme.typography.labelSmall)
     Text(memo.content, style = MaterialTheme.typography.bodyMedium)
     return
   }
-
-  // Extract completed habits from content
-  val completedTags = extractCompletedHabits(memo.content, activeConfig.map { it.tag }.toSet())
-  val completedHabits = activeConfig.filter { it.tag in completedTags }
 
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
     // Date header with progress
@@ -89,16 +89,8 @@ internal fun HabitsTrackingCard(
     }
 
     // Completed habits list
-    if (completedHabits.isNotEmpty()) {
-      completedHabits.forEach { habit ->
-        CompletedHabitRow(habit = habit, demoMode = demoMode)
-      }
-    } else {
-      Text(
-        text = "No habits tracked",
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-      )
+    completedHabits.forEach { habit ->
+      CompletedHabitRow(habit = habit, demoMode = demoMode)
     }
   }
 }

@@ -19,5 +19,11 @@ fun createHabitsFeature(
   FeatureImpl(
     initialState = initialState,
     reducer = habitsReducer,
-    effectHandler = HabitsEffectHandler(dependencies.memosRepository, onRefresh),
+    effectHandler =
+      HabitsEffectHandler(
+        memosRepository = dependencies.memosRepository,
+        buildActivityDataUseCase = dependencies.buildActivityDataUseCase,
+        calculateSuccessRate = dependencies.calculateSuccessRate,
+        onRefresh = onRefresh,
+      ),
   )

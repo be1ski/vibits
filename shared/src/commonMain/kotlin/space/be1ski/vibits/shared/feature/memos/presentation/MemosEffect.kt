@@ -27,4 +27,6 @@ sealed interface MemosEffect {
   data class DeleteMemo(
     val name: String,
   ) : MemosEffect
+
+  data object ClearActivityCache : MemosEffect
 }

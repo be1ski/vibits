@@ -121,7 +121,7 @@ class MemosReducerTest {
       send(MemosAction.ResetForModeChange)
 
       assertState { memos.isEmpty() && !initialDataLoaded && !isLoading }
-      assertNoEffects()
+      assertEffects(MemosEffect.ClearActivityCache)
     }
 
   @Test

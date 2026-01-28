@@ -1,8 +1,13 @@
 package space.be1ski.vibits.shared.feature.habits.presentation
 
+import space.be1ski.vibits.shared.app.domain.model.ActivityMode
+import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
+import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
+import space.be1ski.vibits.shared.feature.habits.domain.model.SuccessRateData
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 /**
@@ -110,5 +115,28 @@ sealed interface HabitsAction {
 
   data class MemoOperationFailed(
     val error: String,
+  ) : HabitsAction
+
+  // Activity data management - NEW: Replaces Compose-level caching
+  data class UpdateActivityData(
+    val range: ActivityRange,
+    val mode: ActivityMode,
+    val weekData: ActivityWeekData,
+    val configTimeline: List<HabitsConfigEntry>,
+    val successRate: SuccessRateData?,
+  ) : HabitsAction
+
+  data class ChangeRange(
+    val range: ActivityRange,
+  ) : HabitsAction
+
+  data class ChangeMode(
+    val mode: ActivityMode,
+  ) : HabitsAction
+
+  data class InvalidateCache(
+    val memos: List<Memo>,
+    val range: ActivityRange,
+    val mode: ActivityMode,
   ) : HabitsAction
 }

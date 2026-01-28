@@ -82,6 +82,11 @@ class MemosEffectHandler(
               emit(MemosAction.OperationFailed(error.message ?: "Failed to delete memo"))
             }
         }
+
+        is MemosEffect.ClearActivityCache -> {
+          // Cache clearing is now handled by StatsScreen watching memos and dispatching InvalidateCache
+          Log.d(TAG, "Activity cache clear is now handled by UI layer")
+        }
       }
     }
 }
