@@ -438,7 +438,6 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
             activityDataCache = emptyMap(),
             isRecalculating = emptySet(),
             needsCacheRefresh = true,
-            isInitialLoading = true,
           )
         }
       }

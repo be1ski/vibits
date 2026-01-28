@@ -46,7 +46,6 @@ class HabitsCacheTest {
     // Then: cache should be cleared and refresh flagged
     assertTrue(newState.activityDataCache.isEmpty(), "Cache should be cleared on mode switch")
     assertTrue(newState.needsCacheRefresh, "needsCacheRefresh should be true")
-    assertTrue(newState.isInitialLoading, "isInitialLoading should be true")
   }
 
   @Test
