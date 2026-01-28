@@ -20,6 +20,7 @@ import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccess
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.EarliestMemoDateUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractDailyMemosUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.quarterIndex
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.startOfWeek
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
@@ -212,15 +213,15 @@ class HabitsEffectHandler(
     endDate: LocalDate,
   ): List<ActivityRange.Quarter> {
     val quarters = mutableListOf<ActivityRange.Quarter>()
-    val startQuarter = startDate.month.ordinal / 3
-    val endQuarter = endDate.month.ordinal / 3
+    val startQuarter = quarterIndex(startDate)
+    val endQuarter = quarterIndex(endDate)
     var yearCursor = startDate.year
     var quarterCursor = startQuarter
     while (yearCursor < endDate.year || (yearCursor == endDate.year && quarterCursor <= endQuarter)) {
       quarters.add(ActivityRange.Quarter(yearCursor, quarterCursor))
       quarterCursor++
-      if (quarterCursor > 3) {
-        quarterCursor = 0
+      if (quarterCursor > 4) {
+        quarterCursor = 1
         yearCursor++
       }
     }
