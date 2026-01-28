@@ -2,7 +2,11 @@ package space.be1ski.vibits.shared.feature.habits.presentation
 
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDate
+import space.be1ski.vibits.shared.app.domain.model.ActivityMode
+import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.test.FakeMemosRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -117,6 +121,65 @@ class HabitsEffectHandlerTest {
       handler(HabitsEffect.RefreshMemos).toList()
 
       assertTrue(refreshCalled)
+    }
+
+  @Test
+  fun `when RecalculateActivityData effect then emits UpdateActivityData`() =
+    runTest {
+      val handler = createHandler()
+      val memo = Memo(name = "memos/1", content = "#habits/exercise")
+      val memos = listOf(memo)
+      val range = ActivityRange.Week(LocalDate(2026, 1, 20))
+      val mode = ActivityMode.HABITS
+      val appMode = AppMode.ONLINE
+
+      val actions =
+        handler(
+          HabitsEffect.RecalculateActivityData(
+            range = range,
+            mode = mode,
+            appMode = appMode,
+            memos = memos,
+          ),
+        ).toList()
+
+      assertEquals(1, actions.size)
+      val action = actions[0] as HabitsAction.UpdateActivityData
+      assertEquals(range, action.range)
+      assertEquals(mode, action.mode)
+      assertEquals(appMode, action.appMode)
+    }
+
+  @Test
+  fun `when RunPrewarmAllRanges effect then emits UpdateActivityData for all ranges and modes`() =
+    runTest {
+      val handler = createHandler()
+      val memo =
+        Memo(
+          name = "memos/1",
+          content = "#habits/exercise",
+          createTime = kotlinx.datetime.Instant.parse("2026-01-20T10:00:00Z"),
+        )
+      val memos = listOf(memo)
+      val appMode = AppMode.ONLINE
+
+      val actions =
+        handler(
+          HabitsEffect.RunPrewarmAllRanges(
+            memos = memos,
+            appMode = appMode,
+          ),
+        ).toList()
+
+      val updateActions = actions.filterIsInstance<HabitsAction.UpdateActivityData>()
+      val completedActions = actions.filterIsInstance<HabitsAction.PrewarmCompleted>()
+
+      assertTrue(updateActions.isNotEmpty(), "Should emit UpdateActivityData actions")
+      assertEquals(1, completedActions.size, "Should emit PrewarmCompleted once")
+      assertTrue(
+        updateActions.all { it.appMode == appMode },
+        "All actions should have correct appMode",
+      )
     }
 
   private fun createHandler(
