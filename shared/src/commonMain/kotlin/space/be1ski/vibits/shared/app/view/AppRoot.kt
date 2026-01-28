@@ -43,9 +43,11 @@ fun AppRoot(dependencies: AppDependencies) {
   var featuresVersion by remember { mutableIntStateOf(0) }
   val darkTheme = resolveDarkTheme(appTheme)
   val modeSelectionFeature =
-    rememberModeSelectionFeature(dependencies) {
-      featuresVersion++
-      appMode = it
+    key(featuresVersion) {
+      rememberModeSelectionFeature(dependencies) {
+        featuresVersion++
+        appMode = it
+      }
     }
   val features = rememberAppFeatures(featuresVersion)
 
@@ -55,7 +57,6 @@ fun AppRoot(dependencies: AppDependencies) {
         AppMode.NOT_SELECTED -> ModeSelectionScreen(feature = modeSelectionFeature)
         AppMode.ONLINE, AppMode.OFFLINE, AppMode.DEMO -> {
           AppWithLoadingScreen(
-            dependencies = dependencies,
             features = features,
             appTheme = appTheme,
             appLanguage = appLanguage,
@@ -81,7 +82,6 @@ fun AppRoot(dependencies: AppDependencies) {
 
 @Composable
 private fun AppWithLoadingScreen(
-  dependencies: AppDependencies,
   features: AppFeatures,
   appTheme: AppTheme,
   appLanguage: AppLanguage,
@@ -96,7 +96,6 @@ private fun AppWithLoadingScreen(
     LoadingScreen()
   } else {
     VibitsApp(
-      dependencies = dependencies,
       features = features,
       currentTheme = appTheme,
       currentLanguage = appLanguage,

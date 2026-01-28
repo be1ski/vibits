@@ -8,6 +8,7 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
  */
 data class MemosState(
   val memos: List<Memo> = emptyList(),
+  val memosRevision: Int = 0,
   val isLoading: Boolean = false,
   val errorMessage: String? = null,
   val credentialsMode: Boolean = false,

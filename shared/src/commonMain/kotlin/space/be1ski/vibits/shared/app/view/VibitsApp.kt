@@ -3,7 +3,6 @@ package space.be1ski.vibits.shared.app.view
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import space.be1ski.vibits.shared.app.di.AppDependencies
 import space.be1ski.vibits.shared.app.presentation.AppFeatures
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
@@ -11,7 +10,6 @@ import space.be1ski.vibits.shared.feature.settings.view.SettingsDialog
 
 @Composable
 internal fun VibitsApp(
-  dependencies: AppDependencies,
   features: AppFeatures,
   currentTheme: AppTheme,
   currentLanguage: AppLanguage,
@@ -38,7 +36,6 @@ internal fun VibitsApp(
 
   VibitsAppScaffold(
     features = features,
-    dependencies = dependencies,
     appState = appState,
     memosState = memosState,
     habitsState = habitsState,

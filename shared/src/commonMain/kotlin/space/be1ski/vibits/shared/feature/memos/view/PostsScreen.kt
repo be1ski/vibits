@@ -4,12 +4,12 @@ import androidx.compose.runtime.Composable
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
+import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
 import space.be1ski.vibits.shared.feature.habits.view.StatsScreen
 import space.be1ski.vibits.shared.feature.habits.view.StatsScreenState
-import space.be1ski.vibits.shared.feature.habits.view.components.ActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
 /**
  * Posts stats tab showing activity charts.
@@ -18,11 +18,11 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 fun PostsScreen(
   memos: List<Memo>,
   range: ActivityRange,
+  appMode: AppMode,
   demoMode: Boolean,
-  calculateSuccessRate: CalculateSuccessRateUseCase,
-  buildActivityDataUseCase: BuildActivityDataUseCase,
-  cache: ActivityWeekDataCache,
   dateFormatter: DateFormatter,
+  habitsState: HabitsState = HabitsState(),
+  onHabitsAction: (HabitsAction) -> Unit = {},
   postsListExpanded: Boolean = false,
   onPostsListExpandedChange: (Boolean) -> Unit = {},
 ) {
@@ -37,10 +37,10 @@ fun PostsScreen(
         demoMode = demoMode,
         postsListExpanded = postsListExpanded,
       ),
-    calculateSuccessRate = calculateSuccessRate,
-    buildActivityDataUseCase = buildActivityDataUseCase,
-    cache = cache,
+    appMode = appMode,
     dateFormatter = dateFormatter,
+    habitsState = habitsState,
+    onHabitsAction = onHabitsAction,
     onPostsListExpandedChange = onPostsListExpandedChange,
   )
 }

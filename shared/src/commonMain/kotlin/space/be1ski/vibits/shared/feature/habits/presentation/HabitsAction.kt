@@ -1,9 +1,15 @@
 package space.be1ski.vibits.shared.feature.habits.presentation
 
+import space.be1ski.vibits.shared.app.domain.model.ActivityMode
+import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
+import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
+import space.be1ski.vibits.shared.feature.habits.domain.model.SuccessRateData
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
 /**
  * Actions for the Habits feature.
@@ -110,5 +116,31 @@ sealed interface HabitsAction {
 
   data class MemoOperationFailed(
     val error: String,
+  ) : HabitsAction
+
+  // Cache management
+  data class RequestPrewarmAllRanges(
+    val memos: List<Memo>,
+    val appMode: AppMode,
+  ) : HabitsAction
+
+  data class UpdateActivityData(
+    val range: ActivityRange,
+    val mode: ActivityMode,
+    val appMode: AppMode,
+    val weekData: ActivityWeekData,
+    val configTimeline: List<HabitsConfigEntry>,
+    val successRate: SuccessRateData?,
+  ) : HabitsAction
+
+  data object PrewarmCompleted : HabitsAction
+
+  data object InvalidateAllCache : HabitsAction
+
+  data class InvalidateCache(
+    val range: ActivityRange,
+    val mode: ActivityMode,
+    val appMode: AppMode,
+    val memos: List<Memo>,
   ) : HabitsAction
 }

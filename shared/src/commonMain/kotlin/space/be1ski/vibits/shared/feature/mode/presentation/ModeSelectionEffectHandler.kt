@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.flow
 import space.be1ski.vibits.shared.core.elm.EffectHandler
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
+import space.be1ski.vibits.shared.feature.auth.domain.usecase.InitializeCredentialsFromEnvUseCase
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.vibits.shared.feature.memos.data.ConnectionTester
@@ -17,7 +18,7 @@ private const val LOG_URL_MAX_LENGTH = 20
 
 class ModeSelectionEffectHandler(
   private val connectionTester: ConnectionTester,
-  private val initializeCredentialsFromEnv: space.be1ski.vibits.shared.feature.auth.domain.usecase.InitializeCredentialsFromEnvUseCase,
+  private val initializeCredentialsFromEnv: InitializeCredentialsFromEnvUseCase,
   private val loadCredentials: LoadCredentialsUseCase,
   private val saveCredentials: SaveCredentialsUseCase,
   private val saveAppMode: SaveAppModeUseCase,

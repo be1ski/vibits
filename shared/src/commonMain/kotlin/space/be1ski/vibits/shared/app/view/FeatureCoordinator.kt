@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.presentation.AppAction
 import space.be1ski.vibits.shared.app.presentation.AppFeatures
+import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
@@ -28,13 +29,14 @@ internal fun FeatureCoordinator(
 ) {
   val dispatchApp = features.app::send
   val dispatchMemos = features.memos::send
+  val dispatchHabits = features.habits::send
 
   // Cross-feature coordination via Settings notifications
   LaunchedEffect(features.settings) {
     features.settings.effects.collect { effect ->
       when (effect) {
         is SettingsEffect.Notification ->
-          handleNotification(effect, dispatchApp, dispatchMemos, onResetApp, onThemeChanged, onLanguageChanged)
+          handleNotification(effect, dispatchApp, dispatchMemos, dispatchHabits, onResetApp, onThemeChanged, onLanguageChanged)
         is SettingsEffect.Command -> Unit
       }
     }
@@ -76,6 +78,7 @@ private fun handleNotification(
   effect: SettingsEffect.Notification,
   dispatchApp: (AppAction) -> Unit,
   dispatchMemos: (MemosAction) -> Unit,
+  dispatchHabits: (HabitsAction) -> Unit,
   onResetApp: () -> Unit,
   onThemeChanged: (AppTheme) -> Unit,
   onLanguageChanged: (AppLanguage) -> Unit,
@@ -85,6 +88,7 @@ private fun handleNotification(
       dispatchApp(AppAction.SetAppMode(effect.newMode))
       dispatchMemos(MemosAction.ResetForModeChange)
       dispatchMemos(MemosAction.LoadMemos)
+      dispatchHabits(HabitsAction.InvalidateAllCache)
     }
     is SettingsEffect.Notification.ResetCompleted -> onResetApp()
     is SettingsEffect.Notification.CredentialsSaved -> {

@@ -16,17 +16,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.app.di.AppDependencies
+import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.app.presentation.AppFeatures
+import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
@@ -34,20 +39,23 @@ import space.be1ski.vibits.shared.core.ui.date.rememberDateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.EarliestMemoDateUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.IsActivityRangeBeforeUseCase
+import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
+import space.be1ski.vibits.shared.feature.habits.presentation.getActivityData
 import space.be1ski.vibits.shared.feature.habits.view.components.rememberHabitsConfigTimeline
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_create_memo
 import space.be1ski.vibits.shared.generated.action_track_today
 
+@Suppress("LongMethod")
 @Composable
 internal fun VibitsAppScaffold(
   features: AppFeatures,
-  dependencies: AppDependencies,
   appState: AppState,
   memosState: MemosState,
   habitsState: HabitsState,
@@ -75,6 +83,40 @@ internal fun VibitsAppScaffold(
       todayData = todayData,
     )
 
+  // Prewarm trigger: single source of truth for cache warming
+  var prevAppMode by remember { mutableStateOf<AppMode?>(null) }
+  var prevMemosRevision by remember { mutableStateOf(0) }
+
+  LaunchedEffect(appState.appMode) {
+    if (prevAppMode != null && prevAppMode != appState.appMode) {
+      features.habits.send(HabitsAction.InvalidateAllCache)
+      // Reset memos revision to prevent prewarming with old mode's data
+      prevMemosRevision = 0
+    }
+    prevAppMode = appState.appMode
+  }
+
+  LaunchedEffect(
+    appState.appMode,
+    memosState.memosRevision,
+    habitsState.needsCacheRefresh,
+    habitsState.isInitialLoading,
+  ) {
+    val revisionChanged = memosState.memosRevision != prevMemosRevision && prevMemosRevision != 0
+    val shouldPrewarm =
+      !habitsState.isInitialLoading &&
+        (habitsState.needsCacheRefresh || habitsState.activityDataCache.isEmpty() || revisionChanged)
+    if (memosState.memos.isNotEmpty() && shouldPrewarm) {
+      prevMemosRevision = memosState.memosRevision
+      features.habits.send(
+        HabitsAction.RequestPrewarmAllRanges(
+          memos = memosState.memos,
+          appMode = appState.appMode,
+        ),
+      )
+    }
+  }
+
   Scaffold(
     floatingActionButton = { AppFab(appState, todayData, callbacks) },
     bottomBar = { MemosBottomNavigation(appState, features.app::send, callbacks.onClearSelection, callbacks.onFeedScrollToTop) },
@@ -82,7 +124,6 @@ internal fun VibitsAppScaffold(
     ScaffoldContent(
       padding = padding,
       features = features,
-      dependencies = dependencies,
       appState = appState,
       memosState = memosState,
       habitsState = habitsState,
@@ -125,7 +166,6 @@ private fun AppFab(
 private fun ScaffoldContent(
   padding: PaddingValues,
   features: AppFeatures,
-  dependencies: AppDependencies,
   appState: AppState,
   memosState: MemosState,
   habitsState: HabitsState,
@@ -161,7 +201,7 @@ private fun ScaffoldContent(
     memosState.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
 
     if (appState.selectedScreen != Screen.FEED) {
-      val successRate = rememberSuccessRateIfNeeded(appState, habitsTimeline, memosState.memos, activityRange, dependencies)
+      val successRate = rememberSuccessRateIfNeeded(appState, habitsTimeline, activityRange, habitsState)
       TimeRangeControls(
         selectedTab = selectedTab,
         rangeLabel = formatRangeLabel(activityRange, dateFormatter),
@@ -182,9 +222,6 @@ private fun ScaffoldContent(
       habitsState = habitsState,
       onHabitsAction = features.habits::send,
       onAppAction = features.app::send,
-      calculateSuccessRate = dependencies.calculateSuccessRate,
-      buildActivityDataUseCase = dependencies.buildActivityData,
-      cache = dependencies.activityWeekDataCache,
       dateFormatter = dateFormatter,
       dispatchMemos = features.memos::send,
       feedListState = feedListState,
@@ -196,21 +233,21 @@ private fun ScaffoldContent(
 private fun rememberSuccessRateIfNeeded(
   appState: AppState,
   habitsTimeline: List<HabitsConfigEntry>,
-  memos: List<Memo>,
   activityRange: ActivityRange,
-  dependencies: AppDependencies,
+  habitsState: HabitsState,
 ): Float? {
   val isHabitsScreen = appState.selectedScreen == Screen.HABITS
   val hasHabits = remember(habitsTimeline) { habitsTimeline.lastOrNull()?.habits?.isNotEmpty() == true }
   val shouldCalculate = isHabitsScreen && hasHabits
   return if (shouldCalculate) {
-    rememberSuccessRate(
-      memos,
-      activityRange,
-      dependencies.calculateSuccessRate,
-      dependencies.buildActivityData,
-      dependencies.activityWeekDataCache,
-    )
+    // Read from TEA cache
+    val cachedData =
+      habitsState.getActivityData(
+        activityRange,
+        ActivityMode.HABITS,
+        appState.appMode,
+      )
+    cachedData?.successRate?.rate
   } else {
     null
   }
