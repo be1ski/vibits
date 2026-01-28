@@ -16,8 +16,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -34,6 +38,7 @@ import space.be1ski.vibits.shared.core.ui.date.rememberDateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.EarliestMemoDateUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.IsActivityRangeBeforeUseCase
+import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
 import space.be1ski.vibits.shared.feature.habits.view.components.rememberHabitsConfigTimeline
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
@@ -44,6 +49,7 @@ import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_create_memo
 import space.be1ski.vibits.shared.generated.action_track_today
 
+@Suppress("LongMethod")
 @Composable
 internal fun VibitsAppScaffold(
   features: AppFeatures,
@@ -74,6 +80,34 @@ internal fun VibitsAppScaffold(
       scope = scope,
       todayData = todayData,
     )
+
+  // Prewarm trigger: single source of truth for cache warming
+  var prevAppMode by remember { mutableStateOf<space.be1ski.vibits.shared.feature.mode.domain.model.AppMode?>(null) }
+  LaunchedEffect(appState.appMode) {
+    if (prevAppMode != null && prevAppMode != appState.appMode) {
+      features.habits.send(HabitsAction.InvalidateAllCache)
+    }
+    prevAppMode = appState.appMode
+  }
+
+  LaunchedEffect(
+    appState.appMode,
+    memosState.memosRevision,
+    habitsState.needsCacheRefresh,
+    habitsState.isInitialLoading,
+  ) {
+    val shouldPrewarm =
+      !habitsState.isInitialLoading &&
+        (habitsState.needsCacheRefresh || habitsState.activityDataCache.isEmpty())
+    if (memosState.memos.isNotEmpty() && shouldPrewarm) {
+      features.habits.send(
+        HabitsAction.RequestPrewarmAllRanges(
+          memos = memosState.memos,
+          appMode = appState.appMode,
+        ),
+      )
+    }
+  }
 
   Scaffold(
     floatingActionButton = { AppFab(appState, todayData, callbacks) },
