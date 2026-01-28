@@ -46,7 +46,14 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
       }
 
       is MemosAction.ResetForModeChange -> {
-        state { copy(memos = emptyList(), initialDataLoaded = false, isLoading = false) }
+        state {
+          copy(
+            memos = emptyList(),
+            memosRevision = memosRevision + 1,
+            initialDataLoaded = false,
+            isLoading = false,
+          )
+        }
       }
 
       // Filtering
@@ -62,7 +69,13 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
 
         if (action.memos.isNotEmpty()) {
           // Cache has data, use it
-          state { copy(memos = sortedMemos(action.memos), initialDataLoaded = true) }
+          state {
+            copy(
+              memos = sortedMemos(action.memos),
+              memosRevision = memosRevision + 1,
+              initialDataLoaded = true,
+            )
+          }
         } else if (!state.isOfflineMode) {
           // Cache is empty and we're online - load from server immediately
           state { copy(isLoading = true) }
@@ -77,6 +90,7 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
         state {
           copy(
             memos = sortedMemos(action.memos),
+            memosRevision = memosRevision + 1,
             isLoading = false,
             errorMessage = null,
             initialDataLoaded = true,
@@ -102,7 +116,7 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
 
       is MemosAction.MemoCreated -> {
         val updatedMemos = sortedMemos(state.memos + action.memo)
-        state { copy(memos = updatedMemos, isLoading = false) }
+        state { copy(memos = updatedMemos, memosRevision = memosRevision + 1, isLoading = false) }
       }
 
       is MemosAction.MemoUpdated -> {
@@ -112,12 +126,12 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
               if (memo.name == action.memo.name) action.memo else memo
             },
           )
-        state { copy(memos = updatedMemos, isLoading = false) }
+        state { copy(memos = updatedMemos, memosRevision = memosRevision + 1, isLoading = false) }
       }
 
       is MemosAction.MemoDeleted -> {
         val updatedMemos = sortedMemos(state.memos.filterNot { it.name == action.name })
-        state { copy(memos = updatedMemos, isLoading = false) }
+        state { copy(memos = updatedMemos, memosRevision = memosRevision + 1, isLoading = false) }
       }
 
       is MemosAction.OperationFailed -> {

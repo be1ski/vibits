@@ -53,6 +53,17 @@ class HabitsEffectHandler(
           Log.d(TAG, "Refreshing memos")
           onRefresh()
         }
+
+        is HabitsEffect.RunPrewarmAllRanges -> {
+          // Stub: Will be implemented in P2
+          Log.d(TAG, "Prewarm requested (stub implementation)")
+          emit(HabitsAction.PrewarmCompleted)
+        }
+
+        is HabitsEffect.RecalculateActivityData -> {
+          // Stub: Will be implemented in P1
+          Log.d(TAG, "Recalculate requested for ${effect.range} (stub implementation)")
+        }
       }
     }
 }

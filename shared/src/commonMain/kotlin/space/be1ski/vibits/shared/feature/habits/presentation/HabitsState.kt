@@ -69,6 +69,11 @@ data class HabitsState(
   val activeSelectionId: String? = null,
   // Loading state
   val isLoading: Boolean = false,
+  // Cache state
+  val activityDataCache: Map<ActivityCacheKey, CachedActivityData> = emptyMap(),
+  val isRecalculating: Set<ActivityCacheKey> = emptySet(),
+  val needsCacheRefresh: Boolean = false,
+  val isInitialLoading: Boolean = false,
 ) {
   val isEditorOpen: Boolean get() = editorDay != null
   val isEditing: Boolean get() = editorExisting != null
