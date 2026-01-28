@@ -30,6 +30,7 @@ import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.app.presentation.AppFeatures
+import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
@@ -98,7 +99,19 @@ internal fun VibitsAppScaffold(
     val shouldPrewarm =
       !habitsState.isInitialLoading &&
         (habitsState.needsCacheRefresh || habitsState.activityDataCache.isEmpty())
+    Log.d(
+      "VibitsAppScaffold",
+      "[CACHE-DEBUG] LaunchedEffect triggered: " +
+        "appMode=${appState.appMode}, " +
+        "memosRevision=${memosState.memosRevision}, " +
+        "needsCacheRefresh=${habitsState.needsCacheRefresh}, " +
+        "isInitialLoading=${habitsState.isInitialLoading}, " +
+        "cacheSize=${habitsState.activityDataCache.size}, " +
+        "memosSize=${memosState.memos.size}, " +
+        "shouldPrewarm=$shouldPrewarm",
+    )
     if (memosState.memos.isNotEmpty() && shouldPrewarm) {
+      Log.d("VibitsAppScaffold", "[CACHE-DEBUG] Sending RequestPrewarmAllRanges with ${memosState.memos.size} memos")
       features.habits.send(
         HabitsAction.RequestPrewarmAllRanges(
           memos = memosState.memos,
