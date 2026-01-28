@@ -419,7 +419,6 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
         val key = ActivityCacheKey(action.range, action.mode)
         state {
           copy(
-            activityDataCache = emptyMap(),
             isRecalculating = setOf(key),
             lastRequestedRange = action.range,
             lastRequestedMode = action.mode,

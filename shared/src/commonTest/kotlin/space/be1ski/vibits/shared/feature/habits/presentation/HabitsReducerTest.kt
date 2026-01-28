@@ -813,7 +813,7 @@ class HabitsReducerTest {
     }
 
   @Test
-  fun `when InvalidateCache then clears cache and emits RecalculateActivityData`() =
+  fun `when InvalidateCache then marks data for recalculation and emits RecalculateActivityData`() =
     habitsReducer.test(
       HabitsState(
         activityDataCache =
@@ -830,7 +830,7 @@ class HabitsReducerTest {
       send(HabitsAction.InvalidateCache(memos, range, mode))
 
       assertState {
-        activityDataCache.isEmpty() &&
+        activityDataCache.isNotEmpty() &&
           isRecalculating.contains(ActivityCacheKey(range, mode)) &&
           lastRequestedRange == range &&
           lastRequestedMode == mode
