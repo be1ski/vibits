@@ -8,6 +8,10 @@ import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.vibits.shared.feature.memos.data.ConnectionTester
+import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemosFileDto
+import space.be1ski.vibits.shared.feature.memos.data.platform.OfflineMemoStorage
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
+import space.be1ski.vibits.shared.feature.mode.domain.usecase.LoadAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveLanguageUseCase
@@ -15,9 +19,12 @@ import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveThemeUseCa
 
 private const val TAG = "SettingsEffect"
 
+@Suppress("LongParameterList")
 class SettingsEffectHandler(
   private val connectionTester: ConnectionTester,
   private val switchAppMode: SwitchAppModeUseCase,
+  private val loadAppMode: LoadAppModeUseCase,
+  private val offlineMemoStorage: OfflineMemoStorage,
   private val saveCredentials: SaveCredentialsUseCase,
   private val resetApp: ResetAppUseCase,
   private val saveLanguage: SaveLanguageUseCase,
@@ -49,7 +56,15 @@ class SettingsEffectHandler(
 
   private fun handleSwitchMode(effect: SettingsEffect.Command.SwitchMode): Flow<SettingsAction> =
     flow {
-      Log.i(TAG, "Switching mode to ${effect.mode}")
+      val currentMode = loadAppMode()
+      Log.i(TAG, "Switching mode from $currentMode to ${effect.mode}")
+
+      // Clear demo data when switching from Demo to Offline
+      if (currentMode == AppMode.DEMO && effect.mode == AppMode.OFFLINE) {
+        Log.i(TAG, "Clearing demo data for fresh Offline start")
+        offlineMemoStorage.save(OfflineMemosFileDto(emptyList()))
+      }
+
       switchAppMode(effect.mode)
       emit(SettingsAction.ModeSwitched)
     }

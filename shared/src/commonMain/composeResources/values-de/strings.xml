@@ -8,9 +8,15 @@
     <string name="action_copied">Kopiert</string>
     <string name="action_configure_habits">Gewohnheiten konfigurieren</string>
     <string name="action_create">Erstellen</string>
+    <string name="action_create_first_habit">Erste Gewohnheit erstellen</string>
     <string name="action_create_memo">Notiz erstellen</string>
+    <string name="action_continue">Weiter</string>
     <string name="action_delete">Löschen</string>
+    <string name="action_add_first_habit">Fügen Sie Ihre erste Gewohnheit hinzu</string>
+    <string name="action_go_to_dashboard">Zum Dashboard</string>
     <string name="action_hide_details">Details ausblenden</string>
+    <string name="action_mark_first_checkin">Erste Eintragung markieren</string>
+    <string name="action_maybe_later">Vielleicht später</string>
     <string name="action_next">Weiter</string>
     <string name="action_previous">Zurück</string>
     <string name="action_refresh">Aktualisieren</string>
@@ -18,6 +24,7 @@
     <string name="action_reset_app">App zurücksetzen</string>
     <string name="action_save">Speichern</string>
     <string name="action_show_details">Details anzeigen</string>
+    <string name="action_start_tracking">Tracking starten</string>
     <string name="action_track">Erfassen</string>
     <string name="action_track_today">Heute erfassen</string>
     <string name="action_update">Aktualisieren</string>
@@ -76,7 +83,7 @@
     <!-- Hints -->
     <string name="hint_add_habits_config">Fügen Sie eine Gewohnheits-Konfigurationsnotiz hinzu, um mit dem Tracking zu beginnen.</string>
     <string name="hint_base_url">https://memos.example.com</string>
-    <string name="hint_habit_name">Gewohnheitsname</string>
+    <string name="hint_habit_name">z.B. Morgensport</string>
     <string name="hint_habits_config">Sport | #habits/gym\nLesen | #habits/reading</string>
     <string name="hint_write_memo">Notiz schreiben...</string>
 
@@ -89,6 +96,12 @@
     <string name="label_demo_mode">Demo-Modus</string>
     <string name="label_environment">Umgebung</string>
     <string name="label_habits_config">Gewohnheits-Konfiguration</string>
+    <string name="label_habit_name">Gewohnheitsname</string>
+    <string name="label_habit_preset_custom">Eigene erstellen</string>
+    <string name="label_habit_preset_read">10 Minuten lesen</string>
+    <string name="label_habit_preset_stretch">Dehnen</string>
+    <string name="label_habit_preset_walk">Spaziergang machen</string>
+    <string name="label_habit_preset_water">Wasser trinken</string>
     <string name="label_language">Sprache</string>
     <string name="label_memos_db">Notizen-DB</string>
     <string name="label_post_filter">Filter</string>
@@ -115,7 +128,10 @@
     <string name="msg_delete_config_warning">Sind Sie sicher, dass Sie diese Konfiguration löschen möchten? Der Konfigurationsbeitrag wird dauerhaft aus Ihren Notizen entfernt.</string>
     <string name="msg_delete_day_confirm">Keine Gewohnheiten ausgewählt. Der Tageseintrag wird gelöscht.</string>
     <string name="msg_delete_day_warning">Sind Sie sicher, dass Sie den Eintrag für diesen Tag löschen möchten? Der Tracking-Beitrag wird dauerhaft aus Ihren Notizen entfernt.</string>
+    <string name="msg_empty_state_no_habits">Erstellen Sie eine, um offline mit dem Tracking zu beginnen.</string>
     <string name="msg_fill_all_fields">Bitte füllen Sie alle Felder aus</string>
+    <string name="msg_habit_name_required">Gewohnheitsname ist erforderlich</string>
+    <string name="msg_habit_setup">Geben Sie Ihrer Gewohnheit einen aussagekräftigen Namen.</string>
     <string name="msg_no_habits_yet">Noch keine Gewohnheiten konfiguriert.</string>
     <string name="msg_no_logs">Noch keine Protokolle</string>
     <string name="msg_no_memos_yet">Keine Notizen in diesem Zeitraum.</string>
@@ -123,6 +139,8 @@
     <string name="msg_select_habit">Wählen Sie mindestens eine Gewohnheit aus.</string>
     <string name="msg_mark_done_confirm">"%1$s" als erledigt für %2$s markieren?</string>
     <string name="msg_mark_not_done_confirm">Erledigung von "%1$s" am %2$s entfernen?</string>
+    <string name="msg_offline_onboarding_success">Alles bereit. Erfassen Sie heute Ihren ersten Check-in.</string>
+    <string name="msg_offline_onboarding_welcome">Verfolgen Sie Gewohnheiten lokal auf Ihrem Gerät. Kein Account erforderlich.</string>
     <string name="msg_restart_required">Neustart erforderlich, um die Sprachänderung anzuwenden</string>
 
     <!-- Language selection -->
@@ -187,6 +205,7 @@
     <string name="time_years">Jahre</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">Wählen Sie eine Startgewohnheit</string>
     <string name="title_create_day">Tag erstellen</string>
     <string name="title_delete_config">Konfiguration löschen?</string>
     <string name="title_delete_day">Tag löschen?</string>
@@ -194,8 +213,12 @@
     <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">Tag bearbeiten</string>
     <string name="title_edit_memo">Notiz bearbeiten</string>
+    <string name="title_empty_state_no_habits">Noch keine Gewohnheiten</string>
+    <string name="title_habit_setup">Richten Sie Ihre Gewohnheit ein</string>
     <string name="title_logs">Protokolle (%1$d)</string>
     <string name="title_new_memo">Neue Notiz</string>
+    <string name="title_offline_onboarding_success">Großartige Arbeit!</string>
+    <string name="title_offline_onboarding_welcome">Offline-Modus bereit</string>
     <string name="title_mark_done">Als erledigt markieren?</string>
     <string name="title_mark_not_done">Als nicht erledigt markieren?</string>
     <string name="title_update_day">Tag aktualisieren</string>

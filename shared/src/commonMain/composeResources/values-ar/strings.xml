@@ -8,9 +8,15 @@
     <string name="action_copied">تم النسخ</string>
     <string name="action_configure_habits">تكوين العادات</string>
     <string name="action_create">إنشاء</string>
+    <string name="action_create_first_habit">إنشاء أول عادة</string>
     <string name="action_create_memo">إنشاء مذكرة</string>
+    <string name="action_continue">متابعة</string>
     <string name="action_delete">حذف</string>
+    <string name="action_add_first_habit">إضافة أول عادة</string>
+    <string name="action_go_to_dashboard">الانتقال إلى لوحة التحكم</string>
     <string name="action_hide_details">إخفاء التفاصيل</string>
+    <string name="action_mark_first_checkin">تسجيل أول علامة</string>
+    <string name="action_maybe_later">ربما لاحقاً</string>
     <string name="action_next">التالي</string>
     <string name="action_previous">السابق</string>
     <string name="action_refresh">تحديث</string>
@@ -18,6 +24,7 @@
     <string name="action_reset_app">إعادة تعيين التطبيق</string>
     <string name="action_save">حفظ</string>
     <string name="action_show_details">عرض التفاصيل</string>
+    <string name="action_start_tracking">بدء التتبع</string>
     <string name="action_track">تتبع</string>
     <string name="action_track_today">تتبع اليوم</string>
     <string name="action_update">تحديث</string>
@@ -76,7 +83,7 @@
     <!-- Hints -->
     <string name="hint_add_habits_config">أضف مذكرة تكوين العادات للبدء في التتبع.</string>
     <string name="hint_base_url">https://memos.example.com</string>
-    <string name="hint_habit_name">اسم العادة</string>
+    <string name="hint_habit_name">مثال: تمرين الصباح</string>
     <string name="hint_habits_config">رياضة | #habits/gym\nقراءة | #habits/reading</string>
     <string name="hint_write_memo">اكتب مذكرة...</string>
 
@@ -89,6 +96,12 @@
     <string name="label_demo_mode">الوضع التجريبي</string>
     <string name="label_environment">البيئة</string>
     <string name="label_habits_config">تكوين العادات</string>
+    <string name="label_habit_name">اسم العادة</string>
+    <string name="label_habit_preset_custom">إنشاء مخصص</string>
+    <string name="label_habit_preset_read">القراءة 10 دقائق</string>
+    <string name="label_habit_preset_stretch">تمارين الإطالة</string>
+    <string name="label_habit_preset_walk">المشي</string>
+    <string name="label_habit_preset_water">شرب الماء</string>
     <string name="label_language">اللغة</string>
     <string name="label_memos_db">قاعدة بيانات المذكرات</string>
     <string name="label_post_filter">تصفية</string>
@@ -115,7 +128,10 @@
     <string name="msg_delete_config_warning">هل أنت متأكد من حذف هذه الإعدادات؟ سيتم حذف منشور التكوين من مذكراتك نهائيًا.</string>
     <string name="msg_delete_day_confirm">لم يتم اختيار عادات. سيتم حذف إدخال اليوم.</string>
     <string name="msg_delete_day_warning">هل أنت متأكد من رغبتك في حذف إدخال هذا اليوم؟ سيؤدي هذا إلى إزالة منشور التتبع من مذكراتك بشكل دائم.</string>
+    <string name="msg_empty_state_no_habits">أنشئ عادة لبدء التتبع في وضع عدم الاتصال.</string>
     <string name="msg_fill_all_fields">يرجى ملء جميع الحقول</string>
+    <string name="msg_habit_name_required">اسم العادة مطلوب</string>
+    <string name="msg_habit_setup">اختر اسماً ذا معنى لعادتك.</string>
     <string name="msg_no_habits_yet">لم يتم تكوين عادات بعد.</string>
     <string name="msg_no_logs">لا توجد سجلات بعد</string>
     <string name="msg_no_memos_yet">لا توجد مذكرات في هذه الفترة.</string>
@@ -123,6 +139,8 @@
     <string name="msg_select_habit">اختر عادة واحدة على الأقل.</string>
     <string name="msg_mark_done_confirm">وضع علامة "%1$s" كمكتمل لـ %2$s؟</string>
     <string name="msg_mark_not_done_confirm">إزالة إكمال "%1$s" في %2$s؟</string>
+    <string name="msg_offline_onboarding_success">كل شيء جاهز. سجل أول علامة اليوم.</string>
+    <string name="msg_offline_onboarding_welcome">تتبع العادات محلياً على جهازك. لا حاجة لحساب.</string>
     <string name="msg_restart_required">يلزم إعادة التشغيل لتطبيق تغيير اللغة</string>
 
     <!-- Language selection -->
@@ -187,6 +205,7 @@
     <string name="time_years">سنوات</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">اختر عادة البداية</string>
     <string name="title_create_day">إنشاء يوم</string>
     <string name="title_delete_config">حذف الإعدادات؟</string>
     <string name="title_delete_day">حذف اليوم؟</string>
@@ -194,8 +213,12 @@
     <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">تعديل اليوم</string>
     <string name="title_edit_memo">تعديل المذكرة</string>
+    <string name="title_empty_state_no_habits">لا توجد عادات حتى الآن</string>
+    <string name="title_habit_setup">إعداد عادتك</string>
     <string name="title_logs">السجلات (%1$d)</string>
     <string name="title_new_memo">مذكرة جديدة</string>
+    <string name="title_offline_onboarding_success">عمل رائع!</string>
+    <string name="title_offline_onboarding_welcome">وضع عدم الاتصال جاهز</string>
     <string name="title_mark_done">وضع علامة مكتمل؟</string>
     <string name="title_mark_not_done">وضع علامة غير مكتمل؟</string>
     <string name="title_update_day">تحديث اليوم</string>
