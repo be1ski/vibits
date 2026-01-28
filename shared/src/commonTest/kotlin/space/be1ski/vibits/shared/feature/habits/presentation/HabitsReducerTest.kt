@@ -825,7 +825,7 @@ class HabitsReducerTest {
     }
 
   @Test
-  fun `when InvalidateAllCache then clears cache and sets initial loading`() =
+  fun `when InvalidateAllCache then clears cache and sets needsCacheRefresh`() =
     habitsReducer.test(
       HabitsState(
         activityDataCache =
@@ -844,7 +844,7 @@ class HabitsReducerTest {
         activityDataCache.isEmpty() &&
           isRecalculating.isEmpty() &&
           needsCacheRefresh &&
-          isInitialLoading
+          !isInitialLoading
       }
       assertNoEffects()
     }

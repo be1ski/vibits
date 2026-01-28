@@ -39,6 +39,23 @@ class HabitsStateExtensionsTest {
   }
 
   @Test
+  fun `isDataLoading returns true when needsCacheRefresh and key not in cache`() {
+    val key = ActivityCacheKey(ActivityRange.Week(LocalDate(2026, 1, 20)), ActivityMode.HABITS, AppMode.ONLINE)
+    val state = HabitsState(needsCacheRefresh = true, activityDataCache = emptyMap())
+
+    assertTrue(state.isDataLoading(key))
+  }
+
+  @Test
+  fun `isDataLoading returns false when needsCacheRefresh but key is in cache`() {
+    val key = ActivityCacheKey(ActivityRange.Week(LocalDate(2026, 1, 20)), ActivityMode.HABITS, AppMode.ONLINE)
+    val data = CachedActivityData(ActivityWeekData(emptyList(), 0, 0), emptyList(), null)
+    val state = HabitsState(needsCacheRefresh = true, activityDataCache = mapOf(key to data))
+
+    assertFalse(state.isDataLoading(key))
+  }
+
+  @Test
   fun `isDataLoading returns false when not loading and key in cache`() {
     val key = ActivityCacheKey(ActivityRange.Week(LocalDate(2026, 1, 20)), ActivityMode.HABITS, AppMode.ONLINE)
     val data = CachedActivityData(ActivityWeekData(emptyList(), 0, 0), emptyList(), null)

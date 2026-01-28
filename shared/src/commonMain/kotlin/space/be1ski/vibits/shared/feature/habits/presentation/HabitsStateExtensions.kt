@@ -7,7 +7,8 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 /**
  * Checks if data for the given key is currently being loaded or recalculated.
  */
-fun HabitsState.isDataLoading(key: ActivityCacheKey): Boolean = key in isRecalculating || (isInitialLoading && key !in activityDataCache)
+fun HabitsState.isDataLoading(key: ActivityCacheKey): Boolean =
+  key in isRecalculating || ((isInitialLoading || needsCacheRefresh) && key !in activityDataCache)
 
 /**
  * Gets cached activity data for the given range, mode, and app mode.
