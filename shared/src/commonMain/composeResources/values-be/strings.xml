@@ -129,6 +129,7 @@
     <string name="msg_delete_day_warning">Вы ўпэўнены, што жадаеце выдаліць запіс за гэты дзень? Допіс з адзнакамі будзе выдалены з вашых нататак назаўсёды.</string>
     <string name="msg_empty_state_no_habits">Стварыце звычку, каб пачаць адсочванне ў афлайн-рэжыме.</string>
     <string name="msg_fill_all_fields">Запоўніце ўсе палі</string>
+    <string name="msg_habit_name_required">Назва звычкі абавязковая</string>
     <string name="msg_habit_setup">Прыдумайце значную назву для вашай звычкі.</string>
     <string name="msg_no_habits_yet">Звычкі яшчэ не наладжаны.</string>
     <string name="msg_no_logs">Логаў пакуль няма</string>

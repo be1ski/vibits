@@ -2,6 +2,7 @@ package space.be1ski.vibits.shared.feature.onboarding.view
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingAction
 import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingState
@@ -13,6 +14,10 @@ fun OnboardingScreen(
   onAction: (OnboardingAction) -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  LaunchedEffect(Unit) {
+    onAction(OnboardingAction.StartOnboarding)
+  }
+
   when (state.currentStep) {
     OnboardingStep.Welcome -> {
       WelcomeScreen(

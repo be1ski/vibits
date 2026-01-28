@@ -130,6 +130,7 @@
     <string name="msg_delete_day_warning">Ushbu kunning yozuvini o\'chirishga aminmisiz? Bu kuzatuv postini eslatmalaringizdan butunlay olib tashlaydi.</string>
     <string name="msg_empty_state_no_habits">Oflayn rejimda kuzatuvni boshlash uchun odat yarating.</string>
     <string name="msg_fill_all_fields">Barcha maydonlarni to\'ldiring</string>
+    <string name="msg_habit_name_required">Odat nomi majburiy</string>
     <string name="msg_habit_setup">Odatingiz uchun mazmunli nom o\'ylab toping.</string>
     <string name="msg_no_habits_yet">Odatlar hali sozlanmagan.</string>
     <string name="msg_no_logs">Loglar hali yo\'q</string>

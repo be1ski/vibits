@@ -130,6 +130,7 @@
     <string name="msg_delete_day_warning">Tem certeza de que deseja excluir a entrada deste dia? Isso removerá permanentemente a publicação de rastreamento das suas notas.</string>
     <string name="msg_empty_state_no_habits">Crie um para começar a rastrear offline.</string>
     <string name="msg_fill_all_fields">Por favor, preencha todos os campos</string>
+    <string name="msg_habit_name_required">O nome do hábito é obrigatório</string>
     <string name="msg_habit_setup">Dê um nome significativo ao seu hábito.</string>
     <string name="msg_no_habits_yet">Nenhum hábito configurado ainda.</string>
     <string name="msg_no_logs">Sem logs ainda</string>

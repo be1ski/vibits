@@ -130,6 +130,7 @@
     <string name="msg_delete_day_warning">この日のエントリーを削除してもよろしいですか？トラッキング投稿がメモから完全に削除されます。</string>
     <string name="msg_empty_state_no_habits">習慣を作成してオフライン記録を開始しましょう。</string>
     <string name="msg_fill_all_fields">すべての項目を入力してください</string>
+    <string name="msg_habit_name_required">習慣名は必須です</string>
     <string name="msg_habit_setup">習慣にわかりやすい名前を付けてください。</string>
     <string name="msg_no_habits_yet">まだ習慣が設定されていません。</string>
     <string name="msg_no_logs">ログがありません</string>

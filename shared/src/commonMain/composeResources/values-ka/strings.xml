@@ -130,6 +130,7 @@
     <string name="msg_delete_day_warning">დარწმუნებული ხართ, რომ გსურთ ამ დღის ჩანაწერის წაშლა? ეს სამუდამოდ წაშლის თვალთვალის ჩანაწერს თქვენი შენიშვნებიდან.</string>
     <string name="msg_empty_state_no_habits">შექმენით ჩვევა ოფლაინ რეჟიმში თვალთვალის დასაწყებად.</string>
     <string name="msg_fill_all_fields">შეავსეთ ყველა ველი</string>
+    <string name="msg_habit_name_required">ჩვევის სახელი აუცილებელია</string>
     <string name="msg_habit_setup">გამოიგონეთ მნიშვნელოვანი სახელი თქვენი ჩვევისთვის.</string>
     <string name="msg_no_habits_yet">ჩვევები ჯერ არ არის კონფიგურირებული.</string>
     <string name="msg_no_logs">ლოგები ჯერ არ არის</string>

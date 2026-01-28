@@ -129,6 +129,7 @@
     <string name="msg_delete_day_warning">Осы күннің жазбасын жоюға сенімдісіз бе? Бұл бақылау жазбасын жазбаларыңыздан біржола жояды.</string>
     <string name="msg_empty_state_no_habits">Желіден тыс режимде бақылауды бастау үшін әдет жасаңыз.</string>
     <string name="msg_fill_all_fields">Барлық өрістерді толтырыңыз</string>
+    <string name="msg_habit_name_required">Әдет атауы міндетті</string>
     <string name="msg_habit_setup">Әдетіңізге мағыналы атау ойлап табыңыз.</string>
     <string name="msg_no_habits_yet">Әдеттер әлі бапталмаған.</string>
     <string name="msg_no_logs">Логтар әлі жоқ</string>

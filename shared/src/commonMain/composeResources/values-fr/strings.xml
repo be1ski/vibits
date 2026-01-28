@@ -130,6 +130,7 @@
     <string name="msg_delete_day_warning">Êtes-vous sûr de vouloir supprimer l\'entrée de ce jour ? Cela supprimera définitivement la publication de suivi de vos notes.</string>
     <string name="msg_empty_state_no_habits">Créez-en une pour commencer le suivi hors ligne.</string>
     <string name="msg_fill_all_fields">Veuillez remplir tous les champs</string>
+    <string name="msg_habit_name_required">Le nom de l\'habitude est requis</string>
     <string name="msg_habit_setup">Donnez un nom significatif à votre habitude.</string>
     <string name="msg_no_habits_yet">Aucune habitude configurée pour l\'instant.</string>
     <string name="msg_no_logs">Aucun journal pour l\'instant</string>

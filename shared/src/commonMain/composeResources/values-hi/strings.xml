@@ -130,6 +130,7 @@
     <string name="msg_delete_day_warning">क्या आप वाकई इस दिन की प्रविष्टि को हटाना चाहते हैं? यह ट्रैकिंग पोस्ट को आपके मेमो से स्थायी रूप से हटा देगा।</string>
     <string name="msg_empty_state_no_habits">ऑफ़लाइन मोड में ट्रैकिंग शुरू करने के लिए आदत बनाएं।</string>
     <string name="msg_fill_all_fields">कृपया सभी फ़ील्ड भरें</string>
+    <string name="msg_habit_name_required">आदत का नाम आवश्यक है</string>
     <string name="msg_habit_setup">अपनी आदत के लिए एक सार्थक नाम सोचें।</string>
     <string name="msg_no_habits_yet">अभी तक कोई आदत कॉन्फ़िगर नहीं।</string>
     <string name="msg_no_logs">अभी कोई लॉग नहीं</string>

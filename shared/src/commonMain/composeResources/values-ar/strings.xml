@@ -130,6 +130,7 @@
     <string name="msg_delete_day_warning">هل أنت متأكد من رغبتك في حذف إدخال هذا اليوم؟ سيؤدي هذا إلى إزالة منشور التتبع من مذكراتك بشكل دائم.</string>
     <string name="msg_empty_state_no_habits">أنشئ عادة لبدء التتبع في وضع عدم الاتصال.</string>
     <string name="msg_fill_all_fields">يرجى ملء جميع الحقول</string>
+    <string name="msg_habit_name_required">اسم العادة مطلوب</string>
     <string name="msg_habit_setup">اختر اسماً ذا معنى لعادتك.</string>
     <string name="msg_no_habits_yet">لم يتم تكوين عادات بعد.</string>
     <string name="msg_no_logs">لا توجد سجلات بعد</string>

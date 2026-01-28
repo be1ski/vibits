@@ -130,6 +130,7 @@
     <string name="msg_delete_day_warning">¿Estás seguro de que quieres eliminar la entrada de este día? Esto eliminará permanentemente la publicación de seguimiento de tus notas.</string>
     <string name="msg_empty_state_no_habits">Crea uno para comenzar el seguimiento sin conexión.</string>
     <string name="msg_fill_all_fields">Por favor, complete todos los campos</string>
+    <string name="msg_habit_name_required">El nombre del hábito es obligatorio</string>
     <string name="msg_habit_setup">Dale a tu hábito un nombre significativo.</string>
     <string name="msg_no_habits_yet">Aún no hay hábitos configurados.</string>
     <string name="msg_no_logs">Aún no hay registros</string>

@@ -130,6 +130,7 @@
     <string name="msg_delete_day_warning">Sind Sie sicher, dass Sie den Eintrag für diesen Tag löschen möchten? Der Tracking-Beitrag wird dauerhaft aus Ihren Notizen entfernt.</string>
     <string name="msg_empty_state_no_habits">Erstellen Sie eine, um offline mit dem Tracking zu beginnen.</string>
     <string name="msg_fill_all_fields">Bitte füllen Sie alle Felder aus</string>
+    <string name="msg_habit_name_required">Gewohnheitsname ist erforderlich</string>
     <string name="msg_habit_setup">Geben Sie Ihrer Gewohnheit einen aussagekräftigen Namen.</string>
     <string name="msg_no_habits_yet">Noch keine Gewohnheiten konfiguriert.</string>
     <string name="msg_no_logs">Noch keine Protokolle</string>

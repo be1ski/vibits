@@ -129,6 +129,7 @@
     <string name="msg_delete_day_warning">Ви впевнені, що хочете видалити запис за цей день? Пост з відмітками буде видалено з ваших нотаток назавжди.</string>
     <string name="msg_empty_state_no_habits">Створіть звичку, щоб почати відстеження в офлайн-режимі.</string>
     <string name="msg_fill_all_fields">Заповніть усі поля</string>
+    <string name="msg_habit_name_required">Назва звички обов'язкова</string>
     <string name="msg_habit_setup">Придумайте значущу назву для вашої звички.</string>
     <string name="msg_no_habits_yet">Звички ще не налаштовано.</string>
     <string name="msg_no_logs">Логів поки немає</string>

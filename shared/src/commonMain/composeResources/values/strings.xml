@@ -129,6 +129,7 @@
     <string name="msg_delete_day_warning">Are you sure you want to delete this day's entry? This will permanently remove the tracking post from your memos.</string>
     <string name="msg_edit_config_warning">You're about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn't exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
     <string name="msg_fill_all_fields">Please fill in all fields</string>
+    <string name="msg_habit_name_required">Habit name is required</string>
     <string name="msg_habit_setup">Give your habit a meaningful name.</string>
     <string name="msg_no_habits_yet">No habits configured yet.</string>
     <string name="msg_no_logs">No logs yet</string>

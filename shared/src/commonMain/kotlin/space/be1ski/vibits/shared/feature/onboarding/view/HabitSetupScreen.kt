@@ -25,6 +25,7 @@ import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_start_tracking
 import space.be1ski.vibits.shared.generated.hint_habit_name
 import space.be1ski.vibits.shared.generated.label_habit_name
+import space.be1ski.vibits.shared.generated.msg_habit_name_required
 import space.be1ski.vibits.shared.generated.msg_habit_setup
 import space.be1ski.vibits.shared.generated.title_habit_setup
 
@@ -38,6 +39,8 @@ fun HabitSetupScreen(
   onBack: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val errorMessage = resolveErrorMessage(error)
+
   Column(
     modifier =
       modifier
@@ -73,7 +76,7 @@ fun HabitSetupScreen(
       enabled = !isCreating,
       isError = error != null,
       supportingText =
-        error?.let {
+        errorMessage?.let {
           { Text(it, color = MaterialTheme.colorScheme.error) }
         },
       modifier = Modifier.fillMaxWidth(),
@@ -95,3 +98,12 @@ fun HabitSetupScreen(
     }
   }
 }
+
+@Composable
+private fun resolveErrorMessage(error: String?): String? =
+  error?.let { errorKey ->
+    when (errorKey) {
+      "habit_name_required" -> stringResource(Res.string.msg_habit_name_required)
+      else -> errorKey
+    }
+  }

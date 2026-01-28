@@ -130,6 +130,7 @@
     <string name="msg_delete_day_warning">您确定要删除这一天的条目吗？这将永久删除您备忘录中的跟踪帖子。</string>
     <string name="msg_empty_state_no_habits">创建习惯以开始离线记录。</string>
     <string name="msg_fill_all_fields">请填写所有字段</string>
+    <string name="msg_habit_name_required">习惯名称为必填项</string>
     <string name="msg_habit_setup">为您的习惯起一个有意义的名称。</string>
     <string name="msg_no_habits_yet">尚未配置任何习惯。</string>
     <string name="msg_no_logs">暂无日志</string>
