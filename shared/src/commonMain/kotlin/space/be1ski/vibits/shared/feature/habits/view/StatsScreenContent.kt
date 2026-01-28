@@ -141,7 +141,10 @@ internal fun StatsHabitsEmptyState(
   dispatch: (HabitsAction) -> Unit,
 ) {
   val state = derived.state
-  if (state.activityMode != ActivityMode.HABITS || derived.currentHabitsConfig.isNotEmpty()) {
+  if (state.activityMode != ActivityMode.HABITS ||
+    derived.currentHabitsConfig.isNotEmpty() ||
+    derived.isLoadingWeekData
+  ) {
     return
   }
   OutlinedCard(modifier = Modifier.fillMaxWidth()) {
