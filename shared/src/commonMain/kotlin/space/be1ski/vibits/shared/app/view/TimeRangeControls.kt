@@ -113,8 +113,10 @@ private fun TimeRangeNavigator(
       verticalAlignment = Alignment.CenterVertically,
     ) {
       Text(rangeLabel, style = MaterialTheme.typography.titleSmall)
-      successRate?.let { rate ->
-        SuccessRateBadge(rate)
+      if (successRate != null) {
+        SuccessRateBadge(successRate)
+      } else {
+        SuccessRatePlaceholder()
       }
     }
     IconButton(
@@ -157,6 +159,21 @@ private fun SuccessRateBadge(rate: Float) {
       text = "$percent%",
       style = MaterialTheme.typography.labelSmall,
       color = color,
+    )
+  }
+}
+
+@Composable
+private fun SuccessRatePlaceholder() {
+  Box(
+    modifier =
+      Modifier
+        .padding(horizontal = BADGE_PADDING_H, vertical = BADGE_PADDING_V),
+  ) {
+    Text(
+      text = "—",
+      style = MaterialTheme.typography.labelSmall,
+      color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
     )
   }
 }

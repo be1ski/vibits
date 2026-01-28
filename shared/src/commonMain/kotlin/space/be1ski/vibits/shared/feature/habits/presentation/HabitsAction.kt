@@ -126,14 +126,6 @@ sealed interface HabitsAction {
     val successRate: SuccessRateData?,
   ) : HabitsAction
 
-  data class ChangeRange(
-    val range: ActivityRange,
-  ) : HabitsAction
-
-  data class ChangeMode(
-    val mode: ActivityMode,
-  ) : HabitsAction
-
   data class InvalidateCache(
     val memos: List<Memo>,
     val range: ActivityRange,

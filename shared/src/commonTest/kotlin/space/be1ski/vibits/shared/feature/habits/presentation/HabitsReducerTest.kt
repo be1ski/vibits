@@ -813,22 +813,6 @@ class HabitsReducerTest {
     }
 
   @Test
-  fun `when ChangeRange then does nothing`() =
-    habitsReducer.test(HabitsState()) {
-      send(HabitsAction.ChangeRange(ActivityRange.Month(2024, Month.JANUARY)))
-
-      assertNoEffects()
-    }
-
-  @Test
-  fun `when ChangeMode then does nothing`() =
-    habitsReducer.test(HabitsState()) {
-      send(HabitsAction.ChangeMode(ActivityMode.POSTS))
-
-      assertNoEffects()
-    }
-
-  @Test
   fun `when InvalidateCache then clears cache and emits RecalculateActivityData`() =
     habitsReducer.test(
       HabitsState(

@@ -415,16 +415,6 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
         }
       }
 
-      is HabitsAction.ChangeRange -> {
-        // No-op: range changes are now handled by InvalidateCache from UI
-        return@reducer
-      }
-
-      is HabitsAction.ChangeMode -> {
-        // No-op: mode changes are now handled by InvalidateCache from UI
-        return@reducer
-      }
-
       is HabitsAction.InvalidateCache -> {
         val key = ActivityCacheKey(action.range, action.mode)
         state {
