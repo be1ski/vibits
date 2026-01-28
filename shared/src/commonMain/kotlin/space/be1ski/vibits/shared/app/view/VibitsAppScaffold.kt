@@ -83,14 +83,17 @@ internal fun VibitsAppScaffold(
 
   // Prewarm trigger: single source of truth for cache warming
   var prevAppMode by remember { mutableStateOf<space.be1ski.vibits.shared.feature.mode.domain.model.AppMode?>(null) }
+  var prevMemosRevision by remember { mutableStateOf(0) }
+
   LaunchedEffect(appState.appMode) {
     if (prevAppMode != null && prevAppMode != appState.appMode) {
       features.habits.send(HabitsAction.InvalidateAllCache)
+      // Reset memos revision to prevent prewarming with old mode's data
+      prevMemosRevision = 0
     }
     prevAppMode = appState.appMode
   }
 
-  var prevMemosRevision by remember { mutableStateOf(0) }
   LaunchedEffect(
     appState.appMode,
     memosState.memosRevision,
