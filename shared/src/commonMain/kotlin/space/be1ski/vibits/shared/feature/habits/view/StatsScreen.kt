@@ -16,8 +16,6 @@ import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.model.findDayByDate
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractDailyMemosUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.GetPeriodPostsUseCase
@@ -26,9 +24,6 @@ import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
 import space.be1ski.vibits.shared.feature.habits.presentation.getActivityData
 import space.be1ski.vibits.shared.feature.habits.presentation.isDataLoading
-import space.be1ski.vibits.shared.feature.habits.view.components.ActivityWeekDataCache
-import space.be1ski.vibits.shared.feature.habits.view.components.rememberActivityWeekData
-import space.be1ski.vibits.shared.feature.habits.view.components.rememberHabitsConfigTimeline
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
 /**
@@ -38,29 +33,22 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 fun StatsScreen(
   state: StatsScreenState,
   appMode: AppMode,
-  calculateSuccessRate: CalculateSuccessRateUseCase,
-  buildActivityDataUseCase: BuildActivityDataUseCase,
-  cache: ActivityWeekDataCache,
   dateFormatter: DateFormatter,
   habitsState: HabitsState = HabitsState(),
   onHabitsAction: (HabitsAction) -> Unit = {},
   onPostsListExpandedChange: (Boolean) -> Unit = {},
 ) {
-  val derived =
-    rememberStatsScreenDerived(state, appMode, habitsState, calculateSuccessRate, buildActivityDataUseCase, cache, dateFormatter)
+  val derived = rememberStatsScreenDerived(state, appMode, habitsState, dateFormatter)
   StatsScreenContent(derived, onHabitsAction, onPostsListExpandedChange)
   StatsScreenDialogs(derived, onHabitsAction)
 }
 
-@Suppress("LongMethod", "CyclomaticComplexMethod")
+@Suppress("LongMethod")
 @Composable
 private fun rememberStatsScreenDerived(
   state: StatsScreenState,
   appMode: AppMode,
   habitsState: HabitsState,
-  calculateSuccessRate: CalculateSuccessRateUseCase,
-  buildActivityDataUseCase: BuildActivityDataUseCase,
-  cache: ActivityWeekDataCache,
   dateFormatter: DateFormatter,
 ): StatsScreenDerivedState {
   val memos = state.memos
@@ -75,11 +63,17 @@ private fun rememberStatsScreenDerived(
   val cachedData = habitsState.getActivityData(range, activityMode, appMode)
   val isLoadingWeekData = habitsState.isDataLoading(cacheKey)
 
-  // Use cached data if available, otherwise fallback to old system
-  val weekData =
-    cachedData?.weekData
-      ?: rememberActivityWeekData(memos, range, activityMode, currentLocalDate(), buildActivityDataUseCase, cache).data
-  val habitsConfigTimeline = cachedData?.configTimeline ?: rememberHabitsConfigTimeline(memos)
+  // Read from TEA cache
+  val emptyWeekData =
+    remember {
+      space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData(
+        weeks = emptyList(),
+        maxDaily = 0,
+        maxWeekly = 0,
+      )
+    }
+  val weekData = cachedData?.weekData ?: emptyWeekData
+  val habitsConfigTimeline = cachedData?.configTimeline.orEmpty()
   val successRateData = cachedData?.successRate
 
   val currentHabitsConfig =
@@ -126,15 +120,8 @@ private fun rememberStatsScreenDerived(
     remember(habitsConfigTimeline) {
       habitsConfigTimeline.firstOrNull()?.date
     }
-  // Success rate already computed in cache, only fallback if not available
-  val finalSuccessRateData =
-    successRateData ?: remember(weekData, range, activityMode, currentHabitsConfig, configStartDate) {
-      if (activityMode == ActivityMode.HABITS && currentHabitsConfig.isNotEmpty()) {
-        calculateSuccessRate(weekData, range, today, configStartDate)
-      } else {
-        null
-      }
-    }
+  // Success rate comes from TEA cache
+  val finalSuccessRateData = successRateData
   val getPeriodPosts = remember { GetPeriodPostsUseCase() }
   val periodPosts =
     remember(memos, range, timeZone) {

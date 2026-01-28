@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.app.di.AppDependencies
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.domain.model.Screen
@@ -54,7 +53,6 @@ import space.be1ski.vibits.shared.generated.action_track_today
 @Composable
 internal fun VibitsAppScaffold(
   features: AppFeatures,
-  dependencies: AppDependencies,
   appState: AppState,
   memosState: MemosState,
   habitsState: HabitsState,
@@ -117,7 +115,6 @@ internal fun VibitsAppScaffold(
     ScaffoldContent(
       padding = padding,
       features = features,
-      dependencies = dependencies,
       appState = appState,
       memosState = memosState,
       habitsState = habitsState,
@@ -160,7 +157,6 @@ private fun AppFab(
 private fun ScaffoldContent(
   padding: PaddingValues,
   features: AppFeatures,
-  dependencies: AppDependencies,
   appState: AppState,
   memosState: MemosState,
   habitsState: HabitsState,
@@ -196,7 +192,7 @@ private fun ScaffoldContent(
     memosState.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
 
     if (appState.selectedScreen != Screen.FEED) {
-      val successRate = rememberSuccessRateIfNeeded(appState, habitsTimeline, memosState.memos, activityRange, habitsState, dependencies)
+      val successRate = rememberSuccessRateIfNeeded(appState, habitsTimeline, activityRange, habitsState)
       TimeRangeControls(
         selectedTab = selectedTab,
         rangeLabel = formatRangeLabel(activityRange, dateFormatter),
@@ -217,9 +213,6 @@ private fun ScaffoldContent(
       habitsState = habitsState,
       onHabitsAction = features.habits::send,
       onAppAction = features.app::send,
-      calculateSuccessRate = dependencies.calculateSuccessRate,
-      buildActivityDataUseCase = dependencies.buildActivityData,
-      cache = dependencies.activityWeekDataCache,
       dateFormatter = dateFormatter,
       dispatchMemos = features.memos::send,
       feedListState = feedListState,
@@ -231,29 +224,21 @@ private fun ScaffoldContent(
 private fun rememberSuccessRateIfNeeded(
   appState: AppState,
   habitsTimeline: List<HabitsConfigEntry>,
-  memos: List<Memo>,
   activityRange: ActivityRange,
   habitsState: HabitsState,
-  dependencies: AppDependencies,
 ): Float? {
   val isHabitsScreen = appState.selectedScreen == Screen.HABITS
   val hasHabits = remember(habitsTimeline) { habitsTimeline.lastOrNull()?.habits?.isNotEmpty() == true }
   val shouldCalculate = isHabitsScreen && hasHabits
   return if (shouldCalculate) {
-    // Try to read from TEA cache first
+    // Read from TEA cache
     val cachedData =
       habitsState.getActivityData(
         activityRange,
         space.be1ski.vibits.shared.app.domain.model.ActivityMode.HABITS,
         appState.appMode,
       )
-    cachedData?.successRate?.rate ?: rememberSuccessRate(
-      memos,
-      activityRange,
-      dependencies.calculateSuccessRate,
-      dependencies.buildActivityData,
-      dependencies.activityWeekDataCache,
-    )
+    cachedData?.successRate?.rate
   } else {
     null
   }
