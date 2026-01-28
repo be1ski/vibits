@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import space.be1ski.vibits.shared.core.elm.EffectHandler
 import space.be1ski.vibits.shared.core.logging.Log
+import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
+import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.CreateFirstCheckInUseCase
 import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.CreateFirstHabitUseCase
 import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.MarkOnboardingCompletedUseCase
 
@@ -13,6 +15,7 @@ private const val TAG = "OnboardingEffect"
 class OnboardingEffectHandler(
   private val getHabitPresets: space.be1ski.vibits.shared.feature.onboarding.domain.usecase.GetHabitPresetsUseCase,
   private val createFirstHabit: CreateFirstHabitUseCase,
+  private val createFirstCheckIn: CreateFirstCheckInUseCase,
   private val markOnboardingCompleted: MarkOnboardingCompletedUseCase,
 ) : EffectHandler<OnboardingEffect, OnboardingAction> {
   override fun invoke(effect: OnboardingEffect): Flow<OnboardingAction> =
@@ -58,6 +61,13 @@ class OnboardingEffectHandler(
 
   private fun handleMarkFirstCheckIn(): Flow<OnboardingAction> =
     flow {
-      Log.d(TAG, "Marking first check-in")
+      Log.d(TAG, "Creating first check-in")
+      val today = currentLocalDate()
+      createFirstCheckIn(today)
+        .onSuccess {
+          Log.d(TAG, "First check-in created successfully")
+        }.onFailure { error ->
+          Log.e(TAG, "Failed to create first check-in", error)
+        }
     }
 }

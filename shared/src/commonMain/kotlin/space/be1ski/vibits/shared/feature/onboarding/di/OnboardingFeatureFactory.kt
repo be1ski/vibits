@@ -19,6 +19,7 @@ fun createOnboardingFeature(
       OnboardingEffectHandler(
         getHabitPresets = dependencies.getHabitPresets,
         createFirstHabit = dependencies.createFirstHabit,
+        createFirstCheckIn = dependencies.createFirstCheckIn,
         markOnboardingCompleted = dependencies.markOnboardingCompleted,
       ),
   )
