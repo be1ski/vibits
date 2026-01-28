@@ -21,6 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.core.ui.Indent
+import space.be1ski.vibits.shared.core.ui.theme.AppColors
+import space.be1ski.vibits.shared.core.ui.theme.resolve
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_start_tracking
 import space.be1ski.vibits.shared.generated.hint_habit_name
@@ -77,7 +79,7 @@ fun HabitSetupScreen(
       isError = error != null,
       supportingText =
         errorMessage?.let {
-          { Text(it, color = MaterialTheme.colorScheme.error) }
+          { Text(it, color = AppColors.errorColor.resolve()) }
         },
       modifier = Modifier.fillMaxWidth(),
     )

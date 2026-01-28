@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.core.ui.Indent
+import space.be1ski.vibits.shared.core.ui.theme.AppColors
+import space.be1ski.vibits.shared.core.ui.theme.resolve
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_continue
 import space.be1ski.vibits.shared.generated.label_habit_preset_custom
@@ -107,21 +109,19 @@ private fun PresetCard(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val backgroundColor =
+    if (isSelected) {
+      AppColors.cardSelected.resolve()
+    } else {
+      AppColors.cardBackground.resolve()
+    }
   Card(
     modifier =
       modifier
         .fillMaxWidth()
         .clickable(onClick = onClick),
     shape = RoundedCornerShape(Indent.s),
-    colors =
-      CardDefaults.cardColors(
-        containerColor =
-          if (isSelected) {
-            MaterialTheme.colorScheme.primaryContainer
-          } else {
-            MaterialTheme.colorScheme.surface
-          },
-      ),
+    colors = CardDefaults.cardColors(containerColor = backgroundColor),
   ) {
     Row(
       modifier =
@@ -148,7 +148,7 @@ private fun PresetCard(
         Icon(
           Icons.Default.Check,
           contentDescription = "Selected",
-          tint = MaterialTheme.colorScheme.primary,
+          tint = AppColors.habitBlue.resolve(),
         )
       }
     }
