@@ -43,9 +43,11 @@ fun AppRoot(dependencies: AppDependencies) {
   var featuresVersion by remember { mutableIntStateOf(0) }
   val darkTheme = resolveDarkTheme(appTheme)
   val modeSelectionFeature =
-    rememberModeSelectionFeature(dependencies) {
-      featuresVersion++
-      appMode = it
+    key(featuresVersion) {
+      rememberModeSelectionFeature(dependencies) {
+        featuresVersion++
+        appMode = it
+      }
     }
   val features = rememberAppFeatures(featuresVersion)
 
