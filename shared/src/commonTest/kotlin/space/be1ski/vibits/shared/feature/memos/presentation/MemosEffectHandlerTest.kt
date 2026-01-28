@@ -188,6 +188,16 @@ class MemosEffectHandlerTest {
       assertTrue(actions[0] is MemosAction.OperationFailed)
     }
 
+  @Test
+  fun `when ClearActivityCache effect then completes without emitting actions`() =
+    runTest {
+      val handler = createHandler()
+
+      val actions = handler(MemosEffect.ClearActivityCache).toList()
+
+      assertTrue(actions.isEmpty())
+    }
+
   private fun createHandler(
     credentialsRepository: FakeCredentialsRepository = FakeCredentialsRepository(),
     memosRepository: FakeMemosRepository = FakeMemosRepository(),

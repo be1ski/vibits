@@ -1,12 +1,18 @@
 package space.be1ski.vibits.shared.feature.habits.presentation
 
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
+import space.be1ski.vibits.shared.app.domain.model.ActivityMode
+import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.core.elm.test
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
+import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitStatus
+import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
+import space.be1ski.vibits.shared.feature.habits.domain.model.SuccessRateData
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -773,5 +779,81 @@ class HabitsReducerTest {
 
       assertState { !showDeleteConfigConfirm }
       assertNoEffects()
+    }
+
+  @Test
+  fun `when UpdateActivityData then updates cache and clears loading flag`() =
+    habitsReducer.test(
+      HabitsState(
+        isRecalculating = setOf(ActivityCacheKey(ActivityRange.Week(LocalDate(2024, 1, 15)), ActivityMode.HABITS)),
+      ),
+    ) {
+      val weekData = ActivityWeekData(emptyList(), 0, 0)
+      val configTimeline = emptyList<HabitsConfigEntry>()
+      val successRate = SuccessRateData(10, 10, 100f)
+
+      send(
+        HabitsAction.UpdateActivityData(
+          range = ActivityRange.Week(LocalDate(2024, 1, 15)),
+          mode = ActivityMode.HABITS,
+          weekData = weekData,
+          configTimeline = configTimeline,
+          successRate = successRate,
+        ),
+      )
+
+      assertState {
+        val key = ActivityCacheKey(ActivityRange.Week(LocalDate(2024, 1, 15)), ActivityMode.HABITS)
+        activityDataCache.containsKey(key) &&
+          activityDataCache[key]?.weekData == weekData &&
+          activityDataCache[key]?.successRate == successRate &&
+          !isRecalculating.contains(key)
+      }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ChangeRange then does nothing`() =
+    habitsReducer.test(HabitsState()) {
+      send(HabitsAction.ChangeRange(ActivityRange.Month(2024, Month.JANUARY)))
+
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ChangeMode then does nothing`() =
+    habitsReducer.test(HabitsState()) {
+      send(HabitsAction.ChangeMode(ActivityMode.POSTS))
+
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when InvalidateCache then clears cache and emits RecalculateActivityData`() =
+    habitsReducer.test(
+      HabitsState(
+        activityDataCache =
+          mapOf(
+            ActivityCacheKey(ActivityRange.Week(LocalDate(2024, 1, 1)), ActivityMode.HABITS) to
+              CachedActivityData(ActivityWeekData(emptyList(), 0, 0), emptyList(), null),
+          ),
+      ),
+    ) {
+      val memos = listOf(Memo(name = "memos/1", content = "test"))
+      val range = ActivityRange.Week(LocalDate(2024, 1, 15))
+      val mode = ActivityMode.HABITS
+
+      send(HabitsAction.InvalidateCache(memos, range, mode))
+
+      assertState {
+        activityDataCache.isEmpty() &&
+          isRecalculating.contains(ActivityCacheKey(range, mode)) &&
+          lastRequestedRange == range &&
+          lastRequestedMode == mode
+      }
+      val effect = assertHasEffect<HabitsEffect.RecalculateActivityData>()
+      assertEquals(range, effect.range)
+      assertEquals(mode, effect.mode)
+      assertEquals(memos, effect.memos)
     }
 }

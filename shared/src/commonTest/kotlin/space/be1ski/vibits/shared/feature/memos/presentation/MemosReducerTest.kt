@@ -212,6 +212,27 @@ class MemosReducerTest {
     }
 
   @Test
+  fun `when MemosLoaded with tracking posts then sorted by date from content`() =
+    memosReducer.test(MemosState()) {
+      val oldTrackingPost =
+        Memo(
+          name = "memos/old-tracking",
+          content = "#habits/daily 2024-01-01\n\n#habits/exercise",
+          createTime = Instant.fromEpochMilliseconds(3000L),
+        )
+      val newTrackingPost =
+        Memo(
+          name = "memos/new-tracking",
+          content = "#habits/daily 2024-01-15\n\n#habits/exercise",
+          createTime = Instant.fromEpochMilliseconds(1000L),
+        )
+
+      send(MemosAction.MemosLoaded(listOf(oldTrackingPost, newTrackingPost)))
+
+      assertState { memos.first().name == "memos/new-tracking" && memos.last().name == "memos/old-tracking" }
+    }
+
+  @Test
   fun `when LoadMemos in offline mode then does not emit SaveCredentials`() =
     memosReducer.test(MemosState(baseUrl = "https://api.com", token = "token", isOfflineMode = true)) {
       send(MemosAction.LoadMemos)

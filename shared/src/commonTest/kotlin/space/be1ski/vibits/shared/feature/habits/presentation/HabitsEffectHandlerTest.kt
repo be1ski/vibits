@@ -2,6 +2,9 @@ package space.be1ski.vibits.shared.feature.habits.presentation
 
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDate
+import space.be1ski.vibits.shared.app.domain.model.ActivityMode
+import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildDayDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
@@ -120,6 +123,31 @@ class HabitsEffectHandlerTest {
       handler(HabitsEffect.RefreshMemos).toList()
 
       assertTrue(refreshCalled)
+    }
+
+  @Test
+  fun `when RecalculateActivityData effect then emits UpdateActivityData`() =
+    runTest {
+      val memos =
+        listOf(
+          Memo(name = "memos/config", content = "#habits/config\n\nexercise | #habits/exercise | #4CAF50"),
+          Memo(name = "memos/daily", content = "2024-01-15\n\n#habits/exercise"),
+        )
+      val handler = createHandler()
+
+      val actions =
+        handler(
+          HabitsEffect.RecalculateActivityData(
+            range = ActivityRange.Week(LocalDate(2024, 1, 15)),
+            mode = ActivityMode.HABITS,
+            memos = memos,
+          ),
+        ).toList()
+
+      assertEquals(1, actions.size)
+      assertTrue(actions[0] is HabitsAction.UpdateActivityData)
+      val action = actions[0] as HabitsAction.UpdateActivityData
+      assertEquals(ActivityMode.HABITS, action.mode)
     }
 
   private fun createHandler(
