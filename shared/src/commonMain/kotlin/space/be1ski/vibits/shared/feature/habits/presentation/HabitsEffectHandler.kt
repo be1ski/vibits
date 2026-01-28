@@ -15,6 +15,9 @@ import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.core.elm.EffectHandler
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
+import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
+import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
+import space.be1ski.vibits.shared.feature.habits.domain.model.SuccessRateData
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.EarliestMemoDateUseCase
@@ -144,7 +147,7 @@ class HabitsEffectHandler(
     }
   }
 
-  private suspend fun calculateActivityData(
+  private fun calculateActivityData(
     range: ActivityRange,
     mode: ActivityMode,
     @Suppress("UnusedParameter") appMode: AppMode,
@@ -238,7 +241,7 @@ private data class PrewarmResult(
   val range: ActivityRange,
   val mode: ActivityMode,
   val appMode: AppMode,
-  val weekData: space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData,
-  val configTimeline: List<space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry>,
-  val successRate: space.be1ski.vibits.shared.feature.habits.domain.model.SuccessRateData?,
+  val weekData: ActivityWeekData,
+  val configTimeline: List<HabitsConfigEntry>,
+  val successRate: SuccessRateData?,
 )

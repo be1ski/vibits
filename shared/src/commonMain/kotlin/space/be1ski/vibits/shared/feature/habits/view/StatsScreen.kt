@@ -15,6 +15,7 @@ import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
+import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.domain.model.findDayByDate
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractDailyMemosUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
@@ -66,7 +67,7 @@ private fun rememberStatsScreenDerived(
   // Read from TEA cache
   val emptyWeekData =
     remember {
-      space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData(
+      ActivityWeekData(
         weeks = emptyList(),
         maxDaily = 0,
         maxWeekly = 0,

@@ -8,6 +8,7 @@ import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import space.be1ski.vibits.shared.app.AppInitializer
 import space.be1ski.vibits.shared.core.platform.app.AppDetailsProvider
 import space.be1ski.vibits.shared.core.platform.env.LocalConfigProvider
 import space.be1ski.vibits.shared.core.platform.env.createLocalConfigProvider
@@ -32,7 +33,7 @@ abstract class AppGraph {
   abstract val appDependencies: AppDependencies
   abstract val appFeaturesFactory: AppFeaturesFactory
   abstract val appCoroutineScope: CoroutineScope
-  abstract val appInitializer: space.be1ski.vibits.shared.app.AppInitializer
+  abstract val appInitializer: AppInitializer
 
   companion object {
     private var instance: AppGraph? = null

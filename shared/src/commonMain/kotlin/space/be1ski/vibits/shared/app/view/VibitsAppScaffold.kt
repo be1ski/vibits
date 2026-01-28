@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
+import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.domain.model.Screen
@@ -44,6 +45,7 @@ import space.be1ski.vibits.shared.feature.habits.presentation.getActivityData
 import space.be1ski.vibits.shared.feature.habits.view.components.rememberHabitsConfigTimeline
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.generated.Res
@@ -82,7 +84,7 @@ internal fun VibitsAppScaffold(
     )
 
   // Prewarm trigger: single source of truth for cache warming
-  var prevAppMode by remember { mutableStateOf<space.be1ski.vibits.shared.feature.mode.domain.model.AppMode?>(null) }
+  var prevAppMode by remember { mutableStateOf<AppMode?>(null) }
   var prevMemosRevision by remember { mutableStateOf(0) }
 
   LaunchedEffect(appState.appMode) {
@@ -242,7 +244,7 @@ private fun rememberSuccessRateIfNeeded(
     val cachedData =
       habitsState.getActivityData(
         activityRange,
-        space.be1ski.vibits.shared.app.domain.model.ActivityMode.HABITS,
+        ActivityMode.HABITS,
         appState.appMode,
       )
     cachedData?.successRate?.rate

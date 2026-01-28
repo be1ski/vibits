@@ -2,6 +2,7 @@ package space.be1ski.vibits.shared.feature.memos.presentation
 
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.parseDailyDateFromContent
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 private const val MILLIS_PER_DAY = 86400000L
@@ -194,9 +195,7 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
 private fun sortedMemos(memos: List<Memo>): List<Memo> {
   return memos.sortedByDescending { memo ->
     // For habit tracking posts, use the tracked date instead of creation date
-    val trackingDate =
-      space.be1ski.vibits.shared.feature.habits.domain.usecase
-        .parseDailyDateFromContent(memo.content)
+    val trackingDate = parseDailyDateFromContent(memo.content)
     if (trackingDate != null) {
       // Convert LocalDate to epoch days, then to milliseconds
       // toEpochDays returns days since 1970-01-01
