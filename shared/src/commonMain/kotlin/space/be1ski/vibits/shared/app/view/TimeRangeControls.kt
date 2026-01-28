@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
@@ -152,8 +153,10 @@ private fun SuccessRateBadge(rate: Float) {
   Box(
     modifier =
       Modifier
+        .width(BADGE_WIDTH)
         .background(color.copy(alpha = BADGE_ALPHA), RoundedCornerShape(BADGE_CORNER_RADIUS))
         .padding(horizontal = BADGE_PADDING_H, vertical = BADGE_PADDING_V),
+    contentAlignment = Alignment.Center,
   ) {
     Text(
       text = "$percent%",
@@ -168,7 +171,9 @@ private fun SuccessRatePlaceholder() {
   Box(
     modifier =
       Modifier
+        .width(BADGE_WIDTH)
         .padding(horizontal = BADGE_PADDING_H, vertical = BADGE_PADDING_V),
+    contentAlignment = Alignment.Center,
   ) {
     Text(
       text = "—",
@@ -188,6 +193,7 @@ private fun colorForLevel(level: SuccessRateLevel) =
 
 private const val PERCENT_MULTIPLIER = 100
 private const val BADGE_ALPHA = 0.2f
+private val BADGE_WIDTH = 40.dp
 private val BADGE_CORNER_RADIUS = 4.dp
 private val BADGE_PADDING_H = 6.dp
 private val BADGE_PADDING_V = 2.dp
