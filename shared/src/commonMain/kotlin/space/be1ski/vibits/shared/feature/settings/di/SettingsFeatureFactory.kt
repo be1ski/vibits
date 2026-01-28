@@ -27,8 +27,6 @@ fun createSettingsFeature(
       SettingsEffectHandler(
         connectionTester = dependencies.connectionTester,
         switchAppMode = dependencies.switchAppMode,
-        loadAppMode = dependencies.loadAppMode,
-        offlineMemoStorage = dependencies.offlineMemoStorage,
         saveCredentials = dependencies.saveCredentials,
         resetApp = dependencies.resetApp,
         saveLanguage = dependencies.saveLanguage,

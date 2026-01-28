@@ -5,10 +5,7 @@ import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.shared.core.platform.locale.LocaleProvider
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.vibits.shared.feature.memos.data.ConnectionTester
-import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemosFileDto
-import space.be1ski.vibits.shared.feature.memos.data.platform.OfflineMemoStorage
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
-import space.be1ski.vibits.shared.feature.mode.domain.usecase.LoadAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
@@ -68,161 +65,6 @@ class SettingsEffectHandlerTest {
 
       assertEquals(listOf(SettingsAction.ModeSwitched), actions)
       assertEquals(AppMode.OFFLINE, appModeRepo.storedMode)
-    }
-
-  @Test
-  fun `when SwitchMode from Demo to Offline then clears demo data`() =
-    runTest {
-      val appModeRepo = FakeAppModeRepository(initial = AppMode.DEMO)
-      val fakeStorage =
-        object : OfflineMemoStorage {
-          var data =
-            OfflineMemosFileDto(
-              listOf(
-                space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemoDto(
-                  name = "memos/1",
-                  content = "#habits/config\nDemo habit",
-                  createTime = "2024-01-01T00:00:00Z",
-                ),
-              ),
-            )
-
-          override fun load(): OfflineMemosFileDto = data
-
-          override fun save(data: OfflineMemosFileDto) {
-            this.data = data
-          }
-        }
-      val handler =
-        SettingsEffectHandler(
-          connectionTester = ConnectionTester { _, _ -> Result.success(Unit) },
-          switchAppMode = SwitchAppModeUseCase(appModeRepo),
-          loadAppMode = LoadAppModeUseCase(appModeRepo),
-          offlineMemoStorage = fakeStorage,
-          saveCredentials = SaveCredentialsUseCase(FakeCredentialsRepository()),
-          resetApp =
-            ResetAppUseCase(
-              appModeRepo,
-              FakeCredentialsRepository(),
-              FakePreferencesRepository(),
-              space.be1ski.vibits.shared.feature.onboarding.data
-                .FakeOnboardingStore(),
-            ),
-          saveLanguage = SaveLanguageUseCase(FakePreferencesRepository(), LocaleProvider()),
-          saveTheme = SaveThemeUseCase(FakePreferencesRepository()),
-        )
-
-      val actions = handler(SettingsEffect.Command.SwitchMode(mode = AppMode.OFFLINE)).toList()
-
-      assertEquals(listOf(SettingsAction.ModeSwitched), actions)
-      assertEquals(AppMode.OFFLINE, appModeRepo.storedMode)
-      assertTrue(fakeStorage.data.memos.isEmpty(), "Demo data should be cleared when switching to Offline")
-    }
-
-  @Test
-  fun `when SwitchMode from Online to Offline then keeps existing data`() =
-    runTest {
-      val appModeRepo = FakeAppModeRepository(initial = AppMode.ONLINE)
-      val fakeStorage =
-        object : OfflineMemoStorage {
-          var data =
-            OfflineMemosFileDto(
-              listOf(
-                space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemoDto(
-                  name = "memos/1",
-                  content = "#habits/config\nMy habit",
-                  createTime = "2024-01-01T00:00:00Z",
-                ),
-              ),
-            )
-
-          override fun load(): OfflineMemosFileDto = data
-
-          override fun save(data: OfflineMemosFileDto) {
-            this.data = data
-          }
-        }
-      val handler =
-        SettingsEffectHandler(
-          connectionTester = ConnectionTester { _, _ -> Result.success(Unit) },
-          switchAppMode = SwitchAppModeUseCase(appModeRepo),
-          loadAppMode = LoadAppModeUseCase(appModeRepo),
-          offlineMemoStorage = fakeStorage,
-          saveCredentials = SaveCredentialsUseCase(FakeCredentialsRepository()),
-          resetApp =
-            ResetAppUseCase(
-              appModeRepo,
-              FakeCredentialsRepository(),
-              FakePreferencesRepository(),
-              space.be1ski.vibits.shared.feature.onboarding.data
-                .FakeOnboardingStore(),
-            ),
-          saveLanguage = SaveLanguageUseCase(FakePreferencesRepository(), LocaleProvider()),
-          saveTheme = SaveThemeUseCase(FakePreferencesRepository()),
-        )
-
-      val actions = handler(SettingsEffect.Command.SwitchMode(mode = AppMode.OFFLINE)).toList()
-
-      assertEquals(listOf(SettingsAction.ModeSwitched), actions)
-      assertEquals(AppMode.OFFLINE, appModeRepo.storedMode)
-      assertEquals(
-        1,
-        fakeStorage.data.memos.size,
-        "Existing data should NOT be cleared when switching from Online to Offline",
-      )
-    }
-
-  @Test
-  fun `when SwitchMode from Demo to Online then keeps data`() =
-    runTest {
-      val appModeRepo = FakeAppModeRepository(initial = AppMode.DEMO)
-      val fakeStorage =
-        object : OfflineMemoStorage {
-          var data =
-            OfflineMemosFileDto(
-              listOf(
-                space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemoDto(
-                  name = "memos/1",
-                  content = "#habits/config\nDemo habit",
-                  createTime = "2024-01-01T00:00:00Z",
-                ),
-              ),
-            )
-
-          override fun load(): OfflineMemosFileDto = data
-
-          override fun save(data: OfflineMemosFileDto) {
-            this.data = data
-          }
-        }
-      val handler =
-        SettingsEffectHandler(
-          connectionTester = ConnectionTester { _, _ -> Result.success(Unit) },
-          switchAppMode = SwitchAppModeUseCase(appModeRepo),
-          loadAppMode = LoadAppModeUseCase(appModeRepo),
-          offlineMemoStorage = fakeStorage,
-          saveCredentials = SaveCredentialsUseCase(FakeCredentialsRepository()),
-          resetApp =
-            ResetAppUseCase(
-              appModeRepo,
-              FakeCredentialsRepository(),
-              FakePreferencesRepository(),
-              space.be1ski.vibits.shared.feature.onboarding.data
-                .FakeOnboardingStore(),
-            ),
-          saveLanguage = SaveLanguageUseCase(FakePreferencesRepository(), LocaleProvider()),
-          saveTheme = SaveThemeUseCase(FakePreferencesRepository()),
-        )
-
-      val actions = handler(SettingsEffect.Command.SwitchMode(mode = AppMode.ONLINE)).toList()
-
-      assertEquals(listOf(SettingsAction.ModeSwitched), actions)
-      assertEquals(AppMode.ONLINE, appModeRepo.storedMode)
-      assertEquals(
-        1,
-        fakeStorage.data.memos.size,
-        "Data should NOT be cleared when switching from Demo to Online",
-      )
     }
 
   @Test
@@ -310,22 +152,10 @@ class SettingsEffectHandlerTest {
     appModeRepository: FakeAppModeRepository = FakeAppModeRepository(),
     credentialsRepository: FakeCredentialsRepository = FakeCredentialsRepository(),
     preferencesRepository: FakePreferencesRepository = FakePreferencesRepository(),
-  ): SettingsEffectHandler {
-    val fakeOfflineStorage =
-      object : OfflineMemoStorage {
-        var data = OfflineMemosFileDto(emptyList())
-
-        override fun load(): OfflineMemosFileDto = data
-
-        override fun save(data: OfflineMemosFileDto) {
-          this.data = data
-        }
-      }
-    return SettingsEffectHandler(
+  ): SettingsEffectHandler =
+    SettingsEffectHandler(
       connectionTester = ConnectionTester { _, _ -> connectionResult },
       switchAppMode = SwitchAppModeUseCase(appModeRepository),
-      loadAppMode = LoadAppModeUseCase(appModeRepository),
-      offlineMemoStorage = fakeOfflineStorage,
       saveCredentials = SaveCredentialsUseCase(credentialsRepository),
       resetApp =
         ResetAppUseCase(
@@ -338,5 +168,4 @@ class SettingsEffectHandlerTest {
       saveLanguage = SaveLanguageUseCase(preferencesRepository, LocaleProvider()),
       saveTheme = SaveThemeUseCase(preferencesRepository),
     )
-  }
 }

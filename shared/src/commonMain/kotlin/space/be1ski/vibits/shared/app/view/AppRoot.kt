@@ -195,6 +195,7 @@ private fun rememberModeSelectionFeature(
 @Composable
 private fun rememberOnboardingFeature(
   dependencies: AppDependencies,
+  features: AppFeatures,
   onOnboardingCompleted: () -> Unit,
 ): Feature<OnboardingAction, OnboardingState, OnboardingEffect> {
   val feature =
@@ -205,8 +206,14 @@ private fun rememberOnboardingFeature(
   LaunchedEffect(feature) { feature.launchIn(scope) }
   LaunchedEffect(feature) {
     feature.effects.collect { effect ->
-      if (effect is OnboardingEffect.Notification.Completed || effect is OnboardingEffect.Notification.Skipped) {
-        onOnboardingCompleted()
+      when (effect) {
+        is OnboardingEffect.Notification.Completed,
+        is OnboardingEffect.Notification.Skipped,
+        -> onOnboardingCompleted()
+        is OnboardingEffect.Notification.FirstCheckInCreated -> {
+          features.memos.send(MemosAction.LoadMemos)
+        }
+        is OnboardingEffect.Command -> {} // Commands handled by EffectHandler
       }
     }
   }
@@ -240,11 +247,11 @@ private fun rememberFeaturesState(
     key(featuresVersion) {
       rememberModeSelectionFeature(dependencies, onModeSelected)
     }
+  val appFeatures = rememberAppFeatures(featuresVersion)
   val onboardingFeature =
     key(featuresVersion) {
-      rememberOnboardingFeature(dependencies, onOnboardingCompleted)
+      rememberOnboardingFeature(dependencies, appFeatures, onOnboardingCompleted)
     }
-  val appFeatures = rememberAppFeatures(featuresVersion)
 
   return FeaturesState(modeSelectionFeature, onboardingFeature, appFeatures)
 }
@@ -261,15 +268,6 @@ private fun AppContent(
   onThemeChanged: (AppTheme) -> Unit,
   onLanguageChanged: (AppLanguage) -> Unit,
 ) {
-  // Reload memos after first check-in is created
-  LaunchedEffect(featuresState.onboarding) {
-    featuresState.onboarding.effects.collect { effect ->
-      if (effect is OnboardingEffect.Notification.FirstCheckInCreated) {
-        featuresState.app.memos.send(MemosAction.LoadMemos)
-      }
-    }
-  }
-
   when {
     appMode == AppMode.NOT_SELECTED -> ModeSelectionScreen(feature = featuresState.modeSelection)
     appMode == AppMode.OFFLINE && showOnboarding -> {

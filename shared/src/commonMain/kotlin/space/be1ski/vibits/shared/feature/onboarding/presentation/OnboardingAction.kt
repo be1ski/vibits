@@ -1,5 +1,7 @@
 package space.be1ski.vibits.shared.feature.onboarding.presentation
 
+import space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset
+
 sealed interface OnboardingAction {
   // Navigation
   data object StartOnboarding : OnboardingAction
@@ -16,7 +18,7 @@ sealed interface OnboardingAction {
   ) : OnboardingAction
 
   data class PresetsLoaded(
-    val presets: List<space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset>,
+    val presets: List<HabitPreset>,
   ) : OnboardingAction
 
   // Habit setup
