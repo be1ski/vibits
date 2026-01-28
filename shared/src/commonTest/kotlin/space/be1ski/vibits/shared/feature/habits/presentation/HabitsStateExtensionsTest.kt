@@ -14,7 +14,7 @@ import kotlin.test.assertTrue
 
 class HabitsStateExtensionsTest {
   @Test
-  fun `isDataLoading returns true when key is in isRecalculating`() {
+  fun `when key is in isRecalculating then isDataLoading returns true`() {
     val key = ActivityCacheKey(ActivityRange.Week(LocalDate(2026, 1, 20)), ActivityMode.HABITS, AppMode.ONLINE)
     val state = HabitsState(isRecalculating = setOf(key))
 
@@ -22,7 +22,7 @@ class HabitsStateExtensionsTest {
   }
 
   @Test
-  fun `isDataLoading returns true when isInitialLoading and key not in cache`() {
+  fun `when isInitialLoading and key not in cache then isDataLoading returns true`() {
     val key = ActivityCacheKey(ActivityRange.Week(LocalDate(2026, 1, 20)), ActivityMode.HABITS, AppMode.ONLINE)
     val state = HabitsState(isInitialLoading = true, activityDataCache = emptyMap())
 
@@ -30,7 +30,7 @@ class HabitsStateExtensionsTest {
   }
 
   @Test
-  fun `isDataLoading returns false when isInitialLoading but key is in cache`() {
+  fun `when isInitialLoading but key is in cache then isDataLoading returns false`() {
     val key = ActivityCacheKey(ActivityRange.Week(LocalDate(2026, 1, 20)), ActivityMode.HABITS, AppMode.ONLINE)
     val data = CachedActivityData(ActivityWeekData(emptyList(), 0, 0), emptyList(), null)
     val state = HabitsState(isInitialLoading = true, activityDataCache = mapOf(key to data))
@@ -39,7 +39,7 @@ class HabitsStateExtensionsTest {
   }
 
   @Test
-  fun `isDataLoading returns true when needsCacheRefresh and key not in cache`() {
+  fun `when needsCacheRefresh and key not in cache then isDataLoading returns true`() {
     val key = ActivityCacheKey(ActivityRange.Week(LocalDate(2026, 1, 20)), ActivityMode.HABITS, AppMode.ONLINE)
     val state = HabitsState(needsCacheRefresh = true, activityDataCache = emptyMap())
 
@@ -47,7 +47,7 @@ class HabitsStateExtensionsTest {
   }
 
   @Test
-  fun `isDataLoading returns false when needsCacheRefresh but key is in cache`() {
+  fun `when needsCacheRefresh but key is in cache then isDataLoading returns false`() {
     val key = ActivityCacheKey(ActivityRange.Week(LocalDate(2026, 1, 20)), ActivityMode.HABITS, AppMode.ONLINE)
     val data = CachedActivityData(ActivityWeekData(emptyList(), 0, 0), emptyList(), null)
     val state = HabitsState(needsCacheRefresh = true, activityDataCache = mapOf(key to data))
@@ -56,7 +56,7 @@ class HabitsStateExtensionsTest {
   }
 
   @Test
-  fun `isDataLoading returns false when not loading and key in cache`() {
+  fun `when not loading and key in cache then isDataLoading returns false`() {
     val key = ActivityCacheKey(ActivityRange.Week(LocalDate(2026, 1, 20)), ActivityMode.HABITS, AppMode.ONLINE)
     val data = CachedActivityData(ActivityWeekData(emptyList(), 0, 0), emptyList(), null)
     val state = HabitsState(isInitialLoading = false, activityDataCache = mapOf(key to data))
@@ -65,7 +65,7 @@ class HabitsStateExtensionsTest {
   }
 
   @Test
-  fun `getActivityData returns cached data when present`() {
+  fun `when cached data present then getActivityData returns it`() {
     val range = ActivityRange.Week(LocalDate(2026, 1, 20))
     val mode = ActivityMode.HABITS
     val appMode = AppMode.ONLINE
@@ -80,7 +80,7 @@ class HabitsStateExtensionsTest {
   }
 
   @Test
-  fun `getActivityData returns null when not cached`() {
+  fun `when not cached then getActivityData returns null`() {
     val state = HabitsState(activityDataCache = emptyMap())
 
     val result = state.getActivityData(ActivityRange.Week(LocalDate(2026, 1, 20)), ActivityMode.HABITS, AppMode.ONLINE)
@@ -89,7 +89,7 @@ class HabitsStateExtensionsTest {
   }
 
   @Test
-  fun `getActivityData returns null for different range`() {
+  fun `when different range then getActivityData returns null`() {
     val range1 = ActivityRange.Week(LocalDate(2026, 1, 20))
     val range2 = ActivityRange.Week(LocalDate(2026, 1, 27))
     val key = ActivityCacheKey(range1, ActivityMode.HABITS, AppMode.ONLINE)
@@ -102,7 +102,7 @@ class HabitsStateExtensionsTest {
   }
 
   @Test
-  fun `getActivityData returns null for different mode`() {
+  fun `when different mode then getActivityData returns null`() {
     val range = ActivityRange.Week(LocalDate(2026, 1, 20))
     val key = ActivityCacheKey(range, ActivityMode.HABITS, AppMode.ONLINE)
     val data = CachedActivityData(ActivityWeekData(emptyList(), 0, 0), emptyList(), null)
@@ -114,7 +114,7 @@ class HabitsStateExtensionsTest {
   }
 
   @Test
-  fun `getActivityData returns null for different app mode`() {
+  fun `when different app mode then getActivityData returns null`() {
     val range = ActivityRange.Week(LocalDate(2026, 1, 20))
     val key = ActivityCacheKey(range, ActivityMode.HABITS, AppMode.ONLINE)
     val data = CachedActivityData(ActivityWeekData(emptyList(), 0, 0), emptyList(), null)
