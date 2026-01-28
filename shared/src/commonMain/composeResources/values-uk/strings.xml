@@ -8,9 +8,15 @@
     <string name="action_copied">Скопійовано</string>
     <string name="action_configure_habits">Налаштувати звички</string>
     <string name="action_create">Створити</string>
+    <string name="action_create_first_habit">Створити першу звичку</string>
     <string name="action_create_memo">Створити нотатку</string>
+    <string name="action_continue">Продовжити</string>
     <string name="action_delete">Видалити</string>
+    <string name="action_add_first_habit">Додати першу звичку</string>
+    <string name="action_go_to_dashboard">Перейти до панелі</string>
     <string name="action_hide_details">Сховати деталі</string>
+    <string name="action_mark_first_checkin">Відмітити першу запис</string>
+    <string name="action_maybe_later">Можливо пізніше</string>
     <string name="action_next">Далі</string>
     <string name="action_previous">Назад</string>
     <string name="action_refresh">Оновити</string>
@@ -18,6 +24,7 @@
     <string name="action_reset_app">Скинути додаток</string>
     <string name="action_save">Зберегти</string>
     <string name="action_show_details">Показати деталі</string>
+    <string name="action_start_tracking">Почати відстеження</string>
     <string name="action_track">Відмітити</string>
     <string name="action_track_today">Відмітити сьогодні</string>
     <string name="action_update">Оновити</string>
@@ -76,7 +83,7 @@
     <!-- Hints -->
     <string name="hint_add_habits_config">Додайте нотатку з конфігурацією звичок, щоб почати відстеження.</string>
     <string name="hint_base_url">https://memos.example.com</string>
-    <string name="hint_habit_name">Назва звички</string>
+    <string name="hint_habit_name">напр., Ранкова зарядка</string>
     <string name="hint_habits_config">Гімнастика | #habits/gym\nЧитання | #habits/reading</string>
     <string name="hint_write_memo">Напишіть нотатку...</string>
 
@@ -89,6 +96,12 @@
     <string name="label_demo_mode">Демо-режим</string>
     <string name="label_environment">Середовище</string>
     <string name="label_habits_config">Конфігурація звичок</string>
+    <string name="label_habit_name">Назва звички</string>
+    <string name="label_habit_preset_custom">Створити свою</string>
+    <string name="label_habit_preset_read">Читати 10 хвилин</string>
+    <string name="label_habit_preset_stretch">Розтяжка</string>
+    <string name="label_habit_preset_walk">Прогулянка</string>
+    <string name="label_habit_preset_water">Випити води</string>
     <string name="label_language">Мова</string>
     <string name="label_memos_db">База нотаток</string>
     <string name="label_post_filter">Фільтр</string>
@@ -114,7 +127,9 @@
     <string name="msg_delete_config_warning">Ви впевнені, що хочете видалити цей конфіг? Пост з конфігурацією буде видалено з ваших нотаток назавжди.</string>
     <string name="msg_delete_day_confirm">Звички не обрано. Запис за цей день буде видалено.</string>
     <string name="msg_delete_day_warning">Ви впевнені, що хочете видалити запис за цей день? Пост з відмітками буде видалено з ваших нотаток назавжди.</string>
+    <string name="msg_empty_state_no_habits">Створіть звичку, щоб почати відстеження в офлайн-режимі.</string>
     <string name="msg_fill_all_fields">Заповніть усі поля</string>
+    <string name="msg_habit_setup">Придумайте значущу назву для вашої звички.</string>
     <string name="msg_no_habits_yet">Звички ще не налаштовано.</string>
     <string name="msg_no_logs">Логів поки немає</string>
     <string name="msg_no_memos_yet">Немає нотаток за цей період.</string>
@@ -122,6 +137,8 @@
     <string name="msg_select_habit">Оберіть хоча б одну звичку.</string>
     <string name="msg_mark_done_confirm">Позначити «%1$s» як виконану за %2$s?</string>
     <string name="msg_mark_not_done_confirm">Зняти позначку з «%1$s» за %2$s?</string>
+    <string name="msg_offline_onboarding_success">Все готово. Відзначте першу запис сьогодні.</string>
+    <string name="msg_offline_onboarding_welcome">Відстежуйте звички локально на вашому пристрої. Обліковий запис не потрібен.</string>
     <string name="msg_restart_required">Для застосування потрібен перезапуск</string>
 
     <!-- Language selection -->
@@ -187,6 +204,7 @@
     <string name="time_years">Роки</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">Оберіть початкову звичку</string>
     <string name="title_create_day">Створити день</string>
     <string name="title_delete_config">Видалити конфіг?</string>
     <string name="title_delete_day">Видалити день?</string>
@@ -194,8 +212,12 @@
     <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">Редагувати день</string>
     <string name="title_edit_memo">Редагувати нотатку</string>
+    <string name="title_empty_state_no_habits">Звичок поки немає</string>
+    <string name="title_habit_setup">Налаштуйте вашу звичку</string>
     <string name="title_logs">Логи (%1$d)</string>
     <string name="title_new_memo">Нова нотатка</string>
+    <string name="title_offline_onboarding_success">Чудова робота!</string>
+    <string name="title_offline_onboarding_welcome">Офлайн-режим готовий</string>
     <string name="title_mark_done">Позначити виконаним?</string>
     <string name="title_mark_not_done">Зняти позначку?</string>
     <string name="title_update_day">Оновити день</string>

@@ -157,7 +157,14 @@ class SettingsEffectHandlerTest {
       connectionTester = ConnectionTester { _, _ -> connectionResult },
       switchAppMode = SwitchAppModeUseCase(appModeRepository),
       saveCredentials = SaveCredentialsUseCase(credentialsRepository),
-      resetApp = ResetAppUseCase(appModeRepository, credentialsRepository, preferencesRepository),
+      resetApp =
+        ResetAppUseCase(
+          appModeRepository,
+          credentialsRepository,
+          preferencesRepository,
+          space.be1ski.vibits.shared.feature.onboarding.data
+            .FakeOnboardingStore(),
+        ),
       saveLanguage = SaveLanguageUseCase(preferencesRepository, LocaleProvider()),
       saveTheme = SaveThemeUseCase(preferencesRepository),
     )

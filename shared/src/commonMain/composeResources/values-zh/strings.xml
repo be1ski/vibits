@@ -8,9 +8,15 @@
     <string name="action_copied">已复制</string>
     <string name="action_configure_habits">配置习惯</string>
     <string name="action_create">创建</string>
+    <string name="action_create_first_habit">创建第一个习惯</string>
     <string name="action_create_memo">创建备忘</string>
+    <string name="action_continue">继续</string>
     <string name="action_delete">删除</string>
+    <string name="action_add_first_habit">添加第一个习惯</string>
+    <string name="action_go_to_dashboard">前往仪表板</string>
     <string name="action_hide_details">隐藏详情</string>
+    <string name="action_mark_first_checkin">标记第一次打卡</string>
+    <string name="action_maybe_later">稍后再说</string>
     <string name="action_next">下一个</string>
     <string name="action_previous">上一个</string>
     <string name="action_refresh">刷新</string>
@@ -18,6 +24,7 @@
     <string name="action_reset_app">重置应用</string>
     <string name="action_save">保存</string>
     <string name="action_show_details">显示详情</string>
+    <string name="action_start_tracking">开始记录</string>
     <string name="action_track">记录</string>
     <string name="action_track_today">今日记录</string>
     <string name="action_update">更新</string>
@@ -76,7 +83,7 @@
     <!-- Hints -->
     <string name="hint_add_habits_config">添加习惯配置备忘以开始跟踪。</string>
     <string name="hint_base_url">https://memos.example.com</string>
-    <string name="hint_habit_name">习惯名称</string>
+    <string name="hint_habit_name">例如，晨练</string>
     <string name="hint_habits_config">健身 | #habits/gym\n阅读 | #habits/reading</string>
     <string name="hint_write_memo">写一条备忘...</string>
 
@@ -89,6 +96,12 @@
     <string name="label_demo_mode">演示模式</string>
     <string name="label_environment">环境</string>
     <string name="label_habits_config">习惯配置</string>
+    <string name="label_habit_name">习惯名称</string>
+    <string name="label_habit_preset_custom">自定义</string>
+    <string name="label_habit_preset_read">阅读10分钟</string>
+    <string name="label_habit_preset_stretch">拉伸</string>
+    <string name="label_habit_preset_walk">散步</string>
+    <string name="label_habit_preset_water">喝水</string>
     <string name="label_language">语言</string>
     <string name="label_memos_db">备忘数据库</string>
     <string name="label_post_filter">筛选</string>
@@ -115,7 +128,9 @@
     <string name="msg_delete_config_warning">您确定要删除此配置吗？这将永久删除您备忘录中的配置帖子。</string>
     <string name="msg_delete_day_confirm">未选择任何习惯。该日记录将被删除。</string>
     <string name="msg_delete_day_warning">您确定要删除这一天的条目吗？这将永久删除您备忘录中的跟踪帖子。</string>
+    <string name="msg_empty_state_no_habits">创建习惯以开始离线记录。</string>
     <string name="msg_fill_all_fields">请填写所有字段</string>
+    <string name="msg_habit_setup">为您的习惯起一个有意义的名称。</string>
     <string name="msg_no_habits_yet">尚未配置任何习惯。</string>
     <string name="msg_no_logs">暂无日志</string>
     <string name="msg_no_memos_yet">该时期暂无备忘。</string>
@@ -123,6 +138,8 @@
     <string name="msg_select_habit">请至少选择一个习惯。</string>
     <string name="msg_mark_done_confirm">将"%1$s"标记为 %2$s 完成？</string>
     <string name="msg_mark_not_done_confirm">取消"%1$s"在 %2$s 的完成标记？</string>
+    <string name="msg_offline_onboarding_success">一切就绪。今天就标记第一次打卡吧。</string>
+    <string name="msg_offline_onboarding_welcome">在设备上本地记录习惯。无需账户。</string>
     <string name="msg_restart_required">需要重启应用以应用语言更改</string>
 
     <!-- Language selection -->
@@ -187,6 +204,7 @@
     <string name="time_years">年</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">选择初始习惯</string>
     <string name="title_create_day">创建日记录</string>
     <string name="title_delete_config">删除配置？</string>
     <string name="title_delete_day">删除日记录？</string>
@@ -194,8 +212,12 @@
     <string name="title_edit_config_warning">编辑现有配置？</string>
     <string name="title_edit_day">编辑日记录</string>
     <string name="title_edit_memo">编辑备忘</string>
+    <string name="title_empty_state_no_habits">暂无习惯</string>
+    <string name="title_habit_setup">设置您的习惯</string>
     <string name="title_logs">日志 (%1$d)</string>
     <string name="title_new_memo">新建备忘</string>
+    <string name="title_offline_onboarding_success">太棒了！</string>
+    <string name="title_offline_onboarding_welcome">离线模式已就绪</string>
     <string name="title_mark_done">标记完成？</string>
     <string name="title_mark_not_done">取消标记？</string>
     <string name="title_update_day">更新日记录</string>

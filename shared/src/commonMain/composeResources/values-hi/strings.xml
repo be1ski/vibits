@@ -8,9 +8,15 @@
     <string name="action_copied">कॉपी हुआ</string>
     <string name="action_configure_habits">आदतें कॉन्फ़िगर करें</string>
     <string name="action_create">बनाएं</string>
+    <string name="action_create_first_habit">पहली आदत बनाएं</string>
     <string name="action_create_memo">मेमो बनाएं</string>
+    <string name="action_continue">जारी रखें</string>
     <string name="action_delete">हटाएं</string>
+    <string name="action_add_first_habit">पहली आदत जोड़ें</string>
+    <string name="action_go_to_dashboard">डैशबोर्ड पर जाएं</string>
     <string name="action_hide_details">विवरण छुपाएं</string>
+    <string name="action_mark_first_checkin">पहला चेक-इन चिह्नित करें</string>
+    <string name="action_maybe_later">शायद बाद में</string>
     <string name="action_next">अगला</string>
     <string name="action_previous">पिछला</string>
     <string name="action_refresh">रिफ्रेश</string>
@@ -18,6 +24,7 @@
     <string name="action_reset_app">ऐप रीसेट करें</string>
     <string name="action_save">सेव करें</string>
     <string name="action_show_details">विवरण दिखाएं</string>
+    <string name="action_start_tracking">ट्रैकिंग शुरू करें</string>
     <string name="action_track">ट्रैक करें</string>
     <string name="action_track_today">आज ट्रैक करें</string>
     <string name="action_update">अपडेट</string>
@@ -76,7 +83,7 @@
     <!-- Hints -->
     <string name="hint_add_habits_config">ट्रैकिंग शुरू करने के लिए आदत कॉन्फ़िगरेशन मेमो जोड़ें।</string>
     <string name="hint_base_url">https://memos.example.com</string>
-    <string name="hint_habit_name">आदत का नाम</string>
+    <string name="hint_habit_name">उदाहरण, सुबह की कसरत</string>
     <string name="hint_habits_config">व्यायाम | #habits/gym\nपढ़ना | #habits/reading</string>
     <string name="hint_write_memo">एक मेमो लिखें...</string>
 
@@ -89,6 +96,12 @@
     <string name="label_demo_mode">डेमो मोड</string>
     <string name="label_environment">वातावरण</string>
     <string name="label_habits_config">आदत कॉन्फ़िगरेशन</string>
+    <string name="label_habit_name">आदत का नाम</string>
+    <string name="label_habit_preset_custom">अपनी खुद की बनाएं</string>
+    <string name="label_habit_preset_read">10 मिनट पढ़ें</string>
+    <string name="label_habit_preset_stretch">स्ट्रेचिंग</string>
+    <string name="label_habit_preset_walk">टहलना</string>
+    <string name="label_habit_preset_water">पानी पीना</string>
     <string name="label_language">भाषा</string>
     <string name="label_memos_db">मेमो DB</string>
     <string name="label_post_filter">फ़िल्टर</string>
@@ -115,7 +128,9 @@
     <string name="msg_delete_config_warning">क्या आप वाकई इस कॉन्फ़िग को हटाना चाहते हैं? यह आपके मेमो से कॉन्फ़िगरेशन पोस्ट को स्थायी रूप से हटा देगा।</string>
     <string name="msg_delete_day_confirm">कोई आदत चयनित नहीं। दैनिक प्रविष्टि हटा दी जाएगी।</string>
     <string name="msg_delete_day_warning">क्या आप वाकई इस दिन की प्रविष्टि को हटाना चाहते हैं? यह ट्रैकिंग पोस्ट को आपके मेमो से स्थायी रूप से हटा देगा।</string>
+    <string name="msg_empty_state_no_habits">ऑफ़लाइन मोड में ट्रैकिंग शुरू करने के लिए आदत बनाएं।</string>
     <string name="msg_fill_all_fields">कृपया सभी फ़ील्ड भरें</string>
+    <string name="msg_habit_setup">अपनी आदत के लिए एक सार्थक नाम सोचें।</string>
     <string name="msg_no_habits_yet">अभी तक कोई आदत कॉन्फ़िगर नहीं।</string>
     <string name="msg_no_logs">अभी कोई लॉग नहीं</string>
     <string name="msg_no_memos_yet">इस अवधि में कोई मेमो नहीं।</string>
@@ -123,6 +138,8 @@
     <string name="msg_select_habit">कम से कम एक आदत चुनें।</string>
     <string name="msg_mark_done_confirm">"%1$s" को %2$s के लिए पूर्ण के रूप में चिह्नित करें?</string>
     <string name="msg_mark_not_done_confirm">%2$s पर "%1$s" की पूर्णता हटाएं?</string>
+    <string name="msg_offline_onboarding_success">सब तैयार है। आज पहला चेक-इन चिह्नित करें।</string>
+    <string name="msg_offline_onboarding_welcome">अपने डिवाइस पर स्थानीय रूप से आदतों को ट्रैक करें। कोई खाता जरूरी नहीं।</string>
     <string name="msg_restart_required">भाषा परिवर्तन लागू करने के लिए पुनः आरंभ आवश्यक</string>
 
     <!-- Language selection -->
@@ -187,6 +204,7 @@
     <string name="time_years">वर्ष</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">शुरुआती आदत चुनें</string>
     <string name="title_create_day">दिन बनाएं</string>
     <string name="title_delete_config">कॉन्फ़िग हटाएं?</string>
     <string name="title_delete_day">दिन हटाएं?</string>
@@ -194,8 +212,12 @@
     <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">दिन संपादित करें</string>
     <string name="title_edit_memo">मेमो संपादित करें</string>
+    <string name="title_empty_state_no_habits">अभी कोई आदत नहीं</string>
+    <string name="title_habit_setup">अपनी आदत सेट करें</string>
     <string name="title_logs">लॉग (%1$d)</string>
     <string name="title_new_memo">नया मेमो</string>
+    <string name="title_offline_onboarding_success">शानदार काम!</string>
+    <string name="title_offline_onboarding_welcome">ऑफ़लाइन मोड तैयार</string>
     <string name="title_mark_done">पूर्ण चिह्नित करें?</string>
     <string name="title_mark_not_done">अपूर्ण चिह्नित करें?</string>
     <string name="title_update_day">दिन अपडेट करें</string>

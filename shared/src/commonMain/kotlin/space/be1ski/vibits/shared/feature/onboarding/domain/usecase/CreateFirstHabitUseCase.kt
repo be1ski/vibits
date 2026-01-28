@@ -1,0 +1,27 @@
+package space.be1ski.vibits.shared.feature.onboarding.domain.usecase
+
+import dev.zacsweers.metro.Inject
+import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
+import space.be1ski.vibits.shared.feature.memos.domain.usecase.CreateMemoUseCase
+
+@Inject
+class CreateFirstHabitUseCase(
+  private val createMemo: CreateMemoUseCase,
+) {
+  suspend operator fun invoke(
+    name: String,
+    presetId: String?,
+  ): Result<Unit> =
+    runCatching {
+      val habitTag = name.lowercase().replace(" ", "_")
+      val content =
+        buildString {
+          appendLine(PostTags.HABITS_CONFIG)
+          append(name)
+          append(" | ")
+          append(PostTags.HABITS_PREFIX)
+          append(habitTag)
+        }
+      createMemo(content)
+    }
+}

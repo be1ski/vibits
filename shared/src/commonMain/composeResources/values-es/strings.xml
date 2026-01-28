@@ -8,9 +8,15 @@
     <string name="action_copied">Copiado</string>
     <string name="action_configure_habits">Configurar hábitos</string>
     <string name="action_create">Crear</string>
+    <string name="action_create_first_habit">Crear mi primer hábito</string>
     <string name="action_create_memo">Crear nota</string>
+    <string name="action_continue">Continuar</string>
     <string name="action_delete">Eliminar</string>
+    <string name="action_add_first_habit">Añadir tu primer hábito</string>
+    <string name="action_go_to_dashboard">Ir al panel</string>
     <string name="action_hide_details">Ocultar detalles</string>
+    <string name="action_mark_first_checkin">Marcar primer registro</string>
+    <string name="action_maybe_later">Quizás más tarde</string>
     <string name="action_next">Siguiente</string>
     <string name="action_previous">Anterior</string>
     <string name="action_refresh">Actualizar</string>
@@ -18,6 +24,7 @@
     <string name="action_reset_app">Restablecer app</string>
     <string name="action_save">Guardar</string>
     <string name="action_show_details">Mostrar detalles</string>
+    <string name="action_start_tracking">Comenzar seguimiento</string>
     <string name="action_track">Registrar</string>
     <string name="action_track_today">Registrar hoy</string>
     <string name="action_update">Actualizar</string>
@@ -76,7 +83,7 @@
     <!-- Hints -->
     <string name="hint_add_habits_config">Añade una nota de configuración para empezar a registrar.</string>
     <string name="hint_base_url">https://memos.example.com</string>
-    <string name="hint_habit_name">Nombre del hábito</string>
+    <string name="hint_habit_name">ej., Ejercicio matutino</string>
     <string name="hint_habits_config">Gimnasia | #habits/gym\nLectura | #habits/reading</string>
     <string name="hint_write_memo">Escribe una nota...</string>
 
@@ -89,6 +96,12 @@
     <string name="label_demo_mode">Modo demo</string>
     <string name="label_environment">Entorno</string>
     <string name="label_habits_config">Configuración de hábitos</string>
+    <string name="label_habit_name">Nombre del hábito</string>
+    <string name="label_habit_preset_custom">Crear el tuyo</string>
+    <string name="label_habit_preset_read">Leer 10 minutos</string>
+    <string name="label_habit_preset_stretch">Estirar</string>
+    <string name="label_habit_preset_walk">Dar un paseo</string>
+    <string name="label_habit_preset_water">Beber agua</string>
     <string name="label_language">Idioma</string>
     <string name="label_memos_db">Base de notas</string>
     <string name="label_post_filter">Filtro</string>
@@ -115,7 +128,9 @@
     <string name="msg_delete_config_warning">¿Estás seguro de que quieres eliminar esta configuración? Esto eliminará permanentemente la publicación de configuración de tus notas.</string>
     <string name="msg_delete_day_confirm">No hay hábitos seleccionados. Se eliminará la entrada del día.</string>
     <string name="msg_delete_day_warning">¿Estás seguro de que quieres eliminar la entrada de este día? Esto eliminará permanentemente la publicación de seguimiento de tus notas.</string>
+    <string name="msg_empty_state_no_habits">Crea uno para comenzar el seguimiento sin conexión.</string>
     <string name="msg_fill_all_fields">Por favor, complete todos los campos</string>
+    <string name="msg_habit_setup">Dale a tu hábito un nombre significativo.</string>
     <string name="msg_no_habits_yet">Aún no hay hábitos configurados.</string>
     <string name="msg_no_logs">Aún no hay registros</string>
     <string name="msg_no_memos_yet">No hay notas en este período.</string>
@@ -123,6 +138,8 @@
     <string name="msg_select_habit">Seleccione al menos un hábito.</string>
     <string name="msg_mark_done_confirm">¿Marcar "%1$s" como completado para %2$s?</string>
     <string name="msg_mark_not_done_confirm">¿Quitar la marca de "%1$s" para %2$s?</string>
+    <string name="msg_offline_onboarding_success">Todo listo. Registra tu primer check-in hoy.</string>
+    <string name="msg_offline_onboarding_welcome">Rastrea hábitos localmente en tu dispositivo. No se necesita cuenta.</string>
     <string name="msg_restart_required">Se requiere reiniciar para aplicar el cambio de idioma</string>
 
     <!-- Language selection -->
@@ -187,6 +204,7 @@
     <string name="time_years">Años</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">Elige un hábito inicial</string>
     <string name="title_create_day">Crear día</string>
     <string name="title_delete_config">¿Eliminar configuración?</string>
     <string name="title_delete_day">¿Eliminar día?</string>
@@ -194,8 +212,12 @@
     <string name="title_edit_config_warning">¿Editar Configuración Existente?</string>
     <string name="title_edit_day">Editar día</string>
     <string name="title_edit_memo">Editar nota</string>
+    <string name="title_empty_state_no_habits">Aún no hay hábitos</string>
+    <string name="title_habit_setup">Configura tu hábito</string>
     <string name="title_logs">Registros (%1$d)</string>
     <string name="title_new_memo">Nueva nota</string>
+    <string name="title_offline_onboarding_success">¡Excelente trabajo!</string>
+    <string name="title_offline_onboarding_welcome">Modo sin conexión listo</string>
     <string name="title_mark_done">¿Marcar como hecho?</string>
     <string name="title_mark_not_done">¿Marcar como no hecho?</string>
     <string name="title_update_day">Actualizar día</string>

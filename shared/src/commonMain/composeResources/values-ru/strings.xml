@@ -6,11 +6,17 @@
     <string name="action_copied">Скопировано</string>
     <string name="action_configure_habits">Настроить привычки</string>
     <string name="action_create">Создать</string>
+    <string name="action_create_first_habit">Создать первую привычку</string>
     <string name="action_create_memo">Создать заметку</string>
     <string name="action_create_new_config">Создать новый конфиг (рекомендуется)</string>
+    <string name="action_continue">Продолжить</string>
     <string name="action_delete">Удалить</string>
+    <string name="action_add_first_habit">Добавить первую привычку</string>
     <string name="action_edit_anyway">Все равно редактировать</string>
+    <string name="action_go_to_dashboard">Перейти к панели</string>
     <string name="action_hide_details">Скрыть детали</string>
+    <string name="action_mark_first_checkin">Отметить первую запись</string>
+    <string name="action_maybe_later">Может быть позже</string>
     <string name="action_next">Вперед</string>
     <string name="action_previous">Назад</string>
     <string name="action_refresh">Обновить</string>
@@ -18,6 +24,7 @@
     <string name="action_reset_app">Сбросить</string>
     <string name="action_save">Сохранить</string>
     <string name="action_show_details">Показать детали</string>
+    <string name="action_start_tracking">Начать отслеживание</string>
     <string name="action_track">Отметить</string>
     <string name="action_track_today">Отметить сегодня</string>
     <string name="action_update">Обновить</string>
@@ -77,7 +84,7 @@
     <!-- Hints -->
     <string name="hint_add_habits_config">Добавьте заметку с конфигурацией привычек, чтобы начать отслеживание.</string>
     <string name="hint_base_url">https://memos.example.com</string>
-    <string name="hint_habit_name">Название привычки</string>
+    <string name="hint_habit_name">например, Утренняя зарядка</string>
     <string name="hint_habits_config">Гимнастика | #habits/gym\nЧтение | #habits/reading</string>
     <string name="hint_write_memo">Напишите заметку...</string>
 
@@ -90,6 +97,12 @@
     <string name="label_demo_mode">Демо-режим</string>
     <string name="label_environment">Окружение</string>
     <string name="label_habits_config">Конфигурация привычек</string>
+    <string name="label_habit_name">Название привычки</string>
+    <string name="label_habit_preset_custom">Создать свою</string>
+    <string name="label_habit_preset_read">Читать 10 минут</string>
+    <string name="label_habit_preset_stretch">Растяжка</string>
+    <string name="label_habit_preset_walk">Прогулка</string>
+    <string name="label_habit_preset_water">Выпить воды</string>
     <string name="label_language">Язык</string>
     <string name="label_memos_db">База заметок</string>
     <string name="label_post_filter">Фильтр</string>
@@ -114,13 +127,17 @@
     <string name="msg_delete_day_confirm">Привычки не выбраны. Запись за этот день будет удалена.</string>
     <string name="msg_delete_day_warning">Вы уверены, что хотите удалить запись за этот день? Пост с отметками будет удален из ваших заметок навсегда.</string>
     <string name="msg_edit_config_warning">Вы собираетесь перезаписать существующий конфиг. Это повлияет на все исторические данные.\n\nРедактирование старого конфига не рекомендуется, так как это изменит отображение прошлых данных. Например, если вы добавите новую привычку, все прошлые дни покажут её как "не выполненную", хотя её тогда еще не существовало.\n\nЛучшая практика: Создайте новый конфиг. Ваши исторические данные сохранят старый конфиг, а новые данные будут использовать новый конфиг.</string>
+    <string name="msg_empty_state_no_habits">Создайте привычку, чтобы начать отслеживание в оффлайн-режиме.</string>
     <string name="msg_fill_all_fields">Заполните все поля</string>
+    <string name="msg_habit_setup">Придумайте осмысленное название для вашей привычки.</string>
     <string name="msg_no_habits_yet">Привычки еще не настроены.</string>
     <string name="msg_no_logs">Логов пока нет</string>
     <string name="msg_reset_confirm">Вы уверены, что хотите сбросить приложение? Все данные будут удалены.</string>
     <string name="msg_select_habit">Выберите хотя бы одну привычку.</string>
     <string name="msg_mark_done_confirm">Отметить «%1$s» как выполненную за %2$s?</string>
     <string name="msg_mark_not_done_confirm">Снять отметку с «%1$s» за %2$s?</string>
+    <string name="msg_offline_onboarding_success">Все готово. Отметьте первую запись сегодня.</string>
+    <string name="msg_offline_onboarding_welcome">Отслеживайте привычки локально на вашем устройстве. Аккаунт не требуется.</string>
     <string name="msg_restart_required">Для применения требуется перезапуск</string>
 
     <!-- Language selection -->
@@ -186,6 +203,7 @@
     <string name="time_years">Годы</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">Выберите начальную привычку</string>
     <string name="title_create_day">Создать день</string>
     <string name="title_delete_config">Удалить конфиг?</string>
     <string name="title_delete_day">Удалить день?</string>
@@ -193,8 +211,12 @@
     <string name="title_edit_config_warning">Редактировать существующий конфиг?</string>
     <string name="title_edit_day">Изменить день</string>
     <string name="title_edit_memo">Редактировать заметку</string>
+    <string name="title_empty_state_no_habits">Привычек пока нет</string>
+    <string name="title_habit_setup">Настройте вашу привычку</string>
     <string name="title_logs">Логи (%1$d)</string>
     <string name="title_new_memo">Новая заметка</string>
+    <string name="title_offline_onboarding_success">Отличная работа!</string>
+    <string name="title_offline_onboarding_welcome">Оффлайн-режим готов</string>
     <string name="title_mark_done">Отметить выполнение?</string>
     <string name="title_mark_not_done">Снять отметку?</string>
     <string name="title_update_day">Обновить день</string>

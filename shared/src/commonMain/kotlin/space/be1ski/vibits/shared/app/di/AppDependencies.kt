@@ -8,6 +8,8 @@ import space.be1ski.vibits.shared.feature.memos.di.MemosDependencies
 import space.be1ski.vibits.shared.feature.mode.di.ModeSelectionDependencies
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.FixInvalidOnlineModeUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.LoadAppModeUseCase
+import space.be1ski.vibits.shared.feature.onboarding.di.OnboardingDependencies
+import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.ShouldShowOnboardingUseCase
 import space.be1ski.vibits.shared.feature.settings.di.SettingsDependencies
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.LoadPreferencesUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveTimeRangeTabUseCase
@@ -24,7 +26,9 @@ class AppDependencies(
   val saveTimeRangeTab: SaveTimeRangeTabUseCase,
   val loadAppDetails: LoadAppDetailsUseCase,
   val loadAppMode: LoadAppModeUseCase,
+  val shouldShowOnboarding: ShouldShowOnboardingUseCase,
   val modeSelectionDependencies: ModeSelectionDependencies,
+  val onboardingDependencies: OnboardingDependencies,
   val habitsDependencies: HabitsDependencies,
   val memosDependencies: MemosDependencies,
   val settingsDependencies: SettingsDependencies,
