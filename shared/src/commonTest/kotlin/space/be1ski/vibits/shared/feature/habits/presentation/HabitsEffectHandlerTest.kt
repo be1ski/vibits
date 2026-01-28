@@ -123,9 +123,20 @@ class HabitsEffectHandlerTest {
     repository: FakeMemosRepository = FakeMemosRepository(),
     onRefresh: () -> Unit = {},
   ): HabitsEffectHandler {
+    val buildActivityDataUseCase =
+      space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase(
+        buildDayDataUseCase =
+          space.be1ski.vibits.shared.feature.habits.domain.usecase
+            .BuildDayDataUseCase(),
+      )
+    val calculateSuccessRateUseCase =
+      space.be1ski.vibits.shared.feature.habits.domain.usecase
+        .CalculateSuccessRateUseCase()
     return HabitsEffectHandler(
       memosRepository = repository,
       onRefresh = onRefresh,
+      buildActivityDataUseCase = buildActivityDataUseCase,
+      calculateSuccessRateUseCase = calculateSuccessRateUseCase,
     )
   }
 }
