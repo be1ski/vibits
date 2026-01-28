@@ -224,6 +224,7 @@ private fun MemosTabContent(
             enablePullRefresh = false,
             demoMode = appState.isDemoMode,
           ),
+        appMode = appState.appMode,
         calculateSuccessRate = calculateSuccessRate,
         buildActivityDataUseCase = buildActivityDataUseCase,
         cache = cache,
@@ -235,11 +236,14 @@ private fun MemosTabContent(
       PostsScreen(
         memos = memos,
         range = activityRange,
+        appMode = appState.appMode,
         demoMode = appState.isDemoMode,
         calculateSuccessRate = calculateSuccessRate,
         buildActivityDataUseCase = buildActivityDataUseCase,
         cache = cache,
         dateFormatter = dateFormatter,
+        habitsState = habitsState,
+        onHabitsAction = onHabitsAction,
         postsListExpanded = appState.postsListExpanded,
         onPostsListExpandedChange = { onAppAction(AppAction.SetPostsListExpanded(it)) },
       )

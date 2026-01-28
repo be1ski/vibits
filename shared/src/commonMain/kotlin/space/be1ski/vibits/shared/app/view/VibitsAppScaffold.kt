@@ -40,6 +40,7 @@ import space.be1ski.vibits.shared.feature.habits.domain.usecase.EarliestMemoDate
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.IsActivityRangeBeforeUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
+import space.be1ski.vibits.shared.feature.habits.presentation.getActivityData
 import space.be1ski.vibits.shared.feature.habits.view.components.rememberHabitsConfigTimeline
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
@@ -195,7 +196,7 @@ private fun ScaffoldContent(
     memosState.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
 
     if (appState.selectedScreen != Screen.FEED) {
-      val successRate = rememberSuccessRateIfNeeded(appState, habitsTimeline, memosState.memos, activityRange, dependencies)
+      val successRate = rememberSuccessRateIfNeeded(appState, habitsTimeline, memosState.memos, activityRange, habitsState, dependencies)
       TimeRangeControls(
         selectedTab = selectedTab,
         rangeLabel = formatRangeLabel(activityRange, dateFormatter),
@@ -232,13 +233,21 @@ private fun rememberSuccessRateIfNeeded(
   habitsTimeline: List<HabitsConfigEntry>,
   memos: List<Memo>,
   activityRange: ActivityRange,
+  habitsState: HabitsState,
   dependencies: AppDependencies,
 ): Float? {
   val isHabitsScreen = appState.selectedScreen == Screen.HABITS
   val hasHabits = remember(habitsTimeline) { habitsTimeline.lastOrNull()?.habits?.isNotEmpty() == true }
   val shouldCalculate = isHabitsScreen && hasHabits
   return if (shouldCalculate) {
-    rememberSuccessRate(
+    // Try to read from TEA cache first
+    val cachedData =
+      habitsState.getActivityData(
+        activityRange,
+        space.be1ski.vibits.shared.app.domain.model.ActivityMode.HABITS,
+        appState.appMode,
+      )
+    cachedData?.successRate?.rate ?: rememberSuccessRate(
       memos,
       activityRange,
       dependencies.calculateSuccessRate,

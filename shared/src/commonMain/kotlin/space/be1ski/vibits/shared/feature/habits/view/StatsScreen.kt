@@ -21,11 +21,15 @@ import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccess
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractDailyMemosUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.GetPeriodPostsUseCase
+import space.be1ski.vibits.shared.feature.habits.presentation.ActivityCacheKey
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
+import space.be1ski.vibits.shared.feature.habits.presentation.getActivityData
+import space.be1ski.vibits.shared.feature.habits.presentation.isDataLoading
 import space.be1ski.vibits.shared.feature.habits.view.components.ActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.habits.view.components.rememberActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.view.components.rememberHabitsConfigTimeline
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
 /**
  * Stats tab with activity charts.
@@ -33,6 +37,7 @@ import space.be1ski.vibits.shared.feature.habits.view.components.rememberHabitsC
 @Composable
 fun StatsScreen(
   state: StatsScreenState,
+  appMode: AppMode,
   calculateSuccessRate: CalculateSuccessRateUseCase,
   buildActivityDataUseCase: BuildActivityDataUseCase,
   cache: ActivityWeekDataCache,
@@ -42,15 +47,16 @@ fun StatsScreen(
   onPostsListExpandedChange: (Boolean) -> Unit = {},
 ) {
   val derived =
-    rememberStatsScreenDerived(state, habitsState, calculateSuccessRate, buildActivityDataUseCase, cache, dateFormatter)
+    rememberStatsScreenDerived(state, appMode, habitsState, calculateSuccessRate, buildActivityDataUseCase, cache, dateFormatter)
   StatsScreenContent(derived, onHabitsAction, onPostsListExpandedChange)
   StatsScreenDialogs(derived, onHabitsAction)
 }
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable
 private fun rememberStatsScreenDerived(
   state: StatsScreenState,
+  appMode: AppMode,
   habitsState: HabitsState,
   calculateSuccessRate: CalculateSuccessRateUseCase,
   buildActivityDataUseCase: BuildActivityDataUseCase,
@@ -60,7 +66,22 @@ private fun rememberStatsScreenDerived(
   val memos = state.memos
   val range = state.range
   val activityMode = state.activityMode
-  val habitsConfigTimeline = rememberHabitsConfigTimeline(memos)
+
+  // Read from TEA cache (new system)
+  val cacheKey =
+    remember(range, activityMode, appMode) {
+      ActivityCacheKey(range, activityMode, appMode)
+    }
+  val cachedData = habitsState.getActivityData(range, activityMode, appMode)
+  val isLoadingWeekData = habitsState.isDataLoading(cacheKey)
+
+  // Use cached data if available, otherwise fallback to old system
+  val weekData =
+    cachedData?.weekData
+      ?: rememberActivityWeekData(memos, range, activityMode, currentLocalDate(), buildActivityDataUseCase, cache).data
+  val habitsConfigTimeline = cachedData?.configTimeline ?: rememberHabitsConfigTimeline(memos)
+  val successRateData = cachedData?.successRate
+
   val currentHabitsConfig =
     remember(habitsConfigTimeline) {
       habitsConfigTimeline.lastOrNull()?.habits ?: emptyList()
@@ -83,9 +104,6 @@ private fun rememberStatsScreenDerived(
         dailyMemo = todayMemo,
       )
     }
-  val weekDataState = rememberActivityWeekData(memos, range, activityMode, today, buildActivityDataUseCase, cache)
-  val weekData = weekDataState.data
-  val isLoadingWeekData = weekDataState.isLoading
   val showWeekdayLegend =
     range is ActivityRange.Week ||
       range is ActivityRange.Month ||
@@ -108,8 +126,9 @@ private fun rememberStatsScreenDerived(
     remember(habitsConfigTimeline) {
       habitsConfigTimeline.firstOrNull()?.date
     }
-  val successRateData =
-    remember(weekData, range, activityMode, currentHabitsConfig, configStartDate) {
+  // Success rate already computed in cache, only fallback if not available
+  val finalSuccessRateData =
+    successRateData ?: remember(weekData, range, activityMode, currentHabitsConfig, configStartDate) {
       if (activityMode == ActivityMode.HABITS && currentHabitsConfig.isNotEmpty()) {
         calculateSuccessRate(weekData, range, today, configStartDate)
       } else {
@@ -138,7 +157,7 @@ private fun rememberStatsScreenDerived(
     todayDay = todayDay,
     today = today,
     timeZone = timeZone,
-    successRateData = successRateData,
+    successRateData = finalSuccessRateData,
     periodPosts = periodPosts,
     dateFormatter = dateFormatter,
     configStartDate = configStartDate,
