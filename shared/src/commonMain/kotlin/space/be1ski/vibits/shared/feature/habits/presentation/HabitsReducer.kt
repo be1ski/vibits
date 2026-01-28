@@ -362,7 +362,6 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
             singleToggleHabitTag = null,
             singleToggleHabitLabel = null,
             singleToggleConfig = emptyList(),
-            needsCacheRefresh = true,
           )
         }
         effect(HabitsEffect.RefreshMemos)
@@ -382,7 +381,6 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
             singleToggleHabitTag = null,
             singleToggleHabitLabel = null,
             singleToggleConfig = emptyList(),
-            needsCacheRefresh = true,
           )
         }
         effect(HabitsEffect.RefreshMemos)

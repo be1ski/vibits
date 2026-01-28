@@ -83,8 +83,8 @@ class HabitsCacheTest {
   }
 
   @Test
-  fun `TC-06 memo operations should set needsCacheRefresh flag`() {
-    val initialState = HabitsState(needsCacheRefresh = false)
+  fun `TC-06 memo operations should close editor and trigger refresh`() {
+    val initialState = HabitsState(needsCacheRefresh = false, isLoading = true)
     val testMemo =
       space.be1ski.vibits.shared.feature.memos.domain.model.Memo(
         name = "memos/1",
@@ -99,10 +99,9 @@ class HabitsCacheTest {
       )
 
     actions.forEach { action ->
-      val (newState, _) = reducer.invoke(action, initialState)
-      // Note: This test will fail until we implement needsCacheRefresh in reducer
-      // Currently MemoCreated/Updated/Deleted don't set this flag
-      assertTrue(newState.needsCacheRefresh, "Action $action should set needsCacheRefresh")
+      val (newState, effects) = reducer.invoke(action, initialState)
+      assertEquals(false, newState.isLoading, "Action $action should stop loading")
+      assertTrue(effects.any { it is HabitsEffect.RefreshMemos }, "Action $action should trigger RefreshMemos")
     }
   }
 
@@ -131,12 +130,12 @@ class HabitsCacheTest {
         name = "memos/1",
         content = "test",
       )
-    val (newState, _) = reducer.invoke(HabitsAction.MemoUpdated(testMemo), initialState)
+    val (newState, effects) = reducer.invoke(HabitsAction.MemoUpdated(testMemo), initialState)
 
     // Then: cache should not be cleared
     assertEquals(2, newState.activityDataCache.size, "Cache size should remain unchanged")
     assertNotNull(newState.activityDataCache[week1Key], "Week 1 cache should exist")
     assertNotNull(newState.activityDataCache[week2Key], "Week 2 cache should exist")
-    assertTrue(newState.needsCacheRefresh, "needsCacheRefresh should be true")
+    assertTrue(effects.any { it is HabitsEffect.RefreshMemos }, "Should trigger memos refresh")
   }
 }
