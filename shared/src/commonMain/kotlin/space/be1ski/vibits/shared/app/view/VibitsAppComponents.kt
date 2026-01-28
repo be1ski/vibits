@@ -16,24 +16,15 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.app.domain.model.ActivityMode
-import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.app.presentation.AppAction
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.Indent
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
-import space.be1ski.vibits.shared.feature.habits.view.components.ActivityWeekDataCache
-import space.be1ski.vibits.shared.feature.habits.view.components.rememberActivityWeekData
-import space.be1ski.vibits.shared.feature.habits.view.components.rememberHabitsConfigTimeline
-import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
@@ -150,24 +141,4 @@ internal fun MemosBottomNavigation(
       label = { Text(stringResource(Res.string.nav_feed)) },
     )
   }
-}
-
-@Composable
-internal fun rememberSuccessRate(
-  memos: List<Memo>,
-  activityRange: ActivityRange,
-  calculateSuccessRate: CalculateSuccessRateUseCase,
-  buildActivityDataUseCase: BuildActivityDataUseCase,
-  cache: ActivityWeekDataCache,
-): Float? {
-  val today = currentLocalDate()
-  val weekDataState = rememberActivityWeekData(memos, activityRange, ActivityMode.HABITS, today, buildActivityDataUseCase, cache)
-  val weekData = weekDataState.data
-  val habitsTimeline = rememberHabitsConfigTimeline(memos)
-  val configStartDate = remember(habitsTimeline) { habitsTimeline.firstOrNull()?.date }
-  val data =
-    remember(weekData, activityRange, today, configStartDate) {
-      calculateSuccessRate(weekData, activityRange, today, configStartDate)
-    }
-  return if (data.total > 0) data.rate else null
 }

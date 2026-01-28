@@ -398,5 +398,56 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
           )
         }
       }
+
+      // Cache management
+      is HabitsAction.RequestPrewarmAllRanges -> {
+        state {
+          copy(
+            needsCacheRefresh = false,
+            isInitialLoading = true,
+          )
+        }
+        effect(HabitsEffect.RunPrewarmAllRanges(action.memos, action.appMode))
+      }
+
+      is HabitsAction.UpdateActivityData -> {
+        val key = ActivityCacheKey(action.range, action.mode, action.appMode)
+        state {
+          copy(
+            activityDataCache =
+              activityDataCache +
+                (key to CachedActivityData(action.weekData, action.configTimeline, action.successRate)),
+            isRecalculating = isRecalculating - key,
+          )
+        }
+      }
+
+      is HabitsAction.PrewarmCompleted -> {
+        state {
+          copy(
+            isInitialLoading = false,
+          )
+        }
+      }
+
+      is HabitsAction.InvalidateAllCache -> {
+        state {
+          copy(
+            activityDataCache = emptyMap(),
+            isRecalculating = emptySet(),
+            needsCacheRefresh = true,
+          )
+        }
+      }
+
+      is HabitsAction.InvalidateCache -> {
+        state {
+          copy(
+            isRecalculating = isRecalculating + ActivityCacheKey(action.range, action.mode, action.appMode),
+            needsCacheRefresh = false,
+          )
+        }
+        effect(HabitsEffect.RecalculateActivityData(action.range, action.mode, action.appMode, action.memos))
+      }
     }
   }

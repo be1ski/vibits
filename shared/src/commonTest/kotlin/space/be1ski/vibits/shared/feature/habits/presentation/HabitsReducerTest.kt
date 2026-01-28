@@ -1,13 +1,17 @@
 package space.be1ski.vibits.shared.feature.habits.presentation
 
 import kotlinx.datetime.LocalDate
+import space.be1ski.vibits.shared.app.domain.model.ActivityMode
+import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.core.elm.test
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
+import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitStatus
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -772,6 +776,125 @@ class HabitsReducerTest {
       send(HabitsAction.CancelDeleteConfig)
 
       assertState { !showDeleteConfigConfirm }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when RequestPrewarmAllRanges then sets initial loading and emits prewarm effect`() =
+    habitsReducer.test(
+      HabitsState(
+        needsCacheRefresh = true,
+        isInitialLoading = false,
+      ),
+    ) {
+      val memos = listOf(Memo(name = "memos/1", content = "test"))
+      send(HabitsAction.RequestPrewarmAllRanges(memos = memos, appMode = AppMode.ONLINE))
+
+      assertState { !needsCacheRefresh && isInitialLoading }
+      val effect = assertHasEffect<HabitsEffect.RunPrewarmAllRanges>()
+      assertEquals(memos, effect.memos)
+      assertEquals(AppMode.ONLINE, effect.appMode)
+    }
+
+  @Test
+  fun `when UpdateActivityData then stores data in cache and clears recalculating flag`() =
+    habitsReducer.test(
+      HabitsState(
+        activityDataCache = emptyMap(),
+        isRecalculating = setOf(ActivityCacheKey(ActivityRange.Week(LocalDate(2024, 1, 1)), ActivityMode.HABITS, AppMode.ONLINE)),
+      ),
+    ) {
+      val weekData = ActivityWeekData(weeks = emptyList(), maxDaily = 5, maxWeekly = 10)
+      send(
+        HabitsAction.UpdateActivityData(
+          range = ActivityRange.Week(LocalDate(2024, 1, 1)),
+          mode = ActivityMode.HABITS,
+          appMode = AppMode.ONLINE,
+          weekData = weekData,
+          configTimeline = emptyList(),
+          successRate = null,
+        ),
+      )
+
+      assertState {
+        activityDataCache.size == 1 &&
+          activityDataCache.values.first().weekData == weekData &&
+          isRecalculating.isEmpty()
+      }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when InvalidateAllCache then clears cache and sets needsCacheRefresh`() =
+    habitsReducer.test(
+      HabitsState(
+        activityDataCache =
+          mapOf(
+            ActivityCacheKey(ActivityRange.Week(LocalDate(2024, 1, 1)), ActivityMode.HABITS, AppMode.ONLINE) to
+              CachedActivityData(ActivityWeekData(emptyList(), 0, 0), emptyList(), null),
+          ),
+        isRecalculating = setOf(ActivityCacheKey(ActivityRange.Week(LocalDate(2024, 1, 1)), ActivityMode.HABITS, AppMode.ONLINE)),
+        needsCacheRefresh = false,
+        isInitialLoading = false,
+      ),
+    ) {
+      send(HabitsAction.InvalidateAllCache)
+
+      assertState {
+        activityDataCache.isEmpty() &&
+          isRecalculating.isEmpty() &&
+          needsCacheRefresh &&
+          !isInitialLoading
+      }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when InvalidateCache then marks key as recalculating and emits effect`() =
+    habitsReducer.test(
+      HabitsState(
+        activityDataCache =
+          mapOf(
+            ActivityCacheKey(ActivityRange.Week(LocalDate(2024, 1, 1)), ActivityMode.HABITS, AppMode.ONLINE) to
+              CachedActivityData(ActivityWeekData(emptyList(), 0, 0), emptyList(), null),
+          ),
+        isRecalculating = emptySet(),
+        needsCacheRefresh = true,
+      ),
+    ) {
+      val memos = listOf(Memo(name = "memos/1", content = "test"))
+      send(
+        HabitsAction.InvalidateCache(
+          range = ActivityRange.Week(LocalDate(2024, 1, 1)),
+          mode = ActivityMode.HABITS,
+          appMode = AppMode.ONLINE,
+          memos = memos,
+        ),
+      )
+
+      assertState {
+        isRecalculating.size == 1 &&
+          isRecalculating.contains(ActivityCacheKey(ActivityRange.Week(LocalDate(2024, 1, 1)), ActivityMode.HABITS, AppMode.ONLINE)) &&
+          !needsCacheRefresh
+      }
+      val effect = assertHasEffect<HabitsEffect.RecalculateActivityData>()
+      assertEquals(ActivityRange.Week(LocalDate(2024, 1, 1)), effect.range)
+      assertEquals(ActivityMode.HABITS, effect.mode)
+      assertEquals(AppMode.ONLINE, effect.appMode)
+      assertEquals(memos, effect.memos)
+    }
+
+  @Test
+  fun `when PrewarmCompleted then clears initial loading flag`() =
+    habitsReducer.test(
+      HabitsState(
+        isInitialLoading = true,
+        needsCacheRefresh = true,
+      ),
+    ) {
+      send(HabitsAction.PrewarmCompleted)
+
+      assertState { !isInitialLoading && needsCacheRefresh }
       assertNoEffects()
     }
 }
