@@ -24,16 +24,13 @@ import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
 import space.be1ski.vibits.shared.feature.habits.domain.parseConfigFromContent
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateActivityRangeDeltaUseCase
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
 import space.be1ski.vibits.shared.feature.habits.view.StatsScreen
 import space.be1ski.vibits.shared.feature.habits.view.StatsScreenState
-import space.be1ski.vibits.shared.feature.habits.view.components.ActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.habits.view.components.quarterIndex
 import space.be1ski.vibits.shared.feature.habits.view.components.startOfWeek
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
@@ -57,9 +54,6 @@ internal fun SwipeableTabContent(
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit,
   onAppAction: (AppAction) -> Unit,
-  calculateSuccessRate: CalculateSuccessRateUseCase,
-  buildActivityDataUseCase: BuildActivityDataUseCase,
-  cache: ActivityWeekDataCache,
   dateFormatter: DateFormatter,
   dispatchMemos: (MemosAction) -> Unit = {},
   feedListState: LazyListState,
@@ -107,9 +101,6 @@ internal fun SwipeableTabContent(
       onHabitsAction = onHabitsAction,
       onAppAction = onAppAction,
       onMemosAction = dispatchMemos,
-      calculateSuccessRate = calculateSuccessRate,
-      buildActivityDataUseCase = buildActivityDataUseCase,
-      cache = cache,
       dateFormatter = dateFormatter,
     )
   }
@@ -126,9 +117,6 @@ private fun SwipeablePagerContent(
   onHabitsAction: (HabitsAction) -> Unit,
   onAppAction: (AppAction) -> Unit,
   onMemosAction: (MemosAction) -> Unit,
-  calculateSuccessRate: CalculateSuccessRateUseCase,
-  buildActivityDataUseCase: BuildActivityDataUseCase,
-  cache: ActivityWeekDataCache,
   dateFormatter: DateFormatter,
 ) {
   val activityRange = activityRangeForAppState(appState)
@@ -189,9 +177,6 @@ private fun SwipeablePagerContent(
       onHabitsAction = onHabitsAction,
       onAppAction = onAppAction,
       onMemosAction = onMemosAction,
-      calculateSuccessRate = calculateSuccessRate,
-      buildActivityDataUseCase = buildActivityDataUseCase,
-      cache = cache,
       dateFormatter = dateFormatter,
     )
   }
@@ -206,9 +191,6 @@ private fun MemosTabContent(
   onHabitsAction: (HabitsAction) -> Unit,
   onAppAction: (AppAction) -> Unit,
   onMemosAction: (MemosAction) -> Unit,
-  calculateSuccessRate: CalculateSuccessRateUseCase,
-  buildActivityDataUseCase: BuildActivityDataUseCase,
-  cache: ActivityWeekDataCache,
   dateFormatter: DateFormatter,
 ) {
   val memos = memosState.memos
@@ -224,9 +206,7 @@ private fun MemosTabContent(
             enablePullRefresh = false,
             demoMode = appState.isDemoMode,
           ),
-        calculateSuccessRate = calculateSuccessRate,
-        buildActivityDataUseCase = buildActivityDataUseCase,
-        cache = cache,
+        appMode = appState.appMode,
         dateFormatter = dateFormatter,
         habitsState = habitsState,
         onHabitsAction = onHabitsAction,
@@ -235,11 +215,11 @@ private fun MemosTabContent(
       PostsScreen(
         memos = memos,
         range = activityRange,
+        appMode = appState.appMode,
         demoMode = appState.isDemoMode,
-        calculateSuccessRate = calculateSuccessRate,
-        buildActivityDataUseCase = buildActivityDataUseCase,
-        cache = cache,
         dateFormatter = dateFormatter,
+        habitsState = habitsState,
+        onHabitsAction = onHabitsAction,
         postsListExpanded = appState.postsListExpanded,
         onPostsListExpandedChange = { onAppAction(AppAction.SetPostsListExpanded(it)) },
       )

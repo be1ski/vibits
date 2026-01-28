@@ -8,6 +8,7 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.normalizeHabitTag
+import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 /**
  * Editable habit entry for the config dialog.
@@ -57,18 +58,23 @@ data class HabitsState(
   // Config dialog state
   val showConfigDialog: Boolean = false,
   val editingHabits: List<EditableHabit> = emptyList(),
-  val editingConfigMemo: space.be1ski.vibits.shared.feature.memos.domain.model.Memo? = null,
+  val editingConfigMemo: Memo? = null,
   val showDeleteConfigConfirm: Boolean = false,
   // Edit existing config warning
   val showEditConfigWarning: Boolean = false,
   val pendingConfigEdit: List<HabitConfig> = emptyList(),
-  val pendingConfigMemo: space.be1ski.vibits.shared.feature.memos.domain.model.Memo? = null,
+  val pendingConfigMemo: Memo? = null,
   // Selection state
   val selectedWeek: ActivityWeek? = null,
   val selectedDate: LocalDate? = null,
   val activeSelectionId: String? = null,
   // Loading state
   val isLoading: Boolean = false,
+  // Cache state
+  val activityDataCache: Map<ActivityCacheKey, CachedActivityData> = emptyMap(),
+  val isRecalculating: Set<ActivityCacheKey> = emptySet(),
+  val needsCacheRefresh: Boolean = false,
+  val isInitialLoading: Boolean = false,
 ) {
   val isEditorOpen: Boolean get() = editorDay != null
   val isEditing: Boolean get() = editorExisting != null

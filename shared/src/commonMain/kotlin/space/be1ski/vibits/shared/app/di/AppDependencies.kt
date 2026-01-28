@@ -4,9 +4,6 @@ import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.shared.app.domain.usecase.LoadAppDetailsUseCase
 import space.be1ski.vibits.shared.core.platform.locale.LocaleProvider
 import space.be1ski.vibits.shared.feature.habits.di.HabitsDependencies
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.BuildActivityDataUseCase
-import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateSuccessRateUseCase
-import space.be1ski.vibits.shared.feature.habits.view.components.ActivityWeekDataCache
 import space.be1ski.vibits.shared.feature.memos.di.MemosDependencies
 import space.be1ski.vibits.shared.feature.mode.di.ModeSelectionDependencies
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.FixInvalidOnlineModeUseCase
@@ -27,9 +24,6 @@ class AppDependencies(
   val saveTimeRangeTab: SaveTimeRangeTabUseCase,
   val loadAppDetails: LoadAppDetailsUseCase,
   val loadAppMode: LoadAppModeUseCase,
-  val calculateSuccessRate: CalculateSuccessRateUseCase,
-  val buildActivityData: BuildActivityDataUseCase,
-  val activityWeekDataCache: ActivityWeekDataCache,
   val modeSelectionDependencies: ModeSelectionDependencies,
   val habitsDependencies: HabitsDependencies,
   val memosDependencies: MemosDependencies,

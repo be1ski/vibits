@@ -141,7 +141,10 @@ internal fun StatsHabitsEmptyState(
   dispatch: (HabitsAction) -> Unit,
 ) {
   val state = derived.state
-  if (state.activityMode != ActivityMode.HABITS || derived.currentHabitsConfig.isNotEmpty()) {
+  if (state.activityMode != ActivityMode.HABITS ||
+    derived.currentHabitsConfig.isNotEmpty() ||
+    derived.isLoadingWeekData
+  ) {
     return
   }
   OutlinedCard(modifier = Modifier.fillMaxWidth()) {
@@ -459,89 +462,6 @@ private fun CompactPostRow(
 
 private const val COMPACT_POST_MAX_LENGTH = 50
 
-private const val SHIMMER_DURATION_MS = 1000
-private const val SHIMMER_LABEL_HEIGHT = 20
-
-@Composable
-private fun ChartShimmer(compactHeight: Boolean) {
-  val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
-  val alpha =
-    infiniteTransition.animateFloat(
-      initialValue = 0.3f,
-      targetValue = 0.7f,
-      animationSpec =
-        infiniteRepeatable(
-          animation = tween(SHIMMER_DURATION_MS),
-          repeatMode = RepeatMode.Reverse,
-        ),
-      label = "shimmer_alpha",
-    )
-  val cellSize = ChartDimens.minCell(compactHeight)
-  val spacing = ChartDimens.spacing(compactHeight)
-  val chartHeight = (cellSize + spacing) * DAYS_IN_WEEK
-
-  Box(
-    modifier =
-      Modifier
-        .fillMaxWidth()
-        .height(chartHeight)
-        .background(
-          color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha.value),
-          shape = RoundedCornerShape(4.dp),
-        ),
-  )
-}
-
-@Composable
-private fun HabitSectionShimmer(
-  label: String,
-  compactHeight: Boolean,
-) {
-  val infiniteTransition = rememberInfiniteTransition(label = "shimmer_$label")
-  val alpha =
-    infiniteTransition.animateFloat(
-      initialValue = 0.3f,
-      targetValue = 0.7f,
-      animationSpec =
-        infiniteRepeatable(
-          animation = tween(SHIMMER_DURATION_MS),
-          repeatMode = RepeatMode.Reverse,
-        ),
-      label = "shimmer_alpha_$label",
-    )
-  val cellSize = ChartDimens.minCell(compactHeight)
-  val spacing = ChartDimens.spacing(compactHeight)
-  val chartHeight = (cellSize + spacing) * DAYS_IN_WEEK
-
-  Column(
-    verticalArrangement = Arrangement.spacedBy(Indent.xs),
-    modifier = Modifier.padding(top = Indent.s),
-  ) {
-    // Label shimmer
-    Box(
-      modifier =
-        Modifier
-          .width(80.dp)
-          .height(SHIMMER_LABEL_HEIGHT.dp)
-          .background(
-            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha.value),
-            shape = RoundedCornerShape(4.dp),
-          ),
-    )
-    // Chart shimmer
-    Box(
-      modifier =
-        Modifier
-          .fillMaxWidth()
-          .height(chartHeight)
-          .background(
-            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha.value),
-            shape = RoundedCornerShape(4.dp),
-          ),
-    )
-  }
-}
-
 @Suppress("LongMethod")
 @Composable
 internal fun StatsMainChart(
@@ -559,12 +479,6 @@ internal fun StatsMainChart(
       compactHeight = derived.useCompactHeight,
       formatter = derived.dateFormatter,
     )
-    return
-  }
-
-  // Show shimmer while loading and no data yet
-  if (derived.isLoadingWeekData && derived.weekData.weeks.isEmpty()) {
-    ChartShimmer(derived.useCompactHeight)
     return
   }
 
@@ -655,12 +569,6 @@ internal fun StatsWeeklyChart(
     return
   }
 
-  // Show shimmer while loading
-  if (derived.isLoadingWeekData && derived.weekData.weeks.isEmpty()) {
-    ChartShimmer(derived.useCompactHeight)
-    return
-  }
-
   val habitsState = derived.habitsState
   val chartScrollState = rememberScrollState()
   WeeklyBarChart(
@@ -688,14 +596,6 @@ internal fun StatsHabitSections(
   dispatch: (HabitsAction) -> Unit,
 ) {
   if (!derived.showHabitSections) {
-    return
-  }
-
-  // Show shimmers while loading
-  if (derived.isLoadingWeekData && derived.weekData.weeks.isEmpty()) {
-    derived.currentHabitsConfig.forEach { habit ->
-      HabitSectionShimmer(habit.tag, derived.useCompactHeight)
-    }
     return
   }
 
