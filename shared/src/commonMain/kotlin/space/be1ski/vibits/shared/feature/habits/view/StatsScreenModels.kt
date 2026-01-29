@@ -40,7 +40,6 @@ internal data class HabitActivitySectionState(
   val habitColor: Long? = null,
 )
 
-@Suppress("LongParameterList")
 internal data class StatsScreenDerivedState(
   val state: StatsScreenState,
   val habitsState: HabitsState,

@@ -450,7 +450,6 @@ private fun ContributionGridTimelineRow(
   )
 }
 
-@Suppress("CyclomaticComplexMethod")
 @Composable
 private fun ContributionGridTooltip(
   state: ContributionGridState,
@@ -646,7 +645,6 @@ internal data class ChartLayout(
 /**
  * Renders an individual activity cell.
  */
-@Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable
 private fun ContributionCell(
   state: ContributionCellState,

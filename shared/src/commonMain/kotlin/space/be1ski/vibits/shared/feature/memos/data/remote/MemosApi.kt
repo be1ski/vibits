@@ -25,7 +25,6 @@ private const val TAG = "MemosApi"
 
 @Inject
 @SingleIn(AppScope::class)
-@Suppress("TooGenericExceptionCaught")
 class MemosApi(
   private val httpClient: HttpClient,
 ) {

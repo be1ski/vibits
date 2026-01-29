@@ -26,7 +26,6 @@ class BuildActivityDataUseCase(
   /**
    * Builds ActivityWeekData for a given range.
    */
-  @Suppress("LongParameterList")
   fun buildWeekData(
     configTimeline: List<HabitsConfigEntry>,
     dailyMemos: Map<LocalDate, DailyMemoInfo>,

@@ -159,7 +159,6 @@ private fun QuickOnlineDialog(
   )
 }
 
-@Suppress("LongMethod")
 @Composable
 private fun CredentialsSetupDialog(
   state: ModeSelectionState,

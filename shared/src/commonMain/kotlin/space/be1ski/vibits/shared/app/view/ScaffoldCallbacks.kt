@@ -14,7 +14,6 @@ import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 
-@Suppress("LongParameterList")
 internal class ScaffoldCallbacks(
   val onClearSelection: () -> Unit,
   val onFeedScrollToTop: () -> Unit,
@@ -25,7 +24,6 @@ internal class ScaffoldCallbacks(
   val onNavigateForward: () -> Unit,
 )
 
-@Suppress("LongMethod")
 @Composable
 internal fun rememberScaffoldCallbacks(
   appState: AppState,

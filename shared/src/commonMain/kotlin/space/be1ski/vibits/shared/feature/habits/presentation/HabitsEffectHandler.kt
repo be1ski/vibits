@@ -41,7 +41,6 @@ class HabitsEffectHandler(
   private val buildActivityDataUseCase: BuildActivityDataUseCase,
   private val calculateSuccessRateUseCase: CalculateSuccessRateUseCase,
 ) : EffectHandler<HabitsEffect, HabitsAction> {
-  @Suppress("LongMethod")
   override fun invoke(effect: HabitsEffect): Flow<HabitsAction> =
     flow {
       when (effect) {
@@ -101,7 +100,7 @@ class HabitsEffectHandler(
 
         is HabitsEffect.RecalculateActivityData -> {
           Log.d(TAG, "Recalculating for ${effect.range}")
-          val result = calculateActivityData(effect.range, effect.mode, effect.appMode, effect.memos)
+          val result = calculateActivityData(effect.range, effect.mode, effect.memos)
           emit(
             HabitsAction.UpdateActivityData(
               range = effect.range,
@@ -139,7 +138,7 @@ class HabitsEffectHandler(
         .flatMap { range ->
           modes.map { mode ->
             async {
-              val data = calculateActivityData(range, mode, appMode, memos)
+              val data = calculateActivityData(range, mode, memos)
               PrewarmResult(range, mode, appMode, data.weekData, data.configTimeline, data.successRate)
             }
           }
@@ -150,7 +149,6 @@ class HabitsEffectHandler(
   private fun calculateActivityData(
     range: ActivityRange,
     mode: ActivityMode,
-    @Suppress("UnusedParameter") appMode: AppMode,
     memos: List<Memo>,
   ): CachedActivityData {
     val timeZone = TimeZone.currentSystemDefault()
@@ -210,7 +208,6 @@ class HabitsEffectHandler(
     return months
   }
 
-  @Suppress("MagicNumber")
   private fun generateQuarters(
     startDate: LocalDate,
     endDate: LocalDate,

@@ -1,5 +1,3 @@
-@file:Suppress("TooManyFunctions")
-
 package space.be1ski.vibits.shared.feature.settings.view
 
 import androidx.compose.foundation.background
@@ -37,8 +35,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -154,7 +152,6 @@ fun SettingsDialog(
   }
 }
 
-@Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable
 private fun SettingsDialogBody(
   state: SettingsState,
@@ -274,21 +271,20 @@ private fun AppModeSelector(
 
 private const val TOAST_DURATION_MS = 1500L
 
-@Suppress("DEPRECATION")
 @Composable
 private fun AppDetailsSection(
   appDetails: AppDetails,
   appMode: AppMode,
 ) {
-  val clipboardManager = LocalClipboardManager.current
+  val clipboard = LocalClipboard.current
   val scope = rememberCoroutineScope()
   var copiedKey by remember { mutableStateOf<String?>(null) }
   val copiedLabel = stringResource(Res.string.action_copied)
 
   val onCopy: (String, String) -> Unit = { key, value ->
-    clipboardManager.setText(AnnotatedString(value))
-    copiedKey = key
     scope.launch {
+      clipboard.setClipEntry(value.toClipEntry())
+      copiedKey = key
       delay(TOAST_DURATION_MS)
       if (copiedKey == key) copiedKey = null
     }
@@ -431,7 +427,6 @@ private fun LanguageDropdown(
   }
 }
 
-@Suppress("CyclomaticComplexMethod")
 @Composable
 private fun getLanguageLabel(language: AppLanguage): String =
   when (language) {
@@ -494,7 +489,6 @@ private fun ResetConfirmationDialog(
   )
 }
 
-@Suppress("LongMethod")
 @Composable
 private fun ActionsRow(
   showMemos: Boolean,
@@ -576,7 +570,6 @@ private fun ActionsRow(
 
 private const val LOG_TIMESTAMP_LENGTH = 8
 
-@Suppress("LongMethod")
 @Composable
 private fun LogsDialog(onDismiss: () -> Unit) {
   val logs = Log.logs

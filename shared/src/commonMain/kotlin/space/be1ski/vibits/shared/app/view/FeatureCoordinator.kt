@@ -69,7 +69,6 @@ internal fun FeatureCoordinator(
   }
 }
 
-@Suppress("LongParameterList")
 private fun handleNotification(
   effect: SettingsEffect.Notification,
   dispatchApp: (AppAction) -> Unit,

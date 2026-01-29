@@ -1,5 +1,3 @@
-@file:Suppress("TooManyFunctions")
-
 package space.be1ski.vibits.shared.app.view
 
 import androidx.compose.foundation.layout.Box
@@ -257,7 +255,6 @@ private fun rememberFeaturesState(
   return FeaturesState(modeSelectionFeature, onboardingFeature, appFeatures)
 }
 
-@Suppress("LongParameterList")
 @Composable
 private fun AppContent(
   appMode: AppMode,
@@ -291,7 +288,6 @@ private fun AppContent(
   }
 }
 
-@Suppress("LongParameterList")
 private fun createResetAppCallback(
   dependencies: AppDependencies,
   onThemeReset: () -> Unit,

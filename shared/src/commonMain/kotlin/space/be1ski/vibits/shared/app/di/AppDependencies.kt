@@ -17,7 +17,6 @@ import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveTimeRangeT
 /**
  * Single entry point for all app dependencies.
  */
-@Suppress("LongParameterList")
 @Inject
 class AppDependencies(
   val localeProvider: LocaleProvider,

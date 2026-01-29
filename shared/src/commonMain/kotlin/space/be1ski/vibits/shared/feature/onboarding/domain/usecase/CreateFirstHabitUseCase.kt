@@ -8,7 +8,6 @@ import space.be1ski.vibits.shared.feature.memos.domain.usecase.CreateMemoUseCase
 class CreateFirstHabitUseCase(
   private val createMemo: CreateMemoUseCase,
 ) {
-  @Suppress("MagicNumber")
   suspend operator fun invoke(
     name: String,
     presetId: String?,

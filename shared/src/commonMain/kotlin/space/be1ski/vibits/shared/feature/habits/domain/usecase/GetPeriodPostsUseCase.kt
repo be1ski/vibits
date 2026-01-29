@@ -29,7 +29,6 @@ class GetPeriodPostsUseCase {
       }.sortedByDescending { it.createTime ?: it.updateTime }
   }
 
-  @Suppress("MagicNumber")
   private fun rangeBounds(range: ActivityRange): Pair<LocalDate, LocalDate> =
     when (range) {
       is ActivityRange.Week -> {

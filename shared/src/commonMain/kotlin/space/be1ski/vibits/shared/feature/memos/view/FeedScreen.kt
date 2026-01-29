@@ -58,7 +58,6 @@ import space.be1ski.vibits.shared.generated.title_delete_memo
 /**
  * Feed tab showing the raw memos list.
  */
-@Suppress("LongParameterList", "LongMethod", "CyclomaticComplexMethod")
 @OptIn(androidx.compose.material.ExperimentalMaterialApi::class)
 @Composable
 fun FeedScreen(

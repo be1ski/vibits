@@ -52,7 +52,6 @@ import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_create_memo
 import space.be1ski.vibits.shared.generated.action_track_today
 
-@Suppress("LongMethod")
 @Composable
 internal fun VibitsAppScaffold(
   features: AppFeatures,

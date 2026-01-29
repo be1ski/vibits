@@ -44,7 +44,6 @@ fun StatsScreen(
   StatsScreenDialogs(derived, onHabitsAction)
 }
 
-@Suppress("LongMethod")
 @Composable
 private fun rememberStatsScreenDerived(
   state: StatsScreenState,

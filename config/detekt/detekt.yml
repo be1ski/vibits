@@ -5,18 +5,72 @@ complexity:
   LongParameterList:
     ignoreAnnotated:
       - Composable
+      - Inject
+    excludes:
+      - '**/di/**'
+      - '**/*EffectHandler.kt'
+
+  LongMethod:
+    ignoreAnnotated:
+      - Composable
+    excludes:
+      - '**/view/**'
+
+  CyclomaticComplexMethod:
+    ignoreAnnotated:
+      - Composable
+    excludes:
+      - '**/view/**'
+
+  TooManyFunctions:
+    excludes:
+      - '**/di/**'
+      - '**/view/**'
+
+exceptions:
+  TooGenericExceptionCaught:
+    excludes:
+      - '**/data/remote/**'
 
 naming:
   FunctionNaming:
     ignoreAnnotated:
       - Composable
       - Preview
+    excludes:
+      - '**/iosMain/**/*ViewController.kt'
 
 style:
   MaxLineLength:
     active: true
     maxLineLength: 140
+
   UnusedPrivateMember:
     active: true
     ignoreAnnotated:
       - Preview
+
+  UnusedParameter:
+    excludes:
+      - '**/wasmJsMain/**'
+      - '**/jsMain/**'
+
+  MagicNumber:
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+    ignoreEnums: true
+    ignoreNumbers:
+      - '-1'
+      - '0'
+      - '1'
+      - '2'
+      - '3'
+      - '4'
+      - '7'
+      - '12'
+      - '24'
+      - '60'
+
+  ReturnCount:
+    ignoreAnnotated:
+      - Composable

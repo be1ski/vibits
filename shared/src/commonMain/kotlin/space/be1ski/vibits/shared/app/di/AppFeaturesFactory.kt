@@ -21,7 +21,6 @@ import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveTimeRangeT
  * Factory for creating and launching all application TEA features.
  * Extracted from DI graph to keep graph clean of business logic.
  */
-@Suppress("LongParameterList")
 @Inject
 class AppFeaturesFactory(
   private val loadPreferences: LoadPreferencesUseCase,

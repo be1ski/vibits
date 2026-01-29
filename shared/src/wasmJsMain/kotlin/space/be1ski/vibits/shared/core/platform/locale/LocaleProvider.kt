@@ -19,7 +19,6 @@ actual class LocaleProvider {
   }
 }
 
-@Suppress("UNUSED_PARAMETER")
 private fun setCustomLocale(locale: String?) {
   js("window.__customLocale = locale")
 }

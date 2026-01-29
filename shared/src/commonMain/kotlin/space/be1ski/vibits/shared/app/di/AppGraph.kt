@@ -28,7 +28,6 @@ import space.be1ski.vibits.shared.feature.onboarding.data.OnboardingStoreImpl
 import space.be1ski.vibits.shared.feature.settings.data.PreferencesStore
 import space.be1ski.vibits.shared.feature.settings.data.PreferencesStoreImpl
 
-@Suppress("TooManyFunctions")
 @SingleIn(AppScope::class)
 @DependencyGraph(AppScope::class)
 abstract class AppGraph {

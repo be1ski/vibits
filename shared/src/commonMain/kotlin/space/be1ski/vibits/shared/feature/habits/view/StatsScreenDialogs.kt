@@ -45,7 +45,6 @@ internal fun EmptyDeleteDialog(
   )
 }
 
-@Suppress("ReturnCount")
 @Composable
 internal fun SingleHabitToggleDialog(
   derived: StatsScreenDerivedState,

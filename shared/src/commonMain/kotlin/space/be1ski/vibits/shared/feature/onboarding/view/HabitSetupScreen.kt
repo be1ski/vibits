@@ -51,7 +51,6 @@ import space.be1ski.vibits.shared.generated.title_habit_setup
 private val COLOR_CIRCLE_SIZE = 24.dp
 private val SELECTED_BORDER_WIDTH = 2.dp
 
-@Suppress("LongMethod")
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun HabitSetupScreen(

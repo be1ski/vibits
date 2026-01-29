@@ -9,7 +9,6 @@ import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadCachedMemosUs
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadMemosUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.UpdateMemoUseCase
 
-@Suppress("LongParameterList")
 @Inject
 class MemosDependencies(
   val loadMemos: LoadMemosUseCase,

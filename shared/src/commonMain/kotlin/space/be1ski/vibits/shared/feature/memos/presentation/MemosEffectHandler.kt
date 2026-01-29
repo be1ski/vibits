@@ -15,7 +15,6 @@ import space.be1ski.vibits.shared.feature.memos.domain.usecase.UpdateMemoUseCase
 
 private const val TAG = "MemosEffect"
 
-@Suppress("LongParameterList")
 class MemosEffectHandler(
   private val loadCredentials: LoadCredentialsUseCase,
   private val saveCredentials: SaveCredentialsUseCase,

@@ -50,7 +50,6 @@ fun parseHabitConfigLine(line: String): HabitConfig? {
  * Parses a hex color string to ARGB Long.
  * Supports formats: #RRGGBB or #AARRGGBB
  */
-@Suppress("MagicNumber")
 fun parseHexColor(hex: String): Long? {
   val clean = hex.trim().removePrefix("#")
   return when (clean.length) {
@@ -63,7 +62,6 @@ fun parseHexColor(hex: String): Long? {
 /**
  * Formats an ARGB Long color to hex string (#RRGGBB).
  */
-@Suppress("MagicNumber")
 fun formatHexColor(color: Long): String {
   val rgb = color and 0xFFFFFFL
   return "#${rgb.toString(16).uppercase().padStart(6, '0')}"

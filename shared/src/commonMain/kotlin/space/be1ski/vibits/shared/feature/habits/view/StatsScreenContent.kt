@@ -462,7 +462,6 @@ private fun CompactPostRow(
 
 private const val COMPACT_POST_MAX_LENGTH = 50
 
-@Suppress("LongMethod")
 @Composable
 internal fun StatsMainChart(
   derived: StatsScreenDerivedState,
@@ -675,7 +674,6 @@ private fun HabitActivitySection(
   }
 }
 
-@Suppress("LongMethod")
 @Composable
 private fun LastSevenDaysMatrix(
   days: List<ContributionDay>,

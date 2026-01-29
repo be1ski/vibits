@@ -8,8 +8,7 @@ import space.be1ski.vibits.shared.app.view.AppRoot
 /**
  * Entry point for embedding Compose UI into an iOS host.
  */
-@Suppress("FunctionNaming", "ktlint:standard:function-naming")
-fun MainViewController(): UIViewController {
+fun createMainViewController(): UIViewController {
   val dependencies = AppGraph.createAppDependencies()
   return ComposeUIViewController { AppRoot(dependencies) }
 }

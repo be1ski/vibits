@@ -28,7 +28,6 @@ internal data class DemoHabit(
 /**
  * Generates mock memos for demo mode with realistic habit data.
  */
-@Suppress("MagicNumber")
 internal object DemoDataGenerator {
   private val demoHabits =
     listOf(

@@ -8,7 +8,6 @@ import org.w3c.dom.url.URL
 import org.w3c.files.Blob
 import org.w3c.files.BlobPropertyBag
 
-@Suppress("UNUSED_PARAMETER")
 private fun createBlobParts(content: String): JsArray<JsAny?> = js("([content])")
 
 actual fun createFileExporter(): FileExporter = WasmFileExporter()
