@@ -23,7 +23,13 @@ val onboardingReducer: Reducer<OnboardingAction, OnboardingState, OnboardingEffe
           OnboardingStep.HabitSetup -> {
             if (state.habitName.isNotBlank()) {
               state { copy(isCreatingHabit = true, creationError = null) }
-              effect(OnboardingEffect.Command.CreateFirstHabit(state.habitName, state.selectedPresetId))
+              effect(
+                OnboardingEffect.Command.CreateFirstHabit(
+                  state.habitName,
+                  state.selectedPresetId,
+                  state.selectedColor,
+                ),
+              )
             } else {
               state { copy(creationError = "habit_name_required") }
             }
@@ -60,10 +66,20 @@ val onboardingReducer: Reducer<OnboardingAction, OnboardingState, OnboardingEffe
         state { copy(habitName = action.name, creationError = null) }
       }
 
+      is OnboardingAction.UpdateHabitColor -> {
+        state { copy(selectedColor = action.color) }
+      }
+
       is OnboardingAction.CreateHabit -> {
         if (state.habitName.isNotBlank()) {
           state { copy(isCreatingHabit = true, creationError = null) }
-          effect(OnboardingEffect.Command.CreateFirstHabit(state.habitName, state.selectedPresetId))
+          effect(
+            OnboardingEffect.Command.CreateFirstHabit(
+              state.habitName,
+              state.selectedPresetId,
+              state.selectedColor,
+            ),
+          )
         } else {
           state { copy(creationError = "habit_name_required") }
         }

@@ -89,6 +89,9 @@
     <string name="label_demo_mode">Mod demo</string>
     <string name="label_environment">Mediu</string>
     <string name="label_habits_config">Configurare obiceiuri</string>
+    <string name="label_habit_color">Culoare obicei</string>
+    <string name="label_habit_name">Nume obicei</string>
+    <string name="label_habit_preset_custom">Creează-ți propriul</string>
     <string name="label_language">Limbă</string>
     <string name="label_memos_db">Baza de date note</string>
     <string name="label_post_filter">Filtru</string>

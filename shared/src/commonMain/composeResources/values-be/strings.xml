@@ -96,6 +96,7 @@
     <string name="label_demo_mode">Дэма-рэжым</string>
     <string name="label_environment">Асяроддзе</string>
     <string name="label_habits_config">Канфігурацыя звычак</string>
+    <string name="label_habit_color">Колер звычкі</string>
     <string name="label_habit_name">Назва звычкі</string>
     <string name="label_habit_preset_custom">Стварыць сваю</string>
     <string name="label_language">Мова</string>

@@ -96,6 +96,7 @@
     <string name="label_demo_mode">დემო რეჟიმი</string>
     <string name="label_environment">გარემო</string>
     <string name="label_habits_config">ჩვევების კონფიგურაცია</string>
+    <string name="label_habit_color">ჩვევის ფერი</string>
     <string name="label_habit_name">ჩვევის სახელი</string>
     <string name="label_habit_preset_custom">შექმენით თქვენი</string>
     <string name="label_language">ენა</string>

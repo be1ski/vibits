@@ -10,6 +10,7 @@ sealed interface OnboardingEffect {
     data class CreateFirstHabit(
       val name: String,
       val presetId: String?,
+      val color: Long,
     ) : Command
 
     data object MarkOnboardingCompleted : Command

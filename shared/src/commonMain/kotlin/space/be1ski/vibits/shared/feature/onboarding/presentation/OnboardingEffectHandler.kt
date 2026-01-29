@@ -42,7 +42,7 @@ class OnboardingEffectHandler(
   private fun handleCreateFirstHabit(effect: OnboardingEffect.Command.CreateFirstHabit): Flow<OnboardingAction> =
     flow {
       Log.d(TAG, "Creating first habit: ${effect.name}")
-      createFirstHabit(effect.name, effect.presetId)
+      createFirstHabit(effect.name, effect.presetId, effect.color)
         .onSuccess {
           Log.d(TAG, "Habit created successfully")
           emit(OnboardingAction.HabitCreated)

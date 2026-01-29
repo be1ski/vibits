@@ -96,6 +96,7 @@
     <string name="label_demo_mode">Демо-режим</string>
     <string name="label_environment">Середовище</string>
     <string name="label_habits_config">Конфігурація звичок</string>
+    <string name="label_habit_color">Колір звички</string>
     <string name="label_habit_name">Назва звички</string>
     <string name="label_habit_preset_custom">Створити свою</string>
     <string name="label_language">Мова</string>

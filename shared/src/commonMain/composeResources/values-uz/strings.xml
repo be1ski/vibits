@@ -96,6 +96,7 @@
     <string name="label_demo_mode">Demo rejim</string>
     <string name="label_environment">Muhit</string>
     <string name="label_habits_config">Odatlar konfiguratsiyasi</string>
+    <string name="label_habit_color">Odat rangi</string>
     <string name="label_habit_name">Odat nomi</string>
     <string name="label_habit_preset_custom">O'zingiznikini yaratish</string>
     <string name="label_language">Til</string>

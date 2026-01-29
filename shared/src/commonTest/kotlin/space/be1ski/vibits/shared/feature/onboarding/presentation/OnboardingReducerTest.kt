@@ -107,12 +107,22 @@ class OnboardingReducerTest {
     }
 
   @Test
+  fun `when UpdateHabitColor then updates selectedColor`() =
+    onboardingReducer.test(OnboardingState()) {
+      send(OnboardingAction.UpdateHabitColor(0xFF2196F3L))
+
+      assertState { selectedColor == 0xFF2196F3L }
+      assertNoEffects()
+    }
+
+  @Test
   fun `when CreateHabit with valid name then starts creation`() =
     onboardingReducer.test(
       OnboardingState(
         currentStep = OnboardingStep.HabitSetup,
         habitName = "Exercise",
         selectedPresetId = "custom",
+        selectedColor = 0xFF4CAF50L,
       ),
     ) {
       send(OnboardingAction.CreateHabit)
@@ -121,6 +131,7 @@ class OnboardingReducerTest {
       val effect = assertHasEffect<OnboardingEffect.Command.CreateFirstHabit>()
       assertEquals("Exercise", effect.name)
       assertEquals("custom", effect.presetId)
+      assertEquals(0xFF4CAF50L, effect.color)
     }
 
   @Test
@@ -252,6 +263,7 @@ class OnboardingReducerTest {
         currentStep = OnboardingStep.HabitSetup,
         habitName = "Exercise",
         selectedPresetId = "custom",
+        selectedColor = 0xFF4CAF50L,
       ),
     ) {
       send(OnboardingAction.Continue)
@@ -260,6 +272,7 @@ class OnboardingReducerTest {
       val effect = assertHasEffect<OnboardingEffect.Command.CreateFirstHabit>()
       assertEquals("Exercise", effect.name)
       assertEquals("custom", effect.presetId)
+      assertEquals(0xFF4CAF50L, effect.color)
     }
 
   @Test

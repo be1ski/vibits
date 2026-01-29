@@ -26,6 +26,10 @@ sealed interface OnboardingAction {
     val name: String,
   ) : OnboardingAction
 
+  data class UpdateHabitColor(
+    val color: Long,
+  ) : OnboardingAction
+
   data object CreateHabit : OnboardingAction
 
   // Responses

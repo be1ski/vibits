@@ -96,6 +96,7 @@
     <string name="label_demo_mode">Demo-Modus</string>
     <string name="label_environment">Umgebung</string>
     <string name="label_habits_config">Gewohnheits-Konfiguration</string>
+    <string name="label_habit_color">Gewohnheitsfarbe</string>
     <string name="label_habit_name">Gewohnheitsname</string>
     <string name="label_habit_preset_custom">Eigene erstellen</string>
     <string name="label_language">Sprache</string>

@@ -97,6 +97,7 @@
     <string name="label_demo_mode">Demo mode</string>
     <string name="label_environment">Environment</string>
     <string name="label_habits_config">Habits config</string>
+    <string name="label_habit_color">Habit color</string>
     <string name="label_habit_name">Habit name</string>
     <string name="label_habit_preset_custom">Create your own</string>
     <string name="label_language">Language</string>

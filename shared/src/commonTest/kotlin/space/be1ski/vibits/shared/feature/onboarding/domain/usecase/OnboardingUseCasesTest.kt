@@ -4,6 +4,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import space.be1ski.vibits.shared.core.ui.theme.DefaultHabitColor
 import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemoDto
 import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemosFileDto
 import space.be1ski.vibits.shared.feature.memos.data.platform.OfflineMemoStorage
@@ -78,7 +79,7 @@ class OnboardingUseCasesTest {
       val createMemo = CreateMemoUseCase(memosRepository)
       val useCase = CreateFirstHabitUseCase(createMemo)
 
-      val result = useCase("Morning Exercise", "custom")
+      val result = useCase("Morning Exercise", "custom", DefaultHabitColor)
 
       assertTrue(result.isSuccess)
       assertEquals(1, memosRepository.createMemoCalls)
@@ -86,6 +87,24 @@ class OnboardingUseCasesTest {
       assertTrue(createdContent.contains("#habits/config"))
       assertTrue(createdContent.contains("Morning Exercise"))
       assertTrue(createdContent.contains("#habits/morning_exercise"))
+      assertTrue(createdContent.contains("#4CAF50"))
+    }
+
+  @Test
+  fun `when create first habit with custom color then includes color in content`() =
+    runTest {
+      val memosRepository =
+        FakeMemosRepository().apply {
+          createMemoResult = Result.success(Memo("memos/1", "content"))
+        }
+      val createMemo = CreateMemoUseCase(memosRepository)
+      val useCase = CreateFirstHabitUseCase(createMemo)
+
+      val result = useCase("Exercise", "custom", 0xFF2196F3L)
+
+      assertTrue(result.isSuccess)
+      val createdContent = memosRepository.lastCreatedContent
+      assertTrue(createdContent.contains("#2196F3"), "Expected #2196F3 in content: $createdContent")
     }
 
   @Test
@@ -141,7 +160,7 @@ class OnboardingUseCasesTest {
       val createMemo = CreateMemoUseCase(memosRepository)
       val useCase = CreateFirstHabitUseCase(createMemo)
 
-      val result = useCase("Exercise", "custom")
+      val result = useCase("Exercise", "custom", DefaultHabitColor)
 
       assertTrue(result.isFailure)
       assertEquals(1, memosRepository.createMemoCalls)
@@ -157,7 +176,7 @@ class OnboardingUseCasesTest {
       val createMemo = CreateMemoUseCase(memosRepository)
       val useCase = CreateFirstHabitUseCase(createMemo)
 
-      val result = useCase("Read Every Day", "read")
+      val result = useCase("Read Every Day", "read", DefaultHabitColor)
 
       assertTrue(result.isSuccess)
       val createdContent = memosRepository.lastCreatedContent

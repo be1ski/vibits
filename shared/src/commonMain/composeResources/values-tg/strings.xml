@@ -89,6 +89,9 @@
     <string name="label_demo_mode">Режими намоишӣ</string>
     <string name="label_environment">Муҳит</string>
     <string name="label_habits_config">Конфигуратсияи одатҳо</string>
+    <string name="label_habit_color">Ранги одат</string>
+    <string name="label_habit_name">Номи одат</string>
+    <string name="label_habit_preset_custom">Одати худро эҷод кунед</string>
     <string name="label_language">Забон</string>
     <string name="label_memos_db">Базаи ёддоштҳо</string>
     <string name="label_post_filter">Филтр</string>

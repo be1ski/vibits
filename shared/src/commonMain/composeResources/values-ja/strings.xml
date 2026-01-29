@@ -96,6 +96,7 @@
     <string name="label_demo_mode">デモモード</string>
     <string name="label_environment">環境</string>
     <string name="label_habits_config">習慣設定</string>
+    <string name="label_habit_color">習慣の色</string>
     <string name="label_habit_name">習慣名</string>
     <string name="label_habit_preset_custom">カスタム</string>
     <string name="label_language">言語</string>

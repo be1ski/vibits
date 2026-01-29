@@ -96,6 +96,7 @@
     <string name="label_demo_mode">演示模式</string>
     <string name="label_environment">环境</string>
     <string name="label_habits_config">习惯配置</string>
+    <string name="label_habit_color">习惯颜色</string>
     <string name="label_habit_name">习惯名称</string>
     <string name="label_habit_preset_custom">自定义</string>
     <string name="label_language">语言</string>

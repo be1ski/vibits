@@ -96,6 +96,7 @@
     <string name="label_demo_mode">डेमो मोड</string>
     <string name="label_environment">वातावरण</string>
     <string name="label_habits_config">आदत कॉन्फ़िगरेशन</string>
+    <string name="label_habit_color">आदत का रंग</string>
     <string name="label_habit_name">आदत का नाम</string>
     <string name="label_habit_preset_custom">अपनी खुद की बनाएं</string>
     <string name="label_language">भाषा</string>
