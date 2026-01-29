@@ -186,6 +186,15 @@ class SettingsReducerTest {
     }
 
   @Test
+  fun `when ConfirmResetWithMemos then hides confirmation and emits ResetAppWithMemos`() =
+    settingsReducer.test(SettingsState(showResetConfirmation = true)) {
+      send(SettingsAction.ConfirmResetWithMemos)
+
+      assertState { !showResetConfirmation && isResetting }
+      assertCommands(SettingsEffect.Command.ResetAppWithMemos)
+    }
+
+  @Test
   fun `when CancelReset then hides reset confirmation`() =
     settingsReducer.test(SettingsState(showResetConfirmation = true)) {
       send(SettingsAction.CancelReset)
