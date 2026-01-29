@@ -10,7 +10,7 @@ private const val MILLIS_PER_DAY = 86400000L
 /**
  * Pure reducer for the Memos feature.
  */
-val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
+val memosReducer: Reducer<MemosAction, MemosState, MemosEffect, Nothing> =
   reducer { action, state ->
     when (action) {
       // Credentials input
@@ -24,7 +24,7 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
 
       is MemosAction.EditCredentials -> {
         state { copy(credentialsMode = true, errorMessage = null) }
-        effect(MemosEffect.LoadCredentials)
+        command(MemosEffect.LoadCredentials)
       }
 
       is MemosAction.CredentialsLoaded -> {
@@ -38,14 +38,14 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
         } else {
           state { copy(isLoading = true, errorMessage = null, credentialsMode = false) }
           if (!state.isOfflineMode) {
-            effect(MemosEffect.SaveCredentials(state.baseUrl, state.token))
+            command(MemosEffect.SaveCredentials(state.baseUrl, state.token))
           }
-          effect(MemosEffect.LoadRemoteMemos)
+          command(MemosEffect.LoadRemoteMemos)
         }
       }
 
       is MemosAction.LoadCachedMemos -> {
-        effect(MemosEffect.LoadCachedMemos)
+        command(MemosEffect.LoadCachedMemos)
       }
 
       is MemosAction.ResetForModeChange -> {
@@ -82,7 +82,7 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
         } else if (!state.isOfflineMode) {
           // Cache is empty and we're online - load from server immediately
           state { copy(isLoading = true) }
-          effect(MemosEffect.LoadRemoteMemos)
+          command(MemosEffect.LoadRemoteMemos)
         } else {
           // Offline mode with no cache - mark as loaded
           state { copy(initialDataLoaded = true) }
@@ -104,17 +104,17 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
       // CRUD
       is MemosAction.CreateMemo -> {
         state { copy(isLoading = true) }
-        effect(MemosEffect.CreateMemo(action.content))
+        command(MemosEffect.CreateMemo(action.content))
       }
 
       is MemosAction.UpdateMemo -> {
         state { copy(isLoading = true) }
-        effect(MemosEffect.UpdateMemo(action.name, action.content))
+        command(MemosEffect.UpdateMemo(action.name, action.content))
       }
 
       is MemosAction.DeleteMemo -> {
         state { copy(isLoading = true) }
-        effect(MemosEffect.DeleteMemo(action.name))
+        command(MemosEffect.DeleteMemo(action.name))
       }
 
       is MemosAction.MemoCreated -> {
@@ -158,7 +158,7 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
         val content = state.createDialogContent.trim()
         if (content.isNotBlank()) {
           state { copy(showCreateDialog = false, createDialogContent = "", isLoading = true) }
-          effect(MemosEffect.CreateMemo(content))
+          command(MemosEffect.CreateMemo(content))
         }
       }
 
@@ -186,7 +186,7 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect> =
         val content = state.editDialogContent.trim()
         if (memo != null && content.isNotBlank()) {
           state { copy(showEditDialog = false, editDialogContent = "", editDialogMemo = null, isLoading = true) }
-          effect(MemosEffect.UpdateMemo(memo.name, content))
+          command(MemosEffect.UpdateMemo(memo.name, content))
         }
       }
     }

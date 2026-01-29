@@ -5,7 +5,7 @@ import kotlin.test.assertTrue
 import kotlin.test.fail
 
 /**
- * DSL for testing reducers in a readable and concise way.
+ * DSL for testing reducers with Command/Notification separation.
  *
  * Example:
  * ```
@@ -14,32 +14,35 @@ import kotlin.test.fail
  *   send(CounterAction.Increment)
  *
  *   assertState { count == 6 }
- *   assertNoEffects()
+ *   assertNoCommands()
+ *   assertNoNotifications()
  * }
  *
  * @Test
- * fun `reset clears counter and emits effects`() = counterReducer.test(CounterState(count = 100)) {
+ * fun `reset clears counter and emits command and notification`() = counterReducer.test(CounterState(count = 100)) {
  *   send(CounterAction.Reset)
  *
  *   assertState(CounterState(count = 0))
- *   assertEffects(CounterEffect.Persist, CounterEffect.NotifyReset)
+ *   assertCommands(CounterCommand.Persist)
+ *   assertNotifications(CounterNotification.ResetCompleted)
  * }
  * ```
  */
-fun <Action, State, Effect> Reducer<Action, State, Effect>.test(
+fun <Action, State, Command, Notification> Reducer<Action, State, Command, Notification>.test(
   initialState: State,
-  block: ReducerTestScope<Action, State, Effect>.() -> Unit,
+  block: ReducerTestScope<Action, State, Command, Notification>.() -> Unit,
 ) {
   ReducerTestScope(this, initialState).apply(block)
 }
 
-class ReducerTestScope<Action, State, Effect>(
-  private val reducer: Reducer<Action, State, Effect>,
+class ReducerTestScope<Action, State, Command, Notification>(
+  private val reducer: Reducer<Action, State, Command, Notification>,
   initialState: State,
 ) {
   private var currentState: State = initialState
-  private var lastResult: ReducerResult<State, Effect>? = null
-  private val allEffects = mutableListOf<Effect>()
+  private var lastResult: ReducerResult<State, Command, Notification>? = null
+  private val allCommands = mutableListOf<Command>()
+  private val allNotifications = mutableListOf<Notification>()
 
   /**
    * Sends an action to the reducer and captures the result.
@@ -47,7 +50,8 @@ class ReducerTestScope<Action, State, Effect>(
   fun send(action: Action) {
     lastResult = reducer(action, currentState)
     currentState = lastResult!!.state
-    allEffects.addAll(lastResult!!.effects)
+    allCommands.addAll(lastResult!!.commands)
+    allNotifications.addAll(lastResult!!.notifications)
   }
 
   /**
@@ -56,14 +60,24 @@ class ReducerTestScope<Action, State, Effect>(
   val state: State get() = currentState
 
   /**
-   * Returns effects from the last action only.
+   * Returns commands from the last action only.
    */
-  val effects: List<Effect> get() = lastResult?.effects ?: emptyList()
+  val commands: List<Command> get() = lastResult?.commands ?: emptyList()
 
   /**
-   * Returns all effects accumulated from all sent actions.
+   * Returns notifications from the last action only.
    */
-  val allEmittedEffects: List<Effect> get() = allEffects.toList()
+  val notifications: List<Notification> get() = lastResult?.notifications ?: emptyList()
+
+  /**
+   * Returns all commands accumulated from all sent actions.
+   */
+  val allEmittedCommands: List<Command> get() = allCommands.toList()
+
+  /**
+   * Returns all notifications accumulated from all sent actions.
+   */
+  val allEmittedNotifications: List<Notification> get() = allNotifications.toList()
 
   /**
    * Asserts that the current state equals the expected state.
@@ -86,50 +100,106 @@ class ReducerTestScope<Action, State, Effect>(
   }
 
   /**
-   * Asserts that no effects were emitted from the last action.
+   * Asserts that no commands or notifications were emitted from the last action.
    */
   fun assertNoEffects() {
-    assertTrue(effects.isEmpty(), "Expected no effects but got: $effects")
+    assertNoCommands()
+    assertNoNotifications()
   }
 
   /**
-   * Asserts that the last action emitted exactly these effects in order.
+   * Asserts that no commands were emitted from the last action.
    */
-  fun assertEffects(vararg expected: Effect) {
-    assertEquals(expected.toList(), effects, "Effects mismatch")
+  fun assertNoCommands() {
+    assertTrue(commands.isEmpty(), "Expected no commands but got: $commands")
   }
 
   /**
-   * Asserts that the last action emitted exactly these effects in order.
+   * Asserts that no notifications were emitted from the last action.
    */
-  fun assertEffects(expected: List<Effect>) {
-    assertEquals(expected, effects, "Effects mismatch")
+  fun assertNoNotifications() {
+    assertTrue(notifications.isEmpty(), "Expected no notifications but got: $notifications")
   }
 
   /**
-   * Asserts that the last action emitted an effect of the given type.
+   * Asserts that the last action emitted exactly these commands in order.
    */
-  inline fun <reified E : Effect> assertHasEffect(): E {
-    val effect =
-      effects.filterIsInstance<E>().firstOrNull()
-        ?: fail("Expected effect of type ${E::class.simpleName} but got: $effects")
-    return effect
+  fun assertCommands(vararg expected: Command) {
+    assertEquals(expected.toList(), commands, "Commands mismatch")
   }
 
   /**
-   * Asserts that the last action emitted an effect matching the predicate.
+   * Asserts that the last action emitted exactly these commands in order.
    */
-  inline fun <reified E : Effect> assertHasEffect(predicate: (E) -> Boolean): E {
-    val effect =
-      effects.filterIsInstance<E>().firstOrNull(predicate)
-        ?: fail("Expected effect of type ${E::class.simpleName} matching predicate but got: $effects")
-    return effect
+  fun assertCommands(expected: List<Command>) {
+    assertEquals(expected, commands, "Commands mismatch")
   }
 
   /**
-   * Asserts the number of effects emitted from the last action.
+   * Asserts that the last action emitted exactly these notifications in order.
    */
-  fun assertEffectCount(expected: Int) {
-    assertEquals(expected, effects.size, "Effect count mismatch")
+  fun assertNotifications(vararg expected: Notification) {
+    assertEquals(expected.toList(), notifications, "Notifications mismatch")
+  }
+
+  /**
+   * Asserts that the last action emitted exactly these notifications in order.
+   */
+  fun assertNotifications(expected: List<Notification>) {
+    assertEquals(expected, notifications, "Notifications mismatch")
+  }
+
+  /**
+   * Asserts that the last action emitted a command of the given type.
+   */
+  inline fun <reified C : Command> assertHasCommand(): C {
+    val command =
+      commands.filterIsInstance<C>().firstOrNull()
+        ?: fail("Expected command of type ${C::class.simpleName} but got: $commands")
+    return command
+  }
+
+  /**
+   * Asserts that the last action emitted a command matching the predicate.
+   */
+  inline fun <reified C : Command> assertHasCommand(predicate: (C) -> Boolean): C {
+    val command =
+      commands.filterIsInstance<C>().firstOrNull(predicate)
+        ?: fail("Expected command of type ${C::class.simpleName} matching predicate but got: $commands")
+    return command
+  }
+
+  /**
+   * Asserts that the last action emitted a notification of the given type.
+   */
+  inline fun <reified N : Notification> assertHasNotification(): N {
+    val notification =
+      notifications.filterIsInstance<N>().firstOrNull()
+        ?: fail("Expected notification of type ${N::class.simpleName} but got: $notifications")
+    return notification
+  }
+
+  /**
+   * Asserts that the last action emitted a notification matching the predicate.
+   */
+  inline fun <reified N : Notification> assertHasNotification(predicate: (N) -> Boolean): N {
+    val notification =
+      notifications.filterIsInstance<N>().firstOrNull(predicate)
+        ?: fail("Expected notification of type ${N::class.simpleName} matching predicate but got: $notifications")
+    return notification
+  }
+
+  /**
+   * Asserts the number of commands emitted from the last action.
+   */
+  fun assertCommandCount(expected: Int) {
+    assertEquals(expected, commands.size, "Command count mismatch")
+  }
+
+  /**
+   * Asserts the number of notifications emitted from the last action.
+   */
+  fun assertNotificationCount(expected: Int) {
+    assertEquals(expected, notifications.size, "Notification count mismatch")
   }
 }

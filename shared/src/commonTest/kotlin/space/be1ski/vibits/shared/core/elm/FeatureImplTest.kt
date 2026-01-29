@@ -36,14 +36,14 @@ class FeatureImplTest {
     data object NoOp : Effect
   }
 
-  private val testReducer: Reducer<Action, State, Effect> =
+  private val testReducer: Reducer<Action, State, Effect, Nothing> =
     reducer { action, _ ->
       when (action) {
         Action.Increment -> state { copy(count = count + 1) }
         Action.Decrement -> state { copy(count = count - 1) }
         Action.StartLoading -> {
           state { copy(loading = true) }
-          effect(Effect.Load)
+          command(Effect.Load)
         }
         Action.LoadingComplete -> state { copy(loading = false) }
         is Action.SetCount -> state { copy(count = action.value) }
@@ -137,7 +137,7 @@ class FeatureImplTest {
           initialState = State(),
           reducer = testReducer,
           effectHandler = createEffectHandler(loadResult = 50),
-          initialEffects = listOf(Effect.Load),
+          initialCommands = listOf(Effect.Load),
         )
       val featureScope = featureTestScope()
       feature.launchIn(featureScope)
@@ -150,21 +150,21 @@ class FeatureImplTest {
   fun `when effect handler returns multiple actions then all are processed`() =
     runTest(UnconfinedTestDispatcher()) {
       var actionCount = 0
-      val countingReducer: Reducer<Action, State, Effect> =
+      val countingReducer: Reducer<Action, State, Effect, Nothing> =
         reducer { action, _ ->
           actionCount++
           when (action) {
             Action.Increment -> state { copy(count = count + 1) }
             Action.StartLoading -> {
               state { copy(loading = true) }
-              effect(Effect.Load)
+              command(Effect.Load)
             }
             else -> {}
           }
         }
 
       val feature =
-        FeatureImpl<Action, State, Effect>(
+        FeatureImpl<Action, State, Effect, Nothing>(
           initialState = State(),
           reducer = countingReducer,
           effectHandler = { effect ->

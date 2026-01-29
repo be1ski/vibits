@@ -45,6 +45,4 @@ sealed interface OnboardingAction {
   data object FirstCheckInCreated : OnboardingAction
 
   data object GoToDashboard : OnboardingAction
-
-  data object OnboardingCompleted : OnboardingAction
 }

@@ -18,7 +18,7 @@ internal fun createAppFeature(
   currentDate: LocalDate,
   initialHabitsTab: TimeRangeTab = TimeRangeTab.WEEKS,
   initialPostsTab: TimeRangeTab = TimeRangeTab.WEEKS,
-): Feature<AppAction, AppState, AppEffect> =
+): Feature<AppAction, AppState, AppEffect, Nothing> =
   FeatureImpl(
     initialState =
       AppState(

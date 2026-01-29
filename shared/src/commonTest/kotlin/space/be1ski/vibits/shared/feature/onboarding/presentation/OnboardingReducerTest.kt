@@ -2,6 +2,8 @@ package space.be1ski.vibits.shared.feature.onboarding.presentation
 
 import space.be1ski.vibits.shared.core.elm.test
 import space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset
+import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingEffect.Command
+import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingEffect.Notification
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -12,7 +14,7 @@ class OnboardingReducerTest {
       send(OnboardingAction.StartOnboarding)
 
       assertState { currentStep == OnboardingStep.Welcome }
-      assertHasEffect<OnboardingEffect.Command.LoadPresets>()
+      assertHasCommand<Command.LoadPresets>()
     }
 
   @Test
@@ -128,7 +130,7 @@ class OnboardingReducerTest {
       send(OnboardingAction.CreateHabit)
 
       assertState { isCreatingHabit }
-      val effect = assertHasEffect<OnboardingEffect.Command.CreateFirstHabit>()
+      val effect = assertHasCommand<Command.CreateFirstHabit>()
       assertEquals("Exercise", effect.name)
       assertEquals("custom", effect.presetId)
       assertEquals(0xFF4CAF50L, effect.color)
@@ -190,7 +192,7 @@ class OnboardingReducerTest {
     onboardingReducer.test(OnboardingState()) {
       send(OnboardingAction.Skip)
 
-      assertHasEffect<OnboardingEffect.Notification.Skipped>()
+      assertHasNotification<Notification.Skipped>()
     }
 
   @Test
@@ -198,8 +200,8 @@ class OnboardingReducerTest {
     onboardingReducer.test(OnboardingState(currentStep = OnboardingStep.Success)) {
       send(OnboardingAction.GoToDashboard)
 
-      assertHasEffect<OnboardingEffect.Command.MarkOnboardingCompleted>()
-      assertHasEffect<OnboardingEffect.Notification.Completed>()
+      assertHasCommand<Command.MarkOnboardingCompleted>()
+      assertHasNotification<Notification.Completed>()
     }
 
   @Test
@@ -207,8 +209,8 @@ class OnboardingReducerTest {
     onboardingReducer.test(OnboardingState(currentStep = OnboardingStep.Success)) {
       send(OnboardingAction.MarkFirstCheckIn)
 
-      assertHasEffect<OnboardingEffect.Command.MarkFirstCheckIn>()
-      assertHasEffect<OnboardingEffect.Command.MarkOnboardingCompleted>()
+      assertHasCommand<Command.MarkFirstCheckIn>()
+      assertHasCommand<Command.MarkOnboardingCompleted>()
     }
 
   @Test
@@ -216,8 +218,8 @@ class OnboardingReducerTest {
     onboardingReducer.test(OnboardingState(currentStep = OnboardingStep.Success)) {
       send(OnboardingAction.FirstCheckInCreated)
 
-      assertHasEffect<OnboardingEffect.Notification.FirstCheckInCreated>()
-      assertHasEffect<OnboardingEffect.Notification.Completed>()
+      assertHasNotification<Notification.FirstCheckInCreated>()
+      assertHasNotification<Notification.Completed>()
     }
 
   @Test
@@ -269,7 +271,7 @@ class OnboardingReducerTest {
       send(OnboardingAction.Continue)
 
       assertState { isCreatingHabit && creationError == null }
-      val effect = assertHasEffect<OnboardingEffect.Command.CreateFirstHabit>()
+      val effect = assertHasCommand<Command.CreateFirstHabit>()
       assertEquals("Exercise", effect.name)
       assertEquals("custom", effect.presetId)
       assertEquals(0xFF4CAF50L, effect.color)
@@ -298,14 +300,6 @@ class OnboardingReducerTest {
       send(OnboardingAction.Continue)
 
       assertState { currentStep == OnboardingStep.Success }
-      assertNoEffects()
-    }
-
-  @Test
-  fun `when OnboardingCompleted then does nothing`() =
-    onboardingReducer.test(OnboardingState()) {
-      send(OnboardingAction.OnboardingCompleted)
-
       assertNoEffects()
     }
 }

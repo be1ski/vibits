@@ -177,7 +177,7 @@ private fun rememberAppFeatures(version: Int): AppFeatures =
 private fun rememberModeSelectionFeature(
   dependencies: AppDependencies,
   onModeSelected: (AppMode) -> Unit,
-): Feature<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect> {
+): Feature<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect.Command, ModeSelectionEffect.Notification> {
   val feature =
     remember {
       createModeSelectionFeature(dependencies = dependencies.modeSelectionDependencies)
@@ -185,8 +185,10 @@ private fun rememberModeSelectionFeature(
   val scope = rememberCoroutineScope()
   LaunchedEffect(feature) { feature.launchIn(scope) }
   LaunchedEffect(feature) {
-    feature.effects.collect { effect ->
-      if (effect is ModeSelectionEffect.NotifyModeSelected) onModeSelected(effect.mode)
+    feature.notifications.collect { notification ->
+      when (notification) {
+        is ModeSelectionEffect.Notification.ModeSelected -> onModeSelected(notification.mode)
+      }
     }
   }
   return feature
@@ -197,7 +199,7 @@ private fun rememberOnboardingFeature(
   dependencies: AppDependencies,
   features: AppFeatures,
   onOnboardingCompleted: () -> Unit,
-): Feature<OnboardingAction, OnboardingState, OnboardingEffect> {
+): Feature<OnboardingAction, OnboardingState, OnboardingEffect.Command, OnboardingEffect.Notification> {
   val feature =
     remember {
       createOnboardingFeature(dependencies = dependencies.onboardingDependencies)
@@ -205,15 +207,14 @@ private fun rememberOnboardingFeature(
   val scope = rememberCoroutineScope()
   LaunchedEffect(feature) { feature.launchIn(scope) }
   LaunchedEffect(feature) {
-    feature.effects.collect { effect ->
-      when (effect) {
+    feature.notifications.collect { notification ->
+      when (notification) {
         is OnboardingEffect.Notification.Completed,
         is OnboardingEffect.Notification.Skipped,
         -> onOnboardingCompleted()
         is OnboardingEffect.Notification.FirstCheckInCreated -> {
           features.memos.send(MemosAction.LoadMemos)
         }
-        is OnboardingEffect.Command -> {} // Commands handled by EffectHandler
       }
     }
   }
@@ -231,8 +232,8 @@ private fun resolveDarkTheme(theme: AppTheme): Boolean {
 }
 
 private data class FeaturesState(
-  val modeSelection: Feature<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect>,
-  val onboarding: Feature<OnboardingAction, OnboardingState, OnboardingEffect>,
+  val modeSelection: Feature<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect.Command, ModeSelectionEffect.Notification>,
+  val onboarding: Feature<OnboardingAction, OnboardingState, OnboardingEffect.Command, OnboardingEffect.Notification>,
   val app: AppFeatures,
 )
 

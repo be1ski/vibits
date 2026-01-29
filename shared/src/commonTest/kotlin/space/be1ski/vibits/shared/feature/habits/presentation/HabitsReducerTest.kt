@@ -145,7 +145,7 @@ class HabitsReducerTest {
       send(HabitsAction.ConfirmEditor)
 
       assertState { isLoading }
-      assertHasEffect<HabitsEffect.CreateMemo>()
+      assertHasCommand<HabitsEffect.CreateMemo>()
     }
 
   @Test
@@ -161,7 +161,7 @@ class HabitsReducerTest {
       send(HabitsAction.ConfirmEditor)
 
       assertState { isLoading }
-      val effect = assertHasEffect<HabitsEffect.UpdateMemo>()
+      val effect = assertHasCommand<HabitsEffect.UpdateMemo>()
       assertEquals("memos/1", effect.name)
     }
 
@@ -194,7 +194,7 @@ class HabitsReducerTest {
       send(HabitsAction.ConfirmDelete)
 
       assertState { isLoading }
-      val effect = assertHasEffect<HabitsEffect.DeleteMemo>()
+      val effect = assertHasCommand<HabitsEffect.DeleteMemo>()
       assertEquals("memos/1", effect.name)
     }
 
@@ -260,7 +260,7 @@ class HabitsReducerTest {
       send(HabitsAction.MemoCreated(Memo(name = "memos/1")))
 
       assertState { !isLoading && editorDay == null && editorConfig.isEmpty() }
-      assertEffects(HabitsEffect.RefreshMemos)
+      assertCommands(HabitsEffect.RefreshMemos)
     }
 
   @Test
@@ -269,7 +269,7 @@ class HabitsReducerTest {
       send(HabitsAction.MemoUpdated(Memo(name = "memos/1")))
 
       assertState { !isLoading && editorDay == null }
-      assertEffects(HabitsEffect.RefreshMemos)
+      assertCommands(HabitsEffect.RefreshMemos)
     }
 
   @Test
@@ -284,7 +284,7 @@ class HabitsReducerTest {
       send(HabitsAction.MemoDeleted("memos/1"))
 
       assertState { !isLoading && editorDay == null && !showDeleteConfirm }
-      assertEffects(HabitsEffect.RefreshMemos)
+      assertCommands(HabitsEffect.RefreshMemos)
     }
 
   @Test
@@ -446,7 +446,7 @@ class HabitsReducerTest {
       send(HabitsAction.SaveConfigDialog)
 
       assertState { isLoading }
-      assertHasEffect<HabitsEffect.CreateMemo>()
+      assertHasCommand<HabitsEffect.CreateMemo>()
     }
 
   @Test
@@ -463,7 +463,7 @@ class HabitsReducerTest {
     ) {
       send(HabitsAction.SaveConfigDialog)
 
-      val effect = assertHasEffect<HabitsEffect.CreateMemo>()
+      val effect = assertHasCommand<HabitsEffect.CreateMemo>()
       assertEquals(true, effect.content.contains("Exercise"))
       assertEquals(true, effect.content.contains("Reading"))
       assertEquals(false, effect.content.contains("habit_2"))
@@ -495,7 +495,7 @@ class HabitsReducerTest {
       send(HabitsAction.ConfirmSingleHabitToggle)
 
       assertState { isLoading }
-      val effect = assertHasEffect<HabitsEffect.DeleteMemo>()
+      val effect = assertHasCommand<HabitsEffect.DeleteMemo>()
       assertEquals("memos/1", effect.name)
     }
 
@@ -511,7 +511,7 @@ class HabitsReducerTest {
       send(HabitsAction.ConfirmSingleHabitToggle)
 
       assertState { isLoading }
-      assertHasEffect<HabitsEffect.CreateMemo>()
+      assertHasCommand<HabitsEffect.CreateMemo>()
     }
 
   @Test
@@ -526,7 +526,7 @@ class HabitsReducerTest {
       send(HabitsAction.ConfirmSingleHabitToggle)
 
       assertState { isLoading }
-      val effect = assertHasEffect<HabitsEffect.UpdateMemo>()
+      val effect = assertHasCommand<HabitsEffect.UpdateMemo>()
       assertEquals("memos/1", effect.name)
     }
 
@@ -664,7 +664,7 @@ class HabitsReducerTest {
       send(HabitsAction.SaveConfigDialog)
 
       assertState { isLoading }
-      assertHasEffect<HabitsEffect.CreateMemo>()
+      assertHasCommand<HabitsEffect.CreateMemo>()
     }
 
   @Test
@@ -704,7 +704,7 @@ class HabitsReducerTest {
           isLoading &&
           pendingConfigEdit.isEmpty()
       }
-      assertHasEffect<HabitsEffect.UpdateMemo>()
+      assertHasCommand<HabitsEffect.UpdateMemo>()
     }
 
   @Test
@@ -723,7 +723,7 @@ class HabitsReducerTest {
           isLoading &&
           pendingConfigEdit.isEmpty()
       }
-      assertHasEffect<HabitsEffect.CreateMemo>()
+      assertHasCommand<HabitsEffect.CreateMemo>()
     }
 
   @Test
@@ -752,7 +752,7 @@ class HabitsReducerTest {
           editingConfigMemo == null &&
           isLoading
       }
-      val effect = assertHasEffect<HabitsEffect.DeleteMemo>()
+      val effect = assertHasCommand<HabitsEffect.DeleteMemo>()
       assertEquals("memos/config_old", effect.name)
     }
 
@@ -791,7 +791,7 @@ class HabitsReducerTest {
       send(HabitsAction.RequestPrewarmAllRanges(memos = memos, appMode = AppMode.ONLINE))
 
       assertState { !needsCacheRefresh && isInitialLoading }
-      val effect = assertHasEffect<HabitsEffect.RunPrewarmAllRanges>()
+      val effect = assertHasCommand<HabitsEffect.RunPrewarmAllRanges>()
       assertEquals(memos, effect.memos)
       assertEquals(AppMode.ONLINE, effect.appMode)
     }
@@ -877,7 +877,7 @@ class HabitsReducerTest {
           isRecalculating.contains(ActivityCacheKey(ActivityRange.Week(LocalDate(2024, 1, 1)), ActivityMode.HABITS, AppMode.ONLINE)) &&
           !needsCacheRefresh
       }
-      val effect = assertHasEffect<HabitsEffect.RecalculateActivityData>()
+      val effect = assertHasCommand<HabitsEffect.RecalculateActivityData>()
       assertEquals(ActivityRange.Week(LocalDate(2024, 1, 1)), effect.range)
       assertEquals(ActivityMode.HABITS, effect.mode)
       assertEquals(AppMode.ONLINE, effect.appMode)

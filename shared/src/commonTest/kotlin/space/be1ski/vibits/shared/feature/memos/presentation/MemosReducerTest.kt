@@ -39,7 +39,7 @@ class MemosReducerTest {
       send(MemosAction.EditCredentials)
 
       assertState { credentialsMode && errorMessage == null }
-      assertEffects(MemosEffect.LoadCredentials)
+      assertCommands(MemosEffect.LoadCredentials)
     }
 
   @Test
@@ -66,9 +66,9 @@ class MemosReducerTest {
       send(MemosAction.LoadMemos)
 
       assertState { isLoading && !credentialsMode && errorMessage == null }
-      assertEffectCount(2)
-      assertHasEffect<MemosEffect.SaveCredentials>()
-      assertHasEffect<MemosEffect.LoadRemoteMemos>()
+      assertCommandCount(2)
+      assertHasCommand<MemosEffect.SaveCredentials>()
+      assertHasCommand<MemosEffect.LoadRemoteMemos>()
     }
 
   @Test
@@ -76,7 +76,7 @@ class MemosReducerTest {
     memosReducer.test(MemosState()) {
       send(MemosAction.LoadCachedMemos)
 
-      assertEffects(MemosEffect.LoadCachedMemos)
+      assertCommands(MemosEffect.LoadCachedMemos)
     }
 
   @Test
@@ -112,7 +112,7 @@ class MemosReducerTest {
       send(MemosAction.CachedMemosLoaded(emptyList()))
 
       assertState { memos.isEmpty() && !initialDataLoaded && isLoading }
-      assertEffects(MemosEffect.LoadRemoteMemos)
+      assertCommands(MemosEffect.LoadRemoteMemos)
     }
 
   @Test
@@ -139,7 +139,7 @@ class MemosReducerTest {
       send(MemosAction.CreateMemo("New memo content"))
 
       assertState { isLoading }
-      val effect = assertHasEffect<MemosEffect.CreateMemo>()
+      val effect = assertHasCommand<MemosEffect.CreateMemo>()
       assertEquals("New memo content", effect.content)
     }
 
@@ -149,7 +149,7 @@ class MemosReducerTest {
       send(MemosAction.UpdateMemo("memos/1", "Updated content"))
 
       assertState { isLoading }
-      val effect = assertHasEffect<MemosEffect.UpdateMemo>()
+      val effect = assertHasCommand<MemosEffect.UpdateMemo>()
       assertEquals("memos/1", effect.name)
       assertEquals("Updated content", effect.content)
     }
@@ -160,7 +160,7 @@ class MemosReducerTest {
       send(MemosAction.DeleteMemo("memos/1"))
 
       assertState { isLoading }
-      val effect = assertHasEffect<MemosEffect.DeleteMemo>()
+      val effect = assertHasCommand<MemosEffect.DeleteMemo>()
       assertEquals("memos/1", effect.name)
     }
 
@@ -249,8 +249,8 @@ class MemosReducerTest {
       send(MemosAction.LoadMemos)
 
       assertState { isLoading }
-      assertEffectCount(1)
-      assertHasEffect<MemosEffect.LoadRemoteMemos>()
+      assertCommandCount(1)
+      assertHasCommand<MemosEffect.LoadRemoteMemos>()
     }
 
   @Test
@@ -286,7 +286,7 @@ class MemosReducerTest {
       send(MemosAction.ConfirmCreateDialog)
 
       assertState { !showCreateDialog && createDialogContent == "" && isLoading }
-      val effect = assertHasEffect<MemosEffect.CreateMemo>()
+      val effect = assertHasCommand<MemosEffect.CreateMemo>()
       assertEquals("New memo", effect.content)
     }
 
@@ -332,7 +332,7 @@ class MemosReducerTest {
       send(MemosAction.ConfirmEditDialog)
 
       assertState { !showEditDialog && editDialogContent == "" && editDialogMemo == null && isLoading }
-      val effect = assertHasEffect<MemosEffect.UpdateMemo>()
+      val effect = assertHasCommand<MemosEffect.UpdateMemo>()
       assertEquals(testMemo.name, effect.name)
       assertEquals("Updated", effect.content)
     }

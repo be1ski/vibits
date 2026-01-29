@@ -11,7 +11,7 @@ import space.be1ski.vibits.shared.feature.onboarding.presentation.onboardingRedu
 fun createOnboardingFeature(
   dependencies: OnboardingDependencies,
   initialState: OnboardingState = OnboardingState(),
-): Feature<OnboardingAction, OnboardingState, OnboardingEffect> =
+): Feature<OnboardingAction, OnboardingState, OnboardingEffect.Command, OnboardingEffect.Notification> =
   FeatureImpl(
     initialState = initialState,
     reducer = onboardingReducer,

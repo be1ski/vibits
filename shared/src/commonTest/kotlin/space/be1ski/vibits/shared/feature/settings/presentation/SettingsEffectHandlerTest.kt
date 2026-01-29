@@ -115,38 +115,6 @@ class SettingsEffectHandlerTest {
       assertEquals(AppTheme.DARK, prefsRepo.stored.theme)
     }
 
-  @Test
-  fun `when Notification effect then returns empty flow`() =
-    runTest {
-      val handler = createHandler()
-
-      val notifyModeActions =
-        handler(
-          SettingsEffect.Notification.ModeChanged(newMode = AppMode.OFFLINE),
-        ).toList()
-      val notifyResetActions = handler(SettingsEffect.Notification.ResetCompleted).toList()
-      val notifyCredentialsActions =
-        handler(
-          SettingsEffect.Notification.CredentialsSaved(baseUrl = "url", token = "token"),
-        ).toList()
-      val notifyLanguageActions =
-        handler(
-          SettingsEffect.Notification.LanguageChanged(language = AppLanguage.ENGLISH),
-        ).toList()
-      val notifyThemeActions =
-        handler(
-          SettingsEffect.Notification.ThemeChanged(theme = AppTheme.DARK),
-        ).toList()
-      val notifyDialogActions = handler(SettingsEffect.Notification.DialogClosed).toList()
-
-      assertTrue(notifyModeActions.isEmpty())
-      assertTrue(notifyResetActions.isEmpty())
-      assertTrue(notifyCredentialsActions.isEmpty())
-      assertTrue(notifyLanguageActions.isEmpty())
-      assertTrue(notifyThemeActions.isEmpty())
-      assertTrue(notifyDialogActions.isEmpty())
-    }
-
   private fun createHandler(
     connectionResult: Result<Unit> = Result.success(Unit),
     appModeRepository: FakeAppModeRepository = FakeAppModeRepository(),
