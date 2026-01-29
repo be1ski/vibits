@@ -1,8 +1,9 @@
 package space.be1ski.vibits.shared.feature.mode.presentation
 
+import space.be1ski.vibits.shared.core.elm.Action
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
-sealed interface ModeSelectionAction {
+sealed interface ModeSelectionAction : Action {
   // Stored credentials check
   data object StoredCredentialsFound : ModeSelectionAction
 

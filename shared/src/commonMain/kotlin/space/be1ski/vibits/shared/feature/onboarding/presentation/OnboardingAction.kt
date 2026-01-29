@@ -1,8 +1,9 @@
 package space.be1ski.vibits.shared.feature.onboarding.presentation
 
+import space.be1ski.vibits.shared.core.elm.Action
 import space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset
 
-sealed interface OnboardingAction {
+sealed interface OnboardingAction : Action {
   // Navigation
   data object StartOnboarding : OnboardingAction
 

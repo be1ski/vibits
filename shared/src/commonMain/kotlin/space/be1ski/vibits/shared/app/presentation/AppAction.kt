@@ -3,13 +3,14 @@ package space.be1ski.vibits.shared.app.presentation
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.Screen
+import space.be1ski.vibits.shared.core.elm.Action
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 
 /**
  * Actions for the App coordinator feature.
  */
-sealed interface AppAction {
+sealed interface AppAction : Action {
   // Navigation
   data class SelectScreen(
     val screen: Screen,
