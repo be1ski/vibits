@@ -4,7 +4,7 @@ import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
-val modeSelectionReducer: Reducer<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect> =
+val modeSelectionReducer: Reducer<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect.Command, ModeSelectionEffect.Notification> =
   reducer { action, state ->
     when (action) {
       is ModeSelectionAction.StoredCredentialsFound -> {
@@ -21,7 +21,7 @@ val modeSelectionReducer: Reducer<ModeSelectionAction, ModeSelectionState, ModeS
 
       is ModeSelectionAction.UseStoredCredentials -> {
         state { copy(showQuickOnlineDialog = false, isValidating = true) }
-        effect(ModeSelectionEffect.UseStoredCredentialsWithValidation)
+        command(ModeSelectionEffect.Command.UseStoredCredentialsWithValidation)
       }
 
       is ModeSelectionAction.ShowCredentialsDialog -> {
@@ -55,7 +55,7 @@ val modeSelectionReducer: Reducer<ModeSelectionAction, ModeSelectionState, ModeS
           state { copy(error = ModeSelectionError.FILL_ALL_FIELDS) }
         } else {
           state { copy(isValidating = true, error = null) }
-          effect(ModeSelectionEffect.ValidateCredentials(baseUrl, token))
+          command(ModeSelectionEffect.Command.ValidateCredentials(baseUrl, token))
         }
       }
 
@@ -76,10 +76,10 @@ val modeSelectionReducer: Reducer<ModeSelectionAction, ModeSelectionState, ModeS
         }
         // Only save credentials if they were manually entered
         if (wasManuallyEntered) {
-          effect(ModeSelectionEffect.SaveCredentials(capturedBaseUrl, capturedToken))
+          command(ModeSelectionEffect.Command.SaveCredentials(capturedBaseUrl, capturedToken))
         }
-        effect(ModeSelectionEffect.SaveMode(AppMode.ONLINE))
-        effect(ModeSelectionEffect.NotifyModeSelected(AppMode.ONLINE))
+        command(ModeSelectionEffect.Command.SaveMode(AppMode.ONLINE))
+        notify(ModeSelectionEffect.Notification.ModeSelected(AppMode.ONLINE))
       }
 
       is ModeSelectionAction.ValidationFailed -> {
@@ -88,8 +88,8 @@ val modeSelectionReducer: Reducer<ModeSelectionAction, ModeSelectionState, ModeS
 
       is ModeSelectionAction.SelectMode -> {
         state { copy(showQuickOnlineDialog = false) }
-        effect(ModeSelectionEffect.SaveMode(action.mode))
-        effect(ModeSelectionEffect.NotifyModeSelected(action.mode))
+        command(ModeSelectionEffect.Command.SaveMode(action.mode))
+        notify(ModeSelectionEffect.Notification.ModeSelected(action.mode))
       }
     }
   }

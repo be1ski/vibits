@@ -104,13 +104,13 @@ class OnboardingEffectHandlerTest {
     }
 
   @Test
-  fun `when MarkOnboardingCompleted then emits OnboardingCompleted`() =
+  fun `when MarkOnboardingCompleted then emits no actions`() =
     runTest {
       val handler = createHandler()
 
       val actions = handler(OnboardingEffect.Command.MarkOnboardingCompleted).toList()
 
-      assertEquals(listOf(OnboardingAction.OnboardingCompleted), actions)
+      assertTrue(actions.isEmpty())
     }
 
   @Test
@@ -144,20 +144,6 @@ class OnboardingEffectHandlerTest {
       val actions = handler(OnboardingEffect.Command.MarkFirstCheckIn).toList()
 
       assertTrue(actions.isEmpty())
-    }
-
-  @Test
-  fun `when Notification effect then returns empty flow`() =
-    runTest {
-      val handler = createHandler()
-
-      val completedActions = handler(OnboardingEffect.Notification.Completed).toList()
-      val skippedActions = handler(OnboardingEffect.Notification.Skipped).toList()
-      val firstCheckInActions = handler(OnboardingEffect.Notification.FirstCheckInCreated).toList()
-
-      assertTrue(completedActions.isEmpty())
-      assertTrue(skippedActions.isEmpty())
-      assertTrue(firstCheckInActions.isEmpty())
     }
 
   private fun createHandler(memosRepository: FakeMemosRepository = FakeMemosRepository()): OnboardingEffectHandler {

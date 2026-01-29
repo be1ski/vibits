@@ -17,17 +17,11 @@ class OnboardingEffectHandler(
   private val createFirstHabit: CreateFirstHabitUseCase,
   private val createFirstCheckIn: CreateFirstCheckInUseCase,
   private val markOnboardingCompleted: MarkOnboardingCompletedUseCase,
-) : EffectHandler<OnboardingEffect, OnboardingAction> {
-  override fun invoke(effect: OnboardingEffect): Flow<OnboardingAction> =
-    when (effect) {
-      is OnboardingEffect.Command -> handleCommand(effect)
-      is OnboardingEffect.Notification -> emptyFlow()
-    }
-
-  private fun handleCommand(effect: OnboardingEffect.Command): Flow<OnboardingAction> =
-    when (effect) {
+) : EffectHandler<OnboardingEffect.Command, OnboardingAction> {
+  override fun invoke(command: OnboardingEffect.Command): Flow<OnboardingAction> =
+    when (command) {
       is OnboardingEffect.Command.LoadPresets -> handleLoadPresets()
-      is OnboardingEffect.Command.CreateFirstHabit -> handleCreateFirstHabit(effect)
+      is OnboardingEffect.Command.CreateFirstHabit -> handleCreateFirstHabit(command)
       is OnboardingEffect.Command.MarkOnboardingCompleted -> handleMarkOnboardingCompleted()
       is OnboardingEffect.Command.MarkFirstCheckIn -> handleMarkFirstCheckIn()
     }
@@ -39,10 +33,10 @@ class OnboardingEffectHandler(
       emit(OnboardingAction.PresetsLoaded(presets))
     }
 
-  private fun handleCreateFirstHabit(effect: OnboardingEffect.Command.CreateFirstHabit): Flow<OnboardingAction> =
+  private fun handleCreateFirstHabit(command: OnboardingEffect.Command.CreateFirstHabit): Flow<OnboardingAction> =
     flow {
-      Log.d(TAG, "Creating first habit: ${effect.name}")
-      createFirstHabit(effect.name, effect.presetId, effect.color)
+      Log.d(TAG, "Creating first habit: ${command.name}")
+      createFirstHabit(command.name, command.presetId, command.color)
         .onSuccess {
           Log.d(TAG, "Habit created successfully")
           emit(OnboardingAction.HabitCreated)
@@ -56,7 +50,6 @@ class OnboardingEffectHandler(
     flow {
       Log.i(TAG, "Marking onboarding as completed")
       markOnboardingCompleted()
-      emit(OnboardingAction.OnboardingCompleted)
     }
 
   private fun handleMarkFirstCheckIn(): Flow<OnboardingAction> =

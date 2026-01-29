@@ -46,7 +46,7 @@ class SettingsReducerTest {
       send(SettingsAction.Close)
 
       assertState { !isOpen && !showLogsDialog && validationError == null }
-      assertEffects(SettingsEffect.Notification.DialogClosed)
+      assertNotifications(SettingsEffect.Notification.DialogClosed)
     }
 
   @Test
@@ -55,7 +55,7 @@ class SettingsReducerTest {
       send(SettingsAction.Dismiss)
 
       assertState { !isOpen }
-      assertEffects(SettingsEffect.Notification.DialogClosed)
+      assertNotifications(SettingsEffect.Notification.DialogClosed)
     }
 
   @Test
@@ -134,14 +134,14 @@ class SettingsReducerTest {
       send(SettingsAction.ValidationSucceeded)
 
       assertState { !isValidating && !isOpen && !pendingSave && appMode == AppMode.ONLINE }
-      assertEffectCount(7)
-      assertHasEffect<SettingsEffect.Command.SaveCredentials>()
-      assertHasEffect<SettingsEffect.Command.SwitchMode>()
-      assertHasEffect<SettingsEffect.Command.SaveLanguage>()
-      assertHasEffect<SettingsEffect.Command.SaveTheme>()
-      assertHasEffect<SettingsEffect.Notification.LanguageChanged>()
-      assertHasEffect<SettingsEffect.Notification.ThemeChanged>()
-      assertHasEffect<SettingsEffect.Notification.CredentialsSaved>()
+      assertCommandCount(4)
+      assertHasCommand<SettingsEffect.Command.SaveCredentials>()
+      assertHasCommand<SettingsEffect.Command.SwitchMode>()
+      assertHasCommand<SettingsEffect.Command.SaveLanguage>()
+      assertHasCommand<SettingsEffect.Command.SaveTheme>()
+      assertHasNotification<SettingsEffect.Notification.LanguageChanged>()
+      assertHasNotification<SettingsEffect.Notification.ThemeChanged>()
+      assertHasNotification<SettingsEffect.Notification.CredentialsSaved>()
     }
 
   @Test
@@ -163,7 +163,7 @@ class SettingsReducerTest {
     settingsReducer.test(SettingsState(appMode = AppMode.OFFLINE)) {
       send(SettingsAction.ModeSwitched)
 
-      val effect = assertHasEffect<SettingsEffect.Notification.ModeChanged>()
+      val effect = assertHasNotification<SettingsEffect.Notification.ModeChanged>()
       assertEquals(AppMode.OFFLINE, effect.newMode)
     }
 
@@ -182,7 +182,7 @@ class SettingsReducerTest {
       send(SettingsAction.ConfirmReset)
 
       assertState { !showResetConfirmation && isResetting }
-      assertEffects(SettingsEffect.Command.ResetApp)
+      assertCommands(SettingsEffect.Command.ResetApp)
     }
 
   @Test
@@ -205,7 +205,7 @@ class SettingsReducerTest {
       send(SettingsAction.ResetCompleted)
 
       assertState { !isOpen && !isResetting }
-      assertEffects(SettingsEffect.Notification.ResetCompleted)
+      assertNotifications(SettingsEffect.Notification.ResetCompleted)
     }
 
   @Test
@@ -239,11 +239,11 @@ class SettingsReducerTest {
       send(SettingsAction.Save)
 
       assertState { !isOpen }
-      assertEffectCount(7)
-      assertHasEffect<SettingsEffect.Command.SaveCredentials>()
-      assertHasEffect<SettingsEffect.Command.SwitchMode>()
-      assertHasEffect<SettingsEffect.Command.SaveLanguage>()
-      assertHasEffect<SettingsEffect.Command.SaveTheme>()
+      assertCommandCount(4)
+      assertHasCommand<SettingsEffect.Command.SaveCredentials>()
+      assertHasCommand<SettingsEffect.Command.SwitchMode>()
+      assertHasCommand<SettingsEffect.Command.SaveLanguage>()
+      assertHasCommand<SettingsEffect.Command.SaveTheme>()
     }
 
   @Test
@@ -276,7 +276,7 @@ class SettingsReducerTest {
 
       assertState { isOpen && isValidating && pendingSave && validationError == null }
 
-      val effect = assertHasEffect<SettingsEffect.Command.ValidateCredentials>()
+      val effect = assertHasCommand<SettingsEffect.Command.ValidateCredentials>()
       assertEquals("https://api.com", effect.baseUrl)
       assertEquals("token123", effect.token)
     }

@@ -22,42 +22,36 @@ class SettingsEffectHandler(
   private val resetApp: ResetAppUseCase,
   private val saveLanguage: SaveLanguageUseCase,
   private val saveTheme: SaveThemeUseCase,
-) : EffectHandler<SettingsEffect, SettingsAction> {
-  override fun invoke(effect: SettingsEffect): Flow<SettingsAction> =
-    when (effect) {
-      is SettingsEffect.Command -> handleCommand(effect)
-      is SettingsEffect.Notification -> emptyFlow()
-    }
-
-  private fun handleCommand(effect: SettingsEffect.Command): Flow<SettingsAction> =
-    when (effect) {
-      is SettingsEffect.Command.ValidateCredentials -> handleValidateCredentials(effect)
-      is SettingsEffect.Command.SwitchMode -> handleSwitchMode(effect)
-      is SettingsEffect.Command.SaveCredentials -> handleSaveCredentials(effect)
+) : EffectHandler<SettingsEffect.Command, SettingsAction> {
+  override fun invoke(command: SettingsEffect.Command): Flow<SettingsAction> =
+    when (command) {
+      is SettingsEffect.Command.ValidateCredentials -> handleValidateCredentials(command)
+      is SettingsEffect.Command.SwitchMode -> handleSwitchMode(command)
+      is SettingsEffect.Command.SaveCredentials -> handleSaveCredentials(command)
       is SettingsEffect.Command.ResetApp -> handleResetApp()
-      is SettingsEffect.Command.SaveLanguage -> handleSaveLanguage(effect)
-      is SettingsEffect.Command.SaveTheme -> handleSaveTheme(effect)
+      is SettingsEffect.Command.SaveLanguage -> handleSaveLanguage(command)
+      is SettingsEffect.Command.SaveTheme -> handleSaveTheme(command)
     }
 
-  private fun handleValidateCredentials(effect: SettingsEffect.Command.ValidateCredentials): Flow<SettingsAction> =
+  private fun handleValidateCredentials(command: SettingsEffect.Command.ValidateCredentials): Flow<SettingsAction> =
     flow {
       Log.d(TAG, "Testing connection")
-      connectionTester(effect.baseUrl, effect.token)
+      connectionTester(command.baseUrl, command.token)
         .onSuccess { emit(SettingsAction.ValidationSucceeded) }
         .onFailure { emit(SettingsAction.ValidationFailed("connection_failed")) }
     }
 
-  private fun handleSwitchMode(effect: SettingsEffect.Command.SwitchMode): Flow<SettingsAction> =
+  private fun handleSwitchMode(command: SettingsEffect.Command.SwitchMode): Flow<SettingsAction> =
     flow {
-      Log.i(TAG, "Switching mode to ${effect.mode}")
-      switchAppMode(effect.mode)
+      Log.i(TAG, "Switching mode to ${command.mode}")
+      switchAppMode(command.mode)
       emit(SettingsAction.ModeSwitched)
     }
 
-  private fun handleSaveCredentials(effect: SettingsEffect.Command.SaveCredentials): Flow<SettingsAction> =
+  private fun handleSaveCredentials(command: SettingsEffect.Command.SaveCredentials): Flow<SettingsAction> =
     flow {
       Log.d(TAG, "Saving credentials")
-      saveCredentials(Credentials(effect.baseUrl, effect.token))
+      saveCredentials(Credentials(command.baseUrl, command.token))
     }
 
   private fun handleResetApp(): Flow<SettingsAction> =
@@ -67,15 +61,15 @@ class SettingsEffectHandler(
       emit(SettingsAction.ResetCompleted)
     }
 
-  private fun handleSaveLanguage(effect: SettingsEffect.Command.SaveLanguage): Flow<SettingsAction> =
+  private fun handleSaveLanguage(command: SettingsEffect.Command.SaveLanguage): Flow<SettingsAction> =
     emptyFlow<SettingsAction>().also {
-      Log.i(TAG, "Language changed to ${effect.language}")
-      saveLanguage(effect.language)
+      Log.i(TAG, "Language changed to ${command.language}")
+      saveLanguage(command.language)
     }
 
-  private fun handleSaveTheme(effect: SettingsEffect.Command.SaveTheme): Flow<SettingsAction> =
+  private fun handleSaveTheme(command: SettingsEffect.Command.SaveTheme): Flow<SettingsAction> =
     emptyFlow<SettingsAction>().also {
-      Log.i(TAG, "Theme changed to ${effect.theme}")
-      saveTheme(effect.theme)
+      Log.i(TAG, "Theme changed to ${command.theme}")
+      saveTheme(command.theme)
     }
 }

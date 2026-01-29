@@ -6,6 +6,7 @@ import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUse
 import space.be1ski.vibits.shared.feature.memos.data.ConnectionTester
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
+import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionEffect.Command
 import space.be1ski.vibits.shared.test.FakeAppModeRepository
 import space.be1ski.vibits.shared.test.FakeCredentialsRepository
 import kotlin.test.Test
@@ -20,7 +21,7 @@ class ModeSelectionEffectHandlerTest {
 
       val actions =
         handler(
-          ModeSelectionEffect.ValidateCredentials(baseUrl = "https://test.com", token = "token"),
+          Command.ValidateCredentials(baseUrl = "https://test.com", token = "token"),
         ).toList()
 
       assertEquals(listOf(ModeSelectionAction.ValidationSucceeded), actions)
@@ -33,7 +34,7 @@ class ModeSelectionEffectHandlerTest {
 
       val actions =
         handler(
-          ModeSelectionEffect.ValidateCredentials(baseUrl = "https://test.com", token = "token"),
+          Command.ValidateCredentials(baseUrl = "https://test.com", token = "token"),
         ).toList()
 
       assertEquals(listOf(ModeSelectionAction.ValidationFailed), actions)
@@ -46,7 +47,7 @@ class ModeSelectionEffectHandlerTest {
       val handler = createHandler(credentialsRepository = credentialsRepo)
 
       handler(
-        ModeSelectionEffect.SaveCredentials(baseUrl = "https://saved.com", token = "saved-token"),
+        Command.SaveCredentials(baseUrl = "https://saved.com", token = "saved-token"),
       ).toList()
 
       assertEquals("https://saved.com", credentialsRepo.stored.baseUrl)
@@ -59,22 +60,9 @@ class ModeSelectionEffectHandlerTest {
       val appModeRepo = FakeAppModeRepository()
       val handler = createHandler(appModeRepository = appModeRepo)
 
-      handler(ModeSelectionEffect.SaveMode(mode = AppMode.OFFLINE)).toList()
+      handler(Command.SaveMode(mode = AppMode.OFFLINE)).toList()
 
       assertEquals(AppMode.OFFLINE, appModeRepo.storedMode)
-    }
-
-  @Test
-  fun `when NotifyModeSelected effect then returns empty flow`() =
-    runTest {
-      val handler = createHandler()
-
-      val actions =
-        handler(
-          ModeSelectionEffect.NotifyModeSelected(mode = AppMode.ONLINE),
-        ).toList()
-
-      assertTrue(actions.isEmpty())
     }
 
   @Test
@@ -91,7 +79,7 @@ class ModeSelectionEffectHandlerTest {
         )
       val handler = createHandler(credentialsRepository = credentialsRepo, localConfigProvider = configProvider)
 
-      val actions = handler(ModeSelectionEffect.InitializeFromLocalConfig).toList()
+      val actions = handler(Command.InitializeFromLocalConfig).toList()
 
       assertEquals(listOf(ModeSelectionAction.StoredCredentialsFound), actions)
     }
@@ -105,7 +93,7 @@ class ModeSelectionEffectHandlerTest {
           .createFakeLocalConfigProvider(config = emptyMap())
       val handler = createHandler(credentialsRepository = credentialsRepo, localConfigProvider = configProvider)
 
-      val actions = handler(ModeSelectionEffect.InitializeFromLocalConfig).toList()
+      val actions = handler(Command.InitializeFromLocalConfig).toList()
 
       assertEquals(listOf(ModeSelectionAction.StoredCredentialsNotFound), actions)
     }
@@ -123,7 +111,7 @@ class ModeSelectionEffectHandlerTest {
         )
       val handler = createHandler(credentialsRepository = credentialsRepo)
 
-      val actions = handler(ModeSelectionEffect.CheckStoredCredentials).toList()
+      val actions = handler(Command.CheckStoredCredentials).toList()
 
       assertEquals(listOf(ModeSelectionAction.StoredCredentialsFound), actions)
     }
@@ -134,7 +122,7 @@ class ModeSelectionEffectHandlerTest {
       val credentialsRepo = FakeCredentialsRepository()
       val handler = createHandler(credentialsRepository = credentialsRepo)
 
-      val actions = handler(ModeSelectionEffect.CheckStoredCredentials).toList()
+      val actions = handler(Command.CheckStoredCredentials).toList()
 
       assertEquals(listOf(ModeSelectionAction.StoredCredentialsNotFound), actions)
     }
@@ -152,7 +140,7 @@ class ModeSelectionEffectHandlerTest {
         )
       val handler = createHandler(credentialsRepository = credentialsRepo)
 
-      val actions = handler(ModeSelectionEffect.UseStoredCredentialsWithValidation).toList()
+      val actions = handler(Command.UseStoredCredentialsWithValidation).toList()
 
       assertEquals(listOf(ModeSelectionAction.ValidationSucceeded), actions)
     }
@@ -170,7 +158,7 @@ class ModeSelectionEffectHandlerTest {
         )
       val handler = createHandler(connectionResult = Result.failure(Exception("Failed")), credentialsRepository = credentialsRepo)
 
-      val actions = handler(ModeSelectionEffect.UseStoredCredentialsWithValidation).toList()
+      val actions = handler(Command.UseStoredCredentialsWithValidation).toList()
 
       assertEquals(listOf(ModeSelectionAction.ValidationFailed), actions)
     }

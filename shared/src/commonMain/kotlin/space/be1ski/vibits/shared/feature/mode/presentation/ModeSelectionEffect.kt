@@ -3,29 +3,37 @@ package space.be1ski.vibits.shared.feature.mode.presentation
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
 sealed interface ModeSelectionEffect {
-  // Async operations (handled by EffectHandler)
-  data object InitializeFromLocalConfig : ModeSelectionEffect
+  /**
+   * Commands handled by ModeSelectionEffectHandler (async operations).
+   */
+  sealed interface Command : ModeSelectionEffect {
+    data object InitializeFromLocalConfig : Command
 
-  data object CheckStoredCredentials : ModeSelectionEffect
+    data object CheckStoredCredentials : Command
 
-  data object UseStoredCredentialsWithValidation : ModeSelectionEffect
+    data object UseStoredCredentialsWithValidation : Command
 
-  data class ValidateCredentials(
-    val baseUrl: String,
-    val token: String,
-  ) : ModeSelectionEffect
+    data class ValidateCredentials(
+      val baseUrl: String,
+      val token: String,
+    ) : Command
 
-  data class SaveCredentials(
-    val baseUrl: String,
-    val token: String,
-  ) : ModeSelectionEffect
+    data class SaveCredentials(
+      val baseUrl: String,
+      val token: String,
+    ) : Command
 
-  data class SaveMode(
-    val mode: AppMode,
-  ) : ModeSelectionEffect
+    data class SaveMode(
+      val mode: AppMode,
+    ) : Command
+  }
 
-  // Parent notifications (observed by AppRoot)
-  data class NotifyModeSelected(
-    val mode: AppMode,
-  ) : ModeSelectionEffect
+  /**
+   * Notifications observed by AppRoot for cross-feature coordination.
+   */
+  sealed interface Notification : ModeSelectionEffect {
+    data class ModeSelected(
+      val mode: AppMode,
+    ) : Notification
+  }
 }

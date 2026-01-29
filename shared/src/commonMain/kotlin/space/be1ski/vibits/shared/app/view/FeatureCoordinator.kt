@@ -33,12 +33,8 @@ internal fun FeatureCoordinator(
 
   // Cross-feature coordination via Settings notifications
   LaunchedEffect(features.settings) {
-    features.settings.effects.collect { effect ->
-      when (effect) {
-        is SettingsEffect.Notification ->
-          handleNotification(effect, dispatchApp, dispatchMemos, dispatchHabits, onResetApp, onThemeChanged, onLanguageChanged)
-        is SettingsEffect.Command -> Unit
-      }
+    features.settings.notifications.collect { notification ->
+      handleNotification(notification, dispatchApp, dispatchMemos, dispatchHabits, onResetApp, onThemeChanged, onLanguageChanged)
     }
   }
 

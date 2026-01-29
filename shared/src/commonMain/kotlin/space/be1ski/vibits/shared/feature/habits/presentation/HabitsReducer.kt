@@ -19,7 +19,7 @@ import kotlin.random.Random
  * Pure reducer for the Habits feature.
  * All state transitions are deterministic and testable.
  */
-val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
+val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect, Nothing> =
   reducer { action, state ->
     when (action) {
       is HabitsAction.OpenEditor -> {
@@ -96,9 +96,9 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
             state { copy(isLoading = true, editorError = null) }
 
             if (existing != null) {
-              effect(HabitsEffect.UpdateMemo(existing.name, content))
+              command(HabitsEffect.UpdateMemo(existing.name, content))
             } else {
-              effect(HabitsEffect.CreateMemo(content))
+              command(HabitsEffect.CreateMemo(content))
             }
           }
         }
@@ -111,7 +111,7 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
       is HabitsAction.ConfirmDelete -> {
         val existing = state.editorExisting ?: return@reducer
         state { copy(isLoading = true) }
-        effect(HabitsEffect.DeleteMemo(existing.name))
+        command(HabitsEffect.DeleteMemo(existing.name))
       }
 
       is HabitsAction.CancelDelete -> {
@@ -188,7 +188,7 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
         } else {
           val content = buildHabitsConfigContentFromList(validHabits)
           state { copy(isLoading = true) }
-          effect(HabitsEffect.CreateMemo(content))
+          command(HabitsEffect.CreateMemo(content))
         }
       }
 
@@ -216,7 +216,7 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
             pendingConfigMemo = null,
           )
         }
-        effect(HabitsEffect.UpdateMemo(existingMemo.name, content))
+        command(HabitsEffect.UpdateMemo(existingMemo.name, content))
       }
 
       is HabitsAction.CreateNewConfigInstead -> {
@@ -229,7 +229,7 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
             pendingConfigMemo = null,
           )
         }
-        effect(HabitsEffect.CreateMemo(content))
+        command(HabitsEffect.CreateMemo(content))
       }
 
       is HabitsAction.RequestDeleteConfig -> {
@@ -247,7 +247,7 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
             isLoading = true,
           )
         }
-        effect(HabitsEffect.DeleteMemo(existingMemo.name))
+        command(HabitsEffect.DeleteMemo(existingMemo.name))
       }
 
       is HabitsAction.CancelDeleteConfig -> {
@@ -287,16 +287,16 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
           !hasAnySelection && existing != null -> {
             // All habits unchecked and memo exists - delete it
             state { copy(isLoading = true) }
-            effect(HabitsEffect.DeleteMemo(existing.name))
+            command(HabitsEffect.DeleteMemo(existing.name))
           }
           hasAnySelection -> {
             // Build and save the memo
             val content = buildDailyContent(day.date, config, selections)
             state { copy(isLoading = true) }
             if (existing != null) {
-              effect(HabitsEffect.UpdateMemo(existing.name, content))
+              command(HabitsEffect.UpdateMemo(existing.name, content))
             } else {
-              effect(HabitsEffect.CreateMemo(content))
+              command(HabitsEffect.CreateMemo(content))
             }
           }
           else -> {
@@ -364,7 +364,7 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
             singleToggleConfig = emptyList(),
           )
         }
-        effect(HabitsEffect.RefreshMemos)
+        command(HabitsEffect.RefreshMemos)
       }
 
       is HabitsAction.MemoDeleted -> {
@@ -383,7 +383,7 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
             singleToggleConfig = emptyList(),
           )
         }
-        effect(HabitsEffect.RefreshMemos)
+        command(HabitsEffect.RefreshMemos)
       }
 
       is HabitsAction.MemoOperationFailed -> {
@@ -407,7 +407,7 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
             isInitialLoading = true,
           )
         }
-        effect(HabitsEffect.RunPrewarmAllRanges(action.memos, action.appMode))
+        command(HabitsEffect.RunPrewarmAllRanges(action.memos, action.appMode))
       }
 
       is HabitsAction.UpdateActivityData -> {
@@ -447,7 +447,7 @@ val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect> =
             needsCacheRefresh = false,
           )
         }
-        effect(HabitsEffect.RecalculateActivityData(action.range, action.mode, action.appMode, action.memos))
+        command(HabitsEffect.RecalculateActivityData(action.range, action.mode, action.appMode, action.memos))
       }
     }
   }
