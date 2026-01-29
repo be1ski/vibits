@@ -89,7 +89,6 @@ fun ChoosePresetScreen(
     Spacer(modifier = Modifier.height(Indent.m))
 
     LazyColumn(
-      modifier = Modifier.weight(1f),
       verticalArrangement = Arrangement.spacedBy(Indent.s),
     ) {
       items(presets, key = { it.id }) { preset ->
@@ -100,6 +99,8 @@ fun ChoosePresetScreen(
         )
       }
     }
+
+    Spacer(modifier = Modifier.weight(1f))
 
     Spacer(modifier = Modifier.height(Indent.m))
 
