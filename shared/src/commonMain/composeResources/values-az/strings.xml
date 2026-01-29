@@ -8,9 +8,15 @@
     <string name="action_copied">Kopyalandı</string>
     <string name="action_configure_habits">Vərdişləri tənzimlə</string>
     <string name="action_create">Yarat</string>
+    <string name="action_create_first_habit">İlk vərdişi yarat</string>
     <string name="action_create_memo">Qeyd yarat</string>
+    <string name="action_continue">Davam et</string>
     <string name="action_delete">Sil</string>
+    <string name="action_add_first_habit">İlk vərdişi əlavə et</string>
+    <string name="action_go_to_dashboard">Panelə get</string>
     <string name="action_hide_details">Detalları gizlət</string>
+    <string name="action_mark_first_checkin">İlk qeydi işarələ</string>
+    <string name="action_maybe_later">Bəlkə sonra</string>
     <string name="action_next">Növbəti</string>
     <string name="action_previous">Əvvəlki</string>
     <string name="action_refresh">Yenilə</string>
@@ -18,6 +24,7 @@
     <string name="action_reset_app">Tətbiqi sıfırla</string>
     <string name="action_save">Saxla</string>
     <string name="action_show_details">Detalları göstər</string>
+    <string name="action_start_tracking">İzləməyə başla</string>
     <string name="action_track">Qeyd et</string>
     <string name="action_track_today">Bu gün qeyd et</string>
     <string name="action_update">Yenilə</string>
@@ -76,7 +83,7 @@
     <!-- Hints -->
     <string name="hint_add_habits_config">İzləməyə başlamaq üçün vərdiş konfiqurasiyası əlavə edin.</string>
     <string name="hint_base_url">https://memos.example.com</string>
-    <string name="hint_habit_name">Vərdiş adı</string>
+    <string name="hint_habit_name">məsələn, Səhər idmanı</string>
     <string name="hint_habits_config">İdman | #habits/gym\nOxu | #habits/reading</string>
     <string name="hint_write_memo">Qeyd yazın...</string>
 
@@ -89,6 +96,9 @@
     <string name="label_demo_mode">Demo rejim</string>
     <string name="label_environment">Mühit</string>
     <string name="label_habits_config">Vərdiş konfiqurasiyası</string>
+    <string name="label_habit_color">Vərdiş rəngi</string>
+    <string name="label_habit_name">Vərdiş adı</string>
+    <string name="label_habit_preset_custom">Özünüz yaradın</string>
     <string name="label_language">Dil</string>
     <string name="label_memos_db">Qeydlər bazası</string>
     <string name="label_post_filter">Filtr</string>
@@ -115,7 +125,10 @@
     <string name="msg_delete_config_warning">Bu konfiqurasiyanı silmək istədiyinizə əminsiniz? Bu, konfiqurasiya yazısını qeydlərinizdən birdəfəlik siləcək.</string>
     <string name="msg_delete_day_confirm">Vərdiş seçilməyib. Günlük qeyd silinəcək.</string>
     <string name="msg_delete_day_warning">Bu günün qeydini silmək istədiyinizdən əminsiniz? Bu, izləmə yazısını qeydlərinizdən birdəfəlik siləcək.</string>
+    <string name="msg_empty_state_no_habits">Oflayn rejimdə izləməyə başlamaq üçün vərdiş yaradın.</string>
     <string name="msg_fill_all_fields">Bütün sahələri doldurun</string>
+    <string name="msg_habit_name_required">Vərdiş adı tələb olunur</string>
+    <string name="msg_habit_setup">Vərdişiniz üçün mənalı ad düşünün.</string>
     <string name="msg_no_habits_yet">Vərdişlər hələ tənzimlənməyib.</string>
     <string name="msg_no_logs">Loglar hələ yoxdur</string>
     <string name="msg_no_memos_yet">Bu dövrdə qeyd yoxdur.</string>
@@ -123,6 +136,8 @@
     <string name="msg_select_habit">Ən azı bir vərdiş seçin.</string>
     <string name="msg_mark_done_confirm">«%1$s» %2$s üçün tamamlanmış kimi qeyd edilsin?</string>
     <string name="msg_mark_not_done_confirm">%2$s tarixində «%1$s» qeydini silmək istəyirsiniz?</string>
+    <string name="msg_offline_onboarding_success">Hər şey hazırdır. Bu gün ilk qeydi işarələyin.</string>
+    <string name="msg_offline_onboarding_welcome">Vərdişləri cihazınızda yerli olaraq izləyin. Hesab lazım deyil.</string>
     <string name="msg_restart_required">Dil dəyişikliyini tətbiq etmək üçün yenidən başlatma tələb olunur</string>
 
     <!-- Language selection -->
@@ -187,6 +202,7 @@
     <string name="time_years">İllər</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">Başlanğıc vərdişi seç</string>
     <string name="title_create_day">Gün yarat</string>
     <string name="title_delete_config">Konfiqurasiyanı silinsin?</string>
     <string name="title_delete_day">Günü sil?</string>
@@ -194,8 +210,12 @@
     <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">Günü redaktə et</string>
     <string name="title_edit_memo">Qeydi redaktə et</string>
+    <string name="title_empty_state_no_habits">Vərdişlər hələ yoxdur</string>
+    <string name="title_habit_setup">Vərdişinizi qurun</string>
     <string name="title_logs">Loglar (%1$d)</string>
     <string name="title_new_memo">Yeni qeyd</string>
+    <string name="title_offline_onboarding_success">Əla iş!</string>
+    <string name="title_offline_onboarding_welcome">Oflayn rejim hazırdır</string>
     <string name="title_mark_done">Tamamlanmış kimi qeyd et?</string>
     <string name="title_mark_not_done">Qeydi sil?</string>
     <string name="title_update_day">Günü yenilə</string>
