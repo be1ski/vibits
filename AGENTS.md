@@ -197,6 +197,7 @@ We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
 
 - **Never hardcode user-facing strings.** All text displayed to users must use string resources from `composeResources/values/strings.xml`.
 - **Always add translations for ALL supported locales immediately.** When adding a new string resource, add proper native translations to all locale files in `composeResources/values-*/strings.xml`. Use professional native translations, not English fallbacks.
+- **Terminology:** In this app, “Memo” must be translated as **«Воспоминание»** in Russian. Do not use «Заметка» for memos.
 - String resource names use `snake_case` with semantic prefixes: `action_`, `label_`, `msg_`, `title_`, `hint_`, `format_`, etc.
 
 ## Testing Guidelines

@@ -4,8 +4,8 @@
     <string name="action_cancel">Бекор кардан</string>
     <string name="action_clear">Тоза кардан</string>
     <string name="action_continue">Идома додан</string>
-    <string name="action_create_new_config">Create New Config (Recommended)</string>
-    <string name="action_edit_anyway">Edit Anyway</string>
+    <string name="action_create_new_config">Эҷоди конфигуратсияи нав (тавсия мешавад)</string>
+    <string name="action_edit_anyway">Бо вуҷуди ин таҳрир кардан</string>
     <string name="action_close">Пӯшидан</string>
     <string name="action_copied">Нусхабардорӣ шуд</string>
     <string name="action_configure_habits">Танзими одатҳо</string>
@@ -119,9 +119,13 @@
     <string name="filter_regular">Оддӣ</string>
 
     <!-- Messages -->
-    <string name="format_active_since">Active since %1$s</string>
+    <string name="format_active_since">Фаъол аз %1$s</string>
     <string name="msg_connection_failed">Хатои пайвастшавӣ</string>
-    <string name="msg_edit_config_warning">You're about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn't exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
+    <string name="msg_edit_config_warning">Шумо мехоҳед конфигуратсияи мавҷударо таҳрир кунед. Ин ба ҳамаи маълумоти таърихӣ таъсир мерасонад.
+
+Таҳрири конфигуратсияи кӯҳна тавсия намешавад, зеро он намуди маълумоти гузаштаатонро тағйир медиҳад. Масалан, агар одати нав илова кунед, ҳамаи рӯзҳои гузашта онро ҳамчун «иҷро нашудааст» нишон медиҳанд, гарчанде он вақт вуҷуд надошт.
+
+Амали беҳтарин: конфигуратсияи нав эҷод кунед. Маълумоти таърихӣ бо конфигуратсияи кӯҳна мемонад, маълумоти нав бошад конфигуратсияи навро истифода мебарад.</string>
     <string name="msg_delete_config_warning">Шумо мутмаин ҳастед, ки мехоҳед ин конфигро нест кунед? Ин постро аз хотиротҳои шумо назди ҳамеша нест мекунад.</string>
     <string name="msg_delete_day_confirm">Одат интихоб нашудааст. Сабти рӯзона нест мешавад.</string>
     <string name="msg_delete_day_warning">Оё шумо мутмаин ҳастед, ки мехоҳед сабти ин рӯзро нест кунед? Ин постро аз ёддоштҳои шумо ҳамешагӣ нест мекунад.</string>
@@ -207,7 +211,7 @@
     <string name="title_delete_config">Конфигро нест кунем?</string>
     <string name="title_delete_day">Рӯзро нест кунем?</string>
     <string name="title_delete_memo">Ёддоштро нест кунем?</string>
-    <string name="title_edit_config_warning">Edit Existing Config?</string>
+    <string name="title_edit_config_warning">Конфигуратсияи мавҷударо таҳрир мекунед?</string>
     <string name="title_edit_day">Таҳрири рӯз</string>
     <string name="title_edit_memo">Таҳрири ёддошт</string>
     <string name="title_empty_state_no_habits">Одатҳо ҳанӯз нестанд</string>
