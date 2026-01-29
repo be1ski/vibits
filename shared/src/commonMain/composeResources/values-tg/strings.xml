@@ -1,16 +1,21 @@
 <resources>
     <!-- Actions -->
+    <string name="action_add_first_habit">Одати аввалро илова кунед</string>
     <string name="action_cancel">Бекор кардан</string>
+    <string name="action_clear">Тоза кардан</string>
+    <string name="action_continue">Идома додан</string>
     <string name="action_create_new_config">Create New Config (Recommended)</string>
     <string name="action_edit_anyway">Edit Anyway</string>
-    <string name="action_clear">Тоза кардан</string>
     <string name="action_close">Пӯшидан</string>
     <string name="action_copied">Нусхабардорӣ шуд</string>
     <string name="action_configure_habits">Танзими одатҳо</string>
     <string name="action_create">Эҷод кардан</string>
+    <string name="action_create_first_habit">Одати аввалро эҷод кунед</string>
     <string name="action_create_memo">Эҷоди ёддошт</string>
     <string name="action_delete">Нест кардан</string>
     <string name="action_hide_details">Пинҳон кардани тафсилот</string>
+    <string name="action_mark_first_checkin">Аввалин қайдро гузоштан</string>
+    <string name="action_maybe_later">Баъдтар</string>
     <string name="action_next">Навбатӣ</string>
     <string name="action_previous">Қаблӣ</string>
     <string name="action_refresh">Навсозӣ</string>
@@ -18,6 +23,7 @@
     <string name="action_reset_app">Барқарор кардани барнома</string>
     <string name="action_save">Захира кардан</string>
     <string name="action_show_details">Нишон додани тафсилот</string>
+    <string name="action_start_tracking">Назоратро оғоз кардан</string>
     <string name="action_track">Қайд кардан</string>
     <string name="action_track_today">Имрӯз қайд кардан</string>
     <string name="action_update">Навсозӣ</string>
@@ -25,6 +31,7 @@
     <string name="action_export">Содирот</string>
     <string name="action_export_logs">Содироти логҳо</string>
     <string name="action_export_memos">Содироти ёддоштҳо</string>
+    <string name="action_go_to_dashboard">Ба лавҳа гузаштан</string>
     <string name="msg_export_success">Ба %1$s содир шуд</string>
     <string name="msg_export_failed">Хатои содирот</string>
 
@@ -119,9 +126,14 @@
     <string name="msg_delete_day_confirm">Одат интихоб нашудааст. Сабти рӯзона нест мешавад.</string>
     <string name="msg_delete_day_warning">Оё шумо мутмаин ҳастед, ки мехоҳед сабти ин рӯзро нест кунед? Ин постро аз ёддоштҳои шумо ҳамешагӣ нест мекунад.</string>
     <string name="msg_fill_all_fields">Ҳамаи майдонҳоро пур кунед</string>
+    <string name="msg_empty_state_no_habits">Барои оғози назорат дар реҷаи офлайн одат эҷод кунед.</string>
+    <string name="msg_habit_name_required">Номи одат зарур аст</string>
+    <string name="msg_habit_setup">Барои одати худ номи маънидор интихоб кунед.</string>
     <string name="msg_no_habits_yet">Одатҳо ҳанӯз танзим нашудаанд.</string>
     <string name="msg_no_logs">Логҳо ҳанӯз нестанд</string>
     <string name="msg_no_memos_yet">Дар ин давра ёддоштҳо нестанд.</string>
+    <string name="msg_offline_onboarding_success">Ҳама чиз тайёр аст. Имрӯз қайди аввалинро гузоред.</string>
+    <string name="msg_offline_onboarding_welcome">Одатҳоро дар дастгоҳи худ маҳаллӣ назорат кунед. Ҳисоб зарур нест.</string>
     <string name="msg_reset_confirm">Шумо мутмаин ҳастед, ки мехоҳед барномаро барқарор кунед? Ҳамаи маълумот нест мешавад.</string>
     <string name="msg_select_habit">Ҳадди ақал як одатро интихоб кунед.</string>
     <string name="msg_mark_done_confirm">«%1$s»-ро барои %2$s ҳамчун иҷрошуда қайд кунем?</string>
@@ -190,6 +202,7 @@
     <string name="time_years">Солҳо</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">Одати оғозиниро интихоб кунед</string>
     <string name="title_create_day">Эҷоди рӯз</string>
     <string name="title_delete_config">Конфигро нест кунем?</string>
     <string name="title_delete_day">Рӯзро нест кунем?</string>
@@ -197,8 +210,12 @@
     <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">Таҳрири рӯз</string>
     <string name="title_edit_memo">Таҳрири ёддошт</string>
+    <string name="title_empty_state_no_habits">Одатҳо ҳанӯз нестанд</string>
+    <string name="title_habit_setup">Одати худро танзим кунед</string>
     <string name="title_logs">Логҳо (%1$d)</string>
     <string name="title_new_memo">Ёддошти нав</string>
+    <string name="title_offline_onboarding_success">Кори аъло!</string>
+    <string name="title_offline_onboarding_welcome">Реҷаи офлайн тайёр аст</string>
     <string name="title_mark_done">Ҳамчун иҷрошуда қайд кунем?</string>
     <string name="title_mark_not_done">Қайдро бардорем?</string>
     <string name="title_update_day">Навсозии рӯз</string>
