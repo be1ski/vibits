@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -40,9 +43,10 @@ fun SuccessScreen(
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center,
   ) {
-    Text(
-      text = "🎉",
-      style = MaterialTheme.typography.displayLarge,
+    Icon(
+      imageVector = Icons.Default.CheckCircle,
+      contentDescription = null,
+      tint = AppColors.habitGreen.resolve(),
       modifier = Modifier.size(80.dp),
     )
 
