@@ -32,8 +32,8 @@ class OnboardingReducerTest {
         selectedPresetId = "water",
         presets =
           listOf(
-            HabitPreset(id = "water", nameKey = "demo_habit_water", nameEn = "Drink Water"),
-            HabitPreset(id = "custom", nameKey = "label_habit_preset_custom", nameEn = "Custom"),
+            HabitPreset(id = "water"),
+            HabitPreset(id = "custom"),
           ),
       ),
     ) {
@@ -41,7 +41,7 @@ class OnboardingReducerTest {
 
       assertState {
         currentStep == OnboardingStep.HabitSetup &&
-          habitName == "Drink Water"
+          habitName == "Water"
       }
       assertNoEffects()
     }
@@ -54,8 +54,8 @@ class OnboardingReducerTest {
         selectedPresetId = "custom",
         presets =
           listOf(
-            HabitPreset(id = "water", nameKey = "demo_habit_water", nameEn = "Drink Water"),
-            HabitPreset(id = "custom", nameKey = "label_habit_preset_custom", nameEn = "Custom"),
+            HabitPreset(id = "water"),
+            HabitPreset(id = "custom"),
           ),
       ),
     ) {
@@ -87,8 +87,8 @@ class OnboardingReducerTest {
     onboardingReducer.test(OnboardingState()) {
       val presets =
         listOf(
-          HabitPreset(id = "water", nameKey = "demo_habit_water", nameEn = "Drink Water"),
-          HabitPreset(id = "walking", nameKey = "demo_habit_walking", nameEn = "10K Steps"),
+          HabitPreset(id = "water"),
+          HabitPreset(id = "walking"),
         )
       send(OnboardingAction.PresetsLoaded(presets))
 

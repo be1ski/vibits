@@ -4,6 +4,7 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.shared.app.di.AppScope
+import space.be1ski.vibits.shared.feature.habits.domain.model.DemoHabits
 import space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset
 
 interface HabitPresetsDataSource {
@@ -16,59 +17,14 @@ interface HabitPresetsDataSource {
 class HabitPresetsDataSourceImpl : HabitPresetsDataSource {
   override fun getPresets(): List<HabitPreset> =
     listOf(
-      HabitPreset(
-        id = "exercise",
-        nameKey = "demo_habit_exercise",
-        nameEn = "Exercise",
-        icon = "🏃",
-      ),
-      HabitPreset(
-        id = "water",
-        nameKey = "demo_habit_water",
-        nameEn = "Drink Water",
-        icon = "💧",
-      ),
-      HabitPreset(
-        id = "reading",
-        nameKey = "demo_habit_reading",
-        nameEn = "Reading",
-        icon = "📚",
-      ),
-      HabitPreset(
-        id = "meditation",
-        nameKey = "demo_habit_meditation",
-        nameEn = "Meditation",
-        icon = "🧘",
-      ),
-      HabitPreset(
-        id = "walking",
-        nameKey = "demo_habit_walking",
-        nameEn = "10K Steps",
-        icon = "🚶",
-      ),
-      HabitPreset(
-        id = "learning",
-        nameKey = "demo_habit_learning",
-        nameEn = "Learning",
-        icon = "📖",
-      ),
-      HabitPreset(
-        id = "no_sugar",
-        nameKey = "demo_habit_no_sugar",
-        nameEn = "No Sugar",
-        icon = "🍬",
-      ),
-      HabitPreset(
-        id = "early_sleep",
-        nameKey = "demo_habit_early_sleep",
-        nameEn = "Sleep by 11pm",
-        icon = "😴",
-      ),
-      HabitPreset(
-        id = "custom",
-        nameKey = "label_habit_preset_custom",
-        nameEn = "Custom",
-        icon = "✨",
-      ),
+      HabitPreset(id = DemoHabits.EXERCISE, icon = "🏃"),
+      HabitPreset(id = DemoHabits.WATER, icon = "💧"),
+      HabitPreset(id = DemoHabits.READING, icon = "📚"),
+      HabitPreset(id = DemoHabits.MEDITATION, icon = "🧘"),
+      HabitPreset(id = DemoHabits.WALKING, icon = "🚶"),
+      HabitPreset(id = DemoHabits.LEARNING, icon = "📖"),
+      HabitPreset(id = DemoHabits.NO_SUGAR, icon = "🍬"),
+      HabitPreset(id = DemoHabits.EARLY_SLEEP, icon = "😴"),
+      HabitPreset(id = "custom", icon = "✨"),
     )
 }
