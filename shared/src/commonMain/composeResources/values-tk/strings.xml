@@ -1,16 +1,21 @@
 <resources>
     <!-- Actions -->
+    <string name="action_add_first_habit">Ilkinji endigi goş</string>
     <string name="action_cancel">Ýatyr</string>
+    <string name="action_clear">Arassala</string>
+    <string name="action_continue">Dowam et</string>
     <string name="action_create_new_config">Create New Config (Recommended)</string>
     <string name="action_edit_anyway">Edit Anyway</string>
-    <string name="action_clear">Arassala</string>
     <string name="action_close">Ýap</string>
     <string name="action_copied">Göçürildi</string>
     <string name="action_configure_habits">Endikleri düz</string>
     <string name="action_create">Döret</string>
+    <string name="action_create_first_habit">Ilkinji endigi döret</string>
     <string name="action_create_memo">Bellik döret</string>
     <string name="action_delete">Poz</string>
     <string name="action_hide_details">Jikme-jiklikleri gizle</string>
+    <string name="action_mark_first_checkin">Ilkinji belligi goý</string>
+    <string name="action_maybe_later">Soň bolsa</string>
     <string name="action_next">Indiki</string>
     <string name="action_previous">Öňki</string>
     <string name="action_refresh">Täzele</string>
@@ -18,6 +23,7 @@
     <string name="action_reset_app">Programany täzele</string>
     <string name="action_save">Sakla</string>
     <string name="action_show_details">Jikme-jiklikleri görkez</string>
+    <string name="action_start_tracking">Yzarlamagy başla</string>
     <string name="action_track">Bellik et</string>
     <string name="action_track_today">Şu gün bellik et</string>
     <string name="action_update">Täzele</string>
@@ -25,6 +31,7 @@
     <string name="action_export">Eksport</string>
     <string name="action_export_logs">Loglary eksport et</string>
     <string name="action_export_memos">Bellikleri eksport et</string>
+    <string name="action_go_to_dashboard">Panele geç</string>
     <string name="msg_export_success">%1$s-a eksport edildi</string>
     <string name="msg_export_failed">Eksport ýalňyşlygy</string>
 
@@ -119,9 +126,14 @@
     <string name="msg_delete_day_confirm">Endik saýlanmady. Gündelik ýazgy öçüriler.</string>
     <string name="msg_delete_day_warning">Bu günüň ýazgysyny öçürmek isleýärsiňizmi? Bu yzarlamak ýazgysyny belliklerňizden hemişelik aýyrar.</string>
     <string name="msg_fill_all_fields">Ähli meýdanlary dolduryň</string>
+    <string name="msg_empty_state_no_habits">Awtonom režimde yzarlamagy başlamak üçin endik dörediň.</string>
+    <string name="msg_habit_name_required">Endik ady hökmany</string>
+    <string name="msg_habit_setup">Endikiňiz üçin many-manyly at oýlap tapyň.</string>
     <string name="msg_no_habits_yet">Endikler heniz düzülmedi.</string>
     <string name="msg_no_logs">Loglar heniz ýok</string>
     <string name="msg_no_memos_yet">Bu döwürde bellik ýok.</string>
+    <string name="msg_offline_onboarding_success">Hemme zat taýýar. Şu gün ilkinji belligi goýuň.</string>
+    <string name="msg_offline_onboarding_welcome">Endikleri enjamyňyzda ýerli yzarlaň. Hasap gerek däl.</string>
     <string name="msg_reset_confirm">Programmany täzeden başlamak isleýärsiňizmi? Ähli maglumatlar öçüriler.</string>
     <string name="msg_select_habit">Azyndan bir endik saýlaň.</string>
     <string name="msg_mark_done_confirm">«%1$s» %2$s üçin ýerine ýetirilen diýip bellesinmi?</string>
@@ -190,6 +202,7 @@
     <string name="time_years">Ýyllar</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">Başlangyç endigi saýla</string>
     <string name="title_create_day">Gün döret</string>
     <string name="title_delete_config">Konfigurasiýany öçürmeli?</string>
     <string name="title_delete_day">Güni poz?</string>
@@ -197,8 +210,12 @@
     <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">Güni redaktirle</string>
     <string name="title_edit_memo">Belligi redaktirle</string>
+    <string name="title_empty_state_no_habits">Endikler heniz ýok</string>
+    <string name="title_habit_setup">Endikiňizi düzüň</string>
     <string name="title_logs">Loglar (%1$d)</string>
     <string name="title_new_memo">Täze bellik</string>
+    <string name="title_offline_onboarding_success">Ajaýyp iş!</string>
+    <string name="title_offline_onboarding_welcome">Awtonom režim taýýar</string>
     <string name="title_mark_done">Ýerine ýetirilen diýip bellesin?</string>
     <string name="title_mark_not_done">Belligi aýyr?</string>
     <string name="title_update_day">Güni täzele</string>
