@@ -242,4 +242,73 @@ class OnboardingReducerTest {
       assertState { currentStep == OnboardingStep.ChoosePreset }
       assertNoEffects()
     }
+
+  @Test
+  fun `when Back from Welcome then stays on Welcome`() =
+    onboardingReducer.test(OnboardingState(currentStep = OnboardingStep.Welcome)) {
+      send(OnboardingAction.Back)
+
+      assertState { currentStep == OnboardingStep.Welcome }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when Back from Success then stays on Success`() =
+    onboardingReducer.test(OnboardingState(currentStep = OnboardingStep.Success)) {
+      send(OnboardingAction.Back)
+
+      assertState { currentStep == OnboardingStep.Success }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when Continue from HabitSetup with valid name then creates habit`() =
+    onboardingReducer.test(
+      OnboardingState(
+        currentStep = OnboardingStep.HabitSetup,
+        habitName = "Exercise",
+        selectedPresetId = "custom",
+      ),
+    ) {
+      send(OnboardingAction.Continue)
+
+      assertState { isCreatingHabit && creationError == null }
+      val effect = assertHasEffect<OnboardingEffect.Command.CreateFirstHabit>()
+      assertEquals("Exercise", effect.name)
+      assertEquals("custom", effect.presetId)
+    }
+
+  @Test
+  fun `when Continue from HabitSetup with blank name then shows error`() =
+    onboardingReducer.test(
+      OnboardingState(
+        currentStep = OnboardingStep.HabitSetup,
+        habitName = "  ",
+      ),
+    ) {
+      send(OnboardingAction.Continue)
+
+      assertState {
+        !isCreatingHabit &&
+          creationError == "habit_name_required"
+      }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when Continue from Success then does nothing`() =
+    onboardingReducer.test(OnboardingState(currentStep = OnboardingStep.Success)) {
+      send(OnboardingAction.Continue)
+
+      assertState { currentStep == OnboardingStep.Success }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when OnboardingCompleted then does nothing`() =
+    onboardingReducer.test(OnboardingState()) {
+      send(OnboardingAction.OnboardingCompleted)
+
+      assertNoEffects()
+    }
 }

@@ -225,4 +225,31 @@ class OnboardingUseCasesTest {
 
       assertTrue(result)
     }
+
+  @Test
+  fun `when should show onboarding and alternative habits config exists then returns false`() =
+    runTest {
+      val store = FakeOnboardingStore(completed = false)
+      val storage =
+        object : OfflineMemoStorage {
+          override fun load() =
+            OfflineMemosFileDto(
+              listOf(
+                OfflineMemoDto(
+                  name = "memos/1",
+                  content = "#habits_config\nWater | #habits/water",
+                ),
+              ),
+            )
+
+          override fun save(data: OfflineMemosFileDto) {}
+        }
+      val dataSource = HabitPresetsDataSourceImpl()
+      val repository = OnboardingRepositoryImpl(store, dataSource)
+      val useCase = ShouldShowOnboardingUseCase(repository, storage)
+
+      val result = useCase()
+
+      assertFalse(result)
+    }
 }
