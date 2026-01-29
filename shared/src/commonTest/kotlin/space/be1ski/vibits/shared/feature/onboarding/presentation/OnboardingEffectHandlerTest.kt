@@ -16,11 +16,11 @@ import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.CreateFirstH
 import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.GetHabitPresetsUseCase
 import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.MarkOnboardingCompletedUseCase
 import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingCompletionEffectHandler
 import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect
-import space.be1ski.vibits.shared.feature.onboarding.presentation.handler.OnboardingCompletionEffectHandler
-import space.be1ski.vibits.shared.feature.onboarding.presentation.handler.OnboardingEffectHandler
-import space.be1ski.vibits.shared.feature.onboarding.presentation.handler.OnboardingPresetsEffectHandler
-import space.be1ski.vibits.shared.feature.onboarding.presentation.handler.OnboardingSetupEffectHandler
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffectHandler
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingPresetsEffectHandler
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingSetupEffectHandler
 import space.be1ski.vibits.shared.feature.onboarding.presentation.reducer.onboardingReducer
 import space.be1ski.vibits.shared.test.FakeMemosRepository
 import kotlin.test.Test

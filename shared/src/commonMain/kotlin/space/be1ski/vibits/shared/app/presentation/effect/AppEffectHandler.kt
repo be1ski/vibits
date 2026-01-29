@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.app.presentation.handler
+package space.be1ski.vibits.shared.app.presentation.effect
 
 import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.shared.app.presentation.action.AppAction

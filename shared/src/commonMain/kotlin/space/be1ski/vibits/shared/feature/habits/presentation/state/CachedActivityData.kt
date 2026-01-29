@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.habits.presentation
+package space.be1ski.vibits.shared.feature.habits.presentation.state
 
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry

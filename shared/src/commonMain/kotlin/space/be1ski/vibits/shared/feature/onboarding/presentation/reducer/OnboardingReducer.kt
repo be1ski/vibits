@@ -2,10 +2,6 @@ package space.be1ski.vibits.shared.feature.onboarding.presentation.reducer
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
 import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect
-import space.be1ski.vibits.shared.feature.onboarding.presentation.reducer.completionReducer
-import space.be1ski.vibits.shared.feature.onboarding.presentation.reducer.habitReducer
-import space.be1ski.vibits.shared.feature.onboarding.presentation.reducer.navigationReducer
-import space.be1ski.vibits.shared.feature.onboarding.presentation.reducer.presetReducer
 import space.be1ski.vibits.shared.feature.onboarding.presentation.state.OnboardingState
 
 val onboardingReducer: Reducer<OnboardingAction, OnboardingState, OnboardingEffect.Command, OnboardingEffect.Notification> =

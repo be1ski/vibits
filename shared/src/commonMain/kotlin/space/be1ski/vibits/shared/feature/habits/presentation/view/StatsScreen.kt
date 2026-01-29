@@ -20,11 +20,11 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.findDayByDate
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractDailyMemosUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.GetPeriodPostsUseCase
-import space.be1ski.vibits.shared.feature.habits.presentation.ActivityCacheKey
 import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
-import space.be1ski.vibits.shared.feature.habits.presentation.getActivityData
-import space.be1ski.vibits.shared.feature.habits.presentation.isDataLoading
+import space.be1ski.vibits.shared.feature.habits.presentation.state.ActivityCacheKey
 import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
+import space.be1ski.vibits.shared.feature.habits.presentation.state.getActivityData
+import space.be1ski.vibits.shared.feature.habits.presentation.state.isDataLoading
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
 /**

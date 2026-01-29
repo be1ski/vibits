@@ -3,10 +3,10 @@ package space.be1ski.vibits.shared.feature.mode.di
 import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.core.elm.FeatureImpl
 import space.be1ski.vibits.shared.feature.mode.presentation.action.ModeSelectionAction
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionCredentialsEffectHandler
 import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionEffect
-import space.be1ski.vibits.shared.feature.mode.presentation.handler.ModeSelectionCredentialsEffectHandler
-import space.be1ski.vibits.shared.feature.mode.presentation.handler.ModeSelectionEffectHandler
-import space.be1ski.vibits.shared.feature.mode.presentation.handler.ModeSelectionModeEffectHandler
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionEffectHandler
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionModeEffectHandler
 import space.be1ski.vibits.shared.feature.mode.presentation.reducer.modeSelectionReducer
 import space.be1ski.vibits.shared.feature.mode.presentation.state.ModeSelectionState
 

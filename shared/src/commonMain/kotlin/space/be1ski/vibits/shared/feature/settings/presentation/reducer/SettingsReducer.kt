@@ -2,11 +2,6 @@ package space.be1ski.vibits.shared.feature.settings.presentation.reducer
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.feature.settings.presentation.action.SettingsAction
 import space.be1ski.vibits.shared.feature.settings.presentation.effect.SettingsEffect
-import space.be1ski.vibits.shared.feature.settings.presentation.reducer.dialogReducer
-import space.be1ski.vibits.shared.feature.settings.presentation.reducer.inputReducer
-import space.be1ski.vibits.shared.feature.settings.presentation.reducer.resetReducer
-import space.be1ski.vibits.shared.feature.settings.presentation.reducer.saveAndLogsReducer
-import space.be1ski.vibits.shared.feature.settings.presentation.reducer.validationReducer
 import space.be1ski.vibits.shared.feature.settings.presentation.state.SettingsState
 
 val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect.Command, SettingsEffect.Notification> =

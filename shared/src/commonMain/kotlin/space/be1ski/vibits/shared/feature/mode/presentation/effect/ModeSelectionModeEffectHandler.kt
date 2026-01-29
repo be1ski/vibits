@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.mode.presentation.handler
+package space.be1ski.vibits.shared.feature.mode.presentation.effect
 
 import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.shared.core.elm.EffectHandler

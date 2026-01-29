@@ -2,10 +2,10 @@ package space.be1ski.vibits.shared.feature.habits.presentation.reducer
 
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
-import space.be1ski.vibits.shared.feature.habits.presentation.ActivityCacheKey
-import space.be1ski.vibits.shared.feature.habits.presentation.CachedActivityData
 import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsEffect
+import space.be1ski.vibits.shared.feature.habits.presentation.state.ActivityCacheKey
+import space.be1ski.vibits.shared.feature.habits.presentation.state.CachedActivityData
 import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 
 /**
