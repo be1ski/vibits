@@ -1,5 +1,4 @@
 package space.be1ski.vibits.shared.feature.habits.presentation.view.components
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -42,9 +41,9 @@ import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.theme.HabitColors
 import space.be1ski.vibits.shared.feature.habits.domain.model.isDemoHabit
-import space.be1ski.vibits.shared.feature.habits.presentation.EditableHabit
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.state.EditableHabit
+import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_cancel
 import space.be1ski.vibits.shared.generated.action_delete

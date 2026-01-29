@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.app.presentation
+package space.be1ski.vibits.shared.app.presentation.effect
 
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 

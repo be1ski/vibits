@@ -9,8 +9,8 @@ import space.be1ski.vibits.shared.feature.auth.domain.usecase.InitializeCredenti
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.vibits.shared.feature.memos.data.ConnectionTester
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionAction
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionEffect
+import space.be1ski.vibits.shared.feature.mode.presentation.action.ModeSelectionAction
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionEffect
 
 private const val TAG = "ModeCredentialsEffect"
 private const val LOG_URL_MAX_LENGTH = 20

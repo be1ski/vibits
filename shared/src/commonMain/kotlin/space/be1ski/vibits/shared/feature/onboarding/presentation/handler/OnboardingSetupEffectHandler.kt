@@ -7,8 +7,8 @@ import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.CreateFirstCheckInUseCase
 import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.CreateFirstHabitUseCase
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingAction
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingEffect
+import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect
 
 private const val TAG = "OnboardingSetupEffect"
 

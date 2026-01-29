@@ -1,5 +1,4 @@
 package space.be1ski.vibits.shared.feature.habits.presentation.view
-
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
@@ -10,7 +9,8 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.habits.domain.model.SuccessRateData
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 /**

@@ -1,9 +1,13 @@
 package space.be1ski.vibits.shared.feature.mode.presentation
-
 import space.be1ski.vibits.shared.core.elm.test
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionEffect.Command
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionEffect.Notification
+import space.be1ski.vibits.shared.feature.mode.presentation.action.ModeSelectionAction
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionEffect
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionEffect.Command
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionEffect.Notification
+import space.be1ski.vibits.shared.feature.mode.presentation.reducer.modeSelectionReducer
+import space.be1ski.vibits.shared.feature.mode.presentation.state.ModeSelectionError
+import space.be1ski.vibits.shared.feature.mode.presentation.state.ModeSelectionState
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

@@ -1,8 +1,9 @@
 package space.be1ski.vibits.shared.feature.habits.presentation.view.components
-
 import androidx.compose.runtime.Composable
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.feature.habits.domain.model.DemoHabitStringKeys
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.demo_habit_early_sleep
 import space.be1ski.vibits.shared.generated.demo_habit_exercise

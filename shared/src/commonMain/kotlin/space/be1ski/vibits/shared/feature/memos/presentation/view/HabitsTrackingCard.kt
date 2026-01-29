@@ -1,5 +1,4 @@
 package space.be1ski.vibits.shared.feature.memos.presentation.view
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +28,8 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.view.components.localizedLabel
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
 
 @Composable
 internal fun HabitsTrackingCard(

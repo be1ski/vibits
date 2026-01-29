@@ -2,8 +2,8 @@ package space.be1ski.vibits.shared.feature.onboarding.presentation.handler
 
 import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.shared.core.elm.EffectHandler
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingAction
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingEffect
+import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect
 
 class OnboardingEffectHandler(
   private val presetsHandler: OnboardingPresetsEffectHandler,

@@ -1,5 +1,4 @@
 package space.be1ski.vibits.shared.feature.habits.presentation.view.components
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -31,6 +30,8 @@ import androidx.compose.ui.window.Popup
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.plus
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 
 private val WEEKLY_BAR_MAX_HEIGHT = 72.dp
 private val WEEKLY_BAR_MIN_HEIGHT = 4.dp

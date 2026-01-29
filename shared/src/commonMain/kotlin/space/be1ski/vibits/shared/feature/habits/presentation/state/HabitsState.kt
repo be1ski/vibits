@@ -1,5 +1,4 @@
-package space.be1ski.vibits.shared.feature.habits.presentation
-
+package space.be1ski.vibits.shared.feature.habits.presentation.state
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.feature.habits.domain.HabitTag
 import space.be1ski.vibits.shared.feature.habits.domain.IsSelected
@@ -8,6 +7,8 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.normalizeHabitTag
+import space.be1ski.vibits.shared.feature.habits.presentation.ActivityCacheKey
+import space.be1ski.vibits.shared.feature.habits.presentation.CachedActivityData
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 /**

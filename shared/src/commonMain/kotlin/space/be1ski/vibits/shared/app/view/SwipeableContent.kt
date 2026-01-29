@@ -19,7 +19,7 @@ import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.domain.model.Screen
-import space.be1ski.vibits.shared.app.presentation.AppAction
+import space.be1ski.vibits.shared.app.presentation.action.AppAction
 import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
@@ -27,8 +27,8 @@ import space.be1ski.vibits.shared.feature.habits.domain.parseConfigFromContent
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateActivityRangeDeltaUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.shared.feature.habits.presentation.view.StatsScreen
 import space.be1ski.vibits.shared.feature.habits.presentation.view.StatsScreenState
 import space.be1ski.vibits.shared.feature.habits.presentation.view.components.quarterIndex
@@ -36,8 +36,8 @@ import space.be1ski.vibits.shared.feature.habits.presentation.view.components.st
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.ClassifyPostTypeUseCase
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
+import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
 import space.be1ski.vibits.shared.feature.memos.presentation.view.FeedScreen
 import space.be1ski.vibits.shared.feature.memos.presentation.view.PostsScreen
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode

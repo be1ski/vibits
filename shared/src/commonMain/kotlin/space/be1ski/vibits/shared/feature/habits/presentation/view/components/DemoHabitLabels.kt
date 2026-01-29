@@ -1,9 +1,10 @@
 package space.be1ski.vibits.shared.feature.habits.presentation.view.components
-
 import androidx.compose.runtime.Composable
 import space.be1ski.vibits.shared.feature.habits.domain.model.DemoHabitStringKeys
 import space.be1ski.vibits.shared.feature.habits.domain.model.DemoHabits
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 
 /**

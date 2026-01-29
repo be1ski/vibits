@@ -1,7 +1,6 @@
 @file:Suppress("TooManyFunctions")
 
 package space.be1ski.vibits.shared.feature.habits.presentation.view.components
-
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -54,6 +53,8 @@ import space.be1ski.vibits.shared.core.ui.hoverAware
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
 import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.day_fri
 import space.be1ski.vibits.shared.generated.day_mon

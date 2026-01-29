@@ -5,8 +5,8 @@ import space.be1ski.vibits.shared.core.elm.EffectHandler
 import space.be1ski.vibits.shared.core.elm.actions
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionAction
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionEffect
+import space.be1ski.vibits.shared.feature.mode.presentation.action.ModeSelectionAction
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionEffect
 
 private const val TAG = "ModeModeEffect"
 

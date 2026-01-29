@@ -1,5 +1,4 @@
 package space.be1ski.vibits.shared.feature.onboarding.presentation.view
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -38,6 +37,8 @@ import space.be1ski.vibits.shared.core.ui.theme.HabitColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
 import space.be1ski.vibits.shared.feature.habits.presentation.view.components.localizedDemoHabitName
 import space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset
+import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
+import space.be1ski.vibits.shared.feature.onboarding.presentation.state.OnboardingState
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_start_tracking
 import space.be1ski.vibits.shared.generated.hint_habit_name

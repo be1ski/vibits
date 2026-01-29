@@ -6,8 +6,8 @@ import space.be1ski.vibits.shared.core.elm.actions
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadCachedMemosUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadMemosUseCase
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosEffect
+import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosEffect
 
 private const val TAG = "MemosLoadEffect"
 

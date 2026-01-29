@@ -1,7 +1,6 @@
 @file:Suppress("TooManyFunctions")
 
 package space.be1ski.vibits.shared.feature.habits.presentation.view
-
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -61,7 +60,8 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.forHabit
 import space.be1ski.vibits.shared.feature.habits.domain.model.lastSevenDays
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.FilterPostsUseCase
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.shared.feature.habits.presentation.view.components.ChartDimens
 import space.be1ski.vibits.shared.feature.habits.presentation.view.components.ContributionGrid
 import space.be1ski.vibits.shared.feature.habits.presentation.view.components.ContributionGridState

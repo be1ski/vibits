@@ -4,9 +4,9 @@ import space.be1ski.vibits.shared.core.elm.ReducerResult
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.parseDailyDateFromContent
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosEffect
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
+import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosEffect
+import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
 
 private const val MILLIS_PER_DAY = 86400000L
 

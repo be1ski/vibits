@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.mode.presentation
+package space.be1ski.vibits.shared.feature.mode.presentation.state
 
 data class ModeSelectionState(
   val showCredentialsDialog: Boolean = false,

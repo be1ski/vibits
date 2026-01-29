@@ -2,8 +2,8 @@ package space.be1ski.vibits.shared.feature.mode.presentation.handler
 
 import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.shared.core.elm.EffectHandler
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionAction
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionEffect
+import space.be1ski.vibits.shared.feature.mode.presentation.action.ModeSelectionAction
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionEffect
 
 class ModeSelectionEffectHandler(
   private val credentialsHandler: ModeSelectionCredentialsEffectHandler,

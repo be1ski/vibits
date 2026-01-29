@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.onboarding.presentation
+package space.be1ski.vibits.shared.feature.onboarding.presentation.effect
 
 sealed interface OnboardingEffect {
   /**

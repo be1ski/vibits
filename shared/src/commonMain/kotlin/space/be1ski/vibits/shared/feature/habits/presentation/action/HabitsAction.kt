@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.habits.presentation
+package space.be1ski.vibits.shared.feature.habits.presentation.action
 
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange

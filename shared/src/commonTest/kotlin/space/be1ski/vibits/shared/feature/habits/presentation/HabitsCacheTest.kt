@@ -1,11 +1,14 @@
 package space.be1ski.vibits.shared.feature.habits.presentation
-
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeek
 import space.be1ski.vibits.shared.feature.habits.domain.model.ActivityWeekData
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsEffect
+import space.be1ski.vibits.shared.feature.habits.presentation.reducer.habitsReducer
+import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import kotlin.test.Test
 import kotlin.test.assertEquals

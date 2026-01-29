@@ -7,9 +7,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingAction
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingState
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingStep
+import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
+import space.be1ski.vibits.shared.feature.onboarding.presentation.state.OnboardingState
+import space.be1ski.vibits.shared.feature.onboarding.presentation.state.OnboardingStep
 
 @Composable
 fun OnboardingScreen(

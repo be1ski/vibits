@@ -15,8 +15,8 @@ import androidx.compose.ui.Alignment
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.core.ui.Indent
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.shared.feature.habits.presentation.view.components.EditConfigWarningDialog
 import space.be1ski.vibits.shared.feature.habits.presentation.view.components.HabitsConfigDialog
 import space.be1ski.vibits.shared.feature.habits.presentation.view.components.localizedLabel

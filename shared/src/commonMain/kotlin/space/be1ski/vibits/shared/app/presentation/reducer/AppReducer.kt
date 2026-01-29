@@ -1,9 +1,10 @@
-package space.be1ski.vibits.shared.app.presentation
-
+package space.be1ski.vibits.shared.app.presentation.reducer
 import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.domain.model.Screen
 import space.be1ski.vibits.shared.app.domain.usecase.AdjustDateForTabChangeUseCase
 import space.be1ski.vibits.shared.app.domain.usecase.GetActivityRangeStartDateUseCase
+import space.be1ski.vibits.shared.app.presentation.action.AppAction
+import space.be1ski.vibits.shared.app.presentation.effect.AppEffect
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab

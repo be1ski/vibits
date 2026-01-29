@@ -21,10 +21,10 @@ import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractDailyMemo
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.GetPeriodPostsUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.ActivityCacheKey
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.getActivityData
 import space.be1ski.vibits.shared.feature.habits.presentation.isDataLoading
+import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
 /**

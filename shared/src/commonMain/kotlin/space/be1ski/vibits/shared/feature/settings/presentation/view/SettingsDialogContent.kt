@@ -66,8 +66,8 @@ import space.be1ski.vibits.shared.feature.memos.data.platform.createOfflineMemoS
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsState
+import space.be1ski.vibits.shared.feature.settings.presentation.action.SettingsAction
+import space.be1ski.vibits.shared.feature.settings.presentation.state.SettingsState
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_cancel
 import space.be1ski.vibits.shared.generated.action_clear

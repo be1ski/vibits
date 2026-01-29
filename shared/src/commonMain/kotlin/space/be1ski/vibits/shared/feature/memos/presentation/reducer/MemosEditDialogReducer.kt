@@ -2,9 +2,9 @@ package space.be1ski.vibits.shared.feature.memos.presentation.reducer
 
 import space.be1ski.vibits.shared.core.elm.ReducerResult
 import space.be1ski.vibits.shared.core.elm.reducer
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosEffect
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
+import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosEffect
+import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
 
 internal fun editDialogReducer(
   action: MemosAction.EditDialog,

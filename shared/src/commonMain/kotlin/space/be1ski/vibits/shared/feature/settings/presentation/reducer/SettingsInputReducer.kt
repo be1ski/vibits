@@ -2,9 +2,9 @@ package space.be1ski.vibits.shared.feature.settings.presentation.reducer
 
 import space.be1ski.vibits.shared.core.elm.ReducerResult
 import space.be1ski.vibits.shared.core.elm.reducer
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffect
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsState
+import space.be1ski.vibits.shared.feature.settings.presentation.action.SettingsAction
+import space.be1ski.vibits.shared.feature.settings.presentation.effect.SettingsEffect
+import space.be1ski.vibits.shared.feature.settings.presentation.state.SettingsState
 
 internal fun inputReducer(
   action: SettingsAction.Input,

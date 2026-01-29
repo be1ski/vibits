@@ -1,7 +1,9 @@
 package space.be1ski.vibits.shared.app.di
-
 import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.shared.app.domain.usecase.LoadAppDetailsUseCase
+import space.be1ski.vibits.shared.app.presentation.action.AppAction
+import space.be1ski.vibits.shared.app.presentation.effect.AppEffect
+import space.be1ski.vibits.shared.app.presentation.reducer.appReducer
 import space.be1ski.vibits.shared.core.platform.locale.LocaleProvider
 import space.be1ski.vibits.shared.feature.habits.di.HabitsDependencies
 import space.be1ski.vibits.shared.feature.memos.di.MemosDependencies

@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.memos.presentation
+package space.be1ski.vibits.shared.feature.memos.presentation.effect
 
 /**
  * Side effects for the Memos feature.

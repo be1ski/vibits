@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.app.presentation
+package space.be1ski.vibits.shared.app.presentation.action
 
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange

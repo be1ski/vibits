@@ -1,14 +1,15 @@
 package space.be1ski.vibits.shared.feature.memos.presentation.view
-
 import androidx.compose.runtime.Composable
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.shared.feature.habits.presentation.view.StatsScreen
 import space.be1ski.vibits.shared.feature.habits.presentation.view.StatsScreenState
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
 /**

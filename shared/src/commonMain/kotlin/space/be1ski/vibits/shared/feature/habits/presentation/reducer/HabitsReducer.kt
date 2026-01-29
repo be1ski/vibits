@@ -1,6 +1,7 @@
-package space.be1ski.vibits.shared.feature.habits.presentation
-
+package space.be1ski.vibits.shared.feature.habits.presentation.reducer
 import space.be1ski.vibits.shared.core.elm.Reducer
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsEffect
 import space.be1ski.vibits.shared.feature.habits.presentation.reducer.cacheReducer
 import space.be1ski.vibits.shared.feature.habits.presentation.reducer.configDeleteReducer
 import space.be1ski.vibits.shared.feature.habits.presentation.reducer.configReducer
@@ -9,6 +10,7 @@ import space.be1ski.vibits.shared.feature.habits.presentation.reducer.editorRedu
 import space.be1ski.vibits.shared.feature.habits.presentation.reducer.responseReducer
 import space.be1ski.vibits.shared.feature.habits.presentation.reducer.selectionReducer
 import space.be1ski.vibits.shared.feature.habits.presentation.reducer.singleToggleReducer
+import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 
 /**
  * Main reducer that delegates to sub-reducers.

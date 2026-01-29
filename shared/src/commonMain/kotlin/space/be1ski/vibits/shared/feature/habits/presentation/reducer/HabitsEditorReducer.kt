@@ -10,9 +10,9 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.shared.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.parseDailyDateFromContent
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.parseMemoDate
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsEffect
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsEffect
+import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 
 /**
  * Sub-reducer for editor lifecycle and interactions.

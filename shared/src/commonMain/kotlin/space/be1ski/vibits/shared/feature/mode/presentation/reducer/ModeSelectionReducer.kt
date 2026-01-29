@@ -1,8 +1,11 @@
-package space.be1ski.vibits.shared.feature.mode.presentation
-
+package space.be1ski.vibits.shared.feature.mode.presentation.reducer
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
+import space.be1ski.vibits.shared.feature.mode.presentation.action.ModeSelectionAction
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionEffect
+import space.be1ski.vibits.shared.feature.mode.presentation.state.ModeSelectionError
+import space.be1ski.vibits.shared.feature.mode.presentation.state.ModeSelectionState
 
 val modeSelectionReducer: Reducer<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect.Command, ModeSelectionEffect.Notification> =
   reducer { action, state ->

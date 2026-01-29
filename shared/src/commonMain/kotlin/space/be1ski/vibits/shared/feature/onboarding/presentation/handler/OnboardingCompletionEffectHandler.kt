@@ -5,8 +5,8 @@ import space.be1ski.vibits.shared.core.elm.EffectHandler
 import space.be1ski.vibits.shared.core.elm.actions
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.MarkOnboardingCompletedUseCase
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingAction
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingEffect
+import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect
 
 private const val TAG = "OnboardingCompletionEffect"
 

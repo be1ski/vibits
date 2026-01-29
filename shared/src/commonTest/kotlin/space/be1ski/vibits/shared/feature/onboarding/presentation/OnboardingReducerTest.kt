@@ -1,9 +1,13 @@
 package space.be1ski.vibits.shared.feature.onboarding.presentation
-
 import space.be1ski.vibits.shared.core.elm.test
 import space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingEffect.Command
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingEffect.Notification
+import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect.Command
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect.Notification
+import space.be1ski.vibits.shared.feature.onboarding.presentation.reducer.onboardingReducer
+import space.be1ski.vibits.shared.feature.onboarding.presentation.state.OnboardingState
+import space.be1ski.vibits.shared.feature.onboarding.presentation.state.OnboardingStep
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

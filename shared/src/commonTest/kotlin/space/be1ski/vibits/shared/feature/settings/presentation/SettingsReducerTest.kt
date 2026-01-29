@@ -1,9 +1,12 @@
 package space.be1ski.vibits.shared.feature.settings.presentation
-
 import space.be1ski.vibits.shared.core.elm.test
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
+import space.be1ski.vibits.shared.feature.settings.presentation.action.SettingsAction
+import space.be1ski.vibits.shared.feature.settings.presentation.effect.SettingsEffect
+import space.be1ski.vibits.shared.feature.settings.presentation.reducer.settingsReducer
+import space.be1ski.vibits.shared.feature.settings.presentation.state.SettingsState
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

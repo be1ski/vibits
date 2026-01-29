@@ -2,9 +2,9 @@ package space.be1ski.vibits.shared.feature.onboarding.presentation.reducer
 
 import space.be1ski.vibits.shared.core.elm.ReducerResult
 import space.be1ski.vibits.shared.core.elm.reducer
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingAction
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingEffect
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingState
+import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect
+import space.be1ski.vibits.shared.feature.onboarding.presentation.state.OnboardingState
 
 internal fun presetReducer(
   action: OnboardingAction.Preset,

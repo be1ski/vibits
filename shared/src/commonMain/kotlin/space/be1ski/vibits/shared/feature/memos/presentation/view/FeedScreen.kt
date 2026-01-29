@@ -1,5 +1,4 @@
 package space.be1ski.vibits.shared.feature.memos.presentation.view
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,6 +44,8 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.canDeleteFromFeed
 import space.be1ski.vibits.shared.feature.memos.domain.model.isConfigPost
 import space.be1ski.vibits.shared.feature.memos.domain.model.isTrackingPost
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.FilterMemosByTypeUseCase
+import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_cancel
 import space.be1ski.vibits.shared.generated.action_delete

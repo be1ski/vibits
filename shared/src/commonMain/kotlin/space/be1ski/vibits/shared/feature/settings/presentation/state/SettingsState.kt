@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.settings.presentation
+package space.be1ski.vibits.shared.feature.settings.presentation.state
 
 import space.be1ski.vibits.shared.app.domain.model.AppDetails
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode

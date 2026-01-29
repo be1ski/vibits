@@ -2,8 +2,8 @@ package space.be1ski.vibits.shared.feature.habits.presentation.handler
 
 import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.shared.core.elm.EffectHandler
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsEffect
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsEffect
 
 class HabitsEffectHandler(
   private val memoHandler: HabitsMemoEffectHandler,

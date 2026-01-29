@@ -7,8 +7,8 @@ import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.vibits.shared.feature.memos.data.ConnectionTester
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffect
+import space.be1ski.vibits.shared.feature.settings.presentation.action.SettingsAction
+import space.be1ski.vibits.shared.feature.settings.presentation.effect.SettingsEffect
 
 private const val TAG = "SettingsCredentialsEffect"
 

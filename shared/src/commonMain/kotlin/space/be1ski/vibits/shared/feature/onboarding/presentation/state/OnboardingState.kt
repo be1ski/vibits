@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.onboarding.presentation
+package space.be1ski.vibits.shared.feature.onboarding.presentation.state
 
 import space.be1ski.vibits.shared.core.ui.theme.DefaultHabitColor
 import space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset

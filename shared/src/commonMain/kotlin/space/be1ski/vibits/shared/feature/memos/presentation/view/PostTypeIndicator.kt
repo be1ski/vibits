@@ -1,5 +1,4 @@
 package space.be1ski.vibits.shared.feature.memos.presentation.view
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -12,6 +11,8 @@ import space.be1ski.vibits.shared.core.ui.theme.resolve
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.ClassifyPostTypeUseCase
+import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
 
 @Composable
 internal fun PostTypeIndicator(
