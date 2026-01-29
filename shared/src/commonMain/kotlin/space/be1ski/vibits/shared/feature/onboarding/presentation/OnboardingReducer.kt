@@ -17,14 +17,7 @@ val onboardingReducer: Reducer<OnboardingAction, OnboardingState, OnboardingEffe
           OnboardingStep.Welcome -> state { copy(currentStep = OnboardingStep.ChoosePreset) }
           OnboardingStep.ChoosePreset -> {
             if (state.selectedPresetId != null) {
-              val selectedPreset = state.presets.find { it.id == state.selectedPresetId }
-              val presetName = selectedPreset?.nameEn ?: ""
-              state {
-                copy(
-                  currentStep = OnboardingStep.HabitSetup,
-                  habitName = if (selectedPreset?.id == "custom") "" else presetName,
-                )
-              }
+              state { copy(currentStep = OnboardingStep.HabitSetup) }
             }
           }
           OnboardingStep.HabitSetup -> {

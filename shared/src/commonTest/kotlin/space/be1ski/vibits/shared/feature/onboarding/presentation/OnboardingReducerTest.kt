@@ -25,46 +25,30 @@ class OnboardingReducerTest {
     }
 
   @Test
-  fun `when Continue from ChoosePreset with selected preset then moves to HabitSetup and auto-fills habit name`() =
+  fun `when Continue from ChoosePreset with selected preset then moves to HabitSetup`() =
     onboardingReducer.test(
       OnboardingState(
         currentStep = OnboardingStep.ChoosePreset,
         selectedPresetId = "water",
-        presets =
-          listOf(
-            HabitPreset(id = "water"),
-            HabitPreset(id = "custom"),
-          ),
       ),
     ) {
       send(OnboardingAction.Continue)
 
-      assertState {
-        currentStep == OnboardingStep.HabitSetup &&
-          habitName == "Water"
-      }
+      assertState { currentStep == OnboardingStep.HabitSetup }
       assertNoEffects()
     }
 
   @Test
-  fun `when Continue from ChoosePreset with custom preset then moves to HabitSetup with blank name`() =
+  fun `when Continue from ChoosePreset with custom preset then moves to HabitSetup`() =
     onboardingReducer.test(
       OnboardingState(
         currentStep = OnboardingStep.ChoosePreset,
         selectedPresetId = "custom",
-        presets =
-          listOf(
-            HabitPreset(id = "water"),
-            HabitPreset(id = "custom"),
-          ),
       ),
     ) {
       send(OnboardingAction.Continue)
 
-      assertState {
-        currentStep == OnboardingStep.HabitSetup &&
-          habitName == ""
-      }
+      assertState { currentStep == OnboardingStep.HabitSetup }
       assertNoEffects()
     }
 
@@ -87,8 +71,8 @@ class OnboardingReducerTest {
     onboardingReducer.test(OnboardingState()) {
       val presets =
         listOf(
-          HabitPreset(id = "water"),
-          HabitPreset(id = "walking"),
+          HabitPreset(id = "water", nameKey = "demo_habit_water"),
+          HabitPreset(id = "walking", nameKey = "demo_habit_walking"),
         )
       send(OnboardingAction.PresetsLoaded(presets))
 

@@ -47,6 +47,8 @@ fun OnboardingScreen(
 
       OnboardingStep.HabitSetup -> {
         HabitSetupScreen(
+          selectedPresetId = state.selectedPresetId,
+          presets = state.presets,
           habitName = state.habitName,
           isCreating = state.isCreatingHabit,
           error = state.creationError,

@@ -56,7 +56,7 @@ private fun HabitPreset.localizedName(): String =
     "demo_habit_no_sugar" -> stringResource(Res.string.demo_habit_no_sugar)
     "demo_habit_early_sleep" -> stringResource(Res.string.demo_habit_early_sleep)
     "label_habit_preset_custom" -> stringResource(Res.string.label_habit_preset_custom)
-    else -> nameEn
+    else -> id
   }
 
 @Composable
