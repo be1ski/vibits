@@ -33,20 +33,20 @@ class ReducerTest {
     data object NotifyReset : CounterEffect
   }
 
-  private val counterReducer: Reducer<CounterAction, CounterState, CounterEffect> =
+  private val counterReducer: Reducer<CounterAction, CounterState, CounterEffect, Nothing> =
     reducer { action, state ->
       when (action) {
         CounterAction.Increment -> state { copy(count = count + 1, lastAction = "increment") }
         CounterAction.Decrement -> state { copy(count = count - 1, lastAction = "decrement") }
         is CounterAction.Add -> {
           state { copy(count = count + action.amount, lastAction = "add") }
-          effect(CounterEffect.Log("Added ${action.amount}"))
+          command(CounterEffect.Log("Added ${action.amount}"))
         }
         CounterAction.Reset -> {
           state { copy(count = 0, lastAction = "reset") }
-          effects(CounterEffect.Persist, CounterEffect.NotifyReset)
+          commands(CounterEffect.Persist, CounterEffect.NotifyReset)
         }
-        CounterAction.Save -> effect(CounterEffect.Persist)
+        CounterAction.Save -> command(CounterEffect.Persist)
       }
     }
 
@@ -56,7 +56,7 @@ class ReducerTest {
 
     assertEquals(6, result.state.count)
     assertEquals("increment", result.state.lastAction)
-    assertEquals(emptyList(), result.effects)
+    assertEquals(emptyList(), result.commands)
   }
 
   @Test
@@ -65,7 +65,7 @@ class ReducerTest {
 
     assertEquals(15, result.state.count)
     assertEquals("add", result.state.lastAction)
-    assertEquals(listOf(CounterEffect.Log("Added 10")), result.effects)
+    assertEquals(listOf(CounterEffect.Log("Added 10")), result.commands)
   }
 
   @Test
@@ -74,7 +74,7 @@ class ReducerTest {
 
     assertEquals(0, result.state.count)
     assertEquals("reset", result.state.lastAction)
-    assertEquals(listOf(CounterEffect.Persist, CounterEffect.NotifyReset), result.effects)
+    assertEquals(listOf(CounterEffect.Persist, CounterEffect.NotifyReset), result.commands)
   }
 
   @Test
@@ -84,7 +84,7 @@ class ReducerTest {
     val result = counterReducer(CounterAction.Save, initialState)
 
     assertEquals(initialState, result.state)
-    assertEquals(listOf(CounterEffect.Persist), result.effects)
+    assertEquals(listOf(CounterEffect.Persist), result.commands)
   }
 
   @Test

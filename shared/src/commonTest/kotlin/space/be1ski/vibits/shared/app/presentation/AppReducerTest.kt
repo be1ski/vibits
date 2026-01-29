@@ -29,7 +29,7 @@ class AppReducerTest {
       send(AppAction.SetHabitsTimeRangeTab(TimeRangeTab.MONTHS))
 
       assertState { habitsTimeRangeTab == TimeRangeTab.MONTHS }
-      val effect = assertHasEffect<AppEffect.SaveHabitsTimeRangeTab>()
+      val effect = assertHasCommand<AppEffect.SaveHabitsTimeRangeTab>()
       assertEquals(TimeRangeTab.MONTHS, effect.tab)
     }
 
@@ -39,7 +39,7 @@ class AppReducerTest {
       send(AppAction.SetPostsTimeRangeTab(TimeRangeTab.QUARTERS))
 
       assertState { postsTimeRangeTab == TimeRangeTab.QUARTERS }
-      val effect = assertHasEffect<AppEffect.SavePostsTimeRangeTab>()
+      val effect = assertHasCommand<AppEffect.SavePostsTimeRangeTab>()
       assertEquals(TimeRangeTab.QUARTERS, effect.tab)
     }
 
@@ -71,7 +71,7 @@ class AppReducerTest {
       send(AppAction.ChangeHabitsTab(oldTab = TimeRangeTab.MONTHS, newTab = TimeRangeTab.WEEKS))
 
       assertState { habitsTimeRangeTab == TimeRangeTab.WEEKS && periodStartDate == LocalDate(2024, Month.MARCH, 31) }
-      assertHasEffect<AppEffect.SaveHabitsTimeRangeTab>()
+      assertHasCommand<AppEffect.SaveHabitsTimeRangeTab>()
     }
 
   @Test
@@ -80,7 +80,7 @@ class AppReducerTest {
       send(AppAction.ChangePostsTab(oldTab = TimeRangeTab.YEARS, newTab = TimeRangeTab.QUARTERS))
 
       assertState { postsTimeRangeTab == TimeRangeTab.QUARTERS && periodStartDate == LocalDate(2024, Month.DECEMBER, 31) }
-      assertHasEffect<AppEffect.SavePostsTimeRangeTab>()
+      assertHasCommand<AppEffect.SavePostsTimeRangeTab>()
     }
 
   @Test

@@ -15,7 +15,7 @@ fun createHabitsFeature(
   dependencies: HabitsDependencies,
   onRefresh: () -> Unit,
   initialState: HabitsState = HabitsState(),
-): Feature<HabitsAction, HabitsState, HabitsEffect> =
+): Feature<HabitsAction, HabitsState, HabitsEffect, Nothing> =
   FeatureImpl(
     initialState = initialState,
     reducer = habitsReducer,

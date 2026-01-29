@@ -22,17 +22,15 @@ class ModeSelectionEffectHandler(
   private val loadCredentials: LoadCredentialsUseCase,
   private val saveCredentials: SaveCredentialsUseCase,
   private val saveAppMode: SaveAppModeUseCase,
-) : EffectHandler<ModeSelectionEffect, ModeSelectionAction> {
-  override fun invoke(effect: ModeSelectionEffect): Flow<ModeSelectionAction> =
-    when (effect) {
-      is ModeSelectionEffect.InitializeFromLocalConfig -> handleInitializeFromLocalConfig()
-      is ModeSelectionEffect.CheckStoredCredentials -> handleCheckStoredCredentials()
-      is ModeSelectionEffect.UseStoredCredentialsWithValidation -> handleUseStoredCredentials()
-      is ModeSelectionEffect.ValidateCredentials -> handleValidateCredentials(effect)
-      is ModeSelectionEffect.SaveCredentials -> handleSaveCredentials(effect)
-      is ModeSelectionEffect.SaveMode -> handleSaveMode(effect)
-      // Parent notification effects are not handled here - they flow through to AppRoot
-      is ModeSelectionEffect.NotifyModeSelected -> emptyFlow()
+) : EffectHandler<ModeSelectionEffect.Command, ModeSelectionAction> {
+  override fun invoke(command: ModeSelectionEffect.Command): Flow<ModeSelectionAction> =
+    when (command) {
+      is ModeSelectionEffect.Command.InitializeFromLocalConfig -> handleInitializeFromLocalConfig()
+      is ModeSelectionEffect.Command.CheckStoredCredentials -> handleCheckStoredCredentials()
+      is ModeSelectionEffect.Command.UseStoredCredentialsWithValidation -> handleUseStoredCredentials()
+      is ModeSelectionEffect.Command.ValidateCredentials -> handleValidateCredentials(command)
+      is ModeSelectionEffect.Command.SaveCredentials -> handleSaveCredentials(command)
+      is ModeSelectionEffect.Command.SaveMode -> handleSaveMode(command)
     }
 
   private fun handleInitializeFromLocalConfig(): Flow<ModeSelectionAction> =
@@ -72,23 +70,23 @@ class ModeSelectionEffectHandler(
         .onFailure { emit(ModeSelectionAction.ValidationFailed) }
     }
 
-  private fun handleValidateCredentials(effect: ModeSelectionEffect.ValidateCredentials): Flow<ModeSelectionAction> =
+  private fun handleValidateCredentials(command: ModeSelectionEffect.Command.ValidateCredentials): Flow<ModeSelectionAction> =
     flow {
       Log.d(TAG, "Testing connection")
-      connectionTester(effect.baseUrl, effect.token)
+      connectionTester(command.baseUrl, command.token)
         .onSuccess { emit(ModeSelectionAction.ValidationSucceeded) }
         .onFailure { emit(ModeSelectionAction.ValidationFailed) }
     }
 
-  private fun handleSaveCredentials(effect: ModeSelectionEffect.SaveCredentials): Flow<ModeSelectionAction> =
+  private fun handleSaveCredentials(command: ModeSelectionEffect.Command.SaveCredentials): Flow<ModeSelectionAction> =
     flow {
       Log.d(TAG, "Saving credentials")
-      saveCredentials(Credentials(effect.baseUrl, effect.token))
+      saveCredentials(Credentials(command.baseUrl, command.token))
     }
 
-  private fun handleSaveMode(effect: ModeSelectionEffect.SaveMode): Flow<ModeSelectionAction> =
+  private fun handleSaveMode(command: ModeSelectionEffect.Command.SaveMode): Flow<ModeSelectionAction> =
     flow {
-      Log.i(TAG, "Saving mode: ${effect.mode}")
-      saveAppMode(effect.mode)
+      Log.i(TAG, "Saving mode: ${command.mode}")
+      saveAppMode(command.mode)
     }
 }

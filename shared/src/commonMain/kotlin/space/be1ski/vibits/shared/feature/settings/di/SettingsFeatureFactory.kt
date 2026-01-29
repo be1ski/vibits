@@ -15,7 +15,7 @@ fun createSettingsFeature(
   initialMode: AppMode,
   appDetails: AppDetails,
   initialState: SettingsState = SettingsState(),
-): Feature<SettingsAction, SettingsState, SettingsEffect> =
+): Feature<SettingsAction, SettingsState, SettingsEffect.Command, SettingsEffect.Notification> =
   FeatureImpl(
     initialState =
       initialState.copy(

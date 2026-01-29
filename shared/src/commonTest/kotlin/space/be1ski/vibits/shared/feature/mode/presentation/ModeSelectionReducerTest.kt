@@ -2,6 +2,8 @@ package space.be1ski.vibits.shared.feature.mode.presentation
 
 import space.be1ski.vibits.shared.core.elm.test
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
+import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionEffect.Command
+import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionEffect.Notification
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -89,7 +91,7 @@ class ModeSelectionReducerTest {
       send(ModeSelectionAction.Submit)
 
       assertState { isValidating && error == null }
-      val effect = assertHasEffect<ModeSelectionEffect.ValidateCredentials>()
+      val effect = assertHasCommand<Command.ValidateCredentials>()
       assertEquals("https://api.com", effect.baseUrl)
       assertEquals("token123", effect.token)
     }
@@ -104,7 +106,7 @@ class ModeSelectionReducerTest {
     ) {
       send(ModeSelectionAction.Submit)
 
-      val effect = assertHasEffect<ModeSelectionEffect.ValidateCredentials>()
+      val effect = assertHasCommand<Command.ValidateCredentials>()
       assertEquals("https://api.com", effect.baseUrl)
       assertEquals("token123", effect.token)
     }
@@ -128,10 +130,10 @@ class ModeSelectionReducerTest {
           token == "" &&
           error == null
       }
-      assertEffectCount(3)
-      assertHasEffect<ModeSelectionEffect.SaveCredentials>()
-      assertHasEffect<ModeSelectionEffect.SaveMode>()
-      assertHasEffect<ModeSelectionEffect.NotifyModeSelected>()
+      assertCommandCount(2)
+      assertHasCommand<Command.SaveCredentials>()
+      assertHasCommand<Command.SaveMode>()
+      assertHasNotification<Notification.ModeSelected>()
     }
 
   @Test
@@ -146,9 +148,9 @@ class ModeSelectionReducerTest {
     ) {
       send(ModeSelectionAction.ValidationSucceeded)
 
-      val saveEffect = assertHasEffect<ModeSelectionEffect.SaveCredentials>()
-      assertEquals("https://api.com", saveEffect.baseUrl)
-      assertEquals("token123", saveEffect.token)
+      val effect = assertHasCommand<Command.SaveCredentials>()
+      assertEquals("https://api.com", effect.baseUrl)
+      assertEquals("token123", effect.token)
     }
 
   @Test
@@ -156,11 +158,11 @@ class ModeSelectionReducerTest {
     modeSelectionReducer.test(ModeSelectionState(isValidating = true)) {
       send(ModeSelectionAction.ValidationSucceeded)
 
-      val saveModeEffect = assertHasEffect<ModeSelectionEffect.SaveMode>()
-      assertEquals(AppMode.ONLINE, saveModeEffect.mode)
+      val effect = assertHasCommand<Command.SaveMode>()
+      assertEquals(AppMode.ONLINE, effect.mode)
 
-      val notifyEffect = assertHasEffect<ModeSelectionEffect.NotifyModeSelected>()
-      assertEquals(AppMode.ONLINE, notifyEffect.mode)
+      val notification = assertHasNotification<Notification.ModeSelected>()
+      assertEquals(AppMode.ONLINE, notification.mode)
     }
 
   @Test
@@ -177,12 +179,12 @@ class ModeSelectionReducerTest {
     modeSelectionReducer.test(ModeSelectionState()) {
       send(ModeSelectionAction.SelectMode(AppMode.OFFLINE))
 
-      assertEffectCount(2)
-      val saveModeEffect = assertHasEffect<ModeSelectionEffect.SaveMode>()
-      assertEquals(AppMode.OFFLINE, saveModeEffect.mode)
+      assertCommandCount(1)
+      val effect = assertHasCommand<Command.SaveMode>()
+      assertEquals(AppMode.OFFLINE, effect.mode)
 
-      val notifyEffect = assertHasEffect<ModeSelectionEffect.NotifyModeSelected>()
-      assertEquals(AppMode.OFFLINE, notifyEffect.mode)
+      val notification = assertHasNotification<Notification.ModeSelected>()
+      assertEquals(AppMode.OFFLINE, notification.mode)
     }
 
   @Test
@@ -190,12 +192,12 @@ class ModeSelectionReducerTest {
     modeSelectionReducer.test(ModeSelectionState()) {
       send(ModeSelectionAction.SelectMode(AppMode.DEMO))
 
-      assertEffectCount(2)
-      val saveModeEffect = assertHasEffect<ModeSelectionEffect.SaveMode>()
-      assertEquals(AppMode.DEMO, saveModeEffect.mode)
+      assertCommandCount(1)
+      val effect = assertHasCommand<Command.SaveMode>()
+      assertEquals(AppMode.DEMO, effect.mode)
 
-      val notifyEffect = assertHasEffect<ModeSelectionEffect.NotifyModeSelected>()
-      assertEquals(AppMode.DEMO, notifyEffect.mode)
+      val notification = assertHasNotification<Notification.ModeSelected>()
+      assertEquals(AppMode.DEMO, notification.mode)
     }
 
   @Test
@@ -231,7 +233,7 @@ class ModeSelectionReducerTest {
       send(ModeSelectionAction.UseStoredCredentials)
 
       assertState { !showQuickOnlineDialog && isValidating }
-      assertEffects(ModeSelectionEffect.UseStoredCredentialsWithValidation)
+      assertCommands(Command.UseStoredCredentialsWithValidation)
     }
 
   @Test
@@ -240,9 +242,9 @@ class ModeSelectionReducerTest {
       send(ModeSelectionAction.ValidationSucceeded)
 
       assertState { !isValidating && baseUrl == "" && token == "" }
-      assertEffectCount(2)
-      assertHasEffect<ModeSelectionEffect.SaveMode>()
-      assertHasEffect<ModeSelectionEffect.NotifyModeSelected>()
+      assertCommandCount(1)
+      assertHasCommand<Command.SaveMode>()
+      assertHasNotification<Notification.ModeSelected>()
     }
 
   @Test
@@ -251,6 +253,6 @@ class ModeSelectionReducerTest {
       send(ModeSelectionAction.SelectMode(AppMode.DEMO))
 
       assertState { !showQuickOnlineDialog }
-      assertEffectCount(2)
+      assertCommandCount(1)
     }
 }

@@ -3,13 +3,13 @@ package space.be1ski.vibits.shared.feature.onboarding.presentation
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 
-val onboardingReducer: Reducer<OnboardingAction, OnboardingState, OnboardingEffect> =
+val onboardingReducer: Reducer<OnboardingAction, OnboardingState, OnboardingEffect.Command, OnboardingEffect.Notification> =
   reducer { action, state ->
     when (action) {
       // Navigation
       is OnboardingAction.StartOnboarding -> {
         state { copy(currentStep = OnboardingStep.Welcome) }
-        effect(OnboardingEffect.Command.LoadPresets)
+        command(OnboardingEffect.Command.LoadPresets)
       }
 
       is OnboardingAction.Continue -> {
@@ -23,7 +23,7 @@ val onboardingReducer: Reducer<OnboardingAction, OnboardingState, OnboardingEffe
           OnboardingStep.HabitSetup -> {
             if (state.habitName.isNotBlank()) {
               state { copy(isCreatingHabit = true, creationError = null) }
-              effect(
+              command(
                 OnboardingEffect.Command.CreateFirstHabit(
                   state.habitName,
                   state.selectedPresetId,
@@ -49,7 +49,7 @@ val onboardingReducer: Reducer<OnboardingAction, OnboardingState, OnboardingEffe
       }
 
       is OnboardingAction.Skip -> {
-        effect(OnboardingEffect.Notification.Skipped)
+        notify(OnboardingEffect.Notification.Skipped)
       }
 
       // Preset selection
@@ -73,7 +73,7 @@ val onboardingReducer: Reducer<OnboardingAction, OnboardingState, OnboardingEffe
       is OnboardingAction.CreateHabit -> {
         if (state.habitName.isNotBlank()) {
           state { copy(isCreatingHabit = true, creationError = null) }
-          effect(
+          command(
             OnboardingEffect.Command.CreateFirstHabit(
               state.habitName,
               state.selectedPresetId,
@@ -107,22 +107,18 @@ val onboardingReducer: Reducer<OnboardingAction, OnboardingState, OnboardingEffe
 
       // Completion
       is OnboardingAction.MarkFirstCheckIn -> {
-        effect(OnboardingEffect.Command.MarkFirstCheckIn)
-        effect(OnboardingEffect.Command.MarkOnboardingCompleted)
+        command(OnboardingEffect.Command.MarkFirstCheckIn)
+        command(OnboardingEffect.Command.MarkOnboardingCompleted)
       }
 
       is OnboardingAction.FirstCheckInCreated -> {
-        effect(OnboardingEffect.Notification.FirstCheckInCreated)
-        effect(OnboardingEffect.Notification.Completed)
+        notify(OnboardingEffect.Notification.FirstCheckInCreated)
+        notify(OnboardingEffect.Notification.Completed)
       }
 
       is OnboardingAction.GoToDashboard -> {
-        effect(OnboardingEffect.Command.MarkOnboardingCompleted)
-        effect(OnboardingEffect.Notification.Completed)
-      }
-
-      is OnboardingAction.OnboardingCompleted -> {
-        // Handled by coordinator
+        command(OnboardingEffect.Command.MarkOnboardingCompleted)
+        notify(OnboardingEffect.Notification.Completed)
       }
     }
   }

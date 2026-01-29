@@ -101,7 +101,7 @@ class HabitsCacheTest {
     actions.forEach { action ->
       val (newState, effects) = reducer.invoke(action, initialState)
       assertEquals(false, newState.isLoading, "Action $action should stop loading")
-      assertTrue(effects.any { it is HabitsEffect.RefreshMemos }, "Action $action should trigger RefreshMemos")
+      assertTrue(effects.commands.any { it is HabitsEffect.RefreshMemos }, "Action $action should trigger RefreshMemos")
     }
   }
 
@@ -136,6 +136,6 @@ class HabitsCacheTest {
     assertEquals(2, newState.activityDataCache.size, "Cache size should remain unchanged")
     assertNotNull(newState.activityDataCache[week1Key], "Week 1 cache should exist")
     assertNotNull(newState.activityDataCache[week2Key], "Week 2 cache should exist")
-    assertTrue(effects.any { it is HabitsEffect.RefreshMemos }, "Should trigger memos refresh")
+    assertTrue(effects.commands.any { it is HabitsEffect.RefreshMemos }, "Should trigger memos refresh")
   }
 }
