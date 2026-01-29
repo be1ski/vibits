@@ -3,9 +3,12 @@ package space.be1ski.vibits.shared.feature.memos.di
 import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.core.elm.FeatureImpl
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.MemosCredentialsEffectHandler
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosEffect
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosEffectHandler
+import space.be1ski.vibits.shared.feature.memos.presentation.MemosLoadEffectHandler
 import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
+import space.be1ski.vibits.shared.feature.memos.presentation.MemosWriteEffectHandler
 import space.be1ski.vibits.shared.feature.memos.presentation.memosReducer
 
 fun createMemosFeature(
@@ -27,13 +30,22 @@ fun createMemosFeature(
     reducer = memosReducer,
     effectHandler =
       MemosEffectHandler(
-        loadCredentials = dependencies.loadCredentials,
-        saveCredentials = dependencies.saveCredentials,
-        loadMemos = dependencies.loadMemos,
-        loadCachedMemos = dependencies.loadCachedMemos,
-        createMemo = dependencies.createMemo,
-        updateMemo = dependencies.updateMemo,
-        deleteMemo = dependencies.deleteMemo,
+        credentialsHandler =
+          MemosCredentialsEffectHandler(
+            loadCredentials = dependencies.loadCredentials,
+            saveCredentials = dependencies.saveCredentials,
+          ),
+        loadHandler =
+          MemosLoadEffectHandler(
+            loadMemos = dependencies.loadMemos,
+            loadCachedMemos = dependencies.loadCachedMemos,
+          ),
+        writeHandler =
+          MemosWriteEffectHandler(
+            createMemo = dependencies.createMemo,
+            updateMemo = dependencies.updateMemo,
+            deleteMemo = dependencies.deleteMemo,
+          ),
       ),
     initialCommands = if (!needsCredentials) listOf(MemosEffect.LoadCachedMemos) else emptyList(),
   )
