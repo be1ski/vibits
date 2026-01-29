@@ -193,13 +193,22 @@ class MemosEffectHandlerTest {
     memosRepository: FakeMemosRepository = FakeMemosRepository(),
   ): MemosEffectHandler {
     return MemosEffectHandler(
-      loadCredentials = LoadCredentialsUseCase(credentialsRepository),
-      saveCredentials = SaveCredentialsUseCase(credentialsRepository),
-      loadMemos = LoadMemosUseCase(memosRepository),
-      loadCachedMemos = LoadCachedMemosUseCase(memosRepository),
-      createMemo = CreateMemoUseCase(memosRepository),
-      updateMemo = UpdateMemoUseCase(memosRepository),
-      deleteMemo = DeleteMemoUseCase(memosRepository),
+      credentialsHandler =
+        MemosCredentialsEffectHandler(
+          loadCredentials = LoadCredentialsUseCase(credentialsRepository),
+          saveCredentials = SaveCredentialsUseCase(credentialsRepository),
+        ),
+      loadHandler =
+        MemosLoadEffectHandler(
+          loadMemos = LoadMemosUseCase(memosRepository),
+          loadCachedMemos = LoadCachedMemosUseCase(memosRepository),
+        ),
+      writeHandler =
+        MemosWriteEffectHandler(
+          createMemo = CreateMemoUseCase(memosRepository),
+          updateMemo = UpdateMemoUseCase(memosRepository),
+          deleteMemo = DeleteMemoUseCase(memosRepository),
+        ),
     )
   }
 }

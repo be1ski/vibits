@@ -9,30 +9,36 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
  * Side effects for the Habits feature.
  */
 sealed interface HabitsEffect {
+  sealed interface Memo : HabitsEffect
+
+  sealed interface Refresh : HabitsEffect
+
+  sealed interface Activity : HabitsEffect
+
   data class CreateMemo(
     val content: String,
-  ) : HabitsEffect
+  ) : Memo
 
   data class UpdateMemo(
     val name: String,
     val content: String,
-  ) : HabitsEffect
+  ) : Memo
 
   data class DeleteMemo(
     val name: String,
-  ) : HabitsEffect
+  ) : Memo
 
-  data object RefreshMemos : HabitsEffect
+  data object RefreshMemos : Refresh
 
   data class RunPrewarmAllRanges(
-    val memos: List<Memo>,
+    val memos: List<space.be1ski.vibits.shared.feature.memos.domain.model.Memo>,
     val appMode: AppMode,
-  ) : HabitsEffect
+  ) : Activity
 
   data class RecalculateActivityData(
     val range: ActivityRange,
     val mode: ActivityMode,
     val appMode: AppMode,
-    val memos: List<Memo>,
-  ) : HabitsEffect
+    val memos: List<space.be1ski.vibits.shared.feature.memos.domain.model.Memo>,
+  ) : Activity
 }

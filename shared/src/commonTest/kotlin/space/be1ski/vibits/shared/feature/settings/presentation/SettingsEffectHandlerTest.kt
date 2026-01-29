@@ -147,13 +147,22 @@ class SettingsEffectHandlerTest {
           .FakeOnboardingStore(),
       )
     return SettingsEffectHandler(
-      connectionTester = ConnectionTester { _, _ -> connectionResult },
-      switchAppMode = SwitchAppModeUseCase(appModeRepository),
-      saveCredentials = SaveCredentialsUseCase(credentialsRepository),
-      resetApp = resetApp,
-      resetAppWithMemos = ResetAppWithMemosUseCase(resetApp, offlineMemoStorage),
-      saveLanguage = SaveLanguageUseCase(preferencesRepository, LocaleProvider()),
-      saveTheme = SaveThemeUseCase(preferencesRepository),
+      credentialsHandler =
+        SettingsCredentialsEffectHandler(
+          connectionTester = ConnectionTester { _, _ -> connectionResult },
+          saveCredentials = SaveCredentialsUseCase(credentialsRepository),
+        ),
+      modeHandler =
+        SettingsModeEffectHandler(
+          switchAppMode = SwitchAppModeUseCase(appModeRepository),
+          resetApp = resetApp,
+          resetAppWithMemos = ResetAppWithMemosUseCase(resetApp, offlineMemoStorage),
+        ),
+      preferencesHandler =
+        SettingsPreferencesEffectHandler(
+          saveLanguage = SaveLanguageUseCase(preferencesRepository, LocaleProvider()),
+          saveTheme = SaveThemeUseCase(preferencesRepository),
+        ),
     )
   }
 }

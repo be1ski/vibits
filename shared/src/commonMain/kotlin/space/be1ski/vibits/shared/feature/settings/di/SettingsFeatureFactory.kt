@@ -5,8 +5,11 @@ import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.core.elm.FeatureImpl
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsCredentialsEffectHandler
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffect
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffectHandler
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsModeEffectHandler
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsPreferencesEffectHandler
 import space.be1ski.vibits.shared.feature.settings.presentation.SettingsState
 import space.be1ski.vibits.shared.feature.settings.presentation.settingsReducer
 
@@ -25,12 +28,21 @@ fun createSettingsFeature(
     reducer = settingsReducer,
     effectHandler =
       SettingsEffectHandler(
-        connectionTester = dependencies.connectionTester,
-        switchAppMode = dependencies.switchAppMode,
-        saveCredentials = dependencies.saveCredentials,
-        resetApp = dependencies.resetApp,
-        resetAppWithMemos = dependencies.resetAppWithMemos,
-        saveLanguage = dependencies.saveLanguage,
-        saveTheme = dependencies.saveTheme,
+        credentialsHandler =
+          SettingsCredentialsEffectHandler(
+            connectionTester = dependencies.connectionTester,
+            saveCredentials = dependencies.saveCredentials,
+          ),
+        modeHandler =
+          SettingsModeEffectHandler(
+            switchAppMode = dependencies.switchAppMode,
+            resetApp = dependencies.resetApp,
+            resetAppWithMemos = dependencies.resetAppWithMemos,
+          ),
+        preferencesHandler =
+          SettingsPreferencesEffectHandler(
+            saveLanguage = dependencies.saveLanguage,
+            saveTheme = dependencies.saveTheme,
+          ),
       ),
   )

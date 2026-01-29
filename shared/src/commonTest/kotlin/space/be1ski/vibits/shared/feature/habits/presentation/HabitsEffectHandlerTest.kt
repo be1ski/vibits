@@ -195,11 +195,30 @@ class HabitsEffectHandlerTest {
     val calculateSuccessRateUseCase =
       space.be1ski.vibits.shared.feature.habits.domain.usecase
         .CalculateSuccessRateUseCase()
+    val calculateActivityDataUseCase =
+      space.be1ski.vibits.shared.feature.habits.domain.usecase
+        .CalculateActivityDataUseCase(
+          buildActivityDataUseCase = buildActivityDataUseCase,
+          calculateSuccessRateUseCase = calculateSuccessRateUseCase,
+        )
     return HabitsEffectHandler(
-      memosRepository = repository,
-      onRefresh = onRefresh,
-      buildActivityDataUseCase = buildActivityDataUseCase,
-      calculateSuccessRateUseCase = calculateSuccessRateUseCase,
+      memoHandler =
+        HabitsMemoEffectHandler(
+          memosRepository = repository,
+        ),
+      refreshHandler =
+        HabitsRefreshEffectHandler(
+          onRefresh = onRefresh,
+        ),
+      activityHandler =
+        HabitsActivityEffectHandler(
+          calculateActivityDataUseCase = calculateActivityDataUseCase,
+          prewarmActivityDataUseCase =
+            space.be1ski.vibits.shared.feature.habits.domain.usecase
+              .PrewarmActivityDataUseCase(
+                calculateActivityDataUseCase = calculateActivityDataUseCase,
+              ),
+        ),
     )
   }
 }
