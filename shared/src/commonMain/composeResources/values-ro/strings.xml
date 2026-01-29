@@ -4,8 +4,8 @@
     <string name="action_cancel">Anulare</string>
     <string name="action_clear">Curăță</string>
     <string name="action_continue">Continuă</string>
-    <string name="action_create_new_config">Create New Config (Recommended)</string>
-    <string name="action_edit_anyway">Edit Anyway</string>
+    <string name="action_create_new_config">Creează o configurație nouă (recomandat)</string>
+    <string name="action_edit_anyway">Editează oricum</string>
     <string name="action_close">Închide</string>
     <string name="action_copied">Copiat</string>
     <string name="action_configure_habits">Configurare obiceiuri</string>
@@ -119,9 +119,13 @@
     <string name="filter_regular">Obișnuite</string>
 
     <!-- Messages -->
-    <string name="format_active_since">Active since %1$s</string>
+    <string name="format_active_since">Activ din %1$s</string>
     <string name="msg_connection_failed">Conexiune eșuată</string>
-    <string name="msg_edit_config_warning">You're about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn't exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
+    <string name="msg_edit_config_warning">Ești pe cale să editezi o configurație existentă. Acest lucru va afecta toate datele istorice.
+
+Editarea unei configurații vechi nu este recomandată, deoarece schimbă modul în care apar datele tale anterioare. De exemplu, dacă adaugi un obicei nou, toate zilele trecute îl vor arăta ca «nefinalizat», deși atunci nu exista.
+
+Cea mai bună practică: creează o configurație nouă. Datele tale istorice vor păstra configurația veche, iar datele noi vor folosi configurația nouă.</string>
     <string name="msg_delete_config_warning">Sigur doriți să ștergeți această configurație? Aceasta va elimina definitiv postarea de configurare din notele dvs.</string>
     <string name="msg_delete_day_confirm">Niciun obicei selectat. Înregistrarea zilnică va fi ștearsă.</string>
     <string name="msg_delete_day_warning">Sunteți sigur că doriți să ștergeți înregistrarea acestei zile? Aceasta va elimina definitiv postarea de urmărire din notițele dumneavoastră.</string>
@@ -207,7 +211,7 @@
     <string name="title_delete_config">Ștergeți configurația?</string>
     <string name="title_delete_day">Șterge ziua?</string>
     <string name="title_delete_memo">Șterge nota?</string>
-    <string name="title_edit_config_warning">Edit Existing Config?</string>
+    <string name="title_edit_config_warning">Editezi configurația existentă?</string>
     <string name="title_edit_day">Editează ziua</string>
     <string name="title_edit_memo">Editează nota</string>
     <string name="title_empty_state_no_habits">Încă niciun obicei</string>
