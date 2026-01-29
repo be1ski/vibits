@@ -1,23 +1,20 @@
 package space.be1ski.vibits.shared.feature.memos.presentation.reducer
 
-import space.be1ski.vibits.shared.core.elm.ReducerResult
+import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosEffect
 import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
 
-internal fun credentialsReducer(
-  action: MemosAction.Credentials,
-  state: MemosState,
-): ReducerResult<MemosState, MemosEffect, Nothing> =
-  reducer<MemosAction.Credentials, MemosState, MemosEffect, Nothing> { a, s ->
-    when (a) {
+internal val credentialsReducer: Reducer<MemosAction.Credentials, MemosState, MemosEffect, Nothing> =
+  reducer { action, state ->
+    when (action) {
       is MemosAction.Credentials.UpdateBaseUrl -> {
-        state { copy(baseUrl = a.value, errorMessage = null) }
+        state { copy(baseUrl = action.value, errorMessage = null) }
       }
 
       is MemosAction.Credentials.UpdateToken -> {
-        state { copy(token = a.value, errorMessage = null) }
+        state { copy(token = action.value, errorMessage = null) }
       }
 
       is MemosAction.Credentials.EditCredentials -> {
@@ -26,7 +23,7 @@ internal fun credentialsReducer(
       }
 
       is MemosAction.Credentials.CredentialsLoaded -> {
-        state { copy(baseUrl = a.baseUrl, token = a.token) }
+        state { copy(baseUrl = action.baseUrl, token = action.token) }
       }
     }
-  }(action, state)
+  }

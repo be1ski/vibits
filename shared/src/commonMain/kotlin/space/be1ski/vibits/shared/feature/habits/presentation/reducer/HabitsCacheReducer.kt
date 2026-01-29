@@ -1,6 +1,6 @@
 package space.be1ski.vibits.shared.feature.habits.presentation.reducer
 
-import space.be1ski.vibits.shared.core.elm.ReducerResult
+import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.habits.presentation.ActivityCacheKey
 import space.be1ski.vibits.shared.feature.habits.presentation.CachedActivityData
@@ -11,12 +11,9 @@ import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 /**
  * Sub-reducer for cache management.
  */
-internal fun cacheReducer(
-  action: HabitsAction.Cache,
-  state: HabitsState,
-): ReducerResult<HabitsState, HabitsEffect, Nothing> =
-  reducer<HabitsAction.Cache, HabitsState, HabitsEffect, Nothing> { a, s ->
-    when (a) {
+internal val cacheReducer: Reducer<HabitsAction.Cache, HabitsState, HabitsEffect, Nothing> =
+  reducer { action, state ->
+    when (action) {
       is HabitsAction.Cache.RequestPrewarmAllRanges -> {
         state {
           copy(
@@ -24,16 +21,16 @@ internal fun cacheReducer(
             isInitialLoading = true,
           )
         }
-        command(HabitsEffect.RunPrewarmAllRanges(a.memos, a.appMode))
+        command(HabitsEffect.RunPrewarmAllRanges(action.memos, action.appMode))
       }
 
       is HabitsAction.Cache.UpdateActivityData -> {
-        val key = ActivityCacheKey(a.range, a.mode, a.appMode)
+        val key = ActivityCacheKey(action.range, action.mode, action.appMode)
         state {
           copy(
             activityDataCache =
               activityDataCache +
-                (key to CachedActivityData(a.weekData, a.configTimeline, a.successRate)),
+                (key to CachedActivityData(action.weekData, action.configTimeline, action.successRate)),
             isRecalculating = isRecalculating - key,
           )
         }
@@ -60,11 +57,11 @@ internal fun cacheReducer(
       is HabitsAction.Cache.InvalidateCache -> {
         state {
           copy(
-            isRecalculating = isRecalculating + ActivityCacheKey(a.range, a.mode, a.appMode),
+            isRecalculating = isRecalculating + ActivityCacheKey(action.range, action.mode, action.appMode),
             needsCacheRefresh = false,
           )
         }
-        command(HabitsEffect.RecalculateActivityData(a.range, a.mode, a.appMode, a.memos))
+        command(HabitsEffect.RecalculateActivityData(action.range, action.mode, action.appMode, action.memos))
       }
     }
-  }(action, state)
+  }

@@ -1,6 +1,6 @@
 package space.be1ski.vibits.shared.feature.settings.presentation.reducer
 
-import space.be1ski.vibits.shared.core.elm.ReducerResult
+import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.presentation.action.SettingsAction
@@ -8,12 +8,9 @@ import space.be1ski.vibits.shared.feature.settings.presentation.effect.SettingsE
 import space.be1ski.vibits.shared.feature.settings.presentation.state.SettingsState
 
 @Suppress("LongMethod")
-internal fun saveAndLogsReducer(
-  action: SettingsAction.SaveAndLogs,
-  state: SettingsState,
-): ReducerResult<SettingsState, SettingsEffect.Command, SettingsEffect.Notification> =
-  reducer<SettingsAction.SaveAndLogs, SettingsState, SettingsEffect.Command, SettingsEffect.Notification> { a, s ->
-    when (a) {
+internal val saveAndLogsReducer: Reducer<SettingsAction.SaveAndLogs, SettingsState, SettingsEffect.Command, SettingsEffect.Notification> =
+  reducer { action, state ->
+    when (action) {
       is SettingsAction.SaveAndLogs.OpenLogs -> {
         state { copy(showLogsDialog = true) }
       }
@@ -23,9 +20,9 @@ internal fun saveAndLogsReducer(
       }
 
       is SettingsAction.SaveAndLogs.Save -> {
-        if (s.appMode == AppMode.ONLINE) {
-          val baseUrl = s.editBaseUrl.trim()
-          val token = s.editToken.trim()
+        if (state.appMode == AppMode.ONLINE) {
+          val baseUrl = state.editBaseUrl.trim()
+          val token = state.editToken.trim()
           if (baseUrl.isBlank() || token.isBlank()) {
             state { copy(validationError = "fill_all_fields") }
           } else {
@@ -34,14 +31,14 @@ internal fun saveAndLogsReducer(
           }
         } else {
           state { copy(isOpen = false) }
-          command(SettingsEffect.Command.SaveCredentials(s.editBaseUrl, s.editToken))
-          command(SettingsEffect.Command.SwitchMode(s.appMode))
-          command(SettingsEffect.Command.SaveLanguage(s.selectedLanguage))
-          command(SettingsEffect.Command.SaveTheme(s.selectedTheme))
-          notify(SettingsEffect.Notification.LanguageChanged(s.selectedLanguage))
-          notify(SettingsEffect.Notification.ThemeChanged(s.selectedTheme))
-          notify(SettingsEffect.Notification.CredentialsSaved(s.editBaseUrl, s.editToken))
+          command(SettingsEffect.Command.SaveCredentials(state.editBaseUrl, state.editToken))
+          command(SettingsEffect.Command.SwitchMode(state.appMode))
+          command(SettingsEffect.Command.SaveLanguage(state.selectedLanguage))
+          command(SettingsEffect.Command.SaveTheme(state.selectedTheme))
+          notify(SettingsEffect.Notification.LanguageChanged(state.selectedLanguage))
+          notify(SettingsEffect.Notification.ThemeChanged(state.selectedTheme))
+          notify(SettingsEffect.Notification.CredentialsSaved(state.editBaseUrl, state.editToken))
         }
       }
     }
-  }(action, state)
+  }

@@ -1,27 +1,24 @@
 package space.be1ski.vibits.shared.feature.settings.presentation.reducer
 
-import space.be1ski.vibits.shared.core.elm.ReducerResult
+import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.settings.presentation.action.SettingsAction
 import space.be1ski.vibits.shared.feature.settings.presentation.effect.SettingsEffect
 import space.be1ski.vibits.shared.feature.settings.presentation.state.SettingsState
 
-internal fun dialogReducer(
-  action: SettingsAction.Dialog,
-  state: SettingsState,
-): ReducerResult<SettingsState, SettingsEffect.Command, SettingsEffect.Notification> =
-  reducer<SettingsAction.Dialog, SettingsState, SettingsEffect.Command, SettingsEffect.Notification> { a, s ->
-    when (a) {
+internal val dialogReducer: Reducer<SettingsAction.Dialog, SettingsState, SettingsEffect.Command, SettingsEffect.Notification> =
+  reducer { action, state ->
+    when (action) {
       is SettingsAction.Dialog.Open -> {
         state {
           copy(
             isOpen = true,
-            editBaseUrl = a.baseUrl,
-            editToken = a.token,
-            appMode = a.appMode,
-            selectedLanguage = a.language,
+            editBaseUrl = action.baseUrl,
+            editToken = action.token,
+            appMode = action.appMode,
+            selectedLanguage = action.language,
             languageChanged = false,
-            selectedTheme = a.theme,
+            selectedTheme = action.theme,
             isValidating = false,
             validationError = null,
             showResetConfirmation = false,
@@ -57,4 +54,4 @@ internal fun dialogReducer(
         notify(SettingsEffect.Notification.DialogClosed)
       }
     }
-  }(action, state)
+  }

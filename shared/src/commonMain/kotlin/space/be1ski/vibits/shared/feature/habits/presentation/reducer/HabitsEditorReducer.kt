@@ -1,7 +1,7 @@
 package space.be1ski.vibits.shared.feature.habits.presentation.reducer
 
 import kotlinx.datetime.TimeZone
-import space.be1ski.vibits.shared.core.elm.ReducerResult
+import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.habits.domain.buildDailyContent
 import space.be1ski.vibits.shared.feature.habits.domain.buildHabitStatuses
@@ -18,42 +18,39 @@ import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
  * Sub-reducer for editor lifecycle and interactions.
  */
 @Suppress("LongMethod", "CyclomaticComplexMethod")
-internal fun editorReducer(
-  action: HabitsAction.Editor,
-  state: HabitsState,
-): ReducerResult<HabitsState, HabitsEffect, Nothing> =
-  reducer<HabitsAction.Editor, HabitsState, HabitsEffect, Nothing> { a, s ->
-    when (a) {
+internal val editorReducer: Reducer<HabitsAction.Editor, HabitsState, HabitsEffect, Nothing> =
+  reducer { action, state ->
+    when (action) {
       is HabitsAction.Editor.OpenEditor -> {
         val day =
           when {
-            a.day != null -> a.day
-            a.memo != null -> {
+            action.day != null -> action.day
+            action.memo != null -> {
               val timeZone = TimeZone.currentSystemDefault()
               val date =
-                parseDailyDateFromContent(a.memo.content)
-                  ?: parseMemoDate(a.memo, timeZone)
+                parseDailyDateFromContent(action.memo.content)
+                  ?: parseMemoDate(action.memo, timeZone)
                   ?: return@reducer
-              val habitStatuses = buildHabitStatuses(a.memo.content, a.config)
+              val habitStatuses = buildHabitStatuses(action.memo.content, action.config)
               val completedCount = habitStatuses.count { it.done }
               ContributionDay(
                 date = date,
                 count = completedCount,
-                totalHabits = a.config.size,
-                completionRatio = if (a.config.isNotEmpty()) completedCount.toFloat() / a.config.size else 0f,
+                totalHabits = action.config.size,
+                completionRatio = if (action.config.isNotEmpty()) completedCount.toFloat() / action.config.size else 0f,
                 habitStatuses = habitStatuses,
-                dailyMemo = DailyMemoInfo(name = a.memo.name, content = a.memo.content),
+                dailyMemo = DailyMemoInfo(name = action.memo.name, content = action.memo.content),
                 inRange = true,
                 isClickable = true,
               )
             }
             else -> return@reducer
           }
-        val selections = buildHabitsEditorSelections(day, a.config)
+        val selections = buildHabitsEditorSelections(day, action.config)
         state {
           copy(
             editorDay = day,
-            editorConfig = a.config,
+            editorConfig = action.config,
             editorSelections = selections,
             editorExisting = day.dailyMemo,
             editorError = null,
@@ -77,23 +74,23 @@ internal fun editorReducer(
 
       is HabitsAction.Editor.ToggleHabit -> {
         state {
-          copy(editorSelections = editorSelections + (a.tag to a.checked))
+          copy(editorSelections = editorSelections + (action.tag to action.checked))
         }
       }
 
       is HabitsAction.Editor.ConfirmEditor -> {
-        val hasSelection = s.editorSelections.values.any { it }
+        val hasSelection = state.editorSelections.values.any { it }
         when {
-          !hasSelection && s.editorExisting != null -> {
+          !hasSelection && state.editorExisting != null -> {
             state { copy(showDeleteConfirm = true) }
           }
           !hasSelection -> {
             state { copy(editorError = "Select at least one habit.") }
           }
           else -> {
-            val day = s.editorDay ?: return@reducer
-            val content = buildDailyContent(day.date, s.editorConfig, s.editorSelections)
-            val existing = s.editorExisting
+            val day = state.editorDay ?: return@reducer
+            val content = buildDailyContent(day.date, state.editorConfig, state.editorSelections)
+            val existing = state.editorExisting
 
             state { copy(isLoading = true, editorError = null) }
 
@@ -111,7 +108,7 @@ internal fun editorReducer(
       }
 
       is HabitsAction.Editor.ConfirmDelete -> {
-        val existing = s.editorExisting ?: return@reducer
+        val existing = state.editorExisting ?: return@reducer
         state { copy(isLoading = true) }
         command(HabitsEffect.DeleteMemo(existing.name))
       }
@@ -120,4 +117,4 @@ internal fun editorReducer(
         state { copy(showDeleteConfirm = false) }
       }
     }
-  }(action, state)
+  }

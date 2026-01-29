@@ -1,6 +1,6 @@
 package space.be1ski.vibits.shared.feature.habits.presentation.reducer
 
-import space.be1ski.vibits.shared.core.elm.ReducerResult
+import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsEffect
@@ -9,12 +9,9 @@ import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 /**
  * Sub-reducer for API response handling.
  */
-internal fun responseReducer(
-  action: HabitsAction.Response,
-  state: HabitsState,
-): ReducerResult<HabitsState, HabitsEffect, Nothing> =
-  reducer<HabitsAction.Response, HabitsState, HabitsEffect, Nothing> { a, s ->
-    when (a) {
+internal val responseReducer: Reducer<HabitsAction.Response, HabitsState, HabitsEffect, Nothing> =
+  reducer { action, state ->
+    when (action) {
       is HabitsAction.Response.MemoCreated, is HabitsAction.Response.MemoUpdated -> {
         state {
           copy(
@@ -58,7 +55,7 @@ internal fun responseReducer(
         state {
           copy(
             isLoading = false,
-            editorError = a.error,
+            editorError = action.error,
             singleToggleDay = null,
             singleToggleHabitTag = null,
             singleToggleHabitLabel = null,
@@ -67,4 +64,4 @@ internal fun responseReducer(
         }
       }
     }
-  }(action, state)
+  }

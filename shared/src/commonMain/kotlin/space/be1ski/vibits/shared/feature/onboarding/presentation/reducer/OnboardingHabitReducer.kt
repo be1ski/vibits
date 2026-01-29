@@ -1,34 +1,31 @@
 package space.be1ski.vibits.shared.feature.onboarding.presentation.reducer
 
-import space.be1ski.vibits.shared.core.elm.ReducerResult
+import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
 import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect
 import space.be1ski.vibits.shared.feature.onboarding.presentation.state.OnboardingState
 import space.be1ski.vibits.shared.feature.onboarding.presentation.state.OnboardingStep
 
-internal fun habitReducer(
-  action: OnboardingAction.Habit,
-  state: OnboardingState,
-): ReducerResult<OnboardingState, OnboardingEffect.Command, OnboardingEffect.Notification> =
-  reducer<OnboardingAction.Habit, OnboardingState, OnboardingEffect.Command, OnboardingEffect.Notification> { a, s ->
-    when (a) {
+internal val habitReducer: Reducer<OnboardingAction.Habit, OnboardingState, OnboardingEffect.Command, OnboardingEffect.Notification> =
+  reducer { action, state ->
+    when (action) {
       is OnboardingAction.Habit.UpdateHabitName -> {
-        state { copy(habitName = a.name, creationError = null) }
+        state { copy(habitName = action.name, creationError = null) }
       }
 
       is OnboardingAction.Habit.UpdateHabitColor -> {
-        state { copy(selectedColor = a.color) }
+        state { copy(selectedColor = action.color) }
       }
 
       is OnboardingAction.Habit.CreateHabit -> {
-        if (s.habitName.isNotBlank()) {
+        if (state.habitName.isNotBlank()) {
           state { copy(isCreatingHabit = true, creationError = null) }
           command(
             OnboardingEffect.Command.CreateFirstHabit(
-              s.habitName,
-              s.selectedPresetId,
-              s.selectedColor,
+              state.habitName,
+              state.selectedPresetId,
+              state.selectedColor,
             ),
           )
         } else {
@@ -50,9 +47,9 @@ internal fun habitReducer(
         state {
           copy(
             isCreatingHabit = false,
-            creationError = a.error,
+            creationError = action.error,
           )
         }
       }
     }
-  }(action, state)
+  }

@@ -1,6 +1,6 @@
 package space.be1ski.vibits.shared.feature.habits.presentation.reducer
 
-import space.be1ski.vibits.shared.core.elm.ReducerResult
+import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.habits.domain.buildHabitsConfigContentFromList
 import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
@@ -10,12 +10,9 @@ import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 /**
  * Sub-reducer for edit config warning flow.
  */
-internal fun configWarningReducer(
-  action: HabitsAction.ConfigWarning,
-  state: HabitsState,
-): ReducerResult<HabitsState, HabitsEffect, Nothing> =
-  reducer<HabitsAction.ConfigWarning, HabitsState, HabitsEffect, Nothing> { a, s ->
-    when (a) {
+internal val configWarningReducer: Reducer<HabitsAction.ConfigWarning, HabitsState, HabitsEffect, Nothing> =
+  reducer { action, state ->
+    when (action) {
       is HabitsAction.ConfigWarning.DismissEditConfigWarning -> {
         state {
           copy(
@@ -30,8 +27,8 @@ internal fun configWarningReducer(
       }
 
       is HabitsAction.ConfigWarning.ConfirmEditExistingConfig -> {
-        val content = buildHabitsConfigContentFromList(s.pendingConfigEdit)
-        val existingMemo = s.editingConfigMemo ?: return@reducer
+        val content = buildHabitsConfigContentFromList(state.pendingConfigEdit)
+        val existingMemo = state.editingConfigMemo ?: return@reducer
         state {
           copy(
             showEditConfigWarning = false,
@@ -44,7 +41,7 @@ internal fun configWarningReducer(
       }
 
       is HabitsAction.ConfigWarning.CreateNewConfigInstead -> {
-        val content = buildHabitsConfigContentFromList(s.pendingConfigEdit)
+        val content = buildHabitsConfigContentFromList(state.pendingConfigEdit)
         state {
           copy(
             showEditConfigWarning = false,
@@ -56,4 +53,4 @@ internal fun configWarningReducer(
         command(HabitsEffect.CreateMemo(content))
       }
     }
-  }(action, state)
+  }

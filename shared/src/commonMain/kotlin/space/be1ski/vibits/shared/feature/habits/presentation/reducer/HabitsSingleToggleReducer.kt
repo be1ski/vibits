@@ -1,6 +1,6 @@
 package space.be1ski.vibits.shared.feature.habits.presentation.reducer
 
-import space.be1ski.vibits.shared.core.elm.ReducerResult
+import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.habits.domain.buildDailyContent
 import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
@@ -11,27 +11,24 @@ import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
  * Sub-reducer for single habit toggle from matrix.
  */
 @Suppress("LongMethod")
-internal fun singleToggleReducer(
-  action: HabitsAction.SingleToggle,
-  state: HabitsState,
-): ReducerResult<HabitsState, HabitsEffect, Nothing> =
-  reducer<HabitsAction.SingleToggle, HabitsState, HabitsEffect, Nothing> { a, s ->
-    when (a) {
+internal val singleToggleReducer: Reducer<HabitsAction.SingleToggle, HabitsState, HabitsEffect, Nothing> =
+  reducer { action, state ->
+    when (action) {
       is HabitsAction.SingleToggle.RequestSingleHabitToggle -> {
         state {
           copy(
-            singleToggleDay = a.day,
-            singleToggleHabitTag = a.habitTag,
-            singleToggleHabitLabel = a.habitLabel,
-            singleToggleConfig = a.config,
+            singleToggleDay = action.day,
+            singleToggleHabitTag = action.habitTag,
+            singleToggleHabitLabel = action.habitLabel,
+            singleToggleConfig = action.config,
           )
         }
       }
 
       is HabitsAction.SingleToggle.ConfirmSingleHabitToggle -> {
-        val day = s.singleToggleDay ?: return@reducer
-        val habitTag = s.singleToggleHabitTag ?: return@reducer
-        val config = s.singleToggleConfig
+        val day = state.singleToggleDay ?: return@reducer
+        val habitTag = state.singleToggleHabitTag ?: return@reducer
+        val config = state.singleToggleConfig
 
         // Build selections by toggling the specific habit
         val currentDone = day.habitStatuses.firstOrNull { it.tag == habitTag }?.done == true
@@ -87,4 +84,4 @@ internal fun singleToggleReducer(
         }
       }
     }
-  }(action, state)
+  }

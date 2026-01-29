@@ -1,18 +1,15 @@
 package space.be1ski.vibits.shared.feature.settings.presentation.reducer
 
-import space.be1ski.vibits.shared.core.elm.ReducerResult
+import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
 import space.be1ski.vibits.shared.feature.settings.presentation.action.SettingsAction
 import space.be1ski.vibits.shared.feature.settings.presentation.effect.SettingsEffect
 import space.be1ski.vibits.shared.feature.settings.presentation.state.SettingsState
 
 @Suppress("LongMethod")
-internal fun resetReducer(
-  action: SettingsAction.Reset,
-  state: SettingsState,
-): ReducerResult<SettingsState, SettingsEffect.Command, SettingsEffect.Notification> =
-  reducer<SettingsAction.Reset, SettingsState, SettingsEffect.Command, SettingsEffect.Notification> { a, s ->
-    when (a) {
+internal val resetReducer: Reducer<SettingsAction.Reset, SettingsState, SettingsEffect.Command, SettingsEffect.Notification> =
+  reducer { action, state ->
+    when (action) {
       is SettingsAction.Reset.RequestReset -> {
         state { copy(showResetConfirmation = true) }
       }
@@ -36,4 +33,4 @@ internal fun resetReducer(
         notify(SettingsEffect.Notification.ResetCompleted)
       }
     }
-  }(action, state)
+  }
