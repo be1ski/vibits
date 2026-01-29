@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.settings.presentation
+package space.be1ski.vibits.shared.feature.settings.presentation.handler
 
 import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.shared.core.elm.EffectHandler
@@ -7,6 +7,8 @@ import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.vibits.shared.feature.memos.data.ConnectionTester
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffect
 
 private const val TAG = "SettingsCredentialsEffect"
 

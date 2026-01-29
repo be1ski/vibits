@@ -7,6 +7,9 @@ import space.be1ski.vibits.shared.feature.memos.data.ConnectionTester
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
 import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionEffect.Command
+import space.be1ski.vibits.shared.feature.mode.presentation.handler.ModeSelectionCredentialsEffectHandler
+import space.be1ski.vibits.shared.feature.mode.presentation.handler.ModeSelectionEffectHandler
+import space.be1ski.vibits.shared.feature.mode.presentation.handler.ModeSelectionModeEffectHandler
 import space.be1ski.vibits.shared.test.FakeAppModeRepository
 import space.be1ski.vibits.shared.test.FakeCredentialsRepository
 import kotlin.test.Test

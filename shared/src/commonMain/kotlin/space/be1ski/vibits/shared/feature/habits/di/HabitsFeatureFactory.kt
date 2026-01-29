@@ -5,13 +5,13 @@ import space.be1ski.vibits.shared.core.elm.FeatureImpl
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.PrewarmActivityDataUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsActivityEffectHandler
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsEffect
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsEffectHandler
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsMemoEffectHandler
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsRefreshEffectHandler
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
 import space.be1ski.vibits.shared.feature.habits.presentation.habitsReducer
+import space.be1ski.vibits.shared.feature.habits.presentation.handler.HabitsActivityEffectHandler
+import space.be1ski.vibits.shared.feature.habits.presentation.handler.HabitsEffectHandler
+import space.be1ski.vibits.shared.feature.habits.presentation.handler.HabitsMemoEffectHandler
+import space.be1ski.vibits.shared.feature.habits.presentation.handler.HabitsRefreshEffectHandler
 
 /**
  * Creates a new HabitsFeature instance.

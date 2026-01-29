@@ -1,12 +1,13 @@
 package space.be1ski.vibits.shared.feature.memos.presentation
 
+import space.be1ski.vibits.shared.core.elm.Action
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
 
 /**
  * Actions for the Memos feature.
  */
-sealed interface MemosAction {
+sealed interface MemosAction : Action {
   // Credentials
   data class UpdateBaseUrl(
     val value: String,

@@ -1,10 +1,11 @@
 package space.be1ski.vibits.shared.feature.settings.presentation
 
+import space.be1ski.vibits.shared.core.elm.Action
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 
-sealed interface SettingsAction {
+sealed interface SettingsAction : Action {
   // Dialog lifecycle
   data class Open(
     val baseUrl: String,

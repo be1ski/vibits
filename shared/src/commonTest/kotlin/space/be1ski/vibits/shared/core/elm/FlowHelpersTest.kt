@@ -7,41 +7,55 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class FlowHelpersTest {
+  private sealed interface TestAction : Action {
+    data class Value(
+      val value: String,
+    ) : TestAction
+  }
+
   @Test
-  fun `action emits single value`() =
+  fun `when action with value then emits single value`() =
     runTest {
-      val result = action("test").toList()
-      assertEquals(listOf("test"), result)
+      val testValue = TestAction.Value("test")
+      val result = action(testValue).toList()
+      assertEquals(listOf(testValue), result)
     }
 
   @Test
-  fun `actions emits multiple values`() =
+  fun `when actions with multiple emissions then emits all values`() =
     runTest {
       val result =
-        actions<String> {
-          emit("first")
-          emit("second")
-          emit("third")
+        actions<TestAction> {
+          emit(TestAction.Value("first"))
+          emit(TestAction.Value("second"))
+          emit(TestAction.Value("third"))
         }.toList()
-      assertEquals(listOf("first", "second", "third"), result)
+      assertEquals(
+        listOf(
+          TestAction.Value("first"),
+          TestAction.Value("second"),
+          TestAction.Value("third"),
+        ),
+        result,
+      )
     }
 
   @Test
-  fun `actions emits no values when empty block`() =
+  fun `when actions with empty block then emits nothing`() =
     runTest {
       val result =
-        actions<String> {
+        actions<TestAction> {
           // Empty block
         }.toList()
       assertTrue(result.isEmpty())
     }
 
   @Test
-  fun `sideEffect executes block but emits nothing`() =
+  fun `when sideEffect with block then executes block but emits nothing`() =
     runTest {
       var executed = false
       val result =
-        sideEffect<String> {
+        sideEffect<TestAction> {
           executed = true
         }.toList()
       assertTrue(executed)
@@ -49,9 +63,9 @@ class FlowHelpersTest {
     }
 
   @Test
-  fun `noActions returns empty flow`() =
+  fun `when noActions then returns empty flow`() =
     runTest {
-      val result = noActions<String>().toList()
+      val result = noActions<TestAction>().toList()
       assertTrue(result.isEmpty())
     }
 }
