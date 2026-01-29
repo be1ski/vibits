@@ -9,17 +9,20 @@ import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.vibits.shared.feature.memos.data.ConnectionTester
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
+import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppWithMemosUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveLanguageUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveThemeUseCase
 
 private const val TAG = "SettingsEffect"
 
+@Suppress("LongParameterList")
 class SettingsEffectHandler(
   private val connectionTester: ConnectionTester,
   private val switchAppMode: SwitchAppModeUseCase,
   private val saveCredentials: SaveCredentialsUseCase,
   private val resetApp: ResetAppUseCase,
+  private val resetAppWithMemos: ResetAppWithMemosUseCase,
   private val saveLanguage: SaveLanguageUseCase,
   private val saveTheme: SaveThemeUseCase,
 ) : EffectHandler<SettingsEffect.Command, SettingsAction> {
@@ -29,6 +32,7 @@ class SettingsEffectHandler(
       is SettingsEffect.Command.SwitchMode -> handleSwitchMode(command)
       is SettingsEffect.Command.SaveCredentials -> handleSaveCredentials(command)
       is SettingsEffect.Command.ResetApp -> handleResetApp()
+      is SettingsEffect.Command.ResetAppWithMemos -> handleResetAppWithMemos()
       is SettingsEffect.Command.SaveLanguage -> handleSaveLanguage(command)
       is SettingsEffect.Command.SaveTheme -> handleSaveTheme(command)
     }
@@ -58,6 +62,13 @@ class SettingsEffectHandler(
     flow {
       Log.i(TAG, "Resetting app")
       resetApp()
+      emit(SettingsAction.ResetCompleted)
+    }
+
+  private fun handleResetAppWithMemos(): Flow<SettingsAction> =
+    flow {
+      Log.i(TAG, "Resetting app with memos")
+      resetAppWithMemos()
       emit(SettingsAction.ResetCompleted)
     }
 

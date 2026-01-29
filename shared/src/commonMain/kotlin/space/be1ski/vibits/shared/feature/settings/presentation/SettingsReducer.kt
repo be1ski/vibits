@@ -110,6 +110,11 @@ val settingsReducer: Reducer<SettingsAction, SettingsState, SettingsEffect.Comma
         command(SettingsEffect.Command.ResetApp)
       }
 
+      is SettingsAction.ConfirmResetWithMemos -> {
+        state { copy(showResetConfirmation = false, isResetting = true) }
+        command(SettingsEffect.Command.ResetAppWithMemos)
+      }
+
       is SettingsAction.CancelReset -> {
         state { copy(showResetConfirmation = false) }
       }
