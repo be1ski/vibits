@@ -22,6 +22,8 @@
     <string name="action_refresh">रिफ्रेश</string>
     <string name="action_reset">रीसेट</string>
     <string name="action_reset_app">ऐप रीसेट करें</string>
+    <string name="action_reset_settings_only">केवल सेटिंग्स रीसेट करें</string>
+    <string name="action_reset_with_memos">सब कुछ रीसेट करें (यादों सहित)</string>
     <string name="action_save">सेव करें</string>
     <string name="action_show_details">विवरण दिखाएं</string>
     <string name="action_start_tracking">ट्रैकिंग शुरू करें</string>
@@ -137,6 +139,7 @@
     <string name="msg_no_logs">अभी कोई लॉग नहीं</string>
     <string name="msg_no_memos_yet">इस अवधि में कोई मेमो नहीं।</string>
     <string name="msg_reset_confirm">क्या आप वाकई ऐप रीसेट करना चाहते हैं? सभी डेटा हटा दिया जाएगा।</string>
+    <string name="msg_reset_choose_option">रीसेट विकल्प चुनें:</string>
     <string name="msg_select_habit">कम से कम एक आदत चुनें।</string>
     <string name="msg_mark_done_confirm">"%1$s" को %2$s के लिए पूर्ण के रूप में चिह्नित करें?</string>
     <string name="msg_mark_not_done_confirm">%2$s पर "%1$s" की पूर्णता हटाएं?</string>

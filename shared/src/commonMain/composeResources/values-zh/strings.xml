@@ -22,6 +22,8 @@
     <string name="action_refresh">刷新</string>
     <string name="action_reset">重置</string>
     <string name="action_reset_app">重置应用</string>
+    <string name="action_reset_settings_only">仅重置设置</string>
+    <string name="action_reset_with_memos">重置所有内容（包括回忆）</string>
     <string name="action_save">保存</string>
     <string name="action_show_details">显示详情</string>
     <string name="action_start_tracking">开始记录</string>
@@ -133,6 +135,7 @@
     <string name="msg_no_logs">暂无日志</string>
     <string name="msg_no_memos_yet">该时期暂无备忘。</string>
     <string name="msg_reset_confirm">确定要重置应用吗？所有数据将被清除。</string>
+    <string name="msg_reset_choose_option">选择重置选项：</string>
     <string name="msg_select_habit">请至少选择一个习惯。</string>
     <string name="msg_mark_done_confirm">将"%1$s"标记为 %2$s 完成？</string>
     <string name="msg_mark_not_done_confirm">取消"%1$s"在 %2$s 的完成标记？</string>

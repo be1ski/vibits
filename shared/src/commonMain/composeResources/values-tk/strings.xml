@@ -21,6 +21,8 @@
     <string name="action_refresh">Täzele</string>
     <string name="action_reset">Täzeden başla</string>
     <string name="action_reset_app">Programany täzele</string>
+    <string name="action_reset_settings_only">Diňe sazlamalary täzeden düzmek</string>
+    <string name="action_reset_with_memos">Ählisini täzeden düzmek (ýatlamalar bilen)</string>
     <string name="action_save">Sakla</string>
     <string name="action_show_details">Jikme-jiklikleri görkez</string>
     <string name="action_start_tracking">Yzarlamagy başla</string>
@@ -139,6 +141,7 @@ Iň gowy usul: täze konfigurasiýa dörediň. Taryhy maglumatlar köne konfigur
     <string name="msg_offline_onboarding_success">Hemme zat taýýar. Şu gün ilkinji belligi goýuň.</string>
     <string name="msg_offline_onboarding_welcome">Endikleri enjamyňyzda ýerli yzarlaň. Hasap gerek däl.</string>
     <string name="msg_reset_confirm">Programmany täzeden başlamak isleýärsiňizmi? Ähli maglumatlar öçüriler.</string>
+    <string name="msg_reset_choose_option">Täzeden düzmek wariantyny saýlaň:</string>
     <string name="msg_select_habit">Azyndan bir endik saýlaň.</string>
     <string name="msg_mark_done_confirm">«%1$s» %2$s üçin ýerine ýetirilen diýip bellesinmi?</string>
     <string name="msg_mark_not_done_confirm">%2$s güni «%1$s» belligini aýyrmak isleýärsiňizmi?</string>

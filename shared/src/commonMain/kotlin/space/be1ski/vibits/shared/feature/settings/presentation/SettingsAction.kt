@@ -56,6 +56,8 @@ sealed interface SettingsAction {
 
   data object ConfirmReset : SettingsAction
 
+  data object ConfirmResetWithMemos : SettingsAction
+
   data object CancelReset : SettingsAction
 
   data object ResetCompleted : SettingsAction

@@ -26,6 +26,8 @@ sealed interface SettingsEffect {
 
     data object ResetApp : Command
 
+    data object ResetAppWithMemos : Command
+
     data class SaveLanguage(
       val language: AppLanguage,
     ) : Command
