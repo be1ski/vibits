@@ -172,20 +172,26 @@ class ModeSelectionEffectHandlerTest {
         .createFakeLocalConfigProvider(),
   ): ModeSelectionEffectHandler {
     return ModeSelectionEffectHandler(
-      connectionTester = ConnectionTester { _, _ -> connectionResult },
-      initializeCredentialsFromEnv =
-        space.be1ski.vibits.shared.feature.auth.domain.usecase.InitializeCredentialsFromEnvUseCase(
+      credentialsHandler =
+        ModeSelectionCredentialsEffectHandler(
+          connectionTester = ConnectionTester { _, _ -> connectionResult },
+          initializeCredentialsFromEnv =
+            space.be1ski.vibits.shared.feature.auth.domain.usecase.InitializeCredentialsFromEnvUseCase(
+              loadCredentials =
+                space.be1ski.vibits.shared.feature.auth.domain.usecase
+                  .LoadCredentialsUseCase(credentialsRepository),
+              saveCredentials = SaveCredentialsUseCase(credentialsRepository),
+              localConfigProvider = localConfigProvider,
+            ),
           loadCredentials =
             space.be1ski.vibits.shared.feature.auth.domain.usecase
               .LoadCredentialsUseCase(credentialsRepository),
           saveCredentials = SaveCredentialsUseCase(credentialsRepository),
-          localConfigProvider = localConfigProvider,
         ),
-      loadCredentials =
-        space.be1ski.vibits.shared.feature.auth.domain.usecase
-          .LoadCredentialsUseCase(credentialsRepository),
-      saveCredentials = SaveCredentialsUseCase(credentialsRepository),
-      saveAppMode = SaveAppModeUseCase(appModeRepository),
+      modeHandler =
+        ModeSelectionModeEffectHandler(
+          saveAppMode = SaveAppModeUseCase(appModeRepository),
+        ),
     )
   }
 }

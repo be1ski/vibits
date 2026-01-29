@@ -7,25 +7,29 @@ sealed interface ModeSelectionEffect {
    * Commands handled by ModeSelectionEffectHandler (async operations).
    */
   sealed interface Command : ModeSelectionEffect {
-    data object InitializeFromLocalConfig : Command
+    sealed interface Credentials : Command
 
-    data object CheckStoredCredentials : Command
+    sealed interface Mode : Command
 
-    data object UseStoredCredentialsWithValidation : Command
+    data object InitializeFromLocalConfig : Credentials
+
+    data object CheckStoredCredentials : Credentials
+
+    data object UseStoredCredentialsWithValidation : Credentials
 
     data class ValidateCredentials(
       val baseUrl: String,
       val token: String,
-    ) : Command
+    ) : Credentials
 
     data class SaveCredentials(
       val baseUrl: String,
       val token: String,
-    ) : Command
+    ) : Credentials
 
     data class SaveMode(
       val mode: AppMode,
-    ) : Command
+    ) : Mode
   }
 
   /**
