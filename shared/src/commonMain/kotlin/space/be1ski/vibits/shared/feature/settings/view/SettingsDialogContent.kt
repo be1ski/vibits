@@ -15,14 +15,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -582,22 +586,50 @@ private fun ResetOptionsDialog(
     onDismissRequest = onDismiss,
     title = { Text(stringResource(Res.string.action_reset_app)) },
     text = {
-      Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+      Column(verticalArrangement = Arrangement.spacedBy(Indent.s)) {
         Text(
           text = stringResource(Res.string.msg_reset_choose_option),
           style = MaterialTheme.typography.bodyMedium,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Button(
-          onClick = onResetSettings,
+        OutlinedButton(
+          onClick = {
+            onResetSettings()
+            onDismiss()
+          },
           modifier = Modifier.fillMaxWidth(),
         ) {
-          Text(stringResource(Res.string.action_reset_settings_only))
+          Icon(
+            imageVector = Icons.Default.Settings,
+            contentDescription = null,
+            modifier = Modifier.size(Indent.m),
+          )
+          Text(
+            text = stringResource(Res.string.action_reset_settings_only),
+            modifier = Modifier.padding(start = Indent.xs),
+          )
         }
         Button(
-          onClick = onResetAll,
+          onClick = {
+            onResetAll()
+            onDismiss()
+          },
           modifier = Modifier.fillMaxWidth(),
+          colors =
+            ButtonDefaults.buttonColors(
+              containerColor = MaterialTheme.colorScheme.error,
+              contentColor = MaterialTheme.colorScheme.onError,
+            ),
         ) {
-          Text(stringResource(Res.string.action_reset_with_memos))
+          Icon(
+            imageVector = Icons.Default.DeleteForever,
+            contentDescription = null,
+            modifier = Modifier.size(Indent.m),
+          )
+          Text(
+            text = stringResource(Res.string.action_reset_with_memos),
+            modifier = Modifier.padding(start = Indent.xs),
+          )
         }
       }
     },
