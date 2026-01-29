@@ -5,17 +5,23 @@ sealed interface OnboardingEffect {
    * Commands handled by OnboardingEffectHandler (async operations).
    */
   sealed interface Command : OnboardingEffect {
-    data object LoadPresets : Command
+    sealed interface Presets : Command
+
+    sealed interface Setup : Command
+
+    sealed interface Completion : Command
+
+    data object LoadPresets : Presets
 
     data class CreateFirstHabit(
       val name: String,
       val presetId: String?,
       val color: Long,
-    ) : Command
+    ) : Setup
 
-    data object MarkOnboardingCompleted : Command
+    data object MarkFirstCheckIn : Setup
 
-    data object MarkFirstCheckIn : Command
+    data object MarkOnboardingCompleted : Completion
   }
 
   /**
