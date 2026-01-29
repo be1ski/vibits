@@ -1,16 +1,21 @@
 <resources>
     <!-- Actions -->
+    <string name="action_add_first_habit">Биринчи адатты кошуу</string>
     <string name="action_cancel">Жокко чыгаруу</string>
+    <string name="action_clear">Тазалоо</string>
+    <string name="action_continue">Улантуу</string>
     <string name="action_create_new_config">Create New Config (Recommended)</string>
     <string name="action_edit_anyway">Edit Anyway</string>
-    <string name="action_clear">Тазалоо</string>
     <string name="action_close">Жабуу</string>
     <string name="action_copied">Көчүрүлдү</string>
     <string name="action_configure_habits">Адаттарды тууралоо</string>
     <string name="action_create">Түзүү</string>
+    <string name="action_create_first_habit">Биринчи адатты түзүү</string>
     <string name="action_create_memo">Жазуу түзүү</string>
     <string name="action_delete">Өчүрүү</string>
     <string name="action_hide_details">Деталдарды жашыруу</string>
+    <string name="action_mark_first_checkin">Биринчи белгини коюу</string>
+    <string name="action_maybe_later">Кийинчерээк</string>
     <string name="action_next">Кийинки</string>
     <string name="action_previous">Мурунку</string>
     <string name="action_refresh">Жаңылоо</string>
@@ -18,6 +23,7 @@
     <string name="action_reset_app">Колдонмону баштапкыга кайтаруу</string>
     <string name="action_save">Сактоо</string>
     <string name="action_show_details">Деталдарды көрсөтүү</string>
+    <string name="action_start_tracking">Көзөмөлдөөнү баштоо</string>
     <string name="action_track">Белгилөө</string>
     <string name="action_track_today">Бүгүн белгилөө</string>
     <string name="action_update">Жаңылоо</string>
@@ -25,6 +31,7 @@
     <string name="action_export">Экспорт</string>
     <string name="action_export_logs">Логдорду экспорттоо</string>
     <string name="action_export_memos">Жазууларды экспорттоо</string>
+    <string name="action_go_to_dashboard">Панелге өтүү</string>
     <string name="msg_export_success">%1$s-ке экспорттолду</string>
     <string name="msg_export_failed">Экспорт катасы</string>
 
@@ -118,10 +125,15 @@
     <string name="msg_delete_config_warning">Бул конфигди өчүргүңүз келгеніне ишенесизби? Бул конфигурация постун жазууларыңыздан биротоло өчүрөт.</string>
     <string name="msg_delete_day_confirm">Адаттар тандалган эмес. Күндүк жазуу өчүрүлөт.</string>
     <string name="msg_delete_day_warning">Бул күндүн жазуусун өчүргүңүз келгенине ишенесизби? Бул көзөмөл постун эстеликтериңизден биротоло өчүрөт.</string>
+    <string name="msg_empty_state_no_habits">Офлайн режимде көзөмөлдөөнү баштоо үчүн адат түзүңүз.</string>
     <string name="msg_fill_all_fields">Бардык талааларды толтуруңуз</string>
+    <string name="msg_habit_name_required">Адаттын аты милдеттүү</string>
+    <string name="msg_habit_setup">Адатыңызга маанилүү ат ойлоп табыңыз.</string>
     <string name="msg_no_habits_yet">Адаттар али тууралangan эмес.</string>
     <string name="msg_no_logs">Логдор али жок</string>
     <string name="msg_no_memos_yet">Бул мезгилде жазуулар жок.</string>
+    <string name="msg_offline_onboarding_success">Баары даяр. Бүгүн биринчи белгини коюңуз.</string>
+    <string name="msg_offline_onboarding_welcome">Адаттарды түзмөгүңүздө жергиликтүү көзөмөлдөңүз. Эсеп керек эмес.</string>
     <string name="msg_reset_confirm">Колдонмону баштапкыга кайтаргыңыз келеби? Бардык маалыматтар өчүрүлөт.</string>
     <string name="msg_select_habit">Жок дегенде бир адатты тандаңыз.</string>
     <string name="msg_mark_done_confirm">«%1$s» %2$s үчүн аткарылды деп белгилөө керекпи?</string>
@@ -190,6 +202,7 @@
     <string name="time_years">Жылдар</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">Башталгыч адатты тандаңыз</string>
     <string name="title_create_day">Күн түзүү</string>
     <string name="title_delete_config">Конфигди өчүрүү керекпи?</string>
     <string name="title_delete_day">Күндү өчүрүү?</string>
@@ -197,8 +210,12 @@
     <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">Күндү түзөтүү</string>
     <string name="title_edit_memo">Жазууну түзөтүү</string>
+    <string name="title_empty_state_no_habits">Адаттар али жок</string>
+    <string name="title_habit_setup">Адатыңызды тууралаңыз</string>
     <string name="title_logs">Логдор (%1$d)</string>
     <string name="title_new_memo">Жаңы жазуу</string>
+    <string name="title_offline_onboarding_success">Мыкты иш!</string>
+    <string name="title_offline_onboarding_welcome">Офлайн режим даяр</string>
     <string name="title_mark_done">Аткарылды деп белгилөө?</string>
     <string name="title_mark_not_done">Белгини алып салуу?</string>
     <string name="title_update_day">Күндү жаңылоо</string>

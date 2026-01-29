@@ -1,16 +1,21 @@
 <resources>
     <!-- Actions -->
+    <string name="action_add_first_habit">Adaugă primul tău obicei</string>
     <string name="action_cancel">Anulare</string>
+    <string name="action_clear">Curăță</string>
+    <string name="action_continue">Continuă</string>
     <string name="action_create_new_config">Create New Config (Recommended)</string>
     <string name="action_edit_anyway">Edit Anyway</string>
-    <string name="action_clear">Curăță</string>
     <string name="action_close">Închide</string>
     <string name="action_copied">Copiat</string>
     <string name="action_configure_habits">Configurare obiceiuri</string>
     <string name="action_create">Creează</string>
+    <string name="action_create_first_habit">Creează primul tău obicei</string>
     <string name="action_create_memo">Creează notă</string>
     <string name="action_delete">Șterge</string>
     <string name="action_hide_details">Ascunde detalii</string>
+    <string name="action_mark_first_checkin">Marchează prima verificare</string>
+    <string name="action_maybe_later">Poate mai târziu</string>
     <string name="action_next">Următorul</string>
     <string name="action_previous">Anterior</string>
     <string name="action_refresh">Reîmprospătare</string>
@@ -18,6 +23,7 @@
     <string name="action_reset_app">Resetare aplicație</string>
     <string name="action_save">Salvează</string>
     <string name="action_show_details">Arată detalii</string>
+    <string name="action_start_tracking">Începe urmărirea</string>
     <string name="action_track">Marchează</string>
     <string name="action_track_today">Marchează astăzi</string>
     <string name="action_update">Actualizare</string>
@@ -25,6 +31,7 @@
     <string name="action_export">Export</string>
     <string name="action_export_logs">Export loguri</string>
     <string name="action_export_memos">Export note</string>
+    <string name="action_go_to_dashboard">Mergi la panou</string>
     <string name="msg_export_success">Exportat în %1$s</string>
     <string name="msg_export_failed">Eroare la export</string>
 
@@ -119,9 +126,14 @@
     <string name="msg_delete_day_confirm">Niciun obicei selectat. Înregistrarea zilnică va fi ștearsă.</string>
     <string name="msg_delete_day_warning">Sunteți sigur că doriți să ștergeți înregistrarea acestei zile? Aceasta va elimina definitiv postarea de urmărire din notițele dumneavoastră.</string>
     <string name="msg_fill_all_fields">Completați toate câmpurile</string>
+    <string name="msg_empty_state_no_habits">Creează unul pentru a începe urmărirea offline.</string>
+    <string name="msg_habit_name_required">Numele obiceiului este obligatoriu</string>
+    <string name="msg_habit_setup">Dă-i obiceiului tău un nume semnificativ.</string>
     <string name="msg_no_habits_yet">Niciun obicei configurat încă.</string>
     <string name="msg_no_logs">Niciun log încă</string>
     <string name="msg_no_memos_yet">Nicio notă în această perioadă.</string>
+    <string name="msg_offline_onboarding_success">Totul este gata. Marchează prima verificare astăzi.</string>
+    <string name="msg_offline_onboarding_welcome">Urmărește obiceiurile local pe dispozitivul tău. Nu este nevoie de cont.</string>
     <string name="msg_reset_confirm">Sunteți sigur că doriți să resetați aplicația? Toate datele vor fi șterse.</string>
     <string name="msg_select_habit">Selectați cel puțin un obicei.</string>
     <string name="msg_mark_done_confirm">Marcați «%1$s» ca finalizat pentru %2$s?</string>
@@ -190,6 +202,7 @@
     <string name="time_years">Ani</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">Alege un obicei de început</string>
     <string name="title_create_day">Creează zi</string>
     <string name="title_delete_config">Ștergeți configurația?</string>
     <string name="title_delete_day">Șterge ziua?</string>
@@ -197,8 +210,12 @@
     <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">Editează ziua</string>
     <string name="title_edit_memo">Editează nota</string>
+    <string name="title_empty_state_no_habits">Încă niciun obicei</string>
+    <string name="title_habit_setup">Configurează-ți obiceiul</string>
     <string name="title_logs">Loguri (%1$d)</string>
     <string name="title_new_memo">Notă nouă</string>
+    <string name="title_offline_onboarding_success">Excelent!</string>
+    <string name="title_offline_onboarding_welcome">Modul offline este gata</string>
     <string name="title_mark_done">Marchează ca finalizat?</string>
     <string name="title_mark_not_done">Elimină marcajul?</string>
     <string name="title_update_day">Actualizează ziua</string>
