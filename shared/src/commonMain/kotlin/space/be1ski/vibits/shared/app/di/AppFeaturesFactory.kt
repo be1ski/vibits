@@ -1,15 +1,17 @@
 package space.be1ski.vibits.shared.app.di
-
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import space.be1ski.vibits.shared.app.domain.usecase.LoadAppDetailsUseCase
 import space.be1ski.vibits.shared.app.presentation.AppFeatures
+import space.be1ski.vibits.shared.app.presentation.action.AppAction
+import space.be1ski.vibits.shared.app.presentation.effect.AppEffect
+import space.be1ski.vibits.shared.app.presentation.reducer.appReducer
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.feature.habits.di.HabitsDependencies
 import space.be1ski.vibits.shared.feature.habits.di.createHabitsFeature
 import space.be1ski.vibits.shared.feature.memos.di.MemosDependencies
 import space.be1ski.vibits.shared.feature.memos.di.createMemosFeature
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.LoadAppModeUseCase
 import space.be1ski.vibits.shared.feature.settings.di.SettingsDependencies
@@ -52,7 +54,7 @@ class AppFeaturesFactory(
     val habitsFeature =
       createHabitsFeature(
         dependencies = habitsDependencies,
-        onRefresh = { memosFeature.send(MemosAction.LoadMemos) },
+        onRefresh = { memosFeature.send(MemosAction.Loading.LoadMemos) },
       )
 
     val settingsFeature =

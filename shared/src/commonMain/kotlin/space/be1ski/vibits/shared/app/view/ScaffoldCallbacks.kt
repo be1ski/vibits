@@ -8,10 +8,10 @@ import kotlinx.coroutines.launch
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.domain.model.Screen
-import space.be1ski.vibits.shared.app.presentation.AppAction
+import space.be1ski.vibits.shared.app.presentation.action.AppAction
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 
 @Suppress("LongParameterList")
@@ -39,7 +39,7 @@ internal fun rememberScaffoldCallbacks(
 ): ScaffoldCallbacks {
   val onClearSelection =
     remember(onHabitsAction) {
-      { onHabitsAction(HabitsAction.ClearSelection) }
+      { onHabitsAction(HabitsAction.Selection.ClearSelection) }
     }
   val onFeedScrollToTop =
     remember(feedListState, scope) {
@@ -50,19 +50,19 @@ internal fun rememberScaffoldCallbacks(
     }
   val onShowCreateMemoDialog =
     remember(onMemosAction) {
-      { onMemosAction(MemosAction.ShowCreateDialog) }
+      { onMemosAction(MemosAction.CreateDialog.ShowCreateDialog) }
     }
   val onOpenTodayEditor =
     remember(onHabitsAction, todayData) {
       {
-        todayData.day?.let { onHabitsAction(HabitsAction.OpenEditor(day = it, config = todayData.config)) }
+        todayData.day?.let { onHabitsAction(HabitsAction.Editor.OpenEditor(day = it, config = todayData.config)) }
         Unit
       }
     }
   val onTabChange =
     remember(onHabitsAction, onAppAction, appState) {
       { newTab: TimeRangeTab ->
-        onHabitsAction(HabitsAction.ClearSelection)
+        onHabitsAction(HabitsAction.Selection.ClearSelection)
         when (appState.selectedScreen) {
           Screen.HABITS -> onAppAction(AppAction.ChangeHabitsTab(appState.habitsTimeRangeTab, newTab))
           Screen.STATS -> onAppAction(AppAction.ChangePostsTab(appState.postsTimeRangeTab, newTab))
@@ -74,7 +74,7 @@ internal fun rememberScaffoldCallbacks(
     remember(onHabitsAction, onAppAction, activityRange) {
       {
         val newRange = NavigateActivityRangeUseCase(activityRange, -1)
-        onHabitsAction(HabitsAction.ClearSelection)
+        onHabitsAction(HabitsAction.Selection.ClearSelection)
         onAppAction(AppAction.SetActivityRange(newRange))
       }
     }
@@ -82,7 +82,7 @@ internal fun rememberScaffoldCallbacks(
     remember(onHabitsAction, onAppAction, activityRange) {
       {
         val newRange = NavigateActivityRangeUseCase(activityRange, 1)
-        onHabitsAction(HabitsAction.ClearSelection)
+        onHabitsAction(HabitsAction.Selection.ClearSelection)
         onAppAction(AppAction.SetActivityRange(newRange))
       }
     }

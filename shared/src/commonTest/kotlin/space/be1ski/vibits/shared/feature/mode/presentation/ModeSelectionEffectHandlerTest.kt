@@ -1,15 +1,17 @@
 package space.be1ski.vibits.shared.feature.mode.presentation
-
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.vibits.shared.feature.memos.data.ConnectionTester
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SaveAppModeUseCase
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionEffect.Command
-import space.be1ski.vibits.shared.feature.mode.presentation.handler.ModeSelectionCredentialsEffectHandler
-import space.be1ski.vibits.shared.feature.mode.presentation.handler.ModeSelectionEffectHandler
-import space.be1ski.vibits.shared.feature.mode.presentation.handler.ModeSelectionModeEffectHandler
+import space.be1ski.vibits.shared.feature.mode.presentation.action.ModeSelectionAction
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionCredentialsEffectHandler
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionEffect
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionEffect.Command
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionEffectHandler
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionModeEffectHandler
+import space.be1ski.vibits.shared.feature.mode.presentation.reducer.modeSelectionReducer
 import space.be1ski.vibits.shared.test.FakeAppModeRepository
 import space.be1ski.vibits.shared.test.FakeCredentialsRepository
 import kotlin.test.Test

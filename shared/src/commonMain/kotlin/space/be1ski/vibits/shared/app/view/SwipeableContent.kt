@@ -19,7 +19,7 @@ import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
 import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.domain.model.Screen
-import space.be1ski.vibits.shared.app.presentation.AppAction
+import space.be1ski.vibits.shared.app.presentation.action.AppAction
 import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.date.DateFormatter
@@ -27,19 +27,19 @@ import space.be1ski.vibits.shared.feature.habits.domain.parseConfigFromContent
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.CalculateActivityRangeDeltaUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.NavigateActivityRangeUseCase
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
-import space.be1ski.vibits.shared.feature.habits.view.StatsScreen
-import space.be1ski.vibits.shared.feature.habits.view.StatsScreenState
-import space.be1ski.vibits.shared.feature.habits.view.components.quarterIndex
-import space.be1ski.vibits.shared.feature.habits.view.components.startOfWeek
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
+import space.be1ski.vibits.shared.feature.habits.presentation.view.StatsScreen
+import space.be1ski.vibits.shared.feature.habits.presentation.view.StatsScreenState
+import space.be1ski.vibits.shared.feature.habits.presentation.view.components.quarterIndex
+import space.be1ski.vibits.shared.feature.habits.presentation.view.components.startOfWeek
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.ClassifyPostTypeUseCase
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
-import space.be1ski.vibits.shared.feature.memos.view.FeedScreen
-import space.be1ski.vibits.shared.feature.memos.view.PostsScreen
+import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
+import space.be1ski.vibits.shared.feature.memos.presentation.view.FeedScreen
+import space.be1ski.vibits.shared.feature.memos.presentation.view.PostsScreen
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 
@@ -63,7 +63,7 @@ internal fun SwipeableTabContent(
       memos = memosState.memos,
       dateFormatter = dateFormatter,
       activeFilter = memosState.activePostFilter,
-      onFilterChange = { filter -> dispatchMemos(MemosAction.ChangePostFilter(filter)) },
+      onFilterChange = { filter -> dispatchMemos(MemosAction.Loading.ChangePostFilter(filter)) },
       isRefreshing = memosState.isLoading,
       onRefresh = {},
       enablePullRefresh = !isDesktop,
@@ -76,7 +76,7 @@ internal fun SwipeableTabContent(
           onHabitsAction = onHabitsAction,
         )
       },
-      onDeleteMemo = { memo -> dispatchMemos(MemosAction.DeleteMemo(memo.name)) },
+      onDeleteMemo = { memo -> dispatchMemos(MemosAction.Crud.DeleteMemo(memo.name)) },
       listState = feedListState,
     )
     return
@@ -155,7 +155,7 @@ private fun SwipeablePagerContent(
       val newRange = NavigateActivityRangeUseCase(currentRange, delta)
       if (newRange != currentActivityRange) {
         onAppAction(AppAction.SetActivityRange(newRange))
-        onHabitsAction(HabitsAction.ClearSelection)
+        onHabitsAction(HabitsAction.Selection.ClearSelection)
       }
     }
   }
@@ -228,7 +228,7 @@ private fun MemosTabContent(
         memos = memos,
         dateFormatter = dateFormatter,
         activeFilter = memosState.activePostFilter,
-        onFilterChange = { filter -> onMemosAction(MemosAction.ChangePostFilter(filter)) },
+        onFilterChange = { filter -> onMemosAction(MemosAction.Loading.ChangePostFilter(filter)) },
         isRefreshing = memosState.isLoading,
         onRefresh = {},
         enablePullRefresh = !isDesktop,
@@ -296,13 +296,13 @@ private fun handleMemoClick(
     PostFilter.CONFIG -> {
       // Parse config from the clicked memo using domain logic
       val clickedConfig = parseConfigFromContent(memo.content)
-      onHabitsAction(HabitsAction.OpenConfigDialog(clickedConfig, existingMemo = memo))
+      onHabitsAction(HabitsAction.Config.OpenConfigDialog(clickedConfig, existingMemo = memo))
     }
     PostFilter.HABIT_TRACKING -> {
-      onHabitsAction(HabitsAction.OpenEditor(config = currentConfig, memo = memo))
+      onHabitsAction(HabitsAction.Editor.OpenEditor(config = currentConfig, memo = memo))
     }
     else -> {
-      onMemosAction(MemosAction.ShowEditDialog(memo))
+      onMemosAction(MemosAction.EditDialog.ShowEditDialog(memo))
     }
   }
 }

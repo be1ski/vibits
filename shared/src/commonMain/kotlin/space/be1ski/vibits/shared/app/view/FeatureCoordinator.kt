@@ -3,17 +3,17 @@ package space.be1ski.vibits.shared.app.view
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import space.be1ski.vibits.shared.app.domain.model.AppState
-import space.be1ski.vibits.shared.app.presentation.AppAction
 import space.be1ski.vibits.shared.app.presentation.AppFeatures
-import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
+import space.be1ski.vibits.shared.app.presentation.action.AppAction
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffect
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsState
+import space.be1ski.vibits.shared.feature.settings.presentation.action.SettingsAction
+import space.be1ski.vibits.shared.feature.settings.presentation.effect.SettingsEffect
+import space.be1ski.vibits.shared.feature.settings.presentation.state.SettingsState
 
 @Composable
 internal fun FeatureCoordinator(
@@ -43,7 +43,7 @@ internal fun FeatureCoordinator(
     val skipCredentialsCheck = appState.skipCredentialsCheck
     if (!skipCredentialsCheck && memosState.credentialsMode && !settingsState.isOpen) {
       features.settings.send(
-        SettingsAction.Open(
+        SettingsAction.Dialog.Open(
           baseUrl = memosState.baseUrl,
           token = memosState.token,
           appMode = appState.appMode,
@@ -64,7 +64,7 @@ internal fun FeatureCoordinator(
         (skipCredentialsCheck || memosState.hasCredentials)
     if (shouldAutoLoad) {
       dispatchApp(AppAction.MarkAutoLoaded)
-      dispatchMemos(MemosAction.LoadMemos)
+      dispatchMemos(MemosAction.Loading.LoadMemos)
     }
   }
 }
@@ -82,15 +82,15 @@ private fun handleNotification(
   when (effect) {
     is SettingsEffect.Notification.ModeChanged -> {
       dispatchApp(AppAction.SetAppMode(effect.newMode))
-      dispatchMemos(MemosAction.ResetForModeChange)
-      dispatchMemos(MemosAction.LoadMemos)
-      dispatchHabits(HabitsAction.InvalidateAllCache)
+      dispatchMemos(MemosAction.Loading.ResetForModeChange)
+      dispatchMemos(MemosAction.Loading.LoadMemos)
+      dispatchHabits(HabitsAction.Cache.InvalidateAllCache)
     }
     is SettingsEffect.Notification.ResetCompleted -> onResetApp()
     is SettingsEffect.Notification.CredentialsSaved -> {
-      dispatchMemos(MemosAction.UpdateBaseUrl(effect.baseUrl))
-      dispatchMemos(MemosAction.UpdateToken(effect.token))
-      dispatchMemos(MemosAction.LoadMemos)
+      dispatchMemos(MemosAction.Credentials.UpdateBaseUrl(effect.baseUrl))
+      dispatchMemos(MemosAction.Credentials.UpdateToken(effect.token))
+      dispatchMemos(MemosAction.Loading.LoadMemos)
     }
     is SettingsEffect.Notification.ThemeChanged -> onThemeChanged(effect.theme)
     is SettingsEffect.Notification.LanguageChanged -> onLanguageChanged(effect.language)

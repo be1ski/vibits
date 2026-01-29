@@ -29,10 +29,10 @@ import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionAction
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionEffect
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionError
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionState
+import space.be1ski.vibits.shared.feature.mode.presentation.action.ModeSelectionAction
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionEffect
+import space.be1ski.vibits.shared.feature.mode.presentation.state.ModeSelectionError
+import space.be1ski.vibits.shared.feature.mode.presentation.state.ModeSelectionState
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_cancel
 import space.be1ski.vibits.shared.generated.action_save

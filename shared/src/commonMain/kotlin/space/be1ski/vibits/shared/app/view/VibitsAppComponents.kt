@@ -21,15 +21,15 @@ import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.app.domain.model.Screen
-import space.be1ski.vibits.shared.app.presentation.AppAction
+import space.be1ski.vibits.shared.app.presentation.action.AppAction
 import space.be1ski.vibits.shared.core.platform.date.currentLocalDate
 import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.Indent
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
+import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
+import space.be1ski.vibits.shared.feature.settings.presentation.action.SettingsAction
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_refresh
 import space.be1ski.vibits.shared.generated.app_name
@@ -55,14 +55,14 @@ internal fun MemosHeader(
     Text(stringResource(Res.string.app_name), style = MaterialTheme.typography.headlineSmall)
     Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs), verticalAlignment = Alignment.CenterVertically) {
       if (isDesktop) {
-        IconButton(onClick = { dispatchMemos(MemosAction.LoadMemos) }) {
+        IconButton(onClick = { dispatchMemos(MemosAction.Loading.LoadMemos) }) {
           Icon(imageVector = Icons.Filled.Refresh, contentDescription = stringResource(Res.string.action_refresh))
         }
       }
       TextButton(
         onClick = {
           dispatchSettings(
-            SettingsAction.Open(
+            SettingsAction.Dialog.Open(
               baseUrl = memosState.baseUrl,
               token = memosState.token,
               appMode = appState.appMode,
