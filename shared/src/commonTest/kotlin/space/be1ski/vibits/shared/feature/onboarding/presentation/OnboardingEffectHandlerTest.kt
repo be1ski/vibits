@@ -152,10 +152,19 @@ class OnboardingEffectHandlerTest {
     val repository = OnboardingRepositoryImpl(onboardingStore, presetsDataSource)
 
     return OnboardingEffectHandler(
-      getHabitPresets = GetHabitPresetsUseCase(repository),
-      createFirstHabit = CreateFirstHabitUseCase(CreateMemoUseCase(memosRepository)),
-      createFirstCheckIn = CreateFirstCheckInUseCase(memosRepository, CreateMemoUseCase(memosRepository)),
-      markOnboardingCompleted = MarkOnboardingCompletedUseCase(repository),
+      presetsHandler =
+        OnboardingPresetsEffectHandler(
+          getHabitPresets = GetHabitPresetsUseCase(repository),
+        ),
+      setupHandler =
+        OnboardingSetupEffectHandler(
+          createFirstHabit = CreateFirstHabitUseCase(CreateMemoUseCase(memosRepository)),
+          createFirstCheckIn = CreateFirstCheckInUseCase(memosRepository, CreateMemoUseCase(memosRepository)),
+        ),
+      completionHandler =
+        OnboardingCompletionEffectHandler(
+          markOnboardingCompleted = MarkOnboardingCompletedUseCase(repository),
+        ),
     )
   }
 }
