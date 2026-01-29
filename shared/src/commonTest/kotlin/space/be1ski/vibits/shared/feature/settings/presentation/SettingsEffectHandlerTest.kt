@@ -7,6 +7,7 @@ import space.be1ski.vibits.shared.feature.auth.domain.usecase.SaveCredentialsUse
 import space.be1ski.vibits.shared.feature.memos.data.ConnectionTester
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
+import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppWithMemosUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
@@ -14,6 +15,7 @@ import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveLanguageUs
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveThemeUseCase
 import space.be1ski.vibits.shared.test.FakeAppModeRepository
 import space.be1ski.vibits.shared.test.FakeCredentialsRepository
+import space.be1ski.vibits.shared.test.FakeOfflineMemoStorage
 import space.be1ski.vibits.shared.test.FakePreferencesRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -94,6 +96,20 @@ class SettingsEffectHandlerTest {
     }
 
   @Test
+  fun `when ResetAppWithMemos then resets and clears memos and emits ResetCompleted`() =
+    runTest {
+      val appModeRepo = FakeAppModeRepository(initial = AppMode.ONLINE)
+      val offlineMemoStorage = FakeOfflineMemoStorage()
+      val handler = createHandler(appModeRepository = appModeRepo, offlineMemoStorage = offlineMemoStorage)
+
+      val actions = handler(SettingsEffect.Command.ResetAppWithMemos).toList()
+
+      assertEquals(listOf(SettingsAction.ResetCompleted), actions)
+      assertEquals(AppMode.NOT_SELECTED, appModeRepo.storedMode)
+      assertEquals(emptyList(), offlineMemoStorage.stored.memos)
+    }
+
+  @Test
   fun `when SaveLanguage then saves language to repository`() =
     runTest {
       val prefsRepo = FakePreferencesRepository()
@@ -120,20 +136,24 @@ class SettingsEffectHandlerTest {
     appModeRepository: FakeAppModeRepository = FakeAppModeRepository(),
     credentialsRepository: FakeCredentialsRepository = FakeCredentialsRepository(),
     preferencesRepository: FakePreferencesRepository = FakePreferencesRepository(),
-  ): SettingsEffectHandler =
-    SettingsEffectHandler(
+    offlineMemoStorage: FakeOfflineMemoStorage = FakeOfflineMemoStorage(),
+  ): SettingsEffectHandler {
+    val resetApp =
+      ResetAppUseCase(
+        appModeRepository,
+        credentialsRepository,
+        preferencesRepository,
+        space.be1ski.vibits.shared.feature.onboarding.data
+          .FakeOnboardingStore(),
+      )
+    return SettingsEffectHandler(
       connectionTester = ConnectionTester { _, _ -> connectionResult },
       switchAppMode = SwitchAppModeUseCase(appModeRepository),
       saveCredentials = SaveCredentialsUseCase(credentialsRepository),
-      resetApp =
-        ResetAppUseCase(
-          appModeRepository,
-          credentialsRepository,
-          preferencesRepository,
-          space.be1ski.vibits.shared.feature.onboarding.data
-            .FakeOnboardingStore(),
-        ),
+      resetApp = resetApp,
+      resetAppWithMemos = ResetAppWithMemosUseCase(resetApp, offlineMemoStorage),
       saveLanguage = SaveLanguageUseCase(preferencesRepository, LocaleProvider()),
       saveTheme = SaveThemeUseCase(preferencesRepository),
     )
+  }
 }

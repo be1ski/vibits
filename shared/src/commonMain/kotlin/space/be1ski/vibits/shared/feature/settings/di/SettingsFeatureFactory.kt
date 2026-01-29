@@ -29,6 +29,7 @@ fun createSettingsFeature(
         switchAppMode = dependencies.switchAppMode,
         saveCredentials = dependencies.saveCredentials,
         resetApp = dependencies.resetApp,
+        resetAppWithMemos = dependencies.resetAppWithMemos,
         saveLanguage = dependencies.saveLanguage,
         saveTheme = dependencies.saveTheme,
       ),

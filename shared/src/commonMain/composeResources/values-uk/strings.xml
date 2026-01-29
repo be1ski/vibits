@@ -22,6 +22,8 @@
     <string name="action_refresh">Оновити</string>
     <string name="action_reset">Скинути</string>
     <string name="action_reset_app">Скинути додаток</string>
+    <string name="action_reset_settings_only">Скинути лише налаштування</string>
+    <string name="action_reset_with_memos">Скинути все (включно зі спогадами)</string>
     <string name="action_save">Зберегти</string>
     <string name="action_show_details">Показати деталі</string>
     <string name="action_start_tracking">Почати відстеження</string>
@@ -136,6 +138,7 @@
     <string name="msg_no_logs">Логів поки немає</string>
     <string name="msg_no_memos_yet">Немає нотаток за цей період.</string>
     <string name="msg_reset_confirm">Ви впевнені, що хочете скинути додаток? Усі дані буде видалено.</string>
+    <string name="msg_reset_choose_option">Оберіть варіант скидання:</string>
     <string name="msg_select_habit">Оберіть хоча б одну звичку.</string>
     <string name="msg_mark_done_confirm">Позначити «%1$s» як виконану за %2$s?</string>
     <string name="msg_mark_not_done_confirm">Зняти позначку з «%1$s» за %2$s?</string>

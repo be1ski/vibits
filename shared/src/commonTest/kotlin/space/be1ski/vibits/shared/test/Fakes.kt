@@ -3,7 +3,9 @@ package space.be1ski.vibits.shared.test
 import space.be1ski.vibits.shared.core.platform.env.LocalConfigProvider
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
+import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemosFileDto
 import space.be1ski.vibits.shared.feature.memos.data.platform.MemoCache
+import space.be1ski.vibits.shared.feature.memos.data.platform.OfflineMemoStorage
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
@@ -140,6 +142,22 @@ class FakePreferencesRepository(
 
   override fun save(preferences: UserPreferences) {
     stored = preferences
+    saveCalls += 1
+  }
+}
+
+class FakeOfflineMemoStorage(
+  initial: OfflineMemosFileDto = OfflineMemosFileDto(memos = emptyList()),
+) : OfflineMemoStorage {
+  var stored: OfflineMemosFileDto = initial
+    private set
+  var saveCalls: Int = 0
+    private set
+
+  override fun load(): OfflineMemosFileDto = stored
+
+  override fun save(data: OfflineMemosFileDto) {
+    stored = data
     saveCalls += 1
   }
 }

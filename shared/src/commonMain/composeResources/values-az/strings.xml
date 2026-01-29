@@ -22,6 +22,8 @@
     <string name="action_refresh">Yenilə</string>
     <string name="action_reset">Sıfırla</string>
     <string name="action_reset_app">Tətbiqi sıfırla</string>
+    <string name="action_reset_settings_only">Yalnız tənzimləmələri sıfırla</string>
+    <string name="action_reset_with_memos">Hər şeyi sıfırla (xatirələr daxil)</string>
     <string name="action_save">Saxla</string>
     <string name="action_show_details">Detalları göstər</string>
     <string name="action_start_tracking">İzləməyə başla</string>
@@ -137,6 +139,7 @@ Köhnə konfiqurasiyanı redaktə etmək tövsiyə olunmur, çünki bu, əvvəlk
     <string name="msg_no_logs">Loglar hələ yoxdur</string>
     <string name="msg_no_memos_yet">Bu dövrdə qeyd yoxdur.</string>
     <string name="msg_reset_confirm">Tətbiqi sıfırlamaq istədiyinizə əminsiniz? Bütün məlumatlar silinəcək.</string>
+    <string name="msg_reset_choose_option">Sıfırlama variantını seçin:</string>
     <string name="msg_select_habit">Ən azı bir vərdiş seçin.</string>
     <string name="msg_mark_done_confirm">«%1$s» %2$s üçün tamamlanmış kimi qeyd edilsin?</string>
     <string name="msg_mark_not_done_confirm">%2$s tarixində «%1$s» qeydini silmək istəyirsiniz?</string>

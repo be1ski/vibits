@@ -21,6 +21,8 @@
     <string name="action_refresh">Навсозӣ</string>
     <string name="action_reset">Барқарор кардан</string>
     <string name="action_reset_app">Барқарор кардани барнома</string>
+    <string name="action_reset_settings_only">Танҳо танзимотро барқарор кардан</string>
+    <string name="action_reset_with_memos">Ҳамаро барқарор кардан (хотираҳоро низ)</string>
     <string name="action_save">Захира кардан</string>
     <string name="action_show_details">Нишон додани тафсилот</string>
     <string name="action_start_tracking">Назоратро оғоз кардан</string>
@@ -139,6 +141,7 @@
     <string name="msg_offline_onboarding_success">Ҳама чиз тайёр аст. Имрӯз қайди аввалинро гузоред.</string>
     <string name="msg_offline_onboarding_welcome">Одатҳоро дар дастгоҳи худ маҳаллӣ назорат кунед. Ҳисоб зарур нест.</string>
     <string name="msg_reset_confirm">Шумо мутмаин ҳастед, ки мехоҳед барномаро барқарор кунед? Ҳамаи маълумот нест мешавад.</string>
+    <string name="msg_reset_choose_option">Вариантҳои барқарорсозиро интихоб кунед:</string>
     <string name="msg_select_habit">Ҳадди ақал як одатро интихоб кунед.</string>
     <string name="msg_mark_done_confirm">«%1$s»-ро барои %2$s ҳамчун иҷрошуда қайд кунем?</string>
     <string name="msg_mark_not_done_confirm">Қайдро аз «%1$s» барои %2$s бардорем?</string>

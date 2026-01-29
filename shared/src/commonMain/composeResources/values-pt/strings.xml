@@ -22,6 +22,8 @@
     <string name="action_refresh">Atualizar</string>
     <string name="action_reset">Redefinir</string>
     <string name="action_reset_app">Redefinir app</string>
+    <string name="action_reset_settings_only">Redefinir apenas as configurações</string>
+    <string name="action_reset_with_memos">Redefinir tudo (incluindo memórias)</string>
     <string name="action_save">Salvar</string>
     <string name="action_show_details">Mostrar detalhes</string>
     <string name="action_start_tracking">Iniciar rastreamento</string>
@@ -137,6 +139,7 @@ Melhor prática: crie uma nova configuração. Seus dados históricos manterão 
     <string name="msg_no_logs">Sem logs ainda</string>
     <string name="msg_no_memos_yet">Sem notas neste período.</string>
     <string name="msg_reset_confirm">Tem certeza de que deseja redefinir o app? Todos os dados serão apagados.</string>
+    <string name="msg_reset_choose_option">Escolha a opção de redefinição:</string>
     <string name="msg_select_habit">Selecione pelo menos um hábito.</string>
     <string name="msg_mark_done_confirm">Marcar "%1$s" como concluído para %2$s?</string>
     <string name="msg_mark_not_done_confirm">Remover conclusão de "%1$s" em %2$s?</string>
