@@ -1,8 +1,8 @@
 <resources>
     <!-- Actions -->
     <string name="action_cancel">キャンセル</string>
-    <string name="action_create_new_config">Create New Config (Recommended)</string>
-    <string name="action_edit_anyway">Edit Anyway</string>
+    <string name="action_create_new_config">新しい設定を作成（推奨）</string>
+    <string name="action_edit_anyway">それでも編集</string>
     <string name="action_clear">クリア</string>
     <string name="action_close">閉じる</string>
     <string name="action_copied">コピー済み</string>
@@ -119,9 +119,13 @@
     <string name="filter_regular">通常</string>
 
     <!-- Messages -->
-    <string name="format_active_since">Active since %1$s</string>
+    <string name="format_active_since">%1$s からアクティブ</string>
     <string name="msg_connection_failed">接続に失敗しました</string>
-    <string name="msg_edit_config_warning">You're about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn't exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
+    <string name="msg_edit_config_warning">既存の設定を編集しようとしています。これは過去のすべてのデータに影響します。
+
+古い設定の編集はおすすめしません。過去のデータの見え方が変わってしまうためです。たとえば新しい習慣を追加すると、当時存在しなかったにもかかわらず過去の日付が「未完了」と表示されます。
+
+推奨: 新しい設定を作成してください。過去データは古い設定のまま保持され、新しいデータは新しい設定を使用します。</string>
     <string name="msg_delete_config_warning">この設定を削除してもよろしいですか？これにより、メモから設定投稿が完全に削除されます。</string>
     <string name="msg_delete_day_confirm">習慣が選択されていません。この日のエントリは削除されます。</string>
     <string name="msg_delete_day_warning">この日のエントリーを削除してもよろしいですか？トラッキング投稿がメモから完全に削除されます。</string>
@@ -207,7 +211,7 @@
     <string name="title_delete_config">設定を削除しますか？</string>
     <string name="title_delete_day">日を削除しますか？</string>
     <string name="title_delete_memo">メモを削除しますか？</string>
-    <string name="title_edit_config_warning">Edit Existing Config?</string>
+    <string name="title_edit_config_warning">既存の設定を編集しますか？</string>
     <string name="title_edit_day">日を編集</string>
     <string name="title_edit_memo">メモを編集</string>
     <string name="title_empty_state_no_habits">習慣がありません</string>

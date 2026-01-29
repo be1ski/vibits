@@ -1,8 +1,8 @@
 <resources>
     <!-- Actions -->
     <string name="action_cancel">გაუქმება</string>
-    <string name="action_create_new_config">Create New Config (Recommended)</string>
-    <string name="action_edit_anyway">Edit Anyway</string>
+    <string name="action_create_new_config">ახალი კონფიგურაციის შექმნა (რეკომენდებულია)</string>
+    <string name="action_edit_anyway">მაინც რედაქტირება</string>
     <string name="action_clear">გასუფთავება</string>
     <string name="action_close">დახურვა</string>
     <string name="action_copied">კოპირებულია</string>
@@ -119,9 +119,13 @@
     <string name="filter_regular">ჩვეულებრივი</string>
 
     <!-- Messages -->
-    <string name="format_active_since">Active since %1$s</string>
+    <string name="format_active_since">აქტიური %1$s-დან</string>
     <string name="msg_connection_failed">კავშირის შეცდომა</string>
-    <string name="msg_edit_config_warning">You're about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn't exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
+    <string name="msg_edit_config_warning">თქვენ აპირებთ არსებული კონფიგურაციის რედაქტირებას. ეს ყველა ისტორიულ მონაცემზე იმოქმედებს.
+
+ძველი კონფიგურაციის რედაქტირება არ არის რეკომენდებული, რადგან ეს ცვლის წარსული მონაცემების ჩვენებას. მაგალითად, თუ დაამატებთ ახალ ჩვევას, ყველა წარსული დღე მას «შეუსრულებლად» აჩვენებს, მიუხედავად იმისა, რომ მაშინ ის არ არსებობდა.
+
+საუკეთესო პრაქტიკა: შექმენით ახალი კონფიგურაცია. ისტორიული მონაცემები დარჩება ძველ კონფიგურაციაზე, ხოლო ახალი მონაცემები გამოიყენებს ახალს.</string>
     <string name="msg_delete_config_warning">დარწმუნებული ხართ, რომ გსურთ ამ კონფიგურაციის წაშლა? ეს სამუდამოდ წაშლის კონფიგურაციის ჩანაწერს თქვენი შენიშვნებიდან.</string>
     <string name="msg_delete_day_confirm">ჩვევები არ არის არჩეული. დღიური ჩანაწერი წაიშლება.</string>
     <string name="msg_delete_day_warning">დარწმუნებული ხართ, რომ გსურთ ამ დღის ჩანაწერის წაშლა? ეს სამუდამოდ წაშლის თვალთვალის ჩანაწერს თქვენი შენიშვნებიდან.</string>
@@ -207,7 +211,7 @@
     <string name="title_delete_config">წაიშალოს კონფიგურაცია?</string>
     <string name="title_delete_day">დღის წაშლა?</string>
     <string name="title_delete_memo">ჩანაწერის წაშლა?</string>
-    <string name="title_edit_config_warning">Edit Existing Config?</string>
+    <string name="title_edit_config_warning">არსებული კონფიგურაციის რედაქტირება?</string>
     <string name="title_edit_day">დღის რედაქტირება</string>
     <string name="title_edit_memo">ჩანაწერის რედაქტირება</string>
     <string name="title_empty_state_no_habits">ჩვევები ჯერ არ არის</string>

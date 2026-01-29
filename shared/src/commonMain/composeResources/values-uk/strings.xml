@@ -1,8 +1,8 @@
 <resources>
     <!-- Actions -->
     <string name="action_cancel">Скасувати</string>
-    <string name="action_create_new_config">Create New Config (Recommended)</string>
-    <string name="action_edit_anyway">Edit Anyway</string>
+    <string name="action_create_new_config">Створити нову конфігурацію (рекомендовано)</string>
+    <string name="action_edit_anyway">Редагувати все одно</string>
     <string name="action_clear">Очистити</string>
     <string name="action_close">Закрити</string>
     <string name="action_copied">Скопійовано</string>
@@ -118,9 +118,13 @@
     <string name="filter_regular">Звичайні</string>
 
     <!-- Messages -->
-    <string name="format_active_since">Active since %1$s</string>
+    <string name="format_active_since">Активно з %1$s</string>
     <string name="msg_connection_failed">Помилка підключення</string>
-    <string name="msg_edit_config_warning">You're about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn't exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
+    <string name="msg_edit_config_warning">Ви збираєтеся редагувати наявну конфігурацію. Це вплине на всі історичні дані.
+
+Редагувати стару конфігурацію не рекомендується, бо це змінює відображення ваших минулих даних. Наприклад, якщо додати нову звичку, усі минулі дні покажуть її як «не виконано», хоча тоді її ще не існувало.
+
+Найкраща практика: створіть нову конфігурацію. Історичні дані збережуть стару конфігурацію, а нові дані використовуватимуть нову.</string>
     <string name="msg_delete_config_warning">Ви впевнені, що хочете видалити цей конфіг? Пост з конфігурацією буде видалено з ваших нотаток назавжди.</string>
     <string name="msg_delete_day_confirm">Звички не обрано. Запис за цей день буде видалено.</string>
     <string name="msg_delete_day_warning">Ви впевнені, що хочете видалити запис за цей день? Пост з відмітками буде видалено з ваших нотаток назавжди.</string>
@@ -207,7 +211,7 @@
     <string name="title_delete_config">Видалити конфіг?</string>
     <string name="title_delete_day">Видалити день?</string>
     <string name="title_delete_memo">Видалити нотатку?</string>
-    <string name="title_edit_config_warning">Edit Existing Config?</string>
+    <string name="title_edit_config_warning">Редагувати наявну конфігурацію?</string>
     <string name="title_edit_day">Редагувати день</string>
     <string name="title_edit_memo">Редагувати нотатку</string>
     <string name="title_empty_state_no_habits">Звичок поки немає</string>

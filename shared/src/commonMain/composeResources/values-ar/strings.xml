@@ -1,8 +1,8 @@
 <resources>
     <!-- Actions -->
     <string name="action_cancel">إلغاء</string>
-    <string name="action_create_new_config">Create New Config (Recommended)</string>
-    <string name="action_edit_anyway">Edit Anyway</string>
+    <string name="action_create_new_config">إنشاء تكوين جديد (موصى به)</string>
+    <string name="action_edit_anyway">تحرير على أي حال</string>
     <string name="action_clear">مسح</string>
     <string name="action_close">إغلاق</string>
     <string name="action_copied">تم النسخ</string>
@@ -119,9 +119,13 @@
     <string name="filter_regular">عادي</string>
 
     <!-- Messages -->
-    <string name="format_active_since">Active since %1$s</string>
+    <string name="format_active_since">نشط منذ %1$s</string>
     <string name="msg_connection_failed">فشل الاتصال</string>
-    <string name="msg_edit_config_warning">You're about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn't exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
+    <string name="msg_edit_config_warning">أنت على وشك تعديل تكوين موجود. سيؤثر ذلك على جميع البيانات التاريخية.
+
+لا يُنصح بتعديل تكوين قديم لأنه يغيّر كيفية ظهور بياناتك السابقة. على سبيل المثال، إذا أضفت عادة جديدة فستظهر جميع الأيام السابقة على أنها «غير مكتملة» رغم أنها لم تكن موجودة حينها.
+
+أفضل ممارسة: أنشئ تكوينًا جديدًا. ستبقى بياناتك التاريخية على التكوين القديم، وستستخدم البيانات الجديدة التكوين الجديد.</string>
     <string name="msg_delete_config_warning">هل أنت متأكد من حذف هذه الإعدادات؟ سيتم حذف منشور التكوين من مذكراتك نهائيًا.</string>
     <string name="msg_delete_day_confirm">لم يتم اختيار عادات. سيتم حذف إدخال اليوم.</string>
     <string name="msg_delete_day_warning">هل أنت متأكد من رغبتك في حذف إدخال هذا اليوم؟ سيؤدي هذا إلى إزالة منشور التتبع من مذكراتك بشكل دائم.</string>
@@ -207,7 +211,7 @@
     <string name="title_delete_config">حذف الإعدادات؟</string>
     <string name="title_delete_day">حذف اليوم؟</string>
     <string name="title_delete_memo">حذف المذكرة؟</string>
-    <string name="title_edit_config_warning">Edit Existing Config?</string>
+    <string name="title_edit_config_warning">تعديل تكوين موجود؟</string>
     <string name="title_edit_day">تعديل اليوم</string>
     <string name="title_edit_memo">تعديل المذكرة</string>
     <string name="title_empty_state_no_habits">لا توجد عادات حتى الآن</string>
