@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.settings.presentation
+package space.be1ski.vibits.shared.feature.settings.presentation.handler
 
 import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.shared.core.elm.EffectHandler
@@ -7,6 +7,8 @@ import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.ResetAppWithMemosUseCase
 import space.be1ski.vibits.shared.feature.mode.domain.usecase.SwitchAppModeUseCase
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
+import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffect
 
 private const val TAG = "SettingsModeEffect"
 

@@ -1,9 +1,11 @@
-package space.be1ski.vibits.shared.feature.habits.presentation
+package space.be1ski.vibits.shared.feature.habits.presentation.handler
 
 import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.shared.core.elm.EffectHandler
 import space.be1ski.vibits.shared.core.elm.sideEffect
 import space.be1ski.vibits.shared.core.logging.Log
+import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.HabitsEffect
 
 private const val TAG = "HabitsRefreshEffect"
 
