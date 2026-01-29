@@ -14,7 +14,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.DirectionsWalk
+import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.NoFood
+import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.SelfImprovement
+import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,11 +34,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
+import space.be1ski.vibits.shared.feature.habits.domain.model.DemoHabits
 import space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_continue
@@ -146,11 +157,12 @@ private fun PresetCard(
           .padding(Indent.m),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      preset.icon?.let { icon ->
-        Text(
-          text = icon,
-          style = MaterialTheme.typography.headlineMedium,
-          modifier = Modifier.size(40.dp),
+      preset.iconVector()?.let { icon ->
+        Icon(
+          imageVector = icon,
+          contentDescription = null,
+          tint = textColor,
+          modifier = Modifier.size(24.dp),
         )
 
         Spacer(modifier = Modifier.size(Indent.m))
@@ -173,3 +185,17 @@ private fun PresetCard(
     }
   }
 }
+
+private fun HabitPreset.iconVector(): ImageVector? =
+  when (id) {
+    DemoHabits.EXERCISE -> Icons.Default.FitnessCenter
+    DemoHabits.WATER -> Icons.Default.WaterDrop
+    DemoHabits.READING -> Icons.AutoMirrored.Filled.MenuBook
+    DemoHabits.MEDITATION -> Icons.Default.SelfImprovement
+    DemoHabits.WALKING -> Icons.AutoMirrored.Filled.DirectionsWalk
+    DemoHabits.LEARNING -> Icons.Default.School
+    DemoHabits.NO_SUGAR -> Icons.Default.NoFood
+    DemoHabits.EARLY_SLEEP -> Icons.Default.Bedtime
+    "custom" -> Icons.Default.AutoAwesome
+    else -> null
+  }
