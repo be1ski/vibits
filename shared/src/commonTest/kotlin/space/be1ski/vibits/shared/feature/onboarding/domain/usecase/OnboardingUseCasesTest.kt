@@ -56,11 +56,15 @@ class OnboardingUseCasesTest {
 
       val result = useCase()
 
-      assertEquals(5, result.size)
+      assertEquals(9, result.size)
+      assertTrue(result.any { it.id == "exercise" })
       assertTrue(result.any { it.id == "water" })
-      assertTrue(result.any { it.id == "stretch" })
-      assertTrue(result.any { it.id == "read" })
-      assertTrue(result.any { it.id == "walk" })
+      assertTrue(result.any { it.id == "reading" })
+      assertTrue(result.any { it.id == "meditation" })
+      assertTrue(result.any { it.id == "walking" })
+      assertTrue(result.any { it.id == "learning" })
+      assertTrue(result.any { it.id == "no_sugar" })
+      assertTrue(result.any { it.id == "early_sleep" })
       assertTrue(result.any { it.id == "custom" })
     }
 

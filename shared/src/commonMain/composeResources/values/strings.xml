@@ -99,10 +99,6 @@
     <string name="label_habits_config">Habits config</string>
     <string name="label_habit_name">Habit name</string>
     <string name="label_habit_preset_custom">Create your own</string>
-    <string name="label_habit_preset_read">Read for 10 minutes</string>
-    <string name="label_habit_preset_stretch">Stretch</string>
-    <string name="label_habit_preset_walk">Take a walk</string>
-    <string name="label_habit_preset_water">Drink water</string>
     <string name="label_language">Language</string>
     <string name="label_memos_db">Memos DB</string>
     <string name="label_post_filter">Filter posts</string>

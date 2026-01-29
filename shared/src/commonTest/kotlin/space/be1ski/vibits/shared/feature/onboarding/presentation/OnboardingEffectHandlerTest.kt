@@ -31,7 +31,7 @@ class OnboardingEffectHandlerTest {
       assertEquals(1, actions.size)
       assertTrue(actions[0] is OnboardingAction.PresetsLoaded)
       val presetsLoaded = actions[0] as OnboardingAction.PresetsLoaded
-      assertEquals(5, presetsLoaded.presets.size)
+      assertEquals(9, presetsLoaded.presets.size)
     }
 
   @Test

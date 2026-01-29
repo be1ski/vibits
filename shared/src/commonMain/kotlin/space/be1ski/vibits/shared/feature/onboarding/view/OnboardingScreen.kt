@@ -36,6 +36,7 @@ fun OnboardingScreen(
 
       OnboardingStep.ChoosePreset -> {
         ChoosePresetScreen(
+          presets = state.presets,
           selectedPresetId = state.selectedPresetId,
           onSelectPreset = { onAction(OnboardingAction.SelectPreset(it)) },
           onContinue = { onAction(OnboardingAction.Continue) },

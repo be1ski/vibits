@@ -98,10 +98,6 @@
     <string name="label_habits_config">Канфігурацыя звычак</string>
     <string name="label_habit_name">Назва звычкі</string>
     <string name="label_habit_preset_custom">Стварыць сваю</string>
-    <string name="label_habit_preset_read">Чытаць 10 хвілін</string>
-    <string name="label_habit_preset_stretch">Расцяжка</string>
-    <string name="label_habit_preset_walk">Прагулка</string>
-    <string name="label_habit_preset_water">Выпіць вады</string>
     <string name="label_language">Мова</string>
     <string name="label_memos_db">База нататак</string>
     <string name="label_post_filter">Фільтр</string>

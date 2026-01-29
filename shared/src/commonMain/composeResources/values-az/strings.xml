@@ -98,10 +98,6 @@
     <string name="label_habits_config">Vərdiş konfiqurasiyası</string>
     <string name="label_habit_name">Vərdiş adı</string>
     <string name="label_habit_preset_custom">Özünüz yaradın</string>
-    <string name="label_habit_preset_read">10 dəqiqə oxu</string>
-    <string name="label_habit_preset_stretch">Dartınma</string>
-    <string name="label_habit_preset_walk">Gəzmə</string>
-    <string name="label_habit_preset_water">Su iç</string>
     <string name="label_language">Dil</string>
     <string name="label_memos_db">Qeydlər bazası</string>
     <string name="label_post_filter">Filtr</string>

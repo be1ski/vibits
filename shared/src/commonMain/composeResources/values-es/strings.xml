@@ -98,10 +98,6 @@
     <string name="label_habits_config">Configuración de hábitos</string>
     <string name="label_habit_name">Nombre del hábito</string>
     <string name="label_habit_preset_custom">Crear el tuyo</string>
-    <string name="label_habit_preset_read">Leer 10 minutos</string>
-    <string name="label_habit_preset_stretch">Estirar</string>
-    <string name="label_habit_preset_walk">Dar un paseo</string>
-    <string name="label_habit_preset_water">Beber agua</string>
     <string name="label_language">Idioma</string>
     <string name="label_memos_db">Base de notas</string>
     <string name="label_post_filter">Filtro</string>

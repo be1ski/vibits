@@ -30,17 +30,38 @@ import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
+import space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_continue
+import space.be1ski.vibits.shared.generated.demo_habit_early_sleep
+import space.be1ski.vibits.shared.generated.demo_habit_exercise
+import space.be1ski.vibits.shared.generated.demo_habit_learning
+import space.be1ski.vibits.shared.generated.demo_habit_meditation
+import space.be1ski.vibits.shared.generated.demo_habit_no_sugar
+import space.be1ski.vibits.shared.generated.demo_habit_reading
+import space.be1ski.vibits.shared.generated.demo_habit_walking
+import space.be1ski.vibits.shared.generated.demo_habit_water
 import space.be1ski.vibits.shared.generated.label_habit_preset_custom
-import space.be1ski.vibits.shared.generated.label_habit_preset_read
-import space.be1ski.vibits.shared.generated.label_habit_preset_stretch
-import space.be1ski.vibits.shared.generated.label_habit_preset_walk
-import space.be1ski.vibits.shared.generated.label_habit_preset_water
 import space.be1ski.vibits.shared.generated.title_choose_starter_habit
 
 @Composable
+private fun HabitPreset.localizedName(): String =
+  when (nameKey) {
+    "demo_habit_exercise" -> stringResource(Res.string.demo_habit_exercise)
+    "demo_habit_water" -> stringResource(Res.string.demo_habit_water)
+    "demo_habit_reading" -> stringResource(Res.string.demo_habit_reading)
+    "demo_habit_meditation" -> stringResource(Res.string.demo_habit_meditation)
+    "demo_habit_walking" -> stringResource(Res.string.demo_habit_walking)
+    "demo_habit_learning" -> stringResource(Res.string.demo_habit_learning)
+    "demo_habit_no_sugar" -> stringResource(Res.string.demo_habit_no_sugar)
+    "demo_habit_early_sleep" -> stringResource(Res.string.demo_habit_early_sleep)
+    "label_habit_preset_custom" -> stringResource(Res.string.label_habit_preset_custom)
+    else -> nameEn
+  }
+
+@Composable
 fun ChoosePresetScreen(
+  presets: List<HabitPreset>,
   selectedPresetId: String?,
   onSelectPreset: (String) -> Unit,
   onContinue: () -> Unit,
@@ -48,14 +69,6 @@ fun ChoosePresetScreen(
   modifier: Modifier = Modifier,
 ) {
   val textColor = AppColors.onBackground.resolve()
-  val presets =
-    listOf(
-      PresetItem("water", Res.string.label_habit_preset_water, "💧"),
-      PresetItem("stretch", Res.string.label_habit_preset_stretch, "🧘"),
-      PresetItem("read", Res.string.label_habit_preset_read, "📚"),
-      PresetItem("walk", Res.string.label_habit_preset_walk, "🚶"),
-      PresetItem("custom", Res.string.label_habit_preset_custom, "✨"),
-    )
 
   Column(
     modifier =
@@ -83,7 +96,7 @@ fun ChoosePresetScreen(
       modifier = Modifier.weight(1f),
       verticalArrangement = Arrangement.spacedBy(Indent.s),
     ) {
-      items(presets) { preset ->
+      items(presets, key = { it.id }) { preset ->
         PresetCard(
           preset = preset,
           isSelected = selectedPresetId == preset.id,
@@ -106,7 +119,7 @@ fun ChoosePresetScreen(
 
 @Composable
 private fun PresetCard(
-  preset: PresetItem,
+  preset: HabitPreset,
   isSelected: Boolean,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
@@ -133,16 +146,18 @@ private fun PresetCard(
           .padding(Indent.m),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      Text(
-        text = preset.icon,
-        style = MaterialTheme.typography.headlineMedium,
-        modifier = Modifier.size(40.dp),
-      )
+      preset.icon?.let { icon ->
+        Text(
+          text = icon,
+          style = MaterialTheme.typography.headlineMedium,
+          modifier = Modifier.size(40.dp),
+        )
 
-      Spacer(modifier = Modifier.size(Indent.m))
+        Spacer(modifier = Modifier.size(Indent.m))
+      }
 
       Text(
-        text = stringResource(preset.nameRes),
+        text = preset.localizedName(),
         style = MaterialTheme.typography.bodyLarge,
         color = textColor,
         modifier = Modifier.weight(1f),
@@ -158,9 +173,3 @@ private fun PresetCard(
     }
   }
 }
-
-private data class PresetItem(
-  val id: String,
-  val nameRes: org.jetbrains.compose.resources.StringResource,
-  val icon: String,
-)

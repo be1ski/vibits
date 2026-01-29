@@ -98,10 +98,6 @@
     <string name="label_habits_config">Odatlar konfiguratsiyasi</string>
     <string name="label_habit_name">Odat nomi</string>
     <string name="label_habit_preset_custom">O'zingiznikini yaratish</string>
-    <string name="label_habit_preset_read">10 daqiqa o'qish</string>
-    <string name="label_habit_preset_stretch">Cho'zish</string>
-    <string name="label_habit_preset_walk">Sayr qilish</string>
-    <string name="label_habit_preset_water">Suv ichish</string>
     <string name="label_language">Til</string>
     <string name="label_memos_db">Eslatmalar bazasi</string>
     <string name="label_post_filter">Filtr</string>

@@ -52,11 +52,15 @@ class OnboardingRepositoryImplTest {
 
       val result = repository.getHabitPresets()
 
-      assertEquals(5, result.size)
-      assertEquals("water", result[0].id)
-      assertEquals("stretch", result[1].id)
-      assertEquals("read", result[2].id)
-      assertEquals("walk", result[3].id)
-      assertEquals("custom", result[4].id)
+      assertEquals(9, result.size)
+      assertEquals("exercise", result[0].id)
+      assertEquals("water", result[1].id)
+      assertEquals("reading", result[2].id)
+      assertEquals("meditation", result[3].id)
+      assertEquals("walking", result[4].id)
+      assertEquals("learning", result[5].id)
+      assertEquals("no_sugar", result[6].id)
+      assertEquals("early_sleep", result[7].id)
+      assertEquals("custom", result[8].id)
     }
 }

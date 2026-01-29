@@ -98,10 +98,6 @@
     <string name="label_habits_config">تكوين العادات</string>
     <string name="label_habit_name">اسم العادة</string>
     <string name="label_habit_preset_custom">إنشاء مخصص</string>
-    <string name="label_habit_preset_read">القراءة 10 دقائق</string>
-    <string name="label_habit_preset_stretch">تمارين الإطالة</string>
-    <string name="label_habit_preset_walk">المشي</string>
-    <string name="label_habit_preset_water">شرب الماء</string>
     <string name="label_language">اللغة</string>
     <string name="label_memos_db">قاعدة بيانات المذكرات</string>
     <string name="label_post_filter">تصفية</string>

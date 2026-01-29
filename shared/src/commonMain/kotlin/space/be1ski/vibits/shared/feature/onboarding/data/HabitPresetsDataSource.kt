@@ -17,28 +17,52 @@ class HabitPresetsDataSourceImpl : HabitPresetsDataSource {
   override fun getPresets(): List<HabitPreset> =
     listOf(
       HabitPreset(
+        id = "exercise",
+        nameKey = "demo_habit_exercise",
+        nameEn = "Exercise",
+        icon = "🏃",
+      ),
+      HabitPreset(
         id = "water",
-        nameKey = "label_habit_preset_water",
-        nameEn = "Drink water",
+        nameKey = "demo_habit_water",
+        nameEn = "Drink Water",
         icon = "💧",
       ),
       HabitPreset(
-        id = "stretch",
-        nameKey = "label_habit_preset_stretch",
-        nameEn = "Stretch",
-        icon = "🧘",
-      ),
-      HabitPreset(
-        id = "read",
-        nameKey = "label_habit_preset_read",
-        nameEn = "Read for 10 minutes",
+        id = "reading",
+        nameKey = "demo_habit_reading",
+        nameEn = "Reading",
         icon = "📚",
       ),
       HabitPreset(
-        id = "walk",
-        nameKey = "label_habit_preset_walk",
-        nameEn = "Take a walk",
+        id = "meditation",
+        nameKey = "demo_habit_meditation",
+        nameEn = "Meditation",
+        icon = "🧘",
+      ),
+      HabitPreset(
+        id = "walking",
+        nameKey = "demo_habit_walking",
+        nameEn = "10K Steps",
         icon = "🚶",
+      ),
+      HabitPreset(
+        id = "learning",
+        nameKey = "demo_habit_learning",
+        nameEn = "Learning",
+        icon = "📖",
+      ),
+      HabitPreset(
+        id = "no_sugar",
+        nameKey = "demo_habit_no_sugar",
+        nameEn = "No Sugar",
+        icon = "🍬",
+      ),
+      HabitPreset(
+        id = "early_sleep",
+        nameKey = "demo_habit_early_sleep",
+        nameEn = "Sleep by 11pm",
+        icon = "😴",
       ),
       HabitPreset(
         id = "custom",

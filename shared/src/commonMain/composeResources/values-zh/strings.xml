@@ -98,10 +98,6 @@
     <string name="label_habits_config">习惯配置</string>
     <string name="label_habit_name">习惯名称</string>
     <string name="label_habit_preset_custom">自定义</string>
-    <string name="label_habit_preset_read">阅读10分钟</string>
-    <string name="label_habit_preset_stretch">拉伸</string>
-    <string name="label_habit_preset_walk">散步</string>
-    <string name="label_habit_preset_water">喝水</string>
     <string name="label_language">语言</string>
     <string name="label_memos_db">备忘数据库</string>
     <string name="label_post_filter">筛选</string>
