@@ -8,14 +8,14 @@ import kotlin.test.assertTrue
 
 class FlowHelpersTest {
   @Test
-  fun `action emits single value`() =
+  fun `when action with value then emits single value`() =
     runTest {
       val result = action("test").toList()
       assertEquals(listOf("test"), result)
     }
 
   @Test
-  fun `actions emits multiple values`() =
+  fun `when actions with multiple emissions then emits all values`() =
     runTest {
       val result =
         actions<String> {
@@ -27,7 +27,7 @@ class FlowHelpersTest {
     }
 
   @Test
-  fun `actions emits no values when empty block`() =
+  fun `when actions with empty block then emits nothing`() =
     runTest {
       val result =
         actions<String> {
@@ -37,7 +37,7 @@ class FlowHelpersTest {
     }
 
   @Test
-  fun `sideEffect executes block but emits nothing`() =
+  fun `when sideEffect with block then executes block but emits nothing`() =
     runTest {
       var executed = false
       val result =
@@ -49,7 +49,7 @@ class FlowHelpersTest {
     }
 
   @Test
-  fun `noActions returns empty flow`() =
+  fun `when noActions then returns empty flow`() =
     runTest {
       val result = noActions<String>().toList()
       assertTrue(result.isEmpty())

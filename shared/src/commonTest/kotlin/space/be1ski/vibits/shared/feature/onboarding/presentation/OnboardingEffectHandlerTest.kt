@@ -16,6 +16,10 @@ import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.CreateFirstC
 import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.CreateFirstHabitUseCase
 import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.GetHabitPresetsUseCase
 import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.MarkOnboardingCompletedUseCase
+import space.be1ski.vibits.shared.feature.onboarding.presentation.handler.OnboardingCompletionEffectHandler
+import space.be1ski.vibits.shared.feature.onboarding.presentation.handler.OnboardingEffectHandler
+import space.be1ski.vibits.shared.feature.onboarding.presentation.handler.OnboardingPresetsEffectHandler
+import space.be1ski.vibits.shared.feature.onboarding.presentation.handler.OnboardingSetupEffectHandler
 import space.be1ski.vibits.shared.test.FakeMemosRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals

@@ -2,6 +2,7 @@ package space.be1ski.vibits.shared.app.presentation
 
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
+import space.be1ski.vibits.shared.app.presentation.handler.AppEffectHandler
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveTimeRangeTabUseCase
 import space.be1ski.vibits.shared.test.FakePreferencesRepository

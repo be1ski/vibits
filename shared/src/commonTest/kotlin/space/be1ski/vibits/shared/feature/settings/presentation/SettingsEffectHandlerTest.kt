@@ -13,6 +13,10 @@ import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveLanguageUseCase
 import space.be1ski.vibits.shared.feature.settings.domain.usecase.SaveThemeUseCase
+import space.be1ski.vibits.shared.feature.settings.presentation.handler.SettingsCredentialsEffectHandler
+import space.be1ski.vibits.shared.feature.settings.presentation.handler.SettingsEffectHandler
+import space.be1ski.vibits.shared.feature.settings.presentation.handler.SettingsModeEffectHandler
+import space.be1ski.vibits.shared.feature.settings.presentation.handler.SettingsPreferencesEffectHandler
 import space.be1ski.vibits.shared.test.FakeAppModeRepository
 import space.be1ski.vibits.shared.test.FakeCredentialsRepository
 import space.be1ski.vibits.shared.test.FakeOfflineMemoStorage
