@@ -21,6 +21,8 @@
     <string name="action_refresh">Reîmprospătare</string>
     <string name="action_reset">Resetare</string>
     <string name="action_reset_app">Resetare aplicație</string>
+    <string name="action_reset_settings_only">Resetează doar setările</string>
+    <string name="action_reset_with_memos">Resetează totul (inclusiv memoriile)</string>
     <string name="action_save">Salvează</string>
     <string name="action_show_details">Arată detalii</string>
     <string name="action_start_tracking">Începe urmărirea</string>
@@ -139,6 +141,7 @@ Cea mai bună practică: creează o configurație nouă. Datele tale istorice vo
     <string name="msg_offline_onboarding_success">Totul este gata. Marchează prima verificare astăzi.</string>
     <string name="msg_offline_onboarding_welcome">Urmărește obiceiurile local pe dispozitivul tău. Nu este nevoie de cont.</string>
     <string name="msg_reset_confirm">Sunteți sigur că doriți să resetați aplicația? Toate datele vor fi șterse.</string>
+    <string name="msg_reset_choose_option">Alege opțiunea de resetare:</string>
     <string name="msg_select_habit">Selectați cel puțin un obicei.</string>
     <string name="msg_mark_done_confirm">Marcați «%1$s» ca finalizat pentru %2$s?</string>
     <string name="msg_mark_not_done_confirm">Eliminați marcajul pentru «%1$s» pe %2$s?</string>

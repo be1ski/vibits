@@ -22,6 +22,8 @@
     <string name="action_refresh">Обновить</string>
     <string name="action_reset">Сбросить</string>
     <string name="action_reset_app">Сбросить приложение</string>
+    <string name="action_reset_settings_only">Сбросить только настройки</string>
+    <string name="action_reset_with_memos">Сбросить всё (включая воспоминания)</string>
     <string name="action_save">Сохранить</string>
     <string name="action_show_details">Показать детали привычки</string>
     <string name="action_start_tracking">Начать отслеживание</string>
@@ -132,6 +134,7 @@
     <string name="msg_no_logs">Логов пока нет</string>
     <string name="msg_no_memos_yet">Нет воспоминаний за этот период.</string>
     <string name="msg_reset_confirm">Вы уверены, что хотите сбросить приложение? Все данные будут удалены.</string>
+    <string name="msg_reset_choose_option">Выберите вариант сброса:</string>
     <string name="msg_select_habit">Выберите хотя бы одну привычку.</string>
     <string name="msg_mark_done_confirm">Отметить «%1$s» как выполненную за %2$s?</string>
     <string name="msg_mark_not_done_confirm">Снять отметку с «%1$s» за %2$s?</string>

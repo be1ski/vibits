@@ -15,14 +15,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -74,6 +78,8 @@ import space.be1ski.vibits.shared.generated.action_export_logs
 import space.be1ski.vibits.shared.generated.action_export_memos
 import space.be1ski.vibits.shared.generated.action_reset
 import space.be1ski.vibits.shared.generated.action_reset_app
+import space.be1ski.vibits.shared.generated.action_reset_settings_only
+import space.be1ski.vibits.shared.generated.action_reset_with_memos
 import space.be1ski.vibits.shared.generated.action_save
 import space.be1ski.vibits.shared.generated.action_view_logs
 import space.be1ski.vibits.shared.generated.hint_base_url
@@ -116,6 +122,7 @@ import space.be1ski.vibits.shared.generated.msg_export_failed
 import space.be1ski.vibits.shared.generated.msg_export_success
 import space.be1ski.vibits.shared.generated.msg_fill_all_fields
 import space.be1ski.vibits.shared.generated.msg_no_logs
+import space.be1ski.vibits.shared.generated.msg_reset_choose_option
 import space.be1ski.vibits.shared.generated.msg_reset_confirm
 import space.be1ski.vibits.shared.generated.msg_restart_required
 import space.be1ski.vibits.shared.generated.nav_settings
@@ -149,6 +156,7 @@ fun SettingsDialog(
   if (state.showResetConfirmation) {
     ResetConfirmationDialog(
       onConfirm = { dispatch(SettingsAction.ConfirmReset) },
+      onConfirmWithMemos = { dispatch(SettingsAction.ConfirmResetWithMemos) },
       onDismiss = { dispatch(SettingsAction.CancelReset) },
     )
   }
@@ -475,22 +483,13 @@ private fun SettingsDialogDismissButton(dispatch: (SettingsAction) -> Unit) {
 @Composable
 private fun ResetConfirmationDialog(
   onConfirm: () -> Unit,
+  onConfirmWithMemos: () -> Unit,
   onDismiss: () -> Unit,
 ) {
-  AlertDialog(
-    onDismissRequest = onDismiss,
-    title = { Text(stringResource(Res.string.action_reset_app)) },
-    text = { Text(stringResource(Res.string.msg_reset_confirm)) },
-    confirmButton = {
-      Button(onClick = onConfirm) {
-        Text(stringResource(Res.string.action_reset))
-      }
-    },
-    dismissButton = {
-      TextButton(onClick = onDismiss) {
-        Text(stringResource(Res.string.action_cancel))
-      }
-    },
+  ResetOptionsDialog(
+    onResetSettings = onConfirm,
+    onResetAll = onConfirmWithMemos,
+    onDismiss = onDismiss,
   )
 }
 
@@ -575,6 +574,73 @@ private fun ActionsRow(
 }
 
 private const val LOG_TIMESTAMP_LENGTH = 8
+
+@Suppress("LongMethod")
+@Composable
+private fun ResetOptionsDialog(
+  onResetSettings: () -> Unit,
+  onResetAll: () -> Unit,
+  onDismiss: () -> Unit,
+) {
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = { Text(stringResource(Res.string.action_reset_app)) },
+    text = {
+      Column(verticalArrangement = Arrangement.spacedBy(Indent.s)) {
+        Text(
+          text = stringResource(Res.string.msg_reset_choose_option),
+          style = MaterialTheme.typography.bodyMedium,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        OutlinedButton(
+          onClick = {
+            onResetSettings()
+            onDismiss()
+          },
+          modifier = Modifier.fillMaxWidth(),
+        ) {
+          Icon(
+            imageVector = Icons.Default.Settings,
+            contentDescription = null,
+            modifier = Modifier.size(Indent.m),
+          )
+          Text(
+            text = stringResource(Res.string.action_reset_settings_only),
+            modifier = Modifier.padding(start = Indent.xs),
+          )
+        }
+        Button(
+          onClick = {
+            onResetAll()
+            onDismiss()
+          },
+          modifier = Modifier.fillMaxWidth(),
+          colors =
+            ButtonDefaults.buttonColors(
+              containerColor = MaterialTheme.colorScheme.error,
+              contentColor = MaterialTheme.colorScheme.onError,
+            ),
+        ) {
+          Icon(
+            imageVector = Icons.Default.DeleteForever,
+            contentDescription = null,
+            modifier = Modifier.size(Indent.m),
+          )
+          Text(
+            text = stringResource(Res.string.action_reset_with_memos),
+            modifier = Modifier.padding(start = Indent.xs),
+          )
+        }
+      }
+    },
+    confirmButton = {},
+    dismissButton = {
+      TextButton(onClick = onDismiss) {
+        Text(stringResource(Res.string.action_cancel))
+      }
+    },
+  )
+}
 
 @Suppress("LongMethod")
 @Composable

@@ -21,6 +21,8 @@
     <string name="action_refresh">Жаңылоо</string>
     <string name="action_reset">Баштапкыга кайтаруу</string>
     <string name="action_reset_app">Колдонмону баштапкыга кайтаруу</string>
+    <string name="action_reset_settings_only">Жөн гана жөндөөлөрдү калыбына келтирүү</string>
+    <string name="action_reset_with_memos">Баарын калыбына келтирүү (эстеликтерди коштоп)</string>
     <string name="action_save">Сактоо</string>
     <string name="action_show_details">Деталдарды көрсөтүү</string>
     <string name="action_start_tracking">Көзөмөлдөөнү баштоо</string>
@@ -139,6 +141,7 @@
     <string name="msg_offline_onboarding_success">Баары даяр. Бүгүн биринчи белгини коюңуз.</string>
     <string name="msg_offline_onboarding_welcome">Адаттарды түзмөгүңүздө жергиликтүү көзөмөлдөңүз. Эсеп керек эмес.</string>
     <string name="msg_reset_confirm">Колдонмону баштапкыга кайтаргыңыз келеби? Бардык маалыматтар өчүрүлөт.</string>
+    <string name="msg_reset_choose_option">Калыбына келтирүү вариантын тандаңыз:</string>
     <string name="msg_select_habit">Жок дегенде бир адатты тандаңыз.</string>
     <string name="msg_mark_done_confirm">«%1$s» %2$s үчүн аткарылды деп белгилөө керекпи?</string>
     <string name="msg_mark_not_done_confirm">%2$s күнү «%1$s» белгисин алып салуу керекпи?</string>

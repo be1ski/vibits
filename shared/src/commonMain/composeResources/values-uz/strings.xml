@@ -22,6 +22,8 @@
     <string name="action_refresh">Yangilash</string>
     <string name="action_reset">Tiklash</string>
     <string name="action_reset_app">Ilovani tiklash</string>
+    <string name="action_reset_settings_only">Faqat sozlamalarni tiklash</string>
+    <string name="action_reset_with_memos">Hammasini tiklash (xotiralarni ham)</string>
     <string name="action_save">Saqlash</string>
     <string name="action_show_details">Tafsilotlarni ko'rsatish</string>
     <string name="action_start_tracking">Kuzatuvni boshlash</string>
@@ -137,6 +139,7 @@ Eng yaxshi yechim: yangi konfiguratsiya yarating. Tarixiy ma'lumotlar eski konfi
     <string name="msg_no_logs">Loglar hali yo\'q</string>
     <string name="msg_no_memos_yet">Bu davrda eslatmalar yo\'q.</string>
     <string name="msg_reset_confirm">Ilovani tiklamoqchimisiz? Barcha ma\'lumotlar o\'chiriladi.</string>
+    <string name="msg_reset_choose_option">Tiklash variantini tanlang:</string>
     <string name="msg_select_habit">Kamida bitta odatni tanlang.</string>
     <string name="msg_mark_done_confirm">«%1$s» ni %2$s uchun bajarilgan deb belgilash kerakmi?</string>
     <string name="msg_mark_not_done_confirm">%2$s sanasida «%1$s» belgisini olib tashlash kerakmi?</string>

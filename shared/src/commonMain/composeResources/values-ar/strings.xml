@@ -22,6 +22,8 @@
     <string name="action_refresh">تحديث</string>
     <string name="action_reset">إعادة تعيين</string>
     <string name="action_reset_app">إعادة تعيين التطبيق</string>
+    <string name="action_reset_settings_only">إعادة تعيين الإعدادات فقط</string>
+    <string name="action_reset_with_memos">إعادة تعيين كل شيء (بما في ذلك الذكريات)</string>
     <string name="action_save">حفظ</string>
     <string name="action_show_details">عرض التفاصيل</string>
     <string name="action_start_tracking">بدء التتبع</string>
@@ -137,6 +139,7 @@
     <string name="msg_no_logs">لا توجد سجلات بعد</string>
     <string name="msg_no_memos_yet">لا توجد مذكرات في هذه الفترة.</string>
     <string name="msg_reset_confirm">هل أنت متأكد من إعادة تعيين التطبيق؟ سيتم مسح جميع البيانات.</string>
+    <string name="msg_reset_choose_option">اختر خيار إعادة التعيين:</string>
     <string name="msg_select_habit">اختر عادة واحدة على الأقل.</string>
     <string name="msg_mark_done_confirm">وضع علامة "%1$s" كمكتمل لـ %2$s؟</string>
     <string name="msg_mark_not_done_confirm">إزالة إكمال "%1$s" في %2$s؟</string>

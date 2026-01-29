@@ -22,6 +22,8 @@
     <string name="action_refresh">Жаңарту</string>
     <string name="action_reset">Қалпына келтіру</string>
     <string name="action_reset_app">Қолданбаны қалпына келтіру</string>
+    <string name="action_reset_settings_only">Тек баптауларды қалпына келтіру</string>
+    <string name="action_reset_with_memos">Бәрін қалпына келтіру (естеліктерді қоса)</string>
     <string name="action_save">Сақтау</string>
     <string name="action_show_details">Мәліметтерді көрсету</string>
     <string name="action_start_tracking">Бақылауды бастау</string>
@@ -136,6 +138,7 @@
     <string name="msg_no_logs">Логтар әлі жоқ</string>
     <string name="msg_no_memos_yet">Бұл кезеңде жазбалар жоқ.</string>
     <string name="msg_reset_confirm">Қолданбаны қалпына келтіргіңіз келе ме? Барлық деректер жойылады.</string>
+    <string name="msg_reset_choose_option">Қалпына келтіру нұсқасын таңдаңыз:</string>
     <string name="msg_select_habit">Кем дегенде бір әдетті таңдаңыз.</string>
     <string name="msg_mark_done_confirm">«%1$s» %2$s үшін орындалды деп белгілеу керек пе?</string>
     <string name="msg_mark_not_done_confirm">%2$s күні «%1$s» белгісін алып тастау керек пе?</string>

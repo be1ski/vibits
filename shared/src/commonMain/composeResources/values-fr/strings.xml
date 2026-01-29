@@ -22,6 +22,8 @@
     <string name="action_refresh">Actualiser</string>
     <string name="action_reset">Réinitialiser</string>
     <string name="action_reset_app">Réinitialiser l\'app</string>
+    <string name="action_reset_settings_only">Réinitialiser uniquement les paramètres</string>
+    <string name="action_reset_with_memos">Tout réinitialiser (y compris les souvenirs)</string>
     <string name="action_save">Enregistrer</string>
     <string name="action_show_details">Afficher les détails</string>
     <string name="action_start_tracking">Commencer le suivi</string>
@@ -137,6 +139,7 @@ Bonne pratique : créez une nouvelle configuration. Vos données historiques con
     <string name="msg_no_logs">Aucun journal pour l\'instant</string>
     <string name="msg_no_memos_yet">Aucune note pour cette période.</string>
     <string name="msg_reset_confirm">Êtes-vous sûr de vouloir réinitialiser l\'app ? Toutes les données seront supprimées.</string>
+    <string name="msg_reset_choose_option">Choisissez l option de réinitialisation :</string>
     <string name="msg_select_habit">Sélectionnez au moins une habitude.</string>
     <string name="msg_mark_done_confirm">Marquer « %1$s » comme accompli pour %2$s ?</string>
     <string name="msg_mark_not_done_confirm">Retirer l\'accomplissement de « %1$s » le %2$s ?</string>

@@ -22,6 +22,8 @@
     <string name="action_refresh">更新</string>
     <string name="action_reset">リセット</string>
     <string name="action_reset_app">アプリをリセット</string>
+    <string name="action_reset_settings_only">設定のみをリセット</string>
+    <string name="action_reset_with_memos">すべてをリセット（思い出を含む）</string>
     <string name="action_save">保存</string>
     <string name="action_show_details">詳細を表示</string>
     <string name="action_start_tracking">記録を開始</string>
@@ -137,6 +139,7 @@
     <string name="msg_no_logs">ログがありません</string>
     <string name="msg_no_memos_yet">この期間にメモがありません。</string>
     <string name="msg_reset_confirm">アプリをリセットしますか？すべてのデータが削除されます。</string>
+    <string name="msg_reset_choose_option">リセットオプションを選択：</string>
     <string name="msg_select_habit">少なくとも1つの習慣を選択してください。</string>
     <string name="msg_mark_done_confirm">「%1$s」を%2$sに完了としてマークしますか？</string>
     <string name="msg_mark_not_done_confirm">%2$sの「%1$s」の完了を取り消しますか？</string>

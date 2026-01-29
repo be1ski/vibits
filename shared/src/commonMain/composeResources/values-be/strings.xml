@@ -22,6 +22,8 @@
     <string name="action_refresh">Абнавіць</string>
     <string name="action_reset">Скінуць</string>
     <string name="action_reset_app">Скінуць праграму</string>
+    <string name="action_reset_settings_only">Скінуць толькі налады</string>
+    <string name="action_reset_with_memos">Скінуць усё (уключна з успамінамі)</string>
     <string name="action_save">Захаваць</string>
     <string name="action_show_details">Паказаць дэталі</string>
     <string name="action_start_tracking">Пачаць адсочванне</string>
@@ -136,6 +138,7 @@
     <string name="msg_no_logs">Логаў пакуль няма</string>
     <string name="msg_no_memos_yet">Няма нататак за гэты перыяд.</string>
     <string name="msg_reset_confirm">Вы ўпэўнены, што хочаце скінуць праграму? Усе даныя будуць выдалены.</string>
+    <string name="msg_reset_choose_option">Абярыце варыянт скіду:</string>
     <string name="msg_select_habit">Абярыце хаця б адну звычку.</string>
     <string name="msg_mark_done_confirm">Пазначыць «%1$s» як выкананую за %2$s?</string>
     <string name="msg_mark_not_done_confirm">Зняць пазнаку з «%1$s» за %2$s?</string>

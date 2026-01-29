@@ -22,6 +22,8 @@
     <string name="action_refresh">Aktualisieren</string>
     <string name="action_reset">Zurücksetzen</string>
     <string name="action_reset_app">App zurücksetzen</string>
+    <string name="action_reset_settings_only">Nur Einstellungen zurücksetzen</string>
+    <string name="action_reset_with_memos">Alles zurücksetzen (einschließlich Erinnerungen)</string>
     <string name="action_save">Speichern</string>
     <string name="action_show_details">Details anzeigen</string>
     <string name="action_start_tracking">Tracking starten</string>
@@ -137,6 +139,7 @@ Empfehlung: Erstelle stattdessen eine neue Konfiguration. Deine historischen Dat
     <string name="msg_no_logs">Noch keine Protokolle</string>
     <string name="msg_no_memos_yet">Keine Notizen in diesem Zeitraum.</string>
     <string name="msg_reset_confirm">Sind Sie sicher, dass Sie die App zurücksetzen möchten? Alle Daten werden gelöscht.</string>
+    <string name="msg_reset_choose_option">Zurücksetzungsoption wählen:</string>
     <string name="msg_select_habit">Wählen Sie mindestens eine Gewohnheit aus.</string>
     <string name="msg_mark_done_confirm">"%1$s" als erledigt für %2$s markieren?</string>
     <string name="msg_mark_not_done_confirm">Erledigung von "%1$s" am %2$s entfernen?</string>
