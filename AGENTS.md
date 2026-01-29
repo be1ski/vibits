@@ -204,6 +204,12 @@ We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
 
 We follow TDD for business logic and aim for high coverage.
 
+**CRITICAL: Always add tests for new code.** When implementing new features, actions, commands, reducers, or any business logic:
+1. Write tests immediately, not as an afterthought
+2. Ensure all new code paths are covered
+3. Verify tests pass before committing
+4. Never skip tests "to do later" — do them now
+
 ### Running Tests
 
 - Run shared unit tests: `./gradlew :shared:desktopTest`
