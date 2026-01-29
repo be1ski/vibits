@@ -9,32 +9,38 @@ sealed interface SettingsEffect {
    * Commands handled by SettingsEffectHandler (async operations).
    */
   sealed interface Command : SettingsEffect {
+    sealed interface Credentials : Command
+
+    sealed interface Mode : Command
+
+    sealed interface Preferences : Command
+
     data class ValidateCredentials(
       val baseUrl: String,
       val token: String,
       val targetMode: AppMode,
-    ) : Command
-
-    data class SwitchMode(
-      val mode: AppMode,
-    ) : Command
+    ) : Credentials
 
     data class SaveCredentials(
       val baseUrl: String,
       val token: String,
-    ) : Command
+    ) : Credentials
 
-    data object ResetApp : Command
+    data class SwitchMode(
+      val mode: AppMode,
+    ) : Mode
 
-    data object ResetAppWithMemos : Command
+    data object ResetApp : Mode
+
+    data object ResetAppWithMemos : Mode
 
     data class SaveLanguage(
       val language: AppLanguage,
-    ) : Command
+    ) : Preferences
 
     data class SaveTheme(
       val theme: AppTheme,
-    ) : Command
+    ) : Preferences
   }
 
   /**
