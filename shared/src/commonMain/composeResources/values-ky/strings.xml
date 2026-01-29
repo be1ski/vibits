@@ -89,6 +89,9 @@
     <string name="label_demo_mode">Демо режим</string>
     <string name="label_environment">Чөйрө</string>
     <string name="label_habits_config">Адаттар конфигурациясы</string>
+    <string name="label_habit_color">Адаттын түсү</string>
+    <string name="label_habit_name">Адаттын аталышы</string>
+    <string name="label_habit_preset_custom">Өзүңүздүкүн түзүү</string>
     <string name="label_language">Тил</string>
     <string name="label_memos_db">Жазуулар базасы</string>
     <string name="label_post_filter">Чыпка</string>

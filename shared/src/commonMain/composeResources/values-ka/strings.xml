@@ -8,9 +8,15 @@
     <string name="action_copied">კოპირებულია</string>
     <string name="action_configure_habits">ჩვევების კონფიგურაცია</string>
     <string name="action_create">შექმნა</string>
+    <string name="action_create_first_habit">პირველი ჩვევის შექმნა</string>
     <string name="action_create_memo">ჩანაწერის შექმნა</string>
+    <string name="action_continue">გაგრძელება</string>
     <string name="action_delete">წაშლა</string>
+    <string name="action_add_first_habit">პირველი ჩვევის დამატება</string>
+    <string name="action_go_to_dashboard">პანელზე გადასვლა</string>
     <string name="action_hide_details">დეტალების დამალვა</string>
+    <string name="action_mark_first_checkin">პირველი ჩანაწერის მონიშვნა</string>
+    <string name="action_maybe_later">შეიძლება მოგვიანებით</string>
     <string name="action_next">შემდეგი</string>
     <string name="action_previous">წინა</string>
     <string name="action_refresh">განახლება</string>
@@ -18,6 +24,7 @@
     <string name="action_reset_app">აპის გადატვირთვა</string>
     <string name="action_save">შენახვა</string>
     <string name="action_show_details">დეტალების ჩვენება</string>
+    <string name="action_start_tracking">თვალთვალის დაწყება</string>
     <string name="action_track">მონიშვნა</string>
     <string name="action_track_today">დღეს მონიშვნა</string>
     <string name="action_update">განახლება</string>
@@ -76,7 +83,7 @@
     <!-- Hints -->
     <string name="hint_add_habits_config">დაამატეთ ჩვევების კონფიგურაცია თვალყურის დევნებისთვის.</string>
     <string name="hint_base_url">https://memos.example.com</string>
-    <string name="hint_habit_name">ჩვევის სახელი</string>
+    <string name="hint_habit_name">მაგალითად, დილის ვარჯიში</string>
     <string name="hint_habits_config">ვარჯიში | #habits/gym\nკითხვა | #habits/reading</string>
     <string name="hint_write_memo">დაწერეთ ჩანაწერი...</string>
 
@@ -89,6 +96,9 @@
     <string name="label_demo_mode">დემო რეჟიმი</string>
     <string name="label_environment">გარემო</string>
     <string name="label_habits_config">ჩვევების კონფიგურაცია</string>
+    <string name="label_habit_color">ჩვევის ფერი</string>
+    <string name="label_habit_name">ჩვევის სახელი</string>
+    <string name="label_habit_preset_custom">შექმენით თქვენი</string>
     <string name="label_language">ენა</string>
     <string name="label_memos_db">ჩანაწერების ბაზა</string>
     <string name="label_post_filter">ფილტრი</string>
@@ -115,7 +125,10 @@
     <string name="msg_delete_config_warning">დარწმუნებული ხართ, რომ გსურთ ამ კონფიგურაციის წაშლა? ეს სამუდამოდ წაშლის კონფიგურაციის ჩანაწერს თქვენი შენიშვნებიდან.</string>
     <string name="msg_delete_day_confirm">ჩვევები არ არის არჩეული. დღიური ჩანაწერი წაიშლება.</string>
     <string name="msg_delete_day_warning">დარწმუნებული ხართ, რომ გსურთ ამ დღის ჩანაწერის წაშლა? ეს სამუდამოდ წაშლის თვალთვალის ჩანაწერს თქვენი შენიშვნებიდან.</string>
+    <string name="msg_empty_state_no_habits">შექმენით ჩვევა ოფლაინ რეჟიმში თვალთვალის დასაწყებად.</string>
     <string name="msg_fill_all_fields">შეავსეთ ყველა ველი</string>
+    <string name="msg_habit_name_required">ჩვევის სახელი აუცილებელია</string>
+    <string name="msg_habit_setup">გამოიგონეთ მნიშვნელოვანი სახელი თქვენი ჩვევისთვის.</string>
     <string name="msg_no_habits_yet">ჩვევები ჯერ არ არის კონფიგურირებული.</string>
     <string name="msg_no_logs">ლოგები ჯერ არ არის</string>
     <string name="msg_no_memos_yet">ამ პერიოდში ჩანაწერები არ არის.</string>
@@ -123,6 +136,8 @@
     <string name="msg_select_habit">აირჩიეთ მინიმუმ ერთი ჩვევა.</string>
     <string name="msg_mark_done_confirm">მონიშნოთ «%1$s» როგორც შესრულებული %2$s-ისთვის?</string>
     <string name="msg_mark_not_done_confirm">მოხსნათ მონიშვნა «%1$s»-ს %2$s-ისთვის?</string>
+    <string name="msg_offline_onboarding_success">ყველაფერი მზადაა. დაამატეთ პირველი ჩანაწერი დღეს.</string>
+    <string name="msg_offline_onboarding_welcome">თვალყური ადევნეთ ჩვევებს ლოკალურად თქვენს მოწყობილობაზე. ანგარიში არ არის საჭირო.</string>
     <string name="msg_restart_required">ენის ცვლილებისთვის საჭიროა გადატვირთვა</string>
 
     <!-- Language selection -->
@@ -187,6 +202,7 @@
     <string name="time_years">წლები</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">საწყისი ჩვევის არჩევა</string>
     <string name="title_create_day">დღის შექმნა</string>
     <string name="title_delete_config">წაიშალოს კონფიგურაცია?</string>
     <string name="title_delete_day">დღის წაშლა?</string>
@@ -194,8 +210,12 @@
     <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">დღის რედაქტირება</string>
     <string name="title_edit_memo">ჩანაწერის რედაქტირება</string>
+    <string name="title_empty_state_no_habits">ჩვევები ჯერ არ არის</string>
+    <string name="title_habit_setup">დააკონფიგურირეთ თქვენი ჩვევა</string>
     <string name="title_logs">ლოგები (%1$d)</string>
     <string name="title_new_memo">ახალი ჩანაწერი</string>
+    <string name="title_offline_onboarding_success">შესანიშნავი სამუშაო!</string>
+    <string name="title_offline_onboarding_welcome">ოფლაინ რეჟიმი მზადაა</string>
     <string name="title_mark_done">მონიშნოთ შესრულებულად?</string>
     <string name="title_mark_not_done">მოხსნათ მონიშვნა?</string>
     <string name="title_update_day">დღის განახლება</string>

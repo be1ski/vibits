@@ -49,7 +49,10 @@ class ResetAppUseCaseTest {
     appModeRepository: FakeAppModeRepository = FakeAppModeRepository(initial = AppMode.ONLINE),
     credentialsRepository: FakeCredentialsRepository = FakeCredentialsRepository(),
     preferencesRepository: FakePreferencesRepository = FakePreferencesRepository(),
-  ) = ResetAppUseCase(appModeRepository, credentialsRepository, preferencesRepository)
+    onboardingStore: space.be1ski.vibits.shared.feature.onboarding.data.FakeOnboardingStore =
+      space.be1ski.vibits.shared.feature.onboarding.data
+        .FakeOnboardingStore(),
+  ) = ResetAppUseCase(appModeRepository, credentialsRepository, preferencesRepository, onboardingStore)
 
   @Test
   fun `when invoke then clears credentials`() {

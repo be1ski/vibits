@@ -23,6 +23,8 @@ import space.be1ski.vibits.shared.feature.memos.data.platform.OfflineMemoStorage
 import space.be1ski.vibits.shared.feature.memos.data.platform.createMemoCache
 import space.be1ski.vibits.shared.feature.memos.data.platform.createOfflineMemoStorage
 import space.be1ski.vibits.shared.feature.mode.data.platform.AppModeStore
+import space.be1ski.vibits.shared.feature.onboarding.data.OnboardingStore
+import space.be1ski.vibits.shared.feature.onboarding.data.OnboardingStoreImpl
 import space.be1ski.vibits.shared.feature.settings.data.PreferencesStore
 import space.be1ski.vibits.shared.feature.settings.data.PreferencesStoreImpl
 
@@ -94,6 +96,10 @@ abstract class AppGraph {
   @Provides
   @SingleIn(AppScope::class)
   fun localConfigProvider(): LocalConfigProvider = createLocalConfigProvider()
+
+  @Provides
+  @SingleIn(AppScope::class)
+  fun onboardingStore(): OnboardingStore = OnboardingStoreImpl(createKeyValueStore())
 
   @Provides
   @SingleIn(AppScope::class)

@@ -114,4 +114,36 @@ object AppColors {
       light = Color(0xFFFFEB3B),
       dark = Color(0xFFFDE047),
     )
+
+  // Onboarding colors
+  val background =
+    ColorPair(
+      light = Color(0xFFFAFAFA),
+      dark = Color(0xFF121212),
+    )
+  val onBackground =
+    ColorPair(
+      light = Color(0xFF000000),
+      dark = Color(0xFFFFFFFF),
+    )
+  val cardBackground =
+    ColorPair(
+      light = Color(0xFFF8FAFC),
+      dark = Color(0xFF1E293B),
+    )
+  val onCardBackground =
+    ColorPair(
+      light = Color(0xFF1E293B),
+      dark = Color(0xFFE2E8F0),
+    )
+  val cardSelected =
+    ColorPair(
+      light = Color(0xFFDEEBFF),
+      dark = Color(0xFF1E3A5F),
+    )
+  val errorColor =
+    ColorPair(
+      light = Color(0xFFD32F2F),
+      dark = Color(0xFFEF5350),
+    )
 }
