@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package space.be1ski.vibits.shared.app.view
 
 import androidx.compose.foundation.layout.Box
@@ -23,12 +25,18 @@ import space.be1ski.vibits.shared.app.presentation.AppFeatures
 import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.core.ui.theme.VibitsTheme
 import space.be1ski.vibits.shared.core.ui.theme.rememberSystemDarkTheme
+import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
 import space.be1ski.vibits.shared.feature.mode.di.createModeSelectionFeature
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionAction
 import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionEffect
 import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionState
 import space.be1ski.vibits.shared.feature.mode.view.ModeSelectionScreen
+import space.be1ski.vibits.shared.feature.onboarding.di.createOnboardingFeature
+import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingAction
+import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingEffect
+import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingState
+import space.be1ski.vibits.shared.feature.onboarding.view.OnboardingScreen
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 
@@ -41,41 +49,77 @@ fun AppRoot(dependencies: AppDependencies) {
   var appTheme by remember { mutableStateOf(initialPrefs.theme) }
   var appLanguage by remember { mutableStateOf(initialPrefs.language) }
   var featuresVersion by remember { mutableIntStateOf(0) }
+  var showOnboarding by remember { mutableStateOf(false) }
+
   val darkTheme = resolveDarkTheme(appTheme)
-  val modeSelectionFeature =
-    key(featuresVersion) {
-      rememberModeSelectionFeature(dependencies) {
+  val featuresState =
+    rememberFeaturesState(
+      dependencies = dependencies,
+      featuresVersion = featuresVersion,
+      onModeSelected = {
         featuresVersion++
         appMode = it
-      }
-    }
-  val features = rememberAppFeatures(featuresVersion)
+      },
+      onOnboardingCompleted = { showOnboarding = false },
+    )
+
+  SyncAppMode(featuresState, appMode) { appMode = it }
+  ObserveOnboardingCheck(appMode, dependencies) { showOnboarding = it }
 
   key(appLanguage) {
     VibitsTheme(darkTheme = darkTheme) {
-      when (appMode) {
-        AppMode.NOT_SELECTED -> ModeSelectionScreen(feature = modeSelectionFeature)
-        AppMode.ONLINE, AppMode.OFFLINE, AppMode.DEMO -> {
-          AppWithLoadingScreen(
-            features = features,
-            appTheme = appTheme,
-            appLanguage = appLanguage,
-            onResetApp = {
-              appTheme = AppTheme.SYSTEM
-              appLanguage = AppLanguage.SYSTEM
-              dependencies.localeProvider.configureLocale(AppLanguage.SYSTEM)
-              AppGraph.resetGraph()
-              featuresVersion++
-              appMode = AppMode.NOT_SELECTED
-            },
-            onThemeChanged = { appTheme = it },
-            onLanguageChanged = {
-              dependencies.localeProvider.configureLocale(it)
-              appLanguage = it
-            },
-          )
-        }
-      }
+      AppContent(
+        appMode = appMode,
+        showOnboarding = showOnboarding,
+        featuresState = featuresState,
+        appTheme = appTheme,
+        appLanguage = appLanguage,
+        onResetApp = {
+          createResetAppCallback(
+            dependencies = dependencies,
+            onThemeReset = { appTheme = AppTheme.SYSTEM },
+            onLanguageReset = { appLanguage = AppLanguage.SYSTEM },
+            onVersionIncrement = { featuresVersion++ },
+            onModeReset = { appMode = AppMode.NOT_SELECTED },
+            onOnboardingReset = { showOnboarding = false },
+          )()
+        },
+        onThemeChanged = { appTheme = it },
+        onLanguageChanged = {
+          dependencies.localeProvider.configureLocale(it)
+          appLanguage = it
+        },
+      )
+    }
+  }
+}
+
+@Composable
+private fun SyncAppMode(
+  featuresState: FeaturesState,
+  currentAppMode: AppMode,
+  onModeUpdated: (AppMode) -> Unit,
+) {
+  val appState by featuresState.app.app.state
+    .collectAsState()
+  LaunchedEffect(appState.appMode) {
+    if (appState.appMode != AppMode.NOT_SELECTED && appState.appMode != currentAppMode) {
+      onModeUpdated(appState.appMode)
+    }
+  }
+}
+
+@Composable
+private fun ObserveOnboardingCheck(
+  appMode: AppMode,
+  dependencies: AppDependencies,
+  onShowOnboarding: (Boolean) -> Unit,
+) {
+  LaunchedEffect(appMode) {
+    if (appMode == AppMode.OFFLINE) {
+      onShowOnboarding(dependencies.shouldShowOnboarding())
+    } else {
+      onShowOnboarding(false)
     }
   }
 }
@@ -149,6 +193,34 @@ private fun rememberModeSelectionFeature(
 }
 
 @Composable
+private fun rememberOnboardingFeature(
+  dependencies: AppDependencies,
+  features: AppFeatures,
+  onOnboardingCompleted: () -> Unit,
+): Feature<OnboardingAction, OnboardingState, OnboardingEffect> {
+  val feature =
+    remember {
+      createOnboardingFeature(dependencies = dependencies.onboardingDependencies)
+    }
+  val scope = rememberCoroutineScope()
+  LaunchedEffect(feature) { feature.launchIn(scope) }
+  LaunchedEffect(feature) {
+    feature.effects.collect { effect ->
+      when (effect) {
+        is OnboardingEffect.Notification.Completed,
+        is OnboardingEffect.Notification.Skipped,
+        -> onOnboardingCompleted()
+        is OnboardingEffect.Notification.FirstCheckInCreated -> {
+          features.memos.send(MemosAction.LoadMemos)
+        }
+        is OnboardingEffect.Command -> {} // Commands handled by EffectHandler
+      }
+    }
+  }
+  return feature
+}
+
+@Composable
 private fun resolveDarkTheme(theme: AppTheme): Boolean {
   val systemDarkTheme = rememberSystemDarkTheme()
   return when (theme) {
@@ -157,3 +229,82 @@ private fun resolveDarkTheme(theme: AppTheme): Boolean {
     AppTheme.DARK -> true
   }
 }
+
+private data class FeaturesState(
+  val modeSelection: Feature<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect>,
+  val onboarding: Feature<OnboardingAction, OnboardingState, OnboardingEffect>,
+  val app: AppFeatures,
+)
+
+@Composable
+private fun rememberFeaturesState(
+  dependencies: AppDependencies,
+  featuresVersion: Int,
+  onModeSelected: (AppMode) -> Unit,
+  onOnboardingCompleted: () -> Unit,
+): FeaturesState {
+  val modeSelectionFeature =
+    key(featuresVersion) {
+      rememberModeSelectionFeature(dependencies, onModeSelected)
+    }
+  val appFeatures = rememberAppFeatures(featuresVersion)
+  val onboardingFeature =
+    key(featuresVersion) {
+      rememberOnboardingFeature(dependencies, appFeatures, onOnboardingCompleted)
+    }
+
+  return FeaturesState(modeSelectionFeature, onboardingFeature, appFeatures)
+}
+
+@Suppress("LongParameterList")
+@Composable
+private fun AppContent(
+  appMode: AppMode,
+  showOnboarding: Boolean,
+  featuresState: FeaturesState,
+  appTheme: AppTheme,
+  appLanguage: AppLanguage,
+  onResetApp: () -> Unit,
+  onThemeChanged: (AppTheme) -> Unit,
+  onLanguageChanged: (AppLanguage) -> Unit,
+) {
+  when {
+    appMode == AppMode.NOT_SELECTED -> ModeSelectionScreen(feature = featuresState.modeSelection)
+    appMode == AppMode.OFFLINE && showOnboarding -> {
+      val onboardingState by featuresState.onboarding.state.collectAsState()
+      OnboardingScreen(
+        state = onboardingState,
+        onAction = featuresState.onboarding::send,
+      )
+    }
+    appMode == AppMode.ONLINE || appMode == AppMode.OFFLINE || appMode == AppMode.DEMO -> {
+      AppWithLoadingScreen(
+        features = featuresState.app,
+        appTheme = appTheme,
+        appLanguage = appLanguage,
+        onResetApp = onResetApp,
+        onThemeChanged = onThemeChanged,
+        onLanguageChanged = onLanguageChanged,
+      )
+    }
+  }
+}
+
+@Suppress("LongParameterList")
+private fun createResetAppCallback(
+  dependencies: AppDependencies,
+  onThemeReset: () -> Unit,
+  onLanguageReset: () -> Unit,
+  onVersionIncrement: () -> Unit,
+  onModeReset: () -> Unit,
+  onOnboardingReset: () -> Unit,
+): () -> Unit =
+  {
+    onThemeReset()
+    onLanguageReset()
+    dependencies.localeProvider.configureLocale(AppLanguage.SYSTEM)
+    AppGraph.resetGraph()
+    onVersionIncrement()
+    onModeReset()
+    onOnboardingReset()
+  }

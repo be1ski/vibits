@@ -8,9 +8,15 @@
     <string name="action_copied">Nusxalandi</string>
     <string name="action_configure_habits">Odatlarni sozlash</string>
     <string name="action_create">Yaratish</string>
+    <string name="action_create_first_habit">Birinchi odatni yaratish</string>
     <string name="action_create_memo">Eslatma yaratish</string>
+    <string name="action_continue">Davom etish</string>
     <string name="action_delete">O'chirish</string>
+    <string name="action_add_first_habit">Birinchi odatni qo'shish</string>
+    <string name="action_go_to_dashboard">Boshqaruv paneliga o'tish</string>
     <string name="action_hide_details">Tafsilotlarni yashirish</string>
+    <string name="action_mark_first_checkin">Birinchi belgilashni qo'yish</string>
+    <string name="action_maybe_later">Keyinroq</string>
     <string name="action_next">Keyingi</string>
     <string name="action_previous">Oldingi</string>
     <string name="action_refresh">Yangilash</string>
@@ -18,6 +24,7 @@
     <string name="action_reset_app">Ilovani tiklash</string>
     <string name="action_save">Saqlash</string>
     <string name="action_show_details">Tafsilotlarni ko'rsatish</string>
+    <string name="action_start_tracking">Kuzatuvni boshlash</string>
     <string name="action_track">Belgilash</string>
     <string name="action_track_today">Bugun belgilash</string>
     <string name="action_update">Yangilash</string>
@@ -76,7 +83,7 @@
     <!-- Hints -->
     <string name="hint_add_habits_config">Kuzatuvni boshlash uchun odatlar konfiguratsiyasini qo\'shing.</string>
     <string name="hint_base_url">https://memos.example.com</string>
-    <string name="hint_habit_name">Odat nomi</string>
+    <string name="hint_habit_name">masalan, Ertalabki mashqlar</string>
     <string name="hint_habits_config">Gimnastika | #habits/gym\nO\'qish | #habits/reading</string>
     <string name="hint_write_memo">Eslatma yozing...</string>
 
@@ -89,6 +96,9 @@
     <string name="label_demo_mode">Demo rejim</string>
     <string name="label_environment">Muhit</string>
     <string name="label_habits_config">Odatlar konfiguratsiyasi</string>
+    <string name="label_habit_color">Odat rangi</string>
+    <string name="label_habit_name">Odat nomi</string>
+    <string name="label_habit_preset_custom">O'zingiznikini yaratish</string>
     <string name="label_language">Til</string>
     <string name="label_memos_db">Eslatmalar bazasi</string>
     <string name="label_post_filter">Filtr</string>
@@ -115,7 +125,10 @@
     <string name="msg_delete_config_warning">Ushbu konfigni o'chirishga ishonchingiz komilmi? Bu konfiguratsiya postini eslatmalaringizdan butunlay o'chiradi.</string>
     <string name="msg_delete_day_confirm">Odatlar tanlanmagan. Kunlik yozuv o\'chiriladi.</string>
     <string name="msg_delete_day_warning">Ushbu kunning yozuvini o\'chirishga aminmisiz? Bu kuzatuv postini eslatmalaringizdan butunlay olib tashlaydi.</string>
+    <string name="msg_empty_state_no_habits">Oflayn rejimda kuzatuvni boshlash uchun odat yarating.</string>
     <string name="msg_fill_all_fields">Barcha maydonlarni to\'ldiring</string>
+    <string name="msg_habit_name_required">Odat nomi majburiy</string>
+    <string name="msg_habit_setup">Odatingiz uchun mazmunli nom o\'ylab toping.</string>
     <string name="msg_no_habits_yet">Odatlar hali sozlanmagan.</string>
     <string name="msg_no_logs">Loglar hali yo\'q</string>
     <string name="msg_no_memos_yet">Bu davrda eslatmalar yo\'q.</string>
@@ -123,6 +136,8 @@
     <string name="msg_select_habit">Kamida bitta odatni tanlang.</string>
     <string name="msg_mark_done_confirm">«%1$s» ni %2$s uchun bajarilgan deb belgilash kerakmi?</string>
     <string name="msg_mark_not_done_confirm">%2$s sanasida «%1$s» belgisini olib tashlash kerakmi?</string>
+    <string name="msg_offline_onboarding_success">Hammasi tayyor. Bugun birinchi belgilashni qo'ying.</string>
+    <string name="msg_offline_onboarding_welcome">Odatlarni qurilmangizda mahalliy kuzating. Hisob kerak emas.</string>
     <string name="msg_restart_required">Til o\'zgarishini qo\'llash uchun qayta ishga tushirish kerak</string>
 
     <!-- Language selection -->
@@ -187,6 +202,7 @@
     <string name="time_years">Yillar</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">Boshlang'ich odatni tanlash</string>
     <string name="title_create_day">Kun yaratish</string>
     <string name="title_delete_config">Konfigni o'chirish kerakmi?</string>
     <string name="title_delete_day">Kunni o\'chirish?</string>
@@ -194,8 +210,12 @@
     <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">Kunni tahrirlash</string>
     <string name="title_edit_memo">Eslatmani tahrirlash</string>
+    <string name="title_empty_state_no_habits">Odatlar hali yo'q</string>
+    <string name="title_habit_setup">Odatingizni sozlang</string>
     <string name="title_logs">Loglar (%1$d)</string>
     <string name="title_new_memo">Yangi eslatma</string>
+    <string name="title_offline_onboarding_success">Ajoyib ish!</string>
+    <string name="title_offline_onboarding_welcome">Oflayn rejim tayyor</string>
     <string name="title_mark_done">Bajarilgan deb belgilash?</string>
     <string name="title_mark_not_done">Belgini olib tashlash?</string>
     <string name="title_update_day">Kunni yangilash</string>

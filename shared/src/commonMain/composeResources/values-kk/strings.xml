@@ -8,9 +8,15 @@
     <string name="action_copied">Көшірілді</string>
     <string name="action_configure_habits">Әдеттерді баптау</string>
     <string name="action_create">Жасау</string>
+    <string name="action_create_first_habit">Бірінші әдетті жасау</string>
     <string name="action_create_memo">Жазба жасау</string>
+    <string name="action_continue">Жалғастыру</string>
     <string name="action_delete">Жою</string>
+    <string name="action_add_first_habit">Бірінші әдетті қосу</string>
+    <string name="action_go_to_dashboard">Панельге өту</string>
     <string name="action_hide_details">Мәліметтерді жасыру</string>
+    <string name="action_mark_first_checkin">Бірінші белгіні қою</string>
+    <string name="action_maybe_later">Кейінірек</string>
     <string name="action_next">Келесі</string>
     <string name="action_previous">Алдыңғы</string>
     <string name="action_refresh">Жаңарту</string>
@@ -18,6 +24,7 @@
     <string name="action_reset_app">Қолданбаны қалпына келтіру</string>
     <string name="action_save">Сақтау</string>
     <string name="action_show_details">Мәліметтерді көрсету</string>
+    <string name="action_start_tracking">Бақылауды бастау</string>
     <string name="action_track">Белгілеу</string>
     <string name="action_track_today">Бүгін белгілеу</string>
     <string name="action_update">Жаңарту</string>
@@ -76,7 +83,7 @@
     <!-- Hints -->
     <string name="hint_add_habits_config">Бақылауды бастау үшін әдеттер конфигурациясын қосыңыз.</string>
     <string name="hint_base_url">https://memos.example.com</string>
-    <string name="hint_habit_name">Әдет атауы</string>
+    <string name="hint_habit_name">мысалы, Таңғы жаттығу</string>
     <string name="hint_habits_config">Жаттығу | #habits/gym\nОқу | #habits/reading</string>
     <string name="hint_write_memo">Жазба жазыңыз...</string>
 
@@ -89,6 +96,9 @@
     <string name="label_demo_mode">Демо режим</string>
     <string name="label_environment">Орта</string>
     <string name="label_habits_config">Әдеттер конфигурациясы</string>
+    <string name="label_habit_color">Әдеттің түсі</string>
+    <string name="label_habit_name">Әдет атауы</string>
+    <string name="label_habit_preset_custom">Өзіңіздікін жасау</string>
     <string name="label_language">Тіл</string>
     <string name="label_memos_db">Жазбалар базасы</string>
     <string name="label_post_filter">Сүзгі</string>
@@ -114,7 +124,10 @@
     <string name="msg_delete_config_warning">Бұл конфигті жойғыңыз келетініне сенімдісіз бе? Бұл конфигурация жазбасын жазбаларыңыздан біржола жояды.</string>
     <string name="msg_delete_day_confirm">Әдеттер таңдалмаған. Күндік жазба жойылады.</string>
     <string name="msg_delete_day_warning">Осы күннің жазбасын жоюға сенімдісіз бе? Бұл бақылау жазбасын жазбаларыңыздан біржола жояды.</string>
+    <string name="msg_empty_state_no_habits">Желіден тыс режимде бақылауды бастау үшін әдет жасаңыз.</string>
     <string name="msg_fill_all_fields">Барлық өрістерді толтырыңыз</string>
+    <string name="msg_habit_name_required">Әдет атауы міндетті</string>
+    <string name="msg_habit_setup">Әдетіңізге мағыналы атау ойлап табыңыз.</string>
     <string name="msg_no_habits_yet">Әдеттер әлі бапталмаған.</string>
     <string name="msg_no_logs">Логтар әлі жоқ</string>
     <string name="msg_no_memos_yet">Бұл кезеңде жазбалар жоқ.</string>
@@ -122,6 +135,8 @@
     <string name="msg_select_habit">Кем дегенде бір әдетті таңдаңыз.</string>
     <string name="msg_mark_done_confirm">«%1$s» %2$s үшін орындалды деп белгілеу керек пе?</string>
     <string name="msg_mark_not_done_confirm">%2$s күні «%1$s» белгісін алып тастау керек пе?</string>
+    <string name="msg_offline_onboarding_success">Бәрі дайын. Бүгін бірінші белгіні қойыңыз.</string>
+    <string name="msg_offline_onboarding_welcome">Әдеттерді құрылғыңызда жергілікті бақылаңыз. Тіркелгі қажет емес.</string>
     <string name="msg_restart_required">Тіл өзгерісін қолдану үшін қайта іске қосу қажет</string>
 
     <!-- Language selection -->
@@ -187,6 +202,7 @@
     <string name="time_years">Жылдар</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">Бастапқы әдетті таңдау</string>
     <string name="title_create_day">Күн жасау</string>
     <string name="title_delete_config">Конфигті жою керек пе?</string>
     <string name="title_delete_day">Күнді жою?</string>
@@ -194,8 +210,12 @@
     <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">Күнді өңдеу</string>
     <string name="title_edit_memo">Жазбаны өңдеу</string>
+    <string name="title_empty_state_no_habits">Әдеттер әлі жоқ</string>
+    <string name="title_habit_setup">Әдетіңізді баптаңыз</string>
     <string name="title_logs">Логтар (%1$d)</string>
     <string name="title_new_memo">Жаңа жазба</string>
+    <string name="title_offline_onboarding_success">Керемет жұмыс!</string>
+    <string name="title_offline_onboarding_welcome">Желіден тыс режим дайын</string>
     <string name="title_mark_done">Орындалды деп белгілеу?</string>
     <string name="title_mark_not_done">Белгіні алып тастау?</string>
     <string name="title_update_day">Күнді жаңарту</string>

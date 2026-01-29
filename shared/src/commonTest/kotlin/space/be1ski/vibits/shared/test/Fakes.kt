@@ -69,6 +69,8 @@ class FakeMemosRepository : MemosRepository {
   var updateMemoResult: Result<Memo> = Result.success(Memo())
   var createMemoResult: Result<Memo> = Result.success(Memo())
   var deleteMemoResult: Result<Unit> = Result.success(Unit)
+  var lastCreatedContent: String = ""
+    private set
   var listMemosCalls: Int = 0
     private set
   var cachedMemosCalls: Int = 0
@@ -100,6 +102,7 @@ class FakeMemosRepository : MemosRepository {
 
   override suspend fun createMemo(content: String): Memo {
     createMemoCalls += 1
+    lastCreatedContent = content
     return createMemoResult.getOrThrow()
   }
 

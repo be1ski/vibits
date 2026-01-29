@@ -8,9 +8,15 @@
     <string name="action_copied">コピー済み</string>
     <string name="action_configure_habits">習慣を設定</string>
     <string name="action_create">作成</string>
+    <string name="action_create_first_habit">最初の習慣を作成</string>
     <string name="action_create_memo">メモを作成</string>
+    <string name="action_continue">続ける</string>
     <string name="action_delete">削除</string>
+    <string name="action_add_first_habit">最初の習慣を追加</string>
+    <string name="action_go_to_dashboard">ダッシュボードへ</string>
     <string name="action_hide_details">詳細を隠す</string>
+    <string name="action_mark_first_checkin">最初の記録をつける</string>
+    <string name="action_maybe_later">後で</string>
     <string name="action_next">次へ</string>
     <string name="action_previous">前へ</string>
     <string name="action_refresh">更新</string>
@@ -18,6 +24,7 @@
     <string name="action_reset_app">アプリをリセット</string>
     <string name="action_save">保存</string>
     <string name="action_show_details">詳細を表示</string>
+    <string name="action_start_tracking">記録を開始</string>
     <string name="action_track">記録</string>
     <string name="action_track_today">今日を記録</string>
     <string name="action_update">更新</string>
@@ -76,7 +83,7 @@
     <!-- Hints -->
     <string name="hint_add_habits_config">トラッキングを開始するには習慣設定メモを追加してください。</string>
     <string name="hint_base_url">https://memos.example.com</string>
-    <string name="hint_habit_name">習慣名</string>
+    <string name="hint_habit_name">例：朝の運動</string>
     <string name="hint_habits_config">運動 | #habits/gym\n読書 | #habits/reading</string>
     <string name="hint_write_memo">メモを書く...</string>
 
@@ -89,6 +96,9 @@
     <string name="label_demo_mode">デモモード</string>
     <string name="label_environment">環境</string>
     <string name="label_habits_config">習慣設定</string>
+    <string name="label_habit_color">習慣の色</string>
+    <string name="label_habit_name">習慣名</string>
+    <string name="label_habit_preset_custom">カスタム</string>
     <string name="label_language">言語</string>
     <string name="label_memos_db">メモDB</string>
     <string name="label_post_filter">フィルター</string>
@@ -115,7 +125,10 @@
     <string name="msg_delete_config_warning">この設定を削除してもよろしいですか？これにより、メモから設定投稿が完全に削除されます。</string>
     <string name="msg_delete_day_confirm">習慣が選択されていません。この日のエントリは削除されます。</string>
     <string name="msg_delete_day_warning">この日のエントリーを削除してもよろしいですか？トラッキング投稿がメモから完全に削除されます。</string>
+    <string name="msg_empty_state_no_habits">習慣を作成してオフライン記録を開始しましょう。</string>
     <string name="msg_fill_all_fields">すべての項目を入力してください</string>
+    <string name="msg_habit_name_required">習慣名は必須です</string>
+    <string name="msg_habit_setup">習慣にわかりやすい名前を付けてください。</string>
     <string name="msg_no_habits_yet">まだ習慣が設定されていません。</string>
     <string name="msg_no_logs">ログがありません</string>
     <string name="msg_no_memos_yet">この期間にメモがありません。</string>
@@ -123,6 +136,8 @@
     <string name="msg_select_habit">少なくとも1つの習慣を選択してください。</string>
     <string name="msg_mark_done_confirm">「%1$s」を%2$sに完了としてマークしますか？</string>
     <string name="msg_mark_not_done_confirm">%2$sの「%1$s」の完了を取り消しますか？</string>
+    <string name="msg_offline_onboarding_success">準備完了です。今日の最初の記録をつけましょう。</string>
+    <string name="msg_offline_onboarding_welcome">デバイス上でローカルに習慣を記録します。アカウントは不要です。</string>
     <string name="msg_restart_required">言語変更を適用するには再起動が必要です</string>
 
     <!-- Language selection -->
@@ -187,6 +202,7 @@
     <string name="time_years">年</string>
 
     <!-- Titles -->
+    <string name="title_choose_starter_habit">最初の習慣を選択</string>
     <string name="title_create_day">日を作成</string>
     <string name="title_delete_config">設定を削除しますか？</string>
     <string name="title_delete_day">日を削除しますか？</string>
@@ -194,8 +210,12 @@
     <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">日を編集</string>
     <string name="title_edit_memo">メモを編集</string>
+    <string name="title_empty_state_no_habits">習慣がありません</string>
+    <string name="title_habit_setup">習慣を設定</string>
     <string name="title_logs">ログ (%1$d)</string>
     <string name="title_new_memo">新規メモ</string>
+    <string name="title_offline_onboarding_success">素晴らしい！</string>
+    <string name="title_offline_onboarding_welcome">オフラインモード準備完了</string>
     <string name="title_mark_done">完了としてマーク？</string>
     <string name="title_mark_not_done">未完了としてマーク？</string>
     <string name="title_update_day">日を更新</string>
