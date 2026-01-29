@@ -17,11 +17,14 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 
 /**
- * Default implementation of [Feature] that processes actions and effects using channels and flows.
+ * Default implementation of [Feature] that processes actions, commands, and notifications using channels and flows.
  *
- * This implementation uses unbounded channels for actions and effects, ensuring that no events
- * are lost even under high load. Actions are processed sequentially, while effects can be
+ * This implementation uses unbounded channels for actions, commands, and notifications, ensuring that no events
+ * are lost even under high load. Actions are processed sequentially, while commands can be
  * processed concurrently (controlled by [concurrency]).
+ *
+ * Commands are processed internally by the EffectHandler. Notifications are exposed to external
+ * observers (coordinators, UI) and never reach the EffectHandler.
  *
  * Example usage:
  * ```
@@ -29,36 +32,37 @@ import kotlinx.coroutines.flow.receiveAsFlow
  *   initialState = MyState(),
  *   reducer = myReducer,
  *   effectHandler = myEffectHandler,
- *   initialEffects = listOf(MyEffect.LoadInitialData),
+ *   initialCommands = listOf(MyCommand.LoadInitialData),
  * )
  *
  * feature.launchIn(viewModelScope)
  * feature.send(MyAction.ButtonClicked)
+ * feature.notifications.collect { notification -> handleNotification(notification) }
  * ```
  *
  * @param initialState The initial state of the feature
- * @param reducer The reducer that processes actions and produces state changes and effects
- * @param effectHandler The handler that processes effects and produces actions
- * @param initialEffects Effects to process immediately when [launchIn] is called
- * @param concurrency The number of concurrent coroutines to process effects.
+ * @param reducer The reducer that processes actions and produces state changes, commands, and notifications
+ * @param effectHandler The handler that processes commands and produces actions
+ * @param initialCommands Commands to process immediately when [launchIn] is called
+ * @param concurrency The number of concurrent coroutines to process commands.
  *   Defaults to [DEFAULT_CONCURRENCY]. Increase this value if your effect handler
  *   performs many parallel operations.
  */
 @OptIn(FlowPreview::class)
-public open class FeatureImpl<Action, State, Effect>(
+public open class FeatureImpl<Action, State, Command, Notification>(
   initialState: State,
-  private val reducer: Reducer<Action, State, Effect>,
-  private val effectHandler: EffectHandler<Effect, Action>,
-  private val initialEffects: List<Effect> = emptyList(),
+  private val reducer: Reducer<Action, State, Command, Notification>,
+  private val effectHandler: EffectHandler<Command, Action>,
+  private val initialCommands: List<Command> = emptyList(),
   private val concurrency: Int = DEFAULT_CONCURRENCY,
-) : Feature<Action, State, Effect> {
+) : Feature<Action, State, Command, Notification> {
   private val _state: MutableStateFlow<State> = MutableStateFlow(initialState)
   override val state: StateFlow<State> = _state.asStateFlow()
 
   private val actionChannel: Channel<Action> = Channel(Channel.UNLIMITED)
-  private val effectQueue: Channel<Effect> = Channel(Channel.UNLIMITED)
-  private val effectBroadcast: Channel<Effect> = Channel(Channel.UNLIMITED)
-  override val effects: Flow<Effect> = effectBroadcast.receiveAsFlow()
+  private val commandQueue: Channel<Command> = Channel(Channel.UNLIMITED)
+  private val notificationBroadcast: Channel<Notification> = Channel(Channel.UNLIMITED)
+  override val notifications: Flow<Notification> = notificationBroadcast.receiveAsFlow()
 
   @OptIn(ExperimentalCoroutinesApi::class)
   override fun launchIn(scope: CoroutineScope) {
@@ -67,13 +71,13 @@ public open class FeatureImpl<Action, State, Effect>(
       .onEach(::dispatch)
       .launchIn(scope)
 
-    effectQueue
+    commandQueue
       .receiveAsFlow()
       .flatMapMerge(concurrency) { effectHandler(it) }
       .onEach(::send)
       .launchIn(scope)
 
-    initialEffects.forEach(::enqueueEffect)
+    initialCommands.forEach(::enqueueCommand)
   }
 
   override fun send(action: Action) {
@@ -81,13 +85,17 @@ public open class FeatureImpl<Action, State, Effect>(
   }
 
   private fun dispatch(action: Action) {
-    val (newState, newEffects) = reducer(action, state.value)
+    val (newState, effects) = reducer(action, state.value)
     _state.value = newState
-    newEffects.forEach(::enqueueEffect)
+    effects.commands.forEach(::enqueueCommand)
+    effects.notifications.forEach(::emitNotification)
   }
 
-  private fun enqueueEffect(effect: Effect) {
-    effectQueue.trySend(effect)
-    effectBroadcast.trySend(effect)
+  private fun enqueueCommand(command: Command) {
+    commandQueue.trySend(command)
+  }
+
+  private fun emitNotification(notification: Notification) {
+    notificationBroadcast.trySend(notification)
   }
 }

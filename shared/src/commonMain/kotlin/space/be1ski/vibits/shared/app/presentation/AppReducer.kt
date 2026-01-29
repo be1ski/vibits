@@ -11,7 +11,7 @@ import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 /**
  * Pure reducer for the App coordinator feature.
  */
-internal val appReducer: Reducer<AppAction, AppState, AppEffect> =
+internal val appReducer: Reducer<AppAction, AppState, AppEffect, Nothing> =
   reducer { action, state ->
     when (action) {
       is AppAction.SelectScreen -> {
@@ -20,12 +20,12 @@ internal val appReducer: Reducer<AppAction, AppState, AppEffect> =
 
       is AppAction.SetHabitsTimeRangeTab -> {
         state { copy(habitsTimeRangeTab = action.tab) }
-        effect(AppEffect.SaveHabitsTimeRangeTab(action.tab))
+        command(AppEffect.SaveHabitsTimeRangeTab(action.tab))
       }
 
       is AppAction.SetPostsTimeRangeTab -> {
         state { copy(postsTimeRangeTab = action.tab) }
-        effect(AppEffect.SavePostsTimeRangeTab(action.tab))
+        command(AppEffect.SavePostsTimeRangeTab(action.tab))
       }
 
       is AppAction.SetPeriodStartDate -> {
@@ -39,13 +39,13 @@ internal val appReducer: Reducer<AppAction, AppState, AppEffect> =
       is AppAction.ChangeHabitsTab -> {
         val adjustedDate = AdjustDateForTabChangeUseCase(state.periodStartDate, action.oldTab, action.newTab)
         state { copy(habitsTimeRangeTab = action.newTab, periodStartDate = adjustedDate) }
-        effect(AppEffect.SaveHabitsTimeRangeTab(action.newTab))
+        command(AppEffect.SaveHabitsTimeRangeTab(action.newTab))
       }
 
       is AppAction.ChangePostsTab -> {
         val adjustedDate = AdjustDateForTabChangeUseCase(state.periodStartDate, action.oldTab, action.newTab)
         state { copy(postsTimeRangeTab = action.newTab, periodStartDate = adjustedDate) }
-        effect(AppEffect.SavePostsTimeRangeTab(action.newTab))
+        command(AppEffect.SavePostsTimeRangeTab(action.newTab))
       }
 
       is AppAction.ResetToHome -> {

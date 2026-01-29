@@ -11,7 +11,7 @@ import space.be1ski.vibits.shared.feature.mode.presentation.modeSelectionReducer
 fun createModeSelectionFeature(
   dependencies: ModeSelectionDependencies,
   initialState: ModeSelectionState = ModeSelectionState(),
-): Feature<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect> =
+): Feature<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect.Command, ModeSelectionEffect.Notification> =
   FeatureImpl(
     initialState = initialState,
     reducer = modeSelectionReducer,
@@ -23,5 +23,5 @@ fun createModeSelectionFeature(
         saveCredentials = dependencies.saveCredentials,
         saveAppMode = dependencies.saveAppMode,
       ),
-    initialEffects = listOf(ModeSelectionEffect.InitializeFromLocalConfig),
+    initialCommands = listOf(ModeSelectionEffect.Command.InitializeFromLocalConfig),
   )

@@ -54,7 +54,9 @@ import space.be1ski.vibits.shared.generated.msg_connection_failed
 import space.be1ski.vibits.shared.generated.msg_fill_all_fields
 
 @Composable
-fun ModeSelectionScreen(feature: Feature<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect>) {
+fun ModeSelectionScreen(
+  feature: Feature<ModeSelectionAction, ModeSelectionState, ModeSelectionEffect.Command, ModeSelectionEffect.Notification>,
+) {
   val state by feature.state.collectAsState()
   val dispatch: (ModeSelectionAction) -> Unit = feature::send
 

@@ -32,15 +32,15 @@ class ReducerTestDslTest {
     data object Notify : Effect
   }
 
-  private val testReducer: Reducer<Action, State, Effect> =
+  private val testReducer: Reducer<Action, State, Effect, Nothing> =
     reducer { action, _ ->
       when (action) {
         Action.Increment -> state { copy(count = count + 1) }
         is Action.SetText -> state { copy(text = action.value) }
-        Action.Save -> effect(Effect.Persist)
+        Action.Save -> command(Effect.Persist)
         Action.Complex -> {
           state { copy(count = count + 10, text = "complex") }
-          effects(Effect.Persist, Effect.Log("complex action"), Effect.Notify)
+          commands(Effect.Persist, Effect.Log("complex action"), Effect.Notify)
         }
       }
     }
@@ -65,40 +65,40 @@ class ReducerTestDslTest {
     }
 
   @Test
-  fun `when effect-only action then state is preserved`() =
+  fun `when command-only action then state is preserved`() =
     testReducer.test(State(count = 42, text = "preserved")) {
       send(Action.Save)
 
       assertState(State(count = 42, text = "preserved"))
-      assertEffects(Effect.Persist)
+      assertCommands(Effect.Persist)
     }
 
   @Test
-  fun `when action with multiple effects then all effects are captured`() =
+  fun `when action with multiple commands then all commands are captured`() =
     testReducer.test(State()) {
       send(Action.Complex)
 
-      assertEffects(Effect.Persist, Effect.Log("complex action"), Effect.Notify)
-      assertEffectCount(3)
+      assertCommands(Effect.Persist, Effect.Log("complex action"), Effect.Notify)
+      assertCommandCount(3)
     }
 
   @Test
-  fun `when assertHasEffect then effect is found by type`() =
+  fun `when assertHasCommand then command is found by type`() =
     testReducer.test(State()) {
       send(Action.Complex)
 
-      assertHasEffect<Effect.Persist>()
-      assertHasEffect<Effect.Notify>()
-      val log = assertHasEffect<Effect.Log>()
+      assertHasCommand<Effect.Persist>()
+      assertHasCommand<Effect.Notify>()
+      val log = assertHasCommand<Effect.Log>()
       assertEquals("complex action", log.msg)
     }
 
   @Test
-  fun `when assertHasEffect with predicate then matching effect is found`() =
+  fun `when assertHasCommand with predicate then matching command is found`() =
     testReducer.test(State()) {
       send(Action.Complex)
 
-      assertHasEffect<Effect.Log> { it.msg.contains("complex") }
+      assertHasCommand<Effect.Log> { it.msg.contains("complex") }
     }
 
   @Test
@@ -116,13 +116,13 @@ class ReducerTestDslTest {
     }
 
   @Test
-  fun `when multiple actions then allEmittedEffects accumulates`() =
+  fun `when multiple actions then allEmittedCommands accumulates`() =
     testReducer.test(State()) {
       send(Action.Save)
       send(Action.Complex)
 
-      assertEffectCount(3) // Last action only
-      assertEquals(4, allEmittedEffects.size) // All effects
+      assertCommandCount(3) // Last action only
+      assertEquals(4, allEmittedCommands.size) // All commands
     }
 
   @Test
@@ -145,7 +145,7 @@ class ReducerTestDslTest {
   }
 
   @Test
-  fun `when assertNoEffects with effects then AssertionError is thrown`() {
+  fun `when assertNoEffects with commands then AssertionError is thrown`() {
     assertFailsWith<AssertionError> {
       testReducer.test(State()) {
         send(Action.Save)

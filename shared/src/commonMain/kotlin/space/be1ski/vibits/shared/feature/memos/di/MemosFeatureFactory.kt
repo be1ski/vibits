@@ -12,7 +12,7 @@ fun createMemosFeature(
   dependencies: MemosDependencies,
   isOfflineMode: Boolean = false,
   initialState: MemosState = MemosState(),
-): Feature<MemosAction, MemosState, MemosEffect> {
+): Feature<MemosAction, MemosState, MemosEffect, Nothing> {
   val creds = dependencies.loadCredentials()
   val needsCredentials = !isOfflineMode && (creds.baseUrl.isBlank() || creds.token.isBlank())
 
@@ -35,6 +35,6 @@ fun createMemosFeature(
         updateMemo = dependencies.updateMemo,
         deleteMemo = dependencies.deleteMemo,
       ),
-    initialEffects = if (!needsCredentials) listOf(MemosEffect.LoadCachedMemos) else emptyList(),
+    initialCommands = if (!needsCredentials) listOf(MemosEffect.LoadCachedMemos) else emptyList(),
   )
 }
