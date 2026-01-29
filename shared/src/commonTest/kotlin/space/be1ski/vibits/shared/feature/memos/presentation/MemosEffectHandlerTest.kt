@@ -34,7 +34,7 @@ class MemosEffectHandlerTest {
       val actions = handler(MemosEffect.LoadCredentials).toList()
 
       assertEquals(
-        listOf(MemosAction.CredentialsLoaded(baseUrl = "https://test.com", token = "test-token")),
+        listOf(MemosAction.Credentials.CredentialsLoaded(baseUrl = "https://test.com", token = "test-token")),
         actions,
       )
     }
@@ -65,7 +65,7 @@ class MemosEffectHandlerTest {
 
       val actions = handler(MemosEffect.LoadCachedMemos).toList()
 
-      assertEquals(listOf(MemosAction.CachedMemosLoaded(expectedMemos)), actions)
+      assertEquals(listOf(MemosAction.Loading.CachedMemosLoaded(expectedMemos)), actions)
     }
 
   @Test
@@ -80,7 +80,7 @@ class MemosEffectHandlerTest {
 
       val actions = handler(MemosEffect.LoadRemoteMemos).toList()
 
-      assertEquals(listOf(MemosAction.MemosLoaded(expectedMemos)), actions)
+      assertEquals(listOf(MemosAction.Loading.MemosLoaded(expectedMemos)), actions)
     }
 
   @Test
@@ -95,8 +95,8 @@ class MemosEffectHandlerTest {
       val actions = handler(MemosEffect.LoadRemoteMemos).toList()
 
       assertEquals(1, actions.size)
-      assertTrue(actions[0] is MemosAction.OperationFailed)
-      assertEquals("Network error", (actions[0] as MemosAction.OperationFailed).error)
+      assertTrue(actions[0] is MemosAction.Crud.OperationFailed)
+      assertEquals("Network error", (actions[0] as MemosAction.Crud.OperationFailed).error)
     }
 
   @Test
@@ -111,7 +111,7 @@ class MemosEffectHandlerTest {
 
       val actions = handler(MemosEffect.CreateMemo(content = "new content")).toList()
 
-      assertEquals(listOf(MemosAction.MemoCreated(expectedMemo)), actions)
+      assertEquals(listOf(MemosAction.Crud.MemoCreated(expectedMemo)), actions)
     }
 
   @Test
@@ -126,7 +126,7 @@ class MemosEffectHandlerTest {
       val actions = handler(MemosEffect.CreateMemo(content = "test")).toList()
 
       assertEquals(1, actions.size)
-      assertTrue(actions[0] is MemosAction.OperationFailed)
+      assertTrue(actions[0] is MemosAction.Crud.OperationFailed)
     }
 
   @Test
@@ -144,7 +144,7 @@ class MemosEffectHandlerTest {
           MemosEffect.UpdateMemo(name = "memos/1", content = "updated"),
         ).toList()
 
-      assertEquals(listOf(MemosAction.MemoUpdated(expectedMemo)), actions)
+      assertEquals(listOf(MemosAction.Crud.MemoUpdated(expectedMemo)), actions)
     }
 
   @Test
@@ -161,7 +161,7 @@ class MemosEffectHandlerTest {
           MemosEffect.UpdateMemo(name = "memos/1", content = "updated"),
         ).toList()
 
-      assertTrue(actions[0] is MemosAction.OperationFailed)
+      assertTrue(actions[0] is MemosAction.Crud.OperationFailed)
     }
 
   @Test
@@ -175,7 +175,7 @@ class MemosEffectHandlerTest {
 
       val actions = handler(MemosEffect.DeleteMemo(name = "memos/1")).toList()
 
-      assertEquals(listOf(MemosAction.MemoDeleted("memos/1")), actions)
+      assertEquals(listOf(MemosAction.Crud.MemoDeleted("memos/1")), actions)
     }
 
   @Test
@@ -189,7 +189,7 @@ class MemosEffectHandlerTest {
 
       val actions = handler(MemosEffect.DeleteMemo(name = "memos/1")).toList()
 
-      assertTrue(actions[0] is MemosAction.OperationFailed)
+      assertTrue(actions[0] is MemosAction.Crud.OperationFailed)
     }
 
   private fun createHandler(

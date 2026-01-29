@@ -6,68 +6,84 @@ import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 
 sealed interface SettingsAction : Action {
-  // Dialog lifecycle
-  data class Open(
-    val baseUrl: String,
-    val token: String,
-    val appMode: AppMode,
-    val language: AppLanguage,
-    val theme: AppTheme,
-  ) : SettingsAction
+  /**
+   * Dialog lifecycle.
+   */
+  sealed interface Dialog : SettingsAction {
+    data class Open(
+      val baseUrl: String,
+      val token: String,
+      val appMode: AppMode,
+      val language: AppLanguage,
+      val theme: AppTheme,
+    ) : Dialog
 
-  data object Close : SettingsAction
+    data object Close : Dialog
 
-  data object Dismiss : SettingsAction
+    data object Dismiss : Dialog
+  }
 
-  // Credentials
-  data class UpdateBaseUrl(
-    val value: String,
-  ) : SettingsAction
+  /**
+   * Input (credentials, mode, language, theme).
+   */
+  sealed interface Input : SettingsAction {
+    data class UpdateBaseUrl(
+      val value: String,
+    ) : Input
 
-  data class UpdateToken(
-    val value: String,
-  ) : SettingsAction
+    data class UpdateToken(
+      val value: String,
+    ) : Input
 
-  // Mode selection
-  data class SelectMode(
-    val mode: AppMode,
-  ) : SettingsAction
+    data class SelectMode(
+      val mode: AppMode,
+    ) : Input
 
-  // Language selection
-  data class SelectLanguage(
-    val language: AppLanguage,
-  ) : SettingsAction
+    data class SelectLanguage(
+      val language: AppLanguage,
+    ) : Input
 
-  // Theme selection
-  data class SelectTheme(
-    val theme: AppTheme,
-  ) : SettingsAction
+    data class SelectTheme(
+      val theme: AppTheme,
+    ) : Input
 
-  // Validation responses
-  data object ValidationSucceeded : SettingsAction
+    data object ModeSwitched : Input
+  }
 
-  data class ValidationFailed(
-    val error: String,
-  ) : SettingsAction
+  /**
+   * Validation flow.
+   */
+  sealed interface Validation : SettingsAction {
+    data object ValidationSucceeded : Validation
 
-  data object ModeSwitched : SettingsAction
+    data class ValidationFailed(
+      val error: String,
+    ) : Validation
+  }
 
-  // Reset flow
-  data object RequestReset : SettingsAction
+  /**
+   * Reset flow.
+   */
+  sealed interface Reset : SettingsAction {
+    data object RequestReset : Reset
 
-  data object ConfirmReset : SettingsAction
+    data object ConfirmReset : Reset
 
-  data object ConfirmResetWithMemos : SettingsAction
+    data object ConfirmResetWithMemos : Reset
 
-  data object CancelReset : SettingsAction
+    data object CancelReset : Reset
 
-  data object ResetCompleted : SettingsAction
+    data object ResetCompleted : Reset
+  }
 
-  // Logs
-  data object OpenLogs : SettingsAction
+  /**
+   * Save and logs.
+   */
+  sealed interface SaveAndLogs : SettingsAction {
+    data object OpenLogs : SaveAndLogs
 
-  data object CloseLogs : SettingsAction
+    data object CloseLogs : SaveAndLogs
 
-  // Save
-  data object Save : SettingsAction
+    data object Save : SaveAndLogs
+  }
 }

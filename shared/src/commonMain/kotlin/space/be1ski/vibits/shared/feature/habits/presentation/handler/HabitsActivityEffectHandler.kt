@@ -28,7 +28,7 @@ class HabitsActivityEffectHandler(
       // Emit AFTER withContext (TC-04: avoid Flow invariant violation)
       results.forEach { result ->
         emit(
-          HabitsAction.UpdateActivityData(
+          HabitsAction.Cache.UpdateActivityData(
             range = result.range,
             mode = result.mode,
             appMode = result.appMode,
@@ -38,7 +38,7 @@ class HabitsActivityEffectHandler(
           ),
         )
       }
-      emit(HabitsAction.PrewarmCompleted)
+      emit(HabitsAction.Cache.PrewarmCompleted)
     }
 
   private fun handleRecalculateActivityData(effect: HabitsEffect.RecalculateActivityData): Flow<HabitsAction> =
@@ -46,7 +46,7 @@ class HabitsActivityEffectHandler(
       Log.d(TAG, "Recalculating for ${effect.range}")
       val result = calculateActivityDataUseCase(effect.range, effect.mode, effect.memos)
       emit(
-        HabitsAction.UpdateActivityData(
+        HabitsAction.Cache.UpdateActivityData(
           range = effect.range,
           mode = effect.mode,
           appMode = effect.appMode,

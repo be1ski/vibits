@@ -25,17 +25,17 @@ class MemosLoadEffectHandler(
     actions {
       Log.d(TAG, "Loading cached memos")
       runCatching { loadCachedMemos() }
-        .onSuccess { memos -> emit(MemosAction.CachedMemosLoaded(memos)) }
+        .onSuccess { memos -> emit(MemosAction.Loading.CachedMemosLoaded(memos)) }
     }
 
   private fun handleLoadRemoteMemos(): Flow<MemosAction> =
     actions {
       Log.d(TAG, "Loading memos")
       runCatching { loadMemos() }
-        .onSuccess { memos -> emit(MemosAction.MemosLoaded(memos)) }
+        .onSuccess { memos -> emit(MemosAction.Loading.MemosLoaded(memos)) }
         .onFailure { error ->
           Log.e(TAG, "Failed to load memos", error)
-          emit(MemosAction.OperationFailed(error.message ?: "Failed to load memos"))
+          emit(MemosAction.Crud.OperationFailed(error.message ?: "Failed to load memos"))
         }
     }
 }

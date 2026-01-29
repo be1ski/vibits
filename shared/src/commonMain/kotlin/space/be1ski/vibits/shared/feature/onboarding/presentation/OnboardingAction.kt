@@ -4,46 +4,61 @@ import space.be1ski.vibits.shared.core.elm.Action
 import space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset
 
 sealed interface OnboardingAction : Action {
-  // Navigation
-  data object StartOnboarding : OnboardingAction
+  /**
+   * Navigation flow.
+   */
+  sealed interface Navigation : OnboardingAction {
+    data object StartOnboarding : Navigation
 
-  data object Continue : OnboardingAction
+    data object Continue : Navigation
 
-  data object Back : OnboardingAction
+    data object Back : Navigation
 
-  data object Skip : OnboardingAction
+    data object Skip : Navigation
+  }
 
-  // Preset selection
-  data class SelectPreset(
-    val presetId: String,
-  ) : OnboardingAction
+  /**
+   * Preset selection.
+   */
+  sealed interface Preset : OnboardingAction {
+    data class PresetsLoaded(
+      val presets: List<HabitPreset>,
+    ) : Preset
 
-  data class PresetsLoaded(
-    val presets: List<HabitPreset>,
-  ) : OnboardingAction
+    data class SelectPreset(
+      val presetId: String,
+    ) : Preset
+  }
 
-  // Habit setup
-  data class UpdateHabitName(
-    val name: String,
-  ) : OnboardingAction
+  /**
+   * Habit setup.
+   */
+  sealed interface Habit : OnboardingAction {
+    data class UpdateHabitName(
+      val name: String,
+    ) : Habit
 
-  data class UpdateHabitColor(
-    val color: Long,
-  ) : OnboardingAction
+    data class UpdateHabitColor(
+      val color: Long,
+    ) : Habit
 
-  data object CreateHabit : OnboardingAction
+    data object CreateHabit : Habit
 
-  // Responses
-  data object HabitCreated : OnboardingAction
+    data object HabitCreated : Habit
 
-  data class HabitCreationFailed(
-    val error: String,
-  ) : OnboardingAction
+    data class HabitCreationFailed(
+      val error: String,
+    ) : Habit
+  }
 
-  // Completion
-  data object MarkFirstCheckIn : OnboardingAction
+  /**
+   * Completion flow.
+   */
+  sealed interface Completion : OnboardingAction {
+    data object MarkFirstCheckIn : Completion
 
-  data object FirstCheckInCreated : OnboardingAction
+    data object FirstCheckInCreated : Completion
 
-  data object GoToDashboard : OnboardingAction
+    data object GoToDashboard : Completion
+  }
 }

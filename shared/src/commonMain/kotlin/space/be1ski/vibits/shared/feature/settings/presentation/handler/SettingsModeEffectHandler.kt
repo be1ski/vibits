@@ -28,20 +28,20 @@ class SettingsModeEffectHandler(
     actions {
       Log.i(TAG, "Switching mode to ${command.mode}")
       switchAppMode(command.mode)
-      emit(SettingsAction.ModeSwitched)
+      emit(SettingsAction.Input.ModeSwitched)
     }
 
   private fun handleResetApp(): Flow<SettingsAction> =
     actions {
       Log.i(TAG, "Resetting app")
       resetApp()
-      emit(SettingsAction.ResetCompleted)
+      emit(SettingsAction.Reset.ResetCompleted)
     }
 
   private fun handleResetAppWithMemos(): Flow<SettingsAction> =
     actions {
       Log.i(TAG, "Resetting app with memos")
       resetAppWithMemos()
-      emit(SettingsAction.ResetCompleted)
+      emit(SettingsAction.Reset.ResetCompleted)
     }
 }

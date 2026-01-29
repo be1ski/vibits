@@ -12,7 +12,7 @@ class SettingsReducerTest {
   fun `when Open then opens dialog with provided values`() =
     settingsReducer.test(SettingsState()) {
       send(
-        SettingsAction.Open(
+        SettingsAction.Dialog.Open(
           baseUrl = "https://api.com",
           token = "secret",
           appMode = AppMode.ONLINE,
@@ -43,7 +43,7 @@ class SettingsReducerTest {
         validationError = "error",
       ),
     ) {
-      send(SettingsAction.Close)
+      send(SettingsAction.Dialog.Close)
 
       assertState { !isOpen && !showLogsDialog && validationError == null }
       assertNotifications(SettingsEffect.Notification.DialogClosed)
@@ -52,7 +52,7 @@ class SettingsReducerTest {
   @Test
   fun `when Dismiss then closes dialog and emits NotifyDialogClosed`() =
     settingsReducer.test(SettingsState(isOpen = true)) {
-      send(SettingsAction.Dismiss)
+      send(SettingsAction.Dialog.Dismiss)
 
       assertState { !isOpen }
       assertNotifications(SettingsEffect.Notification.DialogClosed)
@@ -66,7 +66,7 @@ class SettingsReducerTest {
         validationError = "old error",
       ),
     ) {
-      send(SettingsAction.UpdateBaseUrl("https://new.api.com"))
+      send(SettingsAction.Input.UpdateBaseUrl("https://new.api.com"))
 
       assertState { editBaseUrl == "https://new.api.com" && validationError == null }
       assertNoEffects()
@@ -80,7 +80,7 @@ class SettingsReducerTest {
         validationError = "old error",
       ),
     ) {
-      send(SettingsAction.UpdateToken("new-token"))
+      send(SettingsAction.Input.UpdateToken("new-token"))
 
       assertState { editToken == "new-token" && validationError == null }
       assertNoEffects()
@@ -94,7 +94,7 @@ class SettingsReducerTest {
         validationError = "old error",
       ),
     ) {
-      send(SettingsAction.SelectMode(AppMode.OFFLINE))
+      send(SettingsAction.Input.SelectMode(AppMode.OFFLINE))
 
       assertState { appMode == AppMode.OFFLINE && validationError == null }
       assertNoEffects()
@@ -103,7 +103,7 @@ class SettingsReducerTest {
   @Test
   fun `when SelectLanguage then updates language and marks changed`() =
     settingsReducer.test(SettingsState()) {
-      send(SettingsAction.SelectLanguage(AppLanguage.ENGLISH))
+      send(SettingsAction.Input.SelectLanguage(AppLanguage.ENGLISH))
 
       assertState { selectedLanguage == AppLanguage.ENGLISH && languageChanged }
       assertNoEffects()
@@ -112,7 +112,7 @@ class SettingsReducerTest {
   @Test
   fun `when SelectTheme then updates theme`() =
     settingsReducer.test(SettingsState()) {
-      send(SettingsAction.SelectTheme(AppTheme.DARK))
+      send(SettingsAction.Input.SelectTheme(AppTheme.DARK))
 
       assertState { selectedTheme == AppTheme.DARK }
       assertNoEffects()
@@ -131,7 +131,7 @@ class SettingsReducerTest {
         selectedTheme = AppTheme.DARK,
       ),
     ) {
-      send(SettingsAction.ValidationSucceeded)
+      send(SettingsAction.Validation.ValidationSucceeded)
 
       assertState { !isValidating && !isOpen && !pendingSave && appMode == AppMode.ONLINE }
       assertCommandCount(4)
@@ -152,7 +152,7 @@ class SettingsReducerTest {
         pendingSave = true,
       ),
     ) {
-      send(SettingsAction.ValidationFailed("connection_failed"))
+      send(SettingsAction.Validation.ValidationFailed("connection_failed"))
 
       assertState { !isValidating && !pendingSave && validationError == "connection_failed" }
       assertNoEffects()
@@ -161,7 +161,7 @@ class SettingsReducerTest {
   @Test
   fun `when ModeSwitched then emits NotifyModeChanged`() =
     settingsReducer.test(SettingsState(appMode = AppMode.OFFLINE)) {
-      send(SettingsAction.ModeSwitched)
+      send(SettingsAction.Input.ModeSwitched)
 
       val effect = assertHasNotification<SettingsEffect.Notification.ModeChanged>()
       assertEquals(AppMode.OFFLINE, effect.newMode)
@@ -170,7 +170,7 @@ class SettingsReducerTest {
   @Test
   fun `when RequestReset then shows reset confirmation`() =
     settingsReducer.test(SettingsState()) {
-      send(SettingsAction.RequestReset)
+      send(SettingsAction.Reset.RequestReset)
 
       assertState { showResetConfirmation }
       assertNoEffects()
@@ -179,7 +179,7 @@ class SettingsReducerTest {
   @Test
   fun `when ConfirmReset then hides confirmation and emits ResetApp`() =
     settingsReducer.test(SettingsState(showResetConfirmation = true)) {
-      send(SettingsAction.ConfirmReset)
+      send(SettingsAction.Reset.ConfirmReset)
 
       assertState { !showResetConfirmation && isResetting }
       assertCommands(SettingsEffect.Command.ResetApp)
@@ -188,7 +188,7 @@ class SettingsReducerTest {
   @Test
   fun `when ConfirmResetWithMemos then hides confirmation and emits ResetAppWithMemos`() =
     settingsReducer.test(SettingsState(showResetConfirmation = true)) {
-      send(SettingsAction.ConfirmResetWithMemos)
+      send(SettingsAction.Reset.ConfirmResetWithMemos)
 
       assertState { !showResetConfirmation && isResetting }
       assertCommands(SettingsEffect.Command.ResetAppWithMemos)
@@ -197,7 +197,7 @@ class SettingsReducerTest {
   @Test
   fun `when CancelReset then hides reset confirmation`() =
     settingsReducer.test(SettingsState(showResetConfirmation = true)) {
-      send(SettingsAction.CancelReset)
+      send(SettingsAction.Reset.CancelReset)
 
       assertState { !showResetConfirmation }
       assertNoEffects()
@@ -211,7 +211,7 @@ class SettingsReducerTest {
         isResetting = true,
       ),
     ) {
-      send(SettingsAction.ResetCompleted)
+      send(SettingsAction.Reset.ResetCompleted)
 
       assertState { !isOpen && !isResetting }
       assertNotifications(SettingsEffect.Notification.ResetCompleted)
@@ -220,7 +220,7 @@ class SettingsReducerTest {
   @Test
   fun `when OpenLogs then shows logs dialog`() =
     settingsReducer.test(SettingsState()) {
-      send(SettingsAction.OpenLogs)
+      send(SettingsAction.SaveAndLogs.OpenLogs)
 
       assertState { showLogsDialog }
       assertNoEffects()
@@ -229,7 +229,7 @@ class SettingsReducerTest {
   @Test
   fun `when CloseLogs then hides logs dialog`() =
     settingsReducer.test(SettingsState(showLogsDialog = true)) {
-      send(SettingsAction.CloseLogs)
+      send(SettingsAction.SaveAndLogs.CloseLogs)
 
       assertState { !showLogsDialog }
       assertNoEffects()
@@ -245,7 +245,7 @@ class SettingsReducerTest {
         selectedTheme = AppTheme.LIGHT,
       ),
     ) {
-      send(SettingsAction.Save)
+      send(SettingsAction.SaveAndLogs.Save)
 
       assertState { !isOpen }
       assertCommandCount(4)
@@ -265,7 +265,7 @@ class SettingsReducerTest {
         editToken = "",
       ),
     ) {
-      send(SettingsAction.Save)
+      send(SettingsAction.SaveAndLogs.Save)
 
       assertState { isOpen && validationError == "fill_all_fields" }
       assertNoEffects()
@@ -281,7 +281,7 @@ class SettingsReducerTest {
         editToken = "token123",
       ),
     ) {
-      send(SettingsAction.Save)
+      send(SettingsAction.SaveAndLogs.Save)
 
       assertState { isOpen && isValidating && pendingSave && validationError == null }
 

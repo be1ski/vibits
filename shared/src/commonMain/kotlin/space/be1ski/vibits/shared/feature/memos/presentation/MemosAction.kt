@@ -8,94 +8,112 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
  * Actions for the Memos feature.
  */
 sealed interface MemosAction : Action {
-  // Credentials
-  data class UpdateBaseUrl(
-    val value: String,
-  ) : MemosAction
+  /**
+   * Credentials input.
+   */
+  sealed interface Credentials : MemosAction {
+    data class UpdateBaseUrl(
+      val value: String,
+    ) : Credentials
 
-  data class UpdateToken(
-    val value: String,
-  ) : MemosAction
+    data class UpdateToken(
+      val value: String,
+    ) : Credentials
 
-  data object EditCredentials : MemosAction
+    data object EditCredentials : Credentials
 
-  // Loading
-  data object LoadMemos : MemosAction
+    data class CredentialsLoaded(
+      val baseUrl: String,
+      val token: String,
+    ) : Credentials
+  }
 
-  data object LoadCachedMemos : MemosAction
+  /**
+   * Loading and filtering.
+   */
+  sealed interface Loading : MemosAction {
+    data object LoadMemos : Loading
 
-  data object ResetForModeChange : MemosAction
+    data object LoadCachedMemos : Loading
 
-  // Filtering
-  data class ChangePostFilter(
-    val filter: PostFilter,
-  ) : MemosAction
+    data object ResetForModeChange : Loading
 
-  // CRUD
-  data class CreateMemo(
-    val content: String,
-  ) : MemosAction
+    data class ChangePostFilter(
+      val filter: PostFilter,
+    ) : Loading
 
-  data class UpdateMemo(
-    val name: String,
-    val content: String,
-  ) : MemosAction
+    data class CachedMemosLoaded(
+      val memos: List<Memo>,
+    ) : Loading
 
-  data class DeleteMemo(
-    val name: String,
-  ) : MemosAction
+    data class MemosLoaded(
+      val memos: List<Memo>,
+    ) : Loading
+  }
 
-  // Create dialog
-  data object ShowCreateDialog : MemosAction
+  /**
+   * CRUD operations.
+   */
+  sealed interface Crud : MemosAction {
+    data class CreateMemo(
+      val content: String,
+    ) : Crud
 
-  data class UpdateCreateContent(
-    val content: String,
-  ) : MemosAction
+    data class UpdateMemo(
+      val name: String,
+      val content: String,
+    ) : Crud
 
-  data object DismissCreateDialog : MemosAction
+    data class DeleteMemo(
+      val name: String,
+    ) : Crud
 
-  data object ConfirmCreateDialog : MemosAction
+    data class MemoCreated(
+      val memo: Memo,
+    ) : Crud
 
-  // Edit dialog
-  data class ShowEditDialog(
-    val memo: Memo,
-  ) : MemosAction
+    data class MemoUpdated(
+      val memo: Memo,
+    ) : Crud
 
-  data class UpdateEditContent(
-    val content: String,
-  ) : MemosAction
+    data class MemoDeleted(
+      val name: String,
+    ) : Crud
 
-  data object DismissEditDialog : MemosAction
+    data class OperationFailed(
+      val error: String,
+    ) : Crud
+  }
 
-  data object ConfirmEditDialog : MemosAction
+  /**
+   * Create dialog.
+   */
+  sealed interface CreateDialog : MemosAction {
+    data object ShowCreateDialog : CreateDialog
 
-  // Internal responses
-  data class MemosLoaded(
-    val memos: List<Memo>,
-  ) : MemosAction
+    data class UpdateCreateContent(
+      val content: String,
+    ) : CreateDialog
 
-  data class CachedMemosLoaded(
-    val memos: List<Memo>,
-  ) : MemosAction
+    data object DismissCreateDialog : CreateDialog
 
-  data class MemoCreated(
-    val memo: Memo,
-  ) : MemosAction
+    data object ConfirmCreateDialog : CreateDialog
+  }
 
-  data class MemoUpdated(
-    val memo: Memo,
-  ) : MemosAction
+  /**
+   * Edit dialog.
+   */
+  sealed interface EditDialog : MemosAction {
+    data class ShowEditDialog(
+      val memo: Memo,
+    ) : EditDialog
 
-  data class MemoDeleted(
-    val name: String,
-  ) : MemosAction
+    data class UpdateEditContent(
+      val content: String,
+    ) : EditDialog
 
-  data class OperationFailed(
-    val error: String,
-  ) : MemosAction
+    data object DismissEditDialog : EditDialog
 
-  data class CredentialsLoaded(
-    val baseUrl: String,
-    val token: String,
-  ) : MemosAction
+    data object ConfirmEditDialog : EditDialog
+  }
 }

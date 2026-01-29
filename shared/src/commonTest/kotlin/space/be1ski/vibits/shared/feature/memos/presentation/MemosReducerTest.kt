@@ -18,7 +18,7 @@ class MemosReducerTest {
   @Test
   fun `when UpdateBaseUrl then updates baseUrl and clears error`() =
     memosReducer.test(MemosState(errorMessage = "some error")) {
-      send(MemosAction.UpdateBaseUrl("https://example.com"))
+      send(MemosAction.Credentials.UpdateBaseUrl("https://example.com"))
 
       assertState { baseUrl == "https://example.com" && errorMessage == null }
       assertNoEffects()
@@ -27,7 +27,7 @@ class MemosReducerTest {
   @Test
   fun `when UpdateToken then updates token and clears error`() =
     memosReducer.test(MemosState(errorMessage = "some error")) {
-      send(MemosAction.UpdateToken("secret-token"))
+      send(MemosAction.Credentials.UpdateToken("secret-token"))
 
       assertState { token == "secret-token" && errorMessage == null }
       assertNoEffects()
@@ -36,7 +36,7 @@ class MemosReducerTest {
   @Test
   fun `when EditCredentials then sets credentials mode and emits LoadCredentials`() =
     memosReducer.test(MemosState()) {
-      send(MemosAction.EditCredentials)
+      send(MemosAction.Credentials.EditCredentials)
 
       assertState { credentialsMode && errorMessage == null }
       assertCommands(MemosEffect.LoadCredentials)
@@ -45,7 +45,7 @@ class MemosReducerTest {
   @Test
   fun `when CredentialsLoaded then updates baseUrl and token`() =
     memosReducer.test(MemosState()) {
-      send(MemosAction.CredentialsLoaded("https://api.com", "token123"))
+      send(MemosAction.Credentials.CredentialsLoaded("https://api.com", "token123"))
 
       assertState { baseUrl == "https://api.com" && token == "token123" }
       assertNoEffects()
@@ -54,7 +54,7 @@ class MemosReducerTest {
   @Test
   fun `when LoadMemos without credentials then shows error`() =
     memosReducer.test(MemosState(baseUrl = "", token = "")) {
-      send(MemosAction.LoadMemos)
+      send(MemosAction.Loading.LoadMemos)
 
       assertState { credentialsMode && errorMessage == "Base URL and token are required." }
       assertNoEffects()
@@ -63,7 +63,7 @@ class MemosReducerTest {
   @Test
   fun `when LoadMemos with credentials then starts loading and emits effects`() =
     memosReducer.test(MemosState(baseUrl = "https://api.com", token = "token123")) {
-      send(MemosAction.LoadMemos)
+      send(MemosAction.Loading.LoadMemos)
 
       assertState { isLoading && !credentialsMode && errorMessage == null }
       assertCommandCount(2)
@@ -74,7 +74,7 @@ class MemosReducerTest {
   @Test
   fun `when LoadCachedMemos then emits LoadCachedMemos effect`() =
     memosReducer.test(MemosState()) {
-      send(MemosAction.LoadCachedMemos)
+      send(MemosAction.Loading.LoadCachedMemos)
 
       assertCommands(MemosEffect.LoadCachedMemos)
     }
@@ -82,7 +82,7 @@ class MemosReducerTest {
   @Test
   fun `when CachedMemosLoaded with empty state then updates memos`() =
     memosReducer.test(MemosState()) {
-      send(MemosAction.CachedMemosLoaded(listOf(testMemo)))
+      send(MemosAction.Loading.CachedMemosLoaded(listOf(testMemo)))
 
       assertState { memos.size == 1 && memos.first().name == testMemo.name && initialDataLoaded }
       assertNoEffects()
@@ -91,7 +91,7 @@ class MemosReducerTest {
   @Test
   fun `when CachedMemosLoaded with existing memos then ignores cached`() =
     memosReducer.test(MemosState(memos = listOf(testMemo.copy(name = "memos/existing")))) {
-      send(MemosAction.CachedMemosLoaded(listOf(testMemo)))
+      send(MemosAction.Loading.CachedMemosLoaded(listOf(testMemo)))
 
       assertState { memos.size == 1 && memos.first().name == "memos/existing" }
       assertNoEffects()
@@ -100,7 +100,7 @@ class MemosReducerTest {
   @Test
   fun `when CachedMemosLoaded with empty cache in offline mode then marks as loaded`() =
     memosReducer.test(MemosState(isOfflineMode = true)) {
-      send(MemosAction.CachedMemosLoaded(emptyList()))
+      send(MemosAction.Loading.CachedMemosLoaded(emptyList()))
 
       assertState { memos.isEmpty() && initialDataLoaded }
       assertNoEffects()
@@ -109,7 +109,7 @@ class MemosReducerTest {
   @Test
   fun `when CachedMemosLoaded with empty cache in online mode then loads from server`() =
     memosReducer.test(MemosState(isOfflineMode = false)) {
-      send(MemosAction.CachedMemosLoaded(emptyList()))
+      send(MemosAction.Loading.CachedMemosLoaded(emptyList()))
 
       assertState { memos.isEmpty() && !initialDataLoaded && isLoading }
       assertCommands(MemosEffect.LoadRemoteMemos)
@@ -118,7 +118,7 @@ class MemosReducerTest {
   @Test
   fun `when ResetForModeChange then clears memos and resets initialDataLoaded`() =
     memosReducer.test(MemosState(memos = listOf(testMemo), initialDataLoaded = true, isLoading = true)) {
-      send(MemosAction.ResetForModeChange)
+      send(MemosAction.Loading.ResetForModeChange)
 
       assertState { memos.isEmpty() && !initialDataLoaded && !isLoading }
       assertNoEffects()
@@ -127,7 +127,7 @@ class MemosReducerTest {
   @Test
   fun `when MemosLoaded then updates memos and stops loading`() =
     memosReducer.test(MemosState(isLoading = true, errorMessage = "old error")) {
-      send(MemosAction.MemosLoaded(listOf(testMemo)))
+      send(MemosAction.Loading.MemosLoaded(listOf(testMemo)))
 
       assertState { memos.size == 1 && !isLoading && errorMessage == null && initialDataLoaded }
       assertNoEffects()
@@ -136,7 +136,7 @@ class MemosReducerTest {
   @Test
   fun `when CreateMemo then starts loading and emits CreateMemo effect`() =
     memosReducer.test(MemosState()) {
-      send(MemosAction.CreateMemo("New memo content"))
+      send(MemosAction.Crud.CreateMemo("New memo content"))
 
       assertState { isLoading }
       val effect = assertHasCommand<MemosEffect.CreateMemo>()
@@ -146,7 +146,7 @@ class MemosReducerTest {
   @Test
   fun `when UpdateMemo then starts loading and emits UpdateMemo effect`() =
     memosReducer.test(MemosState()) {
-      send(MemosAction.UpdateMemo("memos/1", "Updated content"))
+      send(MemosAction.Crud.UpdateMemo("memos/1", "Updated content"))
 
       assertState { isLoading }
       val effect = assertHasCommand<MemosEffect.UpdateMemo>()
@@ -157,7 +157,7 @@ class MemosReducerTest {
   @Test
   fun `when DeleteMemo then starts loading and emits DeleteMemo effect`() =
     memosReducer.test(MemosState()) {
-      send(MemosAction.DeleteMemo("memos/1"))
+      send(MemosAction.Crud.DeleteMemo("memos/1"))
 
       assertState { isLoading }
       val effect = assertHasCommand<MemosEffect.DeleteMemo>()
@@ -167,7 +167,7 @@ class MemosReducerTest {
   @Test
   fun `when MemoCreated then adds memo and stops loading`() =
     memosReducer.test(MemosState(isLoading = true, memos = listOf(testMemo))) {
-      send(MemosAction.MemoCreated(Memo(name = "memos/2", content = "New")))
+      send(MemosAction.Crud.MemoCreated(Memo(name = "memos/2", content = "New")))
 
       assertState { memos.size == 2 && !isLoading }
       assertNoEffects()
@@ -176,7 +176,7 @@ class MemosReducerTest {
   @Test
   fun `when MemoUpdated then updates memo in list and stops loading`() =
     memosReducer.test(MemosState(isLoading = true, memos = listOf(testMemo))) {
-      send(MemosAction.MemoUpdated(testMemo.copy(content = "Updated content")))
+      send(MemosAction.Crud.MemoUpdated(testMemo.copy(content = "Updated content")))
 
       assertState { memos.size == 1 && memos.first().content == "Updated content" && !isLoading }
       assertNoEffects()
@@ -185,7 +185,7 @@ class MemosReducerTest {
   @Test
   fun `when MemoDeleted then removes memo from list and stops loading`() =
     memosReducer.test(MemosState(isLoading = true, memos = listOf(testMemo))) {
-      send(MemosAction.MemoDeleted("memos/1"))
+      send(MemosAction.Crud.MemoDeleted("memos/1"))
 
       assertState { memos.isEmpty() && !isLoading }
       assertNoEffects()
@@ -194,7 +194,7 @@ class MemosReducerTest {
   @Test
   fun `when OperationFailed then sets error and stops loading`() =
     memosReducer.test(MemosState(isLoading = true)) {
-      send(MemosAction.OperationFailed("Network error"))
+      send(MemosAction.Crud.OperationFailed("Network error"))
 
       assertState { !isLoading && errorMessage == "Network error" }
       assertNoEffects()
@@ -206,7 +206,7 @@ class MemosReducerTest {
       val oldMemo = Memo(name = "memos/old", updateTime = Instant.fromEpochMilliseconds(1000L))
       val newMemo = Memo(name = "memos/new", updateTime = Instant.fromEpochMilliseconds(2000L))
 
-      send(MemosAction.MemosLoaded(listOf(oldMemo, newMemo)))
+      send(MemosAction.Loading.MemosLoaded(listOf(oldMemo, newMemo)))
 
       assertState { memos.first().name == "memos/new" && memos.last().name == "memos/old" }
     }
@@ -233,7 +233,7 @@ class MemosReducerTest {
           createTime = Instant.fromEpochMilliseconds(2000L),
         )
 
-      send(MemosAction.MemosLoaded(listOf(trackingJan15, regularPost, trackingJan20)))
+      send(MemosAction.Loading.MemosLoaded(listOf(trackingJan15, regularPost, trackingJan20)))
 
       assertState {
         memos.size == 3 &&
@@ -246,7 +246,7 @@ class MemosReducerTest {
   @Test
   fun `when LoadMemos in offline mode then does not emit SaveCredentials`() =
     memosReducer.test(MemosState(baseUrl = "https://api.com", token = "token", isOfflineMode = true)) {
-      send(MemosAction.LoadMemos)
+      send(MemosAction.Loading.LoadMemos)
 
       assertState { isLoading }
       assertCommandCount(1)
@@ -256,7 +256,7 @@ class MemosReducerTest {
   @Test
   fun `when ShowCreateDialog then opens dialog with empty content`() =
     memosReducer.test(MemosState()) {
-      send(MemosAction.ShowCreateDialog)
+      send(MemosAction.CreateDialog.ShowCreateDialog)
 
       assertState { showCreateDialog && createDialogContent == "" }
       assertNoEffects()
@@ -265,7 +265,7 @@ class MemosReducerTest {
   @Test
   fun `when UpdateCreateContent then updates create dialog content`() =
     memosReducer.test(MemosState(showCreateDialog = true)) {
-      send(MemosAction.UpdateCreateContent("New content"))
+      send(MemosAction.CreateDialog.UpdateCreateContent("New content"))
 
       assertState { createDialogContent == "New content" }
       assertNoEffects()
@@ -274,7 +274,7 @@ class MemosReducerTest {
   @Test
   fun `when DismissCreateDialog then closes dialog and clears content`() =
     memosReducer.test(MemosState(showCreateDialog = true, createDialogContent = "Some content")) {
-      send(MemosAction.DismissCreateDialog)
+      send(MemosAction.CreateDialog.DismissCreateDialog)
 
       assertState { !showCreateDialog && createDialogContent == "" }
       assertNoEffects()
@@ -283,7 +283,7 @@ class MemosReducerTest {
   @Test
   fun `when ConfirmCreateDialog with content then closes dialog and emits CreateMemo`() =
     memosReducer.test(MemosState(showCreateDialog = true, createDialogContent = "  New memo  ")) {
-      send(MemosAction.ConfirmCreateDialog)
+      send(MemosAction.CreateDialog.ConfirmCreateDialog)
 
       assertState { !showCreateDialog && createDialogContent == "" && isLoading }
       val effect = assertHasCommand<MemosEffect.CreateMemo>()
@@ -293,7 +293,7 @@ class MemosReducerTest {
   @Test
   fun `when ConfirmCreateDialog with blank content then does nothing`() =
     memosReducer.test(MemosState(showCreateDialog = true, createDialogContent = "   ")) {
-      send(MemosAction.ConfirmCreateDialog)
+      send(MemosAction.CreateDialog.ConfirmCreateDialog)
 
       assertState { showCreateDialog && createDialogContent == "   " }
       assertNoEffects()
@@ -302,7 +302,7 @@ class MemosReducerTest {
   @Test
   fun `when ShowEditDialog then opens dialog with memo content`() =
     memosReducer.test(MemosState()) {
-      send(MemosAction.ShowEditDialog(testMemo))
+      send(MemosAction.EditDialog.ShowEditDialog(testMemo))
 
       assertState { showEditDialog && editDialogContent == testMemo.content && editDialogMemo == testMemo }
       assertNoEffects()
@@ -311,7 +311,7 @@ class MemosReducerTest {
   @Test
   fun `when UpdateEditContent then updates edit dialog content`() =
     memosReducer.test(MemosState(showEditDialog = true, editDialogMemo = testMemo)) {
-      send(MemosAction.UpdateEditContent("Updated content"))
+      send(MemosAction.EditDialog.UpdateEditContent("Updated content"))
 
       assertState { editDialogContent == "Updated content" }
       assertNoEffects()
@@ -320,7 +320,7 @@ class MemosReducerTest {
   @Test
   fun `when DismissEditDialog then closes dialog and clears state`() =
     memosReducer.test(MemosState(showEditDialog = true, editDialogContent = "Content", editDialogMemo = testMemo)) {
-      send(MemosAction.DismissEditDialog)
+      send(MemosAction.EditDialog.DismissEditDialog)
 
       assertState { !showEditDialog && editDialogContent == "" && editDialogMemo == null }
       assertNoEffects()
@@ -329,7 +329,7 @@ class MemosReducerTest {
   @Test
   fun `when ConfirmEditDialog with content then closes dialog and emits UpdateMemo`() =
     memosReducer.test(MemosState(showEditDialog = true, editDialogContent = "  Updated  ", editDialogMemo = testMemo)) {
-      send(MemosAction.ConfirmEditDialog)
+      send(MemosAction.EditDialog.ConfirmEditDialog)
 
       assertState { !showEditDialog && editDialogContent == "" && editDialogMemo == null && isLoading }
       val effect = assertHasCommand<MemosEffect.UpdateMemo>()
@@ -340,7 +340,7 @@ class MemosReducerTest {
   @Test
   fun `when ConfirmEditDialog with blank content then does nothing`() =
     memosReducer.test(MemosState(showEditDialog = true, editDialogContent = "   ", editDialogMemo = testMemo)) {
-      send(MemosAction.ConfirmEditDialog)
+      send(MemosAction.EditDialog.ConfirmEditDialog)
 
       assertState { showEditDialog }
       assertNoEffects()
@@ -349,7 +349,7 @@ class MemosReducerTest {
   @Test
   fun `when ConfirmEditDialog with null memo then does nothing`() =
     memosReducer.test(MemosState(showEditDialog = true, editDialogContent = "Content", editDialogMemo = null)) {
-      send(MemosAction.ConfirmEditDialog)
+      send(MemosAction.EditDialog.ConfirmEditDialog)
 
       assertState { showEditDialog }
       assertNoEffects()

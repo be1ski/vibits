@@ -16,132 +16,164 @@ import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
  * Actions for the Habits feature.
  */
 sealed interface HabitsAction : Action {
-  // Editor lifecycle
-  data class OpenEditor(
-    val day: ContributionDay? = null,
-    val memo: Memo? = null,
-    val config: List<HabitConfig>,
-  ) : HabitsAction
+  /**
+   * Editor lifecycle and interactions.
+   */
+  sealed interface Editor : HabitsAction {
+    data class OpenEditor(
+      val day: ContributionDay? = null,
+      val memo: Memo? = null,
+      val config: List<HabitConfig>,
+    ) : Editor
 
-  data object CloseEditor : HabitsAction
+    data object CloseEditor : Editor
 
-  // Editor interactions
-  data class ToggleHabit(
-    val tag: String,
-    val checked: Boolean,
-  ) : HabitsAction
+    data class ToggleHabit(
+      val tag: String,
+      val checked: Boolean,
+    ) : Editor
 
-  data object ConfirmEditor : HabitsAction
+    data object ConfirmEditor : Editor
 
-  data object RequestDelete : HabitsAction
+    data object RequestDelete : Editor
 
-  data object ConfirmDelete : HabitsAction
+    data object ConfirmDelete : Editor
 
-  data object CancelDelete : HabitsAction
+    data object CancelDelete : Editor
+  }
 
-  // Config dialog
-  data class OpenConfigDialog(
-    val currentConfig: List<HabitConfig>,
-    val existingMemo: Memo? = null,
-  ) : HabitsAction
+  /**
+   * Config dialog management.
+   */
+  sealed interface Config : HabitsAction {
+    data class OpenConfigDialog(
+      val currentConfig: List<HabitConfig>,
+      val existingMemo: Memo? = null,
+    ) : Config
 
-  data object CloseConfigDialog : HabitsAction
+    data object CloseConfigDialog : Config
 
-  data object AddHabit : HabitsAction
+    data object AddHabit : Config
 
-  data class UpdateHabitLabel(
-    val id: String,
-    val label: String,
-  ) : HabitsAction
+    data class UpdateHabitLabel(
+      val id: String,
+      val label: String,
+    ) : Config
 
-  data class UpdateHabitColor(
-    val id: String,
-    val color: Long,
-  ) : HabitsAction
+    data class UpdateHabitColor(
+      val id: String,
+      val color: Long,
+    ) : Config
 
-  data class DeleteHabit(
-    val id: String,
-  ) : HabitsAction
+    data class DeleteHabit(
+      val id: String,
+    ) : Config
 
-  data object SaveConfigDialog : HabitsAction
+    data object SaveConfigDialog : Config
+  }
 
-  data object RequestDeleteConfig : HabitsAction
+  /**
+   * Edit config warning flow.
+   */
+  sealed interface ConfigWarning : HabitsAction {
+    data object DismissEditConfigWarning : ConfigWarning
 
-  data object ConfirmDeleteConfig : HabitsAction
+    data object ConfirmEditExistingConfig : ConfigWarning
 
-  data object CancelDeleteConfig : HabitsAction
+    data object CreateNewConfigInstead : ConfigWarning
+  }
 
-  // Edit existing config warning
-  data object DismissEditConfigWarning : HabitsAction
+  /**
+   * Delete config confirmation.
+   */
+  sealed interface ConfigDelete : HabitsAction {
+    data object RequestDeleteConfig : ConfigDelete
 
-  data object ConfirmEditExistingConfig : HabitsAction
+    data object ConfirmDeleteConfig : ConfigDelete
 
-  data object CreateNewConfigInstead : HabitsAction
+    data object CancelDeleteConfig : ConfigDelete
+  }
 
-  // Single habit toggle (quick toggle from matrix)
-  data class RequestSingleHabitToggle(
-    val day: ContributionDay,
-    val habitTag: String,
-    val habitLabel: String,
-    val config: List<HabitConfig>,
-  ) : HabitsAction
+  /**
+   * Single habit toggle from matrix.
+   */
+  sealed interface SingleToggle : HabitsAction {
+    data class RequestSingleHabitToggle(
+      val day: ContributionDay,
+      val habitTag: String,
+      val habitLabel: String,
+      val config: List<HabitConfig>,
+    ) : SingleToggle
 
-  data object ConfirmSingleHabitToggle : HabitsAction
+    data object ConfirmSingleHabitToggle : SingleToggle
 
-  data object CancelSingleHabitToggle : HabitsAction
+    data object CancelSingleHabitToggle : SingleToggle
+  }
 
-  // Selection management
-  data class SelectDay(
-    val day: ContributionDay,
-    val selectionId: String,
-  ) : HabitsAction
+  /**
+   * Day/week selection.
+   */
+  sealed interface Selection : HabitsAction {
+    data class SelectDay(
+      val day: ContributionDay,
+      val selectionId: String,
+    ) : Selection
 
-  data class SelectWeek(
-    val week: ActivityWeek,
-  ) : HabitsAction
+    data class SelectWeek(
+      val week: ActivityWeek,
+    ) : Selection
 
-  data object ClearSelection : HabitsAction
+    data object ClearSelection : Selection
+  }
 
-  // API responses
-  data class MemoCreated(
-    val memo: Memo,
-  ) : HabitsAction
+  /**
+   * API response handling.
+   */
+  sealed interface Response : HabitsAction {
+    data class MemoCreated(
+      val memo: Memo,
+    ) : Response
 
-  data class MemoUpdated(
-    val memo: Memo,
-  ) : HabitsAction
+    data class MemoUpdated(
+      val memo: Memo,
+    ) : Response
 
-  data class MemoDeleted(
-    val name: String,
-  ) : HabitsAction
+    data class MemoDeleted(
+      val name: String,
+    ) : Response
 
-  data class MemoOperationFailed(
-    val error: String,
-  ) : HabitsAction
+    data class MemoOperationFailed(
+      val error: String,
+    ) : Response
+  }
 
-  // Cache management
-  data class RequestPrewarmAllRanges(
-    val memos: List<Memo>,
-    val appMode: AppMode,
-  ) : HabitsAction
+  /**
+   * Cache management.
+   */
+  sealed interface Cache : HabitsAction {
+    data class RequestPrewarmAllRanges(
+      val memos: List<Memo>,
+      val appMode: AppMode,
+    ) : Cache
 
-  data class UpdateActivityData(
-    val range: ActivityRange,
-    val mode: ActivityMode,
-    val appMode: AppMode,
-    val weekData: ActivityWeekData,
-    val configTimeline: List<HabitsConfigEntry>,
-    val successRate: SuccessRateData?,
-  ) : HabitsAction
+    data class UpdateActivityData(
+      val range: ActivityRange,
+      val mode: ActivityMode,
+      val appMode: AppMode,
+      val weekData: ActivityWeekData,
+      val configTimeline: List<HabitsConfigEntry>,
+      val successRate: SuccessRateData?,
+    ) : Cache
 
-  data object PrewarmCompleted : HabitsAction
+    data object PrewarmCompleted : Cache
 
-  data object InvalidateAllCache : HabitsAction
+    data object InvalidateAllCache : Cache
 
-  data class InvalidateCache(
-    val range: ActivityRange,
-    val mode: ActivityMode,
-    val appMode: AppMode,
-    val memos: List<Memo>,
-  ) : HabitsAction
+    data class InvalidateCache(
+      val range: ActivityRange,
+      val mode: ActivityMode,
+      val appMode: AppMode,
+      val memos: List<Memo>,
+    ) : Cache
+  }
 }

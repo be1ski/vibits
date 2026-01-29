@@ -48,7 +48,7 @@ class HabitsReducerTest {
   @Test
   fun `when OpenEditor then sets editor state`() =
     habitsReducer.test(HabitsState()) {
-      send(HabitsAction.OpenEditor(day = testDay, config = testConfig))
+      send(HabitsAction.Editor.OpenEditor(day = testDay, config = testConfig))
 
       assertState {
         editorDay == testDay &&
@@ -64,7 +64,7 @@ class HabitsReducerTest {
     habitsReducer.test(HabitsState()) {
       val dayWithMemo = testDay.copy(dailyMemo = DailyMemoInfo("memos/1", "content"))
 
-      send(HabitsAction.OpenEditor(day = dayWithMemo, config = testConfig))
+      send(HabitsAction.Editor.OpenEditor(day = dayWithMemo, config = testConfig))
 
       assertState { editorExisting?.name == "memos/1" }
     }
@@ -80,7 +80,7 @@ class HabitsReducerTest {
         showDeleteConfirm = true,
       ),
     ) {
-      send(HabitsAction.CloseEditor)
+      send(HabitsAction.Editor.CloseEditor)
 
       assertState {
         editorDay == null &&
@@ -95,7 +95,7 @@ class HabitsReducerTest {
   @Test
   fun `when ToggleHabit then updates selection`() =
     habitsReducer.test(HabitsState(editorSelections = mapOf("#habits/exercise" to false))) {
-      send(HabitsAction.ToggleHabit("#habits/exercise", true))
+      send(HabitsAction.Editor.ToggleHabit("#habits/exercise", true))
 
       assertState { editorSelections["#habits/exercise"] == true }
       assertNoEffects()
@@ -111,7 +111,7 @@ class HabitsReducerTest {
         editorExisting = DailyMemoInfo("memos/1", "content"),
       ),
     ) {
-      send(HabitsAction.ConfirmEditor)
+      send(HabitsAction.Editor.ConfirmEditor)
 
       assertState { showDeleteConfirm }
       assertNoEffects()
@@ -127,7 +127,7 @@ class HabitsReducerTest {
         editorExisting = null,
       ),
     ) {
-      send(HabitsAction.ConfirmEditor)
+      send(HabitsAction.Editor.ConfirmEditor)
 
       assertState { editorError == "Select at least one habit." }
       assertNoEffects()
@@ -142,7 +142,7 @@ class HabitsReducerTest {
         editorSelections = mapOf("#habits/exercise" to true),
       ),
     ) {
-      send(HabitsAction.ConfirmEditor)
+      send(HabitsAction.Editor.ConfirmEditor)
 
       assertState { isLoading }
       assertHasCommand<HabitsEffect.CreateMemo>()
@@ -158,7 +158,7 @@ class HabitsReducerTest {
         editorExisting = DailyMemoInfo("memos/1", "old content"),
       ),
     ) {
-      send(HabitsAction.ConfirmEditor)
+      send(HabitsAction.Editor.ConfirmEditor)
 
       assertState { isLoading }
       val effect = assertHasCommand<HabitsEffect.UpdateMemo>()
@@ -174,7 +174,7 @@ class HabitsReducerTest {
         editorSelections = mapOf("#habits/exercise" to true),
       ),
     ) {
-      send(HabitsAction.ConfirmEditor)
+      send(HabitsAction.Editor.ConfirmEditor)
 
       assertNoEffects()
     }
@@ -182,7 +182,7 @@ class HabitsReducerTest {
   @Test
   fun `when RequestDelete then shows delete confirm`() =
     habitsReducer.test(HabitsState()) {
-      send(HabitsAction.RequestDelete)
+      send(HabitsAction.Editor.RequestDelete)
 
       assertState { showDeleteConfirm }
       assertNoEffects()
@@ -191,7 +191,7 @@ class HabitsReducerTest {
   @Test
   fun `when ConfirmDelete then emits DeleteMemo effect`() =
     habitsReducer.test(HabitsState(editorExisting = DailyMemoInfo("memos/1", "content"))) {
-      send(HabitsAction.ConfirmDelete)
+      send(HabitsAction.Editor.ConfirmDelete)
 
       assertState { isLoading }
       val effect = assertHasCommand<HabitsEffect.DeleteMemo>()
@@ -201,7 +201,7 @@ class HabitsReducerTest {
   @Test
   fun `when ConfirmDelete with null editorExisting then does nothing`() =
     habitsReducer.test(HabitsState(editorExisting = null)) {
-      send(HabitsAction.ConfirmDelete)
+      send(HabitsAction.Editor.ConfirmDelete)
 
       assertState { !isLoading }
       assertNoEffects()
@@ -210,7 +210,7 @@ class HabitsReducerTest {
   @Test
   fun `when CancelDelete then hides delete confirm`() =
     habitsReducer.test(HabitsState(showDeleteConfirm = true)) {
-      send(HabitsAction.CancelDelete)
+      send(HabitsAction.Editor.CancelDelete)
 
       assertState { !showDeleteConfirm }
       assertNoEffects()
@@ -219,7 +219,7 @@ class HabitsReducerTest {
   @Test
   fun `when SelectDay then updates selection state`() =
     habitsReducer.test(HabitsState()) {
-      send(HabitsAction.SelectDay(testDay, "section-1"))
+      send(HabitsAction.Selection.SelectDay(testDay, "section-1"))
 
       assertState { selectedDate == testDay.date && activeSelectionId == "section-1" }
     }
@@ -229,7 +229,7 @@ class HabitsReducerTest {
     habitsReducer.test(HabitsState()) {
       val week = ActivityWeek(startDate = LocalDate(2024, 1, 15), days = emptyList(), weeklyCount = 0)
 
-      send(HabitsAction.SelectWeek(week))
+      send(HabitsAction.Selection.SelectWeek(week))
 
       assertState { selectedWeek == week }
     }
@@ -243,7 +243,7 @@ class HabitsReducerTest {
         activeSelectionId = "section-1",
       ),
     ) {
-      send(HabitsAction.ClearSelection)
+      send(HabitsAction.Selection.ClearSelection)
 
       assertState { selectedDate == null && selectedWeek == null && activeSelectionId == null }
     }
@@ -257,7 +257,7 @@ class HabitsReducerTest {
         editorConfig = testConfig,
       ),
     ) {
-      send(HabitsAction.MemoCreated(Memo(name = "memos/1")))
+      send(HabitsAction.Response.MemoCreated(Memo(name = "memos/1")))
 
       assertState { !isLoading && editorDay == null && editorConfig.isEmpty() }
       assertCommands(HabitsEffect.RefreshMemos)
@@ -266,7 +266,7 @@ class HabitsReducerTest {
   @Test
   fun `when MemoUpdated then clears editor and emits refresh`() =
     habitsReducer.test(HabitsState(isLoading = true, editorDay = testDay)) {
-      send(HabitsAction.MemoUpdated(Memo(name = "memos/1")))
+      send(HabitsAction.Response.MemoUpdated(Memo(name = "memos/1")))
 
       assertState { !isLoading && editorDay == null }
       assertCommands(HabitsEffect.RefreshMemos)
@@ -281,7 +281,7 @@ class HabitsReducerTest {
         showDeleteConfirm = true,
       ),
     ) {
-      send(HabitsAction.MemoDeleted("memos/1"))
+      send(HabitsAction.Response.MemoDeleted("memos/1"))
 
       assertState { !isLoading && editorDay == null && !showDeleteConfirm }
       assertCommands(HabitsEffect.RefreshMemos)
@@ -290,7 +290,7 @@ class HabitsReducerTest {
   @Test
   fun `when MemoOperationFailed then sets error and stops loading`() =
     habitsReducer.test(HabitsState(isLoading = true)) {
-      send(HabitsAction.MemoOperationFailed("Network error"))
+      send(HabitsAction.Response.MemoOperationFailed("Network error"))
 
       assertState { !isLoading && editorError == "Network error" }
       assertNoEffects()
@@ -299,7 +299,7 @@ class HabitsReducerTest {
   @Test
   fun `when OpenConfigDialog then shows dialog with editable habits`() =
     habitsReducer.test(HabitsState()) {
-      send(HabitsAction.OpenConfigDialog(testConfig))
+      send(HabitsAction.Config.OpenConfigDialog(testConfig))
 
       assertState { showConfigDialog && editingHabits.size == 2 && editingHabits.first().label == "Exercise" }
       assertNoEffects()
@@ -313,7 +313,7 @@ class HabitsReducerTest {
         editingHabits = listOf(EditableHabit("1", "#habits/test", "Test", 0xFF0000L)),
       ),
     ) {
-      send(HabitsAction.CloseConfigDialog)
+      send(HabitsAction.Config.CloseConfigDialog)
 
       assertState { !showConfigDialog && editingHabits.isEmpty() }
       assertNoEffects()
@@ -322,7 +322,7 @@ class HabitsReducerTest {
   @Test
   fun `when AddHabit then adds new empty habit`() =
     habitsReducer.test(HabitsState(editingHabits = emptyList())) {
-      send(HabitsAction.AddHabit)
+      send(HabitsAction.Config.AddHabit)
 
       assertState { editingHabits.size == 1 && editingHabits.first().label == "" }
       assertNoEffects()
@@ -333,7 +333,7 @@ class HabitsReducerTest {
     habitsReducer.test(
       HabitsState(editingHabits = listOf(EditableHabit("habit_1", "", "", 0xFF0000L))),
     ) {
-      send(HabitsAction.UpdateHabitLabel("habit_1", "Morning Run"))
+      send(HabitsAction.Config.UpdateHabitLabel("habit_1", "Morning Run"))
 
       assertState {
         editingHabits.first().label == "Morning Run" &&
@@ -380,7 +380,7 @@ class HabitsReducerTest {
           ),
       ),
     ) {
-      send(HabitsAction.UpdateHabitLabel("habit_1", "Updated A"))
+      send(HabitsAction.Config.UpdateHabitLabel("habit_1", "Updated A"))
 
       assertState {
         editingHabits[0].label == "Updated A" &&
@@ -394,7 +394,7 @@ class HabitsReducerTest {
     habitsReducer.test(
       HabitsState(editingHabits = listOf(EditableHabit("habit_1", "#habits/test", "Test", 0xFF0000L))),
     ) {
-      send(HabitsAction.UpdateHabitColor("habit_1", 0x00FF00L))
+      send(HabitsAction.Config.UpdateHabitColor("habit_1", 0x00FF00L))
 
       assertState { editingHabits.first().color == 0x00FF00L }
       assertNoEffects()
@@ -411,7 +411,7 @@ class HabitsReducerTest {
           ),
       ),
     ) {
-      send(HabitsAction.UpdateHabitColor("habit_1", 0xFFFFFFFL))
+      send(HabitsAction.Config.UpdateHabitColor("habit_1", 0xFFFFFFFL))
 
       assertState {
         editingHabits[0].color == 0xFFFFFFFL &&
@@ -430,7 +430,7 @@ class HabitsReducerTest {
           ),
       ),
     ) {
-      send(HabitsAction.DeleteHabit("habit_1"))
+      send(HabitsAction.Config.DeleteHabit("habit_1"))
 
       assertState { editingHabits.size == 1 && editingHabits.first().id == "habit_2" }
       assertNoEffects()
@@ -443,7 +443,7 @@ class HabitsReducerTest {
         editingHabits = listOf(EditableHabit("habit_1", "#habits/exercise", "Exercise", 0xFF0000L)),
       ),
     ) {
-      send(HabitsAction.SaveConfigDialog)
+      send(HabitsAction.Config.SaveConfigDialog)
 
       assertState { isLoading }
       assertHasCommand<HabitsEffect.CreateMemo>()
@@ -461,7 +461,7 @@ class HabitsReducerTest {
           ),
       ),
     ) {
-      send(HabitsAction.SaveConfigDialog)
+      send(HabitsAction.Config.SaveConfigDialog)
 
       val effect = assertHasCommand<HabitsEffect.CreateMemo>()
       assertEquals(true, effect.content.contains("Exercise"))
@@ -472,7 +472,7 @@ class HabitsReducerTest {
   @Test
   fun `when RequestSingleHabitToggle then sets single toggle state`() =
     habitsReducer.test(HabitsState()) {
-      send(HabitsAction.RequestSingleHabitToggle(testDay, "#habits/exercise", "Exercise", testConfig))
+      send(HabitsAction.SingleToggle.RequestSingleHabitToggle(testDay, "#habits/exercise", "Exercise", testConfig))
 
       assertState {
         singleToggleDay == testDay &&
@@ -492,7 +492,7 @@ class HabitsReducerTest {
         singleToggleConfig = testConfig,
       ),
     ) {
-      send(HabitsAction.ConfirmSingleHabitToggle)
+      send(HabitsAction.SingleToggle.ConfirmSingleHabitToggle)
 
       assertState { isLoading }
       val effect = assertHasCommand<HabitsEffect.DeleteMemo>()
@@ -508,7 +508,7 @@ class HabitsReducerTest {
         singleToggleConfig = testConfig,
       ),
     ) {
-      send(HabitsAction.ConfirmSingleHabitToggle)
+      send(HabitsAction.SingleToggle.ConfirmSingleHabitToggle)
 
       assertState { isLoading }
       assertHasCommand<HabitsEffect.CreateMemo>()
@@ -523,7 +523,7 @@ class HabitsReducerTest {
         singleToggleConfig = testConfig,
       ),
     ) {
-      send(HabitsAction.ConfirmSingleHabitToggle)
+      send(HabitsAction.SingleToggle.ConfirmSingleHabitToggle)
 
       assertState { isLoading }
       val effect = assertHasCommand<HabitsEffect.UpdateMemo>()
@@ -543,7 +543,7 @@ class HabitsReducerTest {
         singleToggleConfig = listOf(HabitConfig("#habits/ex", "Ex")),
       ),
     ) {
-      send(HabitsAction.ConfirmSingleHabitToggle)
+      send(HabitsAction.SingleToggle.ConfirmSingleHabitToggle)
 
       assertState { singleToggleDay == null && singleToggleHabitTag == null }
       assertNoEffects()
@@ -558,7 +558,7 @@ class HabitsReducerTest {
         singleToggleConfig = testConfig,
       ),
     ) {
-      send(HabitsAction.ConfirmSingleHabitToggle)
+      send(HabitsAction.SingleToggle.ConfirmSingleHabitToggle)
 
       assertNoEffects()
     }
@@ -572,7 +572,7 @@ class HabitsReducerTest {
         singleToggleConfig = testConfig,
       ),
     ) {
-      send(HabitsAction.ConfirmSingleHabitToggle)
+      send(HabitsAction.SingleToggle.ConfirmSingleHabitToggle)
 
       assertNoEffects()
     }
@@ -587,7 +587,7 @@ class HabitsReducerTest {
         singleToggleConfig = testConfig,
       ),
     ) {
-      send(HabitsAction.CancelSingleHabitToggle)
+      send(HabitsAction.SingleToggle.CancelSingleHabitToggle)
 
       assertState {
         singleToggleDay == null &&
@@ -601,7 +601,7 @@ class HabitsReducerTest {
   @Test
   fun `when OpenConfigDialog with existing memo then opens dialog for editing`() =
     habitsReducer.test(HabitsState()) {
-      send(HabitsAction.OpenConfigDialog(testConfig, testConfigMemo))
+      send(HabitsAction.Config.OpenConfigDialog(testConfig, testConfigMemo))
 
       assertState {
         showConfigDialog &&
@@ -615,7 +615,7 @@ class HabitsReducerTest {
   @Test
   fun `when OpenConfigDialog without existing memo then opens dialog for new config`() =
     habitsReducer.test(HabitsState()) {
-      send(HabitsAction.OpenConfigDialog(testConfig, existingMemo = null))
+      send(HabitsAction.Config.OpenConfigDialog(testConfig, existingMemo = null))
 
       assertState {
         showConfigDialog &&
@@ -639,7 +639,7 @@ class HabitsReducerTest {
         editingConfigMemo = testConfigMemo,
       ),
     ) {
-      send(HabitsAction.SaveConfigDialog)
+      send(HabitsAction.Config.SaveConfigDialog)
 
       assertState {
         showEditConfigWarning &&
@@ -661,7 +661,7 @@ class HabitsReducerTest {
         editingConfigMemo = null,
       ),
     ) {
-      send(HabitsAction.SaveConfigDialog)
+      send(HabitsAction.Config.SaveConfigDialog)
 
       assertState { isLoading }
       assertHasCommand<HabitsEffect.CreateMemo>()
@@ -676,7 +676,7 @@ class HabitsReducerTest {
         editingConfigMemo = testConfigMemo,
       ),
     ) {
-      send(HabitsAction.DismissEditConfigWarning)
+      send(HabitsAction.ConfigWarning.DismissEditConfigWarning)
 
       assertState {
         !showEditConfigWarning &&
@@ -697,7 +697,7 @@ class HabitsReducerTest {
         editingConfigMemo = testConfigMemo,
       ),
     ) {
-      send(HabitsAction.ConfirmEditExistingConfig)
+      send(HabitsAction.ConfigWarning.ConfirmEditExistingConfig)
 
       assertState {
         !showEditConfigWarning &&
@@ -716,7 +716,7 @@ class HabitsReducerTest {
         editingConfigMemo = testConfigMemo,
       ),
     ) {
-      send(HabitsAction.CreateNewConfigInstead)
+      send(HabitsAction.ConfigWarning.CreateNewConfigInstead)
 
       assertState {
         !showEditConfigWarning &&
@@ -729,7 +729,7 @@ class HabitsReducerTest {
   @Test
   fun `when RequestDeleteConfig then shows delete confirm`() =
     habitsReducer.test(HabitsState()) {
-      send(HabitsAction.RequestDeleteConfig)
+      send(HabitsAction.ConfigDelete.RequestDeleteConfig)
 
       assertState { showDeleteConfigConfirm }
       assertNoEffects()
@@ -743,7 +743,7 @@ class HabitsReducerTest {
         showDeleteConfigConfirm = true,
       ),
     ) {
-      send(HabitsAction.ConfirmDeleteConfig)
+      send(HabitsAction.ConfigDelete.ConfirmDeleteConfig)
 
       assertState {
         !showDeleteConfigConfirm &&
@@ -764,7 +764,7 @@ class HabitsReducerTest {
         showDeleteConfigConfirm = true,
       ),
     ) {
-      send(HabitsAction.ConfirmDeleteConfig)
+      send(HabitsAction.ConfigDelete.ConfirmDeleteConfig)
 
       assertState { !isLoading }
       assertNoEffects()
@@ -773,7 +773,7 @@ class HabitsReducerTest {
   @Test
   fun `when CancelDeleteConfig then hides delete confirm`() =
     habitsReducer.test(HabitsState(showDeleteConfigConfirm = true)) {
-      send(HabitsAction.CancelDeleteConfig)
+      send(HabitsAction.ConfigDelete.CancelDeleteConfig)
 
       assertState { !showDeleteConfigConfirm }
       assertNoEffects()
@@ -788,7 +788,7 @@ class HabitsReducerTest {
       ),
     ) {
       val memos = listOf(Memo(name = "memos/1", content = "test"))
-      send(HabitsAction.RequestPrewarmAllRanges(memos = memos, appMode = AppMode.ONLINE))
+      send(HabitsAction.Cache.RequestPrewarmAllRanges(memos = memos, appMode = AppMode.ONLINE))
 
       assertState { !needsCacheRefresh && isInitialLoading }
       val effect = assertHasCommand<HabitsEffect.RunPrewarmAllRanges>()
@@ -806,7 +806,7 @@ class HabitsReducerTest {
     ) {
       val weekData = ActivityWeekData(weeks = emptyList(), maxDaily = 5, maxWeekly = 10)
       send(
-        HabitsAction.UpdateActivityData(
+        HabitsAction.Cache.UpdateActivityData(
           range = ActivityRange.Week(LocalDate(2024, 1, 1)),
           mode = ActivityMode.HABITS,
           appMode = AppMode.ONLINE,
@@ -838,7 +838,7 @@ class HabitsReducerTest {
         isInitialLoading = false,
       ),
     ) {
-      send(HabitsAction.InvalidateAllCache)
+      send(HabitsAction.Cache.InvalidateAllCache)
 
       assertState {
         activityDataCache.isEmpty() &&
@@ -864,7 +864,7 @@ class HabitsReducerTest {
     ) {
       val memos = listOf(Memo(name = "memos/1", content = "test"))
       send(
-        HabitsAction.InvalidateCache(
+        HabitsAction.Cache.InvalidateCache(
           range = ActivityRange.Week(LocalDate(2024, 1, 1)),
           mode = ActivityMode.HABITS,
           appMode = AppMode.ONLINE,
@@ -892,7 +892,7 @@ class HabitsReducerTest {
         needsCacheRefresh = true,
       ),
     ) {
-      send(HabitsAction.PrewarmCompleted)
+      send(HabitsAction.Cache.PrewarmCompleted)
 
       assertState { !isInitialLoading && needsCacheRefresh }
       assertNoEffects()

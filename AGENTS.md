@@ -67,8 +67,15 @@ feature/<name>/
   data/               # Repository implementations, DTOs, mappers
     platform/         # Platform-specific implementations (expect/actual)
     room/             # Room database (DAO, entities, database)
-  presentation/       # TEA components (Feature, Reducer, EffectHandler)
-  view/               # Compose UI (screens, components, dialogs)
+  presentation/       # TEA components
+    reducer/          # Sub-reducers (focused, ~30-60 lines each)
+    handler/          # Effect handlers (focused, handle specific effects)
+    view/             # Compose UI (screens, components, dialogs)
+    <Name>Action.kt   # Action sealed interface with grouped subtypes
+    <Name>State.kt    # State data class
+    <Name>Effect.kt   # Effect sealed interface
+    <Name>Reducer.kt  # Main reducer (router that delegates to sub-reducers)
+    <Name>Feature.kt  # Feature interface and implementation
 ```
 
 ### Layer Responsibilities
@@ -81,15 +88,27 @@ feature/<name>/
   - **data/platform/** — Platform-specific implementations (expect/actual)
   - **data/room/** — Room database implementations (DAO, entities)
 - **presentation/** — The Elm Architecture (TEA) components:
-  - `*Feature.kt` — State, Action, Effect sealed classes
-  - `*Reducer.kt` — Pure state transitions
-  - `*EffectHandler.kt` — Side effects (API calls, DB operations)
+  - **Root files** (TEA contracts):
+    - `*Action.kt` — Action sealed interface with grouped subtypes (e.g., `Editor`, `Config`, `Loading`)
+    - `*State.kt` — State data class
+    - `*Effect.kt` — Effect sealed interface
+    - `*Reducer.kt` — Main reducer that acts as a router, delegating to sub-reducers
+    - `*Feature.kt` — Feature interface and implementation
+  - **presentation/reducer/** — Sub-reducers (~30-60 lines each):
+    - Each sub-reducer handles a specific action group (e.g., `EditorReducer`, `ConfigReducer`)
+    - Actions are split into sealed subtypes per reducer group (same pattern as effects)
+    - Main reducer uses exhaustive `when` to route actions by type (no `else` branches)
+    - Sub-reducers are `internal` functions with group-specific action types
+    - Example: `editorReducer(action: HabitsAction.Editor, state: HabitsState): ReducerResult`
+  - **presentation/handler/** — Effect handlers (focused, handle specific effects):
+    - Split by effect category (e.g., `ApiEffectHandler`, `StorageEffectHandler`)
+    - Same decomposition pattern as reducers
+  - **presentation/view/** — Compose UI only. Screens, components, dialogs. Excluded from unit test coverage.
   - **`*State` placement rules:**
     - Pure domain state (only domain models + business logic, no UI concerns) → move to `domain/model/`
     - Mixed state (domain + UI concerns like dialog flags, loading states, credentials for dialogs) → keep in `presentation/`
     - When State has computed properties with business logic → add tests regardless of location
     - Example: `AppState` moved to domain (pure domain), `MemosState` stays in presentation (contains UI concerns)
-- **view/** — Compose UI only. Screens, components, dialogs. Excluded from unit test coverage.
 - **di/** — Dependency containers and feature factories:
   - `*Dependencies.kt` — Transport containers for composable dependency passing
   - `*FeatureFactory.kt` — Feature instantiation with dependencies
@@ -135,6 +154,64 @@ class SettingsEffectHandler(
   private val deps: SettingsDependencies,  // Bad: consumer knows about container
 )
 ```
+
+### Sub-Reducer Pattern
+
+Large reducers are decomposed into focused sub-reducers (~30-60 lines each) following the same pattern as effect handlers. Each sub-reducer handles a specific aspect of the feature.
+
+**Action Splitting** — Actions are organized into sealed subtypes (groups):
+```kotlin
+sealed interface HabitsAction : Action {
+  sealed interface Editor : HabitsAction {
+    data class OpenEditor(...) : Editor
+    data object CloseEditor : Editor
+    // ...
+  }
+
+  sealed interface Config : HabitsAction {
+    data class OpenConfigDialog(...) : Config
+    data object SaveConfigDialog : Config
+    // ...
+  }
+
+  // More groups...
+}
+```
+
+**Sub-Reducer Signature** — Each sub-reducer is an `internal` function that takes a specific action group:
+```kotlin
+internal fun editorReducer(
+  action: HabitsAction.Editor,
+  state: HabitsState,
+): ReducerResult<HabitsState, HabitsEffect, Nothing> =
+  reducer<HabitsAction.Editor, HabitsState, HabitsEffect, Nothing> { a, s ->
+    when (a) {
+      is HabitsAction.Editor.OpenEditor -> { ... }
+      is HabitsAction.Editor.CloseEditor -> { ... }
+      // All branches exhaustive, no else
+    }
+  }(action, state)
+```
+
+**Main Reducer Router** — The main reducer delegates to sub-reducers using exhaustive `when`:
+```kotlin
+val habitsReducer: Reducer<HabitsAction, HabitsState, HabitsEffect, Nothing> =
+  reducer { action, state ->
+    when (action) {
+      is HabitsAction.Editor -> editorReducer(action, state)
+      is HabitsAction.Config -> configReducer(action, state)
+      is HabitsAction.Cache -> cacheReducer(action, state)
+      // Exhaustive, type-based routing
+    }
+  }
+```
+
+**Key Principles:**
+- A single action type belongs to exactly one group (sealed subtype)
+- No catch-all reducers or default branches
+- Sub-reducers live in `presentation/reducer/` directory
+- Naming: `<Feature><Group>Reducer.kt` (e.g., `HabitsEditorReducer.kt`)
+- Same pattern as effect handlers for consistency
 
 ## Dependency Injection (Metro)
 

@@ -41,7 +41,7 @@ class HabitsCacheTest {
       )
 
     // When: InvalidateAllCache action dispatched (app shell does this on mode switch)
-    val (newState, _) = reducer.invoke(HabitsAction.InvalidateAllCache, initialState)
+    val (newState, _) = reducer.invoke(HabitsAction.Cache.InvalidateAllCache, initialState)
 
     // Then: cache should be cleared and refresh flagged
     assertTrue(newState.activityDataCache.isEmpty(), "Cache should be cleared on mode switch")
@@ -67,7 +67,7 @@ class HabitsCacheTest {
     val memos = emptyList<space.be1ski.vibits.shared.feature.memos.domain.model.Memo>()
     val (newState, effects) =
       reducer.invoke(
-        HabitsAction.InvalidateCache(
+        HabitsAction.Cache.InvalidateCache(
           range = week2Range,
           mode = ActivityMode.HABITS,
           appMode = appMode,
@@ -93,9 +93,9 @@ class HabitsCacheTest {
 
     val actions =
       listOf(
-        HabitsAction.MemoCreated(testMemo),
-        HabitsAction.MemoUpdated(testMemo),
-        HabitsAction.MemoDeleted("test.md"),
+        HabitsAction.Response.MemoCreated(testMemo),
+        HabitsAction.Response.MemoUpdated(testMemo),
+        HabitsAction.Response.MemoDeleted("test.md"),
       )
 
     actions.forEach { action ->
@@ -130,7 +130,7 @@ class HabitsCacheTest {
         name = "memos/1",
         content = "test",
       )
-    val (newState, effects) = reducer.invoke(HabitsAction.MemoUpdated(testMemo), initialState)
+    val (newState, effects) = reducer.invoke(HabitsAction.Response.MemoUpdated(testMemo), initialState)
 
     // Then: cache should not be cleared
     assertEquals(2, newState.activityDataCache.size, "Cache size should remain unchanged")

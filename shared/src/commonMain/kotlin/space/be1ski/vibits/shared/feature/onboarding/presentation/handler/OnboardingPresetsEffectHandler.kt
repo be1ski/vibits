@@ -22,6 +22,6 @@ class OnboardingPresetsEffectHandler(
     actions {
       Log.d(TAG, "Loading habit presets")
       val presets = getHabitPresets()
-      emit(OnboardingAction.PresetsLoaded(presets))
+      emit(OnboardingAction.Preset.PresetsLoaded(presets))
     }
 }

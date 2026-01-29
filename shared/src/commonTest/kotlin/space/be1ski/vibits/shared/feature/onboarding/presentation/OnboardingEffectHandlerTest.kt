@@ -34,8 +34,8 @@ class OnboardingEffectHandlerTest {
       val actions = handler(OnboardingEffect.Command.LoadPresets).toList()
 
       assertEquals(1, actions.size)
-      assertTrue(actions[0] is OnboardingAction.PresetsLoaded)
-      val presetsLoaded = actions[0] as OnboardingAction.PresetsLoaded
+      assertTrue(actions[0] is OnboardingAction.Preset.PresetsLoaded)
+      val presetsLoaded = actions[0] as OnboardingAction.Preset.PresetsLoaded
       assertEquals(9, presetsLoaded.presets.size)
     }
 
@@ -57,7 +57,7 @@ class OnboardingEffectHandlerTest {
           ),
         ).toList()
 
-      assertEquals(listOf(OnboardingAction.HabitCreated), actions)
+      assertEquals(listOf(OnboardingAction.Habit.HabitCreated), actions)
     }
 
   @Test
@@ -79,8 +79,8 @@ class OnboardingEffectHandlerTest {
         ).toList()
 
       assertEquals(1, actions.size)
-      assertTrue(actions[0] is OnboardingAction.HabitCreationFailed)
-      val failed = actions[0] as OnboardingAction.HabitCreationFailed
+      assertTrue(actions[0] is OnboardingAction.Habit.HabitCreationFailed)
+      val failed = actions[0] as OnboardingAction.Habit.HabitCreationFailed
       assertEquals("Network error", failed.error)
     }
 
@@ -103,7 +103,7 @@ class OnboardingEffectHandlerTest {
         ).toList()
 
       assertEquals(1, actions.size)
-      val failed = actions[0] as OnboardingAction.HabitCreationFailed
+      val failed = actions[0] as OnboardingAction.Habit.HabitCreationFailed
       assertEquals("Unknown error", failed.error)
     }
 
@@ -136,7 +136,7 @@ class OnboardingEffectHandlerTest {
 
       val actions = handler(OnboardingEffect.Command.MarkFirstCheckIn).toList()
 
-      assertEquals(listOf(OnboardingAction.FirstCheckInCreated), actions)
+      assertEquals(listOf(OnboardingAction.Completion.FirstCheckInCreated), actions)
     }
 
   @Test

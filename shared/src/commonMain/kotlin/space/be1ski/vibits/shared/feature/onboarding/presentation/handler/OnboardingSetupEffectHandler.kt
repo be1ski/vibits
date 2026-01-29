@@ -28,10 +28,10 @@ class OnboardingSetupEffectHandler(
       createFirstHabit(command.name, command.presetId, command.color)
         .onSuccess {
           Log.d(TAG, "Habit created successfully")
-          emit(OnboardingAction.HabitCreated)
+          emit(OnboardingAction.Habit.HabitCreated)
         }.onFailure { error ->
           Log.e(TAG, "Failed to create habit", error)
-          emit(OnboardingAction.HabitCreationFailed(error.message ?: "Unknown error"))
+          emit(OnboardingAction.Habit.HabitCreationFailed(error.message ?: "Unknown error"))
         }
     }
 
@@ -42,7 +42,7 @@ class OnboardingSetupEffectHandler(
       createFirstCheckIn(today)
         .onSuccess {
           Log.d(TAG, "First check-in created successfully")
-          emit(OnboardingAction.FirstCheckInCreated)
+          emit(OnboardingAction.Completion.FirstCheckInCreated)
         }.onFailure { error ->
           Log.e(TAG, "Failed to create first check-in", error)
         }

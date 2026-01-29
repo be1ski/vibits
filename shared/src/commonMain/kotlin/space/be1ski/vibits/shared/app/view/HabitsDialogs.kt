@@ -17,9 +17,9 @@ import space.be1ski.vibits.shared.app.domain.model.AppState
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.HabitsState
-import space.be1ski.vibits.shared.feature.habits.view.components.EditConfigWarningDialog
-import space.be1ski.vibits.shared.feature.habits.view.components.HabitsConfigDialog
-import space.be1ski.vibits.shared.feature.habits.view.components.localizedLabel
+import space.be1ski.vibits.shared.feature.habits.presentation.view.components.EditConfigWarningDialog
+import space.be1ski.vibits.shared.feature.habits.presentation.view.components.HabitsConfigDialog
+import space.be1ski.vibits.shared.feature.habits.presentation.view.components.localizedLabel
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_cancel
@@ -55,7 +55,7 @@ private fun HabitEditorDialog(
   }
   val demoMode = appState.isDemoMode
   AlertDialog(
-    onDismissRequest = { dispatch(HabitsAction.CloseEditor) },
+    onDismissRequest = { dispatch(HabitsAction.Editor.CloseEditor) },
     title = {
       val titleRes = if (habitsState.isEditing) Res.string.title_update_day else Res.string.title_create_day
       Text(stringResource(titleRes))
@@ -81,7 +81,7 @@ private fun HabitEditorContent(
           Checkbox(
             checked = done,
             onCheckedChange = { checked ->
-              dispatch(HabitsAction.ToggleHabit(tag, checked))
+              dispatch(HabitsAction.Editor.ToggleHabit(tag, checked))
             },
           )
           Text(habit.localizedLabel(demoMode), style = MaterialTheme.typography.bodySmall)
@@ -93,7 +93,7 @@ private fun HabitEditorContent(
           Checkbox(
             checked = done,
             onCheckedChange = { checked ->
-              dispatch(HabitsAction.ToggleHabit(tag, checked))
+              dispatch(HabitsAction.Editor.ToggleHabit(tag, checked))
             },
           )
           Text(tag, style = MaterialTheme.typography.bodySmall)
@@ -111,7 +111,7 @@ private fun HabitEditorConfirmButton(
   habitsState: HabitsState,
   dispatch: (HabitsAction) -> Unit,
 ) {
-  Button(onClick = { dispatch(HabitsAction.ConfirmEditor) }) {
+  Button(onClick = { dispatch(HabitsAction.Editor.ConfirmEditor) }) {
     val actionRes = if (habitsState.isEditing) Res.string.action_update else Res.string.action_create
     Text(stringResource(actionRes))
   }
@@ -124,11 +124,11 @@ private fun HabitEditorDismissButton(
 ) {
   Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs)) {
     if (habitsState.isEditing) {
-      TextButton(onClick = { dispatch(HabitsAction.RequestDelete) }) {
+      TextButton(onClick = { dispatch(HabitsAction.Editor.RequestDelete) }) {
         Text(stringResource(Res.string.action_delete))
       }
     }
-    TextButton(onClick = { dispatch(HabitsAction.CloseEditor) }) {
+    TextButton(onClick = { dispatch(HabitsAction.Editor.CloseEditor) }) {
       Text(stringResource(Res.string.action_cancel))
     }
   }
@@ -144,12 +144,12 @@ private fun DeleteDayConfirmDialog(
   }
 
   AlertDialog(
-    onDismissRequest = { dispatch(HabitsAction.CancelDelete) },
+    onDismissRequest = { dispatch(HabitsAction.Editor.CancelDelete) },
     title = { Text(stringResource(Res.string.title_delete_day)) },
     text = { Text(stringResource(Res.string.msg_delete_day_warning)) },
     confirmButton = {
       Button(
-        onClick = { dispatch(HabitsAction.ConfirmDelete) },
+        onClick = { dispatch(HabitsAction.Editor.ConfirmDelete) },
         colors =
           ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.error,
@@ -159,7 +159,7 @@ private fun DeleteDayConfirmDialog(
       }
     },
     dismissButton = {
-      TextButton(onClick = { dispatch(HabitsAction.CancelDelete) }) {
+      TextButton(onClick = { dispatch(HabitsAction.Editor.CancelDelete) }) {
         Text(stringResource(Res.string.action_cancel))
       }
     },

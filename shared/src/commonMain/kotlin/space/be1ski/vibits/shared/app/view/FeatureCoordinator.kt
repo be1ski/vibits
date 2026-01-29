@@ -43,7 +43,7 @@ internal fun FeatureCoordinator(
     val skipCredentialsCheck = appState.skipCredentialsCheck
     if (!skipCredentialsCheck && memosState.credentialsMode && !settingsState.isOpen) {
       features.settings.send(
-        SettingsAction.Open(
+        SettingsAction.Dialog.Open(
           baseUrl = memosState.baseUrl,
           token = memosState.token,
           appMode = appState.appMode,
@@ -64,7 +64,7 @@ internal fun FeatureCoordinator(
         (skipCredentialsCheck || memosState.hasCredentials)
     if (shouldAutoLoad) {
       dispatchApp(AppAction.MarkAutoLoaded)
-      dispatchMemos(MemosAction.LoadMemos)
+      dispatchMemos(MemosAction.Loading.LoadMemos)
     }
   }
 }
@@ -82,15 +82,15 @@ private fun handleNotification(
   when (effect) {
     is SettingsEffect.Notification.ModeChanged -> {
       dispatchApp(AppAction.SetAppMode(effect.newMode))
-      dispatchMemos(MemosAction.ResetForModeChange)
-      dispatchMemos(MemosAction.LoadMemos)
-      dispatchHabits(HabitsAction.InvalidateAllCache)
+      dispatchMemos(MemosAction.Loading.ResetForModeChange)
+      dispatchMemos(MemosAction.Loading.LoadMemos)
+      dispatchHabits(HabitsAction.Cache.InvalidateAllCache)
     }
     is SettingsEffect.Notification.ResetCompleted -> onResetApp()
     is SettingsEffect.Notification.CredentialsSaved -> {
-      dispatchMemos(MemosAction.UpdateBaseUrl(effect.baseUrl))
-      dispatchMemos(MemosAction.UpdateToken(effect.token))
-      dispatchMemos(MemosAction.LoadMemos)
+      dispatchMemos(MemosAction.Credentials.UpdateBaseUrl(effect.baseUrl))
+      dispatchMemos(MemosAction.Credentials.UpdateToken(effect.token))
+      dispatchMemos(MemosAction.Loading.LoadMemos)
     }
     is SettingsEffect.Notification.ThemeChanged -> onThemeChanged(effect.theme)
     is SettingsEffect.Notification.LanguageChanged -> onLanguageChanged(effect.language)

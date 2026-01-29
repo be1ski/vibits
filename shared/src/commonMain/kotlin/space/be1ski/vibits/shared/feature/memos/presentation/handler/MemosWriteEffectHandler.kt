@@ -28,10 +28,10 @@ class MemosWriteEffectHandler(
     actions {
       Log.d(TAG, "Creating memo")
       runCatching { createMemo(effect.content) }
-        .onSuccess { memo -> emit(MemosAction.MemoCreated(memo)) }
+        .onSuccess { memo -> emit(MemosAction.Crud.MemoCreated(memo)) }
         .onFailure { error ->
           Log.e(TAG, "Failed to create memo", error)
-          emit(MemosAction.OperationFailed(error.message ?: "Failed to create memo"))
+          emit(MemosAction.Crud.OperationFailed(error.message ?: "Failed to create memo"))
         }
     }
 
@@ -39,10 +39,10 @@ class MemosWriteEffectHandler(
     actions {
       Log.d(TAG, "Updating memo: ${effect.name}")
       runCatching { updateMemo(effect.name, effect.content) }
-        .onSuccess { memo -> emit(MemosAction.MemoUpdated(memo)) }
+        .onSuccess { memo -> emit(MemosAction.Crud.MemoUpdated(memo)) }
         .onFailure { error ->
           Log.e(TAG, "Failed to update memo", error)
-          emit(MemosAction.OperationFailed(error.message ?: "Failed to update memo"))
+          emit(MemosAction.Crud.OperationFailed(error.message ?: "Failed to update memo"))
         }
     }
 
@@ -50,10 +50,10 @@ class MemosWriteEffectHandler(
     actions {
       Log.d(TAG, "Deleting memo: ${effect.name}")
       runCatching { deleteMemo(effect.name) }
-        .onSuccess { emit(MemosAction.MemoDeleted(effect.name)) }
+        .onSuccess { emit(MemosAction.Crud.MemoDeleted(effect.name)) }
         .onFailure { error ->
           Log.e(TAG, "Failed to delete memo", error)
-          emit(MemosAction.OperationFailed(error.message ?: "Failed to delete memo"))
+          emit(MemosAction.Crud.OperationFailed(error.message ?: "Failed to delete memo"))
         }
     }
 }

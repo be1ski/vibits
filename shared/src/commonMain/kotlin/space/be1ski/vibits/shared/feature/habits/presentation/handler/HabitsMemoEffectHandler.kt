@@ -24,10 +24,10 @@ class HabitsMemoEffectHandler(
     actions {
       Log.d(TAG, "Creating habit memo")
       runCatching { memosRepository.createMemo(effect.content) }
-        .onSuccess { memo -> emit(HabitsAction.MemoCreated(memo)) }
+        .onSuccess { memo -> emit(HabitsAction.Response.MemoCreated(memo)) }
         .onFailure { error ->
           Log.e(TAG, "Failed to create habit memo", error)
-          emit(HabitsAction.MemoOperationFailed(error.message ?: "Failed to create memo"))
+          emit(HabitsAction.Response.MemoOperationFailed(error.message ?: "Failed to create memo"))
         }
     }
 
@@ -35,10 +35,10 @@ class HabitsMemoEffectHandler(
     actions {
       Log.d(TAG, "Updating habit memo: ${effect.name}")
       runCatching { memosRepository.updateMemo(effect.name, effect.content) }
-        .onSuccess { memo -> emit(HabitsAction.MemoUpdated(memo)) }
+        .onSuccess { memo -> emit(HabitsAction.Response.MemoUpdated(memo)) }
         .onFailure { error ->
           Log.e(TAG, "Failed to update habit memo", error)
-          emit(HabitsAction.MemoOperationFailed(error.message ?: "Failed to update memo"))
+          emit(HabitsAction.Response.MemoOperationFailed(error.message ?: "Failed to update memo"))
         }
     }
 
@@ -46,10 +46,10 @@ class HabitsMemoEffectHandler(
     actions {
       Log.d(TAG, "Deleting habit memo: ${effect.name}")
       runCatching { memosRepository.deleteMemo(effect.name) }
-        .onSuccess { emit(HabitsAction.MemoDeleted(effect.name)) }
+        .onSuccess { emit(HabitsAction.Response.MemoDeleted(effect.name)) }
         .onFailure { error ->
           Log.e(TAG, "Failed to delete habit memo", error)
-          emit(HabitsAction.MemoOperationFailed(error.message ?: "Failed to delete memo"))
+          emit(HabitsAction.Response.MemoOperationFailed(error.message ?: "Failed to delete memo"))
         }
     }
 }

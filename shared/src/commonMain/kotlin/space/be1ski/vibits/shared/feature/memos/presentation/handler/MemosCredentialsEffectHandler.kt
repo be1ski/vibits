@@ -22,7 +22,7 @@ class MemosCredentialsEffectHandler(
   private fun handleLoadCredentials(): Flow<MemosAction> =
     actions {
       val creds = loadCredentials()
-      emit(MemosAction.CredentialsLoaded(creds.baseUrl, creds.token))
+      emit(MemosAction.Credentials.CredentialsLoaded(creds.baseUrl, creds.token))
     }
 
   private fun handleSaveCredentials(effect: MemosEffect.SaveCredentials): Flow<MemosAction> =

@@ -36,7 +36,7 @@ import space.be1ski.vibits.shared.feature.onboarding.di.createOnboardingFeature
 import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingAction
 import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingEffect
 import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingState
-import space.be1ski.vibits.shared.feature.onboarding.view.OnboardingScreen
+import space.be1ski.vibits.shared.feature.onboarding.presentation.view.OnboardingScreen
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 
@@ -213,7 +213,7 @@ private fun rememberOnboardingFeature(
         is OnboardingEffect.Notification.Skipped,
         -> onOnboardingCompleted()
         is OnboardingEffect.Notification.FirstCheckInCreated -> {
-          features.memos.send(MemosAction.LoadMemos)
+          features.memos.send(MemosAction.Loading.LoadMemos)
         }
       }
     }

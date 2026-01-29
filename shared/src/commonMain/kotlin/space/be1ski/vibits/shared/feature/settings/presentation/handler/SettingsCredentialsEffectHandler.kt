@@ -26,8 +26,8 @@ class SettingsCredentialsEffectHandler(
     actions {
       Log.d(TAG, "Testing connection")
       connectionTester(command.baseUrl, command.token)
-        .onSuccess { emit(SettingsAction.ValidationSucceeded) }
-        .onFailure { emit(SettingsAction.ValidationFailed("connection_failed")) }
+        .onSuccess { emit(SettingsAction.Validation.ValidationSucceeded) }
+        .onFailure { emit(SettingsAction.Validation.ValidationFailed("connection_failed")) }
     }
 
   private fun handleSaveCredentials(command: SettingsEffect.Command.SaveCredentials): Flow<SettingsAction> =

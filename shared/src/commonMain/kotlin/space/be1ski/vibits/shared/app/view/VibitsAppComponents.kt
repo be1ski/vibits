@@ -55,14 +55,14 @@ internal fun MemosHeader(
     Text(stringResource(Res.string.app_name), style = MaterialTheme.typography.headlineSmall)
     Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs), verticalAlignment = Alignment.CenterVertically) {
       if (isDesktop) {
-        IconButton(onClick = { dispatchMemos(MemosAction.LoadMemos) }) {
+        IconButton(onClick = { dispatchMemos(MemosAction.Loading.LoadMemos) }) {
           Icon(imageVector = Icons.Filled.Refresh, contentDescription = stringResource(Res.string.action_refresh))
         }
       }
       TextButton(
         onClick = {
           dispatchSettings(
-            SettingsAction.Open(
+            SettingsAction.Dialog.Open(
               baseUrl = memosState.baseUrl,
               token = memosState.token,
               appMode = appState.appMode,

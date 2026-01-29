@@ -40,7 +40,7 @@ class SettingsEffectHandlerTest {
           ),
         ).toList()
 
-      assertEquals(listOf(SettingsAction.ValidationSucceeded), actions)
+      assertEquals(listOf(SettingsAction.Validation.ValidationSucceeded), actions)
     }
 
   @Test
@@ -58,7 +58,7 @@ class SettingsEffectHandlerTest {
         ).toList()
 
       assertEquals(1, actions.size)
-      assertTrue(actions[0] is SettingsAction.ValidationFailed)
+      assertTrue(actions[0] is SettingsAction.Validation.ValidationFailed)
     }
 
   @Test
@@ -69,7 +69,7 @@ class SettingsEffectHandlerTest {
 
       val actions = handler(SettingsEffect.Command.SwitchMode(mode = AppMode.OFFLINE)).toList()
 
-      assertEquals(listOf(SettingsAction.ModeSwitched), actions)
+      assertEquals(listOf(SettingsAction.Input.ModeSwitched), actions)
       assertEquals(AppMode.OFFLINE, appModeRepo.storedMode)
     }
 
@@ -95,7 +95,7 @@ class SettingsEffectHandlerTest {
 
       val actions = handler(SettingsEffect.Command.ResetApp).toList()
 
-      assertEquals(listOf(SettingsAction.ResetCompleted), actions)
+      assertEquals(listOf(SettingsAction.Reset.ResetCompleted), actions)
       assertEquals(AppMode.NOT_SELECTED, appModeRepo.storedMode)
     }
 
@@ -108,7 +108,7 @@ class SettingsEffectHandlerTest {
 
       val actions = handler(SettingsEffect.Command.ResetAppWithMemos).toList()
 
-      assertEquals(listOf(SettingsAction.ResetCompleted), actions)
+      assertEquals(listOf(SettingsAction.Reset.ResetCompleted), actions)
       assertEquals(AppMode.NOT_SELECTED, appModeRepo.storedMode)
       assertEquals(emptyList(), offlineMemoStorage.stored.memos)
     }
