@@ -1,5 +1,4 @@
 package space.be1ski.vibits.shared.feature.onboarding.presentation
-
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
@@ -16,10 +15,13 @@ import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.CreateFirstC
 import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.CreateFirstHabitUseCase
 import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.GetHabitPresetsUseCase
 import space.be1ski.vibits.shared.feature.onboarding.domain.usecase.MarkOnboardingCompletedUseCase
-import space.be1ski.vibits.shared.feature.onboarding.presentation.handler.OnboardingCompletionEffectHandler
-import space.be1ski.vibits.shared.feature.onboarding.presentation.handler.OnboardingEffectHandler
-import space.be1ski.vibits.shared.feature.onboarding.presentation.handler.OnboardingPresetsEffectHandler
-import space.be1ski.vibits.shared.feature.onboarding.presentation.handler.OnboardingSetupEffectHandler
+import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingCompletionEffectHandler
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffectHandler
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingPresetsEffectHandler
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingSetupEffectHandler
+import space.be1ski.vibits.shared.feature.onboarding.presentation.reducer.onboardingReducer
 import space.be1ski.vibits.shared.test.FakeMemosRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -34,8 +36,8 @@ class OnboardingEffectHandlerTest {
       val actions = handler(OnboardingEffect.Command.LoadPresets).toList()
 
       assertEquals(1, actions.size)
-      assertTrue(actions[0] is OnboardingAction.PresetsLoaded)
-      val presetsLoaded = actions[0] as OnboardingAction.PresetsLoaded
+      assertTrue(actions[0] is OnboardingAction.Preset.PresetsLoaded)
+      val presetsLoaded = actions[0] as OnboardingAction.Preset.PresetsLoaded
       assertEquals(9, presetsLoaded.presets.size)
     }
 
@@ -57,7 +59,7 @@ class OnboardingEffectHandlerTest {
           ),
         ).toList()
 
-      assertEquals(listOf(OnboardingAction.HabitCreated), actions)
+      assertEquals(listOf(OnboardingAction.Habit.HabitCreated), actions)
     }
 
   @Test
@@ -79,8 +81,8 @@ class OnboardingEffectHandlerTest {
         ).toList()
 
       assertEquals(1, actions.size)
-      assertTrue(actions[0] is OnboardingAction.HabitCreationFailed)
-      val failed = actions[0] as OnboardingAction.HabitCreationFailed
+      assertTrue(actions[0] is OnboardingAction.Habit.HabitCreationFailed)
+      val failed = actions[0] as OnboardingAction.Habit.HabitCreationFailed
       assertEquals("Network error", failed.error)
     }
 
@@ -103,7 +105,7 @@ class OnboardingEffectHandlerTest {
         ).toList()
 
       assertEquals(1, actions.size)
-      val failed = actions[0] as OnboardingAction.HabitCreationFailed
+      val failed = actions[0] as OnboardingAction.Habit.HabitCreationFailed
       assertEquals("Unknown error", failed.error)
     }
 
@@ -136,7 +138,7 @@ class OnboardingEffectHandlerTest {
 
       val actions = handler(OnboardingEffect.Command.MarkFirstCheckIn).toList()
 
-      assertEquals(listOf(OnboardingAction.FirstCheckInCreated), actions)
+      assertEquals(listOf(OnboardingAction.Completion.FirstCheckInCreated), actions)
     }
 
   @Test

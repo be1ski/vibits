@@ -1,5 +1,4 @@
 package space.be1ski.vibits.shared.app.di
-
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
@@ -9,6 +8,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import space.be1ski.vibits.shared.app.AppInitializer
+import space.be1ski.vibits.shared.app.presentation.action.AppAction
+import space.be1ski.vibits.shared.app.presentation.effect.AppEffect
+import space.be1ski.vibits.shared.app.presentation.reducer.appReducer
 import space.be1ski.vibits.shared.core.platform.app.AppDetailsProvider
 import space.be1ski.vibits.shared.core.platform.env.LocalConfigProvider
 import space.be1ski.vibits.shared.core.platform.env.createLocalConfigProvider

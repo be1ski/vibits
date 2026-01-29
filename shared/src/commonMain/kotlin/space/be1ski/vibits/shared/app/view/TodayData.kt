@@ -9,7 +9,7 @@ import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractDailyMemosUseCase
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
-import space.be1ski.vibits.shared.feature.habits.view.buildHabitDay
+import space.be1ski.vibits.shared.feature.habits.presentation.view.buildHabitDay
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 internal class TodayData(

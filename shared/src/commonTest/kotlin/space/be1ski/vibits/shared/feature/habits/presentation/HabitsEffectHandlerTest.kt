@@ -1,14 +1,16 @@
 package space.be1ski.vibits.shared.feature.habits.presentation
-
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
-import space.be1ski.vibits.shared.feature.habits.presentation.handler.HabitsActivityEffectHandler
-import space.be1ski.vibits.shared.feature.habits.presentation.handler.HabitsEffectHandler
-import space.be1ski.vibits.shared.feature.habits.presentation.handler.HabitsMemoEffectHandler
-import space.be1ski.vibits.shared.feature.habits.presentation.handler.HabitsRefreshEffectHandler
+import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsActivityEffectHandler
+import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsEffect
+import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsEffectHandler
+import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsMemoEffectHandler
+import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsRefreshEffectHandler
+import space.be1ski.vibits.shared.feature.habits.presentation.reducer.habitsReducer
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.test.FakeMemosRepository
@@ -29,7 +31,7 @@ class HabitsEffectHandlerTest {
 
       val actions = handler(HabitsEffect.CreateMemo(content = "test")).toList()
 
-      assertEquals(listOf(HabitsAction.MemoCreated(expectedMemo)), actions)
+      assertEquals(listOf(HabitsAction.Response.MemoCreated(expectedMemo)), actions)
       assertEquals(1, repository.createMemoCalls)
     }
 
@@ -45,8 +47,8 @@ class HabitsEffectHandlerTest {
       val actions = handler(HabitsEffect.CreateMemo(content = "test")).toList()
 
       assertEquals(1, actions.size)
-      assertTrue(actions[0] is HabitsAction.MemoOperationFailed)
-      assertEquals("Network error", (actions[0] as HabitsAction.MemoOperationFailed).error)
+      assertTrue(actions[0] is HabitsAction.Response.MemoOperationFailed)
+      assertEquals("Network error", (actions[0] as HabitsAction.Response.MemoOperationFailed).error)
     }
 
   @Test
@@ -64,7 +66,7 @@ class HabitsEffectHandlerTest {
           HabitsEffect.UpdateMemo(name = "memos/1", content = "updated"),
         ).toList()
 
-      assertEquals(listOf(HabitsAction.MemoUpdated(expectedMemo)), actions)
+      assertEquals(listOf(HabitsAction.Response.MemoUpdated(expectedMemo)), actions)
       assertEquals(1, repository.updateMemoCalls)
     }
 
@@ -83,7 +85,7 @@ class HabitsEffectHandlerTest {
         ).toList()
 
       assertEquals(1, actions.size)
-      assertTrue(actions[0] is HabitsAction.MemoOperationFailed)
+      assertTrue(actions[0] is HabitsAction.Response.MemoOperationFailed)
     }
 
   @Test
@@ -97,7 +99,7 @@ class HabitsEffectHandlerTest {
 
       val actions = handler(HabitsEffect.DeleteMemo(name = "memos/1")).toList()
 
-      assertEquals(listOf(HabitsAction.MemoDeleted("memos/1")), actions)
+      assertEquals(listOf(HabitsAction.Response.MemoDeleted("memos/1")), actions)
       assertEquals(1, repository.deleteMemoCalls)
     }
 
@@ -113,7 +115,7 @@ class HabitsEffectHandlerTest {
       val actions = handler(HabitsEffect.DeleteMemo(name = "memos/1")).toList()
 
       assertEquals(1, actions.size)
-      assertTrue(actions[0] is HabitsAction.MemoOperationFailed)
+      assertTrue(actions[0] is HabitsAction.Response.MemoOperationFailed)
     }
 
   @Test
@@ -148,7 +150,7 @@ class HabitsEffectHandlerTest {
         ).toList()
 
       assertEquals(1, actions.size)
-      val action = actions[0] as HabitsAction.UpdateActivityData
+      val action = actions[0] as HabitsAction.Cache.UpdateActivityData
       assertEquals(range, action.range)
       assertEquals(mode, action.mode)
       assertEquals(appMode, action.appMode)
@@ -175,8 +177,8 @@ class HabitsEffectHandlerTest {
           ),
         ).toList()
 
-      val updateActions = actions.filterIsInstance<HabitsAction.UpdateActivityData>()
-      val completedActions = actions.filterIsInstance<HabitsAction.PrewarmCompleted>()
+      val updateActions = actions.filterIsInstance<HabitsAction.Cache.UpdateActivityData>()
+      val completedActions = actions.filterIsInstance<HabitsAction.Cache.PrewarmCompleted>()
 
       assertTrue(updateActions.isNotEmpty(), "Should emit UpdateActivityData actions")
       assertEquals(1, completedActions.size, "Should emit PrewarmCompleted once")

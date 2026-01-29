@@ -4,14 +4,14 @@ import space.be1ski.vibits.shared.app.domain.model.AppDetails
 import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.core.elm.FeatureImpl
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsAction
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsEffect
-import space.be1ski.vibits.shared.feature.settings.presentation.SettingsState
-import space.be1ski.vibits.shared.feature.settings.presentation.handler.SettingsCredentialsEffectHandler
-import space.be1ski.vibits.shared.feature.settings.presentation.handler.SettingsEffectHandler
-import space.be1ski.vibits.shared.feature.settings.presentation.handler.SettingsModeEffectHandler
-import space.be1ski.vibits.shared.feature.settings.presentation.handler.SettingsPreferencesEffectHandler
-import space.be1ski.vibits.shared.feature.settings.presentation.settingsReducer
+import space.be1ski.vibits.shared.feature.settings.presentation.action.SettingsAction
+import space.be1ski.vibits.shared.feature.settings.presentation.effect.SettingsCredentialsEffectHandler
+import space.be1ski.vibits.shared.feature.settings.presentation.effect.SettingsEffect
+import space.be1ski.vibits.shared.feature.settings.presentation.effect.SettingsEffectHandler
+import space.be1ski.vibits.shared.feature.settings.presentation.effect.SettingsModeEffectHandler
+import space.be1ski.vibits.shared.feature.settings.presentation.effect.SettingsPreferencesEffectHandler
+import space.be1ski.vibits.shared.feature.settings.presentation.reducer.settingsReducer
+import space.be1ski.vibits.shared.feature.settings.presentation.state.SettingsState
 
 fun createSettingsFeature(
   dependencies: SettingsDependencies,

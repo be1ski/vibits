@@ -25,18 +25,18 @@ import space.be1ski.vibits.shared.app.presentation.AppFeatures
 import space.be1ski.vibits.shared.core.elm.Feature
 import space.be1ski.vibits.shared.core.ui.theme.VibitsTheme
 import space.be1ski.vibits.shared.core.ui.theme.rememberSystemDarkTheme
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.shared.feature.mode.di.createModeSelectionFeature
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionAction
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionEffect
-import space.be1ski.vibits.shared.feature.mode.presentation.ModeSelectionState
+import space.be1ski.vibits.shared.feature.mode.presentation.action.ModeSelectionAction
+import space.be1ski.vibits.shared.feature.mode.presentation.effect.ModeSelectionEffect
+import space.be1ski.vibits.shared.feature.mode.presentation.state.ModeSelectionState
 import space.be1ski.vibits.shared.feature.mode.view.ModeSelectionScreen
 import space.be1ski.vibits.shared.feature.onboarding.di.createOnboardingFeature
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingAction
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingEffect
-import space.be1ski.vibits.shared.feature.onboarding.presentation.OnboardingState
-import space.be1ski.vibits.shared.feature.onboarding.view.OnboardingScreen
+import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
+import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect
+import space.be1ski.vibits.shared.feature.onboarding.presentation.state.OnboardingState
+import space.be1ski.vibits.shared.feature.onboarding.presentation.view.OnboardingScreen
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 
@@ -213,7 +213,7 @@ private fun rememberOnboardingFeature(
         is OnboardingEffect.Notification.Skipped,
         -> onOnboardingCompleted()
         is OnboardingEffect.Notification.FirstCheckInCreated -> {
-          features.memos.send(MemosAction.LoadMemos)
+          features.memos.send(MemosAction.Loading.LoadMemos)
         }
       }
     }

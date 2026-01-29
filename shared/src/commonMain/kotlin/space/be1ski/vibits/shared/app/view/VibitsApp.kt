@@ -6,7 +6,7 @@ import androidx.compose.runtime.getValue
 import space.be1ski.vibits.shared.app.presentation.AppFeatures
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
-import space.be1ski.vibits.shared.feature.settings.view.SettingsDialog
+import space.be1ski.vibits.shared.feature.settings.presentation.view.SettingsDialog
 
 @Composable
 internal fun VibitsApp(

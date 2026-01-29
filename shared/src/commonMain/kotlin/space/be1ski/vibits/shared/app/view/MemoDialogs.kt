@@ -9,8 +9,8 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosAction
-import space.be1ski.vibits.shared.feature.memos.presentation.MemosState
+import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_cancel
 import space.be1ski.vibits.shared.generated.action_create
@@ -28,26 +28,26 @@ internal fun MemoCreateDialog(
     return
   }
   AlertDialog(
-    onDismissRequest = { dispatch(MemosAction.DismissCreateDialog) },
+    onDismissRequest = { dispatch(MemosAction.CreateDialog.DismissCreateDialog) },
     title = { Text(stringResource(Res.string.title_new_memo)) },
     text = {
       TextField(
         value = state.createDialogContent,
-        onValueChange = { dispatch(MemosAction.UpdateCreateContent(it)) },
+        onValueChange = { dispatch(MemosAction.CreateDialog.UpdateCreateContent(it)) },
         placeholder = { Text(stringResource(Res.string.hint_write_memo)) },
         modifier = Modifier.fillMaxWidth(),
       )
     },
     confirmButton = {
       Button(
-        onClick = { dispatch(MemosAction.ConfirmCreateDialog) },
+        onClick = { dispatch(MemosAction.CreateDialog.ConfirmCreateDialog) },
         enabled = state.createDialogContent.trim().isNotBlank(),
       ) {
         Text(stringResource(Res.string.action_create))
       }
     },
     dismissButton = {
-      TextButton(onClick = { dispatch(MemosAction.DismissCreateDialog) }) {
+      TextButton(onClick = { dispatch(MemosAction.CreateDialog.DismissCreateDialog) }) {
         Text(stringResource(Res.string.action_cancel))
       }
     },
@@ -63,25 +63,25 @@ internal fun MemoEditDialog(
     return
   }
   AlertDialog(
-    onDismissRequest = { dispatch(MemosAction.DismissEditDialog) },
+    onDismissRequest = { dispatch(MemosAction.EditDialog.DismissEditDialog) },
     title = { Text(stringResource(Res.string.title_edit_memo)) },
     text = {
       TextField(
         value = state.editDialogContent,
-        onValueChange = { dispatch(MemosAction.UpdateEditContent(it)) },
+        onValueChange = { dispatch(MemosAction.EditDialog.UpdateEditContent(it)) },
         modifier = Modifier.fillMaxWidth(),
       )
     },
     confirmButton = {
       Button(
-        onClick = { dispatch(MemosAction.ConfirmEditDialog) },
+        onClick = { dispatch(MemosAction.EditDialog.ConfirmEditDialog) },
         enabled = state.editDialogContent.trim().isNotBlank(),
       ) {
         Text(stringResource(Res.string.action_save))
       }
     },
     dismissButton = {
-      TextButton(onClick = { dispatch(MemosAction.DismissEditDialog) }) {
+      TextButton(onClick = { dispatch(MemosAction.EditDialog.DismissEditDialog) }) {
         Text(stringResource(Res.string.action_cancel))
       }
     },
