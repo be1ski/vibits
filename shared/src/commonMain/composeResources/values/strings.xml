@@ -216,6 +216,7 @@
     <string name="title_empty_state_no_habits">No habits yet</string>
     <string name="title_habit_setup">Set up your habit</string>
     <string name="title_logs">Logs (%1$d)</string>
+    <string name="title_sync_logs">Sync logs (%1$d)</string>
     <string name="title_new_memo">New memo</string>
     <string name="title_offline_onboarding_success">Great job!</string>
     <string name="title_offline_onboarding_welcome">Offline mode is ready</string>

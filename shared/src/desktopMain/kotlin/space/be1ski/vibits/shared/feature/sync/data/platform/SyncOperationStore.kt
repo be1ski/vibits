@@ -12,21 +12,25 @@ actual fun createSyncOperationStore(): SyncOperationStore = DesktopSyncOperation
 private class DesktopSyncOperationStore : SyncOperationStore {
   private val dao get() = DesktopDatabaseHolder.database.syncOperationDao()
 
-  override suspend fun getPendingOperations(): List<SyncOperation> =
-    dao.getPending().map(SyncOperationEntityMapper::toDomain)
+  override suspend fun getPendingOperations(): List<SyncOperation> = dao.getPending().map(SyncOperationEntityMapper::toDomain)
 
-  override suspend fun getAllOperations(): List<SyncOperation> =
-    dao.getAll().map(SyncOperationEntityMapper::toDomain)
+  override suspend fun getAllOperations(): List<SyncOperation> = dao.getAll().map(SyncOperationEntityMapper::toDomain)
 
   override suspend fun upsertOperation(operation: SyncOperation) {
     dao.upsert(SyncOperationEntityMapper.toEntity(operation))
   }
 
-  override suspend fun updateStatus(id: String, status: SyncOperationStatus) {
+  override suspend fun updateStatus(
+    id: String,
+    status: SyncOperationStatus,
+  ) {
     dao.updateStatus(id, status.name)
   }
 
-  override suspend fun updateMemoName(id: String, memoName: String) {
+  override suspend fun updateMemoName(
+    id: String,
+    memoName: String,
+  ) {
     dao.updateMemoName(id, memoName)
   }
 

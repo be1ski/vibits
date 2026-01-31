@@ -14,54 +14,68 @@ internal val syncReducer: Reducer<MemosAction.Sync, MemosState, MemosEffect, Not
   reducer { action, state ->
     // Skip all sync actions in offline mode (offline or demo)
     if (state.isOfflineMode) {
-      return@reducer state to emptySet()
+      return@reducer
     }
 
     when (action) {
       is MemosAction.Sync.StartSync -> {
-        state.copy(isSyncing = true, errorMessage = null) to setOf(MemosEffect.PerformSync)
+        state { copy(isSyncing = true, errorMessage = null) }
+        command(MemosEffect.PerformSync)
       }
 
       is MemosAction.Sync.SyncCompleted -> {
-        state.copy(
-          memos = action.memos,
-          memosRevision = state.memosRevision + 1,
-          isSyncing = false,
-          syncConflicts = emptyList(),
-          showConflictDialog = false,
-          errorMessage = null,
-        ) to setOf(MemosEffect.LoadSyncStatus)
+        state {
+          copy(
+            memos = action.memos,
+            memosRevision = memosRevision + 1,
+            isSyncing = false,
+            syncConflicts = emptyList(),
+            showConflictDialog = false,
+            errorMessage = null,
+          )
+        }
+        command(MemosEffect.LoadSyncStatus)
       }
 
       is MemosAction.Sync.SyncConflictDetected -> {
-        state.copy(
-          isSyncing = false,
-          syncConflicts = action.conflicts,
-          showConflictDialog = true,
-        ) to emptySet()
+        state {
+          copy(
+            isSyncing = false,
+            syncConflicts = action.conflicts,
+            showConflictDialog = true,
+          )
+        }
       }
 
       is MemosAction.Sync.SyncFailed -> {
-        state.copy(
-          isSyncing = false,
-          errorMessage = action.error,
-        ) to setOf(MemosEffect.LoadSyncStatus)
+        state { copy(isSyncing = false, errorMessage = action.error) }
+        command(MemosEffect.LoadSyncStatus)
       }
 
       is MemosAction.Sync.SyncStatusUpdated -> {
-        state.copy(syncStatus = action.status) to emptySet()
+        state { copy(syncStatus = action.status) }
       }
 
       is MemosAction.Sync.ResolveKeepLocal -> {
-        state.copy(isSyncing = true) to setOf(MemosEffect.ForceLocalSync)
+        state { copy(isSyncing = true) }
+        command(MemosEffect.ForceLocalSync)
       }
 
       is MemosAction.Sync.ResolveKeepServer -> {
-        state.copy(isSyncing = true) to setOf(MemosEffect.ForceServerSync)
+        state { copy(isSyncing = true) }
+        command(MemosEffect.ForceServerSync)
       }
 
       is MemosAction.Sync.DismissConflictDialog -> {
-        state.copy(showConflictDialog = false) to emptySet()
+        state { copy(showConflictDialog = false) }
+      }
+
+      is MemosAction.Sync.ShowSyncLogDialog -> {
+        state { copy(showSyncLogDialog = true) }
+      }
+
+      is MemosAction.Sync.DismissSyncLogDialog -> {
+        state { copy(showSyncLogDialog = false) }
       }
     }
   }

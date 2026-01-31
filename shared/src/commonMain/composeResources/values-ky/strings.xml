@@ -220,6 +220,7 @@
     <string name="title_empty_state_no_habits">Адаттар али жок</string>
     <string name="title_habit_setup">Адатыңызды тууралаңыз</string>
     <string name="title_logs">Логдор (%1$d)</string>
+    <string name="title_sync_logs">Синхрондоо логдору (%1$d)</string>
     <string name="title_new_memo">Жаңы жазуу</string>
     <string name="title_offline_onboarding_success">Мыкты иш!</string>
     <string name="title_offline_onboarding_welcome">Офлайн режим даяр</string>

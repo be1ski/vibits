@@ -220,6 +220,7 @@
     <string name="title_empty_state_no_habits">Звычак пакуль няма</string>
     <string name="title_habit_setup">Наладзьце вашу звычку</string>
     <string name="title_logs">Логі (%1$d)</string>
+    <string name="title_sync_logs">Логі сінхранізацыі (%1$d)</string>
     <string name="title_new_memo">Новая нататка</string>
     <string name="title_offline_onboarding_success">Выдатная праца!</string>
     <string name="title_offline_onboarding_welcome">Афлайн-рэжым гатовы</string>

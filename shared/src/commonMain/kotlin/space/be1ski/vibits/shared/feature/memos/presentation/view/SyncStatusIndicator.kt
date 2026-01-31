@@ -24,7 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.core.ui.theme.Indent
+import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncStatus
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_sync
@@ -49,11 +49,11 @@ fun SyncStatusIndicator(
   Row(
     modifier =
       modifier
-        .clip(RoundedCornerShape(Indent.Medium))
+        .clip(RoundedCornerShape(Indent.m))
         .background(backgroundColor)
         .clickable(enabled = !isSyncing, onClick = onClick)
-        .padding(horizontal = Indent.Medium, vertical = Indent.Small),
-    horizontalArrangement = Arrangement.spacedBy(Indent.Small),
+        .padding(horizontal = Indent.m, vertical = Indent.s),
+    horizontalArrangement = Arrangement.spacedBy(Indent.s),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     SyncStatusContent(syncStatus, isSyncing, contentColor)
@@ -61,7 +61,10 @@ fun SyncStatusIndicator(
 }
 
 @Composable
-private fun getSyncBackgroundColor(syncStatus: SyncStatus, isSyncing: Boolean): Color =
+private fun getSyncBackgroundColor(
+  syncStatus: SyncStatus,
+  isSyncing: Boolean,
+): Color =
   when {
     isSyncing -> MaterialTheme.colorScheme.primaryContainer
     syncStatus.hasFailedOperations -> MaterialTheme.colorScheme.errorContainer
@@ -70,7 +73,10 @@ private fun getSyncBackgroundColor(syncStatus: SyncStatus, isSyncing: Boolean): 
   }
 
 @Composable
-private fun getSyncContentColor(syncStatus: SyncStatus, isSyncing: Boolean): Color =
+private fun getSyncContentColor(
+  syncStatus: SyncStatus,
+  isSyncing: Boolean,
+): Color =
   when {
     isSyncing -> MaterialTheme.colorScheme.onPrimaryContainer
     syncStatus.hasFailedOperations -> MaterialTheme.colorScheme.onErrorContainer
@@ -79,7 +85,11 @@ private fun getSyncContentColor(syncStatus: SyncStatus, isSyncing: Boolean): Col
   }
 
 @Composable
-private fun SyncStatusContent(syncStatus: SyncStatus, isSyncing: Boolean, contentColor: Color) {
+private fun SyncStatusContent(
+  syncStatus: SyncStatus,
+  isSyncing: Boolean,
+  contentColor: Color,
+) {
   when {
     isSyncing -> SyncingContent(contentColor)
     syncStatus.hasPendingOperations -> PendingContent(syncStatus.pendingCount, contentColor)
@@ -103,7 +113,10 @@ private fun SyncingContent(contentColor: Color) {
 }
 
 @Composable
-private fun PendingContent(pendingCount: Int, contentColor: Color) {
+private fun PendingContent(
+  pendingCount: Int,
+  contentColor: Color,
+) {
   Icon(
     imageVector = Icons.Default.CloudUpload,
     contentDescription = null,
@@ -118,7 +131,10 @@ private fun PendingContent(pendingCount: Int, contentColor: Color) {
 }
 
 @Composable
-private fun FailedContent(failedCount: Int, contentColor: Color) {
+private fun FailedContent(
+  failedCount: Int,
+  contentColor: Color,
+) {
   Icon(
     imageVector = Icons.Default.CloudOff,
     contentDescription = null,

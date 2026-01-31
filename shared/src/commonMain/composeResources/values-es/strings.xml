@@ -216,6 +216,7 @@
     <string name="title_empty_state_no_habits">Aún no hay hábitos</string>
     <string name="title_habit_setup">Configura tu hábito</string>
     <string name="title_logs">Registros (%1$d)</string>
+    <string name="title_sync_logs">Registros de sincronización (%1$d)</string>
     <string name="title_new_memo">Nueva nota</string>
     <string name="title_offline_onboarding_success">¡Excelente trabajo!</string>
     <string name="title_offline_onboarding_welcome">Modo sin conexión listo</string>

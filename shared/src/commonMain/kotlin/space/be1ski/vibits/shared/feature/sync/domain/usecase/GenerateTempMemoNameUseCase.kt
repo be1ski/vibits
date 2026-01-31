@@ -13,7 +13,10 @@ object GenerateTempMemoNameUseCase {
   private const val PREFIX = "local_"
 
   operator fun invoke(): String {
-    val timestamp = kotlin.time.Clock.System.now().toEpochMilliseconds()
+    val timestamp =
+      kotlin.time.Clock.System
+        .now()
+        .toEpochMilliseconds()
     val random = Random.nextInt(RANDOM_MIN, RANDOM_MAX)
     return "$PREFIX${timestamp}_$random"
   }

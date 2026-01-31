@@ -220,6 +220,7 @@ Iň gowy usul: täze konfigurasiýa dörediň. Taryhy maglumatlar köne konfigur
     <string name="title_empty_state_no_habits">Endikler heniz ýok</string>
     <string name="title_habit_setup">Endikiňizi düzüň</string>
     <string name="title_logs">Loglar (%1$d)</string>
+    <string name="title_sync_logs">Sinhronizasiýa loglary (%1$d)</string>
     <string name="title_new_memo">Täze bellik</string>
     <string name="title_offline_onboarding_success">Ajaýyp iş!</string>
     <string name="title_offline_onboarding_welcome">Awtonom režim taýýar</string>

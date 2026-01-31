@@ -194,19 +194,24 @@ class FakeSyncQueueRepository : SyncQueueRepository {
     operations.add(operation)
   }
 
-  override suspend fun getPendingOperations(): List<SyncOperation> =
-    operations.filter { it.status == SyncOperationStatus.PENDING }
+  override suspend fun getPendingOperations(): List<SyncOperation> = operations.filter { it.status == SyncOperationStatus.PENDING }
 
   override suspend fun getAllOperations(): List<SyncOperation> = operations.toList()
 
-  override suspend fun updateStatus(id: String, status: SyncOperationStatus) {
+  override suspend fun updateStatus(
+    id: String,
+    status: SyncOperationStatus,
+  ) {
     val index = operations.indexOfFirst { it.id == id }
     if (index >= 0) {
       operations[index] = operations[index].copy(status = status)
     }
   }
 
-  override suspend fun updateMemoName(id: String, memoName: String) {
+  override suspend fun updateMemoName(
+    id: String,
+    memoName: String,
+  ) {
     val index = operations.indexOfFirst { it.id == id }
     if (index >= 0) {
       operations[index] = operations[index].copy(memoName = memoName)

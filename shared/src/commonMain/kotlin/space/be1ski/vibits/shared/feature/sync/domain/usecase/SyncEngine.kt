@@ -14,14 +14,10 @@ import space.be1ski.vibits.shared.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.shared.feature.memos.domain.config.MemosDefaults
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.sync.data.OfflineFirstMemosRepository
-import space.be1ski.vibits.shared.feature.sync.domain.model.ConflictType
-import space.be1ski.vibits.shared.feature.sync.domain.model.SyncConflict
-import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperation
-import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
-import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationType
+import space.be1ski.vibits.shared.feature.sync.domain.SyncLogTags
 import space.be1ski.vibits.shared.feature.sync.domain.repository.SyncQueueRepository
 
-private const val TAG = "SyncEngine"
+private val TAG = SyncLogTags.SYNC_ENGINE
 
 /**
  * Result of a sync attempt.
@@ -34,7 +30,7 @@ sealed interface SyncResult {
 
   /** Sync detected conflicts that need user resolution. */
   data class Conflict(
-    val conflicts: List<SyncConflict>,
+    val conflicts: List<space.be1ski.vibits.shared.feature.sync.domain.model.SyncConflict>,
   ) : SyncResult
 
   /** Sync failed due to an error. */
@@ -78,31 +74,29 @@ class SyncEngineImpl(
   private val syncQueue: SyncQueueRepository,
   private val offlineFirstRepository: OfflineFirstMemosRepository,
 ) : SyncEngine {
-  /** Mutex to prevent concurrent sync operations. */
   private val syncMutex = Mutex()
-
-  /** Atomic flag indicating if sync is in progress. */
   private val _isSyncing = atomic(false)
   override val isSyncing: Boolean get() = _isSyncing.value
 
-  /**
-   * Performs a full sync:
-   * 1. Fetches current server state
-   * 2. Compares with pending operations
-   * 3. Detects conflicts
-   * 4. If no conflicts, applies pending operations to server
-   * 5. Updates local state with server response
-   *
-   * Thread-safe: Only one sync can run at a time.
-   */
-  override suspend fun performSync(): SyncResult = syncMutex.withLock {
-    _isSyncing.value = true
-    try {
-      performSyncInternal()
-    } finally {
-      _isSyncing.value = false
-    }
+  private val operationApplier by lazy {
+    SyncOperationApplier(memosApi, memoMapper, syncQueue, offlineFirstRepository)
   }
+
+  override suspend fun performSync(): SyncResult = withSyncLock { performSyncInternal() }
+
+  override suspend fun forceServerSync(): SyncResult = withSyncLock { forceServerSyncInternal() }
+
+  override suspend fun forceLocalSync(): SyncResult = withSyncLock { forceLocalSyncInternal() }
+
+  private suspend inline fun withSyncLock(crossinline block: suspend () -> SyncResult): SyncResult =
+    syncMutex.withLock {
+      _isSyncing.value = true
+      try {
+        block()
+      } finally {
+        _isSyncing.value = false
+      }
+    }
 
   private suspend fun performSyncInternal(): SyncResult {
     val credentials = credentialsRepository.load()
@@ -111,63 +105,43 @@ class SyncEngineImpl(
       return SyncResult.NoCredentials
     }
 
-    val baseUrl = credentials.baseUrl.trim()
-    val token = credentials.token.trim()
-
-    return try {
+    return runCatching {
       Log.i(TAG, "Starting sync...")
-
-      // 1. Fetch server memos
-      val serverMemos = fetchServerMemos(baseUrl, token)
-      Log.d(TAG, "Fetched ${serverMemos.size} memos from server")
-
-      // 2. Get pending operations
-      val pendingOperations = syncQueue.getPendingOperations()
-      Log.d(TAG, "Found ${pendingOperations.size} pending operations")
-
-      if (pendingOperations.isEmpty()) {
-        // No pending changes, just update local cache
-        offlineFirstRepository.replaceAllMemos(serverMemos)
-        return SyncResult.Success(serverMemos)
-      }
-
-      // 3. Check for conflicts
-      val conflicts = detectConflicts(pendingOperations, serverMemos)
-      if (conflicts.isNotEmpty()) {
-        Log.w(TAG, "Detected ${conflicts.size} conflicts")
-        return SyncResult.Conflict(conflicts)
-      }
-
-      // 4. Apply pending operations to server
-      applyPendingOperations(pendingOperations, baseUrl, token)
-
-      // 5. Fetch updated server state
-      val updatedMemos = fetchServerMemos(baseUrl, token)
-      offlineFirstRepository.replaceAllMemos(updatedMemos)
-
-      // 6. Clear synced operations
-      syncQueue.clearSyncedOperations()
-
-      Log.i(TAG, "Sync completed successfully")
-      SyncResult.Success(updatedMemos)
-    } catch (e: Exception) {
+      executeSyncFlow(credentials.baseUrl.trim(), credentials.token.trim())
+    }.getOrElse { e ->
       Log.e(TAG, "Sync failed", e)
       SyncResult.Error(e.message ?: "Sync failed", e)
     }
   }
 
-  /**
-   * Forces server data to overwrite local data.
-   * Used when user chooses to resolve conflicts by keeping server data.
-   *
-   * Thread-safe: Only one sync can run at a time.
-   */
-  override suspend fun forceServerSync(): SyncResult = syncMutex.withLock {
-    _isSyncing.value = true
-    try {
-      forceServerSyncInternal()
-    } finally {
-      _isSyncing.value = false
+  private suspend fun executeSyncFlow(
+    baseUrl: String,
+    token: String,
+  ): SyncResult {
+    val serverMemos = fetchServerMemos(baseUrl, token)
+    Log.d(TAG, "Fetched ${serverMemos.size} memos from server")
+
+    val pendingOperations = syncQueue.getPendingOperations()
+    Log.d(TAG, "Found ${pendingOperations.size} pending operations")
+
+    if (pendingOperations.isEmpty()) {
+      offlineFirstRepository.replaceAllMemos(serverMemos)
+      return SyncResult.Success(serverMemos)
+    }
+
+    val localMemos = offlineFirstRepository.getCachedMemos()
+    val conflicts = SyncConflictDetector.detectConflicts(pendingOperations, localMemos, serverMemos)
+
+    return if (conflicts.isNotEmpty()) {
+      Log.w(TAG, "Detected ${conflicts.size} conflicts")
+      SyncResult.Conflict(conflicts)
+    } else {
+      operationApplier.applyOperations(pendingOperations, baseUrl, token)
+      val updatedMemos = fetchServerMemos(baseUrl, token)
+      offlineFirstRepository.replaceAllMemos(updatedMemos)
+      syncQueue.clearSyncedOperations()
+      Log.i(TAG, "Sync completed successfully")
+      SyncResult.Success(updatedMemos)
     }
   }
 
@@ -177,40 +151,20 @@ class SyncEngineImpl(
       return SyncResult.NoCredentials
     }
 
-    return try {
+    return runCatching {
       Log.i(TAG, "Forcing server sync...")
-
-      // Fetch server memos
       val serverMemos = fetchServerMemos(credentials.baseUrl.trim(), credentials.token.trim())
 
-      // Discard all pending operations
       val pendingOperations = syncQueue.getPendingOperations()
       pendingOperations.forEach { syncQueue.removeOperation(it.id) }
       Log.d(TAG, "Discarded ${pendingOperations.size} pending operations")
 
-      // Replace local cache with server data
       offlineFirstRepository.replaceAllMemos(serverMemos)
-
       Log.i(TAG, "Force server sync completed")
       SyncResult.Success(serverMemos)
-    } catch (e: Exception) {
+    }.getOrElse { e ->
       Log.e(TAG, "Force server sync failed", e)
       SyncResult.Error(e.message ?: "Force sync failed", e)
-    }
-  }
-
-  /**
-   * Forces local data to overwrite server data.
-   * Used when user chooses to resolve conflicts by keeping local data.
-   *
-   * Thread-safe: Only one sync can run at a time.
-   */
-  override suspend fun forceLocalSync(): SyncResult = syncMutex.withLock {
-    _isSyncing.value = true
-    try {
-      forceLocalSyncInternal()
-    } finally {
-      _isSyncing.value = false
     }
   }
 
@@ -223,25 +177,18 @@ class SyncEngineImpl(
     val baseUrl = credentials.baseUrl.trim()
     val token = credentials.token.trim()
 
-    return try {
+    return runCatching {
       Log.i(TAG, "Forcing local sync...")
-
-      // Get all pending operations
       val pendingOperations = syncQueue.getPendingOperations()
 
-      // Apply all operations to server (ignore conflicts)
-      applyPendingOperations(pendingOperations, baseUrl, token)
-
-      // Fetch updated server state
+      operationApplier.applyOperations(pendingOperations, baseUrl, token)
       val updatedMemos = fetchServerMemos(baseUrl, token)
       offlineFirstRepository.replaceAllMemos(updatedMemos)
-
-      // Clear synced operations
       syncQueue.clearSyncedOperations()
 
       Log.i(TAG, "Force local sync completed")
       SyncResult.Success(updatedMemos)
-    } catch (e: Exception) {
+    }.getOrElse { e ->
       Log.e(TAG, "Force local sync failed", e)
       SyncResult.Error(e.message ?: "Force local sync failed", e)
     }
@@ -267,171 +214,5 @@ class SyncEngineImpl(
     } while (nextPageToken != null)
 
     return allMemos
-  }
-
-  private suspend fun detectConflicts(
-    pendingOperations: List<SyncOperation>,
-    serverMemos: List<Memo>,
-  ): List<SyncConflict> {
-    val localMemos = offlineFirstRepository.getCachedMemos()
-    val serverMemosByName = serverMemos.associateBy { it.name }
-    val localMemosByName = localMemos.associateBy { it.name }
-
-    return pendingOperations.mapNotNull { operation ->
-      val memoName = operation.memoName ?: return@mapNotNull null
-      detectOperationConflict(operation, memoName, serverMemosByName, localMemosByName)
-    }
-  }
-
-  private fun detectOperationConflict(
-    operation: SyncOperation,
-    memoName: String,
-    serverMemosByName: Map<String, Memo>,
-    localMemosByName: Map<String, Memo>,
-  ): SyncConflict? =
-    when (operation.type) {
-      SyncOperationType.CREATE -> detectCreateConflict(operation, memoName, serverMemosByName, localMemosByName)
-      SyncOperationType.UPDATE -> detectUpdateConflict(operation, memoName, serverMemosByName, localMemosByName)
-      SyncOperationType.DELETE -> detectDeleteConflict(operation, memoName, serverMemosByName)
-    }
-
-  private fun detectCreateConflict(
-    operation: SyncOperation,
-    memoName: String,
-    serverMemosByName: Map<String, Memo>,
-    localMemosByName: Map<String, Memo>,
-  ): SyncConflict? {
-    if (GenerateTempMemoNameUseCase.isTemporaryName(memoName)) return null
-    val serverMemo = serverMemosByName[memoName] ?: return null
-    return SyncConflict(
-      operation = operation,
-      localMemo = localMemosByName[memoName],
-      serverMemo = serverMemo,
-      conflictType = ConflictType.BOTH_MODIFIED,
-    )
-  }
-
-  private fun detectUpdateConflict(
-    operation: SyncOperation,
-    memoName: String,
-    serverMemosByName: Map<String, Memo>,
-    localMemosByName: Map<String, Memo>,
-  ): SyncConflict? {
-    val serverMemo = serverMemosByName[memoName]
-    val localMemo = localMemosByName[memoName]
-
-    if (serverMemo == null) {
-      return SyncConflict(
-        operation = operation,
-        localMemo = localMemo,
-        serverMemo = null,
-        conflictType = ConflictType.DELETED_ON_SERVER,
-      )
-    }
-
-    if (localMemo == null) return null
-    val serverUpdateTime = serverMemo.updateTime ?: return null
-    if (serverUpdateTime <= operation.createdAt) return null
-
-    return SyncConflict(
-      operation = operation,
-      localMemo = localMemo,
-      serverMemo = serverMemo,
-      conflictType = ConflictType.SERVER_NEWER,
-    )
-  }
-
-  private fun detectDeleteConflict(
-    operation: SyncOperation,
-    memoName: String,
-    serverMemosByName: Map<String, Memo>,
-  ): SyncConflict? {
-    val serverMemo = serverMemosByName[memoName] ?: return null
-    val serverUpdateTime = serverMemo.updateTime ?: return null
-    if (serverUpdateTime <= operation.createdAt) return null
-
-    return SyncConflict(
-      operation = operation,
-      localMemo = null,
-      serverMemo = serverMemo,
-      conflictType = ConflictType.SERVER_NEWER,
-    )
-  }
-
-  private suspend fun applyPendingOperations(
-    operations: List<SyncOperation>,
-    baseUrl: String,
-    token: String,
-  ) {
-    operations.forEach { operation ->
-      applyOperation(operation, baseUrl, token)
-    }
-  }
-
-  private suspend fun applyOperation(
-    operation: SyncOperation,
-    baseUrl: String,
-    token: String,
-  ) {
-    syncQueue.updateStatus(operation.id, SyncOperationStatus.IN_PROGRESS)
-
-    runCatching {
-      when (operation.type) {
-        SyncOperationType.CREATE -> applyCreateOperation(operation, baseUrl, token)
-        SyncOperationType.UPDATE -> applyUpdateOperation(operation, baseUrl, token)
-        SyncOperationType.DELETE -> applyDeleteOperation(operation, baseUrl, token)
-      }
-    }.onSuccess { applied ->
-      if (applied) {
-        syncQueue.updateStatus(operation.id, SyncOperationStatus.SYNCED)
-        Log.d(TAG, "Synced operation: ${operation.id}")
-      }
-    }.onFailure { e ->
-      syncQueue.updateStatus(operation.id, SyncOperationStatus.FAILED)
-      Log.e(TAG, "Failed to sync operation: ${operation.id}", e)
-      throw e
-    }
-  }
-
-  private suspend fun applyCreateOperation(
-    operation: SyncOperation,
-    baseUrl: String,
-    token: String,
-  ): Boolean {
-    val content = operation.content ?: return false
-    val serverMemo = memoMapper.toDomain(memosApi.createMemo(baseUrl, token, content))
-
-    operation.memoName?.let { tempName ->
-      offlineFirstRepository.updateLocalMemo(tempName, serverMemo)
-      syncQueue.updateMemoName(operation.id, serverMemo.name)
-    }
-    return true
-  }
-
-  private suspend fun applyUpdateOperation(
-    operation: SyncOperation,
-    baseUrl: String,
-    token: String,
-  ): Boolean {
-    val name = operation.memoName ?: return false
-    val content = operation.content ?: return false
-
-    if (GenerateTempMemoNameUseCase.isTemporaryName(name)) {
-      Log.d(TAG, "Skipping update for temp memo: $name")
-      return false
-    }
-
-    memosApi.updateMemo(baseUrl, token, name, content)
-    return true
-  }
-
-  private suspend fun applyDeleteOperation(
-    operation: SyncOperation,
-    baseUrl: String,
-    token: String,
-  ): Boolean {
-    val name = operation.memoName ?: return false
-    memosApi.deleteMemo(baseUrl, token, name)
-    return true
   }
 }

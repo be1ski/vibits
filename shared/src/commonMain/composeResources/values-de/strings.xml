@@ -220,6 +220,7 @@ Empfehlung: Erstelle stattdessen eine neue Konfiguration. Deine historischen Dat
     <string name="title_empty_state_no_habits">Noch keine Gewohnheiten</string>
     <string name="title_habit_setup">Richten Sie Ihre Gewohnheit ein</string>
     <string name="title_logs">Protokolle (%1$d)</string>
+    <string name="title_sync_logs">Synchronisierungsprotokolle (%1$d)</string>
     <string name="title_new_memo">Neue Notiz</string>
     <string name="title_offline_onboarding_success">Großartige Arbeit!</string>
     <string name="title_offline_onboarding_welcome">Offline-Modus bereit</string>

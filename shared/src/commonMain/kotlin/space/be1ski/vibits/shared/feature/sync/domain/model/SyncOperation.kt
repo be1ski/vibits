@@ -8,9 +8,11 @@ import kotlin.time.Instant
 data class SyncOperation(
   val id: String,
   val type: SyncOperationType,
-  val memoName: String?,
-  val content: String?,
-  val createdAt: Instant,
+  val memoName: String? = null,
+  val content: String? = null,
+  val createdAt: Instant =
+    kotlin.time.Clock.System
+      .now(),
   val status: SyncOperationStatus = SyncOperationStatus.PENDING,
 )
 

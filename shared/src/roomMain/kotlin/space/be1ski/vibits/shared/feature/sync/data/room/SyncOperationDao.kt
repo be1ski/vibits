@@ -45,13 +45,19 @@ interface SyncOperationDao {
    * Updates the status of an operation.
    */
   @Query("UPDATE sync_operations SET status = :status WHERE id = :id")
-  suspend fun updateStatus(id: String, status: String)
+  suspend fun updateStatus(
+    id: String,
+    status: String,
+  )
 
   /**
    * Updates the memo name of an operation.
    */
   @Query("UPDATE sync_operations SET memoName = :memoName WHERE id = :id")
-  suspend fun updateMemoName(id: String, memoName: String)
+  suspend fun updateMemoName(
+    id: String,
+    memoName: String,
+  )
 
   /**
    * Deletes an operation by ID.

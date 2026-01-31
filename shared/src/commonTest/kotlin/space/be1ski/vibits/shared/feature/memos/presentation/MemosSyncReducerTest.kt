@@ -18,26 +18,29 @@ import kotlin.test.assertTrue
 import kotlin.time.Instant
 
 class MemosSyncReducerTest {
-  private val testMemo = Memo(
-    name = "memos/1",
-    content = "Test content",
-    createTime = Instant.fromEpochMilliseconds(1000L),
-    updateTime = Instant.fromEpochMilliseconds(2000L),
-  )
+  private val testMemo =
+    Memo(
+      name = "memos/1",
+      content = "Test content",
+      createTime = Instant.fromEpochMilliseconds(1000L),
+      updateTime = Instant.fromEpochMilliseconds(2000L),
+    )
 
-  private val testOperation = SyncOperation(
-    id = "op1",
-    type = SyncOperationType.CREATE,
-    memoName = "memos/1",
-    content = "Test content",
-  )
+  private val testOperation =
+    SyncOperation(
+      id = "op1",
+      type = SyncOperationType.CREATE,
+      memoName = "memos/1",
+      content = "Test content",
+    )
 
-  private val testConflict = SyncConflict(
-    operation = testOperation,
-    localMemo = testMemo,
-    serverMemo = testMemo.copy(content = "Server content"),
-    conflictType = ConflictType.BOTH_MODIFIED,
-  )
+  private val testConflict =
+    SyncConflict(
+      operation = testOperation,
+      localMemo = testMemo,
+      serverMemo = testMemo.copy(content = "Server content"),
+      conflictType = ConflictType.BOTH_MODIFIED,
+    )
 
   // ========== Sync Actions in Online Mode ==========
 

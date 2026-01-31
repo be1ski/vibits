@@ -168,29 +168,38 @@ class MemosReducerTest {
     }
 
   @Test
-  fun `when MemoCreated then adds memo and stops loading`() =
+  fun `when MemoCreated then adds memo stops loading and triggers sync`() =
     memosReducer.test(MemosState(isLoading = true, memos = listOf(testMemo))) {
       send(MemosAction.Crud.MemoCreated(Memo(name = "memos/2", content = "New")))
 
       assertState { memos.size == 2 && !isLoading }
-      assertNoEffects()
+      assertCommands(MemosEffect.PerformSync)
     }
 
   @Test
-  fun `when MemoUpdated then updates memo in list and stops loading`() =
+  fun `when MemoUpdated then updates memo stops loading and triggers sync`() =
     memosReducer.test(MemosState(isLoading = true, memos = listOf(testMemo))) {
       send(MemosAction.Crud.MemoUpdated(testMemo.copy(content = "Updated content")))
 
       assertState { memos.size == 1 && memos.first().content == "Updated content" && !isLoading }
-      assertNoEffects()
+      assertCommands(MemosEffect.PerformSync)
     }
 
   @Test
-  fun `when MemoDeleted then removes memo from list and stops loading`() =
+  fun `when MemoDeleted then removes memo stops loading and triggers sync`() =
     memosReducer.test(MemosState(isLoading = true, memos = listOf(testMemo))) {
       send(MemosAction.Crud.MemoDeleted("memos/1"))
 
       assertState { memos.isEmpty() && !isLoading }
+      assertCommands(MemosEffect.PerformSync)
+    }
+
+  @Test
+  fun `when MemoCreated in offline mode then does not trigger sync`() =
+    memosReducer.test(MemosState(isLoading = true, memos = listOf(testMemo), isOfflineMode = true)) {
+      send(MemosAction.Crud.MemoCreated(Memo(name = "memos/2", content = "New")))
+
+      assertState { memos.size == 2 && !isLoading }
       assertNoEffects()
     }
 

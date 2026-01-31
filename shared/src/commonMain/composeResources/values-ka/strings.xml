@@ -220,6 +220,7 @@
     <string name="title_empty_state_no_habits">ჩვევები ჯერ არ არის</string>
     <string name="title_habit_setup">დააკონფიგურირეთ თქვენი ჩვევა</string>
     <string name="title_logs">ლოგები (%1$d)</string>
+    <string name="title_sync_logs">სინქრონიზაციის ლოგები (%1$d)</string>
     <string name="title_new_memo">ახალი ჩანაწერი</string>
     <string name="title_offline_onboarding_success">შესანიშნავი სამუშაო!</string>
     <string name="title_offline_onboarding_welcome">ოფლაინ რეჟიმი მზადაა</string>

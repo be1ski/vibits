@@ -1,5 +1,7 @@
 package space.be1ski.vibits.shared.feature.memos.data
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
@@ -10,10 +12,14 @@ import space.be1ski.vibits.shared.feature.memos.data.offline.OfflineMemosReposit
 import space.be1ski.vibits.shared.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.shared.feature.memos.data.platform.OfflineMemoStorage
 import space.be1ski.vibits.shared.feature.memos.data.remote.MemosApi
-import space.be1ski.vibits.shared.feature.memos.data.remote.dto.ListMemosResponseDto
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
+import space.be1ski.vibits.shared.feature.sync.data.OfflineFirstMemosRepository
+import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperation
+import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
+import space.be1ski.vibits.shared.feature.sync.domain.model.SyncStatus
+import space.be1ski.vibits.shared.feature.sync.domain.repository.SyncQueueRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -164,7 +170,56 @@ class ModeAwareMemosRepositoryTest {
       offlineRepository = offlineRepo,
       demoRepository = demoRepo,
       memoCache = cache,
+      offlineFirstRepository = OfflineFirstMemosRepository(cache, FakeSyncQueueRepository()),
     )
+}
+
+private class FakeSyncQueueRepository : SyncQueueRepository {
+  private val operations = mutableListOf<SyncOperation>()
+
+  override suspend fun addOperation(operation: SyncOperation) {
+    operations.add(operation)
+  }
+
+  override suspend fun getPendingOperations(): List<SyncOperation> = operations.filter { it.status == SyncOperationStatus.PENDING }
+
+  override suspend fun getAllOperations(): List<SyncOperation> = operations.toList()
+
+  override suspend fun updateStatus(
+    id: String,
+    status: SyncOperationStatus,
+  ) {
+    val index = operations.indexOfFirst { it.id == id }
+    if (index >= 0) {
+      operations[index] = operations[index].copy(status = status)
+    }
+  }
+
+  override suspend fun updateMemoName(
+    id: String,
+    memoName: String,
+  ) {
+    val index = operations.indexOfFirst { it.id == id }
+    if (index >= 0) {
+      operations[index] = operations[index].copy(memoName = memoName)
+    }
+  }
+
+  override suspend fun removeOperation(id: String) {
+    operations.removeAll { it.id == id }
+  }
+
+  override suspend fun clearSyncedOperations() {
+    operations.removeAll { it.status == SyncOperationStatus.SYNCED }
+  }
+
+  override suspend fun getSyncStatus(): SyncStatus =
+    SyncStatus(
+      pendingCount = operations.count { it.status == SyncOperationStatus.PENDING },
+      failedCount = operations.count { it.status == SyncOperationStatus.FAILED },
+    )
+
+  override fun observeSyncStatus(): Flow<SyncStatus> = flowOf(SyncStatus())
 }
 
 private class FakeAppModeRepository(

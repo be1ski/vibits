@@ -8,7 +8,10 @@ actual fun createMemoCache(): MemoCache = IosMemoCache()
 
 private class IosMemoCache : MemoCache {
   override suspend fun readMemos(): List<Memo> =
-    IosDatabaseHolder.database.memoDao().loadAll().map(MemoEntityMapper::toDomain)
+    IosDatabaseHolder.database
+      .memoDao()
+      .loadAll()
+      .map(MemoEntityMapper::toDomain)
 
   override suspend fun replaceMemos(memos: List<Memo>) {
     val dao = IosDatabaseHolder.database.memoDao()

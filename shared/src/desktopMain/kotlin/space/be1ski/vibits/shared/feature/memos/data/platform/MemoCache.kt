@@ -8,7 +8,10 @@ actual fun createMemoCache(): MemoCache = DesktopMemoCache()
 
 private class DesktopMemoCache : MemoCache {
   override suspend fun readMemos(): List<Memo> =
-    DesktopDatabaseHolder.database.memoDao().loadAll().map(MemoEntityMapper::toDomain)
+    DesktopDatabaseHolder.database
+      .memoDao()
+      .loadAll()
+      .map(MemoEntityMapper::toDomain)
 
   override suspend fun replaceMemos(memos: List<Memo>) {
     val dao = DesktopDatabaseHolder.database.memoDao()

@@ -220,6 +220,7 @@
     <string name="title_empty_state_no_habits">Әдеттер әлі жоқ</string>
     <string name="title_habit_setup">Әдетіңізді баптаңыз</string>
     <string name="title_logs">Логтар (%1$d)</string>
+    <string name="title_sync_logs">Синхрондау логтары (%1$d)</string>
     <string name="title_new_memo">Жаңа жазба</string>
     <string name="title_offline_onboarding_success">Керемет жұмыс!</string>
     <string name="title_offline_onboarding_welcome">Желіден тыс режим дайын</string>

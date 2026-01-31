@@ -6,11 +6,12 @@ import space.be1ski.vibits.shared.core.elm.EffectHandler
 import space.be1ski.vibits.shared.core.elm.actions
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.shared.feature.sync.domain.SyncLogTags
 import space.be1ski.vibits.shared.feature.sync.domain.repository.SyncQueueRepository
 import space.be1ski.vibits.shared.feature.sync.domain.usecase.SyncEngine
 import space.be1ski.vibits.shared.feature.sync.domain.usecase.SyncResult
 
-private const val TAG = "MemosSyncEffect"
+private val TAG = SyncLogTags.MEMOS_SYNC_EFFECT
 
 class MemosSyncEffectHandler(
   private val syncEngine: SyncEngine,

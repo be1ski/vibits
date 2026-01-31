@@ -220,6 +220,7 @@
     <string name="title_empty_state_no_habits">Одатҳо ҳанӯз нестанд</string>
     <string name="title_habit_setup">Одати худро танзим кунед</string>
     <string name="title_logs">Логҳо (%1$d)</string>
+    <string name="title_sync_logs">Логҳои синхронизатсия (%1$d)</string>
     <string name="title_new_memo">Ёддошти нав</string>
     <string name="title_offline_onboarding_success">Кори аъло!</string>
     <string name="title_offline_onboarding_welcome">Реҷаи офлайн тайёр аст</string>

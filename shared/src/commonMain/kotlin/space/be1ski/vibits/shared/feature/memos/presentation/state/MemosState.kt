@@ -31,6 +31,7 @@ data class MemosState(
   val isSyncing: Boolean = false,
   val syncConflicts: List<SyncConflict> = emptyList(),
   val showConflictDialog: Boolean = false,
+  val showSyncLogDialog: Boolean = false,
 ) {
   val hasCredentials: Boolean get() = baseUrl.isNotBlank() && token.isNotBlank()
   val needsCredentials: Boolean get() = !isOfflineMode && !hasCredentials

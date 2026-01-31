@@ -220,6 +220,7 @@ Bonne pratique : créez une nouvelle configuration. Vos données historiques con
     <string name="title_empty_state_no_habits">Pas encore d\'habitudes</string>
     <string name="title_habit_setup">Configurez votre habitude</string>
     <string name="title_logs">Journaux (%1$d)</string>
+    <string name="title_sync_logs">Journaux de synchronisation (%1$d)</string>
     <string name="title_new_memo">Nouvelle note</string>
     <string name="title_offline_onboarding_success">Excellent travail !</string>
     <string name="title_offline_onboarding_welcome">Mode hors ligne prêt</string>

@@ -220,6 +220,7 @@
     <string name="title_empty_state_no_habits">習慣がありません</string>
     <string name="title_habit_setup">習慣を設定</string>
     <string name="title_logs">ログ (%1$d)</string>
+    <string name="title_sync_logs">同期ログ (%1$d)</string>
     <string name="title_new_memo">新規メモ</string>
     <string name="title_offline_onboarding_success">素晴らしい！</string>
     <string name="title_offline_onboarding_welcome">オフラインモード準備完了</string>

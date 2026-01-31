@@ -220,6 +220,7 @@
     <string name="title_empty_state_no_habits">لا توجد عادات حتى الآن</string>
     <string name="title_habit_setup">إعداد عادتك</string>
     <string name="title_logs">السجلات (%1$d)</string>
+    <string name="title_sync_logs">سجلات المزامنة (%1$d)</string>
     <string name="title_new_memo">مذكرة جديدة</string>
     <string name="title_offline_onboarding_success">عمل رائع!</string>
     <string name="title_offline_onboarding_welcome">وضع عدم الاتصال جاهز</string>

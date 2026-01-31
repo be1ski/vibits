@@ -44,35 +44,44 @@ class SyncModelsTest {
 
   @Test
   fun `SyncOperation default status is PENDING`() {
-    val operation = SyncOperation(
-      id = "op1",
-      type = SyncOperationType.CREATE,
-      memoName = "memos/1",
-      content = "content",
-    )
+    val operation =
+      SyncOperation(
+        id = "op1",
+        type = SyncOperationType.CREATE,
+        memoName = "memos/1",
+        content = "content",
+      )
     assertEquals(SyncOperationStatus.PENDING, operation.status)
   }
 
   @Test
-  fun `SyncOperation createdAt defaults to epoch start`() {
-    val operation = SyncOperation(
-      id = "op1",
-      type = SyncOperationType.UPDATE,
-      memoName = "memos/1",
-      content = "content",
-    )
-    assertEquals(Instant.fromEpochMilliseconds(0), operation.createdAt)
+  fun `SyncOperation createdAt defaults to current time`() {
+    val before =
+      kotlin.time.Clock.System
+        .now()
+    val operation =
+      SyncOperation(
+        id = "op1",
+        type = SyncOperationType.UPDATE,
+        memoName = "memos/1",
+        content = "content",
+      )
+    val after =
+      kotlin.time.Clock.System
+        .now()
+    assertTrue(operation.createdAt >= before && operation.createdAt <= after)
   }
 
   @Test
   fun `SyncOperation with custom createdAt preserves time`() {
     val customTime = Instant.fromEpochMilliseconds(1704067200000) // 2024-01-01
-    val operation = SyncOperation(
-      id = "op1",
-      type = SyncOperationType.DELETE,
-      memoName = "memos/1",
-      createdAt = customTime,
-    )
+    val operation =
+      SyncOperation(
+        id = "op1",
+        type = SyncOperationType.DELETE,
+        memoName = "memos/1",
+        createdAt = customTime,
+      )
     assertEquals(customTime, operation.createdAt)
   }
 
@@ -98,13 +107,12 @@ class SyncModelsTest {
   // ========== SyncConflict Tests ==========
 
   @Test
-  fun `ConflictType has four values`() {
+  fun `ConflictType has three values`() {
     val types = ConflictType.entries
-    assertEquals(4, types.size)
+    assertEquals(3, types.size)
     assertTrue(types.contains(ConflictType.BOTH_MODIFIED))
     assertTrue(types.contains(ConflictType.DELETED_ON_SERVER))
     assertTrue(types.contains(ConflictType.SERVER_NEWER))
-    assertTrue(types.contains(ConflictType.LOCAL_DELETED))
   }
 
   @Test

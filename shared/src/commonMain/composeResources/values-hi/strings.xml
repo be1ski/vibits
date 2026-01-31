@@ -220,6 +220,7 @@
     <string name="title_empty_state_no_habits">अभी कोई आदत नहीं</string>
     <string name="title_habit_setup">अपनी आदत सेट करें</string>
     <string name="title_logs">लॉग (%1$d)</string>
+    <string name="title_sync_logs">सिंक लॉग (%1$d)</string>
     <string name="title_new_memo">नया मेमो</string>
     <string name="title_offline_onboarding_success">शानदार काम!</string>
     <string name="title_offline_onboarding_welcome">ऑफ़लाइन मोड तैयार</string>

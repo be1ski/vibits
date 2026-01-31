@@ -216,6 +216,7 @@
     <string name="title_empty_state_no_habits">暂无习惯</string>
     <string name="title_habit_setup">设置您的习惯</string>
     <string name="title_logs">日志 (%1$d)</string>
+    <string name="title_sync_logs">同步日志 (%1$d)</string>
     <string name="title_new_memo">新建备忘</string>
     <string name="title_offline_onboarding_success">太棒了！</string>
     <string name="title_offline_onboarding_welcome">离线模式已就绪</string>

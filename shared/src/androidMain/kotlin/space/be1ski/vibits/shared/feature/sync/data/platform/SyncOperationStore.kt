@@ -24,11 +24,17 @@ private class AndroidSyncOperationStore : SyncOperationStore {
     daoOrNull()?.upsert(SyncOperationEntityMapper.toEntity(operation))
   }
 
-  override suspend fun updateStatus(id: String, status: SyncOperationStatus) {
+  override suspend fun updateStatus(
+    id: String,
+    status: SyncOperationStatus,
+  ) {
     daoOrNull()?.updateStatus(id, status.name)
   }
 
-  override suspend fun updateMemoName(id: String, memoName: String) {
+  override suspend fun updateMemoName(
+    id: String,
+    memoName: String,
+  ) {
     daoOrNull()?.updateMemoName(id, memoName)
   }
 

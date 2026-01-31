@@ -216,6 +216,7 @@
     <string name="title_empty_state_no_habits">Привычек пока нет</string>
     <string name="title_habit_setup">Настройте привычку</string>
     <string name="title_logs">Логи (%1$d)</string>
+    <string name="title_sync_logs">Логи синхронизации (%1$d)</string>
     <string name="title_new_memo">Новое воспоминание</string>
     <string name="title_offline_onboarding_success">Отличная работа!</string>
     <string name="title_offline_onboarding_welcome">Офлайн-режим готов</string>

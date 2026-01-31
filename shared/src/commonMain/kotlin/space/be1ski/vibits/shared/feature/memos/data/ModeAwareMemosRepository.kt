@@ -12,9 +12,10 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
+import space.be1ski.vibits.shared.feature.sync.domain.SyncLogTags
 import space.be1ski.vibits.shared.feature.sync.data.OfflineFirstMemosRepository as OfflineFirstRepo
 
-private const val TAG = "ModeAwareRepo"
+private val TAG = SyncLogTags.MODE_AWARE_REPO
 
 @Inject
 @SingleIn(AppScope::class)

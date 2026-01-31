@@ -220,6 +220,7 @@ Köhnə konfiqurasiyanı redaktə etmək tövsiyə olunmur, çünki bu, əvvəlk
     <string name="title_empty_state_no_habits">Vərdişlər hələ yoxdur</string>
     <string name="title_habit_setup">Vərdişinizi qurun</string>
     <string name="title_logs">Loglar (%1$d)</string>
+    <string name="title_sync_logs">Sinxronizasiya logları (%1$d)</string>
     <string name="title_new_memo">Yeni qeyd</string>
     <string name="title_offline_onboarding_success">Əla iş!</string>
     <string name="title_offline_onboarding_welcome">Oflayn rejim hazırdır</string>

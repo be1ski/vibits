@@ -220,6 +220,7 @@ Eng yaxshi yechim: yangi konfiguratsiya yarating. Tarixiy ma'lumotlar eski konfi
     <string name="title_empty_state_no_habits">Odatlar hali yo'q</string>
     <string name="title_habit_setup">Odatingizni sozlang</string>
     <string name="title_logs">Loglar (%1$d)</string>
+    <string name="title_sync_logs">Sinxronizatsiya loglari (%1$d)</string>
     <string name="title_new_memo">Yangi eslatma</string>
     <string name="title_offline_onboarding_success">Ajoyib ish!</string>
     <string name="title_offline_onboarding_welcome">Oflayn rejim tayyor</string>

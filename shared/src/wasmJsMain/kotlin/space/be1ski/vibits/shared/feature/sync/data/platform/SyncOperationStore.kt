@@ -15,9 +15,15 @@ private class WasmSyncOperationStore : SyncOperationStore {
 
   override suspend fun upsertOperation(operation: SyncOperation) = Unit
 
-  override suspend fun updateStatus(id: String, status: SyncOperationStatus) = Unit
+  override suspend fun updateStatus(
+    id: String,
+    status: SyncOperationStatus,
+  ) = Unit
 
-  override suspend fun updateMemoName(id: String, memoName: String) = Unit
+  override suspend fun updateMemoName(
+    id: String,
+    memoName: String,
+  ) = Unit
 
   override suspend fun removeOperation(id: String) = Unit
 

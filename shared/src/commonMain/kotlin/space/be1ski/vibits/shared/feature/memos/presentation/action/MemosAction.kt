@@ -154,5 +154,11 @@ sealed interface MemosAction : Action {
 
     /** Dismiss conflict dialog. */
     data object DismissConflictDialog : Sync
+
+    /** Show sync log dialog. */
+    data object ShowSyncLogDialog : Sync
+
+    /** Dismiss sync log dialog. */
+    data object DismissSyncLogDialog : Sync
   }
 }

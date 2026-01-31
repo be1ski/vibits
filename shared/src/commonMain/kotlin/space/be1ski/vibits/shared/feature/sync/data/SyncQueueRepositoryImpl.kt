@@ -27,33 +27,44 @@ class SyncQueueRepositoryImpl(
   /** Mutex to ensure thread-safe operations on the sync queue. */
   private val mutex = Mutex()
 
-  override suspend fun addOperation(operation: SyncOperation) = mutex.withLock {
-    store.upsertOperation(operation)
-  }
+  override suspend fun addOperation(operation: SyncOperation) =
+    mutex.withLock {
+      store.upsertOperation(operation)
+    }
 
-  override suspend fun getPendingOperations(): List<SyncOperation> = mutex.withLock {
-    store.getPendingOperations()
-  }
+  override suspend fun getPendingOperations(): List<SyncOperation> =
+    mutex.withLock {
+      store.getPendingOperations()
+    }
 
-  override suspend fun getAllOperations(): List<SyncOperation> = mutex.withLock {
-    store.getAllOperations()
-  }
+  override suspend fun getAllOperations(): List<SyncOperation> =
+    mutex.withLock {
+      store.getAllOperations()
+    }
 
-  override suspend fun updateStatus(id: String, status: SyncOperationStatus) = mutex.withLock {
+  override suspend fun updateStatus(
+    id: String,
+    status: SyncOperationStatus,
+  ) = mutex.withLock {
     store.updateStatus(id, status)
   }
 
-  override suspend fun updateMemoName(id: String, memoName: String) = mutex.withLock {
+  override suspend fun updateMemoName(
+    id: String,
+    memoName: String,
+  ) = mutex.withLock {
     store.updateMemoName(id, memoName)
   }
 
-  override suspend fun removeOperation(id: String) = mutex.withLock {
-    store.removeOperation(id)
-  }
+  override suspend fun removeOperation(id: String) =
+    mutex.withLock {
+      store.removeOperation(id)
+    }
 
-  override suspend fun clearSyncedOperations() = mutex.withLock {
-    store.clearSyncedOperations()
-  }
+  override suspend fun clearSyncedOperations() =
+    mutex.withLock {
+      store.clearSyncedOperations()
+    }
 
   override fun observeSyncStatus(): Flow<SyncStatus> =
     combine(
@@ -66,10 +77,11 @@ class SyncQueueRepositoryImpl(
       )
     }
 
-  override suspend fun getSyncStatus(): SyncStatus = mutex.withLock {
-    SyncStatus(
-      pendingCount = store.getPendingCount(),
-      failedCount = store.getFailedCount(),
-    )
-  }
+  override suspend fun getSyncStatus(): SyncStatus =
+    mutex.withLock {
+      SyncStatus(
+        pendingCount = store.getPendingCount(),
+        failedCount = store.getFailedCount(),
+      )
+    }
 }

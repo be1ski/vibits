@@ -220,6 +220,7 @@ Cea mai bună practică: creează o configurație nouă. Datele tale istorice vo
     <string name="title_empty_state_no_habits">Încă niciun obicei</string>
     <string name="title_habit_setup">Configurează-ți obiceiul</string>
     <string name="title_logs">Loguri (%1$d)</string>
+    <string name="title_sync_logs">Loguri de sincronizare (%1$d)</string>
     <string name="title_new_memo">Notă nouă</string>
     <string name="title_offline_onboarding_success">Excelent!</string>
     <string name="title_offline_onboarding_welcome">Modul offline este gata</string>

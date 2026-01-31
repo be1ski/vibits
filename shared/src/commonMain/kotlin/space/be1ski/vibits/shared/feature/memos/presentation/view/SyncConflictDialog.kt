@@ -17,7 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.shared.core.ui.theme.Indent
+import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_cancel
 import space.be1ski.vibits.shared.generated.action_keep_local
@@ -46,7 +46,7 @@ fun SyncConflictDialog(
           text = stringResource(Res.string.msg_sync_conflict),
           style = MaterialTheme.typography.bodyMedium,
         )
-        Spacer(modifier = Modifier.height(Indent.Small))
+        Spacer(modifier = Modifier.height(Indent.s))
         Text(
           text = "$conflictCount conflict(s) detected",
           style = MaterialTheme.typography.bodySmall,
@@ -62,11 +62,11 @@ fun SyncConflictDialog(
         OutlinedButton(onClick = onDismiss) {
           Text(stringResource(Res.string.action_cancel))
         }
-        Spacer(modifier = Modifier.width(Indent.Small))
+        Spacer(modifier = Modifier.width(Indent.s))
         OutlinedButton(onClick = onKeepServer) {
           Text(stringResource(Res.string.action_keep_server))
         }
-        Spacer(modifier = Modifier.width(Indent.Small))
+        Spacer(modifier = Modifier.width(Indent.s))
         Button(
           onClick = onKeepLocal,
           colors =

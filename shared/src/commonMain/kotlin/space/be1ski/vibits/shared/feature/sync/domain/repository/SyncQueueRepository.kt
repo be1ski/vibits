@@ -27,12 +27,18 @@ interface SyncQueueRepository {
   /**
    * Updates the status of an operation.
    */
-  suspend fun updateStatus(id: String, status: SyncOperationStatus)
+  suspend fun updateStatus(
+    id: String,
+    status: SyncOperationStatus,
+  )
 
   /**
    * Updates the memo name after successful create (server assigns the name).
    */
-  suspend fun updateMemoName(id: String, memoName: String)
+  suspend fun updateMemoName(
+    id: String,
+    memoName: String,
+  )
 
   /**
    * Removes a synced operation from the queue.
