@@ -8,6 +8,7 @@ import space.be1ski.vibits.shared.feature.habits.domain.usecase.SaveDailyHabitMe
 import space.be1ski.vibits.shared.feature.habits.domain.usecase.SaveDailyMemoResult
 import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsEffect
+import space.be1ski.vibits.shared.feature.memos.domain.model.PostTags
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 
 private const val TAG = "HabitsMemoEffect"
@@ -49,24 +50,40 @@ class HabitsMemoEffectHandler(
 
   private fun handleCreateMemo(effect: HabitsEffect.CreateMemo): Flow<HabitsAction> =
     actions {
-      Log.d(TAG, "Saving daily habit memo (atomic create-or-update)")
-      when (val result = saveDailyHabitMemo(effect.content)) {
-        is SaveDailyMemoResult.Created -> {
-          Log.d(TAG, "Daily memo created: ${result.memo.name}")
-          emit(HabitsAction.Response.MemoCreated(result.memo))
-        }
-        is SaveDailyMemoResult.Updated -> {
-          Log.d(TAG, "Daily memo updated (race condition prevented): ${result.memo.name}")
-          emit(HabitsAction.Response.MemoUpdated(result.memo))
-        }
-        is SaveDailyMemoResult.Deleted -> {
-          // Shouldn't happen for CreateMemo, but handle for exhaustiveness
-          Log.w(TAG, "Unexpected deletion result for CreateMemo")
-          emit(HabitsAction.Response.MemoDeleted(result.memoName))
-        }
-        is SaveDailyMemoResult.Error -> {
-          Log.e(TAG, "Failed to save daily habit memo: ${result.message}", result.exception)
-          emit(HabitsAction.Response.MemoOperationFailed(result.message))
+      val isConfigMemo =
+        effect.content.startsWith(PostTags.HABITS_CONFIG) ||
+          effect.content.startsWith(PostTags.HABITS_CONFIG_ALT)
+
+      if (isConfigMemo) {
+        Log.d(TAG, "Creating config memo")
+        runCatching { memosRepository.createMemo(effect.content) }
+          .onSuccess { memo ->
+            Log.d(TAG, "Config memo created: ${memo.name}")
+            emit(HabitsAction.Response.MemoCreated(memo))
+          }.onFailure { error ->
+            Log.e(TAG, "Failed to create config memo", error)
+            emit(HabitsAction.Response.MemoOperationFailed(error.message ?: "Failed to create memo"))
+          }
+      } else {
+        Log.d(TAG, "Saving daily habit memo (atomic create-or-update)")
+        when (val result = saveDailyHabitMemo(effect.content)) {
+          is SaveDailyMemoResult.Created -> {
+            Log.d(TAG, "Daily memo created: ${result.memo.name}")
+            emit(HabitsAction.Response.MemoCreated(result.memo))
+          }
+          is SaveDailyMemoResult.Updated -> {
+            Log.d(TAG, "Daily memo updated (race condition prevented): ${result.memo.name}")
+            emit(HabitsAction.Response.MemoUpdated(result.memo))
+          }
+          is SaveDailyMemoResult.Deleted -> {
+            // Shouldn't happen for CreateMemo, but handle for exhaustiveness
+            Log.w(TAG, "Unexpected deletion result for CreateMemo")
+            emit(HabitsAction.Response.MemoDeleted(result.memoName))
+          }
+          is SaveDailyMemoResult.Error -> {
+            Log.e(TAG, "Failed to save daily habit memo: ${result.message}", result.exception)
+            emit(HabitsAction.Response.MemoOperationFailed(result.message))
+          }
         }
       }
     }

@@ -20,7 +20,7 @@ import kotlin.test.assertTrue
 
 class HabitsEffectHandlerTest {
   @Test
-  fun `when CreateMemo effect succeeds then emits MemoCreated`() =
+  fun `when CreateMemo with daily content succeeds then emits MemoCreated`() =
     runTest {
       val dailyContent = "#habits/daily 2026-01-30\n\nexercise"
       val expectedMemo = Memo(name = "memos/1", content = dailyContent)
@@ -38,7 +38,41 @@ class HabitsEffectHandlerTest {
     }
 
   @Test
-  fun `when CreateMemo effect fails then emits MemoOperationFailed`() =
+  fun `when CreateMemo with config content succeeds then emits MemoCreated`() =
+    runTest {
+      val configContent = "#habits/config\n\nExercise | exercise | #4CAF50"
+      val expectedMemo = Memo(name = "memos/1", content = configContent)
+      val repository =
+        FakeMemosRepository().apply {
+          createMemoResult = Result.success(expectedMemo)
+        }
+      val handler = createHandler(repository)
+
+      val actions = handler(HabitsEffect.CreateMemo(content = configContent)).toList()
+
+      assertEquals(listOf(HabitsAction.Response.MemoCreated(expectedMemo)), actions)
+      assertEquals(1, repository.createMemoCalls)
+    }
+
+  @Test
+  fun `when CreateMemo with config content fails then emits MemoOperationFailed`() =
+    runTest {
+      val configContent = "#habits/config\n\nExercise | exercise | #4CAF50"
+      val repository =
+        FakeMemosRepository().apply {
+          createMemoResult = Result.failure(Exception("Storage error"))
+        }
+      val handler = createHandler(repository)
+
+      val actions = handler(HabitsEffect.CreateMemo(content = configContent)).toList()
+
+      assertEquals(1, actions.size)
+      assertTrue(actions[0] is HabitsAction.Response.MemoOperationFailed)
+      assertEquals("Storage error", (actions[0] as HabitsAction.Response.MemoOperationFailed).error)
+    }
+
+  @Test
+  fun `when CreateMemo with daily content fails then emits MemoOperationFailed`() =
     runTest {
       val dailyContent = "#habits/daily 2026-01-30\n\nexercise"
       val repository =
@@ -56,7 +90,7 @@ class HabitsEffectHandlerTest {
     }
 
   @Test
-  fun `when CreateMemo effect finds existing memo for date then updates instead of creating`() =
+  fun `when CreateMemo with daily content finds existing memo for date then updates instead of creating`() =
     runTest {
       val existingMemo = Memo(name = "memos/existing", content = "#habits/daily 2026-01-30\n\nold-habit")
       val newContent = "#habits/daily 2026-01-30\n\nexercise\nmeditation"
