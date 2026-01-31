@@ -1,5 +1,6 @@
 package space.be1ski.vibits.shared.feature.memos.data.platform
 
+import space.be1ski.vibits.shared.feature.memos.data.internal.IosDatabaseHolder
 import space.be1ski.vibits.shared.feature.memos.data.room.MemoEntityMapper
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 

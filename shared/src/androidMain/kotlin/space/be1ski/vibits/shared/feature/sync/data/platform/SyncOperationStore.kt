@@ -2,7 +2,7 @@ package space.be1ski.vibits.shared.feature.sync.data.platform
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import space.be1ski.vibits.shared.feature.memos.data.platform.AndroidDatabaseHolder
+import space.be1ski.vibits.shared.feature.memos.data.internal.AndroidDatabaseHolder
 import space.be1ski.vibits.shared.feature.sync.data.room.SyncOperationDao
 import space.be1ski.vibits.shared.feature.sync.data.room.SyncOperationEntityMapper
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperation

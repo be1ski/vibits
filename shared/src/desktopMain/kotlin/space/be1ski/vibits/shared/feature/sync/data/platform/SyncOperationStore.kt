@@ -1,7 +1,7 @@
 package space.be1ski.vibits.shared.feature.sync.data.platform
 
 import kotlinx.coroutines.flow.Flow
-import space.be1ski.vibits.shared.feature.memos.data.platform.DesktopDatabaseHolder
+import space.be1ski.vibits.shared.feature.memos.data.internal.DesktopDatabaseHolder
 import space.be1ski.vibits.shared.feature.sync.data.room.SyncOperationEntityMapper
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperation
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus

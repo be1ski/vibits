@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.memos.data.platform
+package space.be1ski.vibits.shared.feature.memos.data.internal
 
 import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver

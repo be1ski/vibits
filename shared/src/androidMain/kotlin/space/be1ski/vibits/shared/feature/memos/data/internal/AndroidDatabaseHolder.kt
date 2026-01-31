@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.memos.data.platform
+package space.be1ski.vibits.shared.feature.memos.data.internal
 
 import androidx.room.Room
 import space.be1ski.vibits.shared.app.data.AndroidContextHolder
