@@ -43,10 +43,16 @@ Within `feature/<name>/data/`:
   - DAO interfaces, entities, database classes
   - Excluded from coverage (platform-specific, tested via integration tests)
 
-- **`data/platform/`** — Platform-specific data implementations:
-  - expect/actual storage implementations
-  - Platform-specific caches
+- **`data/platform/`** — **ONLY expect/actual declarations**:
+  - expect interface in `commonMain`, actual implementations in platform source sets
+  - Factory functions like `expect fun createMemoCache(): MemoCache`
+  - **NEVER put non-expect/actual code here** — use `data/internal/` instead
   - Excluded from coverage
+
+- **`data/internal/`** — Platform-specific implementation details (NOT expect/actual):
+  - Singleton holders (e.g., `AndroidDatabaseHolder`, `DesktopDatabaseHolder`)
+  - Platform-specific helpers used by actual implementations
+  - Code that exists only in platform source sets but isn't an expect/actual declaration
 
 - **`data/` (root)** — Testable repository implementations:
   - Repository implementations with business logic
@@ -65,7 +71,8 @@ feature/<name>/
     usecase/          # Business logic (use cases)
     repository/       # Repository interfaces
   data/               # Repository implementations, DTOs, mappers
-    platform/         # Platform-specific implementations (expect/actual)
+    platform/         # ONLY expect/actual declarations
+    internal/         # Platform-specific helpers (NOT expect/actual)
     room/             # Room database (DAO, entities, database)
   presentation/       # TEA components
     action/           # Action sealed interfaces with grouped subtypes
@@ -91,7 +98,8 @@ feature/<name>/
   - Repository implementations with business logic
   - DTOs and mappers
   - API clients
-  - **data/platform/** — Platform-specific implementations (expect/actual)
+  - **data/platform/** — ONLY expect/actual declarations
+  - **data/internal/** — Platform-specific helpers (NOT expect/actual)
   - **data/room/** — Room database implementations (DAO, entities)
 - **presentation/** — The Elm Architecture (TEA) components:
   - **presentation/action/** — Action sealed interfaces:
@@ -391,7 +399,7 @@ kover {
 - `./gradlew ktlintFormat` — auto-fix code style issues before committing.
 - `./gradlew checkAll` — manually run all checks if needed.
 
-Use `@Suppress` annotations only when the lint rule doesn't apply (e.g., `LongParameterList` for DI containers, `ktlint:standard:function-naming` for factory functions).
+**Never use `@Suppress` for new code** — always refactor to fix the underlying issue. When touching existing code that triggers lint warnings, refactor it immediately rather than suppressing. Only use `@Suppress` when the lint rule fundamentally doesn't apply (e.g., `LongParameterList` for DI containers, `ktlint:standard:function-naming` for factory functions).
 
 ## Commit & Pull Request Guidelines
 

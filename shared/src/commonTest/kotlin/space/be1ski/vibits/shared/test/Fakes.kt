@@ -1,5 +1,7 @@
 package space.be1ski.vibits.shared.test
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import space.be1ski.vibits.shared.core.platform.env.LocalConfigProvider
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
@@ -13,6 +15,12 @@ import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeReposito
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.shared.feature.settings.domain.model.UserPreferences
 import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
+import space.be1ski.vibits.shared.feature.sync.domain.SyncEngine
+import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperation
+import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
+import space.be1ski.vibits.shared.feature.sync.domain.model.SyncResult
+import space.be1ski.vibits.shared.feature.sync.domain.model.SyncStatus
+import space.be1ski.vibits.shared.feature.sync.domain.repository.SyncQueueRepository
 
 class FakeCredentialsRepository(
   initial: Credentials = Credentials(baseUrl = "", token = ""),
@@ -164,3 +172,75 @@ class FakeOfflineMemoStorage(
 
 fun createFakeLocalConfigProvider(config: Map<String, String> = emptyMap()): LocalConfigProvider =
   LocalConfigProvider { key -> config[key] }
+
+class FakeSyncEngine : SyncEngine {
+  var performSyncResult: SyncResult = SyncResult.Success(emptyList())
+  var forceLocalSyncResult: SyncResult = SyncResult.Success(emptyList())
+  var forceServerSyncResult: SyncResult = SyncResult.Success(emptyList())
+  override var isSyncing: Boolean = false
+
+  override suspend fun performSync(): SyncResult = performSyncResult
+
+  override suspend fun forceLocalSync(): SyncResult = forceLocalSyncResult
+
+  override suspend fun forceServerSync(): SyncResult = forceServerSyncResult
+}
+
+class FakeSyncQueueRepository : SyncQueueRepository {
+  val operations = mutableListOf<SyncOperation>()
+  var syncStatus = SyncStatus(pendingCount = 0, failedCount = 0)
+
+  override suspend fun addOperation(operation: SyncOperation) {
+    operations.add(operation)
+  }
+
+  override suspend fun getPendingOperations(): List<SyncOperation> = operations.filter { it.status == SyncOperationStatus.PENDING }
+
+  override suspend fun getAllOperations(): List<SyncOperation> = operations.toList()
+
+  override suspend fun updateStatus(
+    id: String,
+    status: SyncOperationStatus,
+  ) {
+    val index = operations.indexOfFirst { it.id == id }
+    if (index >= 0) {
+      operations[index] = operations[index].copy(status = status)
+    }
+  }
+
+  override suspend fun updateMemoName(
+    id: String,
+    memoName: String,
+  ) {
+    val index = operations.indexOfFirst { it.id == id }
+    if (index >= 0) {
+      operations[index] = operations[index].copy(memoName = memoName)
+    }
+  }
+
+  override suspend fun removeOperation(id: String) {
+    operations.removeAll { it.id == id }
+  }
+
+  override suspend fun clearOperations(syncedOnly: Boolean) {
+    if (syncedOnly) {
+      operations.removeAll { it.status == SyncOperationStatus.SYNCED }
+    } else {
+      operations.clear()
+    }
+  }
+
+  override suspend fun resetInProgressToPending() {
+    operations.replaceAll { op ->
+      if (op.status == SyncOperationStatus.IN_PROGRESS) {
+        op.copy(status = SyncOperationStatus.PENDING)
+      } else {
+        op
+      }
+    }
+  }
+
+  override fun observeSyncStatus(): Flow<SyncStatus> = flowOf(syncStatus)
+
+  override suspend fun getSyncStatus(): SyncStatus = syncStatus
+}

@@ -220,6 +220,7 @@
     <string name="title_empty_state_no_habits">習慣がありません</string>
     <string name="title_habit_setup">習慣を設定</string>
     <string name="title_logs">ログ (%1$d)</string>
+    <string name="title_sync_logs">同期ログ (%1$d)</string>
     <string name="title_new_memo">新規メモ</string>
     <string name="title_offline_onboarding_success">素晴らしい！</string>
     <string name="title_offline_onboarding_welcome">オフラインモード準備完了</string>
@@ -236,4 +237,14 @@
     <string name="demo_habit_walking">1万歩</string>
     <string name="demo_habit_no_sugar">砂糖なし</string>
     <string name="demo_habit_early_sleep">23時までに就寝</string>
+
+    <!-- Sync -->
+    <string name="action_sync">同期</string>
+    <string name="action_keep_local">ローカルを保持</string>
+    <string name="action_keep_server">サーバーを保持</string>
+    <string name="format_pending_sync">%1$d件の保留中の変更</string>
+    <string name="msg_sync_conflict">ローカルの変更がサーバーと競合しています。どちらのバージョンを保持するか選択してください。</string>
+    <string name="msg_sync_failed">同期に失敗しました：%1$s</string>
+    <string name="msg_syncing">同期中...</string>
+    <string name="title_sync_conflict">同期の競合</string>
 </resources>

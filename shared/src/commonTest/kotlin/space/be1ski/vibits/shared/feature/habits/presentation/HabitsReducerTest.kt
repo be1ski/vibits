@@ -490,7 +490,7 @@ class HabitsReducerTest {
     }
 
   @Test
-  fun `when ConfirmSingleHabitToggle with no selection and existing memo then deletes memo`() =
+  fun `when ConfirmSingleHabitToggle then emits ToggleDailyHabit with correct params`() =
     habitsReducer.test(
       HabitsState(
         singleToggleDay = testDay.copy(dailyMemo = DailyMemoInfo("memos/1", "content")),
@@ -501,58 +501,10 @@ class HabitsReducerTest {
       send(HabitsAction.SingleToggle.ConfirmSingleHabitToggle)
 
       assertState { isLoading }
-      val effect = assertHasCommand<HabitsEffect.DeleteMemo>()
-      assertEquals("memos/1", effect.name)
-    }
-
-  @Test
-  fun `when ConfirmSingleHabitToggle with selection and no existing memo then creates memo`() =
-    habitsReducer.test(
-      HabitsState(
-        singleToggleDay = testDay.copy(dailyMemo = null),
-        singleToggleHabitTag = "#habits/reading",
-        singleToggleConfig = testConfig,
-      ),
-    ) {
-      send(HabitsAction.SingleToggle.ConfirmSingleHabitToggle)
-
-      assertState { isLoading }
-      assertHasCommand<HabitsEffect.CreateMemo>()
-    }
-
-  @Test
-  fun `when ConfirmSingleHabitToggle with selection and existing memo then updates memo`() =
-    habitsReducer.test(
-      HabitsState(
-        singleToggleDay = testDay.copy(dailyMemo = DailyMemoInfo("memos/1", "old")),
-        singleToggleHabitTag = "#habits/reading",
-        singleToggleConfig = testConfig,
-      ),
-    ) {
-      send(HabitsAction.SingleToggle.ConfirmSingleHabitToggle)
-
-      assertState { isLoading }
-      val effect = assertHasCommand<HabitsEffect.UpdateMemo>()
-      assertEquals("memos/1", effect.name)
-    }
-
-  @Test
-  fun `when ConfirmSingleHabitToggle toggles off last habit with no memo then just closes`() =
-    habitsReducer.test(
-      HabitsState(
-        singleToggleDay =
-          testDay.copy(
-            habitStatuses = listOf(HabitStatus("#habits/ex", "Ex", done = true)),
-            dailyMemo = null,
-          ),
-        singleToggleHabitTag = "#habits/ex",
-        singleToggleConfig = listOf(HabitConfig("#habits/ex", "Ex")),
-      ),
-    ) {
-      send(HabitsAction.SingleToggle.ConfirmSingleHabitToggle)
-
-      assertState { singleToggleDay == null && singleToggleHabitTag == null }
-      assertNoEffects()
+      val effect = assertHasCommand<HabitsEffect.ToggleDailyHabit>()
+      assertEquals(LocalDate(2024, 1, 15), effect.date)
+      assertEquals("#habits/exercise", effect.habitTag)
+      assertEquals(testConfig, effect.habitsConfig)
     }
 
   @Test

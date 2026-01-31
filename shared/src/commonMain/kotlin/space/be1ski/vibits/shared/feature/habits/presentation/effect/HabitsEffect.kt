@@ -1,7 +1,9 @@
 package space.be1ski.vibits.shared.feature.habits.presentation.effect
 
+import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
+import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
@@ -14,6 +16,17 @@ sealed interface HabitsEffect {
   sealed interface Refresh : HabitsEffect
 
   sealed interface Activity : HabitsEffect
+
+  /**
+   * Toggle a single habit for a specific date.
+   * The use case will read current memo state, apply the toggle, and save.
+   * This ensures atomic read-modify-write operations even with rapid toggles.
+   */
+  data class ToggleDailyHabit(
+    val date: LocalDate,
+    val habitTag: String,
+    val habitsConfig: List<HabitConfig>,
+  ) : Memo
 
   data class CreateMemo(
     val content: String,

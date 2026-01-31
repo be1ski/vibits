@@ -645,7 +645,7 @@ private fun ResetOptionsDialog(
 @Suppress("LongMethod")
 @Composable
 private fun LogsDialog(onDismiss: () -> Unit) {
-  val logs = Log.logs
+  var logs by remember { mutableStateOf(Log.logs) }
 
   AlertDialog(
     onDismissRequest = onDismiss,
@@ -701,7 +701,12 @@ private fun LogsDialog(onDismiss: () -> Unit) {
       }
     },
     confirmButton = {
-      TextButton(onClick = { Log.clear() }) {
+      TextButton(
+        onClick = {
+          Log.clear()
+          logs = emptyList()
+        },
+      ) {
         Text(stringResource(Res.string.action_clear))
       }
     },

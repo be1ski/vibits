@@ -2,6 +2,9 @@ build:
   maxIssues: 0
 
 complexity:
+  TooManyFunctions:
+    excludes:
+      - "**/platform/**"
   LongParameterList:
     ignoreAnnotated:
       - Composable

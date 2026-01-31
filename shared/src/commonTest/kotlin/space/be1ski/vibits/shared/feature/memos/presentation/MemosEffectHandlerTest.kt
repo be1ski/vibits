@@ -1,4 +1,5 @@
 package space.be1ski.vibits.shared.feature.memos.presentation
+
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.shared.feature.auth.domain.model.Credentials
@@ -15,10 +16,12 @@ import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosCredent
 import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosEffect
 import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosEffectHandler
 import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosLoadEffectHandler
+import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosSyncEffectHandler
 import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosWriteEffectHandler
-import space.be1ski.vibits.shared.feature.memos.presentation.reducer.memosReducer
 import space.be1ski.vibits.shared.test.FakeCredentialsRepository
 import space.be1ski.vibits.shared.test.FakeMemosRepository
+import space.be1ski.vibits.shared.test.FakeSyncEngine
+import space.be1ski.vibits.shared.test.FakeSyncQueueRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -214,6 +217,11 @@ class MemosEffectHandlerTest {
           createMemo = CreateMemoUseCase(memosRepository),
           updateMemo = UpdateMemoUseCase(memosRepository),
           deleteMemo = DeleteMemoUseCase(memosRepository),
+        ),
+      syncHandler =
+        MemosSyncEffectHandler(
+          syncEngine = FakeSyncEngine(),
+          syncQueueRepository = FakeSyncQueueRepository(),
         ),
     )
   }

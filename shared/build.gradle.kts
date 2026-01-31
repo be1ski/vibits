@@ -153,8 +153,12 @@ kover {
           "*.generated.*",
           // Platform-specific code (expect/actual)
           "*.platform.*",
+          // Platform-specific implementation details (NOT expect/actual)
+          "*.internal.*",
           // Room database (platform-specific persistence layer)
           "*.room.*",
+          // Log tag constants
+          "*LogTags",
           // UI layer (Compose components, theming, etc.)
           "*.ui.*",
           // View/UI components

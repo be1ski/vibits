@@ -29,6 +29,8 @@ import space.be1ski.vibits.shared.feature.onboarding.data.OnboardingStore
 import space.be1ski.vibits.shared.feature.onboarding.data.OnboardingStoreImpl
 import space.be1ski.vibits.shared.feature.settings.data.PreferencesStore
 import space.be1ski.vibits.shared.feature.settings.data.PreferencesStoreImpl
+import space.be1ski.vibits.shared.feature.sync.data.platform.SyncOperationStore
+import space.be1ski.vibits.shared.feature.sync.data.platform.createSyncOperationStore
 
 @Suppress("TooManyFunctions")
 @SingleIn(AppScope::class)
@@ -106,4 +108,8 @@ abstract class AppGraph {
   @Provides
   @SingleIn(AppScope::class)
   fun appCoroutineScope(): CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
+  @Provides
+  @SingleIn(AppScope::class)
+  fun syncOperationStore(): SyncOperationStore = createSyncOperationStore()
 }
