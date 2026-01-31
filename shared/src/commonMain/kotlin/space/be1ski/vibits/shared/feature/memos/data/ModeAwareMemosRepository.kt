@@ -12,6 +12,7 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeRepository
+import space.be1ski.vibits.shared.feature.sync.data.OfflineFirstMemosRepository as OfflineFirstRepo
 
 private const val TAG = "ModeAwareRepo"
 
@@ -24,6 +25,7 @@ class ModeAwareMemosRepository(
   private val offlineRepository: OfflineMemosRepository,
   private val demoRepository: DemoMemosRepository,
   private val memoCache: MemoCache,
+  private val offlineFirstRepository: OfflineFirstRepo,
 ) : MemosRepository {
   private var lastKnownMode: AppMode? = null
 
@@ -43,18 +45,43 @@ class ModeAwareMemosRepository(
 
   override suspend fun cachedMemos(): List<Memo> {
     checkModeChange()
-    return currentRepository().cachedMemos()
+    return when (appModeRepository.loadMode()) {
+      AppMode.ONLINE -> offlineFirstRepository.getCachedMemos()
+      else -> currentRepository().cachedMemos()
+    }
   }
 
   override suspend fun updateMemo(
     name: String,
     content: String,
-  ): Memo = currentRepository().updateMemo(name, content)
+  ): Memo {
+    return when (appModeRepository.loadMode()) {
+      AppMode.ONLINE -> {
+        Log.d(TAG, "Offline-first update: $name")
+        offlineFirstRepository.updateMemoLocally(name, content)
+      }
+      else -> currentRepository().updateMemo(name, content)
+    }
+  }
 
-  override suspend fun createMemo(content: String): Memo = currentRepository().createMemo(content)
+  override suspend fun createMemo(content: String): Memo {
+    return when (appModeRepository.loadMode()) {
+      AppMode.ONLINE -> {
+        Log.d(TAG, "Offline-first create")
+        offlineFirstRepository.createMemoLocally(content)
+      }
+      else -> currentRepository().createMemo(content)
+    }
+  }
 
   override suspend fun deleteMemo(name: String) {
-    currentRepository().deleteMemo(name)
+    when (appModeRepository.loadMode()) {
+      AppMode.ONLINE -> {
+        Log.d(TAG, "Offline-first delete: $name")
+        offlineFirstRepository.deleteMemoLocally(name)
+      }
+      else -> currentRepository().deleteMemo(name)
+    }
   }
 
   private suspend fun checkModeChange() {

@@ -232,4 +232,14 @@
     <string name="demo_habit_walking">10К шагов</string>
     <string name="demo_habit_no_sugar">Без сахара</string>
     <string name="demo_habit_early_sleep">Лечь до 23:00</string>
+
+    <!-- Sync -->
+    <string name="action_sync">Синхронизировать</string>
+    <string name="action_keep_local">Оставить локальные</string>
+    <string name="action_keep_server">Оставить серверные</string>
+    <string name="format_pending_sync">%1$d изменений ожидает синхронизации</string>
+    <string name="msg_sync_conflict">Ваши локальные изменения конфликтуют с сервером. Выберите, какую версию сохранить.</string>
+    <string name="msg_sync_failed">Ошибка синхронизации: %1$s</string>
+    <string name="msg_syncing">Синхронизация...</string>
+    <string name="title_sync_conflict">Конфликт синхронизации</string>
 </resources>

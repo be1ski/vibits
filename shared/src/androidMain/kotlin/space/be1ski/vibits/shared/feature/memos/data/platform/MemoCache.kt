@@ -1,29 +1,13 @@
 package space.be1ski.vibits.shared.feature.memos.data.platform
 
-import androidx.room.Room
-import space.be1ski.vibits.shared.app.data.AndroidContextHolder
 import space.be1ski.vibits.shared.feature.memos.data.room.MemoDao
-import space.be1ski.vibits.shared.feature.memos.data.room.MemoDatabase
 import space.be1ski.vibits.shared.feature.memos.data.room.MemoEntityMapper
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 
 actual fun createMemoCache(): MemoCache = AndroidMemoCache()
 
 private class AndroidMemoCache : MemoCache {
-  private var database: MemoDatabase? = null
-
-  private fun daoOrNull(): MemoDao? {
-    if (database == null && AndroidContextHolder.isReady()) {
-      database =
-        Room
-          .databaseBuilder(
-            AndroidContextHolder.context,
-            MemoDatabase::class.java,
-            "memos.db",
-          ).build()
-    }
-    return database?.memoDao()
-  }
+  private fun daoOrNull(): MemoDao? = AndroidDatabaseHolder.getDatabase()?.memoDao()
 
   override suspend fun readMemos(): List<Memo> {
     val dao = daoOrNull() ?: return emptyList()

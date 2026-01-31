@@ -7,6 +7,7 @@ import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosCredent
 import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosEffect
 import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosEffectHandler
 import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosLoadEffectHandler
+import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosSyncEffectHandler
 import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosWriteEffectHandler
 import space.be1ski.vibits.shared.feature.memos.presentation.reducer.memosReducer
 import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
@@ -45,6 +46,11 @@ fun createMemosFeature(
             createMemo = dependencies.createMemo,
             updateMemo = dependencies.updateMemo,
             deleteMemo = dependencies.deleteMemo,
+          ),
+        syncHandler =
+          MemosSyncEffectHandler(
+            syncEngine = dependencies.syncEngine,
+            syncQueueRepository = dependencies.syncQueueRepository,
           ),
       ),
     initialCommands = if (!needsCredentials) listOf(MemosEffect.LoadCachedMemos) else emptyList(),

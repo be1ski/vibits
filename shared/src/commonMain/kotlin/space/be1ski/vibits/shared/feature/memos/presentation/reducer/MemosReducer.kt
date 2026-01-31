@@ -12,5 +12,6 @@ val memosReducer: Reducer<MemosAction, MemosState, MemosEffect, Nothing> =
       is MemosAction.Crud -> crudReducer(action, state)
       is MemosAction.CreateDialog -> createDialogReducer(action, state)
       is MemosAction.EditDialog -> editDialogReducer(action, state)
+      is MemosAction.Sync -> syncReducer(action, state)
     }
   }

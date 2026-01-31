@@ -1,0 +1,79 @@
+package space.be1ski.vibits.shared.feature.sync.data.room
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
+
+/**
+ * Room DAO for sync operations.
+ */
+@Dao
+interface SyncOperationDao {
+  /**
+   * Returns all pending operations ordered by creation time.
+   */
+  @Query("SELECT * FROM sync_operations WHERE status = 'PENDING' OR status = 'FAILED' ORDER BY createdAtMillis ASC")
+  suspend fun getPending(): List<SyncOperationEntity>
+
+  /**
+   * Returns all operations.
+   */
+  @Query("SELECT * FROM sync_operations ORDER BY createdAtMillis ASC")
+  suspend fun getAll(): List<SyncOperationEntity>
+
+  /**
+   * Observes the count of pending operations.
+   */
+  @Query("SELECT COUNT(*) FROM sync_operations WHERE status = 'PENDING'")
+  fun observePendingCount(): Flow<Int>
+
+  /**
+   * Observes the count of failed operations.
+   */
+  @Query("SELECT COUNT(*) FROM sync_operations WHERE status = 'FAILED'")
+  fun observeFailedCount(): Flow<Int>
+
+  /**
+   * Inserts or replaces an operation.
+   */
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun upsert(entity: SyncOperationEntity)
+
+  /**
+   * Updates the status of an operation.
+   */
+  @Query("UPDATE sync_operations SET status = :status WHERE id = :id")
+  suspend fun updateStatus(id: String, status: String)
+
+  /**
+   * Updates the memo name of an operation.
+   */
+  @Query("UPDATE sync_operations SET memoName = :memoName WHERE id = :id")
+  suspend fun updateMemoName(id: String, memoName: String)
+
+  /**
+   * Deletes an operation by ID.
+   */
+  @Query("DELETE FROM sync_operations WHERE id = :id")
+  suspend fun deleteById(id: String)
+
+  /**
+   * Clears all synced operations.
+   */
+  @Query("DELETE FROM sync_operations WHERE status = 'SYNCED'")
+  suspend fun clearSynced()
+
+  /**
+   * Gets pending count.
+   */
+  @Query("SELECT COUNT(*) FROM sync_operations WHERE status = 'PENDING'")
+  suspend fun getPendingCount(): Int
+
+  /**
+   * Gets failed count.
+   */
+  @Query("SELECT COUNT(*) FROM sync_operations WHERE status = 'FAILED'")
+  suspend fun getFailedCount(): Int
+}
