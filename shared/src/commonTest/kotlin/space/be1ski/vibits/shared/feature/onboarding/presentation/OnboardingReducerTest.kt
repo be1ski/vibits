@@ -1,8 +1,9 @@
 package space.be1ski.vibits.shared.feature.onboarding.presentation
+
 import space.be1ski.vibits.shared.core.elm.test
+import space.be1ski.vibits.shared.core.ui.theme.DefaultHabitColor
 import space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset
 import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
-import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect
 import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect.Command
 import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect.Notification
 import space.be1ski.vibits.shared.feature.onboarding.presentation.reducer.onboardingReducer
@@ -31,17 +32,26 @@ class OnboardingReducerTest {
     }
 
   @Test
-  fun `when Continue from ChoosePreset with selected preset then moves to HabitSetup`() =
+  fun `when Continue from ChoosePreset with regular preset then creates habit directly`() =
     onboardingReducer.test(
       OnboardingState(
         currentStep = OnboardingStep.ChoosePreset,
         selectedPresetId = "water",
+        selectedPresetName = "Drink Water",
+        selectedColor = DefaultHabitColor,
       ),
     ) {
       send(OnboardingAction.Navigation.Continue)
 
-      assertState { currentStep == OnboardingStep.HabitSetup }
-      assertNoEffects()
+      assertState {
+        isCreatingHabit &&
+          habitName == "Drink Water" &&
+          creationError == null
+      }
+      val effect = assertHasCommand<Command.CreateFirstHabit>()
+      assertEquals("Drink Water", effect.name)
+      assertEquals("water", effect.presetId)
+      assertEquals(DefaultHabitColor, effect.color)
     }
 
   @Test
@@ -50,6 +60,7 @@ class OnboardingReducerTest {
       OnboardingState(
         currentStep = OnboardingStep.ChoosePreset,
         selectedPresetId = "custom",
+        selectedPresetName = "Create your own",
       ),
     ) {
       send(OnboardingAction.Navigation.Continue)
@@ -87,11 +98,14 @@ class OnboardingReducerTest {
     }
 
   @Test
-  fun `when SelectPreset then updates selectedPresetId`() =
+  fun `when SelectPreset then updates selectedPresetId and selectedPresetName`() =
     onboardingReducer.test(OnboardingState()) {
-      send(OnboardingAction.Preset.SelectPreset("water"))
+      send(OnboardingAction.Preset.SelectPreset("water", "Drink Water"))
 
-      assertState { selectedPresetId == "water" }
+      assertState {
+        selectedPresetId == "water" &&
+          selectedPresetName == "Drink Water"
+      }
       assertNoEffects()
     }
 
