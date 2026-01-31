@@ -27,6 +27,7 @@ sealed interface OnboardingAction : Action {
 
     data class SelectPreset(
       val presetId: String,
+      val localizedName: String,
     ) : Preset
   }
 

@@ -401,6 +401,7 @@ Use `@Suppress` annotations only when the lint rule doesn't apply (e.g., `LongPa
 - Use auto-merge with squash (`gh pr merge --auto --squash --delete-branch`).
 - **When user requests changes to existing PR:** amend commits and force-push to the same branch. Do NOT close and recreate PRs.
 - Commit messages: imperative, concise, single topic (e.g., "Simplify README").
+- **Never include session links** — do not add `claude.ai/code/session_*` or any other claude.ai links to commits, PRs, or code.
 - PR titles: use English only (no Cyrillic or other non-ASCII characters).
 - **PR descriptions must be concise and focused:**
   - Brief summary explaining what changed and why

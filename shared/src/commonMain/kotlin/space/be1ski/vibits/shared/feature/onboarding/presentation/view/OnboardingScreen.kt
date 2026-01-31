@@ -44,7 +44,9 @@ fun OnboardingScreen(
         ChoosePresetScreen(
           presets = state.presets,
           selectedPresetId = state.selectedPresetId,
-          onSelectPreset = { onAction(OnboardingAction.Preset.SelectPreset(it)) },
+          onSelectPreset = { presetId, localizedName ->
+            onAction(OnboardingAction.Preset.SelectPreset(presetId, localizedName))
+          },
           onContinue = { onAction(OnboardingAction.Navigation.Continue) },
           onBack = { onAction(OnboardingAction.Navigation.Back) },
           modifier = modifier.fillMaxSize(),

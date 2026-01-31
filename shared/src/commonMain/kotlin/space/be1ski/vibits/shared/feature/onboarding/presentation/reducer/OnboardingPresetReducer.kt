@@ -14,7 +14,12 @@ internal val presetReducer: Reducer<OnboardingAction.Preset, OnboardingState, On
       }
 
       is OnboardingAction.Preset.SelectPreset -> {
-        state { copy(selectedPresetId = action.presetId) }
+        state {
+          copy(
+            selectedPresetId = action.presetId,
+            selectedPresetName = action.localizedName,
+          )
+        }
       }
     }
   }

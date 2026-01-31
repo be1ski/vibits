@@ -41,9 +41,8 @@ import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
 import space.be1ski.vibits.shared.feature.habits.domain.model.DemoHabits
 import space.be1ski.vibits.shared.feature.habits.presentation.view.components.localizedDemoHabitName
+import space.be1ski.vibits.shared.feature.onboarding.domain.model.CUSTOM_PRESET_ID
 import space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset
-import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
-import space.be1ski.vibits.shared.feature.onboarding.presentation.state.OnboardingState
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_continue
 import space.be1ski.vibits.shared.generated.label_habit_preset_custom
@@ -60,7 +59,7 @@ private fun HabitPreset.localizedName(): String =
 fun ChoosePresetScreen(
   presets: List<HabitPreset>,
   selectedPresetId: String?,
-  onSelectPreset: (String) -> Unit,
+  onSelectPreset: (presetId: String, localizedName: String) -> Unit,
   onContinue: () -> Unit,
   onBack: () -> Unit,
   modifier: Modifier = Modifier,
@@ -93,10 +92,12 @@ fun ChoosePresetScreen(
       verticalArrangement = Arrangement.spacedBy(Indent.s),
     ) {
       items(presets, key = { it.id }) { preset ->
+        val localizedName = preset.localizedName()
         PresetCard(
           preset = preset,
+          localizedName = localizedName,
           isSelected = selectedPresetId == preset.id,
-          onClick = { onSelectPreset(preset.id) },
+          onClick = { onSelectPreset(preset.id, localizedName) },
         )
       }
     }
@@ -118,6 +119,7 @@ fun ChoosePresetScreen(
 @Composable
 private fun PresetCard(
   preset: HabitPreset,
+  localizedName: String,
   isSelected: Boolean,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
@@ -156,7 +158,7 @@ private fun PresetCard(
       }
 
       Text(
-        text = preset.localizedName(),
+        text = localizedName,
         style = MaterialTheme.typography.bodyLarge,
         color = textColor,
         modifier = Modifier.weight(1f),
@@ -183,6 +185,6 @@ private fun HabitPreset.iconVector(): ImageVector? =
     DemoHabits.LEARNING -> Icons.Default.School
     DemoHabits.NO_SUGAR -> Icons.Default.NoFood
     DemoHabits.EARLY_SLEEP -> Icons.Default.Bedtime
-    "custom" -> Icons.Default.AutoAwesome
+    CUSTOM_PRESET_ID -> Icons.Default.AutoAwesome
     else -> null
   }

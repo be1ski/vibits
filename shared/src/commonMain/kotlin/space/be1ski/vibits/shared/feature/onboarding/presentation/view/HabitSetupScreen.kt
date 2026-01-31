@@ -38,6 +38,7 @@ import space.be1ski.vibits.shared.core.ui.theme.AppColors
 import space.be1ski.vibits.shared.core.ui.theme.HabitColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
 import space.be1ski.vibits.shared.feature.habits.presentation.view.components.localizedDemoHabitName
+import space.be1ski.vibits.shared.feature.onboarding.domain.model.CUSTOM_PRESET_ID
 import space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_start_tracking
@@ -73,7 +74,7 @@ fun HabitSetupScreen(
   val selectedPreset = presets.find { it.id == selectedPresetId }
   val localizedPresetName =
     selectedPreset?.let {
-      if (it.id != "custom") getLocalizedPresetName(it.nameKey) else ""
+      if (it.id != CUSTOM_PRESET_ID) getLocalizedPresetName(it.nameKey) else ""
     } ?: ""
 
   // Auto-fill habit name from localized preset name

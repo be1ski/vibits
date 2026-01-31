@@ -2,6 +2,7 @@ package space.be1ski.vibits.shared.feature.onboarding.presentation.reducer
 
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
+import space.be1ski.vibits.shared.feature.onboarding.domain.model.CUSTOM_PRESET_ID
 import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
 import space.be1ski.vibits.shared.feature.onboarding.presentation.effect.OnboardingEffect
 import space.be1ski.vibits.shared.feature.onboarding.presentation.state.OnboardingState
@@ -20,8 +21,21 @@ internal val navigationReducer:
         when (state.currentStep) {
           OnboardingStep.Welcome -> state { copy(currentStep = OnboardingStep.ChoosePreset) }
           OnboardingStep.ChoosePreset -> {
-            if (state.selectedPresetId != null) {
-              state { copy(currentStep = OnboardingStep.HabitSetup) }
+            val presetId = state.selectedPresetId
+            val presetName = state.selectedPresetName
+            if (presetId != null && presetName != null) {
+              if (presetId == CUSTOM_PRESET_ID) {
+                state { copy(currentStep = OnboardingStep.HabitSetup) }
+              } else {
+                state { copy(isCreatingHabit = true, habitName = presetName, creationError = null) }
+                command(
+                  OnboardingEffect.Command.CreateFirstHabit(
+                    presetName,
+                    presetId,
+                    state.selectedColor,
+                  ),
+                )
+              }
             }
           }
           OnboardingStep.HabitSetup -> {
