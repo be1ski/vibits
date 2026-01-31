@@ -27,7 +27,7 @@ class SyncQueueRepositoryImpl(
   /** Mutex to ensure thread-safe operations on the sync queue. */
   private val mutex = Mutex()
 
-  override suspend fun addOperation(operation: SyncOperation): Unit = mutex.withLock {
+  override suspend fun addOperation(operation: SyncOperation) = mutex.withLock {
     store.upsertOperation(operation)
   }
 
@@ -39,19 +39,19 @@ class SyncQueueRepositoryImpl(
     store.getAllOperations()
   }
 
-  override suspend fun updateStatus(id: String, status: SyncOperationStatus): Unit = mutex.withLock {
+  override suspend fun updateStatus(id: String, status: SyncOperationStatus) = mutex.withLock {
     store.updateStatus(id, status)
   }
 
-  override suspend fun updateMemoName(id: String, memoName: String): Unit = mutex.withLock {
+  override suspend fun updateMemoName(id: String, memoName: String) = mutex.withLock {
     store.updateMemoName(id, memoName)
   }
 
-  override suspend fun removeOperation(id: String): Unit = mutex.withLock {
+  override suspend fun removeOperation(id: String) = mutex.withLock {
     store.removeOperation(id)
   }
 
-  override suspend fun clearSyncedOperations(): Unit = mutex.withLock {
+  override suspend fun clearSyncedOperations() = mutex.withLock {
     store.clearSyncedOperations()
   }
 

@@ -108,7 +108,7 @@ class OfflineFirstMemosRepository(
    * Deletes a memo locally and queues it for sync.
    * Thread-safe.
    */
-  suspend fun deleteMemoLocally(name: String): Unit = mutex.withLock {
+  suspend fun deleteMemoLocally(name: String) = mutex.withLock {
     // Delete locally first
     memoCache.deleteMemo(name)
     Log.d(TAG, "Deleted memo locally: $name")
@@ -144,7 +144,7 @@ class OfflineFirstMemosRepository(
    * Used after successful full sync.
    * Thread-safe.
    */
-  suspend fun replaceAllMemos(memos: List<Memo>): Unit = mutex.withLock {
+  suspend fun replaceAllMemos(memos: List<Memo>) = mutex.withLock {
     memoCache.replaceMemos(memos)
     Log.d(TAG, "Replaced all memos: ${memos.size}")
   }
@@ -157,7 +157,7 @@ class OfflineFirstMemosRepository(
   suspend fun updateLocalMemo(
     oldName: String,
     newMemo: Memo,
-  ): Unit = mutex.withLock {
+  ) = mutex.withLock {
     if (oldName != newMemo.name) {
       // Name changed (temp -> real), delete old and insert new
       memoCache.deleteMemo(oldName)
