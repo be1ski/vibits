@@ -12,6 +12,7 @@ import kotlin.time.Clock
  */
 object Log : SynchronizedObject() {
   private const val MAX_LOGS = 500
+  private const val TIMESTAMP_EXPORT_LENGTH = 23 // "2026-01-31 18:37:14.379"
 
   private val _logs = mutableListOf<LogEntry>()
   val logs: List<LogEntry>
@@ -82,9 +83,14 @@ object Log : SynchronizedObject() {
   fun export(): String =
     synchronized(this) {
       _logs.joinToString("\n") { entry ->
-        "${entry.timestamp} ${entry.level.name.first()}/$entry.tag: ${entry.message}"
+        "${formatTimestamp(entry.timestamp)} ${entry.level.name.first()}/${entry.tag}: ${entry.message}"
       }
     }
+
+  private fun formatTimestamp(timestamp: String): String =
+    timestamp
+      .take(TIMESTAMP_EXPORT_LENGTH)
+      .replace('T', ' ')
 }
 
 data class LogEntry(
