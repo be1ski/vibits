@@ -20,4 +20,5 @@ kotlin-js-store/
 *.db-wal
 /inspections/
 vibits-*.json
-
+*.class
+META-INF/

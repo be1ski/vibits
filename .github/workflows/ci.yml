@@ -27,13 +27,13 @@ jobs:
         run: ./gradlew checkAll
 
       - name: Generate coverage report
-        run: ./gradlew :shared:koverXmlReport
+        run: ./gradlew koverXmlReport
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: shared/build/reports/kover/report.xml
+          files: build/reports/kover/report.xml
           fail_ci_if_error: false
 
       - name: Upload test results
@@ -41,5 +41,5 @@ jobs:
         if: always()
         with:
           name: test-results
-          path: shared/build/reports/tests/desktopTest/
+          path: "**/build/reports/tests/desktopTest/"
           retention-days: 7

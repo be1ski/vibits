@@ -1,0 +1,42 @@
+package space.be1ski.vibits.feature.memos.data.platform
+
+import kotlinx.serialization.json.Json
+import space.be1ski.vibits.feature.memos.data.offline.OfflineMemosFileDto
+import java.io.File
+import java.nio.file.Paths
+
+actual fun createOfflineMemoStorage(): OfflineMemoStorage = DesktopOfflineMemoStorage()
+
+private class DesktopOfflineMemoStorage : OfflineMemoStorage {
+  private val fileName = "memos.json"
+  private val json =
+    Json {
+      ignoreUnknownKeys = true
+      prettyPrint = true
+    }
+
+  override fun load(): OfflineMemosFileDto {
+    val file = getFile()
+    if (!file.exists()) {
+      return OfflineMemosFileDto()
+    }
+    return runCatching {
+      val content = file.readText()
+      json.decodeFromString<OfflineMemosFileDto>(content)
+    }.getOrDefault(OfflineMemosFileDto())
+  }
+
+  override fun save(data: OfflineMemosFileDto) {
+    val file = getFile()
+    runCatching {
+      file.parentFile?.mkdirs()
+      file.writeText(json.encodeToString(OfflineMemosFileDto.serializer(), data))
+    }
+  }
+
+  private fun getFile(): File {
+    val home = System.getProperty("user.home")
+    val documentsDir = Paths.get(home, "Documents", "Vibits").toFile()
+    return File(documentsDir, fileName)
+  }
+}
