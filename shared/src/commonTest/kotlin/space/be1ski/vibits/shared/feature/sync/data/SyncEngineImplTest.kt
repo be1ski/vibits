@@ -384,6 +384,132 @@ class SyncEngineImplTest {
       assertFalse(engine.isSyncing)
     }
 
+  // ========== Conflict Detection Tests ==========
+
+  @Test
+  fun `when performSync with conflicts then returns Conflict`() =
+    runTest {
+      // Create operation with old timestamp so server version is "newer"
+      val oldTimestamp = kotlin.time.Instant.parse("2024-01-01T00:00:00Z")
+      val localMemo = Memo(name = "memos/1", content = "local content")
+      val pendingUpdate =
+        SyncOperation(
+          id = "op-1",
+          type = SyncOperationType.UPDATE,
+          memoName = "memos/1",
+          content = "local content",
+          createdAt = oldTimestamp,
+          status = SyncOperationStatus.PENDING,
+        )
+      val (engine, _, _) =
+        createEngine(
+          handler = { request ->
+            when (request.method) {
+              HttpMethod.Get -> {
+                // Server has updateTime newer than operation's createdAt
+                val memosJson = """[{"name":"memos/1","content":"server","updateTime":"2024-01-02T00:00:00Z"}]"""
+                respond(
+                  content = """{"memos":$memosJson,"nextPageToken":null}""",
+                  headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
+                )
+              }
+              else -> respondError(HttpStatusCode.NotFound)
+            }
+          },
+          initialCachedMemos = listOf(localMemo),
+          pendingOperations = listOf(pendingUpdate),
+        )
+
+      val result = engine.performSync()
+
+      assertIs<SyncResult.Conflict>(result)
+      assertTrue(result.conflicts.isNotEmpty())
+    }
+
+  @Test
+  fun `when performSync with pending DELETE operation then deletes on server`() =
+    runTest {
+      var deleteCalled = false
+      val pendingDelete =
+        SyncOperation(
+          id = "op-1",
+          type = SyncOperationType.DELETE,
+          memoName = "memos/1",
+          content = null,
+          createdAt = Clock.System.now(),
+          status = SyncOperationStatus.PENDING,
+        )
+      val (engine, _, _) =
+        createEngine(
+          handler = { request ->
+            when (request.method) {
+              HttpMethod.Get ->
+                respond(
+                  content = """{"memos":[],"nextPageToken":null}""",
+                  headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
+                )
+              HttpMethod.Delete -> {
+                deleteCalled = true
+                respond(
+                  content = "",
+                  headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
+                )
+              }
+              else -> respondError(HttpStatusCode.NotFound)
+            }
+          },
+          pendingOperations = listOf(pendingDelete),
+        )
+
+      val result = engine.performSync()
+
+      assertIs<SyncResult.Success>(result)
+      assertTrue(deleteCalled)
+    }
+
+  @Test
+  fun `when performSync with pending UPDATE operation then updates on server`() =
+    runTest {
+      var updateCalled = false
+      val pendingUpdate =
+        SyncOperation(
+          id = "op-1",
+          type = SyncOperationType.UPDATE,
+          memoName = "memos/1",
+          content = "updated content",
+          createdAt = Clock.System.now(),
+          status = SyncOperationStatus.PENDING,
+        )
+      val localMemo = Memo(name = "memos/1", content = "updated content")
+      val (engine, _, _) =
+        createEngine(
+          handler = { request ->
+            when (request.method) {
+              HttpMethod.Get ->
+                respond(
+                  content = """{"memos":[{"name":"memos/1","content":"original"}],"nextPageToken":null}""",
+                  headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
+                )
+              HttpMethod.Patch -> {
+                updateCalled = true
+                respond(
+                  content = """{"name":"memos/1","content":"updated content","updateTime":"2024-01-01T00:00:00Z"}""",
+                  headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
+                )
+              }
+              else -> respondError(HttpStatusCode.NotFound)
+            }
+          },
+          initialCachedMemos = listOf(localMemo),
+          pendingOperations = listOf(pendingUpdate),
+        )
+
+      val result = engine.performSync()
+
+      assertIs<SyncResult.Success>(result)
+      assertTrue(updateCalled)
+    }
+
   // ========== Pagination Tests ==========
 
   @Test
