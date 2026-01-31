@@ -87,9 +87,17 @@ class LogTest {
 
     val exported = Log.export()
 
-    assertTrue(exported.contains("D/"))
-    assertTrue(exported.contains("TestTag"))
-    assertTrue(exported.contains("Test message"))
+    assertTrue(exported.contains("D/TestTag: Test message"))
+  }
+
+  @Test
+  fun `when export called then timestamp is formatted without T separator`() {
+    Log.d("Tag", "Message")
+
+    val exported = Log.export()
+
+    // Timestamp should be "YYYY-MM-DD HH:MM:SS.mmm" format (no T, no microseconds)
+    assertTrue(exported.matches(Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} D/Tag: Message""")))
   }
 
   @Test
