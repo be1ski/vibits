@@ -218,6 +218,18 @@ class FakeSyncQueueRepository : SyncQueueRepository {
     }
   }
 
+  override suspend fun updateContent(
+    id: String,
+    content: String,
+  ): Boolean {
+    val index = operations.indexOfFirst { it.id == id && it.status == SyncOperationStatus.PENDING }
+    if (index >= 0) {
+      operations[index] = operations[index].copy(content = content)
+      return true
+    }
+    return false
+  }
+
   override suspend fun removeOperation(id: String) {
     operations.removeAll { it.id == id }
   }

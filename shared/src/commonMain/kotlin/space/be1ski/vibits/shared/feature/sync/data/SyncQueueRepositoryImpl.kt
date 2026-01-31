@@ -18,6 +18,7 @@ import space.be1ski.vibits.shared.feature.sync.domain.repository.SyncQueueReposi
  * Thread-safe implementation of SyncQueueRepository.
  * Uses a mutex to ensure thread-safe access to the underlying store.
  */
+@Suppress("TooManyFunctions")
 @Inject
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
@@ -55,6 +56,14 @@ class SyncQueueRepositoryImpl(
   ) = mutex.withLock {
     store.updateMemoName(id, memoName)
   }
+
+  override suspend fun updateContent(
+    id: String,
+    content: String,
+  ): Boolean =
+    mutex.withLock {
+      store.updateContent(id, content)
+    }
 
   override suspend fun removeOperation(id: String) =
     mutex.withLock {

@@ -40,6 +40,15 @@ interface SyncOperationStore {
   )
 
   /**
+   * Updates the content of a pending operation.
+   * @return true if the operation was found and updated, false otherwise
+   */
+  suspend fun updateContent(
+    id: String,
+    content: String,
+  ): Boolean
+
+  /**
    * Removes an operation.
    */
   suspend fun removeOperation(id: String)

@@ -61,6 +61,16 @@ interface SyncOperationDao {
   )
 
   /**
+   * Updates the content of a pending operation.
+   * @return number of rows affected (1 if found, 0 if not)
+   */
+  @Query("UPDATE sync_operations SET content = :content WHERE id = :id AND status = 'PENDING'")
+  suspend fun updateContent(
+    id: String,
+    content: String,
+  ): Int
+
+  /**
    * Deletes an operation by ID.
    */
   @Query("DELETE FROM sync_operations WHERE id = :id")

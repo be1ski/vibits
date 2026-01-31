@@ -41,6 +41,11 @@ private class AndroidSyncOperationStore : SyncOperationStore {
     daoOrNull()?.updateMemoName(id, memoName)
   }
 
+  override suspend fun updateContent(
+    id: String,
+    content: String,
+  ): Boolean = daoOrNull()?.updateContent(id, content)?.let { it > 0 } ?: false
+
   override suspend fun removeOperation(id: String) {
     daoOrNull()?.deleteById(id)
   }
