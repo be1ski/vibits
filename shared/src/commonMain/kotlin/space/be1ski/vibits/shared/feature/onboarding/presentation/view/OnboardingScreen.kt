@@ -1,6 +1,9 @@
 package space.be1ski.vibits.shared.feature.onboarding.presentation.view
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,7 +25,10 @@ fun OnboardingScreen(
   }
 
   Surface(
-    modifier = modifier.fillMaxSize(),
+    modifier =
+      modifier
+        .fillMaxSize()
+        .windowInsetsPadding(WindowInsets.safeDrawing),
     color = AppColors.background.resolve(),
   ) {
     when (state.currentStep) {
