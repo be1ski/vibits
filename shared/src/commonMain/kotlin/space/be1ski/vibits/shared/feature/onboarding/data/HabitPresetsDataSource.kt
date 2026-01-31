@@ -6,6 +6,7 @@ import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.feature.habits.domain.model.DemoHabitStringKeys
 import space.be1ski.vibits.shared.feature.habits.domain.model.DemoHabits
+import space.be1ski.vibits.shared.feature.onboarding.domain.model.CUSTOM_PRESET_ID
 import space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset
 
 interface HabitPresetsDataSource {
@@ -26,6 +27,6 @@ class HabitPresetsDataSourceImpl : HabitPresetsDataSource {
       HabitPreset(id = DemoHabits.LEARNING, nameKey = DemoHabitStringKeys.LEARNING),
       HabitPreset(id = DemoHabits.NO_SUGAR, nameKey = DemoHabitStringKeys.NO_SUGAR),
       HabitPreset(id = DemoHabits.EARLY_SLEEP, nameKey = DemoHabitStringKeys.EARLY_SLEEP),
-      HabitPreset(id = "custom", nameKey = "label_habit_preset_custom"),
+      HabitPreset(id = CUSTOM_PRESET_ID, nameKey = "label_habit_preset_custom"),
     )
 }

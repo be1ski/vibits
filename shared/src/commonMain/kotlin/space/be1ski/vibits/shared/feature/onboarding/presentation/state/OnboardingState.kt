@@ -7,6 +7,7 @@ data class OnboardingState(
   val currentStep: OnboardingStep = OnboardingStep.Welcome,
   val presets: List<HabitPreset> = emptyList(),
   val selectedPresetId: String? = null,
+  val selectedPresetName: String? = null,
   val habitName: String = "",
   val selectedColor: Long = DefaultHabitColor,
   val isCreatingHabit: Boolean = false,
