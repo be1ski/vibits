@@ -4,6 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.shared.core.elm.EffectHandler
 import space.be1ski.vibits.shared.core.elm.actions
 import space.be1ski.vibits.shared.core.logging.Log
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.SaveDailyHabitMemoUseCase
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.SaveDailyMemoResult
 import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsEffect
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
@@ -12,6 +14,7 @@ private const val TAG = "HabitsMemoEffect"
 
 class HabitsMemoEffectHandler(
   private val memosRepository: MemosRepository,
+  private val saveDailyHabitMemo: SaveDailyHabitMemoUseCase,
 ) : EffectHandler<HabitsEffect.Memo, HabitsAction> {
   override fun invoke(effect: HabitsEffect.Memo): Flow<HabitsAction> =
     when (effect) {
@@ -22,13 +25,21 @@ class HabitsMemoEffectHandler(
 
   private fun handleCreateMemo(effect: HabitsEffect.CreateMemo): Flow<HabitsAction> =
     actions {
-      Log.d(TAG, "Creating habit memo")
-      runCatching { memosRepository.createMemo(effect.content) }
-        .onSuccess { memo -> emit(HabitsAction.Response.MemoCreated(memo)) }
-        .onFailure { error ->
-          Log.e(TAG, "Failed to create habit memo", error)
-          emit(HabitsAction.Response.MemoOperationFailed(error.message ?: "Failed to create memo"))
+      Log.d(TAG, "Saving daily habit memo (atomic create-or-update)")
+      when (val result = saveDailyHabitMemo(effect.content)) {
+        is SaveDailyMemoResult.Created -> {
+          Log.d(TAG, "Daily memo created: ${result.memo.name}")
+          emit(HabitsAction.Response.MemoCreated(result.memo))
         }
+        is SaveDailyMemoResult.Updated -> {
+          Log.d(TAG, "Daily memo updated (race condition prevented): ${result.memo.name}")
+          emit(HabitsAction.Response.MemoUpdated(result.memo))
+        }
+        is SaveDailyMemoResult.Error -> {
+          Log.e(TAG, "Failed to save daily habit memo: ${result.message}", result.exception)
+          emit(HabitsAction.Response.MemoOperationFailed(result.message))
+        }
+      }
     }
 
   private fun handleUpdateMemo(effect: HabitsEffect.UpdateMemo): Flow<HabitsAction> =

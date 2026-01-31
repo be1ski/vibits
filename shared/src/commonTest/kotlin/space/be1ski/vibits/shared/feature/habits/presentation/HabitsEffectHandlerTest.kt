@@ -4,13 +4,13 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.shared.app.domain.model.ActivityMode
 import space.be1ski.vibits.shared.app.domain.model.ActivityRange
+import space.be1ski.vibits.shared.feature.habits.domain.usecase.SaveDailyHabitMemoUseCase
 import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsActivityEffectHandler
 import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsEffect
 import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsEffectHandler
 import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsMemoEffectHandler
 import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsRefreshEffectHandler
-import space.be1ski.vibits.shared.feature.habits.presentation.reducer.habitsReducer
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.test.FakeMemosRepository
@@ -22,14 +22,16 @@ class HabitsEffectHandlerTest {
   @Test
   fun `when CreateMemo effect succeeds then emits MemoCreated`() =
     runTest {
-      val expectedMemo = Memo(name = "memos/1", content = "test")
+      val dailyContent = "#habits/daily 2026-01-30\n\nexercise"
+      val expectedMemo = Memo(name = "memos/1", content = dailyContent)
       val repository =
         FakeMemosRepository().apply {
+          cachedMemosResult = emptyList() // No existing memo for the date
           createMemoResult = Result.success(expectedMemo)
         }
       val handler = createHandler(repository)
 
-      val actions = handler(HabitsEffect.CreateMemo(content = "test")).toList()
+      val actions = handler(HabitsEffect.CreateMemo(content = dailyContent)).toList()
 
       assertEquals(listOf(HabitsAction.Response.MemoCreated(expectedMemo)), actions)
       assertEquals(1, repository.createMemoCalls)
@@ -38,17 +40,39 @@ class HabitsEffectHandlerTest {
   @Test
   fun `when CreateMemo effect fails then emits MemoOperationFailed`() =
     runTest {
+      val dailyContent = "#habits/daily 2026-01-30\n\nexercise"
       val repository =
         FakeMemosRepository().apply {
+          cachedMemosResult = emptyList()
           createMemoResult = Result.failure(Exception("Network error"))
         }
       val handler = createHandler(repository)
 
-      val actions = handler(HabitsEffect.CreateMemo(content = "test")).toList()
+      val actions = handler(HabitsEffect.CreateMemo(content = dailyContent)).toList()
 
       assertEquals(1, actions.size)
       assertTrue(actions[0] is HabitsAction.Response.MemoOperationFailed)
       assertEquals("Network error", (actions[0] as HabitsAction.Response.MemoOperationFailed).error)
+    }
+
+  @Test
+  fun `when CreateMemo effect finds existing memo for date then updates instead of creating`() =
+    runTest {
+      val existingMemo = Memo(name = "memos/existing", content = "#habits/daily 2026-01-30\n\nold-habit")
+      val newContent = "#habits/daily 2026-01-30\n\nexercise\nmeditation"
+      val updatedMemo = Memo(name = "memos/existing", content = newContent)
+      val repository =
+        FakeMemosRepository().apply {
+          cachedMemosResult = listOf(existingMemo) // Existing memo for the same date
+          updateMemoResult = Result.success(updatedMemo)
+        }
+      val handler = createHandler(repository)
+
+      val actions = handler(HabitsEffect.CreateMemo(content = newContent)).toList()
+
+      assertEquals(listOf(HabitsAction.Response.MemoUpdated(updatedMemo)), actions)
+      assertEquals(0, repository.createMemoCalls, "Should not create when memo exists")
+      assertEquals(1, repository.updateMemoCalls, "Should update existing memo")
     }
 
   @Test
@@ -211,6 +235,7 @@ class HabitsEffectHandlerTest {
       memoHandler =
         HabitsMemoEffectHandler(
           memosRepository = repository,
+          saveDailyHabitMemo = SaveDailyHabitMemoUseCase(repository),
         ),
       refreshHandler =
         HabitsRefreshEffectHandler(
