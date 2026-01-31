@@ -399,7 +399,7 @@ kover {
 - `./gradlew ktlintFormat` — auto-fix code style issues before committing.
 - `./gradlew checkAll` — manually run all checks if needed.
 
-Use `@Suppress` annotations only when the lint rule doesn't apply (e.g., `LongParameterList` for DI containers, `ktlint:standard:function-naming` for factory functions).
+**Never use `@Suppress` for new code** — always refactor to fix the underlying issue. When touching existing code that triggers lint warnings, refactor it immediately rather than suppressing. Only use `@Suppress` when the lint rule fundamentally doesn't apply (e.g., `LongParameterList` for DI containers, `ktlint:standard:function-naming` for factory functions).
 
 ## Commit & Pull Request Guidelines
 

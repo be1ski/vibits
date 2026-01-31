@@ -7,6 +7,7 @@ import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
 /**
  * Platform-specific storage for sync operations.
  */
+@Suppress("TooManyFunctions")
 interface SyncOperationStore {
   /**
    * Returns all pending or failed operations.

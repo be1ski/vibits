@@ -276,83 +276,86 @@ class SyncEngineImpl(
     val localMemos = offlineFirstRepository.getCachedMemos()
     val serverMemosByName = serverMemos.associateBy { it.name }
     val localMemosByName = localMemos.associateBy { it.name }
-    val conflicts = mutableListOf<SyncConflict>()
 
-    for (operation in pendingOperations) {
-      val memoName = operation.memoName ?: continue
+    return pendingOperations.mapNotNull { operation ->
+      val memoName = operation.memoName ?: return@mapNotNull null
+      detectOperationConflict(operation, memoName, serverMemosByName, localMemosByName)
+    }
+  }
 
-      when (operation.type) {
-        SyncOperationType.CREATE -> {
-          // Check if a memo with this name already exists on server
-          // (shouldn't happen with temp names, but check anyway)
-          if (!GenerateTempMemoNameUseCase.isTemporaryName(memoName)) {
-            val serverMemo = serverMemosByName[memoName]
-            if (serverMemo != null) {
-              conflicts +=
-                SyncConflict(
-                  operation = operation,
-                  localMemo = localMemosByName[memoName],
-                  serverMemo = serverMemo,
-                  conflictType = ConflictType.BOTH_MODIFIED,
-                )
-            }
-          }
-        }
-
-        SyncOperationType.UPDATE -> {
-          val serverMemo = serverMemosByName[memoName]
-          val localMemo = localMemosByName[memoName]
-
-          if (serverMemo == null) {
-            // Server doesn't have this memo anymore
-            conflicts +=
-              SyncConflict(
-                operation = operation,
-                localMemo = localMemo,
-                serverMemo = null,
-                conflictType = ConflictType.DELETED_ON_SERVER,
-              )
-          } else if (localMemo != null) {
-            // Check if server version is newer
-            val serverUpdateTime = serverMemo.updateTime
-            val localUpdateTime = localMemo.updateTime
-            if (serverUpdateTime != null &&
-              localUpdateTime != null &&
-              serverUpdateTime > operation.createdAt
-            ) {
-              // Server was modified after our local change
-              conflicts +=
-                SyncConflict(
-                  operation = operation,
-                  localMemo = localMemo,
-                  serverMemo = serverMemo,
-                  conflictType = ConflictType.SERVER_NEWER,
-                )
-            }
-          }
-        }
-
-        SyncOperationType.DELETE -> {
-          val serverMemo = serverMemosByName[memoName]
-          if (serverMemo != null) {
-            // Check if server version was modified after our delete request
-            val serverUpdateTime = serverMemo.updateTime
-            if (serverUpdateTime != null && serverUpdateTime > operation.createdAt) {
-              conflicts +=
-                SyncConflict(
-                  operation = operation,
-                  localMemo = null,
-                  serverMemo = serverMemo,
-                  conflictType = ConflictType.SERVER_NEWER,
-                )
-            }
-          }
-          // If server doesn't have the memo, that's fine - nothing to delete
-        }
-      }
+  private fun detectOperationConflict(
+    operation: SyncOperation,
+    memoName: String,
+    serverMemosByName: Map<String, Memo>,
+    localMemosByName: Map<String, Memo>,
+  ): SyncConflict? =
+    when (operation.type) {
+      SyncOperationType.CREATE -> detectCreateConflict(operation, memoName, serverMemosByName, localMemosByName)
+      SyncOperationType.UPDATE -> detectUpdateConflict(operation, memoName, serverMemosByName, localMemosByName)
+      SyncOperationType.DELETE -> detectDeleteConflict(operation, memoName, serverMemosByName)
     }
 
-    return conflicts
+  private fun detectCreateConflict(
+    operation: SyncOperation,
+    memoName: String,
+    serverMemosByName: Map<String, Memo>,
+    localMemosByName: Map<String, Memo>,
+  ): SyncConflict? {
+    if (GenerateTempMemoNameUseCase.isTemporaryName(memoName)) return null
+    val serverMemo = serverMemosByName[memoName] ?: return null
+    return SyncConflict(
+      operation = operation,
+      localMemo = localMemosByName[memoName],
+      serverMemo = serverMemo,
+      conflictType = ConflictType.BOTH_MODIFIED,
+    )
+  }
+
+  private fun detectUpdateConflict(
+    operation: SyncOperation,
+    memoName: String,
+    serverMemosByName: Map<String, Memo>,
+    localMemosByName: Map<String, Memo>,
+  ): SyncConflict? {
+    val serverMemo = serverMemosByName[memoName]
+    val localMemo = localMemosByName[memoName]
+
+    if (serverMemo == null) {
+      return SyncConflict(
+        operation = operation,
+        localMemo = localMemo,
+        serverMemo = null,
+        conflictType = ConflictType.DELETED_ON_SERVER,
+      )
+    }
+
+    if (localMemo == null) return null
+    val serverUpdateTime = serverMemo.updateTime ?: return null
+    if (serverUpdateTime <= operation.createdAt) return null
+
+    return SyncConflict(
+      operation = operation,
+      localMemo = localMemo,
+      serverMemo = serverMemo,
+      conflictType = ConflictType.SERVER_NEWER,
+    )
+  }
+
+  private fun detectDeleteConflict(
+    operation: SyncOperation,
+    memoName: String,
+    serverMemosByName: Map<String, Memo>,
+  ): SyncConflict? {
+    val serverMemo = serverMemosByName[memoName] ?: return null
+    val serverUpdateTime = serverMemo.updateTime ?: return null
+    if (serverUpdateTime <= operation.createdAt) return null
+
+    return SyncConflict(
+      operation = operation,
+      localMemo = null,
+      serverMemo = serverMemo,
+      conflictType = ConflictType.SERVER_NEWER,
+    )
   }
 
   private suspend fun applyPendingOperations(
@@ -360,48 +363,75 @@ class SyncEngineImpl(
     baseUrl: String,
     token: String,
   ) {
-    for (operation in operations) {
-      try {
-        syncQueue.updateStatus(operation.id, SyncOperationStatus.IN_PROGRESS)
+    operations.forEach { operation ->
+      applyOperation(operation, baseUrl, token)
+    }
+  }
 
-        when (operation.type) {
-          SyncOperationType.CREATE -> {
-            val content = operation.content ?: continue
-            val serverMemo = memoMapper.toDomain(memosApi.createMemo(baseUrl, token, content))
+  private suspend fun applyOperation(
+    operation: SyncOperation,
+    baseUrl: String,
+    token: String,
+  ) {
+    syncQueue.updateStatus(operation.id, SyncOperationStatus.IN_PROGRESS)
 
-            // Update local memo with server-assigned name
-            operation.memoName?.let { tempName ->
-              offlineFirstRepository.updateLocalMemo(tempName, serverMemo)
-              syncQueue.updateMemoName(operation.id, serverMemo.name)
-            }
-          }
-
-          SyncOperationType.UPDATE -> {
-            val name = operation.memoName ?: continue
-            val content = operation.content ?: continue
-
-            // Skip temp memos that haven't been synced yet
-            if (GenerateTempMemoNameUseCase.isTemporaryName(name)) {
-              Log.d(TAG, "Skipping update for temp memo: $name")
-              continue
-            }
-
-            memosApi.updateMemo(baseUrl, token, name, content)
-          }
-
-          SyncOperationType.DELETE -> {
-            val name = operation.memoName ?: continue
-            memosApi.deleteMemo(baseUrl, token, name)
-          }
-        }
-
+    runCatching {
+      when (operation.type) {
+        SyncOperationType.CREATE -> applyCreateOperation(operation, baseUrl, token)
+        SyncOperationType.UPDATE -> applyUpdateOperation(operation, baseUrl, token)
+        SyncOperationType.DELETE -> applyDeleteOperation(operation, baseUrl, token)
+      }
+    }.onSuccess { applied ->
+      if (applied) {
         syncQueue.updateStatus(operation.id, SyncOperationStatus.SYNCED)
         Log.d(TAG, "Synced operation: ${operation.id}")
-      } catch (e: Exception) {
-        syncQueue.updateStatus(operation.id, SyncOperationStatus.FAILED)
-        Log.e(TAG, "Failed to sync operation: ${operation.id}", e)
-        throw e // Re-throw to fail the entire sync
       }
+    }.onFailure { e ->
+      syncQueue.updateStatus(operation.id, SyncOperationStatus.FAILED)
+      Log.e(TAG, "Failed to sync operation: ${operation.id}", e)
+      throw e
     }
+  }
+
+  private suspend fun applyCreateOperation(
+    operation: SyncOperation,
+    baseUrl: String,
+    token: String,
+  ): Boolean {
+    val content = operation.content ?: return false
+    val serverMemo = memoMapper.toDomain(memosApi.createMemo(baseUrl, token, content))
+
+    operation.memoName?.let { tempName ->
+      offlineFirstRepository.updateLocalMemo(tempName, serverMemo)
+      syncQueue.updateMemoName(operation.id, serverMemo.name)
+    }
+    return true
+  }
+
+  private suspend fun applyUpdateOperation(
+    operation: SyncOperation,
+    baseUrl: String,
+    token: String,
+  ): Boolean {
+    val name = operation.memoName ?: return false
+    val content = operation.content ?: return false
+
+    if (GenerateTempMemoNameUseCase.isTemporaryName(name)) {
+      Log.d(TAG, "Skipping update for temp memo: $name")
+      return false
+    }
+
+    memosApi.updateMemo(baseUrl, token, name, content)
+    return true
+  }
+
+  private suspend fun applyDeleteOperation(
+    operation: SyncOperation,
+    baseUrl: String,
+    token: String,
+  ): Boolean {
+    val name = operation.memoName ?: return false
+    memosApi.deleteMemo(baseUrl, token, name)
+    return true
   }
 }

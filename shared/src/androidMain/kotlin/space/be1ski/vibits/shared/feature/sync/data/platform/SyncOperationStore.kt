@@ -10,6 +10,7 @@ import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
 
 actual fun createSyncOperationStore(): SyncOperationStore = AndroidSyncOperationStore()
 
+@Suppress("TooManyFunctions")
 private class AndroidSyncOperationStore : SyncOperationStore {
   private fun daoOrNull(): SyncOperationDao? = AndroidDatabaseHolder.getDatabase()?.syncOperationDao()
 

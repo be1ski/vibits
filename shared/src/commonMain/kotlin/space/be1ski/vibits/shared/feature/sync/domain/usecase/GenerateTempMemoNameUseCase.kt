@@ -2,6 +2,9 @@ package space.be1ski.vibits.shared.feature.sync.domain.usecase
 
 import kotlin.random.Random
 
+private const val RANDOM_MIN = 10000
+private const val RANDOM_MAX = 99999
+
 /**
  * Generates a temporary memo name for locally created memos.
  * The server will assign a real name during sync.
@@ -11,7 +14,7 @@ object GenerateTempMemoNameUseCase {
 
   operator fun invoke(): String {
     val timestamp = kotlin.time.Clock.System.now().toEpochMilliseconds()
-    val random = Random.nextInt(10000, 99999)
+    val random = Random.nextInt(RANDOM_MIN, RANDOM_MAX)
     return "$PREFIX${timestamp}_$random"
   }
 

@@ -7,6 +7,7 @@ import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
 
 actual fun createSyncOperationStore(): SyncOperationStore = WasmSyncOperationStore()
 
+@Suppress("TooManyFunctions")
 private class WasmSyncOperationStore : SyncOperationStore {
   override suspend fun getPendingOperations(): List<SyncOperation> = emptyList()
 

@@ -8,6 +8,7 @@ import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
 
 actual fun createSyncOperationStore(): SyncOperationStore = DesktopSyncOperationStore()
 
+@Suppress("TooManyFunctions")
 private class DesktopSyncOperationStore : SyncOperationStore {
   private val dao get() = DesktopDatabaseHolder.database.syncOperationDao()
 
