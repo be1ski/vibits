@@ -294,6 +294,18 @@ private class TrackingSyncQueueRepository : SyncQueueRepository {
     }
   }
 
+  override suspend fun updateContent(
+    id: String,
+    content: String,
+  ): Boolean {
+    val index = addedOperations.indexOfFirst { it.id == id && it.status == SyncOperationStatus.PENDING }
+    if (index >= 0) {
+      addedOperations[index] = addedOperations[index].copy(content = content)
+      return true
+    }
+    return false
+  }
+
   override suspend fun removeOperation(id: String) {
     addedOperations.removeAll { it.id == id }
   }
@@ -382,6 +394,18 @@ private class FakeSyncQueueRepository : SyncQueueRepository {
     if (index >= 0) {
       operations[index] = operations[index].copy(memoName = memoName)
     }
+  }
+
+  override suspend fun updateContent(
+    id: String,
+    content: String,
+  ): Boolean {
+    val index = operations.indexOfFirst { it.id == id && it.status == SyncOperationStatus.PENDING }
+    if (index >= 0) {
+      operations[index] = operations[index].copy(content = content)
+      return true
+    }
+    return false
   }
 
   override suspend fun removeOperation(id: String) {

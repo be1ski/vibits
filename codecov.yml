@@ -4,6 +4,9 @@ coverage:
       default:
         target: 90%
         threshold: 1%
+    patch:
+      default:
+        target: 93%
 
 comment:
   layout: "reach, diff, flags, files"

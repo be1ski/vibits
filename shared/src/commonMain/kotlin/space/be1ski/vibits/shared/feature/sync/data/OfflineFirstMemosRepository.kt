@@ -70,6 +70,8 @@ class OfflineFirstMemosRepository(
 
   /**
    * Updates a memo locally and queues it for sync.
+   * For temporary memos, coalesces the update into the pending CREATE operation
+   * to ensure the latest content is synced when the CREATE is applied.
    * Thread-safe.
    */
   suspend fun updateMemoLocally(
@@ -95,23 +97,53 @@ class OfflineFirstMemosRepository(
       memoCache.upsertMemo(memo)
       Log.d(TAG, "Updated memo locally: $name")
 
-      // Queue for sync
-      val operation =
-        SyncOperation(
-          id = OperationId.generate(),
-          type = SyncOperationType.UPDATE,
-          memoName = name,
-          content = content,
-          createdAt = now,
-        )
-      syncQueue.addOperation(operation)
-      Log.d(TAG, "Queued UPDATE operation: ${operation.id}")
+      // For temp memos, try to update the pending CREATE operation instead of enqueueing UPDATE
+      if (TempMemoName.isTemporary(name)) {
+        val pendingCreate =
+          syncQueue.getPendingOperations().find {
+            it.type == SyncOperationType.CREATE && it.memoName == name
+          }
+        if (pendingCreate != null) {
+          // Atomically update content only if still PENDING (avoids race with concurrent sync)
+          val updated = syncQueue.updateContent(pendingCreate.id, content)
+          if (updated) {
+            Log.d(TAG, "Updated content in pending CREATE: ${pendingCreate.id}")
+          } else {
+            // CREATE is no longer pending (being synced), fall back to UPDATE
+            Log.d(TAG, "CREATE no longer pending, enqueueing UPDATE: ${pendingCreate.id}")
+            enqueueUpdateOperation(name, content, now)
+          }
+        } else {
+          Log.w(TAG, "No pending CREATE found for temp memo: $name, enqueueing UPDATE")
+          enqueueUpdateOperation(name, content, now)
+        }
+      } else {
+        enqueueUpdateOperation(name, content, now)
+      }
 
       memo
     }
 
+  private suspend fun enqueueUpdateOperation(
+    name: String,
+    content: String,
+    createdAt: kotlin.time.Instant,
+  ) {
+    val operation =
+      SyncOperation(
+        id = OperationId.generate(),
+        type = SyncOperationType.UPDATE,
+        memoName = name,
+        content = content,
+        createdAt = createdAt,
+      )
+    syncQueue.addOperation(operation)
+    Log.d(TAG, "Queued UPDATE operation: ${operation.id}")
+  }
+
   /**
    * Deletes a memo locally and queues it for sync.
+   * For temporary memos, removes the pending CREATE operation instead of enqueueing DELETE.
    * Thread-safe.
    */
   suspend fun deleteMemoLocally(name: String) =
@@ -133,8 +165,17 @@ class OfflineFirstMemosRepository(
         syncQueue.addOperation(operation)
         Log.d(TAG, "Queued DELETE operation: ${operation.id}")
       } else {
-        // For temp memos that were never synced, just remove any pending CREATE operation
-        Log.d(TAG, "Skipped sync for temporary memo: $name")
+        // For temp memos that were never synced, remove any pending CREATE operation
+        val pendingCreate =
+          syncQueue.getPendingOperations().find {
+            it.type == SyncOperationType.CREATE && it.memoName == name
+          }
+        if (pendingCreate != null) {
+          syncQueue.removeOperation(pendingCreate.id)
+          Log.d(TAG, "Removed pending CREATE for temp memo: ${pendingCreate.id}")
+        } else {
+          Log.d(TAG, "No pending CREATE found for temp memo: $name")
+        }
       }
     }
 

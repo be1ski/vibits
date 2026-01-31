@@ -25,6 +25,11 @@ private class WasmSyncOperationStore : SyncOperationStore {
     memoName: String,
   ) = Unit
 
+  override suspend fun updateContent(
+    id: String,
+    content: String,
+  ): Boolean = false
+
   override suspend fun removeOperation(id: String) = Unit
 
   override suspend fun clearOperations(syncedOnly: Boolean) = Unit

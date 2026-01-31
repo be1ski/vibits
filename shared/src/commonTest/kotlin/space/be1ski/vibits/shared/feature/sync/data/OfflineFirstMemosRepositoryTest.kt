@@ -119,6 +119,192 @@ class OfflineFirstMemosRepositoryTest {
     }
 
   @Test
+  fun `when deleteMemoLocally with temp memo then removes pending CREATE operation`() =
+    runTest {
+      val (repository, cache, queue) = createRepository()
+
+      // Create a temp memo (this adds a CREATE operation to the queue)
+      val memo = repository.createMemoLocally("Content")
+      assertEquals(1, queue.operations.size)
+      assertEquals(SyncOperationType.CREATE, queue.operations.first().type)
+
+      // Delete the temp memo
+      repository.deleteMemoLocally(memo.name)
+
+      // Memo is removed from cache
+      assertTrue(cache.memos.isEmpty())
+
+      // Pending CREATE operation is removed
+      assertTrue(queue.operations.isEmpty())
+    }
+
+  @Test
+  fun `when updateMemoLocally with temp memo then coalesces into pending CREATE`() =
+    runTest {
+      val (repository, cache, queue) = createRepository()
+
+      // Create a temp memo (this adds a CREATE operation to the queue)
+      val memo = repository.createMemoLocally("Original content")
+      assertEquals(1, queue.operations.size)
+      val createOperation = queue.operations.first()
+      assertEquals(SyncOperationType.CREATE, createOperation.type)
+      assertEquals("Original content", createOperation.content)
+
+      // Update the temp memo
+      repository.updateMemoLocally(memo.name, "Updated content")
+
+      // Cache is updated
+      assertEquals(1, cache.memos.size)
+      assertEquals("Updated content", cache.memos.first().content)
+
+      // Still only one operation (the CREATE), not a separate UPDATE
+      assertEquals(1, queue.operations.size)
+      assertEquals(SyncOperationType.CREATE, queue.operations.first().type)
+      // Content in CREATE operation is updated
+      assertEquals("Updated content", queue.operations.first().content)
+    }
+
+  @Test
+  fun `when updateMemoLocally with temp memo then finds correct CREATE among multiple operations`() =
+    runTest {
+      val (repository, cache, queue) = createRepository()
+
+      // Add some unrelated operations to the queue first
+      queue.addOperation(
+        SyncOperation(
+          id = "other-1",
+          type = SyncOperationType.UPDATE,
+          memoName = "memos/other",
+          content = "other",
+        ),
+      )
+      queue.addOperation(
+        SyncOperation(
+          id = "other-2",
+          type = SyncOperationType.CREATE,
+          memoName = "local_different_name",
+          content = "different",
+        ),
+      )
+
+      // Create a temp memo
+      val memo = repository.createMemoLocally("Original content")
+      assertEquals(3, queue.operations.size)
+
+      // Update the temp memo - should find the correct CREATE
+      repository.updateMemoLocally(memo.name, "Updated content")
+
+      // Only the correct CREATE should be updated
+      val targetCreate = queue.operations.find { it.memoName == memo.name }
+      assertEquals("Updated content", targetCreate?.content)
+
+      // Other operations unchanged
+      assertEquals("other", queue.operations.find { it.id == "other-1" }?.content)
+      assertEquals("different", queue.operations.find { it.id == "other-2" }?.content)
+    }
+
+  @Test
+  fun `when updateMemoLocally with server memo then queues UPDATE operation`() =
+    runTest {
+      val (repository, cache, queue) = createRepository()
+      cache.memos.add(Memo(name = "memos/123", content = "Original"))
+
+      repository.updateMemoLocally("memos/123", "Updated content")
+
+      // UPDATE operation is queued (not coalesced since it's not a temp memo)
+      assertEquals(1, queue.operations.size)
+      assertEquals(SyncOperationType.UPDATE, queue.operations.first().type)
+      assertEquals("memos/123", queue.operations.first().memoName)
+      assertEquals("Updated content", queue.operations.first().content)
+    }
+
+  @Test
+  fun `when updateMemoLocally with non-existing memo then uses current time for createTime`() =
+    runTest {
+      val (repository, cache, queue) = createRepository()
+      // Don't add memo to cache - simulates updating a memo not in cache
+
+      val memo = repository.updateMemoLocally("memos/new", "Content")
+
+      // Memo is created with current time for both createTime and updateTime
+      assertNotNull(memo.createTime)
+      assertNotNull(memo.updateTime)
+      assertEquals(memo.createTime, memo.updateTime)
+
+      // Memo is in cache
+      assertEquals(1, cache.memos.size)
+
+      // UPDATE operation is queued
+      assertEquals(1, queue.operations.size)
+      assertEquals(SyncOperationType.UPDATE, queue.operations.first().type)
+    }
+
+  @Test
+  fun `when updateMemoLocally with existing memo among others then finds correct one`() =
+    runTest {
+      val (repository, cache, queue) = createRepository()
+      // Add multiple memos, only one matches
+      cache.memos.add(Memo(name = "memos/other1", content = "Other 1"))
+      cache.memos.add(Memo(name = "memos/target", content = "Original", createTime = Instant.fromEpochMilliseconds(1000L)))
+      cache.memos.add(Memo(name = "memos/other2", content = "Other 2"))
+
+      val memo = repository.updateMemoLocally("memos/target", "Updated")
+
+      // Create time is preserved from the found existing memo
+      assertEquals(Instant.fromEpochMilliseconds(1000L), memo.createTime)
+      assertEquals("Updated", memo.content)
+    }
+
+  @Test
+  fun `when updateMemoLocally with temp memo and CREATE no longer pending then falls back to UPDATE`() =
+    runTest {
+      val (repository, cache, queue) = createRepository()
+
+      // Create a temp memo (this adds a CREATE operation to the queue)
+      val memo = repository.createMemoLocally("Original content")
+      assertEquals(1, queue.operations.size)
+
+      // Simulate race condition: getPendingOperations returns CREATE, but updateContent fails
+      queue.simulateUpdateContentRace = true
+
+      // Update the temp memo while sync is racing
+      repository.updateMemoLocally(memo.name, "Updated content")
+
+      // Cache is updated
+      assertEquals("Updated content", cache.memos.first().content)
+
+      // CREATE content is NOT updated (race condition simulated)
+      assertEquals("Original content", queue.operations.first().content)
+
+      // An UPDATE operation is enqueued as fallback
+      assertEquals(2, queue.operations.size)
+      val updateOp = queue.operations.last()
+      assertEquals(SyncOperationType.UPDATE, updateOp.type)
+      assertEquals(memo.name, updateOp.memoName)
+      assertEquals("Updated content", updateOp.content)
+    }
+
+  @Test
+  fun `when updateMemoLocally with temp memo and no CREATE in queue then enqueues UPDATE`() =
+    runTest {
+      val (repository, cache, queue) = createRepository()
+
+      // Add temp memo directly to cache without CREATE operation
+      val tempName = "local_123456_78901"
+      cache.memos.add(Memo(name = tempName, content = "Original"))
+
+      repository.updateMemoLocally(tempName, "Updated content")
+
+      // Cache is updated
+      assertEquals("Updated content", cache.memos.first().content)
+
+      // UPDATE is enqueued since no CREATE was found
+      assertEquals(1, queue.operations.size)
+      assertEquals(SyncOperationType.UPDATE, queue.operations.first().type)
+      assertEquals(tempName, queue.operations.first().memoName)
+    }
+
+  @Test
   fun `when getCachedMemos then returns all memos from cache`() =
     runTest {
       val (repository, cache, _) = createRepository()
@@ -148,6 +334,28 @@ class OfflineFirstMemosRepositoryTest {
       assertEquals(2, cache.memos.size)
       assertEquals("memos/1", cache.memos[0].name)
       assertEquals("memos/2", cache.memos[1].name)
+    }
+
+  @Test
+  fun `when replaceAllMemos with local temp memos then preserves them`() =
+    runTest {
+      val (repository, cache, _) = createRepository()
+      // Add a local temp memo that should be preserved
+      cache.memos.add(Memo(name = "local_123456_78901", content = "Local temp"))
+      cache.memos.add(Memo(name = "memos/old", content = "Old"))
+
+      val serverMemos =
+        listOf(
+          Memo(name = "memos/1", content = "One"),
+          Memo(name = "memos/2", content = "Two"),
+        )
+      repository.replaceAllMemos(serverMemos)
+
+      // Server memos + preserved local temp
+      assertEquals(3, cache.memos.size)
+      assertTrue(cache.memos.any { it.name == "memos/1" })
+      assertTrue(cache.memos.any { it.name == "memos/2" })
+      assertTrue(cache.memos.any { it.name == "local_123456_78901" })
     }
 
   @Test
@@ -215,6 +423,9 @@ class OfflineFirstMemosRepositoryTest {
   private class FakeSyncQueueRepository : SyncQueueRepository {
     val operations = mutableListOf<SyncOperation>()
 
+    /** When true, updateContent always returns false to simulate race condition */
+    var simulateUpdateContentRace = false
+
     override suspend fun addOperation(operation: SyncOperation) {
       operations.add(operation)
     }
@@ -241,6 +452,19 @@ class OfflineFirstMemosRepositoryTest {
       if (index >= 0) {
         operations[index] = operations[index].copy(memoName = memoName)
       }
+    }
+
+    override suspend fun updateContent(
+      id: String,
+      content: String,
+    ): Boolean {
+      if (simulateUpdateContentRace) return false
+      val index = operations.indexOfFirst { it.id == id && it.status == SyncOperationStatus.PENDING }
+      if (index >= 0) {
+        operations[index] = operations[index].copy(content = content)
+        return true
+      }
+      return false
     }
 
     override suspend fun removeOperation(id: String) {

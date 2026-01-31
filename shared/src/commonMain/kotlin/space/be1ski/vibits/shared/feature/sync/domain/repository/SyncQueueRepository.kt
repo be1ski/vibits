@@ -56,6 +56,16 @@ interface SyncQueueRepository : SyncStatusProvider {
   )
 
   /**
+   * Updates the content of a pending operation.
+   * Used to coalesce updates to temporary memos into the pending CREATE operation.
+   * @return true if the operation was found and updated, false otherwise
+   */
+  suspend fun updateContent(
+    id: String,
+    content: String,
+  ): Boolean
+
+  /**
    * Removes a synced operation from the queue.
    */
   suspend fun removeOperation(id: String)
@@ -64,7 +74,7 @@ interface SyncQueueRepository : SyncStatusProvider {
    * Clears operations from the queue.
    * @param syncedOnly If true, only clears synced operations. If false, clears all operations.
    */
-  suspend fun clearOperations(syncedOnly: Boolean = true)
+  suspend fun clearOperations(syncedOnly: Boolean)
 
   /**
    * Resets IN_PROGRESS operations back to PENDING.

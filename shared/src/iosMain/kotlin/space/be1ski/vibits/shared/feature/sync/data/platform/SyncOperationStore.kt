@@ -33,6 +33,11 @@ private class IosSyncOperationStore : SyncOperationStore {
     dao.updateMemoName(id, memoName)
   }
 
+  override suspend fun updateContent(
+    id: String,
+    content: String,
+  ): Boolean = dao.updateContent(id, content) > 0
+
   override suspend fun removeOperation(id: String) {
     dao.deleteById(id)
   }

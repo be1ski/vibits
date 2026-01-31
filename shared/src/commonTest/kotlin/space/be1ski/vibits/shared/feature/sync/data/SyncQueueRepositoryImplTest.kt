@@ -108,6 +108,42 @@ class SyncQueueRepositoryImplTest {
     }
 
   @Test
+  fun `when updateContent with pending operation then updates and returns true`() =
+    runTest {
+      val (repository, store) = createRepository()
+      store.operations["op1"] =
+        SyncOperation(
+          id = "op1",
+          type = SyncOperationType.CREATE,
+          content = "old content",
+          status = SyncOperationStatus.PENDING,
+        )
+
+      val result = repository.updateContent("op1", "new content")
+
+      assertTrue(result)
+      assertEquals("new content", store.operations["op1"]?.content)
+    }
+
+  @Test
+  fun `when updateContent with non-pending operation then returns false`() =
+    runTest {
+      val (repository, store) = createRepository()
+      store.operations["op1"] =
+        SyncOperation(
+          id = "op1",
+          type = SyncOperationType.CREATE,
+          content = "old content",
+          status = SyncOperationStatus.IN_PROGRESS,
+        )
+
+      val result = repository.updateContent("op1", "new content")
+
+      assertTrue(!result)
+      assertEquals("old content", store.operations["op1"]?.content)
+    }
+
+  @Test
   fun `when removeOperation then removes from store`() =
     runTest {
       val (repository, store) = createRepository()
@@ -221,6 +257,19 @@ class SyncQueueRepositoryImplTest {
     ) {
       operations[id]?.let { operations[id] = it.copy(memoName = memoName) }
       notifyChange()
+    }
+
+    override suspend fun updateContent(
+      id: String,
+      content: String,
+    ): Boolean {
+      val op = operations[id]
+      if (op != null && op.status == SyncOperationStatus.PENDING) {
+        operations[id] = op.copy(content = content)
+        notifyChange()
+        return true
+      }
+      return false
     }
 
     override suspend fun removeOperation(id: String) {
