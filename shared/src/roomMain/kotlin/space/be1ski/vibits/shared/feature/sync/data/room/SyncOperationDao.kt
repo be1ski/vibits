@@ -13,8 +13,9 @@ import kotlinx.coroutines.flow.Flow
 interface SyncOperationDao {
   /**
    * Returns all pending operations ordered by creation time.
+   * Only returns operations with PENDING status (not FAILED).
    */
-  @Query("SELECT * FROM sync_operations WHERE status = 'PENDING' OR status = 'FAILED' ORDER BY createdAtMillis ASC")
+  @Query("SELECT * FROM sync_operations WHERE status = 'PENDING' ORDER BY createdAtMillis ASC")
   suspend fun getPending(): List<SyncOperationEntity>
 
   /**
