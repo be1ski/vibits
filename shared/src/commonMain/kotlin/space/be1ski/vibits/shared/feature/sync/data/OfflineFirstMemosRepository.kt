@@ -2,6 +2,8 @@ package space.be1ski.vibits.shared.feature.sync.data
 
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.memos.data.platform.MemoCache
@@ -16,8 +18,9 @@ import kotlin.time.Clock
 private const val TAG = "OfflineFirstMemos"
 
 /**
- * Offline-first memo operations.
+ * Thread-safe offline-first memo operations.
  * All write operations are persisted locally first, then queued for sync.
+ * Uses a mutex to ensure thread-safe access to cache and sync queue.
  */
 @Inject
 @SingleIn(AppScope::class)
@@ -25,11 +28,15 @@ class OfflineFirstMemosRepository(
   private val memoCache: MemoCache,
   private val syncQueue: SyncQueueRepository,
 ) {
+  /** Mutex to ensure thread-safe operations on cache and sync queue. */
+  private val mutex = Mutex()
+
   /**
    * Creates a memo locally and queues it for sync.
    * Returns a memo with a temporary name that will be replaced after sync.
+   * Thread-safe.
    */
-  suspend fun createMemoLocally(content: String): Memo {
+  suspend fun createMemoLocally(content: String): Memo = mutex.withLock {
     val now = Clock.System.now()
     val tempName = GenerateTempMemoNameUseCase()
     val memo =
@@ -56,13 +63,14 @@ class OfflineFirstMemosRepository(
     syncQueue.addOperation(operation)
     Log.d(TAG, "Queued CREATE operation: ${operation.id}")
 
-    return memo
+    memo
   }
 
   /**
    * Updates a memo locally and queues it for sync.
+   * Thread-safe.
    */
-  suspend fun updateMemoLocally(name: String, content: String): Memo {
+  suspend fun updateMemoLocally(name: String, content: String): Memo = mutex.withLock {
     val now = Clock.System.now()
 
     // Get existing memo to preserve create time
@@ -93,13 +101,14 @@ class OfflineFirstMemosRepository(
     syncQueue.addOperation(operation)
     Log.d(TAG, "Queued UPDATE operation: ${operation.id}")
 
-    return memo
+    memo
   }
 
   /**
    * Deletes a memo locally and queues it for sync.
+   * Thread-safe.
    */
-  suspend fun deleteMemoLocally(name: String) {
+  suspend fun deleteMemoLocally(name: String): Unit = mutex.withLock {
     // Delete locally first
     memoCache.deleteMemo(name)
     Log.d(TAG, "Deleted memo locally: $name")
@@ -124,14 +133,18 @@ class OfflineFirstMemosRepository(
 
   /**
    * Returns all locally cached memos.
+   * Thread-safe.
    */
-  suspend fun getCachedMemos(): List<Memo> = memoCache.readMemos()
+  suspend fun getCachedMemos(): List<Memo> = mutex.withLock {
+    memoCache.readMemos()
+  }
 
   /**
    * Replaces all local memos with the given list.
    * Used after successful full sync.
+   * Thread-safe.
    */
-  suspend fun replaceAllMemos(memos: List<Memo>) {
+  suspend fun replaceAllMemos(memos: List<Memo>): Unit = mutex.withLock {
     memoCache.replaceMemos(memos)
     Log.d(TAG, "Replaced all memos: ${memos.size}")
   }
@@ -139,11 +152,12 @@ class OfflineFirstMemosRepository(
   /**
    * Updates a local memo with server-assigned data.
    * Used after successful sync to update temp names with real names.
+   * Thread-safe.
    */
   suspend fun updateLocalMemo(
     oldName: String,
     newMemo: Memo,
-  ) {
+  ): Unit = mutex.withLock {
     if (oldName != newMemo.name) {
       // Name changed (temp -> real), delete old and insert new
       memoCache.deleteMemo(oldName)

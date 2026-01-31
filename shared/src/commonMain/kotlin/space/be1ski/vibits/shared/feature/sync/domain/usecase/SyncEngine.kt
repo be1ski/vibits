@@ -2,11 +2,14 @@ package space.be1ski.vibits.shared.feature.sync.domain.usecase
 
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.auth.domain.repository.CredentialsRepository
-import space.be1ski.vibits.shared.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.shared.feature.memos.data.mapper.MemoMapper
+import space.be1ski.vibits.shared.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.shared.feature.memos.domain.config.MemosDefaults
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.sync.data.OfflineFirstMemosRepository
@@ -44,7 +47,8 @@ sealed interface SyncResult {
 }
 
 /**
- * Sync engine that processes pending operations and syncs with the server.
+ * Thread-safe sync engine that processes pending operations and syncs with the server.
+ * Only one sync operation can run at a time.
  */
 @Inject
 @SingleIn(AppScope::class)
@@ -55,6 +59,13 @@ class SyncEngine(
   private val syncQueue: SyncQueueRepository,
   private val offlineFirstRepository: OfflineFirstMemosRepository,
 ) {
+  /** Mutex to prevent concurrent sync operations. */
+  private val syncMutex = Mutex()
+
+  /** Atomic flag indicating if sync is in progress. */
+  private val _isSyncing = atomic(false)
+  val isSyncing: Boolean get() = _isSyncing.value
+
   /**
    * Performs a full sync:
    * 1. Fetches current server state
@@ -62,8 +73,19 @@ class SyncEngine(
    * 3. Detects conflicts
    * 4. If no conflicts, applies pending operations to server
    * 5. Updates local state with server response
+   *
+   * Thread-safe: Only one sync can run at a time.
    */
-  suspend fun performSync(): SyncResult {
+  suspend fun performSync(): SyncResult = syncMutex.withLock {
+    _isSyncing.value = true
+    try {
+      performSyncInternal()
+    } finally {
+      _isSyncing.value = false
+    }
+  }
+
+  private suspend fun performSyncInternal(): SyncResult {
     val credentials = credentialsRepository.load()
     if (credentials.baseUrl.isBlank() || credentials.token.isBlank()) {
       Log.w(TAG, "No credentials configured")
@@ -118,8 +140,19 @@ class SyncEngine(
   /**
    * Forces server data to overwrite local data.
    * Used when user chooses to resolve conflicts by keeping server data.
+   *
+   * Thread-safe: Only one sync can run at a time.
    */
-  suspend fun forceServerSync(): SyncResult {
+  suspend fun forceServerSync(): SyncResult = syncMutex.withLock {
+    _isSyncing.value = true
+    try {
+      forceServerSyncInternal()
+    } finally {
+      _isSyncing.value = false
+    }
+  }
+
+  private suspend fun forceServerSyncInternal(): SyncResult {
     val credentials = credentialsRepository.load()
     if (credentials.baseUrl.isBlank() || credentials.token.isBlank()) {
       return SyncResult.NoCredentials
@@ -150,8 +183,19 @@ class SyncEngine(
   /**
    * Forces local data to overwrite server data.
    * Used when user chooses to resolve conflicts by keeping local data.
+   *
+   * Thread-safe: Only one sync can run at a time.
    */
-  suspend fun forceLocalSync(): SyncResult {
+  suspend fun forceLocalSync(): SyncResult = syncMutex.withLock {
+    _isSyncing.value = true
+    try {
+      forceLocalSyncInternal()
+    } finally {
+      _isSyncing.value = false
+    }
+  }
+
+  private suspend fun forceLocalSyncInternal(): SyncResult {
     val credentials = credentialsRepository.load()
     if (credentials.baseUrl.isBlank() || credentials.token.isBlank()) {
       return SyncResult.NoCredentials

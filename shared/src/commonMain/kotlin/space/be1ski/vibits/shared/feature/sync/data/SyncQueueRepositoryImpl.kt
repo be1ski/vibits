@@ -5,6 +5,8 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.feature.sync.data.platform.SyncOperationStore
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperation
@@ -12,33 +14,44 @@ import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncStatus
 import space.be1ski.vibits.shared.feature.sync.domain.repository.SyncQueueRepository
 
+/**
+ * Thread-safe implementation of SyncQueueRepository.
+ * Uses a mutex to ensure thread-safe access to the underlying store.
+ */
 @Inject
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 class SyncQueueRepositoryImpl(
   private val store: SyncOperationStore,
 ) : SyncQueueRepository {
-  override suspend fun addOperation(operation: SyncOperation) {
+  /** Mutex to ensure thread-safe operations on the sync queue. */
+  private val mutex = Mutex()
+
+  override suspend fun addOperation(operation: SyncOperation): Unit = mutex.withLock {
     store.upsertOperation(operation)
   }
 
-  override suspend fun getPendingOperations(): List<SyncOperation> = store.getPendingOperations()
+  override suspend fun getPendingOperations(): List<SyncOperation> = mutex.withLock {
+    store.getPendingOperations()
+  }
 
-  override suspend fun getAllOperations(): List<SyncOperation> = store.getAllOperations()
+  override suspend fun getAllOperations(): List<SyncOperation> = mutex.withLock {
+    store.getAllOperations()
+  }
 
-  override suspend fun updateStatus(id: String, status: SyncOperationStatus) {
+  override suspend fun updateStatus(id: String, status: SyncOperationStatus): Unit = mutex.withLock {
     store.updateStatus(id, status)
   }
 
-  override suspend fun updateMemoName(id: String, memoName: String) {
+  override suspend fun updateMemoName(id: String, memoName: String): Unit = mutex.withLock {
     store.updateMemoName(id, memoName)
   }
 
-  override suspend fun removeOperation(id: String) {
+  override suspend fun removeOperation(id: String): Unit = mutex.withLock {
     store.removeOperation(id)
   }
 
-  override suspend fun clearSyncedOperations() {
+  override suspend fun clearSyncedOperations(): Unit = mutex.withLock {
     store.clearSyncedOperations()
   }
 
@@ -53,9 +66,10 @@ class SyncQueueRepositoryImpl(
       )
     }
 
-  override suspend fun getSyncStatus(): SyncStatus =
+  override suspend fun getSyncStatus(): SyncStatus = mutex.withLock {
     SyncStatus(
       pendingCount = store.getPendingCount(),
       failedCount = store.getFailedCount(),
     )
+  }
 }
