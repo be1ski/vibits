@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -29,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.shared.core.ui.Indent
@@ -37,8 +39,6 @@ import space.be1ski.vibits.shared.core.ui.theme.HabitColors
 import space.be1ski.vibits.shared.core.ui.theme.resolve
 import space.be1ski.vibits.shared.feature.habits.presentation.view.components.localizedDemoHabitName
 import space.be1ski.vibits.shared.feature.onboarding.domain.model.HabitPreset
-import space.be1ski.vibits.shared.feature.onboarding.presentation.action.OnboardingAction
-import space.be1ski.vibits.shared.feature.onboarding.presentation.state.OnboardingState
 import space.be1ski.vibits.shared.generated.Res
 import space.be1ski.vibits.shared.generated.action_start_tracking
 import space.be1ski.vibits.shared.generated.hint_habit_name
@@ -49,8 +49,9 @@ import space.be1ski.vibits.shared.generated.msg_habit_name_required
 import space.be1ski.vibits.shared.generated.msg_habit_setup
 import space.be1ski.vibits.shared.generated.title_habit_setup
 
-private val COLOR_CIRCLE_SIZE = 24.dp
-private val SELECTED_BORDER_WIDTH = 2.dp
+private val COLOR_CIRCLE_SIZE = 40.dp
+private val SELECTED_BORDER_WIDTH = 3.dp
+private val CHECKMARK_SIZE = 20.dp
 
 @Suppress("LongMethod")
 @OptIn(ExperimentalLayoutApi::class)
@@ -134,8 +135,8 @@ fun HabitSetupScreen(
     )
 
     FlowRow(
-      horizontalArrangement = Arrangement.spacedBy(Indent.xs),
-      verticalArrangement = Arrangement.spacedBy(Indent.xs),
+      horizontalArrangement = Arrangement.spacedBy(Indent.s),
+      verticalArrangement = Arrangement.spacedBy(Indent.s),
     ) {
       HabitColors.forEach { color ->
         ColorCircle(
@@ -185,11 +186,18 @@ private fun ColorCircle(
   isSelected: Boolean,
   onClick: () -> Unit,
 ) {
+  val circleColor = Color(color)
   val borderColor =
     if (isSelected) {
       MaterialTheme.colorScheme.primary
     } else {
       Color.Transparent
+    }
+  val checkmarkColor =
+    if (circleColor.luminance() > 0.5f) {
+      Color.Black
+    } else {
+      Color.White
     }
 
   Box(
@@ -197,8 +205,18 @@ private fun ColorCircle(
       Modifier
         .size(COLOR_CIRCLE_SIZE)
         .clip(CircleShape)
-        .background(Color(color))
+        .background(circleColor)
         .border(SELECTED_BORDER_WIDTH, borderColor, CircleShape)
         .clickable(onClick = onClick),
-  )
+    contentAlignment = Alignment.Center,
+  ) {
+    if (isSelected) {
+      Icon(
+        imageVector = Icons.Default.Check,
+        contentDescription = null,
+        tint = checkmarkColor,
+        modifier = Modifier.size(CHECKMARK_SIZE),
+      )
+    }
+  }
 }
