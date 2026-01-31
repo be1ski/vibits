@@ -220,6 +220,7 @@ Empfehlung: Erstelle stattdessen eine neue Konfiguration. Deine historischen Dat
     <string name="title_empty_state_no_habits">Noch keine Gewohnheiten</string>
     <string name="title_habit_setup">Richten Sie Ihre Gewohnheit ein</string>
     <string name="title_logs">Protokolle (%1$d)</string>
+    <string name="title_sync_logs">Synchronisierungsprotokolle (%1$d)</string>
     <string name="title_new_memo">Neue Notiz</string>
     <string name="title_offline_onboarding_success">Großartige Arbeit!</string>
     <string name="title_offline_onboarding_welcome">Offline-Modus bereit</string>
@@ -236,4 +237,14 @@ Empfehlung: Erstelle stattdessen eine neue Konfiguration. Deine historischen Dat
     <string name="demo_habit_walking">10K Schritte</string>
     <string name="demo_habit_no_sugar">Kein Zucker</string>
     <string name="demo_habit_early_sleep">Vor 23 Uhr schlafen</string>
+
+    <!-- Sync -->
+    <string name="action_sync">Synchronisieren</string>
+    <string name="action_keep_local">Lokal behalten</string>
+    <string name="action_keep_server">Server behalten</string>
+    <string name="format_pending_sync">%1$d ausstehende Änderungen</string>
+    <string name="msg_sync_conflict">Ihre lokalen Änderungen stehen im Konflikt mit dem Server. Wählen Sie, welche Version behalten werden soll.</string>
+    <string name="msg_sync_failed">Synchronisierung fehlgeschlagen: %1$s</string>
+    <string name="msg_syncing">Synchronisiere...</string>
+    <string name="title_sync_conflict">Synchronisierungskonflikt</string>
 </resources>

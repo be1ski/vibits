@@ -8,6 +8,8 @@ import space.be1ski.vibits.shared.feature.memos.domain.usecase.DeleteMemoUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadCachedMemosUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadMemosUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.UpdateMemoUseCase
+import space.be1ski.vibits.shared.feature.sync.domain.SyncEngine
+import space.be1ski.vibits.shared.feature.sync.domain.repository.SyncQueueRepository
 
 @Suppress("LongParameterList")
 @Inject
@@ -19,4 +21,6 @@ class MemosDependencies(
   val createMemo: CreateMemoUseCase,
   val updateMemo: UpdateMemoUseCase,
   val deleteMemo: DeleteMemoUseCase,
+  val syncEngine: SyncEngine,
+  val syncQueueRepository: SyncQueueRepository,
 )

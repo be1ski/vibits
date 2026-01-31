@@ -220,6 +220,7 @@
     <string name="title_empty_state_no_habits">Адаттар али жок</string>
     <string name="title_habit_setup">Адатыңызды тууралаңыз</string>
     <string name="title_logs">Логдор (%1$d)</string>
+    <string name="title_sync_logs">Синхрондоо логдору (%1$d)</string>
     <string name="title_new_memo">Жаңы жазуу</string>
     <string name="title_offline_onboarding_success">Мыкты иш!</string>
     <string name="title_offline_onboarding_welcome">Офлайн режим даяр</string>
@@ -236,4 +237,14 @@
     <string name="demo_habit_walking">10К кадам</string>
     <string name="demo_habit_no_sugar">Кантсыз</string>
     <string name="demo_habit_early_sleep">23:00гө чейин уктоо</string>
+
+    <!-- Sync -->
+    <string name="action_sync">Шайкештирүү</string>
+    <string name="action_keep_local">Жергиликтүү сактоо</string>
+    <string name="action_keep_server">Серверди сактоо</string>
+    <string name="format_pending_sync">%1$d күтүүдөгү өзгөртүү</string>
+    <string name="msg_sync_conflict">Жергиликтүү өзгөртүүлөрүңүз сервер менен карама-каршы келет. Кайсы версияны сактоо керектигин тандаңыз.</string>
+    <string name="msg_sync_failed">Шайкештирүү ийгиликсиз: %1$s</string>
+    <string name="msg_syncing">Шайкештирүүдө...</string>
+    <string name="title_sync_conflict">Шайкештирүү карама-каршылыгы</string>
 </resources>

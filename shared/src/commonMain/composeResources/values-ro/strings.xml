@@ -220,6 +220,7 @@ Cea mai bună practică: creează o configurație nouă. Datele tale istorice vo
     <string name="title_empty_state_no_habits">Încă niciun obicei</string>
     <string name="title_habit_setup">Configurează-ți obiceiul</string>
     <string name="title_logs">Loguri (%1$d)</string>
+    <string name="title_sync_logs">Loguri de sincronizare (%1$d)</string>
     <string name="title_new_memo">Notă nouă</string>
     <string name="title_offline_onboarding_success">Excelent!</string>
     <string name="title_offline_onboarding_welcome">Modul offline este gata</string>
@@ -236,4 +237,14 @@ Cea mai bună practică: creează o configurație nouă. Datele tale istorice vo
     <string name="demo_habit_walking">10K pași</string>
     <string name="demo_habit_no_sugar">Fără zahăr</string>
     <string name="demo_habit_early_sleep">Somn până la 23:00</string>
+
+    <!-- Sync -->
+    <string name="action_sync">Sincronizare</string>
+    <string name="action_keep_local">Păstrează local</string>
+    <string name="action_keep_server">Păstrează server</string>
+    <string name="format_pending_sync">%1$d modificări în așteptare</string>
+    <string name="msg_sync_conflict">Modificările locale sunt în conflict cu serverul. Alegeți ce versiune să păstrați.</string>
+    <string name="msg_sync_failed">Sincronizare eșuată: %1$s</string>
+    <string name="msg_syncing">Sincronizare...</string>
+    <string name="title_sync_conflict">Conflict de sincronizare</string>
 </resources>

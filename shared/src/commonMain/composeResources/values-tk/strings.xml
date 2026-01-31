@@ -220,6 +220,7 @@ Iň gowy usul: täze konfigurasiýa dörediň. Taryhy maglumatlar köne konfigur
     <string name="title_empty_state_no_habits">Endikler heniz ýok</string>
     <string name="title_habit_setup">Endikiňizi düzüň</string>
     <string name="title_logs">Loglar (%1$d)</string>
+    <string name="title_sync_logs">Sinhronizasiýa loglary (%1$d)</string>
     <string name="title_new_memo">Täze bellik</string>
     <string name="title_offline_onboarding_success">Ajaýyp iş!</string>
     <string name="title_offline_onboarding_welcome">Awtonom režim taýýar</string>
@@ -236,4 +237,14 @@ Iň gowy usul: täze konfigurasiýa dörediň. Taryhy maglumatlar köne konfigur
     <string name="demo_habit_walking">10K ädim</string>
     <string name="demo_habit_no_sugar">Şekersiz</string>
     <string name="demo_habit_early_sleep">23:00-a çenli uky</string>
+
+    <!-- Sync -->
+    <string name="action_sync">Sinhronizasiýa</string>
+    <string name="action_keep_local">Ýerli sakla</string>
+    <string name="action_keep_server">Serveri sakla</string>
+    <string name="format_pending_sync">%1$d garaşýan üýtgeşme</string>
+    <string name="msg_sync_conflict">Ýerli üýtgeşmeleriňiz server bilen gapma-garşy. Haýsy wersiýany saklamalydygyny saýlaň.</string>
+    <string name="msg_sync_failed">Sinhronizasiýa şowsuz: %1$s</string>
+    <string name="msg_syncing">Sinhronizasiýa edilýär...</string>
+    <string name="title_sync_conflict">Sinhronizasiýa gapma-garşylygy</string>
 </resources>

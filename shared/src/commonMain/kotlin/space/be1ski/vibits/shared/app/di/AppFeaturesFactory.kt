@@ -54,7 +54,10 @@ class AppFeaturesFactory(
     val habitsFeature =
       createHabitsFeature(
         dependencies = habitsDependencies,
-        onRefresh = { memosFeature.send(MemosAction.Loading.LoadMemos) },
+        onRefresh = {
+          memosFeature.send(MemosAction.Loading.RefreshMemos)
+          memosFeature.send(MemosAction.Sync.StartSync)
+        },
       )
 
     val settingsFeature =

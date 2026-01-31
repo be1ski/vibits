@@ -2,15 +2,15 @@ package space.be1ski.vibits.shared.feature.habits.presentation.reducer
 
 import space.be1ski.vibits.shared.core.elm.Reducer
 import space.be1ski.vibits.shared.core.elm.reducer
-import space.be1ski.vibits.shared.feature.habits.domain.buildDailyContent
 import space.be1ski.vibits.shared.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.shared.feature.habits.presentation.effect.HabitsEffect
 import space.be1ski.vibits.shared.feature.habits.presentation.state.HabitsState
 
 /**
  * Sub-reducer for single habit toggle from matrix.
+ * Uses ToggleDailyHabit effect which atomically reads current state,
+ * applies the toggle, and saves - preventing race conditions.
  */
-@Suppress("LongMethod")
 internal val singleToggleReducer: Reducer<HabitsAction.SingleToggle, HabitsState, HabitsEffect, Nothing> =
   reducer { action, state ->
     when (action) {
@@ -30,47 +30,16 @@ internal val singleToggleReducer: Reducer<HabitsAction.SingleToggle, HabitsState
         val habitTag = state.singleToggleHabitTag ?: return@reducer
         val config = state.singleToggleConfig
 
-        // Build selections by toggling the specific habit
-        val currentDone = day.habitStatuses.firstOrNull { it.tag == habitTag }?.done == true
-        val newDone = !currentDone
-
-        val selections =
-          config.associate { habit ->
-            val wasDone = day.habitStatuses.firstOrNull { it.tag == habit.tag }?.done == true
-            habit.tag to if (habit.tag == habitTag) newDone else wasDone
-          }
-
-        val hasAnySelection = selections.values.any { it }
-        val existing = day.dailyMemo
-
-        when {
-          !hasAnySelection && existing != null -> {
-            // All habits unchecked and memo exists - delete it
-            state { copy(isLoading = true) }
-            command(HabitsEffect.DeleteMemo(existing.name))
-          }
-          hasAnySelection -> {
-            // Build and save the memo
-            val content = buildDailyContent(day.date, config, selections)
-            state { copy(isLoading = true) }
-            if (existing != null) {
-              command(HabitsEffect.UpdateMemo(existing.name, content))
-            } else {
-              command(HabitsEffect.CreateMemo(content))
-            }
-          }
-          else -> {
-            // No selection and no existing memo - just close dialog
-            state {
-              copy(
-                singleToggleDay = null,
-                singleToggleHabitTag = null,
-                singleToggleHabitLabel = null,
-                singleToggleConfig = emptyList(),
-              )
-            }
-          }
-        }
+        // Use atomic toggle operation that reads current state from cache
+        // This prevents race conditions when rapidly toggling multiple habits
+        state { copy(isLoading = true) }
+        command(
+          HabitsEffect.ToggleDailyHabit(
+            date = day.date,
+            habitTag = habitTag,
+            habitsConfig = config,
+          ),
+        )
       }
 
       is HabitsAction.SingleToggle.CancelSingleHabitToggle -> {

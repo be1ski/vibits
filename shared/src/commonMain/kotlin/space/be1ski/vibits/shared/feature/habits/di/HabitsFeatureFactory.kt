@@ -29,6 +29,7 @@ fun createHabitsFeature(
         memoHandler =
           HabitsMemoEffectHandler(
             memosRepository = dependencies.memosRepository,
+            saveDailyHabitMemo = dependencies.saveDailyHabitMemo,
           ),
         refreshHandler =
           HabitsRefreshEffectHandler(

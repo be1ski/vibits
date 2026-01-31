@@ -31,6 +31,10 @@ internal val crudReducer: Reducer<MemosAction.Crud, MemosState, MemosEffect, Not
       is MemosAction.Crud.MemoCreated -> {
         val updatedMemos = sortedMemos(state.memos + action.memo)
         state { copy(memos = updatedMemos, memosRevision = memosRevision + 1, isLoading = false) }
+        // Trigger sync to push local changes to server in online mode
+        if (!state.isOfflineMode) {
+          command(MemosEffect.PerformSync)
+        }
       }
 
       is MemosAction.Crud.MemoUpdated -> {
@@ -41,11 +45,19 @@ internal val crudReducer: Reducer<MemosAction.Crud, MemosState, MemosEffect, Not
             },
           )
         state { copy(memos = updatedMemos, memosRevision = memosRevision + 1, isLoading = false) }
+        // Trigger sync to push local changes to server in online mode
+        if (!state.isOfflineMode) {
+          command(MemosEffect.PerformSync)
+        }
       }
 
       is MemosAction.Crud.MemoDeleted -> {
         val updatedMemos = sortedMemos(state.memos.filterNot { it.name == action.name })
         state { copy(memos = updatedMemos, memosRevision = memosRevision + 1, isLoading = false) }
+        // Trigger sync to push local changes to server in online mode
+        if (!state.isOfflineMode) {
+          command(MemosEffect.PerformSync)
+        }
       }
 
       is MemosAction.Crud.OperationFailed -> {

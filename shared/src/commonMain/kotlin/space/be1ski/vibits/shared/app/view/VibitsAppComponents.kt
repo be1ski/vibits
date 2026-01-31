@@ -27,6 +27,9 @@ import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
+import space.be1ski.vibits.shared.feature.memos.presentation.view.SyncConflictDialog
+import space.be1ski.vibits.shared.feature.memos.presentation.view.SyncDot
+import space.be1ski.vibits.shared.feature.memos.presentation.view.SyncLogDialog
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.shared.feature.settings.presentation.action.SettingsAction
@@ -52,12 +55,34 @@ internal fun MemosHeader(
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Text(stringResource(Res.string.app_name), style = MaterialTheme.typography.headlineSmall)
+    // Left side: App name + sync dot (on desktop)
+    Row(
+      horizontalArrangement = Arrangement.spacedBy(Indent.s),
+      verticalAlignment = Alignment.CenterVertically,
+    ) {
+      Text(stringResource(Res.string.app_name), style = MaterialTheme.typography.headlineSmall)
+      // Show sync dot on desktop (left side) only in online mode
+      if (isDesktop && !memosState.isOfflineMode) {
+        SyncDot(
+          syncStatus = memosState.syncStatus,
+          isSyncing = memosState.isSyncing,
+          onClick = { dispatchMemos(MemosAction.Sync.ShowSyncLogDialog) },
+        )
+      }
+    }
+    // Right side: refresh button + sync dot (on mobile) + settings
     Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs), verticalAlignment = Alignment.CenterVertically) {
       if (isDesktop) {
         IconButton(onClick = { dispatchMemos(MemosAction.Loading.LoadMemos) }) {
           Icon(imageVector = Icons.Filled.Refresh, contentDescription = stringResource(Res.string.action_refresh))
         }
+      } else if (!memosState.isOfflineMode) {
+        // Show sync dot on mobile (right side) only in online mode
+        SyncDot(
+          syncStatus = memosState.syncStatus,
+          isSyncing = memosState.isSyncing,
+          onClick = { dispatchMemos(MemosAction.Sync.ShowSyncLogDialog) },
+        )
       }
       TextButton(
         onClick = {
@@ -75,6 +100,26 @@ internal fun MemosHeader(
         Text(stringResource(Res.string.nav_settings))
       }
     }
+  }
+
+  MemosDialogs(memosState = memosState, dispatchMemos = dispatchMemos)
+}
+
+@Composable
+private fun MemosDialogs(
+  memosState: MemosState,
+  dispatchMemos: (MemosAction) -> Unit,
+) {
+  if (memosState.showSyncLogDialog) {
+    SyncLogDialog(onDismiss = { dispatchMemos(MemosAction.Sync.DismissSyncLogDialog) })
+  }
+  if (memosState.showConflictDialog) {
+    SyncConflictDialog(
+      conflictCount = memosState.syncConflicts.size,
+      onKeepLocal = { dispatchMemos(MemosAction.Sync.ResolveKeepLocal) },
+      onKeepServer = { dispatchMemos(MemosAction.Sync.ResolveKeepServer) },
+      onDismiss = { dispatchMemos(MemosAction.Sync.DismissConflictDialog) },
+    )
   }
 }
 

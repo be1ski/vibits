@@ -220,6 +220,7 @@
     <string name="title_empty_state_no_habits">Звичок поки немає</string>
     <string name="title_habit_setup">Налаштуйте вашу звичку</string>
     <string name="title_logs">Логи (%1$d)</string>
+    <string name="title_sync_logs">Логи синхронізації (%1$d)</string>
     <string name="title_new_memo">Нова нотатка</string>
     <string name="title_offline_onboarding_success">Чудова робота!</string>
     <string name="title_offline_onboarding_welcome">Офлайн-режим готовий</string>
@@ -236,4 +237,14 @@
     <string name="demo_habit_walking">10К кроків</string>
     <string name="demo_habit_no_sugar">Без цукру</string>
     <string name="demo_habit_early_sleep">Сон до 23:00</string>
+
+    <!-- Sync -->
+    <string name="action_sync">Синхронізувати</string>
+    <string name="action_keep_local">Залишити локальні</string>
+    <string name="action_keep_server">Залишити серверні</string>
+    <string name="format_pending_sync">%1$d змін очікує синхронізації</string>
+    <string name="msg_sync_conflict">Ваші локальні зміни конфліктують із сервером. Виберіть, яку версію зберегти.</string>
+    <string name="msg_sync_failed">Помилка синхронізації: %1$s</string>
+    <string name="msg_syncing">Синхронізація...</string>
+    <string name="title_sync_conflict">Конфлікт синхронізації</string>
 </resources>

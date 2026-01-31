@@ -220,6 +220,7 @@ Melhor prática: crie uma nova configuração. Seus dados históricos manterão 
     <string name="title_empty_state_no_habits">Ainda sem hábitos</string>
     <string name="title_habit_setup">Configure seu hábito</string>
     <string name="title_logs">Logs (%1$d)</string>
+    <string name="title_sync_logs">Logs de sincronização (%1$d)</string>
     <string name="title_new_memo">Nova nota</string>
     <string name="title_offline_onboarding_success">Ótimo trabalho!</string>
     <string name="title_offline_onboarding_welcome">Modo offline pronto</string>
@@ -236,4 +237,14 @@ Melhor prática: crie uma nova configuração. Seus dados históricos manterão 
     <string name="demo_habit_walking">10K passos</string>
     <string name="demo_habit_no_sugar">Sem açúcar</string>
     <string name="demo_habit_early_sleep">Dormir até 23h</string>
+
+    <!-- Sync -->
+    <string name="action_sync">Sincronizar</string>
+    <string name="action_keep_local">Manter local</string>
+    <string name="action_keep_server">Manter servidor</string>
+    <string name="format_pending_sync">%1$d alterações pendentes</string>
+    <string name="msg_sync_conflict">Suas alterações locais conflitam com o servidor. Escolha qual versão manter.</string>
+    <string name="msg_sync_failed">Falha na sincronização: %1$s</string>
+    <string name="msg_syncing">Sincronizando...</string>
+    <string name="title_sync_conflict">Conflito de sincronização</string>
 </resources>
