@@ -18,6 +18,7 @@ import space.be1ski.vibits.shared.feature.sync.domain.SyncLogTags
 import space.be1ski.vibits.shared.feature.sync.domain.repository.SyncQueueRepository
 
 private val TAG = SyncLogTags.SYNC_ENGINE
+private const val LOG_CONTENT_PREVIEW_LENGTH = 50
 
 /**
  * Result of a sync attempt.
@@ -122,7 +123,15 @@ class SyncEngineImpl(
     Log.d(TAG, "Fetched ${serverMemos.size} memos from server")
 
     val pendingOperations = syncQueue.getPendingOperations()
-    Log.d(TAG, "Found ${pendingOperations.size} pending operations")
+    if (pendingOperations.isNotEmpty()) {
+      Log.d(TAG, "Found ${pendingOperations.size} pending operations:")
+      pendingOperations.forEach { op ->
+        val content = op.content?.take(LOG_CONTENT_PREVIEW_LENGTH)?.replace("\n", " ") ?: "null"
+        Log.d(TAG, "  - ${op.type.name} '${op.memoName}': '$content...'")
+      }
+    } else {
+      Log.d(TAG, "No pending operations")
+    }
 
     if (pendingOperations.isEmpty()) {
       offlineFirstRepository.replaceAllMemos(serverMemos)
@@ -133,7 +142,26 @@ class SyncEngineImpl(
     val conflicts = SyncConflictDetector.detectConflicts(pendingOperations, localMemos, serverMemos)
 
     return if (conflicts.isNotEmpty()) {
-      Log.w(TAG, "Detected ${conflicts.size} conflicts")
+      Log.w(TAG, "Detected ${conflicts.size} conflicts:")
+      conflicts.forEach { conflict ->
+        val memoName = conflict.operation.memoName ?: "unknown"
+        val opType = conflict.operation.type.name
+        val conflictType = conflict.conflictType.name
+        val localContent =
+          conflict.localMemo
+            ?.content
+            ?.take(LOG_CONTENT_PREVIEW_LENGTH)
+            ?.replace("\n", " ") ?: "null"
+        val serverContent =
+          conflict.serverMemo
+            ?.content
+            ?.take(LOG_CONTENT_PREVIEW_LENGTH)
+            ?.replace("\n", " ") ?: "null"
+        Log.w(
+          TAG,
+          "  - [$conflictType] $opType '$memoName': local='$localContent...', server='$serverContent...'",
+        )
+      }
       SyncResult.Conflict(conflicts)
     } else {
       operationApplier.applyOperations(pendingOperations, baseUrl, token)

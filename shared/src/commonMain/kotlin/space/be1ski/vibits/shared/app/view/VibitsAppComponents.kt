@@ -27,6 +27,7 @@ import space.be1ski.vibits.shared.core.platform.isDesktop
 import space.be1ski.vibits.shared.core.ui.Indent
 import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
+import space.be1ski.vibits.shared.feature.memos.presentation.view.SyncConflictDialog
 import space.be1ski.vibits.shared.feature.memos.presentation.view.SyncDot
 import space.be1ski.vibits.shared.feature.memos.presentation.view.SyncLogDialog
 import space.be1ski.vibits.shared.feature.settings.domain.model.AppLanguage
@@ -101,9 +102,24 @@ internal fun MemosHeader(
     }
   }
 
-  // Sync log dialog
+  MemosDialogs(memosState = memosState, dispatchMemos = dispatchMemos)
+}
+
+@Composable
+private fun MemosDialogs(
+  memosState: MemosState,
+  dispatchMemos: (MemosAction) -> Unit,
+) {
   if (memosState.showSyncLogDialog) {
     SyncLogDialog(onDismiss = { dispatchMemos(MemosAction.Sync.DismissSyncLogDialog) })
+  }
+  if (memosState.showConflictDialog) {
+    SyncConflictDialog(
+      conflictCount = memosState.syncConflicts.size,
+      onKeepLocal = { dispatchMemos(MemosAction.Sync.ResolveKeepLocal) },
+      onKeepServer = { dispatchMemos(MemosAction.Sync.ResolveKeepServer) },
+      onDismiss = { dispatchMemos(MemosAction.Sync.DismissConflictDialog) },
+    )
   }
 }
 

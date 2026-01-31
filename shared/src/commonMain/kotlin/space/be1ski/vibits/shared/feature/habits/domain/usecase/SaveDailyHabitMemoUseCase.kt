@@ -4,9 +4,13 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.shared.app.di.AppScope
 import space.be1ski.vibits.shared.core.logging.Log
+import space.be1ski.vibits.shared.feature.habits.domain.buildDailyContent
+import space.be1ski.vibits.shared.feature.habits.domain.extractCompletedHabits
+import space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.repository.MemosRepository
 
@@ -22,6 +26,10 @@ sealed interface SaveDailyMemoResult {
 
   data class Updated(
     val memo: Memo,
+  ) : SaveDailyMemoResult
+
+  data class Deleted(
+    val memoName: String,
   ) : SaveDailyMemoResult
 
   data class Error(
@@ -88,6 +96,92 @@ class SaveDailyHabitMemoUseCase(
       }.getOrElse { e ->
         Log.e(TAG, "Failed to save daily memo", e)
         SaveDailyMemoResult.Error(e.message ?: "Failed to save memo", e)
+      }
+    }
+
+  /**
+   * Atomically toggles a habit for a specific date.
+   * Reads current memo state, applies the toggle, and saves.
+   * This ensures correct behavior even with rapid sequential toggles.
+   *
+   * @param date The date to toggle the habit for
+   * @param habitTag The habit tag to toggle
+   * @param habitsConfig All habit configurations (for building content)
+   * @return Result indicating the operation outcome
+   */
+  suspend fun toggleHabit(
+    date: LocalDate,
+    habitTag: String,
+    habitsConfig: List<HabitConfig>,
+  ): SaveDailyMemoResult =
+    mutex.withLock {
+      Log.d(TAG, "Toggling habit $habitTag for date $date")
+
+      runCatching {
+        // Get current cached memos
+        val cachedMemos = memosRepository.cachedMemos()
+        val existingMemoInfo =
+          ExtractDailyMemosUseCase.forDate(
+            memos = cachedMemos,
+            timeZone = TimeZone.currentSystemDefault(),
+            date = date,
+          )
+
+        // Get current completed habits from existing memo
+        val currentlyDone =
+          if (existingMemoInfo != null) {
+            extractCompletedHabits(
+              existingMemoInfo.content,
+              habitsConfig.map { it.tag }.toSet(),
+            )
+          } else {
+            emptySet()
+          }
+
+        // Toggle the specific habit
+        val isCurrentlyDone = habitTag in currentlyDone
+        val newDone =
+          if (isCurrentlyDone) {
+            currentlyDone - habitTag
+          } else {
+            currentlyDone + habitTag
+          }
+
+        Log.d(TAG, "Habit $habitTag: $isCurrentlyDone -> ${!isCurrentlyDone}, total done: ${newDone.size}")
+
+        // Build selections map for content builder
+        val selections = habitsConfig.associate { it.tag to (it.tag in newDone) }
+        val hasAnySelection = selections.values.any { it }
+
+        when {
+          !hasAnySelection && existingMemoInfo != null -> {
+            // All habits unchecked - delete the memo
+            Log.d(TAG, "All habits unchecked, deleting memo: ${existingMemoInfo.name}")
+            memosRepository.deleteMemo(existingMemoInfo.name)
+            SaveDailyMemoResult.Deleted(existingMemoInfo.name)
+          }
+          hasAnySelection -> {
+            // Build and save the memo
+            val content = buildDailyContent(date, habitsConfig, selections)
+            if (existingMemoInfo != null) {
+              Log.d(TAG, "Updating existing memo: ${existingMemoInfo.name}")
+              val updated = memosRepository.updateMemo(existingMemoInfo.name, content)
+              SaveDailyMemoResult.Updated(updated)
+            } else {
+              Log.d(TAG, "Creating new memo for date $date")
+              val created = memosRepository.createMemo(content)
+              SaveDailyMemoResult.Created(created)
+            }
+          }
+          else -> {
+            // No selection and no existing memo - nothing to do
+            Log.d(TAG, "No habits selected and no existing memo, nothing to do")
+            SaveDailyMemoResult.Error("No changes to save")
+          }
+        }
+      }.getOrElse { e ->
+        Log.e(TAG, "Failed to toggle habit", e)
+        SaveDailyMemoResult.Error(e.message ?: "Failed to toggle habit", e)
       }
     }
 }

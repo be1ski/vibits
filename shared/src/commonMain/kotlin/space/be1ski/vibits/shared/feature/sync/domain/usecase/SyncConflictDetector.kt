@@ -1,10 +1,14 @@
 package space.be1ski.vibits.shared.feature.sync.domain.usecase
 
+import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.sync.domain.SyncLogTags
 import space.be1ski.vibits.shared.feature.sync.domain.model.ConflictType
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncConflict
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperation
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationType
+
+private val TAG = SyncLogTags.SYNC_ENGINE
 
 /**
  * Detects conflicts between pending sync operations and server state.
@@ -44,6 +48,7 @@ internal object SyncConflictDetector {
   ): SyncConflict? {
     if (GenerateTempMemoNameUseCase.isTemporaryName(memoName)) return null
     return serverMemosByName[memoName]?.let { serverMemo ->
+      Log.d(TAG, "CREATE conflict: '$memoName' already exists on server (BOTH_MODIFIED)")
       SyncConflict(
         operation = operation,
         localMemo = localMemosByName[memoName],
@@ -63,20 +68,27 @@ internal object SyncConflictDetector {
     val localMemo = localMemosByName[memoName]
 
     return when {
-      serverMemo == null ->
+      serverMemo == null -> {
+        Log.d(TAG, "UPDATE conflict: '$memoName' deleted on server but modified locally")
         SyncConflict(
           operation = operation,
           localMemo = localMemo,
           serverMemo = null,
           conflictType = ConflictType.DELETED_ON_SERVER,
         )
-      isServerNewerThanOperation(serverMemo, operation, localMemo) ->
+      }
+      isServerNewerThanOperation(serverMemo, operation, localMemo) -> {
+        Log.d(
+          TAG,
+          "UPDATE conflict: '$memoName' server newer (server=${serverMemo.updateTime}, op=${operation.createdAt})",
+        )
         SyncConflict(
           operation = operation,
           localMemo = localMemo,
           serverMemo = serverMemo,
           conflictType = ConflictType.SERVER_NEWER,
         )
+      }
       else -> null
     }
   }
@@ -98,6 +110,10 @@ internal object SyncConflictDetector {
     serverMemosByName[memoName]
       ?.takeIf { it.updateTime?.let { time -> time > operation.createdAt } == true }
       ?.let { serverMemo ->
+        Log.d(
+          TAG,
+          "DELETE conflict: '$memoName' modified on server after delete (server=${serverMemo.updateTime}, op=${operation.createdAt})",
+        )
         SyncConflict(
           operation = operation,
           localMemo = null,
