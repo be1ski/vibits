@@ -27,7 +27,9 @@ private class WasmSyncOperationStore : SyncOperationStore {
 
   override suspend fun removeOperation(id: String) = Unit
 
-  override suspend fun clearSyncedOperations() = Unit
+  override suspend fun clearOperations(syncedOnly: Boolean) = Unit
+
+  override suspend fun resetInProgressToPending() = Unit
 
   override fun observePendingCount(): Flow<Int> = flowOf(0)
 

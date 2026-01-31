@@ -61,9 +61,14 @@ class SyncQueueRepositoryImpl(
       store.removeOperation(id)
     }
 
-  override suspend fun clearSyncedOperations() =
+  override suspend fun clearOperations(syncedOnly: Boolean) =
     mutex.withLock {
-      store.clearSyncedOperations()
+      store.clearOperations(syncedOnly)
+    }
+
+  override suspend fun resetInProgressToPending() =
+    mutex.withLock {
+      store.resetInProgressToPending()
     }
 
   override fun observeSyncStatus(): Flow<SyncStatus> =

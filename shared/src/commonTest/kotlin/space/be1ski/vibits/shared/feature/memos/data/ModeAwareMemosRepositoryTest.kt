@@ -209,8 +209,22 @@ private class FakeSyncQueueRepository : SyncQueueRepository {
     operations.removeAll { it.id == id }
   }
 
-  override suspend fun clearSyncedOperations() {
-    operations.removeAll { it.status == SyncOperationStatus.SYNCED }
+  override suspend fun clearOperations(syncedOnly: Boolean) {
+    if (syncedOnly) {
+      operations.removeAll { it.status == SyncOperationStatus.SYNCED }
+    } else {
+      operations.clear()
+    }
+  }
+
+  override suspend fun resetInProgressToPending() {
+    operations.replaceAll { op ->
+      if (op.status == SyncOperationStatus.IN_PROGRESS) {
+        op.copy(status = SyncOperationStatus.PENDING)
+      } else {
+        op
+      }
+    }
   }
 
   override suspend fun getSyncStatus(): SyncStatus =

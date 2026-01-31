@@ -7,7 +7,6 @@ import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
 /**
  * Platform-specific storage for sync operations.
  */
-@Suppress("TooManyFunctions")
 interface SyncOperationStore {
   /**
    * Returns all pending or failed operations.
@@ -46,9 +45,16 @@ interface SyncOperationStore {
   suspend fun removeOperation(id: String)
 
   /**
-   * Clears all synced operations.
+   * Clears operations from the store.
+   * @param syncedOnly If true, only clears synced operations. If false, clears all operations.
    */
-  suspend fun clearSyncedOperations()
+  suspend fun clearOperations(syncedOnly: Boolean = true)
+
+  /**
+   * Resets IN_PROGRESS operations back to PENDING.
+   * Called at startup to recover from crashes during sync.
+   */
+  suspend fun resetInProgressToPending()
 
   /**
    * Observes the count of pending operations.

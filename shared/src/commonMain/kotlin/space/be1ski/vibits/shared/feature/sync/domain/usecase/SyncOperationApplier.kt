@@ -43,9 +43,13 @@ internal class SyncOperationApplier(
         SyncOperationType.DELETE -> applyDeleteOperation(operation, baseUrl, token)
       }
     }.onSuccess { applied ->
+      // Always mark as SYNCED after processing (whether applied or skipped)
+      // This prevents operations getting stuck in IN_PROGRESS state
+      syncQueue.updateStatus(operation.id, SyncOperationStatus.SYNCED)
       if (applied) {
-        syncQueue.updateStatus(operation.id, SyncOperationStatus.SYNCED)
         Log.d(TAG, "Synced operation: ${operation.id}")
+      } else {
+        Log.d(TAG, "Skipped operation (marked as synced): ${operation.id}")
       }
     }.onFailure { e ->
       syncQueue.updateStatus(operation.id, SyncOperationStatus.FAILED)

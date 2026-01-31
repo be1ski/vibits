@@ -106,6 +106,9 @@ class SyncEngineImpl(
       return SyncResult.NoCredentials
     }
 
+    // Reset any IN_PROGRESS operations from previous crash/kill
+    syncQueue.resetInProgressToPending()
+
     return runCatching {
       Log.i(TAG, "Starting sync...")
       executeSyncFlow(credentials.baseUrl.trim(), credentials.token.trim())
@@ -167,7 +170,7 @@ class SyncEngineImpl(
       operationApplier.applyOperations(pendingOperations, baseUrl, token)
       val updatedMemos = fetchServerMemos(baseUrl, token)
       offlineFirstRepository.replaceAllMemos(updatedMemos)
-      syncQueue.clearSyncedOperations()
+      syncQueue.clearOperations(syncedOnly = true)
       Log.i(TAG, "Sync completed successfully")
       SyncResult.Success(updatedMemos)
     }
@@ -212,7 +215,7 @@ class SyncEngineImpl(
       operationApplier.applyOperations(pendingOperations, baseUrl, token)
       val updatedMemos = fetchServerMemos(baseUrl, token)
       offlineFirstRepository.replaceAllMemos(updatedMemos)
-      syncQueue.clearSyncedOperations()
+      syncQueue.clearOperations(syncedOnly = true)
 
       Log.i(TAG, "Force local sync completed")
       SyncResult.Success(updatedMemos)

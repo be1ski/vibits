@@ -6,9 +6,24 @@ import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncStatus
 
 /**
+ * Provides sync status observation capabilities.
+ */
+interface SyncStatusProvider {
+  /**
+   * Observes the current sync status.
+   */
+  fun observeSyncStatus(): Flow<SyncStatus>
+
+  /**
+   * Returns the current sync status.
+   */
+  suspend fun getSyncStatus(): SyncStatus
+}
+
+/**
  * Repository for managing the sync operation queue.
  */
-interface SyncQueueRepository {
+interface SyncQueueRepository : SyncStatusProvider {
   /**
    * Adds an operation to the sync queue.
    */
@@ -46,17 +61,14 @@ interface SyncQueueRepository {
   suspend fun removeOperation(id: String)
 
   /**
-   * Clears all synced operations.
+   * Clears operations from the queue.
+   * @param syncedOnly If true, only clears synced operations. If false, clears all operations.
    */
-  suspend fun clearSyncedOperations()
+  suspend fun clearOperations(syncedOnly: Boolean = true)
 
   /**
-   * Observes the current sync status.
+   * Resets IN_PROGRESS operations back to PENDING.
+   * Called at startup to recover from crashes during sync.
    */
-  fun observeSyncStatus(): Flow<SyncStatus>
-
-  /**
-   * Returns the current sync status.
-   */
-  suspend fun getSyncStatus(): SyncStatus
+  suspend fun resetInProgressToPending()
 }

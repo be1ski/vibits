@@ -82,4 +82,16 @@ interface SyncOperationDao {
    */
   @Query("SELECT COUNT(*) FROM sync_operations WHERE status = 'FAILED'")
   suspend fun getFailedCount(): Int
+
+  /**
+   * Clears ALL operations regardless of status.
+   */
+  @Query("DELETE FROM sync_operations")
+  suspend fun clearAll()
+
+  /**
+   * Resets IN_PROGRESS operations back to PENDING.
+   */
+  @Query("UPDATE sync_operations SET status = 'PENDING' WHERE status = 'IN_PROGRESS'")
+  suspend fun resetInProgressToPending()
 }

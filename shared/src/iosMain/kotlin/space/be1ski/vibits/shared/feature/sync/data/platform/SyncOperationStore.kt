@@ -8,7 +8,6 @@ import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
 
 actual fun createSyncOperationStore(): SyncOperationStore = IosSyncOperationStore()
 
-@Suppress("TooManyFunctions")
 private class IosSyncOperationStore : SyncOperationStore {
   private val dao get() = IosDatabaseHolder.database.syncOperationDao()
 
@@ -38,8 +37,16 @@ private class IosSyncOperationStore : SyncOperationStore {
     dao.deleteById(id)
   }
 
-  override suspend fun clearSyncedOperations() {
-    dao.clearSynced()
+  override suspend fun clearOperations(syncedOnly: Boolean) {
+    if (syncedOnly) {
+      dao.clearSynced()
+    } else {
+      dao.clearAll()
+    }
+  }
+
+  override suspend fun resetInProgressToPending() {
+    dao.resetInProgressToPending()
   }
 
   override fun observePendingCount(): Flow<Int> = dao.observePendingCount()

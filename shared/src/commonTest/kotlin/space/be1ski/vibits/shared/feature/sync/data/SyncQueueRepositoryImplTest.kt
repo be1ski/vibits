@@ -119,7 +119,7 @@ class SyncQueueRepositoryImplTest {
     }
 
   @Test
-  fun `when clearSyncedOperations then removes synced operations`() =
+  fun `when clearOperations with syncedOnly true then removes synced operations`() =
     runTest {
       val (repository, store) = createRepository()
       store.operations["op1"] =
@@ -135,7 +135,7 @@ class SyncQueueRepositoryImplTest {
           status = SyncOperationStatus.PENDING,
         )
 
-      repository.clearSyncedOperations()
+      repository.clearOperations(syncedOnly = true)
 
       assertEquals(1, store.operations.size)
       assertEquals("op2", store.operations.keys.first())
@@ -228,9 +228,22 @@ class SyncQueueRepositoryImplTest {
       notifyChange()
     }
 
-    override suspend fun clearSyncedOperations() {
-      val synced = operations.filter { it.value.status == SyncOperationStatus.SYNCED }.keys
-      synced.forEach { operations.remove(it) }
+    override suspend fun clearOperations(syncedOnly: Boolean) {
+      if (syncedOnly) {
+        val synced = operations.filter { it.value.status == SyncOperationStatus.SYNCED }.keys
+        synced.forEach { operations.remove(it) }
+      } else {
+        operations.clear()
+      }
+      notifyChange()
+    }
+
+    override suspend fun resetInProgressToPending() {
+      operations.forEach { (id, op) ->
+        if (op.status == SyncOperationStatus.IN_PROGRESS) {
+          operations[id] = op.copy(status = SyncOperationStatus.PENDING)
+        }
+      }
       notifyChange()
     }
 

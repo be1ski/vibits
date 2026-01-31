@@ -10,7 +10,6 @@ import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
 
 actual fun createSyncOperationStore(): SyncOperationStore = AndroidSyncOperationStore()
 
-@Suppress("TooManyFunctions")
 private class AndroidSyncOperationStore : SyncOperationStore {
   private fun daoOrNull(): SyncOperationDao? = AndroidDatabaseHolder.getDatabase()?.syncOperationDao()
 
@@ -42,8 +41,16 @@ private class AndroidSyncOperationStore : SyncOperationStore {
     daoOrNull()?.deleteById(id)
   }
 
-  override suspend fun clearSyncedOperations() {
-    daoOrNull()?.clearSynced()
+  override suspend fun clearOperations(syncedOnly: Boolean) {
+    if (syncedOnly) {
+      daoOrNull()?.clearSynced()
+    } else {
+      daoOrNull()?.clearAll()
+    }
+  }
+
+  override suspend fun resetInProgressToPending() {
+    daoOrNull()?.resetInProgressToPending()
   }
 
   override fun observePendingCount(): Flow<Int> = daoOrNull()?.observePendingCount() ?: emptyFlow()

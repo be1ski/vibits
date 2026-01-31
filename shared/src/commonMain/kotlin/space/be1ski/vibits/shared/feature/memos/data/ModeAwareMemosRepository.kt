@@ -89,7 +89,16 @@ class ModeAwareMemosRepository(
     val currentMode = appModeRepository.loadMode()
     if (lastKnownMode != null && lastKnownMode != currentMode) {
       Log.i(TAG, "Mode changed: $lastKnownMode -> $currentMode")
-      memoCache.clear()
+
+      // When switching FROM ONLINE mode, clear the entire online data
+      // (cache + pending operations) to prevent data leakage
+      if (lastKnownMode == AppMode.ONLINE) {
+        Log.i(TAG, "Clearing online data on mode switch")
+        offlineFirstRepository.clearOnlineData()
+      } else {
+        memoCache.clear()
+      }
+
       if (currentMode == AppMode.DEMO) {
         demoRepository.reset()
       }

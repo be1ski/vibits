@@ -174,4 +174,16 @@ class OfflineFirstMemosRepository(
     memoCache.upsertMemo(newMemo)
     Log.d(TAG, "Updated local memo: $oldName -> ${newMemo.name}")
   }
+
+  /**
+   * Clears all online mode data (cache and pending operations).
+   * Called when switching away from ONLINE mode to prevent data leakage.
+   * Thread-safe.
+   */
+  suspend fun clearOnlineData() =
+    mutex.withLock {
+      memoCache.clear()
+      syncQueue.clearOperations(syncedOnly = false)
+      Log.i(TAG, "Cleared online data (cache and pending operations)")
+    }
 }
