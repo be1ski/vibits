@@ -236,4 +236,14 @@
     <string name="demo_habit_walking">10K ნაბიჯი</string>
     <string name="demo_habit_no_sugar">შაქრის გარეშე</string>
     <string name="demo_habit_early_sleep">ძილი 23:00-მდე</string>
+
+    <!-- Sync -->
+    <string name="action_sync">სინქრონიზაცია</string>
+    <string name="action_keep_local">ლოკალური შენარჩუნება</string>
+    <string name="action_keep_server">სერვერის შენარჩუნება</string>
+    <string name="format_pending_sync">%1$d მომლოდინე ცვლილება</string>
+    <string name="msg_sync_conflict">თქვენი ლოკალური ცვლილებები კონფლიქტშია სერვერთან. აირჩიეთ რომელი ვერსია შეინარჩუნოთ.</string>
+    <string name="msg_sync_failed">სინქრონიზაცია ვერ მოხერხდა: %1$s</string>
+    <string name="msg_syncing">მიმდინარეობს სინქრონიზაცია...</string>
+    <string name="title_sync_conflict">სინქრონიზაციის კონფლიქტი</string>
 </resources>

@@ -8,9 +8,15 @@ import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
 
 /**
  * Reducer for sync-related actions.
+ * Sync is only enabled in online mode - all sync actions are no-ops in offline/demo modes.
  */
 internal val syncReducer: Reducer<MemosAction.Sync, MemosState, MemosEffect, Nothing> =
   reducer { action, state ->
+    // Skip all sync actions in offline mode (offline or demo)
+    if (state.isOfflineMode) {
+      return@reducer state to emptySet()
+    }
+
     when (action) {
       is MemosAction.Sync.StartSync -> {
         state.copy(isSyncing = true, errorMessage = null) to setOf(MemosEffect.PerformSync)

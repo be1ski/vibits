@@ -236,4 +236,14 @@
     <string name="demo_habit_walking">10K कदम</string>
     <string name="demo_habit_no_sugar">बिना चीनी</string>
     <string name="demo_habit_early_sleep">रात 11 बजे तक सोना</string>
+
+    <!-- Sync -->
+    <string name="action_sync">सिंक करें</string>
+    <string name="action_keep_local">स्थानीय रखें</string>
+    <string name="action_keep_server">सर्वर रखें</string>
+    <string name="format_pending_sync">%1$d लंबित परिवर्तन</string>
+    <string name="msg_sync_conflict">आपके स्थानीय परिवर्तन सर्वर के साथ विरोध में हैं। कौन सा संस्करण रखना है चुनें।</string>
+    <string name="msg_sync_failed">सिंक विफल: %1$s</string>
+    <string name="msg_syncing">सिंक हो रहा है...</string>
+    <string name="title_sync_conflict">सिंक विरोध</string>
 </resources>

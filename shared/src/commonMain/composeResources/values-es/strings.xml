@@ -232,4 +232,14 @@
     <string name="demo_habit_walking">10K pasos</string>
     <string name="demo_habit_no_sugar">Sin azúcar</string>
     <string name="demo_habit_early_sleep">Dormir antes de las 23h</string>
+
+    <!-- Sync -->
+    <string name="action_sync">Sincronizar</string>
+    <string name="action_keep_local">Mantener local</string>
+    <string name="action_keep_server">Mantener servidor</string>
+    <string name="format_pending_sync">%1$d cambios pendientes</string>
+    <string name="msg_sync_conflict">Sus cambios locales están en conflicto con el servidor. Elija qué versión mantener.</string>
+    <string name="msg_sync_failed">Error de sincronización: %1$s</string>
+    <string name="msg_syncing">Sincronizando...</string>
+    <string name="title_sync_conflict">Conflicto de sincronización</string>
 </resources>

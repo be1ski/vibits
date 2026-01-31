@@ -236,4 +236,14 @@ Köhnə konfiqurasiyanı redaktə etmək tövsiyə olunmur, çünki bu, əvvəlk
     <string name="demo_habit_walking">10K addım</string>
     <string name="demo_habit_no_sugar">Şəkərsiz</string>
     <string name="demo_habit_early_sleep">23:00-a qədər yat</string>
+
+    <!-- Sync -->
+    <string name="action_sync">Sinxronizasiya</string>
+    <string name="action_keep_local">Yerli saxla</string>
+    <string name="action_keep_server">Server saxla</string>
+    <string name="format_pending_sync">%1$d gözləyən dəyişiklik</string>
+    <string name="msg_sync_conflict">Yerli dəyişiklikləriniz serverlə ziddiyyət təşkil edir. Hansı versiyanı saxlamaq istədiyinizi seçin.</string>
+    <string name="msg_sync_failed">Sinxronizasiya uğursuz oldu: %1$s</string>
+    <string name="msg_syncing">Sinxronizasiya edilir...</string>
+    <string name="title_sync_conflict">Sinxronizasiya ziddiyyəti</string>
 </resources>

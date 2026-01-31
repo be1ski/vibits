@@ -236,4 +236,14 @@
     <string name="demo_habit_walking">10К қадам</string>
     <string name="demo_habit_no_sugar">Бе қанд</string>
     <string name="demo_habit_early_sleep">Хоб то 23:00</string>
+
+    <!-- Sync -->
+    <string name="action_sync">Ҳамоҳангсозӣ</string>
+    <string name="action_keep_local">Маҳаллӣ нигоҳ доред</string>
+    <string name="action_keep_server">Серверро нигоҳ доред</string>
+    <string name="format_pending_sync">%1$d тағйирот интизор аст</string>
+    <string name="msg_sync_conflict">Тағйироти маҳаллии шумо бо сервер ихтилоф дорад. Интихоб кунед, ки кадом версияро нигоҳ доред.</string>
+    <string name="msg_sync_failed">Ҳамоҳангсозӣ ноком шуд: %1$s</string>
+    <string name="msg_syncing">Ҳамоҳангсозӣ...</string>
+    <string name="title_sync_conflict">Ихтилофи ҳамоҳангсозӣ</string>
 </resources>

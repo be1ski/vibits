@@ -236,4 +236,14 @@ Empfehlung: Erstelle stattdessen eine neue Konfiguration. Deine historischen Dat
     <string name="demo_habit_walking">10K Schritte</string>
     <string name="demo_habit_no_sugar">Kein Zucker</string>
     <string name="demo_habit_early_sleep">Vor 23 Uhr schlafen</string>
+
+    <!-- Sync -->
+    <string name="action_sync">Synchronisieren</string>
+    <string name="action_keep_local">Lokal behalten</string>
+    <string name="action_keep_server">Server behalten</string>
+    <string name="format_pending_sync">%1$d ausstehende Änderungen</string>
+    <string name="msg_sync_conflict">Ihre lokalen Änderungen stehen im Konflikt mit dem Server. Wählen Sie, welche Version behalten werden soll.</string>
+    <string name="msg_sync_failed">Synchronisierung fehlgeschlagen: %1$s</string>
+    <string name="msg_syncing">Synchronisiere...</string>
+    <string name="title_sync_conflict">Synchronisierungskonflikt</string>
 </resources>

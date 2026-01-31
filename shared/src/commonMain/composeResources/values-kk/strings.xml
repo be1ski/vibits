@@ -236,4 +236,14 @@
     <string name="demo_habit_walking">10К қадам</string>
     <string name="demo_habit_no_sugar">Қантсыз</string>
     <string name="demo_habit_early_sleep">23:00-ге дейін ұйықтау</string>
+
+    <!-- Sync -->
+    <string name="action_sync">Синхрондау</string>
+    <string name="action_keep_local">Жергілікті сақтау</string>
+    <string name="action_keep_server">Серверді сақтау</string>
+    <string name="format_pending_sync">%1$d күтудегі өзгеріс</string>
+    <string name="msg_sync_conflict">Жергілікті өзгерістеріңіз сервермен қайшы келеді. Қай нұсқаны сақтау керектігін таңдаңыз.</string>
+    <string name="msg_sync_failed">Синхрондау сәтсіз аяқталды: %1$s</string>
+    <string name="msg_syncing">Синхрондалуда...</string>
+    <string name="title_sync_conflict">Синхрондау қайшылығы</string>
 </resources>
