@@ -1,5 +1,6 @@
 package space.be1ski.vibits.shared.feature.sync.domain.usecase
 
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.atomicfu.atomic
@@ -47,24 +48,42 @@ sealed interface SyncResult {
 }
 
 /**
+ * Sync engine interface for processing pending operations and syncing with the server.
+ */
+interface SyncEngine {
+  /** Whether a sync is currently in progress. */
+  val isSyncing: Boolean
+
+  /** Performs a full sync. */
+  suspend fun performSync(): SyncResult
+
+  /** Forces server data to overwrite local data. */
+  suspend fun forceServerSync(): SyncResult
+
+  /** Forces local data to overwrite server data. */
+  suspend fun forceLocalSync(): SyncResult
+}
+
+/**
  * Thread-safe sync engine that processes pending operations and syncs with the server.
  * Only one sync operation can run at a time.
  */
 @Inject
 @SingleIn(AppScope::class)
-class SyncEngine(
+@ContributesBinding(AppScope::class)
+class SyncEngineImpl(
   private val memosApi: MemosApi,
   private val memoMapper: MemoMapper,
   private val credentialsRepository: CredentialsRepository,
   private val syncQueue: SyncQueueRepository,
   private val offlineFirstRepository: OfflineFirstMemosRepository,
-) {
+) : SyncEngine {
   /** Mutex to prevent concurrent sync operations. */
   private val syncMutex = Mutex()
 
   /** Atomic flag indicating if sync is in progress. */
   private val _isSyncing = atomic(false)
-  val isSyncing: Boolean get() = _isSyncing.value
+  override val isSyncing: Boolean get() = _isSyncing.value
 
   /**
    * Performs a full sync:
@@ -76,7 +95,7 @@ class SyncEngine(
    *
    * Thread-safe: Only one sync can run at a time.
    */
-  suspend fun performSync(): SyncResult = syncMutex.withLock {
+  override suspend fun performSync(): SyncResult = syncMutex.withLock {
     _isSyncing.value = true
     try {
       performSyncInternal()
@@ -143,7 +162,7 @@ class SyncEngine(
    *
    * Thread-safe: Only one sync can run at a time.
    */
-  suspend fun forceServerSync(): SyncResult = syncMutex.withLock {
+  override suspend fun forceServerSync(): SyncResult = syncMutex.withLock {
     _isSyncing.value = true
     try {
       forceServerSyncInternal()
@@ -186,7 +205,7 @@ class SyncEngine(
    *
    * Thread-safe: Only one sync can run at a time.
    */
-  suspend fun forceLocalSync(): SyncResult = syncMutex.withLock {
+  override suspend fun forceLocalSync(): SyncResult = syncMutex.withLock {
     _isSyncing.value = true
     try {
       forceLocalSyncInternal()
