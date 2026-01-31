@@ -9,11 +9,11 @@ import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.sync.domain.SyncLogTags
+import space.be1ski.vibits.shared.feature.sync.domain.model.OperationId
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperation
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationType
 import space.be1ski.vibits.shared.feature.sync.domain.model.TempMemoName
 import space.be1ski.vibits.shared.feature.sync.domain.repository.SyncQueueRepository
-import space.be1ski.vibits.shared.feature.sync.domain.usecase.GenerateOperationIdUseCase
 import kotlin.time.Clock
 
 private val TAG = SyncLogTags.OFFLINE_FIRST_MEMOS
@@ -56,7 +56,7 @@ class OfflineFirstMemosRepository(
       // Queue for sync
       val operation =
         SyncOperation(
-          id = GenerateOperationIdUseCase(),
+          id = OperationId.generate(),
           type = SyncOperationType.CREATE,
           memoName = tempName,
           content = content,
@@ -98,7 +98,7 @@ class OfflineFirstMemosRepository(
       // Queue for sync
       val operation =
         SyncOperation(
-          id = GenerateOperationIdUseCase(),
+          id = OperationId.generate(),
           type = SyncOperationType.UPDATE,
           memoName = name,
           content = content,
@@ -124,7 +124,7 @@ class OfflineFirstMemosRepository(
       if (!TempMemoName.isTemporary(name)) {
         val operation =
           SyncOperation(
-            id = GenerateOperationIdUseCase(),
+            id = OperationId.generate(),
             type = SyncOperationType.DELETE,
             memoName = name,
             content = null,
