@@ -1,4 +1,4 @@
-package space.be1ski.vibits.shared.feature.sync.domain.usecase
+package space.be1ski.vibits.shared.feature.sync.data
 
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -13,53 +13,14 @@ import space.be1ski.vibits.shared.feature.memos.data.mapper.MemoMapper
 import space.be1ski.vibits.shared.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.shared.feature.memos.domain.config.MemosDefaults
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
-import space.be1ski.vibits.shared.feature.sync.data.OfflineFirstMemosRepository
+import space.be1ski.vibits.shared.feature.sync.domain.SyncEngine
 import space.be1ski.vibits.shared.feature.sync.domain.SyncLogTags
+import space.be1ski.vibits.shared.feature.sync.domain.model.SyncResult
 import space.be1ski.vibits.shared.feature.sync.domain.repository.SyncQueueRepository
+import space.be1ski.vibits.shared.feature.sync.domain.usecase.DetectSyncConflictsUseCase
 
 private val TAG = SyncLogTags.SYNC_ENGINE
 private const val LOG_CONTENT_PREVIEW_LENGTH = 50
-
-/**
- * Result of a sync attempt.
- */
-sealed interface SyncResult {
-  /** Sync completed successfully. */
-  data class Success(
-    val syncedMemos: List<Memo>,
-  ) : SyncResult
-
-  /** Sync detected conflicts that need user resolution. */
-  data class Conflict(
-    val conflicts: List<space.be1ski.vibits.shared.feature.sync.domain.model.SyncConflict>,
-  ) : SyncResult
-
-  /** Sync failed due to an error. */
-  data class Error(
-    val message: String,
-    val exception: Throwable? = null,
-  ) : SyncResult
-
-  /** No credentials configured. */
-  data object NoCredentials : SyncResult
-}
-
-/**
- * Sync engine interface for processing pending operations and syncing with the server.
- */
-interface SyncEngine {
-  /** Whether a sync is currently in progress. */
-  val isSyncing: Boolean
-
-  /** Performs a full sync. */
-  suspend fun performSync(): SyncResult
-
-  /** Forces server data to overwrite local data. */
-  suspend fun forceServerSync(): SyncResult
-
-  /** Forces local data to overwrite server data. */
-  suspend fun forceLocalSync(): SyncResult
-}
 
 /**
  * Thread-safe sync engine that processes pending operations and syncs with the server.
@@ -142,7 +103,7 @@ class SyncEngineImpl(
     }
 
     val localMemos = offlineFirstRepository.getCachedMemos()
-    val conflicts = SyncConflictDetector.detectConflicts(pendingOperations, localMemos, serverMemos)
+    val conflicts = DetectSyncConflictsUseCase(pendingOperations, localMemos, serverMemos)
 
     return if (conflicts.isNotEmpty()) {
       Log.w(TAG, "Detected ${conflicts.size} conflicts:")

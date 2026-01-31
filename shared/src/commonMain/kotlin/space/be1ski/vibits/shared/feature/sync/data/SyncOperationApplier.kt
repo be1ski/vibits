@@ -1,14 +1,14 @@
-package space.be1ski.vibits.shared.feature.sync.domain.usecase
+package space.be1ski.vibits.shared.feature.sync.data
 
 import space.be1ski.vibits.shared.core.logging.Log
 import space.be1ski.vibits.shared.feature.memos.data.mapper.MemoMapper
 import space.be1ski.vibits.shared.feature.memos.data.remote.MemosApi
-import space.be1ski.vibits.shared.feature.sync.data.OfflineFirstMemosRepository
 import space.be1ski.vibits.shared.feature.sync.domain.SyncLogTags
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperation
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationType
 import space.be1ski.vibits.shared.feature.sync.domain.repository.SyncQueueRepository
+import space.be1ski.vibits.shared.feature.sync.domain.usecase.GenerateTempMemoNameUseCase
 
 private val TAG = SyncLogTags.SYNC_OPERATION_APPLIER
 

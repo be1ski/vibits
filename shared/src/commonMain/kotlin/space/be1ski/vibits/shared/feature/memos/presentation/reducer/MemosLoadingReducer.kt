@@ -6,6 +6,7 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosEffect
 import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 
 @Suppress("LongMethod")
 internal val loadingReducer: Reducer<MemosAction.Loading, MemosState, MemosEffect, Nothing> =
@@ -27,13 +28,19 @@ internal val loadingReducer: Reducer<MemosAction.Loading, MemosState, MemosEffec
         command(MemosEffect.LoadCachedMemos)
       }
 
+      is MemosAction.Loading.RefreshMemos -> {
+        command(MemosEffect.RefreshMemos)
+      }
+
       is MemosAction.Loading.ResetForModeChange -> {
+        val isOffline = action.newMode == AppMode.OFFLINE || action.newMode == AppMode.DEMO
         state {
           copy(
             memos = emptyList(),
             memosRevision = memosRevision + 1,
             initialDataLoaded = false,
             isLoading = false,
+            isOfflineMode = isOffline,
           )
         }
       }

@@ -15,12 +15,12 @@ import space.be1ski.vibits.shared.feature.mode.domain.repository.AppModeReposito
 import space.be1ski.vibits.shared.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.shared.feature.settings.domain.model.UserPreferences
 import space.be1ski.vibits.shared.feature.settings.domain.repository.PreferencesRepository
+import space.be1ski.vibits.shared.feature.sync.domain.SyncEngine
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperation
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
+import space.be1ski.vibits.shared.feature.sync.domain.model.SyncResult
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncStatus
 import space.be1ski.vibits.shared.feature.sync.domain.repository.SyncQueueRepository
-import space.be1ski.vibits.shared.feature.sync.domain.usecase.SyncEngine
-import space.be1ski.vibits.shared.feature.sync.domain.usecase.SyncResult
 
 class FakeCredentialsRepository(
   initial: Credentials = Credentials(baseUrl = "", token = ""),

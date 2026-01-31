@@ -13,8 +13,8 @@ private val TAG = SyncLogTags.SYNC_ENGINE
 /**
  * Detects conflicts between pending sync operations and server state.
  */
-internal object SyncConflictDetector {
-  fun detectConflicts(
+object DetectSyncConflictsUseCase {
+  operator fun invoke(
     pendingOperations: List<SyncOperation>,
     localMemos: List<Memo>,
     serverMemos: List<Memo>,

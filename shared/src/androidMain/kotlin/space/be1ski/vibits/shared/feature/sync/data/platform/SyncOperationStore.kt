@@ -1,12 +1,16 @@
 package space.be1ski.vibits.shared.feature.sync.data.platform
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import space.be1ski.vibits.shared.feature.memos.data.internal.AndroidDatabaseHolder
 import space.be1ski.vibits.shared.feature.sync.data.room.SyncOperationDao
 import space.be1ski.vibits.shared.feature.sync.data.room.SyncOperationEntityMapper
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperation
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
+
+private const val DB_POLL_INTERVAL_MS = 100L
 
 actual fun createSyncOperationStore(): SyncOperationStore = AndroidSyncOperationStore()
 
@@ -53,9 +57,24 @@ private class AndroidSyncOperationStore : SyncOperationStore {
     daoOrNull()?.resetInProgressToPending()
   }
 
-  override fun observePendingCount(): Flow<Int> = daoOrNull()?.observePendingCount() ?: emptyFlow()
+  override fun observePendingCount(): Flow<Int> =
+    flow {
+      val dao = awaitDao()
+      emitAll(dao.observePendingCount())
+    }
 
-  override fun observeFailedCount(): Flow<Int> = daoOrNull()?.observeFailedCount() ?: emptyFlow()
+  override fun observeFailedCount(): Flow<Int> =
+    flow {
+      val dao = awaitDao()
+      emitAll(dao.observeFailedCount())
+    }
+
+  private suspend fun awaitDao(): SyncOperationDao {
+    while (true) {
+      daoOrNull()?.let { return it }
+      delay(DB_POLL_INTERVAL_MS)
+    }
+  }
 
   override suspend fun getPendingCount(): Int = daoOrNull()?.getPendingCount() ?: 0
 

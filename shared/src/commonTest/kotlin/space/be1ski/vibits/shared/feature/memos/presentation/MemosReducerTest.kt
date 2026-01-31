@@ -5,6 +5,7 @@ import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosEffect
 import space.be1ski.vibits.shared.feature.memos.presentation.reducer.memosReducer
 import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Instant
@@ -119,11 +120,20 @@ class MemosReducerTest {
     }
 
   @Test
-  fun `when ResetForModeChange then clears memos and resets initialDataLoaded`() =
+  fun `when ResetForModeChange to OFFLINE then clears memos and sets isOfflineMode true`() =
     memosReducer.test(MemosState(memos = listOf(testMemo), initialDataLoaded = true, isLoading = true)) {
-      send(MemosAction.Loading.ResetForModeChange)
+      send(MemosAction.Loading.ResetForModeChange(AppMode.OFFLINE))
 
-      assertState { memos.isEmpty() && !initialDataLoaded && !isLoading }
+      assertState { memos.isEmpty() && !initialDataLoaded && !isLoading && isOfflineMode }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ResetForModeChange to ONLINE then clears memos and sets isOfflineMode false`() =
+    memosReducer.test(MemosState(memos = listOf(testMemo), initialDataLoaded = true, isLoading = true, isOfflineMode = true)) {
+      send(MemosAction.Loading.ResetForModeChange(AppMode.ONLINE))
+
+      assertState { memos.isEmpty() && !initialDataLoaded && !isLoading && !isOfflineMode }
       assertNoEffects()
     }
 

@@ -3,6 +3,7 @@ package space.be1ski.vibits.shared.feature.memos.presentation.action
 import space.be1ski.vibits.shared.core.elm.Action
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
+import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncConflict
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncStatus
 
@@ -38,7 +39,12 @@ sealed interface MemosAction : Action {
 
     data object LoadCachedMemos : Loading
 
-    data object ResetForModeChange : Loading
+    /** Refresh memos from cache, always updating state (used after local changes). */
+    data object RefreshMemos : Loading
+
+    data class ResetForModeChange(
+      val newMode: AppMode,
+    ) : Loading
 
     data class ChangePostFilter(
       val filter: PostFilter,

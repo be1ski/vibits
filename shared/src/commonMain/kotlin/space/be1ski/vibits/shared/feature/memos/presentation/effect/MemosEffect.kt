@@ -23,6 +23,9 @@ sealed interface MemosEffect {
 
   data object LoadRemoteMemos : Load
 
+  /** Refresh memos from cache, always updating state. */
+  data object RefreshMemos : Load
+
   data class CreateMemo(
     val content: String,
   ) : Write

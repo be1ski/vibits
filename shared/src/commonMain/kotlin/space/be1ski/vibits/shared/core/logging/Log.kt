@@ -82,7 +82,7 @@ object Log : SynchronizedObject() {
 
   fun export(): String =
     synchronized(this) {
-      _logs.joinToString("\n") { entry ->
+      _logs.asReversed().joinToString("\n") { entry ->
         "${formatTimestamp(entry.timestamp)} ${entry.level.name.first()}/${entry.tag}: ${entry.message}"
       }
     }

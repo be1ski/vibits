@@ -19,6 +19,7 @@ class MemosLoadEffectHandler(
     when (effect) {
       MemosEffect.LoadCachedMemos -> handleLoadCachedMemos()
       MemosEffect.LoadRemoteMemos -> handleLoadRemoteMemos()
+      MemosEffect.RefreshMemos -> handleRefreshMemos()
     }
 
   private fun handleLoadCachedMemos(): Flow<MemosAction> =
@@ -26,6 +27,16 @@ class MemosLoadEffectHandler(
       Log.d(TAG, "Loading cached memos")
       runCatching { loadCachedMemos() }
         .onSuccess { memos -> emit(MemosAction.Loading.CachedMemosLoaded(memos)) }
+    }
+
+  private fun handleRefreshMemos(): Flow<MemosAction> =
+    actions {
+      Log.d(TAG, "Refreshing memos from cache")
+      runCatching { loadCachedMemos() }
+        .onSuccess { memos ->
+          Log.d(TAG, "Refreshed ${memos.size} memos")
+          emit(MemosAction.Loading.MemosLoaded(memos))
+        }
     }
 
   private fun handleLoadRemoteMemos(): Flow<MemosAction> =

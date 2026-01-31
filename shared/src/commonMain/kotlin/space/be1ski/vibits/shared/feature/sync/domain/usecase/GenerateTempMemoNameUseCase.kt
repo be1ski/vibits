@@ -2,8 +2,8 @@ package space.be1ski.vibits.shared.feature.sync.domain.usecase
 
 import kotlin.random.Random
 
-private const val RANDOM_MIN = 10000
-private const val RANDOM_MAX = 99999
+private const val RANDOM_MIN = 100000000
+private const val RANDOM_MAX = 999999999
 
 /**
  * Generates a temporary memo name for locally created memos.

@@ -154,6 +154,132 @@ class HabitsEffectHandlerTest {
     }
 
   @Test
+  fun `when ToggleDailyHabit creates new memo then emits MemoCreated`() =
+    runTest {
+      val date = LocalDate(2026, 1, 30)
+      val expectedMemo = Memo(name = "memos/1", content = "#habits/daily 2026-01-30\n\nexercise")
+      val repository =
+        FakeMemosRepository().apply {
+          cachedMemosResult = emptyList()
+          createMemoResult = Result.success(expectedMemo)
+        }
+      val handler = createHandler(repository)
+      val habitsConfig =
+        listOf(
+          space.be1ski.vibits.shared.feature.habits.domain.model.HabitConfig(
+            tag = "exercise",
+            label = "Exercise",
+          ),
+        )
+
+      val actions =
+        handler(
+          HabitsEffect.ToggleDailyHabit(
+            date = date,
+            habitTag = "exercise",
+            habitsConfig = habitsConfig,
+          ),
+        ).toList()
+
+      assertEquals(1, actions.size)
+      assertTrue(actions[0] is HabitsAction.Response.MemoCreated)
+    }
+
+  @Test
+  fun `when ToggleDailyHabit updates existing memo then emits MemoUpdated`() =
+    runTest {
+      val date = LocalDate(2026, 1, 30)
+      val existingMemo =
+        Memo(name = "memos/existing", content = "#habits/daily 2026-01-30\n\n- [x] meditation")
+      val updatedMemo = Memo(name = "memos/existing", content = "#habits/daily 2026-01-30\n\n- [x] exercise\n- [x] meditation")
+      val repository =
+        FakeMemosRepository().apply {
+          cachedMemosResult = listOf(existingMemo)
+          updateMemoResult = Result.success(updatedMemo)
+        }
+      val handler = createHandler(repository)
+      val habitsConfig =
+        listOf(
+          space.be1ski.vibits.shared.feature.habits.domain.model
+            .HabitConfig(tag = "exercise", label = "Exercise"),
+          space.be1ski.vibits.shared.feature.habits.domain.model
+            .HabitConfig(tag = "meditation", label = "Meditation"),
+        )
+
+      val actions =
+        handler(
+          HabitsEffect.ToggleDailyHabit(
+            date = date,
+            habitTag = "exercise",
+            habitsConfig = habitsConfig,
+          ),
+        ).toList()
+
+      assertEquals(1, actions.size)
+      assertTrue(actions[0] is HabitsAction.Response.MemoUpdated)
+    }
+
+  @Test
+  fun `when ToggleDailyHabit removes last habit then emits MemoDeleted`() =
+    runTest {
+      val date = LocalDate(2026, 1, 30)
+      val existingMemo =
+        Memo(name = "memos/existing", content = "#habits/daily 2026-01-30\n\n- [x] exercise")
+      val repository =
+        FakeMemosRepository().apply {
+          cachedMemosResult = listOf(existingMemo)
+          deleteMemoResult = Result.success(Unit)
+        }
+      val handler = createHandler(repository)
+      val habitsConfig =
+        listOf(
+          space.be1ski.vibits.shared.feature.habits.domain.model
+            .HabitConfig(tag = "exercise", label = "Exercise"),
+        )
+
+      val actions =
+        handler(
+          HabitsEffect.ToggleDailyHabit(
+            date = date,
+            habitTag = "exercise",
+            habitsConfig = habitsConfig,
+          ),
+        ).toList()
+
+      assertEquals(1, actions.size)
+      assertTrue(actions[0] is HabitsAction.Response.MemoDeleted)
+    }
+
+  @Test
+  fun `when ToggleDailyHabit fails then emits MemoOperationFailed`() =
+    runTest {
+      val date = LocalDate(2026, 1, 30)
+      val repository =
+        FakeMemosRepository().apply {
+          cachedMemosResult = emptyList()
+          createMemoResult = Result.failure(Exception("Network error"))
+        }
+      val handler = createHandler(repository)
+      val habitsConfig =
+        listOf(
+          space.be1ski.vibits.shared.feature.habits.domain.model
+            .HabitConfig(tag = "exercise", label = "Exercise"),
+        )
+
+      val actions =
+        handler(
+          HabitsEffect.ToggleDailyHabit(
+            date = date,
+            habitTag = "exercise",
+            habitsConfig = habitsConfig,
+          ),
+        ).toList()
+
+      assertEquals(1, actions.size)
+      assertTrue(actions[0] is HabitsAction.Response.MemoOperationFailed)
+    }
+
+  @Test
   fun `when RecalculateActivityData effect then emits UpdateActivityData`() =
     runTest {
       val handler = createHandler()

@@ -8,8 +8,8 @@ import space.be1ski.vibits.shared.feature.memos.domain.usecase.DeleteMemoUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadCachedMemosUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.LoadMemosUseCase
 import space.be1ski.vibits.shared.feature.memos.domain.usecase.UpdateMemoUseCase
+import space.be1ski.vibits.shared.feature.sync.domain.SyncEngine
 import space.be1ski.vibits.shared.feature.sync.domain.repository.SyncQueueRepository
-import space.be1ski.vibits.shared.feature.sync.domain.usecase.SyncEngine
 
 @Suppress("LongParameterList")
 @Inject

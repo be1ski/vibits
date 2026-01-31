@@ -149,13 +149,26 @@ class OfflineFirstMemosRepository(
 
   /**
    * Replaces all local memos with the given list.
+   * Preserves any local temporary memos (names starting with local_) that were created
+   * during sync but haven't been synced yet.
    * Used after successful full sync.
    * Thread-safe.
    */
   suspend fun replaceAllMemos(memos: List<Memo>) =
     mutex.withLock {
-      memoCache.replaceMemos(memos)
-      Log.d(TAG, "Replaced all memos: ${memos.size}")
+      // Preserve local temporary memos that might have been created during sync
+      val currentMemos = memoCache.readMemos()
+      val localTempMemos = currentMemos.filter { GenerateTempMemoNameUseCase.isTemporaryName(it.name) }
+
+      // Replace with server memos + preserved local temps
+      val combined = memos + localTempMemos
+      memoCache.replaceMemos(combined)
+
+      if (localTempMemos.isNotEmpty()) {
+        Log.d(TAG, "Replaced all memos: ${memos.size} server + ${localTempMemos.size} local temp")
+      } else {
+        Log.d(TAG, "Replaced all memos: ${memos.size}")
+      }
     }
 
   /**

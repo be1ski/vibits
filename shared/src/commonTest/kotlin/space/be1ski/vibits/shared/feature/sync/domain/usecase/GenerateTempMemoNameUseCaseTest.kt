@@ -49,8 +49,8 @@ class GenerateTempMemoNameUseCaseTest {
     assertTrue(parts.size == 2)
     // First part is timestamp (long number)
     assertTrue(parts[0].all { it.isDigit() })
-    // Second part is random (5 digit number)
-    assertTrue(parts[1].length == 5)
+    // Second part is random (9 digit number)
+    assertTrue(parts[1].length == 9)
     assertTrue(parts[1].all { it.isDigit() })
   }
 }
