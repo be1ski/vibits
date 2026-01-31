@@ -7,6 +7,7 @@ import space.be1ski.vibits.shared.feature.sync.domain.model.ConflictType
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncConflict
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperation
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationType
+import space.be1ski.vibits.shared.feature.sync.domain.model.TempMemoName
 
 private val TAG = SyncLogTags.SYNC_ENGINE
 
@@ -46,7 +47,7 @@ object DetectSyncConflictsUseCase {
     serverMemosByName: Map<String, Memo>,
     localMemosByName: Map<String, Memo>,
   ): SyncConflict? {
-    if (GenerateTempMemoNameUseCase.isTemporaryName(memoName)) return null
+    if (TempMemoName.isTemporary(memoName)) return null
     return serverMemosByName[memoName]?.let { serverMemo ->
       Log.d(TAG, "CREATE conflict: '$memoName' already exists on server (BOTH_MODIFIED)")
       SyncConflict(

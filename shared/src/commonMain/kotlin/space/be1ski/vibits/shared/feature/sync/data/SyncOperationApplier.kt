@@ -7,8 +7,8 @@ import space.be1ski.vibits.shared.feature.sync.domain.SyncLogTags
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperation
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationStatus
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationType
+import space.be1ski.vibits.shared.feature.sync.domain.model.TempMemoName
 import space.be1ski.vibits.shared.feature.sync.domain.repository.SyncQueueRepository
-import space.be1ski.vibits.shared.feature.sync.domain.usecase.GenerateTempMemoNameUseCase
 
 private val TAG = SyncLogTags.SYNC_OPERATION_APPLIER
 
@@ -83,7 +83,7 @@ internal class SyncOperationApplier(
 
     return when {
       name == null || content == null -> false
-      GenerateTempMemoNameUseCase.isTemporaryName(name) -> {
+      TempMemoName.isTemporary(name) -> {
         Log.d(TAG, "Skipping update for temp memo: $name")
         false
       }

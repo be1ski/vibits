@@ -11,9 +11,9 @@ import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
 import space.be1ski.vibits.shared.feature.sync.domain.SyncLogTags
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperation
 import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationType
+import space.be1ski.vibits.shared.feature.sync.domain.model.TempMemoName
 import space.be1ski.vibits.shared.feature.sync.domain.repository.SyncQueueRepository
 import space.be1ski.vibits.shared.feature.sync.domain.usecase.GenerateOperationIdUseCase
-import space.be1ski.vibits.shared.feature.sync.domain.usecase.GenerateTempMemoNameUseCase
 import kotlin.time.Clock
 
 private val TAG = SyncLogTags.OFFLINE_FIRST_MEMOS
@@ -40,7 +40,7 @@ class OfflineFirstMemosRepository(
   suspend fun createMemoLocally(content: String): Memo =
     mutex.withLock {
       val now = Clock.System.now()
-      val tempName = GenerateTempMemoNameUseCase()
+      val tempName = TempMemoName.generate()
       val memo =
         Memo(
           name = tempName,
@@ -121,7 +121,7 @@ class OfflineFirstMemosRepository(
       Log.d(TAG, "Deleted memo locally: $name")
 
       // Queue for sync (only if it's not a temporary local-only memo)
-      if (!GenerateTempMemoNameUseCase.isTemporaryName(name)) {
+      if (!TempMemoName.isTemporary(name)) {
         val operation =
           SyncOperation(
             id = GenerateOperationIdUseCase(),
@@ -158,7 +158,7 @@ class OfflineFirstMemosRepository(
     mutex.withLock {
       // Preserve local temporary memos that might have been created during sync
       val currentMemos = memoCache.readMemos()
-      val localTempMemos = currentMemos.filter { GenerateTempMemoNameUseCase.isTemporaryName(it.name) }
+      val localTempMemos = currentMemos.filter { TempMemoName.isTemporary(it.name) }
 
       // Replace with server memos + preserved local temps
       val combined = memos + localTempMemos

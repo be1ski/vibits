@@ -1,11 +1,18 @@
 package space.be1ski.vibits.shared.feature.memos.presentation
+
 import space.be1ski.vibits.shared.core.elm.test
 import space.be1ski.vibits.shared.feature.memos.domain.model.Memo
+import space.be1ski.vibits.shared.feature.memos.domain.model.PostFilter
 import space.be1ski.vibits.shared.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.shared.feature.memos.presentation.effect.MemosEffect
 import space.be1ski.vibits.shared.feature.memos.presentation.reducer.memosReducer
 import space.be1ski.vibits.shared.feature.memos.presentation.state.MemosState
 import space.be1ski.vibits.shared.feature.mode.domain.model.AppMode
+import space.be1ski.vibits.shared.feature.sync.domain.model.ConflictType
+import space.be1ski.vibits.shared.feature.sync.domain.model.SyncConflict
+import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperation
+import space.be1ski.vibits.shared.feature.sync.domain.model.SyncOperationType
+import space.be1ski.vibits.shared.feature.sync.domain.model.SyncStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Instant
@@ -374,6 +381,279 @@ class MemosReducerTest {
       send(MemosAction.EditDialog.ConfirmEditDialog)
 
       assertState { showEditDialog }
+      assertNoEffects()
+    }
+
+  // ============ Loading Reducer - Additional Tests ============
+
+  @Test
+  fun `when RefreshMemos then emits RefreshMemos effect`() =
+    memosReducer.test(MemosState()) {
+      send(MemosAction.Loading.RefreshMemos)
+
+      assertCommands(MemosEffect.RefreshMemos)
+    }
+
+  @Test
+  fun `when ChangePostFilter then updates activePostFilter`() =
+    memosReducer.test(MemosState(activePostFilter = PostFilter.ALL)) {
+      send(MemosAction.Loading.ChangePostFilter(PostFilter.HABIT_TRACKING))
+
+      assertState { activePostFilter == PostFilter.HABIT_TRACKING }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ResetForModeChange to DEMO then clears memos and sets isOfflineMode true`() =
+    memosReducer.test(MemosState(memos = listOf(testMemo), initialDataLoaded = true, isLoading = true)) {
+      send(MemosAction.Loading.ResetForModeChange(AppMode.DEMO))
+
+      assertState { memos.isEmpty() && !initialDataLoaded && !isLoading && isOfflineMode }
+      assertNoEffects()
+    }
+
+  // ============ Crud Reducer - Additional Tests ============
+
+  @Test
+  fun `when MemoUpdated in offline mode then does not trigger sync`() =
+    memosReducer.test(MemosState(isLoading = true, memos = listOf(testMemo), isOfflineMode = true)) {
+      send(MemosAction.Crud.MemoUpdated(testMemo.copy(content = "Updated content")))
+
+      assertState { memos.size == 1 && memos.first().content == "Updated content" && !isLoading }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when MemoDeleted in offline mode then does not trigger sync`() =
+    memosReducer.test(MemosState(isLoading = true, memos = listOf(testMemo), isOfflineMode = true)) {
+      send(MemosAction.Crud.MemoDeleted("memos/1"))
+
+      assertState { memos.isEmpty() && !isLoading }
+      assertNoEffects()
+    }
+
+  // ============ Sync Reducer Tests ============
+
+  @Test
+  fun `when StartSync in online mode then sets isSyncing and emits PerformSync`() =
+    memosReducer.test(MemosState(isOfflineMode = false, errorMessage = "old error")) {
+      send(MemosAction.Sync.StartSync)
+
+      assertState { isSyncing && errorMessage == null }
+      assertCommands(MemosEffect.PerformSync)
+    }
+
+  @Test
+  fun `when StartSync in offline mode then does nothing`() =
+    memosReducer.test(MemosState(isOfflineMode = true)) {
+      send(MemosAction.Sync.StartSync)
+
+      assertState { !isSyncing }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when SyncCompleted in online mode then updates memos and clears sync state`() {
+    val syncedMemos = listOf(testMemo.copy(name = "memos/synced"))
+    memosReducer.test(
+      MemosState(
+        isOfflineMode = false,
+        isSyncing = true,
+        syncConflicts =
+          listOf(
+            SyncConflict(
+              operation = SyncOperation(id = "op1", type = SyncOperationType.CREATE, memoName = "memos/1", content = "content"),
+              localMemo = testMemo,
+              serverMemo = null,
+              conflictType = ConflictType.SERVER_NEWER,
+            ),
+          ),
+        showConflictDialog = true,
+        errorMessage = "old error",
+      ),
+    ) {
+      send(MemosAction.Sync.SyncCompleted(syncedMemos))
+
+      assertState {
+        memos.size == 1 &&
+          memos.first().name == "memos/synced" &&
+          !isSyncing &&
+          syncConflicts.isEmpty() &&
+          !showConflictDialog &&
+          errorMessage == null
+      }
+      assertCommands(MemosEffect.LoadSyncStatus)
+    }
+  }
+
+  @Test
+  fun `when SyncCompleted in offline mode then does nothing`() =
+    memosReducer.test(MemosState(isOfflineMode = true, isSyncing = true)) {
+      send(MemosAction.Sync.SyncCompleted(listOf(testMemo)))
+
+      assertState { isSyncing }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when SyncConflictDetected in online mode then updates conflicts and shows dialog`() {
+    val conflicts =
+      listOf(
+        SyncConflict(
+          operation = SyncOperation(id = "op1", type = SyncOperationType.UPDATE, memoName = "memos/1", content = "content"),
+          localMemo = testMemo,
+          serverMemo = testMemo.copy(content = "Server content"),
+          conflictType = ConflictType.BOTH_MODIFIED,
+        ),
+      )
+    memosReducer.test(MemosState(isOfflineMode = false, isSyncing = true)) {
+      send(MemosAction.Sync.SyncConflictDetected(conflicts))
+
+      assertState {
+        !isSyncing &&
+          syncConflicts.size == 1 &&
+          showConflictDialog
+      }
+      assertNoEffects()
+    }
+  }
+
+  @Test
+  fun `when SyncConflictDetected in offline mode then does nothing`() =
+    memosReducer.test(MemosState(isOfflineMode = true, isSyncing = true)) {
+      send(MemosAction.Sync.SyncConflictDetected(emptyList()))
+
+      assertState { isSyncing && !showConflictDialog }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when SyncFailed in online mode then sets error and stops syncing`() =
+    memosReducer.test(MemosState(isOfflineMode = false, isSyncing = true)) {
+      send(MemosAction.Sync.SyncFailed("Network error"))
+
+      assertState { !isSyncing && errorMessage == "Network error" }
+      assertCommands(MemosEffect.LoadSyncStatus)
+    }
+
+  @Test
+  fun `when SyncFailed in offline mode then does nothing`() =
+    memosReducer.test(MemosState(isOfflineMode = true, isSyncing = true)) {
+      send(MemosAction.Sync.SyncFailed("Network error"))
+
+      assertState { isSyncing && errorMessage == null }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when SyncStatusUpdated in online mode then updates syncStatus`() {
+    val newStatus = SyncStatus(pendingCount = 5, failedCount = 1)
+    memosReducer.test(MemosState(isOfflineMode = false)) {
+      send(MemosAction.Sync.SyncStatusUpdated(newStatus))
+
+      assertState { syncStatus.pendingCount == 5 && syncStatus.failedCount == 1 }
+      assertNoEffects()
+    }
+  }
+
+  @Test
+  fun `when SyncStatusUpdated in offline mode then does nothing`() {
+    val newStatus = SyncStatus(pendingCount = 5)
+    memosReducer.test(MemosState(isOfflineMode = true, syncStatus = SyncStatus())) {
+      send(MemosAction.Sync.SyncStatusUpdated(newStatus))
+
+      assertState { syncStatus.pendingCount == 0 }
+      assertNoEffects()
+    }
+  }
+
+  @Test
+  fun `when ResolveKeepLocal in online mode then starts syncing and emits ForceLocalSync`() =
+    memosReducer.test(MemosState(isOfflineMode = false)) {
+      send(MemosAction.Sync.ResolveKeepLocal)
+
+      assertState { isSyncing }
+      assertCommands(MemosEffect.ForceLocalSync)
+    }
+
+  @Test
+  fun `when ResolveKeepLocal in offline mode then does nothing`() =
+    memosReducer.test(MemosState(isOfflineMode = true)) {
+      send(MemosAction.Sync.ResolveKeepLocal)
+
+      assertState { !isSyncing }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ResolveKeepServer in online mode then starts syncing and emits ForceServerSync`() =
+    memosReducer.test(MemosState(isOfflineMode = false)) {
+      send(MemosAction.Sync.ResolveKeepServer)
+
+      assertState { isSyncing }
+      assertCommands(MemosEffect.ForceServerSync)
+    }
+
+  @Test
+  fun `when ResolveKeepServer in offline mode then does nothing`() =
+    memosReducer.test(MemosState(isOfflineMode = true)) {
+      send(MemosAction.Sync.ResolveKeepServer)
+
+      assertState { !isSyncing }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when DismissConflictDialog in online mode then hides dialog`() =
+    memosReducer.test(MemosState(isOfflineMode = false, showConflictDialog = true)) {
+      send(MemosAction.Sync.DismissConflictDialog)
+
+      assertState { !showConflictDialog }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when DismissConflictDialog in offline mode then does nothing`() =
+    memosReducer.test(MemosState(isOfflineMode = true, showConflictDialog = true)) {
+      send(MemosAction.Sync.DismissConflictDialog)
+
+      assertState { showConflictDialog }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ShowSyncLogDialog in online mode then shows dialog`() =
+    memosReducer.test(MemosState(isOfflineMode = false)) {
+      send(MemosAction.Sync.ShowSyncLogDialog)
+
+      assertState { showSyncLogDialog }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when ShowSyncLogDialog in offline mode then does nothing`() =
+    memosReducer.test(MemosState(isOfflineMode = true, showSyncLogDialog = false)) {
+      send(MemosAction.Sync.ShowSyncLogDialog)
+
+      assertState { !showSyncLogDialog }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when DismissSyncLogDialog in online mode then hides dialog`() =
+    memosReducer.test(MemosState(isOfflineMode = false, showSyncLogDialog = true)) {
+      send(MemosAction.Sync.DismissSyncLogDialog)
+
+      assertState { !showSyncLogDialog }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when DismissSyncLogDialog in offline mode then does nothing`() =
+    memosReducer.test(MemosState(isOfflineMode = true, showSyncLogDialog = true)) {
+      send(MemosAction.Sync.DismissSyncLogDialog)
+
+      assertState { showSyncLogDialog }
       assertNoEffects()
     }
 }
