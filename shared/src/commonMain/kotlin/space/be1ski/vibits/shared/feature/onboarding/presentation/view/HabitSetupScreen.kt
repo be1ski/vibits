@@ -52,6 +52,7 @@ import space.be1ski.vibits.shared.generated.title_habit_setup
 private val COLOR_CIRCLE_SIZE = 40.dp
 private val SELECTED_BORDER_WIDTH = 3.dp
 private val CHECKMARK_SIZE = 20.dp
+private const val LUMINANCE_THRESHOLD = 0.5f
 
 @Suppress("LongMethod")
 @OptIn(ExperimentalLayoutApi::class)
@@ -194,7 +195,7 @@ private fun ColorCircle(
       Color.Transparent
     }
   val checkmarkColor =
-    if (circleColor.luminance() > 0.5f) {
+    if (circleColor.luminance() > LUMINANCE_THRESHOLD) {
       Color.Black
     } else {
       Color.White
