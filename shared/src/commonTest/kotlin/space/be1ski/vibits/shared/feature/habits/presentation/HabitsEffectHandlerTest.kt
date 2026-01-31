@@ -348,7 +348,7 @@ class HabitsEffectHandlerTest {
         Memo(
           name = "memos/1",
           content = "#habits/exercise",
-          createTime = kotlinx.datetime.Instant.parse("2026-01-20T10:00:00Z"),
+          createTime = kotlin.time.Instant.parse("2026-01-20T10:00:00Z"),
         )
       val memos = listOf(memo)
       val appMode = AppMode.ONLINE
