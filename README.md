@@ -24,7 +24,8 @@ Habit tracker powered by [Memos](https://github.com/usememos/memos). Kotlin Mult
 ## Build
 
 ```
-./gradlew checkAll                                   # lint, detekt, compile, tests
+./gradlew verifyAll                                  # lint, detekt, compile, tests (macOS)
+./gradlew verify                                     # JVM checks only (Linux)
 ./gradlew koverXmlReport                             # coverage report
 ./gradlew :androidApp:assembleRelease                # Android APK
 ./gradlew :iosFramework:assembleSharedReleaseXCFramework  # iOS framework
