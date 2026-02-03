@@ -63,10 +63,9 @@ subprojects {
   }
 }
 
-tasks.register("verify") {
+tasks.register("checkJvm") {
   group = "verification"
   description = "Runs JVM checks: detekt, compile, and tests (Linux-safe)"
-
   subprojects {
     plugins.withId("org.jetbrains.kotlin.multiplatform") {
       tasks.findByName("detekt")?.let { dependsOn(it) }
@@ -78,10 +77,9 @@ tasks.register("verify") {
   dependsOn(":webApp:ktlintCheck", ":webApp:detekt", ":webApp:compileKotlinWasmJs")
 }
 
-tasks.register("verifyNative") {
+tasks.register("checkIos") {
   group = "verification"
-  description = "Runs native checks: iOS compile, ktlint (requires macOS)"
-
+  description = "Runs iOS checks: compile, ktlint (requires macOS)"
   subprojects {
     plugins.withId("org.jetbrains.kotlin.multiplatform") {
       tasks.findByName("compileKotlinIosArm64")?.let { dependsOn(it) }
@@ -90,10 +88,10 @@ tasks.register("verifyNative") {
   }
 }
 
-tasks.register("verifyAll") {
+tasks.register("checkAll") {
   group = "verification"
-  description = "Runs all checks including native (requires macOS)"
-  dependsOn("verify", "verifyNative")
+  description = "Runs all checks including iOS (requires macOS)"
+  dependsOn("checkJvm", "checkIos")
 }
 
 tasks.register<Copy>("installGitHooks") {
