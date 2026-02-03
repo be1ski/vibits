@@ -1,32 +1,13 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
-import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
-
 plugins {
   id("vibits.kmp.compose")
   id("vibits.kmp.metro")
   alias(libs.plugins.kotlin.serialization)
-  alias(libs.plugins.kover)
 }
 
 kotlin {
   androidLibrary {
     androidResources {
       enable = true
-    }
-  }
-
-  val iosX64Target = iosX64()
-  val iosArm64Target = iosArm64()
-  val iosSimulatorArm64Target = iosSimulatorArm64()
-
-  val xcframework = XCFramework()
-  listOf(iosX64Target, iosArm64Target, iosSimulatorArm64Target).forEach { target ->
-    target.binaries.framework {
-      baseName = "shared"
-      if (buildType == NativeBuildType.RELEASE) {
-        freeCompilerArgs += listOf("-Xdisable-phases=Devirtualization")
-      }
-      xcframework.add(this)
     }
   }
 
@@ -102,40 +83,6 @@ kotlin {
     wasmJsMain {
       dependencies {
         implementation(libs.ktor.client.js)
-      }
-    }
-  }
-}
-
-kover {
-  currentProject {
-    sources {
-      excludedSourceSets.addAll("androidMain", "iosMain", "wasmJsMain")
-    }
-  }
-  reports {
-    filters {
-      excludes {
-        classes(
-          "*State",
-          "*State$*",
-          "*Action",
-          "*Action$*",
-          "*Effect",
-          "*Effect$*",
-          "*Features",
-          "*Features$*",
-          "*.di.*",
-          "*.generated.*",
-          "*.platform.*",
-          "*.internal.*",
-          "*.room.*",
-          "*LogTags",
-          "*.ui.*",
-          "*.view.*",
-          "*Dto",
-          "*Dto$*",
-        )
       }
     }
   }

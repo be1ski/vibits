@@ -1,6 +1,5 @@
 package space.be1ski.vibits.feature.sync.data
 
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.atomicfu.atomic
@@ -28,7 +27,6 @@ private const val LOG_CONTENT_PREVIEW_LENGTH = 50
  */
 @Inject
 @SingleIn(AppScope::class)
-@ContributesBinding(AppScope::class)
 class SyncEngineImpl(
   private val memosApi: MemosApi,
   private val memoMapper: MemoMapper,
