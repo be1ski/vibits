@@ -6,13 +6,13 @@
     <string name="action_copied">Copied</string>
     <string name="action_configure_habits">Configure habits</string>
     <string name="action_create">Create</string>
-    <string name="action_create_first_habit">Create my first habit</string>
+    <string name="action_create_first_habit">Create your first habit</string>
     <string name="action_create_memo">Create memo</string>
-    <string name="action_create_new_config">Create New Config (Recommended)</string>
+    <string name="action_create_new_config">Create new config (recommended)</string>
     <string name="action_continue">Continue</string>
     <string name="action_delete">Delete</string>
     <string name="action_add_first_habit">Add your first habit</string>
-    <string name="action_edit_anyway">Edit Anyway</string>
+    <string name="action_edit_anyway">Edit anyway</string>
     <string name="action_go_to_dashboard">Go to dashboard</string>
     <string name="action_hide_details">Hide habit details</string>
     <string name="action_mark_first_checkin">Mark first check-in</string>
@@ -30,10 +30,10 @@
     <string name="action_track">Track</string>
     <string name="action_track_today">Track today</string>
     <string name="action_update">Update</string>
-    <string name="action_view_logs">View Logs</string>
+    <string name="action_view_logs">View logs</string>
     <string name="action_export">Export</string>
-    <string name="action_export_logs">Export Logs</string>
-    <string name="action_export_memos">Export Memos</string>
+    <string name="action_export_logs">Export logs</string>
+    <string name="action_export_memos">Export memos</string>
     <string name="msg_export_success">Exported to %1$s</string>
     <string name="msg_export_failed">Export failed</string>
 
@@ -182,7 +182,7 @@
     <string name="mode_demo_desc">Try the app with sample data</string>
     <string name="mode_quick_online_title">Credentials Found</string>
     <string name="mode_quick_online_desc">Saved credentials detected. Use them to quickly connect online?</string>
-    <string name="action_use_saved">Use Saved</string>
+    <string name="action_use_saved">Use saved</string>
 
     <!-- Navigation -->
     <string name="nav_feed">Feed</string>
