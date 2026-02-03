@@ -7,12 +7,13 @@ plugins {
 
 kotlin {
   sourceSets {
-    val roomMain = create("roomMain") {
-      dependsOn(commonMain.get())
-      dependencies {
-        implementation(libs.androidx.room.runtime)
+    val roomMain =
+      create("roomMain") {
+        dependsOn(commonMain.get())
+        dependencies {
+          implementation(libs.androidx.room.runtime)
+        }
       }
-    }
 
     commonMain {
       dependencies {

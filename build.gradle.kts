@@ -63,45 +63,20 @@ subprojects {
   }
 }
 
-// ===================================================================================
-// iOS/WasmJS DISABLED: Waiting for Kotlin 2.3.20+
-// ===================================================================================
-// Metro's @ContributesBinding doesn't work cross-module on native/wasm targets.
-// After modularization, DI bindings from feature modules (e.g., MemosRepositoryImpl)
-// are not found by AppGraph on iOS/WasmJS, causing compilation errors like:
-//   "Cannot find @Inject constructor or @Provides for: MemosRepository"
-//
-// This works on JVM/Android because Metro uses different code generation there.
-// Fix available in Kotlin 2.3.20+: https://github.com/ZacSweers/metro/issues/460
-//
-// TODO(Kotlin 2.3.20): Re-enable iOS/WasmJS:
-//   - Add compileKotlinIos* tasks to checkAll
-//   - Add runKtlintCheckOverIosMainSourceSet, runKtlintCheckOverWasmJsMainSourceSet
-//   - Add webApp checks: ktlintCheck, detekt, compileKotlinWasmJs
-// ===================================================================================
 tasks.register("checkAll") {
   group = "verification"
   description = "Runs all checks: ktlint, detekt, compile, and tests"
 
-  // Dynamically find all KMP modules
   subprojects {
     plugins.withId("org.jetbrains.kotlin.multiplatform") {
-      // Add ktlint for desktop/common/android source sets only (skip iOS/WasmJS)
-      tasks.findByName("runKtlintCheckOverCommonMainSourceSet")?.let { dependsOn(it) }
-      tasks.findByName("runKtlintCheckOverCommonTestSourceSet")?.let { dependsOn(it) }
-      tasks.findByName("runKtlintCheckOverAndroidMainSourceSet")?.let { dependsOn(it) }
-      tasks.findByName("runKtlintCheckOverDesktopMainSourceSet")?.let { dependsOn(it) }
-      tasks.findByName("runKtlintCheckOverDesktopTestSourceSet")?.let { dependsOn(it) }
-      // Add detekt for all KMP modules
+      tasks.findByName("ktlintCheck")?.let { dependsOn(it) }
       tasks.findByName("detekt")?.let { dependsOn(it) }
-      // Add desktop tests for all KMP modules that have them
       tasks.findByName("desktopTest")?.let { dependsOn(it) }
     }
   }
-  // Android app checks
   dependsOn(":androidApp:ktlintCheck", ":androidApp:detekt", ":androidApp:compileDebugKotlin")
-  // Desktop app checks
   dependsOn(":desktopApp:ktlintCheck", ":desktopApp:detekt", ":desktopApp:compileKotlinDesktop")
+  dependsOn(":webApp:ktlintCheck", ":webApp:detekt", ":webApp:compileKotlinWasmJs")
 }
 
 tasks.register<Copy>("installGitHooks") {

@@ -50,8 +50,8 @@ import space.be1ski.vibits.feature.sync.data.SyncEngineImpl
 import space.be1ski.vibits.feature.sync.data.SyncQueueRepositoryImpl
 import space.be1ski.vibits.feature.sync.data.platform.SyncOperationStore
 import space.be1ski.vibits.feature.sync.data.platform.createSyncOperationStore
-import space.be1ski.vibits.feature.sync.domain.repository.OfflineFirstMemoOperations
 import space.be1ski.vibits.feature.sync.domain.SyncEngine
+import space.be1ski.vibits.feature.sync.domain.repository.OfflineFirstMemoOperations
 import space.be1ski.vibits.feature.sync.domain.repository.SyncQueueRepository
 
 @Suppress("TooManyFunctions")

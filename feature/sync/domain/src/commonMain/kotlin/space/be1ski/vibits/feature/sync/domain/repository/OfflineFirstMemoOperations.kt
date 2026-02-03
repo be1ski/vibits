@@ -16,7 +16,10 @@ interface OfflineFirstMemoOperations {
   /**
    * Updates a memo locally and queues it for sync.
    */
-  suspend fun updateMemoLocally(name: String, content: String): Memo
+  suspend fun updateMemoLocally(
+    name: String,
+    content: String,
+  ): Memo
 
   /**
    * Deletes a memo locally and queues it for sync.
