@@ -273,10 +273,10 @@ We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
 
 ## Build, Test, and Development Commands
 
-- `./gradlew verifyAll` — run all checks (ktlint, detekt, compile, tests). Requires macOS for native.
-- `./gradlew verify` — run JVM-only checks (Linux-safe).
-- `./gradlew verifyNative` — run native/iOS checks (requires macOS).
-- `./gradlew installGitHooks` — install pre-commit hook that runs `verifyAll`.
+- `./gradlew checkAll` — run all checks (ktlint, detekt, compile, tests). Requires macOS for iOS.
+- `./gradlew checkJvm` — run JVM-only checks (Linux-safe).
+- `./gradlew checkIos` — run iOS checks (requires macOS).
+- `./gradlew installGitHooks` — install pre-commit hook that runs `checkAll`.
 - `./gradlew :desktopApp:run` — run the desktop app locally.
 - `./gradlew :androidApp:installDebug` — build and install the Android app on a device/emulator.
 
@@ -334,7 +334,7 @@ We follow TDD for business logic and aim for high coverage.
 
 ### Running Tests
 
-- Run all checks: `./gradlew verifyAll` (includes ktlint, detekt, compile, all module tests)
+- Run all checks: `./gradlew checkAll` (includes ktlint, detekt, compile, all module tests)
 - Run tests for specific module: `./gradlew :feature:habits:presentation:desktopTest`
 - Coverage reports:
   - XML (aggregated): `./gradlew koverXmlReport` (outputs to `build/reports/kover/report.xml`)
@@ -411,7 +411,7 @@ Kover is applied to all modules via `vibits.kmp.library` convention plugin and g
 **Pre-commit hook handles all checks automatically.** Install it once with `./gradlew installGitHooks`.
 
 - `./gradlew ktlintFormat` — auto-fix code style issues before committing.
-- `./gradlew verifyAll` — manually run all checks if needed.
+- `./gradlew checkAll` — manually run all checks if needed.
 
 **Never use `@Suppress` for new code** — always refactor to fix the underlying issue. When touching existing code that triggers lint warnings, refactor it immediately rather than suppressing. Only use `@Suppress` when the lint rule fundamentally doesn't apply (e.g., `LongParameterList` for DI containers, `ktlint:standard:function-naming` for factory functions).
 
@@ -432,15 +432,15 @@ Kover is applied to all modules via `vibits.kmp.library` convention plugin and g
   - Test plan with checkboxes only if relevant
   - **NO unnecessary headers, footers, badges, or promotional content**
   - Keep it clean and to the point
-- Pre-commit hook runs `verifyAll` automatically — no manual checks needed.
+- Pre-commit hook runs `checkAll` automatically — no manual checks needed.
 
 ## CI/CD
 
 ### CI Workflow
 
 Runs automatically on push to `main` and on pull requests:
-- `verify` job (Linux): runs `./gradlew verify` (detekt, compile, tests)
-- `verify-native` job (macOS): runs `./gradlew verifyNative` (iOS compile, ktlint)
+- `check-jvm` job (Linux): runs `./gradlew checkJvm` (detekt, compile, tests)
+- `check-ios` job (macOS): runs `./gradlew checkIos` (iOS compile, ktlint)
 - Generates coverage report and uploads to Codecov
 - Uploads test results as artifacts
 

@@ -2,7 +2,7 @@
 
 echo "Running pre-commit checks..."
 
-./gradlew verifyAll --quiet
+./gradlew checkAll --quiet
 
 if [ $? -ne 0 ]; then
   echo ""
