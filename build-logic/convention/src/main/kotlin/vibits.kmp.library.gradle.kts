@@ -9,6 +9,8 @@ kotlin {
     namespace = project.androidNamespace()
     compileSdk = 36
     minSdk = 31
+    // Required for Compose Multiplatform resources to work with the new KMP Android plugin
+    androidResources.enable = true
   }
 
   jvm("desktop")
