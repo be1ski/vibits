@@ -5,13 +5,12 @@ plugins {
 
 kotlin {
   sourceSets {
-    val roomMain =
-      create("roomMain") {
-        dependsOn(commonMain.get())
-        dependencies {
-          implementation(libs.androidx.room.runtime)
-        }
+    val nonWasmMain by creating {
+      dependsOn(commonMain.get())
+      dependencies {
+        implementation(libs.androidx.room.runtime)
       }
+    }
 
     commonMain {
       dependencies {
@@ -38,18 +37,18 @@ kotlin {
     }
 
     androidMain {
-      dependsOn(roomMain)
+      dependsOn(nonWasmMain)
     }
 
     desktopMain {
-      dependsOn(roomMain)
+      dependsOn(nonWasmMain)
       dependencies {
         implementation(libs.androidx.sqlite.bundled)
       }
     }
 
     iosMain {
-      dependsOn(roomMain)
+      dependsOn(nonWasmMain)
       dependencies {
         implementation(libs.androidx.sqlite.bundled)
       }
