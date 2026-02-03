@@ -22,7 +22,8 @@ kotlin {
         implementation(libs.compose.material3)
         implementation(libs.compose.runtime)
         implementation(libs.compose.ui)
-        implementation(project(":shared"))
+        implementation(libs.kotlinx.browser)
+        implementation(project(":feature:main"))
       }
     }
   }
