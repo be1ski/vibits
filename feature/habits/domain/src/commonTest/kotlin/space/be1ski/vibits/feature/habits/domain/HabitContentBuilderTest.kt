@@ -1,0 +1,222 @@
+package space.be1ski.vibits.feature.habits.domain
+
+import kotlinx.datetime.LocalDate
+import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
+import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
+import space.be1ski.vibits.feature.habits.domain.model.HabitStatus
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+
+class HabitContentBuilderTest {
+  // buildDailyContent tests
+
+  @Test
+  fun `when selections have done habits then includes them`() {
+    val date = LocalDate(2024, 1, 15)
+    val config =
+      listOf(
+        HabitConfig("#habits/exercise", "Exercise"),
+        HabitConfig("#habits/reading", "Reading"),
+      )
+    val selections =
+      mapOf(
+        "#habits/exercise" to true,
+        "#habits/reading" to false,
+      )
+
+    val result = buildDailyContent(date, config, selections)
+
+    assertTrue(result.contains("#habits/daily 2024-01-15"))
+    assertTrue(result.contains("#habits/exercise"))
+    assertTrue(!result.contains("#habits/reading"))
+  }
+
+  @Test
+  fun `when no habits selected then only has header`() {
+    val date = LocalDate(2024, 1, 15)
+    val config = listOf(HabitConfig("#habits/exercise", "Exercise"))
+    val selections = mapOf("#habits/exercise" to false)
+
+    val result = buildDailyContent(date, config, selections)
+
+    assertEquals("#habits/daily 2024-01-15\n\n", result)
+  }
+
+  @Test
+  fun `when all habits selected then includes all`() {
+    val date = LocalDate(2024, 1, 15)
+    val config =
+      listOf(
+        HabitConfig("#habits/exercise", "Exercise"),
+        HabitConfig("#habits/reading", "Reading"),
+      )
+    val selections =
+      mapOf(
+        "#habits/exercise" to true,
+        "#habits/reading" to true,
+      )
+
+    val result = buildDailyContent(date, config, selections)
+
+    assertTrue(result.contains("#habits/exercise"))
+    assertTrue(result.contains("#habits/reading"))
+  }
+
+  // buildHabitsEditorSelections tests
+
+  @Test
+  fun `when day has habit statuses then builds selections from them`() {
+    val day =
+      ContributionDay(
+        date = LocalDate(2024, 1, 15),
+        count = 1,
+        totalHabits = 2,
+        completionRatio = 0.5f,
+        habitStatuses =
+          listOf(
+            HabitStatus("#habits/exercise", "Exercise", done = true),
+            HabitStatus("#habits/reading", "Reading", done = false),
+          ),
+        dailyMemo = null,
+        inRange = true,
+      )
+    val config =
+      listOf(
+        HabitConfig("#habits/exercise", "Exercise"),
+        HabitConfig("#habits/reading", "Reading"),
+      )
+
+    val result = buildHabitsEditorSelections(day, config)
+
+    assertEquals(true, result["#habits/exercise"])
+    assertEquals(false, result["#habits/reading"])
+  }
+
+  @Test
+  fun `when config is empty then uses day statuses`() {
+    val day =
+      ContributionDay(
+        date = LocalDate(2024, 1, 15),
+        count = 1,
+        totalHabits = 1,
+        completionRatio = 1f,
+        habitStatuses =
+          listOf(
+            HabitStatus("#habits/exercise", "Exercise", done = true),
+          ),
+        dailyMemo = null,
+        inRange = true,
+      )
+
+    val result = buildHabitsEditorSelections(day, emptyList())
+
+    assertEquals(true, result["#habits/exercise"])
+  }
+
+  @Test
+  fun `when config has habit not in day then defaults to false`() {
+    val day =
+      ContributionDay(
+        date = LocalDate(2024, 1, 15),
+        count = 0,
+        totalHabits = 0,
+        completionRatio = 0f,
+        habitStatuses = emptyList(),
+        dailyMemo = null,
+        inRange = true,
+      )
+    val config = listOf(HabitConfig("#habits/new_habit", "New Habit"))
+
+    val result = buildHabitsEditorSelections(day, config)
+
+    assertEquals(false, result["#habits/new_habit"])
+  }
+
+  // buildHabitsConfigContentFromList tests
+
+  @Test
+  fun `when entries exist then builds config content with header`() {
+    val entries =
+      listOf(
+        HabitConfig("#habits/exercise", "Exercise", 0xFF4CAF50L),
+        HabitConfig("#habits/reading", "Reading", 0xFF2196F3L),
+      )
+
+    val result = buildHabitsConfigContentFromList(entries)
+
+    assertTrue(result.startsWith("#habits/config\n\n"))
+    assertTrue(result.contains("Exercise | #habits/exercise | #4CAF50"))
+    assertTrue(result.contains("Reading | #habits/reading | #2196F3"))
+  }
+
+  @Test
+  fun `when entries empty then returns only header`() {
+    val result = buildHabitsConfigContentFromList(emptyList())
+
+    assertEquals("#habits/config\n\n", result)
+  }
+
+  // extractDateFromTrackingContent tests
+
+  @Test
+  fun `when valid tracking memo then extracts date`() {
+    val content = "#habits/daily 2024-01-15\n#habits/exercise\n#habits/reading"
+
+    val result = extractDateFromTrackingContent(content)
+
+    assertEquals(LocalDate(2024, 1, 15), result)
+  }
+
+  @Test
+  fun `when tracking memo with only date then extracts date`() {
+    val content = "#habits/daily 2024-12-31"
+
+    val result = extractDateFromTrackingContent(content)
+
+    assertEquals(LocalDate(2024, 12, 31), result)
+  }
+
+  @Test
+  fun `when invalid date format then returns null`() {
+    val content = "#habits/daily not-a-date\n#habits/exercise"
+
+    val result = extractDateFromTrackingContent(content)
+
+    assertEquals(null, result)
+  }
+
+  @Test
+  fun `when empty content then returns null`() {
+    val result = extractDateFromTrackingContent("")
+
+    assertEquals(null, result)
+  }
+
+  @Test
+  fun `when non-tracking content then returns null`() {
+    val content = "Just a regular memo"
+
+    val result = extractDateFromTrackingContent(content)
+
+    assertEquals(null, result)
+  }
+
+  @Test
+  fun `when alternative daily tag then returns null`() {
+    val content = "#daily 2024-01-15\n#habits/exercise"
+
+    val result = extractDateFromTrackingContent(content)
+
+    assertEquals(null, result)
+  }
+
+  @Test
+  fun `when date on second line then returns null`() {
+    val content = "Some text\n#habits/daily 2024-01-15"
+
+    val result = extractDateFromTrackingContent(content)
+
+    assertEquals(null, result)
+  }
+}

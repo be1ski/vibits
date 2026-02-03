@@ -1,0 +1,89 @@
+package space.be1ski.vibits.feature.main.view
+
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import org.jetbrains.compose.resources.stringResource
+import space.be1ski.vibits.core.strings.generated.Res
+import space.be1ski.vibits.core.strings.generated.action_cancel
+import space.be1ski.vibits.core.strings.generated.action_create
+import space.be1ski.vibits.core.strings.generated.action_save
+import space.be1ski.vibits.core.strings.generated.hint_write_memo
+import space.be1ski.vibits.core.strings.generated.title_edit_memo
+import space.be1ski.vibits.core.strings.generated.title_new_memo
+import space.be1ski.vibits.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.feature.memos.presentation.state.MemosState
+
+@Composable
+internal fun MemoCreateDialog(
+  state: MemosState,
+  dispatch: (MemosAction) -> Unit,
+) {
+  if (!state.showCreateDialog) {
+    return
+  }
+  AlertDialog(
+    onDismissRequest = { dispatch(MemosAction.CreateDialog.DismissCreateDialog) },
+    title = { Text(stringResource(Res.string.title_new_memo)) },
+    text = {
+      TextField(
+        value = state.createDialogContent,
+        onValueChange = { dispatch(MemosAction.CreateDialog.UpdateCreateContent(it)) },
+        placeholder = { Text(stringResource(Res.string.hint_write_memo)) },
+        modifier = Modifier.fillMaxWidth(),
+      )
+    },
+    confirmButton = {
+      Button(
+        onClick = { dispatch(MemosAction.CreateDialog.ConfirmCreateDialog) },
+        enabled = state.createDialogContent.trim().isNotBlank(),
+      ) {
+        Text(stringResource(Res.string.action_create))
+      }
+    },
+    dismissButton = {
+      TextButton(onClick = { dispatch(MemosAction.CreateDialog.DismissCreateDialog) }) {
+        Text(stringResource(Res.string.action_cancel))
+      }
+    },
+  )
+}
+
+@Composable
+internal fun MemoEditDialog(
+  state: MemosState,
+  dispatch: (MemosAction) -> Unit,
+) {
+  if (!state.showEditDialog) {
+    return
+  }
+  AlertDialog(
+    onDismissRequest = { dispatch(MemosAction.EditDialog.DismissEditDialog) },
+    title = { Text(stringResource(Res.string.title_edit_memo)) },
+    text = {
+      TextField(
+        value = state.editDialogContent,
+        onValueChange = { dispatch(MemosAction.EditDialog.UpdateEditContent(it)) },
+        modifier = Modifier.fillMaxWidth(),
+      )
+    },
+    confirmButton = {
+      Button(
+        onClick = { dispatch(MemosAction.EditDialog.ConfirmEditDialog) },
+        enabled = state.editDialogContent.trim().isNotBlank(),
+      ) {
+        Text(stringResource(Res.string.action_save))
+      }
+    },
+    dismissButton = {
+      TextButton(onClick = { dispatch(MemosAction.EditDialog.DismissEditDialog) }) {
+        Text(stringResource(Res.string.action_cancel))
+      }
+    },
+  )
+}

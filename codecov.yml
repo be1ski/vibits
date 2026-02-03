@@ -8,6 +8,25 @@ coverage:
       default:
         target: 93%
 
+# Single source of truth for coverage exclusions
+# These match the patterns previously in kover config
+ignore:
+  # Package-based exclusions
+  - "**/di/**"
+  - "**/generated/**"
+  - "**/internal/**"
+  - "**/platform/**"
+  - "**/room/**"
+  - "**/test/**"
+  - "**/ui/**"
+  - "**/view/**"
+  # File-based exclusions (TEA architecture classes)
+  - "**/*Action.kt"
+  - "**/*Dto.kt"
+  - "**/*Effect.kt"
+  - "**/*Features.kt"
+  - "**/*State.kt"
+
 comment:
   layout: "reach, diff, flags, files"
   behavior: default

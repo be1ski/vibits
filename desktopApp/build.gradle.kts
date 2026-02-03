@@ -1,5 +1,3 @@
-import org.gradle.api.tasks.JavaExec
-
 val appVersion: String = providers.gradleProperty("appVersion").getOrElse("1.0.0")
 
 plugins {
@@ -16,7 +14,7 @@ kotlin {
       dependencies {
         implementation(compose.desktop.currentOs)
         implementation(libs.kotlinx.coroutines.swing)
-        implementation(project(":shared"))
+        implementation(project(":feature:main"))
       }
     }
   }

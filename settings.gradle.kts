@@ -1,4 +1,5 @@
 pluginManagement {
+  includeBuild("build-logic")
   repositories {
     google {
       content {
@@ -20,7 +21,44 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Vibits"
-include(":androidApp")
-include(":desktopApp")
-include(":webApp")
-include(":shared")
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+include(
+  ":androidApp",
+  ":desktopApp",
+  ":webApp",
+
+  ":feature:main",
+
+  ":core:platform",
+  ":core:elm",
+  ":core:elm:test",
+  ":core:ui",
+  ":core:strings",
+
+  ":feature:auth:domain",
+  ":feature:auth:data",
+
+  ":feature:memos:domain",
+  ":feature:memos:data",
+  ":feature:memos:presentation",
+
+  ":feature:habits:domain",
+  ":feature:habits:presentation",
+
+  ":feature:mode:domain",
+  ":feature:mode:data",
+  ":feature:mode:presentation",
+
+  ":feature:settings:domain",
+  ":feature:settings:data",
+  ":feature:settings:presentation",
+
+  ":feature:onboarding:domain",
+  ":feature:onboarding:data",
+  ":feature:onboarding:presentation",
+
+  ":feature:sync:domain",
+  ":feature:sync:data",
+)

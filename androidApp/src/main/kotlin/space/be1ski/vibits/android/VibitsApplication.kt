@@ -1,7 +1,7 @@
 package space.be1ski.vibits.android
 
 import android.app.Application
-import space.be1ski.vibits.shared.app.data.AndroidContextHolder
+import space.be1ski.vibits.core.platform.app.AndroidContextHolder
 
 /**
  * Android Application that initializes shared context.

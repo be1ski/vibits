@@ -1,0 +1,20 @@
+package space.be1ski.vibits.core.platform.app
+
+import java.nio.file.Paths
+
+/**
+ * Desktop implementation.
+ */
+actual class AppDetailsProvider {
+  actual fun load(): AppDetails {
+    val home = System.getProperty("user.home")
+    val offlinePath = Paths.get(home, "Documents", "Vibits", "memos.json").toString()
+    return AppDetails(
+      version = DesktopStoragePaths.appVersion(),
+      environment = DesktopStoragePaths.environmentLabel(),
+      credentialsStore = "Preferences(${DesktopStoragePaths.preferencesNode()})",
+      memosDatabase = DesktopStoragePaths.databasePath(),
+      offlineStorage = offlinePath,
+    )
+  }
+}
