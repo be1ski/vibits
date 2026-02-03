@@ -24,11 +24,11 @@ Habit tracker powered by [Memos](https://github.com/usememos/memos). Kotlin Mult
 ## Build
 
 ```
-./gradlew verifyAll                                  # lint, detekt, compile, tests (macOS)
-./gradlew verify                                     # JVM checks only (Linux)
+./gradlew checkAll                                   # lint, detekt, compile, tests (macOS)
+./gradlew checkJvm                                   # JVM checks only (Linux)
 ./gradlew koverXmlReport                             # coverage report
 ./gradlew :androidApp:assembleRelease                # Android APK
-./gradlew :iosFramework:assembleSharedReleaseXCFramework  # iOS framework
+./gradlew :iosApp:framework:assembleSharedReleaseXCFramework  # iOS framework
 ./gradlew :desktopApp:packageDmg                     # macOS DMG
 ./gradlew :desktopApp:packageMsi                     # Windows MSI
 ```
@@ -40,28 +40,15 @@ Habit tracker powered by [Memos](https://github.com/usememos/memos). Kotlin Mult
 - **macOS DMG / Windows MSI** → GitHub Releases
 - **Web** → GitHub Releases + GitHub Pages
 
-## Modules
+## Structure
 
 ```
-core/
-  elm/           — TEA architecture
-  platform/      — Platform abstractions
-  strings/       — Localized strings
-  ui/            — Compose theme & components
-feature/
-  auth/          — Authentication
-  habits/        — Habits tracking
-  main/          — App graph & DI
-  memos/         — Memos API
-  mode/          — App mode (demo/online)
-  onboarding/    — Onboarding flow
-  settings/      — Settings
-  sync/          — Sync engine
-androidApp/      — Android entry point
-desktopApp/      — Desktop entry point
-iosFramework/    — iOS XCFramework
-iosApp/          — iOS Xcode project
-webApp/          — Web entry (WASM)
+core/       — shared infrastructure (TEA, UI, strings, platform)
+feature/    — feature modules
+androidApp/ — Android entry point
+desktopApp/ — Desktop entry point
+iosApp/     — iOS entry point (Xcode app + framework)
+webApp/     — Web entry point (WASM)
 ```
 
 ## Architecture
