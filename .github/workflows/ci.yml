@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  verify:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,8 +23,8 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
 
-      - name: Run checks (Android, Desktop, Web)
-        run: ./gradlew checkAllJvm
+      - name: Run checks
+        run: ./gradlew verify
 
       - name: Generate coverage report
         run: ./gradlew koverXmlReport
@@ -44,7 +44,7 @@ jobs:
           path: "**/build/reports/tests/desktopTest/"
           retention-days: 7
 
-  ios-check:
+  verify-native:
     runs-on: macos-latest
 
     steps:
@@ -60,5 +60,5 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
 
-      - name: Check iOS compilation
-        run: ./gradlew checkIos
+      - name: Run native checks
+        run: ./gradlew verifyNative

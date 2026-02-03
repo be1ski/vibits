@@ -62,7 +62,7 @@ jobs:
             echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
           fi
 
-  check-jvm:
+  verify:
     runs-on: ubuntu-latest
     needs: [resolve-version]
 
@@ -79,10 +79,10 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
 
-      - name: Run JVM checks
-        run: ./gradlew checkAllJvm
+      - name: Run checks
+        run: ./gradlew verify
 
-  check-ios:
+  verify-native:
     runs-on: macos-latest
     needs: [resolve-version]
 
@@ -99,12 +99,12 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
 
-      - name: Run iOS checks
-        run: ./gradlew checkIos
+      - name: Run native checks
+        run: ./gradlew verifyNative
 
   build-apk:
     runs-on: ubuntu-latest
-    needs: [check-jvm, check-ios, resolve-version]
+    needs: [verify, verify-native, resolve-version]
 
     steps:
       - name: Checkout
@@ -158,7 +158,7 @@ jobs:
 
   build-dmg:
     runs-on: macos-latest
-    needs: [check-jvm, check-ios, resolve-version]
+    needs: [verify, verify-native, resolve-version]
 
     steps:
       - name: Checkout
@@ -186,7 +186,7 @@ jobs:
 
   build-msi:
     runs-on: windows-latest
-    needs: [check-jvm, check-ios, resolve-version]
+    needs: [verify, verify-native, resolve-version]
 
     steps:
       - name: Checkout
@@ -215,7 +215,7 @@ jobs:
 
   build-web:
     runs-on: ubuntu-latest
-    needs: [check-jvm, check-ios, resolve-version]
+    needs: [verify, verify-native, resolve-version]
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
