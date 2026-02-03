@@ -122,32 +122,4 @@ dependencies {
   }
 }
 
-kover {
-  reports {
-    filters {
-      excludes {
-        classes(
-          "*State",
-          "*State$*",
-          "*Action",
-          "*Action$*",
-          "*Effect",
-          "*Effect$*",
-          "*Features",
-          "*Features$*",
-          "*.di.*",
-          "*.generated.*",
-          "*.platform.*",
-          "*.internal.*",
-          "*.room.*",
-          "*.test.*",
-          "*LogTags",
-          "*.ui.*",
-          "*.view.*",
-          "*Dto",
-          "*Dto$*",
-        )
-      }
-    }
-  }
-}
+kover {}
