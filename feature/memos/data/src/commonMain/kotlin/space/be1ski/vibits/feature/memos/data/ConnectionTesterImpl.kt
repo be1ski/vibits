@@ -1,6 +1,5 @@
 package space.be1ski.vibits.feature.memos.data
 
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.core.logging.Log
@@ -12,7 +11,6 @@ private const val TAG = "ConnectionTester"
 
 @Inject
 @SingleIn(AppScope::class)
-@ContributesBinding(AppScope::class)
 class ConnectionTesterImpl(
   private val memosApi: MemosApi,
 ) : ConnectionTester {

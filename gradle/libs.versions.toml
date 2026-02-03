@@ -18,8 +18,6 @@ datetime = "0.7.1"
 detekt = "1.23.8"
 kover = "0.9.5"
 metro = "0.10.2"
-# TODO: Update to 2.3.20+ to enable Metro cross-module bindings for iOS/WasmJS
-# See: https://github.com/ZacSweers/metro/issues/460, build.gradle.kts checkAll task
 kotlin = "2.3.0"
 ksp = "2.3.5"
 ktor = "3.4.0"

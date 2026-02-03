@@ -1,6 +1,5 @@
 package space.be1ski.vibits.feature.auth.data
 
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.core.logging.Log
@@ -17,7 +16,6 @@ private const val URL_LOG_MAX_LENGTH = 50
  */
 @Inject
 @SingleIn(AppScope::class)
-@ContributesBinding(AppScope::class)
 class CredentialsRepositoryImpl(
   private val credentialsStore: CredentialsStore,
 ) : CredentialsRepository {

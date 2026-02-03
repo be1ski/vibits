@@ -27,6 +27,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(
   ":androidApp",
   ":desktopApp",
+  ":iosFramework",
   ":webApp",
 
   ":feature:main",

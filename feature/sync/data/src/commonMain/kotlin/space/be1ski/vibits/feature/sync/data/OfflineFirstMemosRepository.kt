@@ -1,6 +1,5 @@
 package space.be1ski.vibits.feature.sync.data
 
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.sync.Mutex
@@ -27,7 +26,6 @@ private val TAG = SyncLogTags.OFFLINE_FIRST_MEMOS
  */
 @Inject
 @SingleIn(AppScope::class)
-@ContributesBinding(AppScope::class)
 class OfflineFirstMemosRepository(
   private val memoCache: MemoCache,
   private val syncQueue: SyncQueueRepository,
