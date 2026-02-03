@@ -4,10 +4,28 @@ Vibits is a habit tracker powered by Memos, built with Kotlin Multiplatform (KMP
 
 ## Project Structure & Module Organization
 
-- `shared/` — shared UI, models, networking, DI, and platform abstractions.
-- `androidApp/` — Android entry point and app manifest.
-- `desktopApp/` — Compose Desktop entry point.
-- `gradle/` and root Gradle files — build configuration and wrapper.
+```
+core/
+  elm/           — TEA architecture foundation
+  elm/test/      — Test utilities for reducers
+  platform/      — Platform abstractions (expect/actual)
+  strings/       — Localized string resources
+  ui/            — Compose UI components and theme
+feature/
+  auth/          — Authentication (domain, data)
+  habits/        — Habits tracking (domain, presentation)
+  main/          — App graph, DI wiring, coordinator
+  memos/         — Memos API (domain, data, presentation)
+  mode/          — App mode selection (domain, data, presentation)
+  onboarding/    — Onboarding flow (domain, data, presentation)
+  settings/      — Settings (domain, data, presentation)
+  sync/          — Sync engine (domain, data)
+androidApp/      — Android entry point
+desktopApp/      — Desktop entry point
+iosApp/          — iOS wrapper
+webApp/          — Web entry (WASM)
+build-logic/     — Convention plugins (vibits.kmp.*)
+```
 
 Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if any) live under module `src/.../res`.
 
@@ -255,8 +273,10 @@ We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
 
 ## Build, Test, and Development Commands
 
-- `./gradlew checkAll` — run all checks (ktlint, detekt, compile, tests).
-- `./gradlew installGitHooks` — install pre-commit hook that runs `checkAll`.
+- `./gradlew verifyAll` — run all checks (ktlint, detekt, compile, tests). Requires macOS for native.
+- `./gradlew verify` — run JVM-only checks (Linux-safe).
+- `./gradlew verifyNative` — run native/iOS checks (requires macOS).
+- `./gradlew installGitHooks` — install pre-commit hook that runs `verifyAll`.
 - `./gradlew :desktopApp:run` — run the desktop app locally.
 - `./gradlew :androidApp:installDebug` — build and install the Android app on a device/emulator.
 
@@ -314,16 +334,17 @@ We follow TDD for business logic and aim for high coverage.
 
 ### Running Tests
 
-- Run shared unit tests: `./gradlew :shared:desktopTest`
-- Run iOS simulator tests: `./gradlew :shared:iosSimulatorArm64Test`
+- Run all checks: `./gradlew verifyAll` (includes ktlint, detekt, compile, all module tests)
+- Run tests for specific module: `./gradlew :feature:habits:presentation:desktopTest`
 - Coverage reports:
-  - HTML: `./gradlew :shared:koverHtmlReport` (opens at `shared/build/reports/kover/html/index.html`)
-  - XML (for CI): `./gradlew :shared:koverXmlReport` (outputs to `shared/build/reports/kover/report.xml`)
+  - XML (aggregated): `./gradlew koverXmlReport` (outputs to `build/reports/kover/report.xml`)
+  - HTML (per module): `./gradlew :feature:memos:presentation:koverHtmlReport`
 
 ### Test Organization
 
-- Unit tests live in `shared/src/commonTest` for shared KMP logic.
-- Desktop-specific tests in `shared/src/desktopTest`.
+- Unit tests live in each module's `src/commonTest/kotlin/...` directory.
+- Desktop-specific tests in `src/desktopTest/kotlin/...`.
+- Test utilities in `core/elm/test` (package `*.test.*`, excluded from coverage).
 - Android-specific tests belong under `androidApp/src/test` or `androidApp/src/androidTest`.
 - Test names use backticks with `when ... then ...` phrasing.
 - **Hardcode strings in tests.** Use literal string values instead of constants like `PostTags.HABITS_CONFIG`. Tests should verify real behavior with real data, not automatically adjust when constants change.
@@ -365,39 +386,32 @@ We maintain **~95% test coverage** using Kover. Coverage is automatically measur
 
 Check coverage locally:
 ```bash
-./gradlew :shared:koverHtmlReport
-open shared/build/reports/kover/html/index.html
+./gradlew koverXmlReport
+# Aggregated report at build/reports/kover/report.xml
 ```
 
 ### Coverage Configuration
 
-**Kover is the single source of truth** for coverage exclusions. Configure exclusions in `shared/build.gradle.kts`:
+**Codecov is the single source of truth** for coverage exclusions. Configure in `codecov.yml`:
 
-```kotlin
-kover {
-  reports {
-    filters {
-      excludes {
-        classes(
-          "*.view.*",      // View layer
-          "*.ui.*",        // UI components
-          "*State",        // TEA State classes
-          // etc.
-        )
-      }
-    }
-  }
-}
+```yaml
+ignore:
+  - "**/di/**"
+  - "**/view/**"
+  - "**/ui/**"
+  - "**/platform/**"
+  - "**/*State.kt"
+  # etc.
 ```
 
-**Codecov** (`codecov.yml`) only checks overall project coverage (90% target), not per-patch coverage. This prevents false failures when adding UI code or other excluded files. Codecov receives coverage data from Kover XML.
+Kover is applied to all modules via `vibits.kmp.library` convention plugin and generates full coverage reports without exclusions. Codecov applies ignore rules when calculating coverage percentage.
 
 ## Linting & Formatting
 
 **Pre-commit hook handles all checks automatically.** Install it once with `./gradlew installGitHooks`.
 
 - `./gradlew ktlintFormat` — auto-fix code style issues before committing.
-- `./gradlew checkAll` — manually run all checks if needed.
+- `./gradlew verifyAll` — manually run all checks if needed.
 
 **Never use `@Suppress` for new code** — always refactor to fix the underlying issue. When touching existing code that triggers lint warnings, refactor it immediately rather than suppressing. Only use `@Suppress` when the lint rule fundamentally doesn't apply (e.g., `LongParameterList` for DI containers, `ktlint:standard:function-naming` for factory functions).
 
@@ -418,14 +432,15 @@ kover {
   - Test plan with checkboxes only if relevant
   - **NO unnecessary headers, footers, badges, or promotional content**
   - Keep it clean and to the point
-- Pre-commit hook runs `checkAll` automatically — no manual checks needed.
+- Pre-commit hook runs `verifyAll` automatically — no manual checks needed.
 
 ## CI/CD
 
 ### CI Workflow
 
 Runs automatically on push to `main` and on pull requests:
-- Runs `./gradlew checkAll` (ktlint, detekt, compile, tests)
+- `verify` job (Linux): runs `./gradlew verify` (detekt, compile, tests)
+- `verify-native` job (macOS): runs `./gradlew verifyNative` (iOS compile, ktlint)
 - Generates coverage report and uploads to Codecov
 - Uploads test results as artifacts
 

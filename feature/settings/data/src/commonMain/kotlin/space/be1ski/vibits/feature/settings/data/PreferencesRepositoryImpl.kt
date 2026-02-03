@@ -1,6 +1,5 @@
 package space.be1ski.vibits.feature.settings.data
 
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.core.logging.Log
@@ -18,7 +17,6 @@ private const val TAG = "Preferences"
  */
 @Inject
 @SingleIn(AppScope::class)
-@ContributesBinding(AppScope::class)
 class PreferencesRepositoryImpl(
   private val preferencesStore: PreferencesStore,
 ) : PreferencesRepository {

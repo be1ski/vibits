@@ -1,6 +1,5 @@
 package space.be1ski.vibits.feature.onboarding.data
 
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.core.logging.Log
@@ -15,7 +14,6 @@ private const val TAG = "Onboarding"
 
 @Inject
 @SingleIn(AppScope::class)
-@ContributesBinding(AppScope::class)
 class OnboardingRepositoryImpl(
   private val onboardingStore: OnboardingStore,
   private val presetsDataSource: HabitPresetsDataSource,
