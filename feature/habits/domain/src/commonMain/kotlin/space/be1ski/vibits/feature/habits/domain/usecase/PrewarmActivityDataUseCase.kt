@@ -8,10 +8,7 @@ import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.core.platform.date.currentLocalDate
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
-import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
-import space.be1ski.vibits.feature.habits.domain.model.ActivityWeekData
-import space.be1ski.vibits.feature.habits.domain.model.HabitsConfigEntry
-import space.be1ski.vibits.feature.habits.domain.model.SuccessRateData
+import space.be1ski.vibits.feature.habits.domain.model.PrewarmResult
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 
 class PrewarmActivityDataUseCase(
@@ -41,12 +38,3 @@ class PrewarmActivityDataUseCase(
     }
   }
 }
-
-data class PrewarmResult(
-  val range: ActivityRange,
-  val mode: ActivityMode,
-  val appMode: AppMode,
-  val weekData: ActivityWeekData,
-  val configTimeline: List<HabitsConfigEntry>,
-  val successRate: SuccessRateData?,
-)
