@@ -4,8 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.core.elm.EffectHandler
 import space.be1ski.vibits.core.elm.actions
 import space.be1ski.vibits.core.logging.Log
+import space.be1ski.vibits.feature.habits.domain.model.SaveDailyMemoResult
 import space.be1ski.vibits.feature.habits.domain.usecase.SaveDailyHabitMemoUseCase
-import space.be1ski.vibits.feature.habits.domain.usecase.SaveDailyMemoResult
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.memos.domain.model.isConfigTag
 import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
