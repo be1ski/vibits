@@ -4,6 +4,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.core.logging.Log
 import space.be1ski.vibits.core.platform.di.AppScope
+import space.be1ski.vibits.feature.auth.domain.model.requireFilled
 import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.feature.memos.data.mapper.MemoMapper
 import space.be1ski.vibits.feature.memos.data.platform.MemoCache
@@ -30,10 +31,7 @@ class MemosRepositoryImpl(
    * Loads memos from the server using stored credentials and paginated API calls.
    */
   override suspend fun listMemos(): List<Memo> {
-    val credentials = credentialsRepository.load()
-    val baseUrl = credentials.baseUrl.trim()
-    val token = credentials.token.trim()
-    check(baseUrl.isNotBlank() && token.isNotBlank()) { "Base URL and token are required." }
+    val (baseUrl, token) = credentialsRepository.load().requireFilled()
     val allMemos = mutableListOf<Memo>()
     val seenTokens = mutableSetOf<String>()
     var nextPageToken: String? = null
@@ -80,10 +78,7 @@ class MemosRepositoryImpl(
     name: String,
     content: String,
   ): Memo {
-    val credentials = credentialsRepository.load()
-    val baseUrl = credentials.baseUrl.trim()
-    val token = credentials.token.trim()
-    check(baseUrl.isNotBlank() && token.isNotBlank()) { "Base URL and token are required." }
+    val (baseUrl, token) = credentialsRepository.load().requireFilled()
     val dto =
       memosApi.updateMemo(
         baseUrl = baseUrl,
@@ -102,10 +97,7 @@ class MemosRepositoryImpl(
    */
   override suspend fun createMemo(content: String): Memo {
     Log.d(TAG, "Creating memo...")
-    val credentials = credentialsRepository.load()
-    val baseUrl = credentials.baseUrl.trim()
-    val token = credentials.token.trim()
-    check(baseUrl.isNotBlank() && token.isNotBlank()) { "Base URL and token are required." }
+    val (baseUrl, token) = credentialsRepository.load().requireFilled()
     val dto =
       memosApi.createMemo(
         baseUrl = baseUrl,
@@ -123,10 +115,7 @@ class MemosRepositoryImpl(
    */
   override suspend fun deleteMemo(name: String) {
     Log.d(TAG, "Deleting memo: $name")
-    val credentials = credentialsRepository.load()
-    val baseUrl = credentials.baseUrl.trim()
-    val token = credentials.token.trim()
-    check(baseUrl.isNotBlank() && token.isNotBlank()) { "Base URL and token are required." }
+    val (baseUrl, token) = credentialsRepository.load().requireFilled()
     memosApi.deleteMemo(
       baseUrl = baseUrl,
       token = token,
