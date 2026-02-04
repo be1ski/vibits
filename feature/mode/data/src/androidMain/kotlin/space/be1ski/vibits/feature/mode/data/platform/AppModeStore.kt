@@ -6,11 +6,13 @@ import space.be1ski.vibits.core.platform.app.AndroidContextHolder
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.mode.data.LocalAppMode
 
-actual class AppModeStore {
+actual fun createAppModeStore(): AppModeStore = AndroidAppModeStore()
+
+private class AndroidAppModeStore : AppModeStore {
   private val prefsName = "memos_app_mode"
   private val keyMode = "app_mode"
 
-  actual fun load(): LocalAppMode {
+  override fun load(): LocalAppMode {
     if (!AndroidContextHolder.isReady()) {
       return LocalAppMode(mode = AppMode.NOT_SELECTED)
     }
@@ -20,7 +22,7 @@ actual class AppModeStore {
     return LocalAppMode(mode = mode)
   }
 
-  actual fun save(mode: LocalAppMode) {
+  override fun save(mode: LocalAppMode) {
     if (!AndroidContextHolder.isReady()) {
       return
     }
