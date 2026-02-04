@@ -1,4 +1,5 @@
 package space.be1ski.vibits.feature.main.presentation
+
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import space.be1ski.vibits.core.elm.test.test
@@ -17,18 +18,18 @@ class AppReducerTest {
   private val testDate = LocalDate(2024, Month.MARCH, 15)
 
   @Test
-  fun `when SelectScreen then updates selected screen`() =
+  fun `when Navigation SelectScreen then updates selected screen`() =
     appReducer.test(AppState(periodStartDate = testDate)) {
-      send(AppAction.SelectScreen(Screen.STATS))
+      send(AppAction.Navigation.SelectScreen(Screen.STATS))
 
       assertState { selectedScreen == Screen.STATS }
       assertNoEffects()
     }
 
   @Test
-  fun `when SetHabitsTimeRangeTab then updates tab and emits save effect`() =
+  fun `when TimeRange SetHabitsTab then updates tab and emits save effect`() =
     appReducer.test(AppState(periodStartDate = testDate)) {
-      send(AppAction.SetHabitsTimeRangeTab(TimeRangeTab.MONTHS))
+      send(AppAction.TimeRange.SetHabitsTab(TimeRangeTab.MONTHS))
 
       assertState { habitsTimeRangeTab == TimeRangeTab.MONTHS }
       val effect = assertHasCommand<AppEffect.SaveHabitsTimeRangeTab>()
@@ -36,9 +37,9 @@ class AppReducerTest {
     }
 
   @Test
-  fun `when SetPostsTimeRangeTab then updates tab and emits save effect`() =
+  fun `when TimeRange SetPostsTab then updates tab and emits save effect`() =
     appReducer.test(AppState(periodStartDate = testDate)) {
-      send(AppAction.SetPostsTimeRangeTab(TimeRangeTab.QUARTERS))
+      send(AppAction.TimeRange.SetPostsTab(TimeRangeTab.QUARTERS))
 
       assertState { postsTimeRangeTab == TimeRangeTab.QUARTERS }
       val effect = assertHasCommand<AppEffect.SavePostsTimeRangeTab>()
@@ -46,47 +47,47 @@ class AppReducerTest {
     }
 
   @Test
-  fun `when SetPeriodStartDate then updates date`() =
+  fun `when TimeRange SetPeriodStartDate then updates date`() =
     appReducer.test(AppState(periodStartDate = testDate)) {
       val newDate = LocalDate(2024, Month.JUNE, 1)
 
-      send(AppAction.SetPeriodStartDate(newDate))
+      send(AppAction.TimeRange.SetPeriodStartDate(newDate))
 
       assertState { periodStartDate == newDate }
       assertNoEffects()
     }
 
   @Test
-  fun `when SetActivityRange then updates period start date from range`() =
+  fun `when TimeRange SetActivityRange then updates period start date from range`() =
     appReducer.test(AppState(periodStartDate = testDate)) {
       val range = ActivityRange.Month(2024, Month.JUNE)
 
-      send(AppAction.SetActivityRange(range))
+      send(AppAction.TimeRange.SetActivityRange(range))
 
       assertState { periodStartDate == LocalDate(2024, Month.JUNE, 1) }
       assertNoEffects()
     }
 
   @Test
-  fun `when ChangeHabitsTab then updates tab and adjusts date`() =
+  fun `when TimeRange ChangeHabitsTab then updates tab and adjusts date`() =
     appReducer.test(AppState(periodStartDate = testDate, habitsTimeRangeTab = TimeRangeTab.MONTHS)) {
-      send(AppAction.ChangeHabitsTab(oldTab = TimeRangeTab.MONTHS, newTab = TimeRangeTab.WEEKS))
+      send(AppAction.TimeRange.ChangeHabitsTab(oldTab = TimeRangeTab.MONTHS, newTab = TimeRangeTab.WEEKS))
 
       assertState { habitsTimeRangeTab == TimeRangeTab.WEEKS && periodStartDate == LocalDate(2024, Month.MARCH, 31) }
       assertHasCommand<AppEffect.SaveHabitsTimeRangeTab>()
     }
 
   @Test
-  fun `when ChangePostsTab then updates tab and adjusts date`() =
+  fun `when TimeRange ChangePostsTab then updates tab and adjusts date`() =
     appReducer.test(AppState(periodStartDate = testDate, postsTimeRangeTab = TimeRangeTab.YEARS)) {
-      send(AppAction.ChangePostsTab(oldTab = TimeRangeTab.YEARS, newTab = TimeRangeTab.QUARTERS))
+      send(AppAction.TimeRange.ChangePostsTab(oldTab = TimeRangeTab.YEARS, newTab = TimeRangeTab.QUARTERS))
 
       assertState { postsTimeRangeTab == TimeRangeTab.QUARTERS && periodStartDate == LocalDate(2024, Month.DECEMBER, 31) }
       assertHasCommand<AppEffect.SavePostsTimeRangeTab>()
     }
 
   @Test
-  fun `when ResetToHome on HABITS screen then resets date and tab`() =
+  fun `when TimeRange ResetToHome on HABITS screen then resets date and tab`() =
     appReducer.test(
       AppState(
         periodStartDate = testDate,
@@ -96,14 +97,14 @@ class AppReducerTest {
     ) {
       val today = LocalDate(2024, Month.JANUARY, 1)
 
-      send(AppAction.ResetToHome(today))
+      send(AppAction.TimeRange.ResetToHome(today))
 
       assertState { periodStartDate == today && habitsTimeRangeTab == TimeRangeTab.WEEKS }
       assertNoEffects()
     }
 
   @Test
-  fun `when ResetToHome on STATS screen then resets date and tab`() =
+  fun `when TimeRange ResetToHome on STATS screen then resets date and tab`() =
     appReducer.test(
       AppState(
         periodStartDate = testDate,
@@ -113,45 +114,45 @@ class AppReducerTest {
     ) {
       val today = LocalDate(2024, Month.JANUARY, 1)
 
-      send(AppAction.ResetToHome(today))
+      send(AppAction.TimeRange.ResetToHome(today))
 
       assertState { periodStartDate == today && postsTimeRangeTab == TimeRangeTab.WEEKS }
       assertNoEffects()
     }
 
   @Test
-  fun `when ResetToHome on FEED screen then resets only date`() =
+  fun `when TimeRange ResetToHome on FEED screen then resets only date`() =
     appReducer.test(AppState(periodStartDate = testDate, selectedScreen = Screen.FEED)) {
       val today = LocalDate(2024, Month.JANUARY, 1)
 
-      send(AppAction.ResetToHome(today))
+      send(AppAction.TimeRange.ResetToHome(today))
 
       assertState { periodStartDate == today }
       assertNoEffects()
     }
 
   @Test
-  fun `when SetAppMode then updates app mode`() =
+  fun `when Mode SetAppMode then updates app mode`() =
     appReducer.test(AppState(periodStartDate = testDate)) {
-      send(AppAction.SetAppMode(AppMode.ONLINE))
+      send(AppAction.Mode.SetAppMode(AppMode.ONLINE))
 
       assertState { appMode == AppMode.ONLINE }
       assertNoEffects()
     }
 
   @Test
-  fun `when MarkAutoLoaded then sets autoLoaded to true`() =
+  fun `when UI MarkAutoLoaded then sets autoLoaded to true`() =
     appReducer.test(AppState(periodStartDate = testDate, autoLoaded = false)) {
-      send(AppAction.MarkAutoLoaded)
+      send(AppAction.UI.MarkAutoLoaded)
 
       assertState { autoLoaded }
       assertNoEffects()
     }
 
   @Test
-  fun `when SetPostsListExpanded then updates expanded state`() =
+  fun `when UI SetPostsListExpanded then updates expanded state`() =
     appReducer.test(AppState(periodStartDate = testDate, postsListExpanded = false)) {
-      send(AppAction.SetPostsListExpanded(true))
+      send(AppAction.UI.SetPostsListExpanded(true))
 
       assertState { postsListExpanded }
       assertNoEffects()

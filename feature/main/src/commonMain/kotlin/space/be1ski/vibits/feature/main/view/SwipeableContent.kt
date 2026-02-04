@@ -149,7 +149,7 @@ private fun SwipeablePagerContent(
       val delta = page + minDelta
       val newRange = NavigateActivityRangeUseCase(currentRange, delta)
       if (newRange != currentActivityRange) {
-        onAppAction(AppAction.SetActivityRange(newRange))
+        onAppAction(AppAction.TimeRange.SetActivityRange(newRange))
         onHabitsAction(HabitsAction.Selection.ClearSelection)
       }
     }
@@ -216,7 +216,7 @@ private fun MemosTabContent(
         habitsState = habitsState,
         onHabitsAction = onHabitsAction,
         postsListExpanded = appState.postsListExpanded,
-        onPostsListExpandedChange = { onAppAction(AppAction.SetPostsListExpanded(it)) },
+        onPostsListExpandedChange = { onAppAction(AppAction.UI.SetPostsListExpanded(it)) },
       )
     Screen.FEED ->
       FeedScreen(
