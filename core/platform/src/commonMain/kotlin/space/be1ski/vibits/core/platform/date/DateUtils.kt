@@ -1,12 +1,10 @@
-package space.be1ski.vibits.feature.habits.domain.usecase
+package space.be1ski.vibits.core.platform.date
 
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.minus
-import space.be1ski.vibits.core.platform.date.FIRST_QUARTER_INDEX
-import space.be1ski.vibits.core.platform.date.MONTHS_IN_QUARTER
 
 /**
  * Returns the Monday of the week containing [date].

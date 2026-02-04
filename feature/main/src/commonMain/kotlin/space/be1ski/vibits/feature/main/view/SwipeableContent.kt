@@ -14,6 +14,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import space.be1ski.vibits.core.platform.date.quarterIndex
+import space.be1ski.vibits.core.platform.date.startOfWeek
 import space.be1ski.vibits.core.platform.isDesktop
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.date.DateFormatter
@@ -23,8 +25,6 @@ import space.be1ski.vibits.feature.habits.domain.parseConfigFromContent
 import space.be1ski.vibits.feature.habits.domain.usecase.CalculateActivityRangeDeltaUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.NavigateActivityRangeUseCase
-import space.be1ski.vibits.feature.habits.domain.usecase.quarterIndex
-import space.be1ski.vibits.feature.habits.domain.usecase.startOfWeek
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.feature.habits.presentation.view.StatsScreen
