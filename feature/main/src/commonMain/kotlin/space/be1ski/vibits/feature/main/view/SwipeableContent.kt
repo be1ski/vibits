@@ -14,8 +14,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import space.be1ski.vibits.core.platform.date.quarterIndex
-import space.be1ski.vibits.core.platform.date.startOfWeek
+import space.be1ski.vibits.core.date.quarterIndex
+import space.be1ski.vibits.core.date.startOfWeek
 import space.be1ski.vibits.core.platform.isDesktop
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.date.DateFormatter

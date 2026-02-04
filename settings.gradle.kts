@@ -32,11 +32,12 @@ include(
 
   ":feature:main",
 
-  ":core:platform",
   ":core:elm",
   ":core:elm:test",
-  ":core:ui",
+  ":core:platform",
   ":core:strings",
+  ":core:ui",
+  ":core:utils",
 
   ":feature:auth:domain",
   ":feature:auth:data",

@@ -11,6 +11,7 @@ kotlin {
         implementation(projects.core.platform)
         implementation(projects.core.strings)
         implementation(projects.core.ui)
+        implementation(projects.core.utils)
         implementation(projects.feature.habits.domain)
         implementation(projects.feature.memos.domain)
         implementation(libs.compose.resources)

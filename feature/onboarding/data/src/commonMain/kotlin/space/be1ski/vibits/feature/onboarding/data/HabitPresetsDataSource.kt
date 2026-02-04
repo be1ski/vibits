@@ -8,7 +8,7 @@ import space.be1ski.vibits.feature.habits.domain.model.DemoHabits
 import space.be1ski.vibits.feature.onboarding.domain.model.CUSTOM_PRESET_ID
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
 
-fun interface HabitPresetsDataSource {
+interface HabitPresetsDataSource {
   fun getPresets(): List<HabitPreset>
 }
 

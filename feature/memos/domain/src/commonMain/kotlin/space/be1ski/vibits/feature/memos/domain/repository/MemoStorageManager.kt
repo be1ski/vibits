@@ -3,7 +3,7 @@ package space.be1ski.vibits.feature.memos.domain.repository
 /**
  * Manages offline memo storage operations.
  */
-fun interface MemoStorageManager {
+interface MemoStorageManager {
   /**
    * Clears all memos from offline storage.
    */

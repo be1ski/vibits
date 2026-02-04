@@ -53,6 +53,7 @@ import space.be1ski.vibits.core.logging.Log
 import space.be1ski.vibits.core.platform.app.AppDetails
 import space.be1ski.vibits.core.platform.export.createFileExporter
 import space.be1ski.vibits.core.platform.locale.AppLanguage
+import space.be1ski.vibits.core.platform.logging.LogLevel
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_cancel
