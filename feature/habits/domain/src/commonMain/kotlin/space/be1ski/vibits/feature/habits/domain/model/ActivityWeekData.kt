@@ -1,8 +1,7 @@
 package space.be1ski.vibits.feature.habits.domain.model
 
 import kotlinx.datetime.LocalDate
-
-private const val LAST_SEVEN_DAYS = 7
+import space.be1ski.vibits.core.platform.date.DAYS_IN_WEEK
 
 /**
  * Fully prepared dataset for activity charts.
@@ -21,7 +20,7 @@ data class ActivityWeekData(
  */
 fun ActivityWeekData.lastSevenDays(): List<ContributionDay> {
   val days = weeks.flatMap { it.days }.filter { it.inRange }
-  return days.takeLast(LAST_SEVEN_DAYS)
+  return days.takeLast(DAYS_IN_WEEK)
 }
 
 /**
