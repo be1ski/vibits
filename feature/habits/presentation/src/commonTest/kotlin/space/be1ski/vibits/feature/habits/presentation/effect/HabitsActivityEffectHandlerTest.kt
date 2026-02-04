@@ -12,7 +12,6 @@ import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.usecase.BuildActivityDataUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.BuildDayDataUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.CalculateActivityDataUseCase
-import space.be1ski.vibits.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.PrewarmActivityDataUseCase
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.memos.domain.model.Memo
@@ -29,11 +28,9 @@ class HabitsActivityEffectHandlerTest {
   private fun createHandler(): HabitsActivityEffectHandler {
     val buildDayDataUseCase = BuildDayDataUseCase()
     val buildActivityDataUseCase = BuildActivityDataUseCase(buildDayDataUseCase)
-    val calculateSuccessRateUseCase = CalculateSuccessRateUseCase()
     val calculateActivityDataUseCase =
       CalculateActivityDataUseCase(
         buildActivityDataUseCase = buildActivityDataUseCase,
-        calculateSuccessRateUseCase = calculateSuccessRateUseCase,
       )
     val prewarmActivityDataUseCase =
       PrewarmActivityDataUseCase(

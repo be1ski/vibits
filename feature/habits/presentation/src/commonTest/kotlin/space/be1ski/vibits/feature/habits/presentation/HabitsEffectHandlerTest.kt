@@ -382,14 +382,10 @@ class HabitsEffectHandlerTest {
           space.be1ski.vibits.feature.habits.domain.usecase
             .BuildDayDataUseCase(),
       )
-    val calculateSuccessRateUseCase =
-      space.be1ski.vibits.feature.habits.domain.usecase
-        .CalculateSuccessRateUseCase()
     val calculateActivityDataUseCase =
       space.be1ski.vibits.feature.habits.domain.usecase
         .CalculateActivityDataUseCase(
           buildActivityDataUseCase = buildActivityDataUseCase,
-          calculateSuccessRateUseCase = calculateSuccessRateUseCase,
         )
     return HabitsEffectHandler(
       memoHandler =
