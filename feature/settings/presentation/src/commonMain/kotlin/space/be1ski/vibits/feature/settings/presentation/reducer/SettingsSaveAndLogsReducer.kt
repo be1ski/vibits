@@ -7,7 +7,6 @@ import space.be1ski.vibits.feature.settings.presentation.action.SettingsAction
 import space.be1ski.vibits.feature.settings.presentation.effect.SettingsEffect
 import space.be1ski.vibits.feature.settings.presentation.state.SettingsState
 
-@Suppress("LongMethod")
 internal val saveAndLogsReducer: Reducer<SettingsAction.SaveAndLogs, SettingsState, SettingsEffect.Command, SettingsEffect.Notification> =
   reducer { action, state ->
     when (action) {
