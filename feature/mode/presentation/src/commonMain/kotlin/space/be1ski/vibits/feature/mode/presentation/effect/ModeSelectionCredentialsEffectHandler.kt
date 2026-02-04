@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.core.elm.EffectHandler
 import space.be1ski.vibits.core.elm.actions
 import space.be1ski.vibits.core.logging.Log
+import space.be1ski.vibits.core.logging.maskUrl
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.feature.auth.domain.model.isFilled
 import space.be1ski.vibits.feature.auth.domain.usecase.InitializeCredentialsFromEnvUseCase
@@ -13,7 +14,6 @@ import space.be1ski.vibits.feature.memos.domain.repository.ConnectionTester
 import space.be1ski.vibits.feature.mode.presentation.action.ModeSelectionAction
 
 private const val TAG = "ModeCredentialsEffect"
-private const val LOG_URL_MAX_LENGTH = 20
 
 class ModeSelectionCredentialsEffectHandler(
   private val connectionTester: ConnectionTester,
@@ -61,7 +61,7 @@ class ModeSelectionCredentialsEffectHandler(
       // Ensure credentials are loaded from local config (in case of app reset)
       initializeCredentialsFromEnv()
       val credentials = loadCredentials()
-      Log.d(TAG, "Using stored credentials: baseUrl=${credentials.baseUrl.take(LOG_URL_MAX_LENGTH)}")
+      Log.d(TAG, "Using stored credentials: baseUrl=${credentials.baseUrl.maskUrl()}")
       connectionTester(credentials.baseUrl, credentials.token)
         .onSuccess { emit(ModeSelectionAction.ValidationSucceeded) }
         .onFailure { emit(ModeSelectionAction.ValidationFailed) }

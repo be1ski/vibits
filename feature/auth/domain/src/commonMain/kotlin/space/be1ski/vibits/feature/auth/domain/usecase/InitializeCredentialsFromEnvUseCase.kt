@@ -2,13 +2,13 @@ package space.be1ski.vibits.feature.auth.domain.usecase
 
 import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.core.logging.Log
+import space.be1ski.vibits.core.logging.maskUrl
 import space.be1ski.vibits.core.platform.env.LocalConfigProvider
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
 
 private const val TAG = "InitCredentialsFromConfig"
 private const val CONFIG_MEMOS_BASE_URL = "memos.baseUrl"
 private const val CONFIG_MEMOS_TOKEN = "memos.token"
-private const val LOG_URL_MAX_LENGTH = 20
 
 /**
  * Initializes credentials from local configuration on first launch.
@@ -30,7 +30,7 @@ class InitializeCredentialsFromEnvUseCase(
     val baseUrl = localConfigProvider.get(CONFIG_MEMOS_BASE_URL)
     val token = localConfigProvider.get(CONFIG_MEMOS_TOKEN)
 
-    val maskedUrl = baseUrl?.take(LOG_URL_MAX_LENGTH) ?: "null"
+    val maskedUrl = baseUrl?.maskUrl() ?: "null"
     val maskedToken = if (token.isNullOrBlank()) "null" else "***"
     Log.i(TAG, "Checking config: baseUrl=$maskedUrl token=$maskedToken")
 
