@@ -47,6 +47,7 @@ import androidx.compose.ui.window.PopupPositionProvider
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
+import space.be1ski.vibits.core.platform.date.DAYS_IN_WEEK
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.day_fri
 import space.be1ski.vibits.core.strings.generated.day_mon
@@ -331,7 +332,6 @@ private fun CalendarWeekdayHeader(
   }
 }
 
-private const val DAYS_IN_WEEK = 7
 private const val WEEKEND_LABEL_ALPHA = 0.6f
 private const val WEEKEND_CELL_ALPHA = 0.15f
 

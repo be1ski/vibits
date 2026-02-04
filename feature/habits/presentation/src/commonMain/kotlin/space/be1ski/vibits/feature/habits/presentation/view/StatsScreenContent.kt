@@ -38,6 +38,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
+import space.be1ski.vibits.core.platform.date.DAYS_IN_WEEK
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_configure_habits
 import space.be1ski.vibits.core.strings.generated.action_hide_memos
@@ -217,7 +218,6 @@ private fun StatsInfoCardLayout(
 
 private val INFO_CARD_MIN_HEIGHT = 40.dp
 
-private const val DAYS_IN_WEEK = 7
 private const val TIME_BLOCKS = 4
 private const val HOURS_PER_BLOCK = 6
 private const val INTENSITY_BASE = 0.3f
