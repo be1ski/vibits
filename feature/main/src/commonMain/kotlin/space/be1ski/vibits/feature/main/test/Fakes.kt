@@ -14,6 +14,8 @@ import space.be1ski.vibits.feature.memos.data.platform.OfflineMemoStorage
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.repository.MemoStorageManager
 import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
+import space.be1ski.vibits.feature.mode.data.LocalAppMode
+import space.be1ski.vibits.feature.mode.data.platform.AppModeStore
 import space.be1ski.vibits.feature.mode.domain.repository.AppModeRepository
 import space.be1ski.vibits.feature.onboarding.domain.repository.OnboardingStore
 import space.be1ski.vibits.feature.settings.domain.model.TimeRangeTab
@@ -177,6 +179,22 @@ class FakeAppModeRepository(
 
   override fun saveMode(mode: AppMode) {
     storedMode = mode
+    saveCalls += 1
+  }
+}
+
+class FakeAppModeStore(
+  initial: LocalAppMode = LocalAppMode(mode = AppMode.NOT_SELECTED),
+) : AppModeStore {
+  var stored: LocalAppMode = initial
+    private set
+  var saveCalls: Int = 0
+    private set
+
+  override fun load(): LocalAppMode = stored
+
+  override fun save(mode: LocalAppMode) {
+    stored = mode
     saveCalls += 1
   }
 }
