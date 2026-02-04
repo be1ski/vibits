@@ -23,6 +23,8 @@ import space.be1ski.vibits.feature.memos.data.remote.dto.UpdateMemoRequestDto
 
 private const val TAG = "MemosApi"
 
+private fun String.normalizeBaseUrl(): String = trim().trimEnd('/')
+
 @Inject
 @SingleIn(AppScope::class)
 @Suppress("TooGenericExceptionCaught")
@@ -35,8 +37,7 @@ class MemosApi(
     pageSize: Int,
     pageToken: String?,
   ): ListMemosResponseDto {
-    val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
-    val fullUrl = "$normalizedBaseUrl/api/v1/memos"
+    val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/v1/memos"
     Log.i(TAG, "GET $fullUrl")
     return try {
       val response: ListMemosResponseDto =
@@ -63,8 +64,7 @@ class MemosApi(
     name: String,
     content: String,
   ): MemoDto {
-    val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
-    val fullUrl = "$normalizedBaseUrl/api/v1/$name"
+    val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/v1/$name"
     Log.i(TAG, "PATCH $fullUrl")
     return try {
       val response: MemoDto =
@@ -88,8 +88,7 @@ class MemosApi(
     token: String,
     content: String,
   ): MemoDto {
-    val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
-    val fullUrl = "$normalizedBaseUrl/api/v1/memos"
+    val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/v1/memos"
     Log.i(TAG, "POST $fullUrl")
     return try {
       val response: MemoDto =
@@ -112,8 +111,7 @@ class MemosApi(
     token: String,
     name: String,
   ) {
-    val normalizedBaseUrl = baseUrl.trim().trimEnd('/')
-    val fullUrl = "$normalizedBaseUrl/api/v1/$name"
+    val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/v1/$name"
     Log.i(TAG, "DELETE $fullUrl")
     try {
       httpClient.delete(fullUrl) {
