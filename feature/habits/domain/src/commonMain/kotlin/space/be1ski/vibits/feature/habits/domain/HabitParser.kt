@@ -17,6 +17,13 @@ private val CHECKBOX_REGEX = Regex("^\\s*[-*]\\s*\\[(x|X)\\]\\s+(.+)$")
 /** Regex for extracting habit tags from content. */
 private val HABIT_TAG_REGEX = Regex("${PostTags.HABITS_PREFIX}[^\\s]+")
 
+// Hex color format constants
+private const val HEX_RGB_LENGTH = 6
+private const val HEX_ARGB_LENGTH = 8
+private const val FULL_ALPHA_MASK = 0xFF000000L
+private const val RGB_MASK = 0xFFFFFFL
+private const val HEX_RADIX = 16
+
 /**
  * Parses a single line from a habits config memo.
  * Supports formats:
@@ -62,12 +69,11 @@ fun parseHabitConfigLine(line: String): HabitConfig? {
  * Parses a hex color string to ARGB Long.
  * Supports formats: #RRGGBB or #AARRGGBB
  */
-@Suppress("MagicNumber")
 fun parseHexColor(hex: String): Long? {
   val clean = hex.trim().removePrefix("#")
   return when (clean.length) {
-    6 -> clean.toLongOrNull(16)?.let { 0xFF000000L or it }
-    8 -> clean.toLongOrNull(16)
+    HEX_RGB_LENGTH -> clean.toLongOrNull(HEX_RADIX)?.let { FULL_ALPHA_MASK or it }
+    HEX_ARGB_LENGTH -> clean.toLongOrNull(HEX_RADIX)
     else -> null
   }
 }
@@ -75,10 +81,9 @@ fun parseHexColor(hex: String): Long? {
 /**
  * Formats an ARGB Long color to hex string (#RRGGBB).
  */
-@Suppress("MagicNumber")
 fun formatHexColor(color: Long): String {
-  val rgb = color and 0xFFFFFFL
-  return "#${rgb.toString(16).uppercase().padStart(6, '0')}"
+  val rgb = color and RGB_MASK
+  return "#${rgb.toString(HEX_RADIX).uppercase().padStart(HEX_RGB_LENGTH, '0')}"
 }
 
 /**
