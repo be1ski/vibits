@@ -7,6 +7,8 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import space.be1ski.vibits.core.logging.Log
 import space.be1ski.vibits.core.platform.di.AppScope
+import space.be1ski.vibits.feature.auth.domain.model.isFilled
+import space.be1ski.vibits.feature.auth.domain.model.trimmed
 import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.feature.memos.data.mapper.MemoMapper
 import space.be1ski.vibits.feature.memos.data.remote.MemosApi
@@ -60,17 +62,18 @@ class SyncEngineImpl(
 
   private suspend fun performSyncInternal(): SyncResult {
     val credentials = credentialsRepository.load()
-    if (credentials.baseUrl.isBlank() || credentials.token.isBlank()) {
+    if (!credentials.isFilled) {
       Log.w(TAG, "No credentials configured")
       return SyncResult.NoCredentials
     }
+    val (baseUrl, token) = credentials.trimmed()
 
     // Reset any IN_PROGRESS operations from previous crash/kill
     syncQueue.resetInProgressToPending()
 
     return runCatching {
       Log.i(TAG, "Starting sync...")
-      executeSyncFlow(credentials.baseUrl.trim(), credentials.token.trim())
+      executeSyncFlow(baseUrl, token)
     }.getOrElse { e ->
       Log.e(TAG, "Sync failed", e)
       SyncResult.Error(e.message ?: "Sync failed", e)
@@ -137,13 +140,14 @@ class SyncEngineImpl(
 
   private suspend fun forceServerSyncInternal(): SyncResult {
     val credentials = credentialsRepository.load()
-    if (credentials.baseUrl.isBlank() || credentials.token.isBlank()) {
+    if (!credentials.isFilled) {
       return SyncResult.NoCredentials
     }
+    val (baseUrl, token) = credentials.trimmed()
 
     return runCatching {
       Log.i(TAG, "Forcing server sync...")
-      val serverMemos = fetchServerMemos(credentials.baseUrl.trim(), credentials.token.trim())
+      val serverMemos = fetchServerMemos(baseUrl, token)
 
       val pendingOperations = syncQueue.getPendingOperations()
       pendingOperations.forEach { syncQueue.removeOperation(it.id) }
@@ -160,12 +164,10 @@ class SyncEngineImpl(
 
   private suspend fun forceLocalSyncInternal(): SyncResult {
     val credentials = credentialsRepository.load()
-    if (credentials.baseUrl.isBlank() || credentials.token.isBlank()) {
+    if (!credentials.isFilled) {
       return SyncResult.NoCredentials
     }
-
-    val baseUrl = credentials.baseUrl.trim()
-    val token = credentials.token.trim()
+    val (baseUrl, token) = credentials.trimmed()
 
     return runCatching {
       Log.i(TAG, "Forcing local sync...")
