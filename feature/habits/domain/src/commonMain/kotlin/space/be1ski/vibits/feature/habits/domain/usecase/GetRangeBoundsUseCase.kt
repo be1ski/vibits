@@ -6,13 +6,12 @@ import kotlinx.datetime.Month
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import space.be1ski.vibits.core.platform.date.DAYS_IN_WEEK
+import space.be1ski.vibits.core.platform.date.FIRST_DAY_OF_MONTH
+import space.be1ski.vibits.core.platform.date.FIRST_QUARTER_INDEX
 import space.be1ski.vibits.core.platform.date.MONTHS_IN_QUARTER
 import space.be1ski.vibits.core.platform.date.QUARTERS_IN_YEAR
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.RangeBounds
-
-private const val FIRST_QUARTER_INDEX = 1
-private const val YEAR_START_DAY = 1
 
 /**
  * Calculates date bounds for an activity range.
@@ -45,9 +44,9 @@ object GetRangeBoundsUseCase {
       }
       is ActivityRange.Year ->
         RangeBounds(
-          start = LocalDate(range.year, Month.JANUARY, YEAR_START_DAY),
+          start = LocalDate(range.year, Month.JANUARY, FIRST_DAY_OF_MONTH),
           end =
-            LocalDate(range.year + 1, Month.JANUARY, YEAR_START_DAY)
+            LocalDate(range.year + 1, Month.JANUARY, FIRST_DAY_OF_MONTH)
               .minus(DatePeriod(days = 1)),
         )
     }
