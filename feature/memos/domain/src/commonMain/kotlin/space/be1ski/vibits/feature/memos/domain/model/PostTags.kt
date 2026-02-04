@@ -12,4 +12,7 @@ object PostTags {
   // Tag prefixes used for parsing and normalization
   const val HABITS_PREFIX = "#habits/"
   const val HABIT_PREFIX = "#habit/"
+
+  // Base hashtag for filtering all habits-related content
+  const val HABITS_HASHTAG = "#habits"
 }
