@@ -4,8 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.core.elm.EffectHandler
 import space.be1ski.vibits.core.elm.sideEffect
 import space.be1ski.vibits.feature.main.presentation.action.AppAction
+import space.be1ski.vibits.feature.settings.domain.model.TimeRangeScreen
 import space.be1ski.vibits.feature.settings.domain.usecase.SaveTimeRangeTabUseCase
-import space.be1ski.vibits.feature.settings.domain.usecase.TimeRangeScreen
 
 internal class AppEffectHandler(
   private val saveTimeRangeTab: SaveTimeRangeTabUseCase,
