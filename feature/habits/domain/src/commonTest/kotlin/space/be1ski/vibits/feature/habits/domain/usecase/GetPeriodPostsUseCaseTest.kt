@@ -33,7 +33,7 @@ class GetPeriodPostsUseCaseTest {
         createMemo("Post 3", Instant.parse("2024-01-07T10:00:00Z")), // Sunday (last day)
         createMemo("Post 4", Instant.parse("2024-01-08T10:00:00Z")), // Next Monday (outside)
       )
-    val useCase = GetPeriodPostsUseCase()
+    val useCase = GetPeriodPostsUseCase
 
     val result = useCase(memos, ActivityRange.Week(startDate), timeZone)
 
@@ -52,7 +52,7 @@ class GetPeriodPostsUseCaseTest {
         createMemo("Post 3", Instant.parse("2024-01-31T10:00:00Z")), // Last day
         createMemo("Post 4", Instant.parse("2024-02-01T10:00:00Z")), // Next month (outside)
       )
-    val useCase = GetPeriodPostsUseCase()
+    val useCase = GetPeriodPostsUseCase
 
     val result = useCase(memos, ActivityRange.Month(year = 2024, month = Month.JANUARY), timeZone)
 
@@ -71,7 +71,7 @@ class GetPeriodPostsUseCaseTest {
         createMemo("Post 3", Instant.parse("2024-03-31T10:00:00Z")), // Q1 end
         createMemo("Post 4", Instant.parse("2024-04-01T10:00:00Z")), // Q2 start (outside)
       )
-    val useCase = GetPeriodPostsUseCase()
+    val useCase = GetPeriodPostsUseCase
 
     val result = useCase(memos, ActivityRange.Quarter(year = 2024, index = 1), timeZone)
 
@@ -90,7 +90,7 @@ class GetPeriodPostsUseCaseTest {
         createMemo("Post 3", Instant.parse("2024-06-30T10:00:00Z")), // Q2 end (Jun)
         createMemo("Post 4", Instant.parse("2024-07-01T10:00:00Z")), // Q3 start (outside)
       )
-    val useCase = GetPeriodPostsUseCase()
+    val useCase = GetPeriodPostsUseCase
 
     val result = useCase(memos, ActivityRange.Quarter(year = 2024, index = 2), timeZone)
 
@@ -106,7 +106,7 @@ class GetPeriodPostsUseCaseTest {
         createMemo("Post 3", Instant.parse("2024-12-31T10:00:00Z")), // Last day
         createMemo("Post 4", Instant.parse("2025-01-01T10:00:00Z")), // Next year (outside)
       )
-    val useCase = GetPeriodPostsUseCase()
+    val useCase = GetPeriodPostsUseCase
 
     val result = useCase(memos, ActivityRange.Year(year = 2024), timeZone)
 
@@ -128,7 +128,7 @@ class GetPeriodPostsUseCaseTest {
           updateTime = Instant.parse("2024-01-02T10:00:00Z"),
         ),
       )
-    val useCase = GetPeriodPostsUseCase()
+    val useCase = GetPeriodPostsUseCase
 
     val result = useCase(memos, ActivityRange.Week(LocalDate(2024, 1, 1)), timeZone)
 
@@ -148,7 +148,7 @@ class GetPeriodPostsUseCaseTest {
           updateTime = null,
         ),
       )
-    val useCase = GetPeriodPostsUseCase()
+    val useCase = GetPeriodPostsUseCase
 
     val result = useCase(memos, ActivityRange.Week(LocalDate(2024, 1, 1)), timeZone)
 
@@ -167,7 +167,7 @@ class GetPeriodPostsUseCaseTest {
           updateTime = Instant.parse("2024-01-01T10:00:00Z"),
         ),
       )
-    val useCase = GetPeriodPostsUseCase()
+    val useCase = GetPeriodPostsUseCase
 
     val result = useCase(memos, ActivityRange.Week(LocalDate(2024, 1, 1)), timeZone)
 
@@ -182,7 +182,7 @@ class GetPeriodPostsUseCaseTest {
         createMemo("Post 1", Instant.parse("2023-12-31T10:00:00Z")), // Before range
         createMemo("Post 2", Instant.parse("2024-01-08T10:00:00Z")), // After range
       )
-    val useCase = GetPeriodPostsUseCase()
+    val useCase = GetPeriodPostsUseCase
 
     val result = useCase(memos, ActivityRange.Week(LocalDate(2024, 1, 1)), timeZone)
 
@@ -191,7 +191,7 @@ class GetPeriodPostsUseCaseTest {
 
   @Test
   fun `when empty memos list then returns empty list`() {
-    val useCase = GetPeriodPostsUseCase()
+    val useCase = GetPeriodPostsUseCase
 
     val result = useCase(emptyList(), ActivityRange.Week(LocalDate(2024, 1, 1)), timeZone)
 
@@ -205,7 +205,7 @@ class GetPeriodPostsUseCaseTest {
         createMemo("Post 1", Instant.parse("2024-02-29T10:00:00Z")), // Leap day
         createMemo("Post 2", Instant.parse("2024-03-01T10:00:00Z")), // Next month
       )
-    val useCase = GetPeriodPostsUseCase()
+    val useCase = GetPeriodPostsUseCase
 
     val result = useCase(memos, ActivityRange.Month(year = 2024, month = Month.FEBRUARY), timeZone)
 

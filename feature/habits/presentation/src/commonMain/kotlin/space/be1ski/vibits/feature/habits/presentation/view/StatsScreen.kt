@@ -123,10 +123,9 @@ private fun rememberStatsScreenDerived(
     }
   // Success rate comes from TEA cache
   val finalSuccessRateData = successRateData
-  val getPeriodPosts = remember { GetPeriodPostsUseCase() }
   val periodPosts =
     remember(memos, range, timeZone) {
-      getPeriodPosts(memos, range, timeZone)
+      GetPeriodPostsUseCase(memos, range, timeZone)
     }
   return StatsScreenDerivedState(
     state = state,

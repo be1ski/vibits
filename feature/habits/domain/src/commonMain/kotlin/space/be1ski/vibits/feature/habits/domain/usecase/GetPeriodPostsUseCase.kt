@@ -17,7 +17,7 @@ import space.be1ski.vibits.feature.memos.domain.model.Memo
 /**
  * Returns posts (non-habit memos) for a given activity range.
  */
-class GetPeriodPostsUseCase {
+object GetPeriodPostsUseCase {
   operator fun invoke(
     memos: List<Memo>,
     range: ActivityRange,
