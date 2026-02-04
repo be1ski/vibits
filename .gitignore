@@ -22,3 +22,5 @@ kotlin-js-store/
 vibits-*.json
 *.class
 META-INF/
+/.ralphrc
+/.ralph/
