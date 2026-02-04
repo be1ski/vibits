@@ -40,14 +40,12 @@ fun createHabitsFeature(
             calculateActivityDataUseCase =
               CalculateActivityDataUseCase(
                 buildActivityDataUseCase = dependencies.buildActivityDataUseCase,
-                calculateSuccessRateUseCase = dependencies.calculateSuccessRateUseCase,
               ),
             prewarmActivityDataUseCase =
               PrewarmActivityDataUseCase(
                 calculateActivityDataUseCase =
                   CalculateActivityDataUseCase(
                     buildActivityDataUseCase = dependencies.buildActivityDataUseCase,
-                    calculateSuccessRateUseCase = dependencies.calculateSuccessRateUseCase,
                   ),
               ),
           ),
