@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
-import space.be1ski.vibits.feature.memos.data.mapper.MemoMapper
 import space.be1ski.vibits.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.feature.memos.domain.model.Memo
@@ -34,7 +33,6 @@ import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 
 class SyncOperationApplierTest {
-  private val memoMapper = MemoMapper()
   private val baseUrl = "https://memos.example.com"
   private val token = "test-token"
 
@@ -67,7 +65,7 @@ class SyncOperationApplierTest {
     val fakeQueue = FakeSyncQueue()
     val fakeCache = FakeMemoCache()
     val fakeOfflineRepo = OfflineFirstMemosRepository(fakeCache, fakeQueue)
-    val applier = SyncOperationApplier(MemosApi(client), memoMapper, fakeQueue, fakeOfflineRepo, retryConfig)
+    val applier = SyncOperationApplier(MemosApi(client), fakeQueue, fakeOfflineRepo, retryConfig)
     return Triple(applier, fakeQueue, tracker)
   }
 

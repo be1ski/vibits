@@ -20,7 +20,6 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.feature.main.test.FakeCredentialsRepository
-import space.be1ski.vibits.feature.memos.data.mapper.MemoMapper
 import space.be1ski.vibits.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.feature.memos.domain.model.Memo
@@ -38,8 +37,6 @@ import kotlin.test.assertTrue
 import kotlin.time.Clock
 
 class SyncEngineImplTest {
-  private val memoMapper = MemoMapper()
-
   private fun createEngine(
     credentials: Credentials = Credentials(baseUrl = "https://memos.example.com", token = "test-token"),
     handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData,
@@ -69,7 +66,6 @@ class SyncEngineImplTest {
     val syncEngine =
       SyncEngineImpl(
         memosApi = MemosApi(client),
-        memoMapper = memoMapper,
         credentialsRepository = credentialsRepository,
         syncQueue = syncQueue,
         offlineFirstRepository = offlineFirstRepository,

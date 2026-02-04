@@ -7,7 +7,6 @@ import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.feature.memos.data.demo.DemoMemosRepository
-import space.be1ski.vibits.feature.memos.data.mapper.MemoMapper
 import space.be1ski.vibits.feature.memos.data.offline.OfflineMemosFileDto
 import space.be1ski.vibits.feature.memos.data.offline.OfflineMemosRepository
 import space.be1ski.vibits.feature.memos.data.platform.MemoCache
@@ -504,7 +503,6 @@ private fun createStubOnlineRepository(): MemosRepositoryImpl {
     }
   return MemosRepositoryImpl(
     memosApi = MemosApi(httpClient),
-    memoMapper = MemoMapper(),
     credentialsRepository = FakeCredentialsRepository(),
     memoCache = FakeMemoCache(),
   )
