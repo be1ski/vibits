@@ -3,6 +3,7 @@ package space.be1ski.vibits.feature.habits.presentation.state
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
+import space.be1ski.vibits.feature.habits.domain.model.CachedActivityData
 
 /**
  * Checks if data for the given key is currently being loaded or recalculated.
