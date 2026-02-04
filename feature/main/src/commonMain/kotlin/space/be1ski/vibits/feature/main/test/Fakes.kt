@@ -31,6 +31,9 @@ import space.be1ski.vibits.feature.sync.domain.repository.SyncQueueRepository
 class FakeOnboardingStore(
   private var completed: Boolean = false,
 ) : OnboardingStore {
+  var resetCalls: Int = 0
+    private set
+
   override fun isOnboardingCompleted(): Boolean = completed
 
   override fun markOnboardingCompleted() {
@@ -38,6 +41,7 @@ class FakeOnboardingStore(
   }
 
   override fun reset() {
+    resetCalls += 1
     completed = false
   }
 }
