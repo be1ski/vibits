@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.habits.domain.usecase
 
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -14,6 +15,7 @@ import space.be1ski.vibits.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.feature.habits.domain.model.SuccessRateData
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 
+@Inject
 class PrewarmActivityDataUseCase(
   private val calculateActivityDataUseCase: CalculateActivityDataUseCase,
 ) {
