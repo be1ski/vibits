@@ -64,8 +64,8 @@ internal fun rememberScaffoldCallbacks(
       { newTab: TimeRangeTab ->
         onHabitsAction(HabitsAction.Selection.ClearSelection)
         when (appState.selectedScreen) {
-          Screen.HABITS -> onAppAction(AppAction.ChangeHabitsTab(appState.habitsTimeRangeTab, newTab))
-          Screen.STATS -> onAppAction(AppAction.ChangePostsTab(appState.postsTimeRangeTab, newTab))
+          Screen.HABITS -> onAppAction(AppAction.TimeRange.ChangeHabitsTab(appState.habitsTimeRangeTab, newTab))
+          Screen.STATS -> onAppAction(AppAction.TimeRange.ChangePostsTab(appState.postsTimeRangeTab, newTab))
           Screen.FEED -> {}
         }
       }
@@ -75,7 +75,7 @@ internal fun rememberScaffoldCallbacks(
       {
         val newRange = NavigateActivityRangeUseCase(activityRange, -1)
         onHabitsAction(HabitsAction.Selection.ClearSelection)
-        onAppAction(AppAction.SetActivityRange(newRange))
+        onAppAction(AppAction.TimeRange.SetActivityRange(newRange))
       }
     }
   val onNavigateForward =
@@ -83,7 +83,7 @@ internal fun rememberScaffoldCallbacks(
       {
         val newRange = NavigateActivityRangeUseCase(activityRange, 1)
         onHabitsAction(HabitsAction.Selection.ClearSelection)
-        onAppAction(AppAction.SetActivityRange(newRange))
+        onAppAction(AppAction.TimeRange.SetActivityRange(newRange))
       }
     }
   return ScaffoldCallbacks(
