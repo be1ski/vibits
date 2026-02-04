@@ -14,7 +14,7 @@ actual class CredentialsStore {
   }
 
   actual fun save(credentials: LocalCredentials) {
-    prefs.put("base_url", credentials.baseUrl.trim())
-    prefs.put("token", credentials.token.trim())
+    prefs.put("base_url", credentials.baseUrl)
+    prefs.put("token", credentials.token)
   }
 }

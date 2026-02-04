@@ -24,8 +24,8 @@ actual class CredentialsStore {
     }
     val prefs = AndroidContextHolder.context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
     prefs.edit {
-      putString("base_url", credentials.baseUrl.trim())
-      putString("token", credentials.token.trim())
+      putString("base_url", credentials.baseUrl)
+      putString("token", credentials.token)
     }
   }
 }

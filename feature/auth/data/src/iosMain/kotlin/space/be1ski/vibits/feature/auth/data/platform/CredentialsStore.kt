@@ -13,7 +13,7 @@ actual class CredentialsStore {
   }
 
   actual fun save(credentials: LocalCredentials) {
-    defaults.setObject(credentials.baseUrl.trim(), forKey = "base_url")
-    defaults.setObject(credentials.token.trim(), forKey = "token")
+    defaults.setObject(credentials.baseUrl, forKey = "base_url")
+    defaults.setObject(credentials.token, forKey = "token")
   }
 }

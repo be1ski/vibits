@@ -14,7 +14,7 @@ actual class CredentialsStore {
   }
 
   actual fun save(credentials: LocalCredentials) {
-    localStorage.setItem(KEY_BASE_URL, credentials.baseUrl.trim())
-    localStorage.setItem(KEY_TOKEN, credentials.token.trim())
+    localStorage.setItem(KEY_BASE_URL, credentials.baseUrl)
+    localStorage.setItem(KEY_TOKEN, credentials.token)
   }
 }
