@@ -3,6 +3,8 @@ package space.be1ski.vibits.feature.habits.domain
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
+import space.be1ski.vibits.feature.habits.domain.model.HabitTag
+import space.be1ski.vibits.feature.habits.domain.model.IsSelected
 import space.be1ski.vibits.feature.memos.domain.model.PostTags
 
 /**
