@@ -37,10 +37,10 @@ class ModeSelectionCredentialsEffectHandler(
       val credentials = loadCredentials()
       if (credentials.isFilled) {
         Log.d(TAG, "Stored credentials found after initialization")
-        emit(ModeSelectionAction.StoredCredentialsFound)
+        emit(ModeSelectionAction.StoredCredentials.Found)
       } else {
         Log.d(TAG, "No stored credentials after initialization")
-        emit(ModeSelectionAction.StoredCredentialsNotFound)
+        emit(ModeSelectionAction.StoredCredentials.NotFound)
       }
     }
 
@@ -49,10 +49,10 @@ class ModeSelectionCredentialsEffectHandler(
       val credentials = loadCredentials()
       if (credentials.isFilled) {
         Log.d(TAG, "Stored credentials found")
-        emit(ModeSelectionAction.StoredCredentialsFound)
+        emit(ModeSelectionAction.StoredCredentials.Found)
       } else {
         Log.d(TAG, "No stored credentials")
-        emit(ModeSelectionAction.StoredCredentialsNotFound)
+        emit(ModeSelectionAction.StoredCredentials.NotFound)
       }
     }
 
@@ -63,16 +63,16 @@ class ModeSelectionCredentialsEffectHandler(
       val credentials = loadCredentials()
       Log.d(TAG, "Using stored credentials: baseUrl=${credentials.baseUrl.maskUrl()}")
       connectionTester(credentials.baseUrl, credentials.token)
-        .onSuccess { emit(ModeSelectionAction.ValidationSucceeded) }
-        .onFailure { emit(ModeSelectionAction.ValidationFailed) }
+        .onSuccess { emit(ModeSelectionAction.Validation.Succeeded) }
+        .onFailure { emit(ModeSelectionAction.Validation.Failed) }
     }
 
   private fun handleValidateCredentials(command: ModeSelectionEffect.Command.ValidateCredentials): Flow<ModeSelectionAction> =
     actions {
       Log.d(TAG, "Testing connection")
       connectionTester(command.baseUrl, command.token)
-        .onSuccess { emit(ModeSelectionAction.ValidationSucceeded) }
-        .onFailure { emit(ModeSelectionAction.ValidationFailed) }
+        .onSuccess { emit(ModeSelectionAction.Validation.Succeeded) }
+        .onFailure { emit(ModeSelectionAction.Validation.Failed) }
     }
 
   private fun handleSaveCredentials(command: ModeSelectionEffect.Command.SaveCredentials): Flow<ModeSelectionAction> =
