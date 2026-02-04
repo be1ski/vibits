@@ -26,7 +26,7 @@ class ModeSelectionEffectHandlerTest {
           Command.ValidateCredentials(baseUrl = "https://test.com", token = "token"),
         ).toList()
 
-      assertEquals(listOf(ModeSelectionAction.ValidationSucceeded), actions)
+      assertEquals(listOf(ModeSelectionAction.Validation.Succeeded), actions)
     }
 
   @Test
@@ -39,7 +39,7 @@ class ModeSelectionEffectHandlerTest {
           Command.ValidateCredentials(baseUrl = "https://test.com", token = "token"),
         ).toList()
 
-      assertEquals(listOf(ModeSelectionAction.ValidationFailed), actions)
+      assertEquals(listOf(ModeSelectionAction.Validation.Failed), actions)
     }
 
   @Test
@@ -83,7 +83,7 @@ class ModeSelectionEffectHandlerTest {
 
       val actions = handler(Command.InitializeFromLocalConfig).toList()
 
-      assertEquals(listOf(ModeSelectionAction.StoredCredentialsFound), actions)
+      assertEquals(listOf(ModeSelectionAction.StoredCredentials.Found), actions)
     }
 
   @Test
@@ -97,7 +97,7 @@ class ModeSelectionEffectHandlerTest {
 
       val actions = handler(Command.InitializeFromLocalConfig).toList()
 
-      assertEquals(listOf(ModeSelectionAction.StoredCredentialsNotFound), actions)
+      assertEquals(listOf(ModeSelectionAction.StoredCredentials.NotFound), actions)
     }
 
   @Test
@@ -115,7 +115,7 @@ class ModeSelectionEffectHandlerTest {
 
       val actions = handler(Command.CheckStoredCredentials).toList()
 
-      assertEquals(listOf(ModeSelectionAction.StoredCredentialsFound), actions)
+      assertEquals(listOf(ModeSelectionAction.StoredCredentials.Found), actions)
     }
 
   @Test
@@ -126,7 +126,7 @@ class ModeSelectionEffectHandlerTest {
 
       val actions = handler(Command.CheckStoredCredentials).toList()
 
-      assertEquals(listOf(ModeSelectionAction.StoredCredentialsNotFound), actions)
+      assertEquals(listOf(ModeSelectionAction.StoredCredentials.NotFound), actions)
     }
 
   @Test
@@ -144,7 +144,7 @@ class ModeSelectionEffectHandlerTest {
 
       val actions = handler(Command.UseStoredCredentialsWithValidation).toList()
 
-      assertEquals(listOf(ModeSelectionAction.ValidationSucceeded), actions)
+      assertEquals(listOf(ModeSelectionAction.Validation.Succeeded), actions)
     }
 
   @Test
@@ -162,7 +162,7 @@ class ModeSelectionEffectHandlerTest {
 
       val actions = handler(Command.UseStoredCredentialsWithValidation).toList()
 
-      assertEquals(listOf(ModeSelectionAction.ValidationFailed), actions)
+      assertEquals(listOf(ModeSelectionAction.Validation.Failed), actions)
     }
 
   private fun createHandler(

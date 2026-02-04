@@ -13,16 +13,16 @@ import kotlin.test.assertEquals
 
 class ModeSelectionReducerTest {
   @Test
-  fun `when ShowCredentialsDialog then shows dialog and clears error`() =
+  fun `when Dialog Show then shows dialog and clears error`() =
     modeSelectionReducer.test(ModeSelectionState(error = ModeSelectionError.FILL_ALL_FIELDS)) {
-      send(ModeSelectionAction.ShowCredentialsDialog)
+      send(ModeSelectionAction.Dialog.Show)
 
       assertState { showCredentialsDialog && error == null }
       assertNoEffects()
     }
 
   @Test
-  fun `when DismissCredentialsDialog then hides dialog and resets state`() =
+  fun `when Dialog Dismiss then hides dialog and resets state`() =
     modeSelectionReducer.test(
       ModeSelectionState(
         showCredentialsDialog = true,
@@ -32,7 +32,7 @@ class ModeSelectionReducerTest {
         error = ModeSelectionError.CONNECTION_FAILED,
       ),
     ) {
-      send(ModeSelectionAction.DismissCredentialsDialog)
+      send(ModeSelectionAction.Dialog.Dismiss)
 
       assertState {
         !showCredentialsDialog &&
@@ -45,54 +45,54 @@ class ModeSelectionReducerTest {
     }
 
   @Test
-  fun `when UpdateBaseUrl then updates baseUrl and clears error`() =
+  fun `when Input UpdateBaseUrl then updates baseUrl and clears error`() =
     modeSelectionReducer.test(ModeSelectionState(error = ModeSelectionError.FILL_ALL_FIELDS)) {
-      send(ModeSelectionAction.UpdateBaseUrl("https://new.api.com"))
+      send(ModeSelectionAction.Input.UpdateBaseUrl("https://new.api.com"))
 
       assertState { baseUrl == "https://new.api.com" && error == null }
       assertNoEffects()
     }
 
   @Test
-  fun `when UpdateToken then updates token and clears error`() =
+  fun `when Input UpdateToken then updates token and clears error`() =
     modeSelectionReducer.test(ModeSelectionState(error = ModeSelectionError.FILL_ALL_FIELDS)) {
-      send(ModeSelectionAction.UpdateToken("new-token"))
+      send(ModeSelectionAction.Input.UpdateToken("new-token"))
 
       assertState { token == "new-token" && error == null }
       assertNoEffects()
     }
 
   @Test
-  fun `when Submit with empty credentials then shows error`() =
+  fun `when Validation Submit with empty credentials then shows error`() =
     modeSelectionReducer.test(ModeSelectionState(baseUrl = "", token = "")) {
-      send(ModeSelectionAction.Submit)
+      send(ModeSelectionAction.Validation.Submit)
 
       assertState { error == ModeSelectionError.FILL_ALL_FIELDS && !isValidating }
       assertNoEffects()
     }
 
   @Test
-  fun `when Submit with blank baseUrl then shows error`() =
+  fun `when Validation Submit with blank baseUrl then shows error`() =
     modeSelectionReducer.test(ModeSelectionState(baseUrl = "  ", token = "token123")) {
-      send(ModeSelectionAction.Submit)
+      send(ModeSelectionAction.Validation.Submit)
 
       assertState { error == ModeSelectionError.FILL_ALL_FIELDS }
       assertNoEffects()
     }
 
   @Test
-  fun `when Submit with blank token then shows error`() =
+  fun `when Validation Submit with blank token then shows error`() =
     modeSelectionReducer.test(ModeSelectionState(baseUrl = "https://api.com", token = "  ")) {
-      send(ModeSelectionAction.Submit)
+      send(ModeSelectionAction.Validation.Submit)
 
       assertState { error == ModeSelectionError.FILL_ALL_FIELDS }
       assertNoEffects()
     }
 
   @Test
-  fun `when Submit with valid credentials then starts validation`() =
+  fun `when Validation Submit with valid credentials then starts validation`() =
     modeSelectionReducer.test(ModeSelectionState(baseUrl = "https://api.com", token = "token123")) {
-      send(ModeSelectionAction.Submit)
+      send(ModeSelectionAction.Validation.Submit)
 
       assertState { isValidating && error == null }
       val effect = assertHasCommand<Command.ValidateCredentials>()
@@ -101,14 +101,14 @@ class ModeSelectionReducerTest {
     }
 
   @Test
-  fun `when Submit then trims credentials before validation`() =
+  fun `when Validation Submit then trims credentials before validation`() =
     modeSelectionReducer.test(
       ModeSelectionState(
         baseUrl = "  https://api.com  ",
         token = "  token123  ",
       ),
     ) {
-      send(ModeSelectionAction.Submit)
+      send(ModeSelectionAction.Validation.Submit)
 
       val effect = assertHasCommand<Command.ValidateCredentials>()
       assertEquals("https://api.com", effect.baseUrl)
@@ -116,7 +116,7 @@ class ModeSelectionReducerTest {
     }
 
   @Test
-  fun `when ValidationSucceeded then closes dialog saves and notifies`() =
+  fun `when Validation Succeeded then closes dialog saves and notifies`() =
     modeSelectionReducer.test(
       ModeSelectionState(
         showCredentialsDialog = true,
@@ -125,7 +125,7 @@ class ModeSelectionReducerTest {
         isValidating = true,
       ),
     ) {
-      send(ModeSelectionAction.ValidationSucceeded)
+      send(ModeSelectionAction.Validation.Succeeded)
 
       assertState {
         !showCredentialsDialog &&
@@ -141,7 +141,7 @@ class ModeSelectionReducerTest {
     }
 
   @Test
-  fun `when ValidationSucceeded then saves trimmed credentials`() =
+  fun `when Validation Succeeded then saves trimmed credentials`() =
     modeSelectionReducer.test(
       ModeSelectionState(
         showCredentialsDialog = true,
@@ -150,7 +150,7 @@ class ModeSelectionReducerTest {
         isValidating = true,
       ),
     ) {
-      send(ModeSelectionAction.ValidationSucceeded)
+      send(ModeSelectionAction.Validation.Succeeded)
 
       val effect = assertHasCommand<Command.SaveCredentials>()
       assertEquals("https://api.com", effect.baseUrl)
@@ -158,9 +158,9 @@ class ModeSelectionReducerTest {
     }
 
   @Test
-  fun `when ValidationSucceeded then saves ONLINE mode`() =
+  fun `when Validation Succeeded then saves ONLINE mode`() =
     modeSelectionReducer.test(ModeSelectionState(isValidating = true)) {
-      send(ModeSelectionAction.ValidationSucceeded)
+      send(ModeSelectionAction.Validation.Succeeded)
 
       val effect = assertHasCommand<Command.SaveMode>()
       assertEquals(AppMode.ONLINE, effect.mode)
@@ -170,18 +170,18 @@ class ModeSelectionReducerTest {
     }
 
   @Test
-  fun `when ValidationFailed then stops validating and shows error`() =
+  fun `when Validation Failed then stops validating and shows error`() =
     modeSelectionReducer.test(ModeSelectionState(isValidating = true)) {
-      send(ModeSelectionAction.ValidationFailed)
+      send(ModeSelectionAction.Validation.Failed)
 
       assertState { !isValidating && error == ModeSelectionError.CONNECTION_FAILED }
       assertNoEffects()
     }
 
   @Test
-  fun `when SelectMode OFFLINE then saves and notifies`() =
+  fun `when Selection SelectMode OFFLINE then saves and notifies`() =
     modeSelectionReducer.test(ModeSelectionState()) {
-      send(ModeSelectionAction.SelectMode(AppMode.OFFLINE))
+      send(ModeSelectionAction.Selection.SelectMode(AppMode.OFFLINE))
 
       assertCommandCount(1)
       val effect = assertHasCommand<Command.SaveMode>()
@@ -192,9 +192,9 @@ class ModeSelectionReducerTest {
     }
 
   @Test
-  fun `when SelectMode DEMO then saves and notifies`() =
+  fun `when Selection SelectMode DEMO then saves and notifies`() =
     modeSelectionReducer.test(ModeSelectionState()) {
-      send(ModeSelectionAction.SelectMode(AppMode.DEMO))
+      send(ModeSelectionAction.Selection.SelectMode(AppMode.DEMO))
 
       assertCommandCount(1)
       val effect = assertHasCommand<Command.SaveMode>()
@@ -205,45 +205,45 @@ class ModeSelectionReducerTest {
     }
 
   @Test
-  fun `when StoredCredentialsFound then sets flag and shows quick online dialog`() =
+  fun `when StoredCredentials Found then sets flag and shows quick online dialog`() =
     modeSelectionReducer.test(ModeSelectionState()) {
-      send(ModeSelectionAction.StoredCredentialsFound)
+      send(ModeSelectionAction.StoredCredentials.Found)
 
       assertState { hasStoredCredentials && showQuickOnlineDialog }
       assertNoEffects()
     }
 
   @Test
-  fun `when StoredCredentialsNotFound then clears flag`() =
+  fun `when StoredCredentials NotFound then clears flag`() =
     modeSelectionReducer.test(ModeSelectionState(hasStoredCredentials = true)) {
-      send(ModeSelectionAction.StoredCredentialsNotFound)
+      send(ModeSelectionAction.StoredCredentials.NotFound)
 
       assertState { !hasStoredCredentials }
       assertNoEffects()
     }
 
   @Test
-  fun `when DismissQuickOnlineDialog then hides dialog`() =
+  fun `when QuickOnline Dismiss then hides dialog`() =
     modeSelectionReducer.test(ModeSelectionState(showQuickOnlineDialog = true)) {
-      send(ModeSelectionAction.DismissQuickOnlineDialog)
+      send(ModeSelectionAction.QuickOnline.Dismiss)
 
       assertState { !showQuickOnlineDialog }
       assertNoEffects()
     }
 
   @Test
-  fun `when UseStoredCredentials then closes dialog and starts validation`() =
+  fun `when QuickOnline UseStoredCredentials then closes dialog and starts validation`() =
     modeSelectionReducer.test(ModeSelectionState(showQuickOnlineDialog = true)) {
-      send(ModeSelectionAction.UseStoredCredentials)
+      send(ModeSelectionAction.QuickOnline.UseStoredCredentials)
 
       assertState { !showQuickOnlineDialog && isValidating }
       assertCommands(Command.UseStoredCredentialsWithValidation)
     }
 
   @Test
-  fun `when ValidationSucceeded with empty state then does not save credentials`() =
+  fun `when Validation Succeeded with empty state then does not save credentials`() =
     modeSelectionReducer.test(ModeSelectionState(isValidating = true)) {
-      send(ModeSelectionAction.ValidationSucceeded)
+      send(ModeSelectionAction.Validation.Succeeded)
 
       assertState { !isValidating && baseUrl == "" && token == "" }
       assertCommandCount(1)
@@ -252,9 +252,9 @@ class ModeSelectionReducerTest {
     }
 
   @Test
-  fun `when SelectMode then closes quick online dialog`() =
+  fun `when Selection SelectMode then closes quick online dialog`() =
     modeSelectionReducer.test(ModeSelectionState(showQuickOnlineDialog = true)) {
-      send(ModeSelectionAction.SelectMode(AppMode.DEMO))
+      send(ModeSelectionAction.Selection.SelectMode(AppMode.DEMO))
 
       assertState { !showQuickOnlineDialog }
       assertCommandCount(1)

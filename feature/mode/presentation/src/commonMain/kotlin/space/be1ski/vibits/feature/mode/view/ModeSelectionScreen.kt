@@ -86,7 +86,7 @@ fun ModeSelectionScreen(
       title = stringResource(Res.string.mode_online_title),
       description = stringResource(Res.string.mode_online_desc),
       isPrimary = true,
-      onClick = { dispatch(ModeSelectionAction.ShowCredentialsDialog) },
+      onClick = { dispatch(ModeSelectionAction.Dialog.Show) },
     )
 
     Spacer(modifier = Modifier.height(Indent.m))
@@ -95,7 +95,7 @@ fun ModeSelectionScreen(
       title = stringResource(Res.string.mode_offline_title),
       description = stringResource(Res.string.mode_offline_desc),
       isPrimary = false,
-      onClick = { dispatch(ModeSelectionAction.SelectMode(AppMode.OFFLINE)) },
+      onClick = { dispatch(ModeSelectionAction.Selection.SelectMode(AppMode.OFFLINE)) },
     )
 
     Spacer(modifier = Modifier.height(Indent.m))
@@ -104,7 +104,7 @@ fun ModeSelectionScreen(
       title = stringResource(Res.string.mode_demo_title),
       description = stringResource(Res.string.mode_demo_desc),
       isPrimary = false,
-      onClick = { dispatch(ModeSelectionAction.SelectMode(AppMode.DEMO)) },
+      onClick = { dispatch(ModeSelectionAction.Selection.SelectMode(AppMode.DEMO)) },
     )
   }
 
@@ -129,12 +129,12 @@ private fun QuickOnlineDialog(
   dispatch: (ModeSelectionAction) -> Unit,
 ) {
   AlertDialog(
-    onDismissRequest = { if (!state.isValidating) dispatch(ModeSelectionAction.DismissQuickOnlineDialog) },
+    onDismissRequest = { if (!state.isValidating) dispatch(ModeSelectionAction.QuickOnline.Dismiss) },
     title = { Text(stringResource(Res.string.mode_quick_online_title)) },
     text = { Text(stringResource(Res.string.mode_quick_online_desc)) },
     confirmButton = {
       Button(
-        onClick = { dispatch(ModeSelectionAction.UseStoredCredentials) },
+        onClick = { dispatch(ModeSelectionAction.QuickOnline.UseStoredCredentials) },
         enabled = !state.isValidating,
       ) {
         if (state.isValidating) {
@@ -150,7 +150,7 @@ private fun QuickOnlineDialog(
     },
     dismissButton = {
       TextButton(
-        onClick = { dispatch(ModeSelectionAction.DismissQuickOnlineDialog) },
+        onClick = { dispatch(ModeSelectionAction.QuickOnline.Dismiss) },
         enabled = !state.isValidating,
       ) {
         Text(stringResource(Res.string.action_cancel))
@@ -173,13 +173,13 @@ private fun CredentialsSetupDialog(
     }
 
   AlertDialog(
-    onDismissRequest = { if (!state.isValidating) dispatch(ModeSelectionAction.DismissCredentialsDialog) },
+    onDismissRequest = { if (!state.isValidating) dispatch(ModeSelectionAction.Dialog.Dismiss) },
     title = { Text(stringResource(Res.string.mode_online_title)) },
     text = {
       Column(verticalArrangement = Arrangement.spacedBy(Indent.s)) {
         TextField(
           value = state.baseUrl,
-          onValueChange = { dispatch(ModeSelectionAction.UpdateBaseUrl(it)) },
+          onValueChange = { dispatch(ModeSelectionAction.Input.UpdateBaseUrl(it)) },
           label = { Text(stringResource(Res.string.label_base_url)) },
           placeholder = { Text(stringResource(Res.string.hint_base_url)) },
           enabled = !state.isValidating,
@@ -188,7 +188,7 @@ private fun CredentialsSetupDialog(
         )
         TextField(
           value = state.token,
-          onValueChange = { dispatch(ModeSelectionAction.UpdateToken(it)) },
+          onValueChange = { dispatch(ModeSelectionAction.Input.UpdateToken(it)) },
           label = { Text(stringResource(Res.string.label_access_token)) },
           visualTransformation = PasswordVisualTransformation(),
           enabled = !state.isValidating,
@@ -206,7 +206,7 @@ private fun CredentialsSetupDialog(
     },
     confirmButton = {
       Button(
-        onClick = { dispatch(ModeSelectionAction.Submit) },
+        onClick = { dispatch(ModeSelectionAction.Validation.Submit) },
         enabled = !state.isValidating,
       ) {
         if (state.isValidating) {
@@ -222,7 +222,7 @@ private fun CredentialsSetupDialog(
     },
     dismissButton = {
       TextButton(
-        onClick = { dispatch(ModeSelectionAction.DismissCredentialsDialog) },
+        onClick = { dispatch(ModeSelectionAction.Dialog.Dismiss) },
         enabled = !state.isValidating,
       ) {
         Text(stringResource(Res.string.action_cancel))
