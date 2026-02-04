@@ -5,6 +5,7 @@ import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
+import space.be1ski.vibits.core.platform.date.DAYS_IN_WEEK
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
@@ -13,8 +14,6 @@ import space.be1ski.vibits.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.feature.habits.domain.model.DayBuildContext
 import space.be1ski.vibits.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.feature.memos.domain.model.Memo
-
-private const val DAYS_IN_WEEK = 7
 
 /**
  * Use case for building activity data.
