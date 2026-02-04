@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.plus
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.core.platform.date.DAYS_IN_WEEK
+import space.be1ski.vibits.core.date.DAYS_IN_WEEK
 import space.be1ski.vibits.core.platform.date.currentLocalDate
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_next

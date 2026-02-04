@@ -2,7 +2,7 @@ package space.be1ski.vibits.feature.habits.presentation.view.components
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
-import space.be1ski.vibits.core.platform.date.quarterIndex
+import space.be1ski.vibits.core.date.quarterIndex
 import space.be1ski.vibits.core.ui.date.DateFormatter
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
