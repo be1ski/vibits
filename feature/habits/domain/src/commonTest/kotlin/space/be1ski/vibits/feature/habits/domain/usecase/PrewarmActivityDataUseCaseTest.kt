@@ -11,11 +11,9 @@ import kotlin.time.Instant
 
 class PrewarmActivityDataUseCaseTest {
   private val buildActivityDataUseCase = BuildActivityDataUseCase(buildDayDataUseCase = BuildDayDataUseCase())
-  private val calculateSuccessRateUseCase = CalculateSuccessRateUseCase()
   private val calculateActivityDataUseCase =
     CalculateActivityDataUseCase(
       buildActivityDataUseCase,
-      calculateSuccessRateUseCase,
     )
   private val useCase = PrewarmActivityDataUseCase(calculateActivityDataUseCase)
 
