@@ -7,7 +7,7 @@ import space.be1ski.vibits.core.logging.Log
 import space.be1ski.vibits.feature.habits.domain.usecase.SaveDailyHabitMemoUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.SaveDailyMemoResult
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
-import space.be1ski.vibits.feature.memos.domain.model.PostTags
+import space.be1ski.vibits.feature.memos.domain.model.isConfigTag
 import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
 
 private const val TAG = "HabitsMemoEffect"
@@ -49,11 +49,7 @@ class HabitsMemoEffectHandler(
 
   private fun handleCreateMemo(effect: HabitsEffect.CreateMemo): Flow<HabitsAction> =
     actions {
-      val isConfigMemo =
-        effect.content.startsWith(PostTags.HABITS_CONFIG) ||
-          effect.content.startsWith(PostTags.HABITS_CONFIG_ALT)
-
-      if (isConfigMemo) {
+      if (effect.content.isConfigTag()) {
         Log.d(TAG, "Creating config memo")
         runCatching { memosRepository.createMemo(effect.content) }
           .onSuccess { memo ->
