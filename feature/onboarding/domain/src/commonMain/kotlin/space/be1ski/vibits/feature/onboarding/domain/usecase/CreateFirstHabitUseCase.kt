@@ -1,6 +1,7 @@
 package space.be1ski.vibits.feature.onboarding.domain.usecase
 
 import dev.zacsweers.metro.Inject
+import space.be1ski.vibits.feature.habits.domain.formatHexColor
 import space.be1ski.vibits.feature.memos.domain.model.PostTags
 import space.be1ski.vibits.feature.memos.domain.usecase.CreateMemoUseCase
 
@@ -8,7 +9,6 @@ import space.be1ski.vibits.feature.memos.domain.usecase.CreateMemoUseCase
 class CreateFirstHabitUseCase(
   private val createMemo: CreateMemoUseCase,
 ) {
-  @Suppress("MagicNumber")
   suspend operator fun invoke(
     name: String,
     presetId: String?,
@@ -16,7 +16,7 @@ class CreateFirstHabitUseCase(
   ): Result<Unit> =
     runCatching {
       val habitTag = name.lowercase().replace(" ", "_")
-      val hexColor = "#${color.toString(16).takeLast(6).uppercase()}"
+      val hexColor = formatHexColor(color)
       val content =
         buildString {
           appendLine(PostTags.HABITS_CONFIG)
