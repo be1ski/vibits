@@ -7,7 +7,6 @@ import space.be1ski.vibits.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.feature.memos.presentation.effect.MemosEffect
 import space.be1ski.vibits.feature.memos.presentation.state.MemosState
 
-@Suppress("LongMethod")
 internal val loadingReducer: Reducer<MemosAction.Loading, MemosState, MemosEffect, Nothing> =
   reducer { action, state ->
     when (action) {
