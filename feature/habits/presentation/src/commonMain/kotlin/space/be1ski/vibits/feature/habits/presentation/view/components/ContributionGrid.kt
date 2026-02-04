@@ -47,7 +47,7 @@ import androidx.compose.ui.window.PopupPositionProvider
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.core.platform.date.DAYS_IN_WEEK
+import space.be1ski.vibits.core.date.DAYS_IN_WEEK
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.day_fri
 import space.be1ski.vibits.core.strings.generated.day_mon

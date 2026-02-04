@@ -4,6 +4,7 @@ import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import space.be1ski.vibits.core.platform.logging.LogLevel
 import space.be1ski.vibits.core.platform.logging.platformLog
 import kotlin.time.Clock
 
@@ -99,13 +100,6 @@ data class LogEntry(
   val tag: String,
   val message: String,
 )
-
-enum class LogLevel {
-  DEBUG,
-  INFO,
-  WARN,
-  ERROR,
-}
 
 private const val DEFAULT_URL_MAX_LENGTH = 50
 

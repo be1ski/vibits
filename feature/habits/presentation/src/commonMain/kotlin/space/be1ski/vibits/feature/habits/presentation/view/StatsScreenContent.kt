@@ -38,7 +38,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.core.platform.date.DAYS_IN_WEEK
+import space.be1ski.vibits.core.date.DAYS_IN_WEEK
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_configure_habits
 import space.be1ski.vibits.core.strings.generated.action_hide_memos

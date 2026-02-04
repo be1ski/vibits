@@ -8,6 +8,7 @@ kotlin {
       dependencies {
         implementation(projects.core.platform)
         implementation(projects.core.strings)
+        implementation(projects.core.utils)
         implementation(libs.compose.resources)
         implementation(libs.compose.foundation)
         implementation(libs.compose.material3)

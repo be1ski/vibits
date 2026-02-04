@@ -8,6 +8,7 @@ kotlin {
     commonMain {
       dependencies {
         implementation(projects.core.platform)
+        implementation(projects.core.utils)
         implementation(projects.feature.memos.domain)
         implementation(libs.kotlinx.coroutines.core)
         implementation(libs.kotlinx.datetime)

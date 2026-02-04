@@ -18,6 +18,7 @@ kotlin {
         api(projects.core.platform)
         api(projects.core.strings)
         api(projects.core.ui)
+        api(projects.core.utils)
         api(projects.feature.auth.data)
         api(projects.feature.auth.domain)
         api(projects.feature.habits.domain)

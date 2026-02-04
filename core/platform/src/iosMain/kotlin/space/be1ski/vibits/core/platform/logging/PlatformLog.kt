@@ -1,8 +1,8 @@
 package space.be1ski.vibits.core.platform.logging
 
-import space.be1ski.vibits.core.logging.LogLevel
+import space.be1ski.vibits.core.platform.logging.LogLevel
 
-internal actual fun platformLog(
+actual fun platformLog(
   level: LogLevel,
   tag: String,
   message: String,

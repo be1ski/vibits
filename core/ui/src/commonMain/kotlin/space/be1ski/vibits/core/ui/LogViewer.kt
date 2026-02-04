@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import space.be1ski.vibits.core.logging.LogEntry
-import space.be1ski.vibits.core.logging.LogLevel
+import space.be1ski.vibits.core.platform.logging.LogLevel
 
 private const val LOG_TIMESTAMP_LENGTH = 8
 private val MaxHeight = 400.dp

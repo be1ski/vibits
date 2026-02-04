@@ -18,6 +18,7 @@ kotlin {
       dependencies {
         implementation(projects.core.platform)
         implementation(projects.core.ui)
+        implementation(projects.core.utils)
         implementation(projects.feature.auth.domain)
         implementation(projects.feature.habits.domain)
         implementation(projects.feature.memos.domain)

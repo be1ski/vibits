@@ -5,8 +5,8 @@ import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
-import space.be1ski.vibits.core.platform.date.DAYS_IN_WEEK
-import space.be1ski.vibits.core.platform.date.startOfWeek
+import space.be1ski.vibits.core.date.DAYS_IN_WEEK
+import space.be1ski.vibits.core.date.startOfWeek
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
