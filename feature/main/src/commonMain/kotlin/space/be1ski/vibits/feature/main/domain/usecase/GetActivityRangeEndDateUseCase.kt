@@ -5,11 +5,11 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
+import space.be1ski.vibits.core.platform.date.DAYS_IN_WEEK
+import space.be1ski.vibits.core.platform.date.FIRST_DAY_OF_MONTH
+import space.be1ski.vibits.core.platform.date.MONTHS_IN_QUARTER
+import space.be1ski.vibits.core.platform.date.MONTHS_IN_YEAR
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
-import space.be1ski.vibits.feature.main.domain.model.DAYS_IN_WEEK
-import space.be1ski.vibits.feature.main.domain.model.FIRST_DAY_OF_MONTH
-import space.be1ski.vibits.feature.main.domain.model.MONTHS_IN_YEAR
-import space.be1ski.vibits.feature.main.domain.model.MONTHS_PER_QUARTER
 
 /**
  * Returns the last day of the given activity range.
@@ -23,7 +23,7 @@ object GetActivityRangeEndDateUseCase {
         nextMonth.minus(DatePeriod(days = 1))
       }
       is ActivityRange.Quarter -> {
-        val lastMonthOfQuarter = range.index * MONTHS_PER_QUARTER
+        val lastMonthOfQuarter = range.index * MONTHS_IN_QUARTER
         val firstOfNextQuarter =
           if (lastMonthOfQuarter == MONTHS_IN_YEAR) {
             LocalDate(range.year + 1, Month.JANUARY, FIRST_DAY_OF_MONTH)

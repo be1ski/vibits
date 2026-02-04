@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.plus
 import org.jetbrains.compose.resources.stringResource
+import space.be1ski.vibits.core.platform.date.DAYS_IN_WEEK
 import space.be1ski.vibits.core.platform.date.currentLocalDate
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_next
@@ -40,8 +41,6 @@ import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.main.domain.model.SuccessRateLevel
 import space.be1ski.vibits.feature.main.domain.usecase.GetSuccessRateLevelUseCase
 import space.be1ski.vibits.feature.settings.domain.model.TimeRangeTab
-
-private const val WEEK_END_OFFSET = 6
 
 @Composable
 internal fun TimeRangeControls(
@@ -133,7 +132,7 @@ internal fun formatRangeLabel(
 ): String =
   when (range) {
     is ActivityRange.Week -> {
-      val endDate = range.startDate.plus(DatePeriod(days = WEEK_END_OFFSET))
+      val endDate = range.startDate.plus(DatePeriod(days = DAYS_IN_WEEK - 1))
       val currentYear = currentLocalDate().year
       formatter.weekRange(range.startDate, endDate, currentYear)
     }

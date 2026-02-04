@@ -5,11 +5,10 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import space.be1ski.vibits.core.platform.date.DAYS_IN_WEEK
+import space.be1ski.vibits.core.platform.date.MONTHS_IN_QUARTER
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.memos.domain.model.Memo
-
-private const val DAYS_IN_WEEK = 7
-private const val MONTHS_PER_QUARTER = 3
 
 /**
  * Returns posts (non-habit memos) for a given activity range.
@@ -42,9 +41,9 @@ class GetPeriodPostsUseCase {
         start to end
       }
       is ActivityRange.Quarter -> {
-        val startMonth = (range.index - 1) * MONTHS_PER_QUARTER + 1
+        val startMonth = (range.index - 1) * MONTHS_IN_QUARTER + 1
         val start = LocalDate(range.year, startMonth, 1)
-        val end = start.plus(DatePeriod(months = MONTHS_PER_QUARTER)).plus(DatePeriod(days = -1))
+        val end = start.plus(DatePeriod(months = MONTHS_IN_QUARTER)).plus(DatePeriod(days = -1))
         start to end
       }
       is ActivityRange.Year -> {

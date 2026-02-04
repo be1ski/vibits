@@ -1,10 +1,9 @@
 package space.be1ski.vibits.feature.habits.domain.usecase
 
+import space.be1ski.vibits.core.platform.date.DAYS_IN_WEEK
+import space.be1ski.vibits.core.platform.date.MONTHS_IN_YEAR
+import space.be1ski.vibits.core.platform.date.QUARTERS_IN_YEAR
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
-
-private const val DAYS_IN_WEEK = 7
-private const val QUARTERS_IN_YEAR = 4
-private const val MONTHS_IN_YEAR = 12
 
 /**
  * Calculates the number of periods between two activity ranges.
