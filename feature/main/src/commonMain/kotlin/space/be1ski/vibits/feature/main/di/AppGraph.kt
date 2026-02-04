@@ -35,6 +35,7 @@ import space.be1ski.vibits.feature.memos.domain.repository.MemoStorageManager
 import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.feature.mode.data.AppModeRepositoryImpl
 import space.be1ski.vibits.feature.mode.data.platform.AppModeStore
+import space.be1ski.vibits.feature.mode.data.platform.createAppModeStore
 import space.be1ski.vibits.feature.mode.domain.repository.AppModeRepository
 import space.be1ski.vibits.feature.onboarding.data.HabitPresetsDataSource
 import space.be1ski.vibits.feature.onboarding.data.HabitPresetsDataSourceImpl
@@ -110,7 +111,7 @@ abstract class AppGraph {
 
   @Provides
   @SingleIn(AppScope::class)
-  fun appModeStore(): AppModeStore = AppModeStore()
+  fun appModeStore(): AppModeStore = createAppModeStore()
 
   @Provides
   @SingleIn(AppScope::class)
