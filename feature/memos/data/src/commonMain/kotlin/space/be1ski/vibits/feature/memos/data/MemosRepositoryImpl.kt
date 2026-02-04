@@ -23,7 +23,6 @@ private const val TAG = "MemosRepository"
 @SingleIn(AppScope::class)
 class MemosRepositoryImpl(
   private val memosApi: MemosApi,
-  private val memoMapper: MemoMapper,
   private val credentialsRepository: CredentialsRepository,
   private val memoCache: MemoCache,
 ) : MemosRepository {
@@ -45,7 +44,7 @@ class MemosRepositoryImpl(
           pageSize = MemosDefaults.DEFAULT_PAGE_SIZE,
           pageToken = nextPageToken,
         )
-      allMemos += memoMapper.toDomainList(response.memos)
+      allMemos += MemoMapper.toDomainList(response.memos)
       nextPageToken = response.nextPageToken?.takeIf { it.isNotBlank() }
       nextPageToken?.let { tokenValue ->
         if (!seenTokens.add(tokenValue)) {
@@ -86,7 +85,7 @@ class MemosRepositoryImpl(
         name = name,
         content = content,
       )
-    val updated = memoMapper.toDomain(dto)
+    val updated = MemoMapper.toDomain(dto)
     runCatching { memoCache.upsertMemo(updated) }
     Log.i(TAG, "Updated memo: $name")
     return updated
@@ -104,7 +103,7 @@ class MemosRepositoryImpl(
         token = token,
         content = content,
       )
-    val created = memoMapper.toDomain(dto)
+    val created = MemoMapper.toDomain(dto)
     runCatching { memoCache.upsertMemo(created) }
     Log.i(TAG, "Created memo: ${created.name}")
     return created

@@ -31,7 +31,6 @@ private const val LOG_CONTENT_PREVIEW_LENGTH = 50
 @SingleIn(AppScope::class)
 class SyncEngineImpl(
   private val memosApi: MemosApi,
-  private val memoMapper: MemoMapper,
   private val credentialsRepository: CredentialsRepository,
   private val syncQueue: SyncQueueRepository,
   private val offlineFirstRepository: OfflineFirstMemosRepository,
@@ -41,7 +40,7 @@ class SyncEngineImpl(
   override val isSyncing: Boolean get() = _isSyncing.value
 
   private val operationApplier by lazy {
-    SyncOperationApplier(memosApi, memoMapper, syncQueue, offlineFirstRepository)
+    SyncOperationApplier(memosApi, syncQueue, offlineFirstRepository)
   }
 
   override suspend fun performSync(): SyncResult = withSyncLock { performSyncInternal() }
@@ -201,7 +200,7 @@ class SyncEngineImpl(
           pageSize = MemosDefaults.DEFAULT_PAGE_SIZE,
           pageToken = nextPageToken,
         )
-      allMemos += memoMapper.toDomainList(response.memos)
+      allMemos += MemoMapper.toDomainList(response.memos)
       nextPageToken = response.nextPageToken?.takeIf { it.isNotBlank() }
     } while (nextPageToken != null)
 

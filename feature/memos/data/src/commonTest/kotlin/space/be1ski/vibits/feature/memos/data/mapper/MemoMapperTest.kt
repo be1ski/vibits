@@ -7,7 +7,7 @@ import kotlin.test.assertNull
 import kotlin.time.Instant
 
 class MemoMapperTest {
-  private val mapper = MemoMapper()
+  private val mapper = MemoMapper
 
   @Test
   fun `when ISO timestamp then maps to instant`() {

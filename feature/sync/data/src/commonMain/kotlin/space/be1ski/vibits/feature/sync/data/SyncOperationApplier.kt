@@ -34,7 +34,6 @@ data class RetryConfig(
  */
 internal class SyncOperationApplier(
   private val memosApi: MemosApi,
-  private val memoMapper: MemoMapper,
   private val syncQueue: SyncQueueRepository,
   private val offlineFirstRepository: OfflineFirstMemosRepository,
   private val retryConfig: RetryConfig = RetryConfig(),
@@ -97,7 +96,7 @@ internal class SyncOperationApplier(
     token: String,
   ): Boolean {
     val content = operation.content ?: return false
-    val serverMemo = memoMapper.toDomain(memosApi.createMemo(baseUrl, token, content))
+    val serverMemo = MemoMapper.toDomain(memosApi.createMemo(baseUrl, token, content))
 
     operation.memoName?.let { tempName ->
       offlineFirstRepository.updateLocalMemo(tempName, serverMemo)
