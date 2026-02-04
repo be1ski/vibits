@@ -9,7 +9,7 @@ import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 /**
  * Builds a ContributionDay for a specific date with habits configuration.
  */
-class BuildHabitDayUseCase {
+object BuildHabitDayUseCase {
   operator fun invoke(
     date: LocalDate,
     habitsConfig: List<HabitConfig>,

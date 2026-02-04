@@ -10,7 +10,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class BuildHabitDayUseCaseTest {
-  private val useCase = BuildHabitDayUseCase()
+  private val useCase = BuildHabitDayUseCase
 
   @Test
   fun `when habitsConfig is empty then returns null`() {
