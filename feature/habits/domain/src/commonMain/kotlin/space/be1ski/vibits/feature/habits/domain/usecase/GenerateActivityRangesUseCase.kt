@@ -3,6 +3,10 @@ package space.be1ski.vibits.feature.habits.domain.usecase
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
+import space.be1ski.vibits.core.platform.date.DAYS_IN_WEEK
+import space.be1ski.vibits.core.platform.date.FIRST_DAY_OF_MONTH
+import space.be1ski.vibits.core.platform.date.FIRST_QUARTER_INDEX
+import space.be1ski.vibits.core.platform.date.QUARTERS_IN_YEAR
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 
 object GenerateActivityRangesUseCase {
@@ -25,7 +29,7 @@ object GenerateActivityRangesUseCase {
     var cursor = startOfWeek(startDate)
     while (cursor <= endDate) {
       weeks.add(ActivityRange.Week(cursor))
-      cursor = cursor.plus(DatePeriod(days = 7))
+      cursor = cursor.plus(DatePeriod(days = DAYS_IN_WEEK))
     }
     return weeks
   }
@@ -39,13 +43,12 @@ object GenerateActivityRangesUseCase {
     val end = ActivityRange.Month(endDate.year, endDate.month)
     while (cursor.year < end.year || (cursor.year == end.year && cursor.month <= end.month)) {
       months.add(cursor)
-      val nextDate = LocalDate(cursor.year, cursor.month, 1).plus(DatePeriod(months = 1))
+      val nextDate = LocalDate(cursor.year, cursor.month, FIRST_DAY_OF_MONTH).plus(DatePeriod(months = 1))
       cursor = ActivityRange.Month(nextDate.year, nextDate.month)
     }
     return months
   }
 
-  @Suppress("MagicNumber")
   private fun generateQuarters(
     startDate: LocalDate,
     endDate: LocalDate,
@@ -58,8 +61,8 @@ object GenerateActivityRangesUseCase {
     while (yearCursor < endDate.year || (yearCursor == endDate.year && quarterCursor <= endQuarter)) {
       quarters.add(ActivityRange.Quarter(yearCursor, quarterCursor))
       quarterCursor++
-      if (quarterCursor > 4) {
-        quarterCursor = 1
+      if (quarterCursor > QUARTERS_IN_YEAR) {
+        quarterCursor = FIRST_QUARTER_INDEX
         yearCursor++
       }
     }
