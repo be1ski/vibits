@@ -62,7 +62,7 @@ internal fun FeatureCoordinator(
         !memosState.isLoading &&
         (skipCredentialsCheck || memosState.hasCredentials)
     if (shouldAutoLoad) {
-      dispatchApp(AppAction.MarkAutoLoaded)
+      dispatchApp(AppAction.UI.MarkAutoLoaded)
       dispatchMemos(MemosAction.Loading.LoadMemos)
     }
   }
@@ -80,7 +80,7 @@ private fun handleNotification(
 ) {
   when (effect) {
     is SettingsEffect.Notification.ModeChanged -> {
-      dispatchApp(AppAction.SetAppMode(effect.newMode))
+      dispatchApp(AppAction.Mode.SetAppMode(effect.newMode))
       dispatchMemos(MemosAction.Loading.ResetForModeChange(effect.newMode))
       dispatchMemos(MemosAction.Loading.LoadMemos)
       dispatchHabits(HabitsAction.Cache.InvalidateAllCache)

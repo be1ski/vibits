@@ -136,9 +136,9 @@ internal fun MemosBottomNavigation(
       onClick = {
         onClearSelection()
         if (appState.selectedScreen == Screen.HABITS) {
-          onAppAction(AppAction.ResetToHome(currentLocalDate()))
+          onAppAction(AppAction.TimeRange.ResetToHome(currentLocalDate()))
         } else {
-          onAppAction(AppAction.SelectScreen(Screen.HABITS))
+          onAppAction(AppAction.Navigation.SelectScreen(Screen.HABITS))
         }
       },
       icon = {
@@ -154,9 +154,9 @@ internal fun MemosBottomNavigation(
       onClick = {
         onClearSelection()
         if (appState.selectedScreen == Screen.STATS) {
-          onAppAction(AppAction.ResetToHome(currentLocalDate()))
+          onAppAction(AppAction.TimeRange.ResetToHome(currentLocalDate()))
         } else {
-          onAppAction(AppAction.SelectScreen(Screen.STATS))
+          onAppAction(AppAction.Navigation.SelectScreen(Screen.STATS))
         }
       },
       icon = {
@@ -174,7 +174,7 @@ internal fun MemosBottomNavigation(
         if (appState.selectedScreen == Screen.FEED) {
           onFeedScrollToTop()
         } else {
-          onAppAction(AppAction.SelectScreen(Screen.FEED))
+          onAppAction(AppAction.Navigation.SelectScreen(Screen.FEED))
         }
       },
       icon = {
