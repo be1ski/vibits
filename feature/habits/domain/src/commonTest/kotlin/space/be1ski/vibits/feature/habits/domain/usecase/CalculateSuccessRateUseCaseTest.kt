@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class CalculateSuccessRateUseCaseTest {
-  private val useCase = CalculateSuccessRateUseCase()
+  private val useCase = CalculateSuccessRateUseCase
 
   @Test
   fun `when current week and today is Thursday then calculates Monday to Thursday`() {

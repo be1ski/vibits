@@ -11,7 +11,6 @@ import space.be1ski.vibits.feature.memos.domain.model.Memo
 
 class CalculateActivityDataUseCase(
   private val buildActivityDataUseCase: BuildActivityDataUseCase,
-  private val calculateSuccessRateUseCase: CalculateSuccessRateUseCase,
 ) {
   operator fun invoke(
     range: ActivityRange,
@@ -35,7 +34,7 @@ class CalculateActivityDataUseCase(
     val configStartDate = configTimeline.firstOrNull()?.date
     val successRate =
       if (mode == ActivityMode.HABITS && configTimeline.isNotEmpty()) {
-        calculateSuccessRateUseCase(weekData, range, today, configStartDate)
+        CalculateSuccessRateUseCase(weekData, range, today, configStartDate)
       } else {
         null
       }
