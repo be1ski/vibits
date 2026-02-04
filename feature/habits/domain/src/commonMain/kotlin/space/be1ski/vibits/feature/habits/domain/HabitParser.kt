@@ -5,6 +5,15 @@ import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitStatus
 import space.be1ski.vibits.feature.memos.domain.model.PostTags
 
+/** Regex for matching whitespace sequences (for tag normalization). */
+private val WHITESPACE_REGEX = Regex("\\s+")
+
+/** Regex for matching checkbox format: "- [x] habit" or "* [X] habit". */
+private val CHECKBOX_REGEX = Regex("^\\s*[-*]\\s*\\[(x|X)\\]\\s+(.+)$")
+
+/** Regex for extracting habit tags from content. */
+private val HABIT_TAG_REGEX = Regex("${PostTags.HABITS_PREFIX}[^\\s]+")
+
 /**
  * Parses a single line from a habits config memo.
  * Supports formats:
@@ -75,7 +84,7 @@ fun formatHexColor(color: Long): String {
 fun normalizeHabitTag(raw: String): String {
   val trimmed = raw.trim()
   val withoutPrefix = trimmed.removePrefix(PostTags.HABITS_PREFIX).removePrefix(PostTags.HABIT_PREFIX)
-  val sanitized = withoutPrefix.replace("\\s+".toRegex(), "_")
+  val sanitized = withoutPrefix.replace(WHITESPACE_REGEX, "_")
   return "${PostTags.HABITS_PREFIX}$sanitized"
 }
 
@@ -116,10 +125,9 @@ fun extractCompletedHabits(
 ): Set<String> {
   val done = mutableSetOf<String>()
   val lines = content.lineSequence()
-  val checkboxRegex = Regex("^\\s*[-*]\\s*\\[(x|X)\\]\\s+(.+)$")
   var sawCheckbox = false
   lines.forEach { line ->
-    val match = checkboxRegex.find(line)
+    val match = CHECKBOX_REGEX.find(line)
     if (match != null) {
       sawCheckbox = true
       val trailing = match.groupValues[2]
@@ -144,8 +152,7 @@ fun extractHabitTagsFromContent(content: String?): Set<String> {
   if (content.isNullOrBlank()) {
     return emptySet()
   }
-  val habitTagPattern = "${PostTags.HABITS_PREFIX}[^\\s]+"
-  return Regex(habitTagPattern)
+  return HABIT_TAG_REGEX
     .findAll(content)
     .map { it.value }
     .filterNot { it.equals(PostTags.HABITS_DAILY, ignoreCase = true) || it.startsWith(PostTags.HABITS_DAILY) }
