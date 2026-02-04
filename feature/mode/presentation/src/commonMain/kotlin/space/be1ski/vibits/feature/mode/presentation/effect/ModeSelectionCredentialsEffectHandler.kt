@@ -5,6 +5,7 @@ import space.be1ski.vibits.core.elm.EffectHandler
 import space.be1ski.vibits.core.elm.actions
 import space.be1ski.vibits.core.logging.Log
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
+import space.be1ski.vibits.feature.auth.domain.model.isFilled
 import space.be1ski.vibits.feature.auth.domain.usecase.InitializeCredentialsFromEnvUseCase
 import space.be1ski.vibits.feature.auth.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.vibits.feature.auth.domain.usecase.SaveCredentialsUseCase
@@ -34,7 +35,7 @@ class ModeSelectionCredentialsEffectHandler(
       initializeCredentialsFromEnv()
       // After initialization, check if credentials were loaded
       val credentials = loadCredentials()
-      if (credentials.baseUrl.isNotBlank() && credentials.token.isNotBlank()) {
+      if (credentials.isFilled) {
         Log.d(TAG, "Stored credentials found after initialization")
         emit(ModeSelectionAction.StoredCredentialsFound)
       } else {
@@ -46,7 +47,7 @@ class ModeSelectionCredentialsEffectHandler(
   private fun handleCheckStoredCredentials(): Flow<ModeSelectionAction> =
     actions {
       val credentials = loadCredentials()
-      if (credentials.baseUrl.isNotBlank() && credentials.token.isNotBlank()) {
+      if (credentials.isFilled) {
         Log.d(TAG, "Stored credentials found")
         emit(ModeSelectionAction.StoredCredentialsFound)
       } else {

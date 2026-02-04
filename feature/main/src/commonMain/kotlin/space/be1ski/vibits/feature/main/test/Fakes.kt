@@ -4,6 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import space.be1ski.vibits.core.platform.env.LocalConfigProvider
 import space.be1ski.vibits.core.platform.mode.AppMode
+import space.be1ski.vibits.feature.auth.data.LocalCredentials
+import space.be1ski.vibits.feature.auth.data.platform.CredentialsStore
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.feature.memos.data.offline.OfflineMemosFileDto
@@ -35,6 +37,22 @@ class FakeOnboardingStore(
 
   override fun reset() {
     completed = false
+  }
+}
+
+class FakeCredentialsStore(
+  initial: LocalCredentials = LocalCredentials(baseUrl = "", token = ""),
+) : CredentialsStore {
+  var stored: LocalCredentials = initial
+    private set
+  var saveCalls: Int = 0
+    private set
+
+  override fun load(): LocalCredentials = stored
+
+  override fun save(credentials: LocalCredentials) {
+    stored = credentials
+    saveCalls += 1
   }
 }
 

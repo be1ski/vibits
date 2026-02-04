@@ -2,6 +2,7 @@ package space.be1ski.vibits.feature.mode.domain.usecase
 
 import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.core.platform.mode.AppMode
+import space.be1ski.vibits.feature.auth.domain.model.isFilled
 import space.be1ski.vibits.feature.auth.domain.usecase.LoadCredentialsUseCase
 
 /**
@@ -20,7 +21,7 @@ class FixInvalidOnlineModeUseCase(
 
     if (mode == AppMode.ONLINE) {
       val credentials = loadCredentialsUseCase()
-      if (credentials.baseUrl.isBlank() || credentials.token.isBlank()) {
+      if (!credentials.isFilled) {
         saveAppModeUseCase(AppMode.NOT_SELECTED)
         return AppMode.NOT_SELECTED
       }
