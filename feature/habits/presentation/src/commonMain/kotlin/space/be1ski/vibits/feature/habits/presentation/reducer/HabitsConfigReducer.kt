@@ -13,7 +13,6 @@ import kotlin.random.Random
 /**
  * Sub-reducer for config dialog management.
  */
-@Suppress("LongMethod")
 internal val configReducer: Reducer<HabitsAction.Config, HabitsState, HabitsEffect, Nothing> =
   reducer { action, state ->
     when (action) {
