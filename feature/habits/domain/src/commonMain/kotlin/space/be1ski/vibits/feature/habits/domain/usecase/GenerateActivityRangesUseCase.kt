@@ -7,6 +7,8 @@ import space.be1ski.vibits.core.platform.date.DAYS_IN_WEEK
 import space.be1ski.vibits.core.platform.date.FIRST_DAY_OF_MONTH
 import space.be1ski.vibits.core.platform.date.FIRST_QUARTER_INDEX
 import space.be1ski.vibits.core.platform.date.QUARTERS_IN_YEAR
+import space.be1ski.vibits.core.platform.date.quarterIndex
+import space.be1ski.vibits.core.platform.date.startOfWeek
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 
 object GenerateActivityRangesUseCase {
