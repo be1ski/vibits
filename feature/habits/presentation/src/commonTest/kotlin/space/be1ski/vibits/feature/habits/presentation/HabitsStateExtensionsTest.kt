@@ -4,8 +4,8 @@ import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeekData
+import space.be1ski.vibits.feature.habits.domain.model.CachedActivityData
 import space.be1ski.vibits.feature.habits.presentation.state.ActivityCacheKey
-import space.be1ski.vibits.feature.habits.presentation.state.CachedActivityData
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.feature.habits.presentation.state.getActivityData
 import space.be1ski.vibits.feature.habits.presentation.state.isDataLoading

@@ -4,9 +4,7 @@ import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.core.platform.date.currentLocalDate
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
-import space.be1ski.vibits.feature.habits.domain.model.ActivityWeekData
-import space.be1ski.vibits.feature.habits.domain.model.HabitsConfigEntry
-import space.be1ski.vibits.feature.habits.domain.model.SuccessRateData
+import space.be1ski.vibits.feature.habits.domain.model.CachedActivityData
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 
 class CalculateActivityDataUseCase(
@@ -46,9 +44,3 @@ class CalculateActivityDataUseCase(
     )
   }
 }
-
-data class CachedActivityData(
-  val weekData: ActivityWeekData,
-  val configTimeline: List<HabitsConfigEntry>,
-  val successRate: SuccessRateData?,
-)
