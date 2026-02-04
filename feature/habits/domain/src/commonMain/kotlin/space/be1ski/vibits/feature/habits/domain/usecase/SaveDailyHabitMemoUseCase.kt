@@ -11,32 +11,10 @@ import space.be1ski.vibits.core.platform.di.AppScope
 import space.be1ski.vibits.feature.habits.domain.buildDailyContent
 import space.be1ski.vibits.feature.habits.domain.extractCompletedHabits
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
-import space.be1ski.vibits.feature.memos.domain.model.Memo
+import space.be1ski.vibits.feature.habits.domain.model.SaveDailyMemoResult
 import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
 
 private const val TAG = "SaveDailyHabitMemo"
-
-/**
- * Result of saving a daily habit memo.
- */
-sealed interface SaveDailyMemoResult {
-  data class Created(
-    val memo: Memo,
-  ) : SaveDailyMemoResult
-
-  data class Updated(
-    val memo: Memo,
-  ) : SaveDailyMemoResult
-
-  data class Deleted(
-    val memoName: String,
-  ) : SaveDailyMemoResult
-
-  data class Error(
-    val message: String,
-    val exception: Throwable? = null,
-  ) : SaveDailyMemoResult
-}
 
 /**
  * Atomically saves a daily habit memo, preventing race conditions when
