@@ -5,6 +5,7 @@ import space.be1ski.vibits.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.feature.auth.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.vibits.feature.main.test.FakeAppModeRepository
 import space.be1ski.vibits.feature.main.test.FakeCredentialsRepository
+import space.be1ski.vibits.feature.main.test.FakeMemoStorageManager
 import space.be1ski.vibits.feature.main.test.FakeOnboardingStore
 import space.be1ski.vibits.feature.main.test.FakePreferencesRepository
 import kotlin.test.Test
@@ -236,5 +237,44 @@ class FixInvalidOnlineModeUseCaseTest {
     assertEquals(AppMode.NOT_SELECTED, result)
     assertEquals(AppMode.NOT_SELECTED, repository.storedMode)
     assertEquals(1, repository.saveCalls)
+  }
+}
+
+class ResetAppWithMemosUseCaseTest {
+  private fun createUseCase(
+    appModeRepository: FakeAppModeRepository = FakeAppModeRepository(initial = AppMode.ONLINE),
+    credentialsRepository: FakeCredentialsRepository = FakeCredentialsRepository(),
+    preferencesRepository: FakePreferencesRepository = FakePreferencesRepository(),
+    onboardingStore: FakeOnboardingStore = FakeOnboardingStore(),
+    memoStorageManager: FakeMemoStorageManager = FakeMemoStorageManager(),
+  ): Pair<ResetAppWithMemosUseCase, FakeMemoStorageManager> {
+    val resetAppUseCase =
+      ResetAppUseCase(
+        appModeRepository,
+        credentialsRepository,
+        preferencesRepository,
+        onboardingStore,
+      )
+    val useCase = ResetAppWithMemosUseCase(resetAppUseCase, memoStorageManager)
+    return useCase to memoStorageManager
+  }
+
+  @Test
+  fun `when invoke then calls resetApp`() {
+    val appModeRepository = FakeAppModeRepository(initial = AppMode.ONLINE)
+    val (useCase, _) = createUseCase(appModeRepository = appModeRepository)
+
+    useCase()
+
+    assertEquals(AppMode.NOT_SELECTED, appModeRepository.storedMode)
+  }
+
+  @Test
+  fun `when invoke then clears all memos`() {
+    val (useCase, memoStorageManager) = createUseCase()
+
+    useCase()
+
+    assertEquals(1, memoStorageManager.clearAllCalls)
   }
 }
