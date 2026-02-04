@@ -3,6 +3,7 @@ package space.be1ski.vibits.feature.settings.domain.usecase
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.feature.main.test.FakePreferencesRepository
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
+import space.be1ski.vibits.feature.settings.domain.model.TimeRangeScreen
 import space.be1ski.vibits.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.feature.settings.domain.model.UserPreferences
 import kotlin.test.Test
