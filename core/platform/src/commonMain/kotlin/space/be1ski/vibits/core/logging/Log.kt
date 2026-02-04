@@ -106,3 +106,12 @@ enum class LogLevel {
   WARN,
   ERROR,
 }
+
+private const val DEFAULT_URL_MAX_LENGTH = 50
+
+/**
+ * Masks a URL for safe logging, truncating to the specified length.
+ */
+fun String.maskUrl(maxLength: Int = DEFAULT_URL_MAX_LENGTH): String {
+  return take(maxLength) + if (length > maxLength) "..." else ""
+}

@@ -177,4 +177,49 @@ class LogTest {
     assertTrue(logs.size <= 500)
     assertEquals("Message 509", logs.first().message)
   }
+
+  @Test
+  fun `when maskUrl called on short url then returns unchanged`() {
+    val url = "https://example.com"
+
+    val masked = url.maskUrl()
+
+    assertEquals("https://example.com", masked)
+  }
+
+  @Test
+  fun `when maskUrl called on url exceeding default length then truncates with ellipsis`() {
+    val url = "https://example.com/very/long/path/that/exceeds/fifty/characters/for/sure"
+
+    val masked = url.maskUrl()
+
+    assertEquals("https://example.com/very/long/path/that/exceeds/fi...", masked)
+  }
+
+  @Test
+  fun `when maskUrl called with custom length then respects length`() {
+    val url = "https://example.com/path"
+
+    val masked = url.maskUrl(maxLength = 10)
+
+    assertEquals("https://ex...", masked)
+  }
+
+  @Test
+  fun `when maskUrl called on empty string then returns empty`() {
+    val url = ""
+
+    val masked = url.maskUrl()
+
+    assertEquals("", masked)
+  }
+
+  @Test
+  fun `when maskUrl called on url exactly at max length then no ellipsis`() {
+    val url = "a".repeat(50)
+
+    val masked = url.maskUrl()
+
+    assertEquals(url, masked)
+  }
 }
