@@ -5,10 +5,10 @@ import androidx.core.content.edit
 import space.be1ski.vibits.core.platform.app.AndroidContextHolder
 import space.be1ski.vibits.feature.auth.data.LocalCredentials
 
-actual class CredentialsStore {
+internal class AndroidCredentialsStore : CredentialsStore {
   private val prefsName = "memos_prefs"
 
-  actual fun load(): LocalCredentials {
+  override fun load(): LocalCredentials {
     if (!AndroidContextHolder.isReady()) {
       return LocalCredentials(baseUrl = "", token = "")
     }
@@ -18,7 +18,7 @@ actual class CredentialsStore {
     return LocalCredentials(baseUrl = baseUrl, token = token)
   }
 
-  actual fun save(credentials: LocalCredentials) {
+  override fun save(credentials: LocalCredentials) {
     if (!AndroidContextHolder.isReady()) {
       return
     }
@@ -29,3 +29,5 @@ actual class CredentialsStore {
     }
   }
 }
+
+actual fun createCredentialsStore(): CredentialsStore = AndroidCredentialsStore()
