@@ -5,7 +5,7 @@ import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.core.logging.Log
 import space.be1ski.vibits.core.platform.di.AppScope
 import space.be1ski.vibits.feature.memos.data.platform.OfflineMemoStorage
-import space.be1ski.vibits.feature.memos.domain.model.PostTags
+import space.be1ski.vibits.feature.memos.domain.model.isConfigMemo
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
 import space.be1ski.vibits.feature.onboarding.domain.repository.OnboardingRepository
 import space.be1ski.vibits.feature.onboarding.domain.repository.OnboardingStore
@@ -40,7 +40,7 @@ class OnboardingRepositoryImpl(
     val memosFile = offlineMemoStorage.load()
     val hasConfig =
       memosFile.memos.any { memo ->
-        memo.content.contains(PostTags.HABITS_CONFIG) || memo.content.contains(PostTags.HABITS_CONFIG_ALT)
+        memo.content.isConfigMemo()
       }
     Log.d(TAG, "hasHabitsConfig() = $hasConfig")
     return hasConfig

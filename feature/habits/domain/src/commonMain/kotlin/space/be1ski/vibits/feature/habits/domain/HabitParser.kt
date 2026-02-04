@@ -4,6 +4,9 @@ import space.be1ski.vibits.core.ui.theme.DefaultHabitColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitStatus
 import space.be1ski.vibits.feature.memos.domain.model.PostTags
+import space.be1ski.vibits.feature.memos.domain.model.isConfigMemo
+import space.be1ski.vibits.feature.memos.domain.model.isConfigTag
+import space.be1ski.vibits.feature.memos.domain.model.stripHabitPrefixes
 
 /** Regex for matching whitespace sequences (for tag normalization). */
 private val WHITESPACE_REGEX = Regex("\\s+")
@@ -83,7 +86,7 @@ fun formatHexColor(color: Long): String {
  */
 fun normalizeHabitTag(raw: String): String {
   val trimmed = raw.trim()
-  val withoutPrefix = trimmed.removePrefix(PostTags.HABITS_PREFIX).removePrefix(PostTags.HABIT_PREFIX)
+  val withoutPrefix = trimmed.stripHabitPrefixes()
   val sanitized = withoutPrefix.replace(WHITESPACE_REGEX, "_")
   return "${PostTags.HABITS_PREFIX}$sanitized"
 }
@@ -91,7 +94,7 @@ fun normalizeHabitTag(raw: String): String {
 /**
  * Extracts a human-readable label from a habit tag.
  */
-fun labelFromTag(tag: String): String = tag.removePrefix(PostTags.HABITS_PREFIX).removePrefix(PostTags.HABIT_PREFIX).replace('_', ' ')
+fun labelFromTag(tag: String): String = tag.stripHabitPrefixes().replace('_', ' ')
 
 /**
  * Builds habit statuses for a day given the memo content and habit configurations.
@@ -164,14 +167,14 @@ fun extractHabitTagsFromContent(content: String?): Set<String> {
  * Returns the list of habits defined in the memo, or empty list if not a config memo.
  */
 fun parseConfigFromContent(content: String): List<HabitConfig> {
-  if (!content.contains(PostTags.HABITS_CONFIG) && !content.contains(PostTags.HABITS_CONFIG_ALT)) {
+  if (!content.isConfigMemo()) {
     return emptyList()
   }
   return content
     .lineSequence()
     .map { it.trim() }
     .filter { it.isNotBlank() }
-    .filterNot { it.startsWith(PostTags.HABITS_CONFIG) || it.startsWith(PostTags.HABITS_CONFIG_ALT) }
+    .filterNot { it.isConfigTag() }
     .mapNotNull { line -> parseHabitConfigLine(line) }
     .distinctBy { it.tag }
     .toList()
