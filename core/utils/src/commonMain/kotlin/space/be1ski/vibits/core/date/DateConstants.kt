@@ -1,4 +1,4 @@
-package space.be1ski.vibits.core.platform.date
+package space.be1ski.vibits.core.date
 
 const val DAYS_IN_WEEK = 7
 const val MONTHS_IN_QUARTER = 3

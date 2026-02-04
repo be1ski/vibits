@@ -1,7 +1,7 @@
 package space.be1ski.vibits.feature.main.domain.usecase
 
 import kotlinx.datetime.LocalDate
-import space.be1ski.vibits.core.platform.date.quarterIndex
+import space.be1ski.vibits.core.date.quarterIndex
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.settings.domain.model.TimeRangeTab
 

@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import space.be1ski.vibits.core.platform.logging.LogLevel
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

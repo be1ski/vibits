@@ -8,6 +8,7 @@ kotlin {
     commonMain {
       dependencies {
         implementation(projects.core.platform)
+        implementation(projects.core.utils)
         implementation(projects.feature.auth.domain)
       }
     }

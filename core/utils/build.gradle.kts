@@ -1,6 +1,5 @@
 plugins {
   id("vibits.kmp.library")
-  id("vibits.kmp.metro")
 }
 
 kotlin {
@@ -8,13 +7,12 @@ kotlin {
     commonMain {
       dependencies {
         implementation(projects.core.platform)
-        implementation(projects.core.utils)
-        implementation(projects.feature.settings.domain)
+        implementation(libs.kotlinx.atomicfu)
+        implementation(libs.kotlinx.datetime)
       }
     }
     commonTest {
       dependencies {
-        implementation(projects.feature.main)
         implementation(kotlin("test"))
         implementation(libs.kotlinx.coroutines.test)
       }
