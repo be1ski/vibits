@@ -9,7 +9,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -137,9 +136,6 @@ private fun SwipeablePagerContent(
       initialPage = initialPage,
       pageCount = { pageCount },
     )
-
-  @Suppress("UNUSED_VARIABLE")
-  val scope = rememberCoroutineScope()
 
   LaunchedEffect(currentDelta, minDelta) {
     val targetPage = (currentDelta - minDelta).coerceIn(0, pageCount - 1)
