@@ -1,4 +1,4 @@
-package space.be1ski.vibits.feature.main.data
+package space.be1ski.vibits.feature.memos.data.export
 
 import space.be1ski.vibits.core.platform.export.FileExporter
 import space.be1ski.vibits.feature.memos.data.offline.OfflineMemosFileDto
