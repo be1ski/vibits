@@ -15,7 +15,6 @@ import kotlinx.serialization.json.Json
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.feature.main.test.FakeCredentialsRepository
 import space.be1ski.vibits.feature.main.test.FakeMemoCache
-import space.be1ski.vibits.feature.memos.data.mapper.MemoMapper
 import space.be1ski.vibits.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import kotlin.test.Test
@@ -49,7 +48,6 @@ class MemosRepositoryImplTest {
       val repository =
         MemosRepositoryImpl(
           memosApi = MemosApi(client),
-          memoMapper = MemoMapper(),
           credentialsRepository = credentials,
           memoCache = cache,
         )
@@ -75,7 +73,6 @@ class MemosRepositoryImplTest {
       val repository =
         MemosRepositoryImpl(
           memosApi = MemosApi(client),
-          memoMapper = MemoMapper(),
           credentialsRepository = FakeCredentialsRepository(Credentials(baseUrl = "https://example.com", token = "token")),
           memoCache = cache,
         )
@@ -104,7 +101,6 @@ class MemosRepositoryImplTest {
       val repository =
         MemosRepositoryImpl(
           memosApi = MemosApi(client),
-          memoMapper = MemoMapper(),
           credentialsRepository = FakeCredentialsRepository(Credentials(baseUrl = "https://example.com", token = "token")),
           memoCache = cache,
         )
@@ -134,7 +130,6 @@ class MemosRepositoryImplTest {
       val repository =
         MemosRepositoryImpl(
           memosApi = MemosApi(client),
-          memoMapper = MemoMapper(),
           credentialsRepository = FakeCredentialsRepository(Credentials(baseUrl = "https://example.com", token = "token")),
           memoCache = cache,
         )
@@ -157,7 +152,6 @@ class MemosRepositoryImplTest {
       val repository =
         MemosRepositoryImpl(
           memosApi = MemosApi(client),
-          memoMapper = MemoMapper(),
           credentialsRepository = FakeCredentialsRepository(Credentials(baseUrl = "https://example.com", token = "token")),
           memoCache = cache,
         )
@@ -175,7 +169,6 @@ class MemosRepositoryImplTest {
       val repository =
         MemosRepositoryImpl(
           memosApi = MemosApi(client),
-          memoMapper = MemoMapper(),
           credentialsRepository = FakeCredentialsRepository(Credentials(baseUrl = "", token = "")),
           memoCache = FakeMemoCache(),
         )

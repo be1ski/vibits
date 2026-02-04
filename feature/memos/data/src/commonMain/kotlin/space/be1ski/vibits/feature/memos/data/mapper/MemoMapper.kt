@@ -1,17 +1,12 @@
 package space.be1ski.vibits.feature.memos.data.mapper
 
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
-import space.be1ski.vibits.core.platform.di.AppScope
 import space.be1ski.vibits.feature.memos.data.remote.dto.MemoDto
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 
 /**
  * Maps network memo DTOs into domain models.
  */
-@Inject
-@SingleIn(AppScope::class)
-class MemoMapper {
+object MemoMapper {
   /**
    * Converts a [MemoDto] into a domain [Memo].
    */
