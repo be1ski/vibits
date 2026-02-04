@@ -7,6 +7,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 import space.be1ski.vibits.core.ui.theme.HabitColors
+import space.be1ski.vibits.feature.habits.domain.formatHexColor
 import space.be1ski.vibits.feature.habits.domain.labelFromTag
 import space.be1ski.vibits.feature.habits.domain.model.DemoHabits
 import space.be1ski.vibits.feature.memos.domain.model.Memo
@@ -32,14 +33,14 @@ internal data class DemoHabit(
 internal object DemoDataGenerator {
   private val demoHabits =
     listOf(
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.EXERCISE}", HabitColors[0].toHexString(), 0.85f, 0.7f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.READING}", HabitColors[3].toHexString(), 0.70f, 1.1f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.MEDITATION}", HabitColors[4].toHexString(), 0.60f, 1.0f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.WATER}", HabitColors[5].toHexString(), 0.90f, 0.95f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.LEARNING}", HabitColors[6].toHexString(), 0.50f, 0.6f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.WALKING}", HabitColors[8].toHexString(), 0.65f, 1.2f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.NO_SUGAR}", HabitColors[2].toHexString(), 0.45f, 0.8f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.EARLY_SLEEP}", HabitColors[1].toHexString(), 0.55f, 0.7f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.EXERCISE}", formatHexColor(HabitColors[0]), 0.85f, 0.7f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.READING}", formatHexColor(HabitColors[3]), 0.70f, 1.1f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.MEDITATION}", formatHexColor(HabitColors[4]), 0.60f, 1.0f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.WATER}", formatHexColor(HabitColors[5]), 0.90f, 0.95f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.LEARNING}", formatHexColor(HabitColors[6]), 0.50f, 0.6f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.WALKING}", formatHexColor(HabitColors[8]), 0.65f, 1.2f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.NO_SUGAR}", formatHexColor(HabitColors[2]), 0.45f, 0.8f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.EARLY_SLEEP}", formatHexColor(HabitColors[1]), 0.55f, 0.7f),
     )
 
   private const val MONTHS_OF_HISTORY = 18
@@ -217,9 +218,4 @@ internal object DemoDataGenerator {
   }
 
   private fun LocalDate.nextDay(): LocalDate = LocalDate.fromEpochDays(this.toEpochDays() + 1)
-
-  private fun Long.toHexString(): String {
-    val hex = this.toString(16).uppercase()
-    return "#${hex.takeLast(6)}"
-  }
 }
