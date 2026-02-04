@@ -31,6 +31,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
 
 class SyncOperationApplierTest {
   private val memoMapper = MemoMapper()
@@ -38,6 +39,11 @@ class SyncOperationApplierTest {
   private val token = "test-token"
 
   private fun createApplier(
+    handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData,
+  ): Triple<SyncOperationApplier, FakeSyncQueue, RequestTracker> = createApplierWithRetry(RetryConfig(maxRetries = 0), handler)
+
+  private fun createApplierWithRetry(
+    retryConfig: RetryConfig,
     handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData,
   ): Triple<SyncOperationApplier, FakeSyncQueue, RequestTracker> {
     val tracker = RequestTracker()
@@ -61,7 +67,7 @@ class SyncOperationApplierTest {
     val fakeQueue = FakeSyncQueue()
     val fakeCache = FakeMemoCache()
     val fakeOfflineRepo = OfflineFirstMemosRepository(fakeCache, fakeQueue)
-    val applier = SyncOperationApplier(MemosApi(client), memoMapper, fakeQueue, fakeOfflineRepo)
+    val applier = SyncOperationApplier(MemosApi(client), memoMapper, fakeQueue, fakeOfflineRepo, retryConfig)
     return Triple(applier, fakeQueue, tracker)
   }
 
@@ -426,6 +432,134 @@ class SyncOperationApplierTest {
       val statusHistory = fakeQueue.statusHistory["op-1"]!!
       assertEquals(SyncOperationStatus.IN_PROGRESS, statusHistory.first())
       assertEquals(SyncOperationStatus.SYNCED, statusHistory.last())
+    }
+
+  // ========== Retry Tests ==========
+
+  @Test
+  fun `when operation fails and retries succeed then status becomes SYNCED`() =
+    runTest {
+      var callCount = 0
+      val retryConfig = RetryConfig(maxRetries = 2, initialDelay = 1.milliseconds, maxDelay = 10.milliseconds)
+      val (applier, fakeQueue, tracker) =
+        createApplierWithRetry(retryConfig) { request ->
+          callCount++
+          if (callCount < 2) {
+            respondError(HttpStatusCode.InternalServerError)
+          } else {
+            respond(
+              content = """{"name":"memos/created-1","content":"created","createTime":"2024-01-01T00:00:00Z"}""",
+              headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
+            )
+          }
+        }
+      val operation =
+        SyncOperation(
+          id = "op-1",
+          type = SyncOperationType.CREATE,
+          memoName = "local_123_456",
+          content = "content",
+          createdAt = Clock.System.now(),
+          status = SyncOperationStatus.PENDING,
+        )
+      fakeQueue.operations.add(operation)
+
+      applier.applyOperations(listOf(operation), baseUrl, token)
+
+      assertEquals(2, tracker.postCalls)
+      assertEquals(SyncOperationStatus.SYNCED, fakeQueue.statusHistory["op-1"]?.last())
+    }
+
+  @Test
+  fun `when operation fails all retries then status becomes FAILED`() =
+    runTest {
+      val retryConfig = RetryConfig(maxRetries = 2, initialDelay = 1.milliseconds, maxDelay = 10.milliseconds)
+      val (applier, fakeQueue, tracker) =
+        createApplierWithRetry(retryConfig) { respondError(HttpStatusCode.InternalServerError) }
+      val operation =
+        SyncOperation(
+          id = "op-1",
+          type = SyncOperationType.CREATE,
+          memoName = "local_123_456",
+          content = "content",
+          createdAt = Clock.System.now(),
+          status = SyncOperationStatus.PENDING,
+        )
+      fakeQueue.operations.add(operation)
+
+      var exceptionThrown = false
+      try {
+        applier.applyOperations(listOf(operation), baseUrl, token)
+      } catch (e: Exception) {
+        exceptionThrown = true
+      }
+
+      assertTrue(exceptionThrown)
+      assertEquals(3, tracker.postCalls) // Initial + 2 retries
+      assertEquals(SyncOperationStatus.FAILED, fakeQueue.statusHistory["op-1"]?.last())
+    }
+
+  @Test
+  fun `when operation succeeds on third retry then makes expected number of calls`() =
+    runTest {
+      var callCount = 0
+      val retryConfig = RetryConfig(maxRetries = 3, initialDelay = 1.milliseconds, maxDelay = 10.milliseconds)
+      val (applier, fakeQueue, tracker) =
+        createApplierWithRetry(retryConfig) { request ->
+          callCount++
+          if (callCount <= 2) {
+            respondError(HttpStatusCode.ServiceUnavailable)
+          } else {
+            respond(
+              content = """{"name":"memos/created-1","content":"created","createTime":"2024-01-01T00:00:00Z"}""",
+              headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
+            )
+          }
+        }
+      val operation =
+        SyncOperation(
+          id = "op-1",
+          type = SyncOperationType.CREATE,
+          memoName = "local_123_456",
+          content = "content",
+          createdAt = Clock.System.now(),
+          status = SyncOperationStatus.PENDING,
+        )
+      fakeQueue.operations.add(operation)
+
+      applier.applyOperations(listOf(operation), baseUrl, token)
+
+      assertEquals(3, tracker.postCalls)
+      assertEquals(SyncOperationStatus.SYNCED, fakeQueue.statusHistory["op-1"]?.last())
+    }
+
+  @Test
+  fun `when retry config has zero retries then fails immediately without retry`() =
+    runTest {
+      val retryConfig = RetryConfig(maxRetries = 0, initialDelay = 1.milliseconds, maxDelay = 10.milliseconds)
+      val (applier, fakeQueue, tracker) =
+        createApplierWithRetry(retryConfig) { respondError(HttpStatusCode.InternalServerError) }
+      val operation =
+        SyncOperation(
+          id = "op-1",
+          type = SyncOperationType.CREATE,
+          memoName = "local_123_456",
+          content = "content",
+          createdAt = Clock.System.now(),
+          status = SyncOperationStatus.PENDING,
+        )
+      fakeQueue.operations.add(operation)
+
+      var exceptionThrown = false
+      try {
+        applier.applyOperations(listOf(operation), baseUrl, token)
+      } catch (e: Exception) {
+        exceptionThrown = true
+      }
+
+      assertTrue(exceptionThrown)
+      assertEquals(1, tracker.postCalls)
+      assertEquals(SyncOperationStatus.FAILED, fakeQueue.statusHistory["op-1"]?.last())
     }
 
   // ========== Helper Classes ==========
