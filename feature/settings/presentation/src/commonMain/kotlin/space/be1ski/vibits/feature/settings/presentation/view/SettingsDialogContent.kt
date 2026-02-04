@@ -8,11 +8,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteForever
@@ -45,17 +42,14 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.logging.Log
-import space.be1ski.vibits.core.logging.LogLevel
 import space.be1ski.vibits.core.platform.app.AppDetails
 import space.be1ski.vibits.core.platform.export.createFileExporter
 import space.be1ski.vibits.core.platform.locale.AppLanguage
@@ -122,6 +116,7 @@ import space.be1ski.vibits.core.strings.generated.theme_light
 import space.be1ski.vibits.core.strings.generated.theme_system
 import space.be1ski.vibits.core.strings.generated.title_logs
 import space.be1ski.vibits.core.ui.Indent
+import space.be1ski.vibits.core.ui.LogViewer
 import space.be1ski.vibits.core.ui.SegmentedSelector
 import space.be1ski.vibits.feature.memos.data.export.ExportResult
 import space.be1ski.vibits.feature.memos.data.export.Exporter
@@ -572,8 +567,6 @@ private fun ActionsRow(
   }
 }
 
-private const val LOG_TIMESTAMP_LENGTH = 8
-
 @Suppress("LongMethod")
 @Composable
 private fun ResetOptionsDialog(
@@ -641,7 +634,6 @@ private fun ResetOptionsDialog(
   )
 }
 
-@Suppress("LongMethod")
 @Composable
 private fun LogsDialog(onDismiss: () -> Unit) {
   var logs by remember { mutableStateOf(Log.logs) }
@@ -650,54 +642,10 @@ private fun LogsDialog(onDismiss: () -> Unit) {
     onDismissRequest = onDismiss,
     title = { Text(stringResource(Res.string.title_logs, logs.size)) },
     text = {
-      LazyColumn(
-        modifier =
-          Modifier
-            .fillMaxWidth()
-            .heightIn(max = 400.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-      ) {
-        items(logs) { entry ->
-          val bgColor =
-            when (entry.level) {
-              LogLevel.ERROR -> MaterialTheme.colorScheme.errorContainer
-              LogLevel.WARN -> MaterialTheme.colorScheme.tertiaryContainer
-              else -> MaterialTheme.colorScheme.surfaceVariant
-            }
-          Column(
-            modifier =
-              Modifier
-                .fillMaxWidth()
-                .background(bgColor, RoundedCornerShape(4.dp))
-                .padding(6.dp),
-          ) {
-            val time = entry.timestamp.substringAfter('T').take(LOG_TIMESTAMP_LENGTH)
-            val header = "$time ${entry.level.name.first()}/${entry.tag}"
-            Text(
-              text = header,
-              style = MaterialTheme.typography.labelSmall,
-              color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Text(
-              text = entry.message,
-              style =
-                MaterialTheme.typography.bodySmall.copy(
-                  fontFamily = FontFamily.Monospace,
-                  fontSize = 11.sp,
-                ),
-            )
-          }
-        }
-        if (logs.isEmpty()) {
-          item {
-            Text(
-              stringResource(Res.string.msg_no_logs),
-              style = MaterialTheme.typography.bodyMedium,
-              color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-          }
-        }
-      }
+      LogViewer(
+        logs = logs,
+        emptyMessage = stringResource(Res.string.msg_no_logs),
+      )
     },
     confirmButton = {
       TextButton(
