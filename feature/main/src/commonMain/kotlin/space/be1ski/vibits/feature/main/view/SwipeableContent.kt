@@ -23,12 +23,12 @@ import space.be1ski.vibits.feature.habits.domain.parseConfigFromContent
 import space.be1ski.vibits.feature.habits.domain.usecase.CalculateActivityRangeDeltaUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.NavigateActivityRangeUseCase
+import space.be1ski.vibits.feature.habits.domain.usecase.quarterIndex
 import space.be1ski.vibits.feature.habits.domain.usecase.startOfWeek
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.feature.habits.presentation.view.StatsScreen
 import space.be1ski.vibits.feature.habits.presentation.view.StatsScreenState
-import space.be1ski.vibits.feature.habits.presentation.view.components.quarterIndex
 import space.be1ski.vibits.feature.main.domain.model.AppState
 import space.be1ski.vibits.feature.main.domain.model.Screen
 import space.be1ski.vibits.feature.main.presentation.action.AppAction
