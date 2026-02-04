@@ -17,7 +17,6 @@ import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
 /**
  * Sub-reducer for editor lifecycle and interactions.
  */
-@Suppress("LongMethod", "CyclomaticComplexMethod")
 internal val editorReducer: Reducer<HabitsAction.Editor, HabitsState, HabitsEffect, Nothing> =
   reducer { action, state ->
     when (action) {
