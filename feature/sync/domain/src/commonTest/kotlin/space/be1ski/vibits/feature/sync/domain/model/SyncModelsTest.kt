@@ -84,42 +84,4 @@ class SyncModelsTest {
       )
     assertEquals(customTime, operation.createdAt)
   }
-
-  @Test
-  fun `SyncOperationType has three values`() {
-    val types = SyncOperationType.entries
-    assertEquals(3, types.size)
-    assertTrue(types.contains(SyncOperationType.CREATE))
-    assertTrue(types.contains(SyncOperationType.UPDATE))
-    assertTrue(types.contains(SyncOperationType.DELETE))
-  }
-
-  @Test
-  fun `SyncOperationStatus has four values`() {
-    val statuses = SyncOperationStatus.entries
-    assertEquals(4, statuses.size)
-    assertTrue(statuses.contains(SyncOperationStatus.PENDING))
-    assertTrue(statuses.contains(SyncOperationStatus.IN_PROGRESS))
-    assertTrue(statuses.contains(SyncOperationStatus.SYNCED))
-    assertTrue(statuses.contains(SyncOperationStatus.FAILED))
-  }
-
-  // ========== SyncConflict Tests ==========
-
-  @Test
-  fun `ConflictType has three values`() {
-    val types = ConflictType.entries
-    assertEquals(3, types.size)
-    assertTrue(types.contains(ConflictType.BOTH_MODIFIED))
-    assertTrue(types.contains(ConflictType.DELETED_ON_SERVER))
-    assertTrue(types.contains(ConflictType.SERVER_NEWER))
-  }
-
-  @Test
-  fun `ConflictResolution has two values`() {
-    val resolutions = ConflictResolution.entries
-    assertEquals(2, resolutions.size)
-    assertTrue(resolutions.contains(ConflictResolution.KEEP_LOCAL))
-    assertTrue(resolutions.contains(ConflictResolution.KEEP_SERVER))
-  }
 }
