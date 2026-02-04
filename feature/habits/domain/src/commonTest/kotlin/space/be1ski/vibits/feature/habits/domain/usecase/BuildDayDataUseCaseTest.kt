@@ -14,7 +14,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class BuildDayDataUseCaseTest {
-  private val useCase = BuildDayDataUseCase()
+  private val useCase = BuildDayDataUseCase
   private val today = LocalDate(2024, 1, 15)
   private val configDate = LocalDate(2024, 1, 10)
   private val habits = listOf(HabitConfig(tag = "#habits/test", label = "Test"))

@@ -9,8 +9,6 @@ import kotlinx.datetime.atStartOfDayIn
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
-import space.be1ski.vibits.feature.habits.domain.usecase.BuildActivityDataUseCase
-import space.be1ski.vibits.feature.habits.domain.usecase.BuildDayDataUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.CalculateActivityDataUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.CalculateSuccessRateUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.PrewarmActivityDataUseCase
@@ -27,18 +25,9 @@ class HabitsActivityEffectHandlerTest {
   private val timeZone = TimeZone.UTC
 
   private fun createHandler(): HabitsActivityEffectHandler {
-    val buildDayDataUseCase = BuildDayDataUseCase()
-    val buildActivityDataUseCase = BuildActivityDataUseCase(buildDayDataUseCase)
     val calculateSuccessRateUseCase = CalculateSuccessRateUseCase()
-    val calculateActivityDataUseCase =
-      CalculateActivityDataUseCase(
-        buildActivityDataUseCase = buildActivityDataUseCase,
-        calculateSuccessRateUseCase = calculateSuccessRateUseCase,
-      )
-    val prewarmActivityDataUseCase =
-      PrewarmActivityDataUseCase(
-        calculateActivityDataUseCase = calculateActivityDataUseCase,
-      )
+    val calculateActivityDataUseCase = CalculateActivityDataUseCase(calculateSuccessRateUseCase)
+    val prewarmActivityDataUseCase = PrewarmActivityDataUseCase(calculateActivityDataUseCase)
     return HabitsActivityEffectHandler(
       calculateActivityDataUseCase = calculateActivityDataUseCase,
       prewarmActivityDataUseCase = prewarmActivityDataUseCase,

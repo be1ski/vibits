@@ -10,7 +10,6 @@ import space.be1ski.vibits.feature.habits.domain.model.SuccessRateData
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 
 class CalculateActivityDataUseCase(
-  private val buildActivityDataUseCase: BuildActivityDataUseCase,
   private val calculateSuccessRateUseCase: CalculateSuccessRateUseCase,
 ) {
   operator fun invoke(
@@ -23,7 +22,7 @@ class CalculateActivityDataUseCase(
     val configTimeline = ExtractHabitsConfigUseCase(memos, timeZone)
     val dailyMemos = ExtractDailyMemosUseCase(memos, timeZone)
     val weekData =
-      buildActivityDataUseCase.buildWeekData(
+      BuildActivityDataUseCase.buildWeekData(
         configTimeline = if (mode == ActivityMode.HABITS) configTimeline else emptyList(),
         dailyMemos = dailyMemos,
         timeZone = timeZone,

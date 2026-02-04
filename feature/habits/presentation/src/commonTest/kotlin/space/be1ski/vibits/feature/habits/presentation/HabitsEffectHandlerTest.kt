@@ -5,6 +5,9 @@ import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
+import space.be1ski.vibits.feature.habits.domain.usecase.CalculateActivityDataUseCase
+import space.be1ski.vibits.feature.habits.domain.usecase.CalculateSuccessRateUseCase
+import space.be1ski.vibits.feature.habits.domain.usecase.PrewarmActivityDataUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.SaveDailyHabitMemoUseCase
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.effect.HabitsActivityEffectHandler
@@ -376,21 +379,8 @@ class HabitsEffectHandlerTest {
     repository: FakeMemosRepository = FakeMemosRepository(),
     onRefresh: () -> Unit = {},
   ): HabitsEffectHandler {
-    val buildActivityDataUseCase =
-      space.be1ski.vibits.feature.habits.domain.usecase.BuildActivityDataUseCase(
-        buildDayDataUseCase =
-          space.be1ski.vibits.feature.habits.domain.usecase
-            .BuildDayDataUseCase(),
-      )
-    val calculateSuccessRateUseCase =
-      space.be1ski.vibits.feature.habits.domain.usecase
-        .CalculateSuccessRateUseCase()
-    val calculateActivityDataUseCase =
-      space.be1ski.vibits.feature.habits.domain.usecase
-        .CalculateActivityDataUseCase(
-          buildActivityDataUseCase = buildActivityDataUseCase,
-          calculateSuccessRateUseCase = calculateSuccessRateUseCase,
-        )
+    val calculateSuccessRateUseCase = CalculateSuccessRateUseCase()
+    val calculateActivityDataUseCase = CalculateActivityDataUseCase(calculateSuccessRateUseCase)
     return HabitsEffectHandler(
       memoHandler =
         HabitsMemoEffectHandler(
@@ -404,11 +394,7 @@ class HabitsEffectHandlerTest {
       activityHandler =
         HabitsActivityEffectHandler(
           calculateActivityDataUseCase = calculateActivityDataUseCase,
-          prewarmActivityDataUseCase =
-            space.be1ski.vibits.feature.habits.domain.usecase
-              .PrewarmActivityDataUseCase(
-                calculateActivityDataUseCase = calculateActivityDataUseCase,
-              ),
+          prewarmActivityDataUseCase = PrewarmActivityDataUseCase(calculateActivityDataUseCase),
         ),
     )
   }

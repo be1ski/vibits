@@ -1,6 +1,5 @@
 package space.be1ski.vibits.feature.habits.domain.usecase
 
-import dev.zacsweers.metro.Inject
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -19,10 +18,7 @@ import space.be1ski.vibits.feature.memos.domain.model.Memo
 /**
  * Use case for building activity data.
  */
-@Inject
-class BuildActivityDataUseCase(
-  private val buildDayDataUseCase: BuildDayDataUseCase,
-) {
+object BuildActivityDataUseCase {
   /**
    * Builds ActivityWeekData for a given range.
    */
@@ -47,7 +43,7 @@ class BuildActivityDataUseCase(
     while (cursor <= bounds.end) {
       val days =
         (0 until DAYS_IN_WEEK).map { offset ->
-          buildDayDataUseCase(
+          BuildDayDataUseCase(
             DayBuildContext(
               date = cursor.plus(DatePeriod(days = offset)),
               bounds = bounds,

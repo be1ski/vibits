@@ -11,10 +11,7 @@ import kotlin.test.assertTrue
 import kotlin.time.Instant
 
 class BuildActivityDataUseCaseTest {
-  private val useCase =
-    BuildActivityDataUseCase(
-      buildDayDataUseCase = BuildDayDataUseCase(),
-    )
+  private val useCase = BuildActivityDataUseCase
 
   @Test
   fun `when range is week then buildWeekData returns 7 days`() {

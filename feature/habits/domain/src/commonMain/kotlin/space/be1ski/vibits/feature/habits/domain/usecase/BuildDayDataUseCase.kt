@@ -1,6 +1,5 @@
 package space.be1ski.vibits.feature.habits.domain.usecase
 
-import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.feature.habits.domain.buildHabitStatuses
 import space.be1ski.vibits.feature.habits.domain.extractHabitTagsFromContent
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
@@ -13,8 +12,7 @@ import space.be1ski.vibits.feature.habits.domain.model.HabitStatus
 /**
  * Use case for building a single ContributionDay from context.
  */
-@Inject
-class BuildDayDataUseCase {
+object BuildDayDataUseCase {
   operator fun invoke(context: DayBuildContext): ContributionDay {
     val dailyMemo = context.dailyMemos[context.date]
     val habitsForDay = habitsForDay(context)

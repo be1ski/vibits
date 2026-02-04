@@ -13,9 +13,8 @@ import kotlin.test.assertTrue
 import kotlin.time.Instant
 
 class CalculateActivityDataUseCaseTest {
-  private val buildActivityDataUseCase = BuildActivityDataUseCase(buildDayDataUseCase = BuildDayDataUseCase())
   private val calculateSuccessRateUseCase = CalculateSuccessRateUseCase()
-  private val useCase = CalculateActivityDataUseCase(buildActivityDataUseCase, calculateSuccessRateUseCase)
+  private val useCase = CalculateActivityDataUseCase(calculateSuccessRateUseCase)
 
   @Test
   fun `when memos is empty then returns empty week data`() {
