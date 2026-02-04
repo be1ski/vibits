@@ -5,11 +5,11 @@ import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeekData
+import space.be1ski.vibits.feature.habits.domain.model.CachedActivityData
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.effect.HabitsEffect
 import space.be1ski.vibits.feature.habits.presentation.reducer.habitsReducer
 import space.be1ski.vibits.feature.habits.presentation.state.ActivityCacheKey
-import space.be1ski.vibits.feature.habits.presentation.state.CachedActivityData
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
 import kotlin.test.Test
 import kotlin.test.assertEquals

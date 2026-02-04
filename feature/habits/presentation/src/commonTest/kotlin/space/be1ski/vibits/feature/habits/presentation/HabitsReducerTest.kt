@@ -6,6 +6,7 @@ import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeekData
+import space.be1ski.vibits.feature.habits.domain.model.CachedActivityData
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
@@ -14,7 +15,6 @@ import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.effect.HabitsEffect
 import space.be1ski.vibits.feature.habits.presentation.reducer.habitsReducer
 import space.be1ski.vibits.feature.habits.presentation.state.ActivityCacheKey
-import space.be1ski.vibits.feature.habits.presentation.state.CachedActivityData
 import space.be1ski.vibits.feature.habits.presentation.state.EditableHabit
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.feature.memos.domain.model.Memo
