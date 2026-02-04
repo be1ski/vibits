@@ -76,6 +76,33 @@ class HabitsReducerTest {
     }
 
   @Test
+  fun `when OpenEditor with memo parameter then constructs day from memo`() =
+    habitsReducer.test(HabitsState()) {
+      val dailyMemo =
+        Memo(
+          name = "memos/daily-123",
+          content = "#habits/daily 2024-01-15\n- [x] #habits/exercise\n- [ ] #habits/reading",
+          createTime = null,
+          updateTime = null,
+        )
+
+      send(HabitsAction.Editor.OpenEditor(memo = dailyMemo, config = testConfig))
+
+      assertState { editorDay?.date == LocalDate(2024, 1, 15) }
+      assertState { editorExisting?.name == "memos/daily-123" }
+      assertState { editorConfig == testConfig }
+    }
+
+  @Test
+  fun `when OpenEditor with neither day nor memo then does nothing`() =
+    habitsReducer.test(HabitsState()) {
+      send(HabitsAction.Editor.OpenEditor(config = testConfig))
+
+      assertState { editorDay == null }
+      assertNoEffects()
+    }
+
+  @Test
   fun `when CloseEditor then clears editor state`() =
     habitsReducer.test(
       HabitsState(
