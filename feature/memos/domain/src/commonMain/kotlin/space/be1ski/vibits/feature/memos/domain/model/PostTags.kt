@@ -16,3 +16,23 @@ object PostTags {
   // Base hashtag for filtering all habits-related content
   const val HABITS_HASHTAG = "#habits"
 }
+
+/**
+ * Checks if this string represents a config memo by detecting config tags in content.
+ */
+fun String.isConfigMemo(): Boolean = contains(PostTags.HABITS_CONFIG) || contains(PostTags.HABITS_CONFIG_ALT)
+
+/**
+ * Checks if this string represents a daily habits memo.
+ */
+fun String.isDailyMemo(): Boolean = contains(PostTags.HABITS_DAILY) || contains(PostTags.DAILY)
+
+/**
+ * Checks if this string is a config tag (starts with config prefix).
+ */
+fun String.isConfigTag(): Boolean = startsWith(PostTags.HABITS_CONFIG) || startsWith(PostTags.HABITS_CONFIG_ALT)
+
+/**
+ * Removes habit tag prefixes from this string.
+ */
+fun String.stripHabitPrefixes(): String = removePrefix(PostTags.HABITS_PREFIX).removePrefix(PostTags.HABIT_PREFIX)

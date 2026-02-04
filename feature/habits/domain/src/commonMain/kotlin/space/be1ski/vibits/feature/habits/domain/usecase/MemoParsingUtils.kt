@@ -4,7 +4,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import space.be1ski.vibits.feature.memos.domain.model.Memo
-import space.be1ski.vibits.feature.memos.domain.model.PostTags
+import space.be1ski.vibits.feature.memos.domain.model.isDailyMemo
 import kotlin.time.Instant as KtInstant
 
 private val DATE_REGEX = Regex("\\b(\\d{4}-\\d{2}-\\d{2})\\b")
@@ -15,7 +15,7 @@ private val DATE_REGEX = Regex("\\b(\\d{4}-\\d{2}-\\d{2})\\b")
  */
 fun parseDailyDateFromContent(content: String): LocalDate? {
   val match =
-    if (content.contains(PostTags.HABITS_DAILY) || content.contains(PostTags.DAILY)) {
+    if (content.isDailyMemo()) {
       DATE_REGEX.find(content)
     } else {
       null

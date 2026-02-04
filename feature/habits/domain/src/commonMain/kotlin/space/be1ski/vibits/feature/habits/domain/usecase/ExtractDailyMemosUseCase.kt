@@ -4,7 +4,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.feature.habits.domain.model.DailyMemoInfo
 import space.be1ski.vibits.feature.memos.domain.model.Memo
-import space.be1ski.vibits.feature.memos.domain.model.PostTags
+import space.be1ski.vibits.feature.memos.domain.model.isDailyMemo
 
 /**
  * Extracts daily memos from a list of memos.
@@ -17,7 +17,7 @@ object ExtractDailyMemosUseCase {
   ): Map<LocalDate, DailyMemoInfo> {
     val dailyMemos =
       memos.filter { memo ->
-        memo.content.contains(PostTags.HABITS_DAILY) || memo.content.contains(PostTags.DAILY)
+        memo.content.isDailyMemo()
       }
     return dailyMemos
       .mapNotNull { memo ->

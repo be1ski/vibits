@@ -6,7 +6,8 @@ import kotlinx.datetime.toLocalDateTime
 import space.be1ski.vibits.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.feature.habits.domain.parseHabitConfigLine
 import space.be1ski.vibits.feature.memos.domain.model.Memo
-import space.be1ski.vibits.feature.memos.domain.model.PostTags
+import space.be1ski.vibits.feature.memos.domain.model.isConfigMemo
+import space.be1ski.vibits.feature.memos.domain.model.isConfigTag
 
 /**
  * Extracts habits configuration entries from memos.
@@ -19,9 +20,7 @@ object ExtractHabitsConfigUseCase {
   ): List<HabitsConfigEntry> {
     val entries =
       memos.mapNotNull { memo ->
-        if (!memo.content.contains(PostTags.HABITS_CONFIG) &&
-          !memo.content.contains(PostTags.HABITS_CONFIG_ALT)
-        ) {
+        if (!memo.content.isConfigMemo()) {
           return@mapNotNull null
         }
         // Use createTime for config memos to keep date stable when content is edited
@@ -32,7 +31,7 @@ object ExtractHabitsConfigUseCase {
             .lineSequence()
             .map { it.trim() }
             .filter { it.isNotBlank() }
-            .filterNot { it.startsWith(PostTags.HABITS_CONFIG) || it.startsWith(PostTags.HABITS_CONFIG_ALT) }
+            .filterNot { it.isConfigTag() }
         val habits =
           lines
             .mapNotNull { line -> parseHabitConfigLine(line) }
