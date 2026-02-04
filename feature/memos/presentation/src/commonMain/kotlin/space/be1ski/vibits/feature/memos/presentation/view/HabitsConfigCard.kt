@@ -25,7 +25,7 @@ import space.be1ski.vibits.core.ui.date.DateFormatter
 import space.be1ski.vibits.feature.habits.domain.parseHabitConfigLine
 import space.be1ski.vibits.feature.habits.presentation.view.components.localizedLabel
 import space.be1ski.vibits.feature.memos.domain.model.Memo
-import space.be1ski.vibits.feature.memos.domain.model.PostTags
+import space.be1ski.vibits.feature.memos.domain.model.isConfigTag
 
 @Composable
 internal fun HabitsConfigCard(
@@ -39,7 +39,7 @@ internal fun HabitsConfigCard(
       .lineSequence()
       .map { it.trim() }
       .filter { it.isNotBlank() }
-      .filterNot { it.startsWith(PostTags.HABITS_CONFIG) || it.startsWith(PostTags.HABITS_CONFIG_ALT) }
+      .filterNot { it.isConfigTag() }
       .mapNotNull { line -> parseHabitConfigLine(line) }
       .distinctBy { it.tag }
       .toList()
