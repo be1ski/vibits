@@ -20,6 +20,7 @@ import space.be1ski.vibits.core.platform.network.createHttpClient
 import space.be1ski.vibits.core.platform.storage.createKeyValueStore
 import space.be1ski.vibits.feature.auth.data.CredentialsRepositoryImpl
 import space.be1ski.vibits.feature.auth.data.platform.CredentialsStore
+import space.be1ski.vibits.feature.auth.data.platform.createCredentialsStore
 import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.feature.main.AppInitializer
 import space.be1ski.vibits.feature.memos.data.ConnectionTesterImpl
@@ -89,7 +90,7 @@ abstract class AppGraph {
 
   @Provides
   @SingleIn(AppScope::class)
-  fun credentialsStore(): CredentialsStore = CredentialsStore()
+  fun credentialsStore(): CredentialsStore = createCredentialsStore()
 
   @Provides
   @SingleIn(AppScope::class)

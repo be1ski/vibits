@@ -2,6 +2,7 @@ package space.be1ski.vibits.feature.memos.di
 
 import space.be1ski.vibits.core.elm.Feature
 import space.be1ski.vibits.core.elm.FeatureImpl
+import space.be1ski.vibits.feature.auth.domain.model.isFilled
 import space.be1ski.vibits.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.feature.memos.presentation.effect.MemosCredentialsEffectHandler
 import space.be1ski.vibits.feature.memos.presentation.effect.MemosEffect
@@ -18,7 +19,7 @@ fun createMemosFeature(
   initialState: MemosState = MemosState(),
 ): Feature<MemosAction, MemosState, MemosEffect, Nothing> {
   val creds = dependencies.loadCredentials()
-  val needsCredentials = !isOfflineMode && (creds.baseUrl.isBlank() || creds.token.isBlank())
+  val needsCredentials = !isOfflineMode && !creds.isFilled
 
   return FeatureImpl(
     initialState =
