@@ -3,11 +3,11 @@ package space.be1ski.vibits.feature.memos.data.offline
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.core.platform.di.AppScope
+import space.be1ski.vibits.feature.memos.data.mapper.parseInstant
 import space.be1ski.vibits.feature.memos.data.platform.OfflineMemoStorage
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
 import kotlin.time.Clock
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -88,11 +88,4 @@ class OfflineMemosRepository(
       createTime = parseInstant(dto.createTime),
       updateTime = parseInstant(dto.updateTime),
     )
-
-  private fun parseInstant(value: String?): Instant? {
-    if (value.isNullOrBlank()) {
-      return null
-    }
-    return runCatching { Instant.parse(value.trim()) }.getOrNull()
-  }
 }
