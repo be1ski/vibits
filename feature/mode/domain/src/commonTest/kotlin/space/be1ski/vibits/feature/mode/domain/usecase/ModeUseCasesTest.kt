@@ -85,6 +85,17 @@ class ResetAppUseCaseTest {
 
     assertEquals(1, preferencesRepository.saveCalls)
   }
+
+  @Test
+  fun `when invoke then resets onboarding`() {
+    val onboardingStore = FakeOnboardingStore()
+    onboardingStore.markOnboardingCompleted()
+    val useCase = createUseCase(onboardingStore = onboardingStore)
+
+    useCase()
+
+    assertEquals(1, onboardingStore.resetCalls)
+  }
 }
 
 class SwitchAppModeUseCaseTest {
