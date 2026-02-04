@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.habits.domain.usecase
 
+import dev.zacsweers.metro.Inject
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.core.platform.date.currentLocalDate
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
@@ -7,6 +8,7 @@ import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.CachedActivityData
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 
+@Inject
 class CalculateActivityDataUseCase(
   private val buildActivityDataUseCase: BuildActivityDataUseCase,
 ) {
