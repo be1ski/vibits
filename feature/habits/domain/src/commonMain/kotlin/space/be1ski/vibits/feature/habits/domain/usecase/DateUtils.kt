@@ -5,9 +5,8 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.minus
+import space.be1ski.vibits.core.platform.date.FIRST_QUARTER_INDEX
 import space.be1ski.vibits.core.platform.date.MONTHS_IN_QUARTER
-
-private const val FIRST_QUARTER_INDEX = 1
 
 /**
  * Returns the Monday of the week containing [date].
