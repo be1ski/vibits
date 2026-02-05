@@ -26,6 +26,9 @@ kotlin {
     commonTest {
       dependencies {
         implementation(projects.core.elm.test)
+        implementation(projects.core.platform.testing)
+        implementation(projects.feature.auth.domain.testing)
+        implementation(projects.feature.mode.domain.testing)
         implementation(kotlin("test"))
         implementation(libs.kotlinx.coroutines.test)
       }

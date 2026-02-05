@@ -57,6 +57,7 @@ kotlin {
     commonTest {
       dependencies {
         implementation(projects.core.elm.test)
+        implementation(projects.feature.settings.domain.testing)
         implementation(kotlin("test"))
         implementation(libs.ktor.client.mock)
         implementation(libs.kotlinx.coroutines.test)

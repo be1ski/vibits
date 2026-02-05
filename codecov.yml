@@ -18,6 +18,7 @@ ignore:
   - "**/platform/**"
   - "**/room/**"
   - "**/test/**"
+  - "**/testing/**"
   - "**/ui/**"
   - "**/view/**"
   # File-based exclusions (TEA architecture classes)

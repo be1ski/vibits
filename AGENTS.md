@@ -9,18 +9,19 @@ core/
   elm/           — TEA architecture foundation
   elm/test/      — Test utilities for reducers
   platform/      — Platform abstractions (expect/actual)
+  platform/testing/ — Test fakes for platform interfaces
   strings/       — Localized string resources
   ui/            — Compose UI components and theme
   utils/         — Shared utilities (date, logging)
 feature/
-  auth/          — Authentication (domain, data)
+  auth/          — Authentication (domain, domain/testing, data)
   habits/        — Habits tracking (domain, presentation)
   homescreen/    — App graph, DI wiring, coordinator
-  memos/         — Memos API (domain, data, presentation)
-  mode/          — App mode selection (domain, data, presentation)
-  onboarding/    — Onboarding flow (domain, data, presentation)
-  settings/      — Settings (domain, data, presentation)
-  sync/          — Sync engine (domain, data)
+  memos/         — Memos API (domain, domain/testing, data, data/testing, presentation)
+  mode/          — App mode selection (domain, domain/testing, data, presentation)
+  onboarding/    — Onboarding flow (domain, domain/testing, data, presentation)
+  settings/      — Settings (domain, domain/testing, data, presentation)
+  sync/          — Sync engine (domain, domain/testing, data)
 androidApp/      — Android entry point
 desktopApp/      — Desktop entry point
 iosApp/          — iOS wrapper
@@ -357,6 +358,7 @@ We follow TDD for business logic and aim for high coverage.
 - Unit tests live in each module's `src/commonTest/kotlin/...` directory.
 - Desktop-specific tests in `src/desktopTest/kotlin/...`.
 - Test utilities in `core/elm/test` (package `*.test.*`, excluded from coverage).
+- Cross-module test fakes in `<module>/testing/` submodules (e.g., `feature/auth/domain/testing`). Add as `commonTest` dependency: `implementation(projects.feature.auth.domain.testing)`.
 - Android-specific tests belong under `androidApp/src/test` or `androidApp/src/androidTest`.
 - Test names use backticks with `when ... then ...` phrasing.
 - **Hardcode strings in tests.** Use literal string values instead of constants like `PostTags.HABITS_CONFIG`. Tests should verify real behavior with real data, not automatically adjust when constants change.

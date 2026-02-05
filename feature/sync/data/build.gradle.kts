@@ -30,6 +30,7 @@ kotlin {
 
     commonTest {
       dependencies {
+        implementation(projects.feature.auth.domain.testing)
         implementation(kotlin("test"))
         implementation(libs.kotlinx.coroutines.test)
         implementation(libs.ktor.client.mock)
