@@ -12,18 +12,18 @@ import space.be1ski.vibits.feature.habits.domain.usecase.ExtractHabitsConfigUseC
 import space.be1ski.vibits.feature.habits.presentation.view.buildHabitDay
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 
-internal class TodayData(
+internal class TodayHabits(
   val config: List<HabitConfig>,
   val day: ContributionDay?,
 )
 
 @Composable
-internal fun rememberTodayData(
+internal fun rememberTodayHabits(
   habitsTimeline: List<HabitsConfigEntry>,
   memos: List<Memo>,
   timeZone: TimeZone,
   today: LocalDate,
-): TodayData {
+): TodayHabits {
   val todayConfig =
     remember(habitsTimeline, today) {
       ExtractHabitsConfigUseCase.forDate(habitsTimeline, today)?.habits.orEmpty()
@@ -36,5 +36,5 @@ internal fun rememberTodayData(
     remember(todayConfig, todayMemo, today) {
       buildHabitDay(date = today, habitsConfig = todayConfig, dailyMemo = todayMemo)
     }
-  return TodayData(config = todayConfig, day = todayDay)
+  return TodayHabits(config = todayConfig, day = todayDay)
 }

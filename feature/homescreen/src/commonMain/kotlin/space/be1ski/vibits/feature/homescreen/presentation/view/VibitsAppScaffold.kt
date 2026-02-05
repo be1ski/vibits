@@ -64,7 +64,7 @@ internal fun VibitsAppScaffold(
   val today = currentLocalDate()
   val dateFormatter = rememberDateFormatter()
   val habitsTimeline = rememberHabitsConfigTimeline(memosState.memos)
-  val todayData = rememberTodayData(habitsTimeline, memosState.memos, timeZone, today)
+  val todayHabits = rememberTodayHabits(habitsTimeline, memosState.memos, timeZone, today)
 
   val activityRange = activityRangeForAppState(appState)
   val feedListState = rememberLazyListState()
@@ -78,7 +78,7 @@ internal fun VibitsAppScaffold(
       onMemosAction = features.memos::send,
       feedListState = feedListState,
       scope = scope,
-      todayData = todayData,
+      todayHabits = todayHabits,
     )
 
   // Prewarm trigger: single source of truth for cache warming
@@ -116,7 +116,7 @@ internal fun VibitsAppScaffold(
   }
 
   Scaffold(
-    floatingActionButton = { AppFab(appState, todayData, callbacks) },
+    floatingActionButton = { AppFab(appState, todayHabits, callbacks) },
     bottomBar = { MemosBottomNavigation(appState, features.app::send, callbacks.onClearSelection, callbacks.onFeedScrollToTop) },
   ) { padding ->
     ScaffoldContent(
@@ -141,12 +141,12 @@ internal fun VibitsAppScaffold(
 @Composable
 private fun AppFab(
   appState: AppState,
-  todayData: TodayData,
+  todayHabits: TodayHabits,
   callbacks: ScaffoldCallbacks,
 ) {
   when (appState.selectedScreen) {
     Screen.HABITS -> {
-      if (todayData.config.isNotEmpty() && todayData.day != null) {
+      if (todayHabits.config.isNotEmpty() && todayHabits.day != null) {
         FloatingActionButton(onClick = callbacks.onOpenTodayEditor) {
           Icon(Icons.Filled.AddTask, contentDescription = stringResource(Res.string.action_track_today))
         }
