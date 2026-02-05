@@ -11,9 +11,6 @@ import space.be1ski.vibits.core.date.MONTHS_IN_QUARTER
 import space.be1ski.vibits.core.date.MONTHS_IN_YEAR
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 
-/**
- * Returns the last day of the given activity range.
- */
 object GetActivityRangeEndDateUseCase {
   operator fun invoke(range: ActivityRange): LocalDate =
     when (range) {

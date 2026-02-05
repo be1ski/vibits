@@ -14,10 +14,6 @@ import space.be1ski.vibits.feature.settings.presentation.action.SettingsAction
 import space.be1ski.vibits.feature.settings.presentation.effect.SettingsEffect
 import space.be1ski.vibits.feature.settings.presentation.state.SettingsState
 
-/**
- * Container for all application TEA features.
- * Created by AppFeaturesFactory, lives in AppScope.
- */
 class AppFeatures internal constructor(
   val app: Feature<AppAction, AppState, AppEffect, Nothing>,
   val memos: Feature<MemosAction, MemosState, MemosEffect, Nothing>,
