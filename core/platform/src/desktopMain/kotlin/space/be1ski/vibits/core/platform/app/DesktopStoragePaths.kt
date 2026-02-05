@@ -4,39 +4,24 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 
-/**
- * Desktop paths for preferences and databases.
- */
 object DesktopStoragePaths {
   private const val APP_NAME = "Memos"
   private const val APP_ID = "space.be1ski.vibits"
   private const val ENVIRONMENT_PROPERTY = "memos.env"
   private const val VERSION_PROPERTY = "memos.version"
 
-  /**
-   * Returns the application version.
-   */
   fun appVersion(): String =
     System.getProperty(VERSION_PROPERTY)?.takeIf { it.isNotBlank() }
       ?: DesktopStoragePaths::class.java.`package`?.implementationVersion
       ?: "dev"
 
-  /**
-   * Returns the preferences node name with an optional environment suffix.
-   */
   fun preferencesNode(): String {
     val env = environmentSuffix()
     return if (env.isBlank()) APP_ID else "$APP_ID.$env"
   }
 
-  /**
-   * Returns the full path to the memo database file.
-   */
   fun databasePath(): String = appDataDir().resolve("memos.db").toString()
 
-  /**
-   * Returns the current environment label.
-   */
   fun environmentLabel(): String = environmentSuffix().ifBlank { "prod" }
 
   private fun appDataDir(): Path {

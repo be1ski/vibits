@@ -1,6 +1,5 @@
-package space.be1ski.vibits.feature.homescreen.data
+package space.be1ski.vibits.core.platform.app
 
-import space.be1ski.vibits.core.platform.app.DesktopStoragePaths
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
