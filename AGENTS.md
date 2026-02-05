@@ -101,10 +101,12 @@ feature/<name>/
     model/            # Domain models and types
     usecase/          # Business logic (use cases)
     repository/       # Repository interfaces
+    testing/          # Cross-module test fakes (separate Gradle module)
   data/               # Repository implementations, DTOs, mappers
     platform/         # ONLY expect/actual declarations
     internal/         # Platform-specific helpers (NOT expect/actual)
     room/             # Room database (DAO, entities, database)
+    testing/          # Cross-module test fakes (separate Gradle module)
   presentation/       # TEA components
     action/           # Action sealed interfaces with grouped subtypes
       <Name>Action.kt # Main action sealed interface
@@ -363,6 +365,17 @@ We follow TDD for business logic and aim for high coverage.
 - Test names use backticks with `when ... then ...` phrasing.
 - **Hardcode strings in tests.** Use literal string values instead of constants like `PostTags.HABITS_CONFIG`. Tests should verify real behavior with real data, not automatically adjust when constants change.
 
+### Test Fakes
+
+Manual fakes are the standard approach (no MockK/Mockito — they don't support KMP).
+
+- **Same-module fakes** (used only within own module's tests) → place in `commonTest`
+- **Cross-module fakes** (used by other modules' tests) → place in `<module>/testing/` submodule
+  - The `testing/` module's `commonMain` depends on parent via `api()` and contains fake implementations
+  - Consumers add `implementation(projects.feature.<name>.domain.testing)` to their `commonTest`
+  - Packages stay in `*.test` namespace (e.g., `space.be1ski.vibits.feature.auth.domain.test`)
+- **Test-specific fakes** (with custom tracking) → define `private class` locally in the test file
+
 ### Avoiding Test Rot
 
 Tests must stay useful and up-to-date. Follow these rules:
@@ -383,6 +396,7 @@ We maintain **~95% test coverage** using Kover. Coverage is automatically measur
 - **Platform-specific code:** `*.platform.*` (expect/actual declarations)
 - **Room database:** `*.room.*` (platform-specific persistence)
 - **UI layer:** `*.ui.*`, `*.view.*` (Compose UI, @Composable functions)
+- **Test fakes:** `*.test.*`, `*.testing.*` (cross-module fake implementations)
 - **DTOs:** `*Dto` (serialization data classes)
 
 **What must be tested:**
@@ -411,6 +425,8 @@ Check coverage locally:
 ```yaml
 ignore:
   - "**/di/**"
+  - "**/test/**"
+  - "**/testing/**"
   - "**/view/**"
   - "**/ui/**"
   - "**/platform/**"
