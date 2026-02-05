@@ -49,12 +49,12 @@ The project follows strict package organization to maintain clean architecture a
   - Any code containing @Composable functions
   - **Excluded from coverage** (@Composable cannot be unit tested)
 
-- **`core.date.*`** — Date/time utilities (module: `core/utils`):
+- **`core.utils.date.*`** — Date/time utilities (module: `core/utils`):
   - `DateConstants` — Calendar constants (`DAYS_IN_WEEK`, `MONTHS_IN_QUARTER`, etc.)
   - `DateUtils` — Pure functions: `startOfWeek(LocalDate)`, `quarterIndex(LocalDate|Month)`
   - Uses `kotlinx-datetime`; no platform-specific code
 
-- **`core.logging.*`** — In-memory logging (module: `core/utils`):
+- **`core.utils.logging.*`** — In-memory logging (module: `core/utils`):
   - `Log` — Thread-safe singleton log store (max 500 entries), delegates to `platformLog()`
   - `LogEntry` — Data class: timestamp, level, tag, message
   - `String.maskUrl()` — Truncates URLs for safe logging

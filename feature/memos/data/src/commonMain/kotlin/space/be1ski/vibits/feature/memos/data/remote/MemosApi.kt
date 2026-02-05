@@ -14,8 +14,8 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
-import space.be1ski.vibits.core.logging.Log
 import space.be1ski.vibits.core.platform.di.AppScope
+import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.data.remote.dto.CreateMemoRequestDto
 import space.be1ski.vibits.feature.memos.data.remote.dto.ListMemosResponseDto
 import space.be1ski.vibits.feature.memos.data.remote.dto.MemoDto

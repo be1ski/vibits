@@ -47,7 +47,6 @@ import androidx.compose.ui.window.PopupPositionProvider
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.core.date.DAYS_IN_WEEK
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.day_fri
 import space.be1ski.vibits.core.strings.generated.day_mon
@@ -65,6 +64,7 @@ import space.be1ski.vibits.core.ui.date.DateFormatter
 import space.be1ski.vibits.core.ui.hoverAware
 import space.be1ski.vibits.core.ui.theme.AppColors
 import space.be1ski.vibits.core.ui.theme.resolve
+import space.be1ski.vibits.core.utils.date.DAYS_IN_WEEK
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
 
 internal object ChartDimens {

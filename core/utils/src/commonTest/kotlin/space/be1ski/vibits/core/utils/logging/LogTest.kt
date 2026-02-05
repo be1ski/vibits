@@ -1,4 +1,4 @@
-package space.be1ski.vibits.core.logging
+package space.be1ski.vibits.core.utils.logging
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.joinAll

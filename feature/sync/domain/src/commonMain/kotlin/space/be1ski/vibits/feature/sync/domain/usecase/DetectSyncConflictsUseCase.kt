@@ -1,6 +1,6 @@
 package space.be1ski.vibits.feature.sync.domain.usecase
 
-import space.be1ski.vibits.core.logging.Log
+import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.sync.domain.SyncLogTags
 import space.be1ski.vibits.feature.sync.domain.model.ConflictType

@@ -3,8 +3,8 @@ package space.be1ski.vibits.feature.mode.presentation.effect
 import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.core.elm.EffectHandler
 import space.be1ski.vibits.core.elm.actions
-import space.be1ski.vibits.core.logging.Log
-import space.be1ski.vibits.core.logging.maskUrl
+import space.be1ski.vibits.core.utils.logging.Log
+import space.be1ski.vibits.core.utils.logging.maskUrl
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.feature.auth.domain.model.isFilled
 import space.be1ski.vibits.feature.auth.domain.usecase.InitializeCredentialsFromEnvUseCase

@@ -4,8 +4,8 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
-import space.be1ski.vibits.core.date.quarterIndex
-import space.be1ski.vibits.core.date.startOfWeek
+import space.be1ski.vibits.core.utils.date.quarterIndex
+import space.be1ski.vibits.core.utils.date.startOfWeek
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import kotlin.test.Test
 import kotlin.test.assertEquals

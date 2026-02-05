@@ -2,9 +2,9 @@ package space.be1ski.vibits.feature.settings.data
 
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import space.be1ski.vibits.core.logging.Log
 import space.be1ski.vibits.core.platform.di.AppScope
 import space.be1ski.vibits.core.platform.locale.AppLanguage
+import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.feature.settings.domain.model.UserPreferences
