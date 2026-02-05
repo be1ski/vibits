@@ -5,9 +5,9 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import space.be1ski.vibits.core.ui.theme.DefaultHabitColor
-import space.be1ski.vibits.feature.main.test.FakeMemosRepository
-import space.be1ski.vibits.feature.main.test.FakeOfflineMemoStorage
-import space.be1ski.vibits.feature.main.test.FakeOnboardingStore
+import space.be1ski.vibits.feature.homescreen.test.FakeMemosRepository
+import space.be1ski.vibits.feature.homescreen.test.FakeOfflineMemoStorage
+import space.be1ski.vibits.feature.homescreen.test.FakeOnboardingStore
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.usecase.CreateMemoUseCase
 import space.be1ski.vibits.feature.onboarding.data.HabitPresetsDataSourceImpl

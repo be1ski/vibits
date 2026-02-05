@@ -2,7 +2,7 @@ package space.be1ski.vibits.feature.memos.presentation.effect
 
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import space.be1ski.vibits.feature.main.test.FakeMemosRepository
+import space.be1ski.vibits.feature.homescreen.test.FakeMemosRepository
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.usecase.LoadCachedMemosUseCase
 import space.be1ski.vibits.feature.memos.domain.usecase.LoadMemosUseCase

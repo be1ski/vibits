@@ -30,7 +30,7 @@ include(
   ":iosApp:framework",
   ":webApp",
 
-  ":feature:main",
+  ":feature:homescreen",
 
   ":core:elm",
   ":core:elm:test",
