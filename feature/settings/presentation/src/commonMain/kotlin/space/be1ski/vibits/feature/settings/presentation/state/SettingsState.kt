@@ -3,6 +3,7 @@ package space.be1ski.vibits.feature.settings.presentation.state
 import space.be1ski.vibits.core.platform.app.AppDetails
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.mode.AppMode
+import space.be1ski.vibits.feature.auth.domain.model.CredentialValidationError
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
 
 data class SettingsState(
@@ -14,7 +15,7 @@ data class SettingsState(
   val languageChanged: Boolean = false,
   val selectedTheme: AppTheme = AppTheme.SYSTEM,
   val isValidating: Boolean = false,
-  val validationError: String? = null,
+  val validationError: CredentialValidationError? = null,
   val showResetConfirmation: Boolean = false,
   val isResetting: Boolean = false,
   val showLogsDialog: Boolean = false,

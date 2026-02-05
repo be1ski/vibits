@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.core.elm.EffectHandler
 import space.be1ski.vibits.core.elm.actions
 import space.be1ski.vibits.core.utils.logging.Log
+import space.be1ski.vibits.feature.auth.domain.model.CredentialValidationError
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.vibits.feature.memos.domain.repository.ConnectionTester
@@ -26,7 +27,7 @@ class SettingsCredentialsEffectHandler(
       Log.d(TAG, "Testing connection")
       connectionTester(command.baseUrl, command.token)
         .onSuccess { emit(SettingsAction.Validation.ValidationSucceeded) }
-        .onFailure { emit(SettingsAction.Validation.ValidationFailed("connection_failed")) }
+        .onFailure { emit(SettingsAction.Validation.ValidationFailed(CredentialValidationError.CONNECTION_FAILED)) }
     }
 
   private fun handleSaveCredentials(command: SettingsEffect.Command.SaveCredentials): Flow<SettingsAction> =

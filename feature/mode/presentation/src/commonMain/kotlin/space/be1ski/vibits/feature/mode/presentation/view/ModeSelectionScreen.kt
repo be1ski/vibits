@@ -17,13 +17,11 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.elm.Feature
@@ -32,9 +30,6 @@ import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_cancel
 import space.be1ski.vibits.core.strings.generated.action_save
 import space.be1ski.vibits.core.strings.generated.action_use_saved
-import space.be1ski.vibits.core.strings.generated.hint_base_url
-import space.be1ski.vibits.core.strings.generated.label_access_token
-import space.be1ski.vibits.core.strings.generated.label_base_url
 import space.be1ski.vibits.core.strings.generated.mode_demo_desc
 import space.be1ski.vibits.core.strings.generated.mode_demo_title
 import space.be1ski.vibits.core.strings.generated.mode_offline_desc
@@ -45,12 +40,11 @@ import space.be1ski.vibits.core.strings.generated.mode_quick_online_desc
 import space.be1ski.vibits.core.strings.generated.mode_quick_online_title
 import space.be1ski.vibits.core.strings.generated.mode_select_subtitle
 import space.be1ski.vibits.core.strings.generated.mode_select_title
-import space.be1ski.vibits.core.strings.generated.msg_connection_failed
-import space.be1ski.vibits.core.strings.generated.msg_fill_all_fields
 import space.be1ski.vibits.core.ui.Indent
+import space.be1ski.vibits.feature.auth.presentation.view.CredentialFields
+import space.be1ski.vibits.feature.auth.presentation.view.credentialValidationErrorMessage
 import space.be1ski.vibits.feature.mode.presentation.action.ModeSelectionAction
 import space.be1ski.vibits.feature.mode.presentation.effect.ModeSelectionEffect
-import space.be1ski.vibits.feature.mode.presentation.state.ModeSelectionError
 import space.be1ski.vibits.feature.mode.presentation.state.ModeSelectionState
 
 @Composable
@@ -159,45 +153,26 @@ private fun QuickOnlineDialog(
   )
 }
 
-@Suppress("LongMethod")
 @Composable
 private fun CredentialsSetupDialog(
   state: ModeSelectionState,
   dispatch: (ModeSelectionAction) -> Unit,
 ) {
-  val errorText =
-    when (state.error) {
-      ModeSelectionError.FILL_ALL_FIELDS -> stringResource(Res.string.msg_fill_all_fields)
-      ModeSelectionError.CONNECTION_FAILED -> stringResource(Res.string.msg_connection_failed)
-      null -> null
-    }
-
   AlertDialog(
     onDismissRequest = { if (!state.isValidating) dispatch(ModeSelectionAction.Dialog.Dismiss) },
     title = { Text(stringResource(Res.string.mode_online_title)) },
     text = {
       Column(verticalArrangement = Arrangement.spacedBy(Indent.s)) {
-        TextField(
-          value = state.baseUrl,
-          onValueChange = { dispatch(ModeSelectionAction.Input.UpdateBaseUrl(it)) },
-          label = { Text(stringResource(Res.string.label_base_url)) },
-          placeholder = { Text(stringResource(Res.string.hint_base_url)) },
+        CredentialFields(
+          baseUrl = state.baseUrl,
+          token = state.token,
+          onBaseUrlChange = { dispatch(ModeSelectionAction.Input.UpdateBaseUrl(it)) },
+          onTokenChange = { dispatch(ModeSelectionAction.Input.UpdateToken(it)) },
           enabled = !state.isValidating,
-          modifier = Modifier.fillMaxWidth(),
-          singleLine = true,
         )
-        TextField(
-          value = state.token,
-          onValueChange = { dispatch(ModeSelectionAction.Input.UpdateToken(it)) },
-          label = { Text(stringResource(Res.string.label_access_token)) },
-          visualTransformation = PasswordVisualTransformation(),
-          enabled = !state.isValidating,
-          modifier = Modifier.fillMaxWidth(),
-          singleLine = true,
-        )
-        errorText?.let { error ->
+        state.error?.let { error ->
           Text(
-            text = error,
+            text = credentialValidationErrorMessage(error),
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.bodySmall,
           )

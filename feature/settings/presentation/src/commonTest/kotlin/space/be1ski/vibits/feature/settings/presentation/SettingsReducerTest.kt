@@ -3,6 +3,7 @@ package space.be1ski.vibits.feature.settings.presentation
 import space.be1ski.vibits.core.elm.test.test
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.mode.AppMode
+import space.be1ski.vibits.feature.auth.domain.model.CredentialValidationError
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.feature.settings.presentation.action.SettingsAction
 import space.be1ski.vibits.feature.settings.presentation.effect.SettingsEffect
@@ -44,7 +45,7 @@ class SettingsReducerTest {
       SettingsState(
         isOpen = true,
         showLogsDialog = true,
-        validationError = "error",
+        validationError = CredentialValidationError.CONNECTION_FAILED,
       ),
     ) {
       send(SettingsAction.Dialog.Close)
@@ -67,7 +68,7 @@ class SettingsReducerTest {
     settingsReducer.test(
       SettingsState(
         editToken = "token123",
-        validationError = "old error",
+        validationError = CredentialValidationError.FILL_ALL_FIELDS,
       ),
     ) {
       send(SettingsAction.Input.UpdateBaseUrl("https://new.api.com"))
@@ -81,7 +82,7 @@ class SettingsReducerTest {
     settingsReducer.test(
       SettingsState(
         editBaseUrl = "https://api.com",
-        validationError = "old error",
+        validationError = CredentialValidationError.FILL_ALL_FIELDS,
       ),
     ) {
       send(SettingsAction.Input.UpdateToken("new-token"))
@@ -95,7 +96,7 @@ class SettingsReducerTest {
     settingsReducer.test(
       SettingsState(
         appMode = AppMode.ONLINE,
-        validationError = "old error",
+        validationError = CredentialValidationError.FILL_ALL_FIELDS,
       ),
     ) {
       send(SettingsAction.Input.SelectMode(AppMode.OFFLINE))
@@ -156,9 +157,9 @@ class SettingsReducerTest {
         pendingSave = true,
       ),
     ) {
-      send(SettingsAction.Validation.ValidationFailed("connection_failed"))
+      send(SettingsAction.Validation.ValidationFailed(CredentialValidationError.CONNECTION_FAILED))
 
-      assertState { !isValidating && !pendingSave && validationError == "connection_failed" }
+      assertState { !isValidating && !pendingSave && validationError == CredentialValidationError.CONNECTION_FAILED }
       assertNoEffects()
     }
 
@@ -271,7 +272,7 @@ class SettingsReducerTest {
     ) {
       send(SettingsAction.SaveAndLogs.Save)
 
-      assertState { isOpen && validationError == "fill_all_fields" }
+      assertState { isOpen && validationError == CredentialValidationError.FILL_ALL_FIELDS }
       assertNoEffects()
     }
 
