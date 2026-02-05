@@ -12,9 +12,6 @@ import space.be1ski.vibits.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.feature.habits.domain.model.SuccessRate
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 
-/**
- * Actions for the Habits feature.
- */
 sealed interface HabitsAction : Action {
   /**
    * Editor lifecycle and interactions.

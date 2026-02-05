@@ -6,9 +6,6 @@ import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 
-/**
- * Side effects for the Habits feature.
- */
 sealed interface HabitsEffect {
   sealed interface Memo : HabitsEffect
 

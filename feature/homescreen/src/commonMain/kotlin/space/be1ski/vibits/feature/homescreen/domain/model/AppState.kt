@@ -4,9 +4,6 @@ import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.settings.domain.model.TimeRangeTab
 
-/**
- * State for the App coordinator feature.
- */
 data class AppState(
   val appMode: AppMode = AppMode.NOT_SELECTED,
   val selectedScreen: Screen = Screen.HABITS,
