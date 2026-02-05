@@ -24,13 +24,13 @@ Habit tracker powered by [Memos](https://github.com/usememos/memos). Kotlin Mult
 ## Build
 
 ```
-./gradlew checkAll                                   # lint, detekt, compile, tests (macOS)
-./gradlew checkJvm                                   # JVM checks only (Linux)
-./gradlew koverXmlReport                             # coverage report
-./gradlew :androidApp:assembleRelease                # Android APK
-./gradlew :iosApp:framework:assembleSharedReleaseXCFramework  # iOS framework
-./gradlew :desktopApp:packageDmg                     # macOS DMG
-./gradlew :desktopApp:packageMsi                     # Windows MSI
+./gradlew checkAll                                                    # lint, detekt, compile, tests (macOS)
+./gradlew checkJvm                                                    # JVM checks only (Linux)
+./gradlew koverXmlReport                                              # coverage report
+./gradlew :androidApp:assembleRelease                                 # Android APK
+./gradlew :iosApp:framework:assembleSharedReleaseXCFramework          # iOS framework
+./gradlew :desktopApp:packageDmg                                      # macOS DMG
+./gradlew :desktopApp:packageMsi                                      # Windows MSI
 ```
 
 ## CI/CD
