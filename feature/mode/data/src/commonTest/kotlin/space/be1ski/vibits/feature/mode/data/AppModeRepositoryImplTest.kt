@@ -1,7 +1,7 @@
 package space.be1ski.vibits.feature.mode.data
 
 import space.be1ski.vibits.core.platform.mode.AppMode
-import space.be1ski.vibits.feature.main.test.FakeAppModeStore
+import space.be1ski.vibits.feature.homescreen.test.FakeAppModeStore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

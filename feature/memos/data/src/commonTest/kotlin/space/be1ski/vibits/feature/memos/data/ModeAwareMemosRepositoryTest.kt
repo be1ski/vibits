@@ -494,14 +494,14 @@ private fun createModeAwareRepository(
  * Stub implementation for online repository.
  * Uses fakes for all dependencies since we're not testing online mode here.
  */
-private fun createStubOnlineRepository(): MemosRepositoryImpl {
+private fun createStubOnlineRepository(): OnlineMemosRepository {
   val httpClient =
     io.ktor.client.HttpClient(io.ktor.client.engine.mock.MockEngine) {
       engine {
         addHandler { throw NotImplementedError("Not testing online mode") }
       }
     }
-  return MemosRepositoryImpl(
+  return OnlineMemosRepository(
     memosApi = MemosApi(httpClient),
     credentialsRepository = FakeCredentialsRepository(),
     memoCache = FakeMemoCache(),

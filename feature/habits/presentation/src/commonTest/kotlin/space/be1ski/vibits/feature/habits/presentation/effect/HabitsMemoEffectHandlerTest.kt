@@ -6,7 +6,7 @@ import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.usecase.SaveDailyHabitMemoUseCase
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
-import space.be1ski.vibits.feature.main.test.FakeMemosRepository
+import space.be1ski.vibits.feature.homescreen.test.FakeMemosRepository
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
 import kotlin.test.Test

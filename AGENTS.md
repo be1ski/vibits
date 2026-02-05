@@ -14,7 +14,7 @@ core/
 feature/
   auth/          — Authentication (domain, data)
   habits/        — Habits tracking (domain, presentation)
-  main/          — App graph, DI wiring, coordinator
+  homescreen/    — App graph, DI wiring, coordinator
   memos/         — Memos API (domain, data, presentation)
   mode/          — App mode selection (domain, data, presentation)
   onboarding/    — Onboarding flow (domain, data, presentation)

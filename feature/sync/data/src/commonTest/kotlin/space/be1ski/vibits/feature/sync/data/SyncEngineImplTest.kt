@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
-import space.be1ski.vibits.feature.main.test.FakeCredentialsRepository
+import space.be1ski.vibits.feature.homescreen.test.FakeCredentialsRepository
 import space.be1ski.vibits.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.feature.memos.domain.model.Memo
