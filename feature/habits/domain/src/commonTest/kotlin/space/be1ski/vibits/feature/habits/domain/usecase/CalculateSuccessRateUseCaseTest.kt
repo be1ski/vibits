@@ -2,8 +2,8 @@ package space.be1ski.vibits.feature.habits.domain.usecase
 
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
+import space.be1ski.vibits.feature.habits.domain.model.ActivitySummary
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
-import space.be1ski.vibits.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -188,7 +188,7 @@ class CalculateSuccessRateUseCaseTest {
       inRange = inRange,
     )
 
-  private fun createWeekData(vararg days: Pair<LocalDate, ContributionDay>): ActivityWeekData {
+  private fun createWeekData(vararg days: Pair<LocalDate, ContributionDay>): ActivitySummary {
     val sortedDays = days.sortedBy { it.first }
     val weeks =
       sortedDays.chunked(7).map { chunk ->
@@ -200,6 +200,6 @@ class CalculateSuccessRateUseCaseTest {
       }
     val maxDaily = days.maxOfOrNull { it.second.count } ?: 0
     val maxWeekly = weeks.maxOfOrNull { it.weeklyCount } ?: 0
-    return ActivityWeekData(weeks = weeks, maxDaily = maxDaily, maxWeekly = maxWeekly)
+    return ActivitySummary(weeks = weeks, maxDaily = maxDaily, maxWeekly = maxWeekly)
   }
 }

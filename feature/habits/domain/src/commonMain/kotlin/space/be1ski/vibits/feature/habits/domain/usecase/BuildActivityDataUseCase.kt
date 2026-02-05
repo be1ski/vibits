@@ -9,9 +9,9 @@ import space.be1ski.vibits.core.date.DAYS_IN_WEEK
 import space.be1ski.vibits.core.date.startOfWeek
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
+import space.be1ski.vibits.feature.habits.domain.model.ActivitySummary
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
-import space.be1ski.vibits.feature.habits.domain.model.ActivityWeekData
-import space.be1ski.vibits.feature.habits.domain.model.DailyMemoInfo
+import space.be1ski.vibits.feature.habits.domain.model.DailyMemo
 import space.be1ski.vibits.feature.habits.domain.model.DayBuildContext
 import space.be1ski.vibits.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.feature.memos.domain.model.Memo
@@ -24,18 +24,18 @@ class BuildActivityDataUseCase(
   private val buildDayDataUseCase: BuildDayDataUseCase,
 ) {
   /**
-   * Builds ActivityWeekData for a given range.
+   * Builds ActivitySummary for a given range.
    */
   @Suppress("LongParameterList")
   fun buildWeekData(
     configTimeline: List<HabitsConfigEntry>,
-    dailyMemos: Map<LocalDate, DailyMemoInfo>,
+    dailyMemos: Map<LocalDate, DailyMemo>,
     timeZone: TimeZone,
     memos: List<Memo>,
     range: ActivityRange,
     mode: ActivityMode,
     today: LocalDate,
-  ): ActivityWeekData {
+  ): ActivitySummary {
     val bounds = GetRangeBoundsUseCase(range)
     val effectiveConfigTimeline = if (mode == ActivityMode.HABITS) configTimeline else emptyList()
     val counts =
@@ -70,6 +70,6 @@ class BuildActivityDataUseCase(
     }
     val maxDaily = weeks.maxOfOrNull { week -> week.days.maxOfOrNull { it.count } ?: 0 } ?: 0
     val maxWeekly = weeks.maxOfOrNull { it.weeklyCount } ?: 0
-    return ActivityWeekData(weeks = weeks, maxDaily = maxDaily, maxWeekly = maxWeekly)
+    return ActivitySummary(weeks = weeks, maxDaily = maxDaily, maxWeekly = maxWeekly)
   }
 }

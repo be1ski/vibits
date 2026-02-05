@@ -6,8 +6,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-class ActivityWeekDataTest {
-  private fun createTestData(): ActivityWeekData {
+class ActivitySummaryTest {
+  private fun createTestData(): ActivitySummary {
     val days =
       listOf(
         ContributionDay(
@@ -48,7 +48,7 @@ class ActivityWeekDataTest {
         ),
       )
     val week = ActivityWeek(startDate = LocalDate(2024, 1, 1), days = days, weeklyCount = 10)
-    return ActivityWeekData(weeks = listOf(week), maxDaily = 5, maxWeekly = 10)
+    return ActivitySummary(weeks = listOf(week), maxDaily = 5, maxWeekly = 10)
   }
 
   @Test
@@ -78,7 +78,7 @@ class ActivityWeekDataTest {
         )
       }
     val week = ActivityWeek(startDate = LocalDate(2024, 1, 1), days = days, weeklyCount = 10)
-    val data = ActivityWeekData(weeks = listOf(week), maxDaily = 1, maxWeekly = 10)
+    val data = ActivitySummary(weeks = listOf(week), maxDaily = 1, maxWeekly = 10)
 
     val result = data.lastSevenDays()
 
@@ -128,7 +128,7 @@ class ActivityWeekDataTest {
         ),
       )
     val week = ActivityWeek(startDate = LocalDate(2024, 1, 1), days = days, weeklyCount = 2)
-    val data = ActivityWeekData(weeks = listOf(week), maxDaily = 2, maxWeekly = 2)
+    val data = ActivitySummary(weeks = listOf(week), maxDaily = 2, maxWeekly = 2)
 
     val result = data.forHabit(habit)
 
@@ -162,7 +162,7 @@ class ActivityWeekDataTest {
         ),
       )
     val week = ActivityWeek(startDate = LocalDate(2024, 1, 1), days = days, weeklyCount = 1)
-    val data = ActivityWeekData(weeks = listOf(week), maxDaily = 1, maxWeekly = 1)
+    val data = ActivitySummary(weeks = listOf(week), maxDaily = 1, maxWeekly = 1)
 
     val result = data.forHabit(habit)
 
@@ -189,7 +189,7 @@ class ActivityWeekDataTest {
         ),
       )
     val week = ActivityWeek(startDate = LocalDate(2024, 1, 1), days = days, weeklyCount = 0)
-    val data = ActivityWeekData(weeks = listOf(week), maxDaily = 0, maxWeekly = 0)
+    val data = ActivitySummary(weeks = listOf(week), maxDaily = 0, maxWeekly = 0)
 
     val result = data.forHabit(habit)
 
@@ -233,7 +233,7 @@ class ActivityWeekDataTest {
         ),
       )
     val week = ActivityWeek(startDate = LocalDate(2024, 1, 1), days = days1, weeklyCount = 4)
-    val data = ActivityWeekData(weeks = listOf(week), maxDaily = 2, maxWeekly = 4)
+    val data = ActivitySummary(weeks = listOf(week), maxDaily = 2, maxWeekly = 4)
 
     val result = data.forHabit(habit)
 

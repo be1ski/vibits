@@ -11,7 +11,7 @@ data class DayBuildContext(
   val bounds: RangeBounds,
   val mode: ActivityMode,
   val configTimeline: List<HabitsConfigEntry>,
-  val dailyMemos: Map<LocalDate, DailyMemoInfo>,
+  val dailyMemos: Map<LocalDate, DailyMemo>,
   val counts: Map<LocalDate, Int>,
   val today: LocalDate,
 )

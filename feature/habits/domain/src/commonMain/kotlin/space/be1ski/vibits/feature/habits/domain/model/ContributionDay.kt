@@ -17,7 +17,7 @@ data class ContributionDay(
   /** Parsed habit status list for the day. */
   val habitStatuses: List<HabitStatus>,
   /** Daily memo information when available. */
-  val dailyMemo: DailyMemoInfo?,
+  val dailyMemo: DailyMemo?,
   /** True if the day is within the requested range. */
   val inRange: Boolean,
   /** True if the day can be clicked to toggle habits (not future, not before config). */

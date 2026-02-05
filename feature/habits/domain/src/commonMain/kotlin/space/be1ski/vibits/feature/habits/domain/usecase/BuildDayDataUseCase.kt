@@ -5,7 +5,7 @@ import space.be1ski.vibits.feature.habits.domain.buildHabitStatuses
 import space.be1ski.vibits.feature.habits.domain.extractHabitTagsFromContent
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
-import space.be1ski.vibits.feature.habits.domain.model.DailyMemoInfo
+import space.be1ski.vibits.feature.habits.domain.model.DailyMemo
 import space.be1ski.vibits.feature.habits.domain.model.DayBuildContext
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitStatus
@@ -47,7 +47,7 @@ class BuildDayDataUseCase {
 
   private fun buildHabitSelectionState(
     context: DayBuildContext,
-    dailyMemo: DailyMemoInfo?,
+    dailyMemo: DailyMemo?,
     habitsForDay: List<HabitConfig>,
   ): HabitSelectionState {
     val useHabits = context.mode == ActivityMode.HABITS && habitsForDay.isNotEmpty()

@@ -9,7 +9,7 @@ data class PrewarmResult(
   val range: ActivityRange,
   val mode: ActivityMode,
   val appMode: AppMode,
-  val weekData: ActivityWeekData,
+  val weekData: ActivitySummary,
   val configTimeline: List<HabitsConfigEntry>,
-  val successRate: SuccessRateData?,
+  val successRate: SuccessRate?,
 )

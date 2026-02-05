@@ -3,7 +3,7 @@ package space.be1ski.vibits.feature.habits.domain.usecase
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.feature.habits.domain.buildHabitStatuses
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
-import space.be1ski.vibits.feature.habits.domain.model.DailyMemoInfo
+import space.be1ski.vibits.feature.habits.domain.model.DailyMemo
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 
 /**
@@ -13,7 +13,7 @@ object BuildHabitDayUseCase {
   operator fun invoke(
     date: LocalDate,
     habitsConfig: List<HabitConfig>,
-    dailyMemo: DailyMemoInfo?,
+    dailyMemo: DailyMemo?,
   ): ContributionDay? {
     if (habitsConfig.isEmpty()) {
       return null

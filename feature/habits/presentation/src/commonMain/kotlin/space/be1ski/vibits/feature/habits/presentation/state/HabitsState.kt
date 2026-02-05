@@ -2,9 +2,9 @@ package space.be1ski.vibits.feature.habits.presentation.state
 
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
-import space.be1ski.vibits.feature.habits.domain.model.CachedActivityData
+import space.be1ski.vibits.feature.habits.domain.model.CachedActivity
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
-import space.be1ski.vibits.feature.habits.domain.model.DailyMemoInfo
+import space.be1ski.vibits.feature.habits.domain.model.DailyMemo
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitTag
 import space.be1ski.vibits.feature.habits.domain.model.IsSelected
@@ -47,7 +47,7 @@ data class HabitsState(
   val editorDay: ContributionDay? = null,
   val editorConfig: List<HabitConfig> = emptyList(),
   val editorSelections: Map<HabitTag, IsSelected> = emptyMap(),
-  val editorExisting: DailyMemoInfo? = null,
+  val editorExisting: DailyMemo? = null,
   val editorError: String? = null,
   // Delete confirmation
   val showDeleteConfirm: Boolean = false,
@@ -72,7 +72,7 @@ data class HabitsState(
   // Loading state
   val isLoading: Boolean = false,
   // Cache state
-  val activityDataCache: Map<ActivityCacheKey, CachedActivityData> = emptyMap(),
+  val activityDataCache: Map<ActivityCacheKey, CachedActivity> = emptyMap(),
   val isRecalculating: Set<ActivityCacheKey> = emptySet(),
   val needsCacheRefresh: Boolean = false,
   val isInitialLoading: Boolean = false,

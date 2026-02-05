@@ -4,11 +4,11 @@ import space.be1ski.vibits.core.elm.test.test
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
+import space.be1ski.vibits.feature.habits.domain.model.ActivitySummary
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
-import space.be1ski.vibits.feature.habits.domain.model.ActivityWeekData
-import space.be1ski.vibits.feature.habits.domain.model.CachedActivityData
+import space.be1ski.vibits.feature.habits.domain.model.CachedActivity
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
-import space.be1ski.vibits.feature.habits.domain.model.DailyMemoInfo
+import space.be1ski.vibits.feature.habits.domain.model.DailyMemo
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitStatus
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
@@ -68,7 +68,7 @@ class HabitsReducerTest {
   @Test
   fun `when OpenEditor with existing memo then sets editorExisting`() =
     habitsReducer.test(HabitsState()) {
-      val dayWithMemo = testDay.copy(dailyMemo = DailyMemoInfo("memos/1", "content"))
+      val dayWithMemo = testDay.copy(dailyMemo = DailyMemo("memos/1", "content"))
 
       send(HabitsAction.Editor.OpenEditor(day = dayWithMemo, config = testConfig))
 
@@ -141,7 +141,7 @@ class HabitsReducerTest {
         editorDay = testDay,
         editorConfig = testConfig,
         editorSelections = mapOf("#habits/exercise" to false),
-        editorExisting = DailyMemoInfo("memos/1", "content"),
+        editorExisting = DailyMemo("memos/1", "content"),
       ),
     ) {
       send(HabitsAction.Editor.ConfirmEditor)
@@ -188,7 +188,7 @@ class HabitsReducerTest {
         editorDay = testDay,
         editorConfig = testConfig,
         editorSelections = mapOf("#habits/exercise" to true),
-        editorExisting = DailyMemoInfo("memos/1", "old content"),
+        editorExisting = DailyMemo("memos/1", "old content"),
       ),
     ) {
       send(HabitsAction.Editor.ConfirmEditor)
@@ -223,7 +223,7 @@ class HabitsReducerTest {
 
   @Test
   fun `when ConfirmDelete then emits DeleteMemo effect`() =
-    habitsReducer.test(HabitsState(editorExisting = DailyMemoInfo("memos/1", "content"))) {
+    habitsReducer.test(HabitsState(editorExisting = DailyMemo("memos/1", "content"))) {
       send(HabitsAction.Editor.ConfirmDelete)
 
       assertState { isLoading }
@@ -520,7 +520,7 @@ class HabitsReducerTest {
   fun `when ConfirmSingleHabitToggle then emits ToggleDailyHabit with correct params`() =
     habitsReducer.test(
       HabitsState(
-        singleToggleDay = testDay.copy(dailyMemo = DailyMemoInfo("memos/1", "content")),
+        singleToggleDay = testDay.copy(dailyMemo = DailyMemo("memos/1", "content")),
         singleToggleHabitTag = "#habits/exercise",
         singleToggleConfig = testConfig,
       ),
@@ -789,7 +789,7 @@ class HabitsReducerTest {
         isRecalculating = setOf(ActivityCacheKey(ActivityRange.Week(LocalDate(2024, 1, 1)), ActivityMode.HABITS, AppMode.ONLINE)),
       ),
     ) {
-      val weekData = ActivityWeekData(weeks = emptyList(), maxDaily = 5, maxWeekly = 10)
+      val weekData = ActivitySummary(weeks = emptyList(), maxDaily = 5, maxWeekly = 10)
       send(
         HabitsAction.Cache.UpdateActivityData(
           range = ActivityRange.Week(LocalDate(2024, 1, 1)),
@@ -816,7 +816,7 @@ class HabitsReducerTest {
         activityDataCache =
           mapOf(
             ActivityCacheKey(ActivityRange.Week(LocalDate(2024, 1, 1)), ActivityMode.HABITS, AppMode.ONLINE) to
-              CachedActivityData(ActivityWeekData(emptyList(), 0, 0), emptyList(), null),
+              CachedActivity(ActivitySummary(emptyList(), 0, 0), emptyList(), null),
           ),
         isRecalculating = setOf(ActivityCacheKey(ActivityRange.Week(LocalDate(2024, 1, 1)), ActivityMode.HABITS, AppMode.ONLINE)),
         needsCacheRefresh = false,
@@ -841,7 +841,7 @@ class HabitsReducerTest {
         activityDataCache =
           mapOf(
             ActivityCacheKey(ActivityRange.Week(LocalDate(2024, 1, 1)), ActivityMode.HABITS, AppMode.ONLINE) to
-              CachedActivityData(ActivityWeekData(emptyList(), 0, 0), emptyList(), null),
+              CachedActivity(ActivitySummary(emptyList(), 0, 0), emptyList(), null),
           ),
         isRecalculating = emptySet(),
         needsCacheRefresh = true,
