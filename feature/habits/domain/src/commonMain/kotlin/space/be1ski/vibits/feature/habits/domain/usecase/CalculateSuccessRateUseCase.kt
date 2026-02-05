@@ -5,9 +5,6 @@ import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.ActivitySummary
 import space.be1ski.vibits.feature.habits.domain.model.SuccessRate
 
-/**
- * Calculates success rate for habits within a given time range.
- */
 object CalculateSuccessRateUseCase {
   operator fun invoke(
     weekData: ActivitySummary,

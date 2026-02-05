@@ -7,9 +7,7 @@ interface SyncEngine {
 
   suspend fun performSync(): SyncResult
 
-  /** Forces server data to overwrite local data. */
   suspend fun forceServerSync(): SyncResult
 
-  /** Forces local data to overwrite server data. */
   suspend fun forceLocalSync(): SyncResult
 }

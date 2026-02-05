@@ -11,9 +11,6 @@ import space.be1ski.vibits.feature.sync.domain.model.TempMemoName
 
 private val TAG = SyncLogTags.SYNC_ENGINE
 
-/**
- * Detects conflicts between pending sync operations and server state.
- */
 object DetectSyncConflictsUseCase {
   operator fun invoke(
     pendingOperations: List<SyncOperation>,

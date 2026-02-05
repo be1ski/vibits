@@ -16,16 +16,10 @@ import space.be1ski.vibits.feature.habits.domain.model.DayBuildContext
 import space.be1ski.vibits.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 
-/**
- * Use case for building activity data.
- */
 @Inject
 class BuildActivityDataUseCase(
   private val buildDayDataUseCase: BuildDayDataUseCase,
 ) {
-  /**
-   * Builds ActivitySummary for a given range.
-   */
   @Suppress("LongParameterList")
   fun buildWeekData(
     configTimeline: List<HabitsConfigEntry>,
