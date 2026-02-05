@@ -5,7 +5,7 @@ import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.core.platform.date.currentLocalDate
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
-import space.be1ski.vibits.feature.habits.domain.model.CachedActivityData
+import space.be1ski.vibits.feature.habits.domain.model.CachedActivity
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 
 @Inject
@@ -16,7 +16,7 @@ class CalculateActivityDataUseCase(
     range: ActivityRange,
     mode: ActivityMode,
     memos: List<Memo>,
-  ): CachedActivityData {
+  ): CachedActivity {
     val timeZone = TimeZone.currentSystemDefault()
     val today = currentLocalDate()
     val configTimeline = ExtractHabitsConfigUseCase(memos, timeZone)
@@ -39,7 +39,7 @@ class CalculateActivityDataUseCase(
         null
       }
 
-    return CachedActivityData(
+    return CachedActivity(
       weekData = weekData,
       configTimeline = configTimeline,
       successRate = successRate,

@@ -2,7 +2,7 @@ package space.be1ski.vibits.feature.habits.domain.usecase
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import space.be1ski.vibits.feature.habits.domain.model.DailyMemoInfo
+import space.be1ski.vibits.feature.habits.domain.model.DailyMemo
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.model.isDailyMemo
 
@@ -14,7 +14,7 @@ object ExtractDailyMemosUseCase {
   operator fun invoke(
     memos: List<Memo>,
     timeZone: TimeZone,
-  ): Map<LocalDate, DailyMemoInfo> {
+  ): Map<LocalDate, DailyMemo> {
     val dailyMemos =
       memos.filter { memo ->
         memo.content.isDailyMemo()
@@ -26,7 +26,7 @@ object ExtractDailyMemosUseCase {
             ?: parseMemoDate(memo, timeZone)
             ?: return@mapNotNull null
         date to
-          DailyMemoInfo(
+          DailyMemo(
             name = memo.name,
             content = memo.content,
           )
@@ -40,5 +40,5 @@ object ExtractDailyMemosUseCase {
     memos: List<Memo>,
     timeZone: TimeZone,
     date: LocalDate,
-  ): DailyMemoInfo? = invoke(memos, timeZone)[date]
+  ): DailyMemo? = invoke(memos, timeZone)[date]
 }

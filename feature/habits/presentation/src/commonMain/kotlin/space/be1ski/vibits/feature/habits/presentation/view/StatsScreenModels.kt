@@ -4,11 +4,11 @@ import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.core.ui.date.DateFormatter
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
-import space.be1ski.vibits.feature.habits.domain.model.ActivityWeekData
+import space.be1ski.vibits.feature.habits.domain.model.ActivitySummary
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitsConfigEntry
-import space.be1ski.vibits.feature.habits.domain.model.SuccessRateData
+import space.be1ski.vibits.feature.habits.domain.model.SuccessRate
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 
@@ -28,7 +28,7 @@ data class StatsScreenState(
 
 internal data class HabitActivitySectionState(
   val habit: HabitConfig,
-  val baseWeekData: ActivityWeekData,
+  val baseWeekData: ActivitySummary,
   val selectedDate: LocalDate?,
   val isActiveSelection: Boolean,
   val showWeekdayLegend: Boolean,
@@ -45,7 +45,7 @@ internal data class StatsScreenDerivedState(
   val habitsState: HabitsState,
   val habitsConfigTimeline: List<HabitsConfigEntry>,
   val currentHabitsConfig: List<HabitConfig>,
-  val weekData: ActivityWeekData,
+  val weekData: ActivitySummary,
   val isLoadingWeekData: Boolean,
   val showWeekdayLegend: Boolean,
   val useCompactHeight: Boolean,
@@ -57,7 +57,7 @@ internal data class StatsScreenDerivedState(
   val todayDay: ContributionDay?,
   val today: LocalDate,
   val timeZone: TimeZone,
-  val successRateData: SuccessRateData?,
+  val successRate: SuccessRate?,
   val periodPosts: List<Memo>,
   val dateFormatter: DateFormatter,
   /** Date when habits were first configured (null if no config). */

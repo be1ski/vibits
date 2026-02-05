@@ -3,8 +3,8 @@ package space.be1ski.vibits.feature.habits.domain.model
 /**
  * Cached activity data for a specific range and mode.
  */
-data class CachedActivityData(
-  val weekData: ActivityWeekData,
+data class CachedActivity(
+  val weekData: ActivitySummary,
   val configTimeline: List<HabitsConfigEntry>,
-  val successRate: SuccessRateData?,
+  val successRate: SuccessRate?,
 )

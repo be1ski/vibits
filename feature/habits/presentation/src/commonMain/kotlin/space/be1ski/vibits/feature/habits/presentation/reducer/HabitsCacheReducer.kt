@@ -2,7 +2,7 @@ package space.be1ski.vibits.feature.habits.presentation.reducer
 
 import space.be1ski.vibits.core.elm.Reducer
 import space.be1ski.vibits.core.elm.reducer
-import space.be1ski.vibits.feature.habits.domain.model.CachedActivityData
+import space.be1ski.vibits.feature.habits.domain.model.CachedActivity
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.effect.HabitsEffect
 import space.be1ski.vibits.feature.habits.presentation.state.ActivityCacheKey
@@ -30,7 +30,7 @@ internal val cacheReducer: Reducer<HabitsAction.Cache, HabitsState, HabitsEffect
           state.copy(
             activityDataCache =
               state.activityDataCache +
-                (key to CachedActivityData(action.weekData, action.configTimeline, action.successRate)),
+                (key to CachedActivity(action.weekData, action.configTimeline, action.successRate)),
             isRecalculating = state.isRecalculating - key,
           )
         }

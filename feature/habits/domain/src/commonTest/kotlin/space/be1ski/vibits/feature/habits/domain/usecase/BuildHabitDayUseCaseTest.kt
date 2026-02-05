@@ -1,7 +1,7 @@
 package space.be1ski.vibits.feature.habits.domain.usecase
 
 import kotlinx.datetime.LocalDate
-import space.be1ski.vibits.feature.habits.domain.model.DailyMemoInfo
+import space.be1ski.vibits.feature.habits.domain.model.DailyMemo
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -15,7 +15,7 @@ class BuildHabitDayUseCaseTest {
   @Test
   fun `when habitsConfig is empty then returns null`() {
     val date = LocalDate(2024, 1, 15)
-    val dailyMemo = DailyMemoInfo(name = "test", content = "content")
+    val dailyMemo = DailyMemo(name = "test", content = "content")
 
     val result = useCase(date, emptyList(), dailyMemo)
 
@@ -31,7 +31,7 @@ class BuildHabitDayUseCaseTest {
         HabitConfig(tag = "#habits/reading", label = "Reading"),
       )
     val dailyMemo =
-      DailyMemoInfo(
+      DailyMemo(
         name = "test",
         content = "#daily 2024-01-15\n#habits/exercise\n#habits/reading",
       )
@@ -56,7 +56,7 @@ class BuildHabitDayUseCaseTest {
         HabitConfig(tag = "#habits/meditation", label = "Meditation"),
       )
     val dailyMemo =
-      DailyMemoInfo(
+      DailyMemo(
         name = "test",
         content = "#daily 2024-01-15\n#habits/exercise",
       )
@@ -77,7 +77,7 @@ class BuildHabitDayUseCaseTest {
         HabitConfig(tag = "#habits/exercise", label = "Exercise"),
       )
     val dailyMemo =
-      DailyMemoInfo(
+      DailyMemo(
         name = "test",
         content = "#daily 2024-01-15",
       )
@@ -116,7 +116,7 @@ class BuildHabitDayUseCaseTest {
         HabitConfig(tag = "#habits/reading", label = "Reading"),
       )
     val dailyMemo =
-      DailyMemoInfo(
+      DailyMemo(
         name = "test",
         content = "#daily\n#habits/exercise",
       )
@@ -143,7 +143,7 @@ class BuildHabitDayUseCaseTest {
         HabitConfig(tag = "#habits/exercise", label = "Exercise"),
       )
     val dailyMemo =
-      DailyMemoInfo(
+      DailyMemo(
         name = "test",
         content = "#habits/exercise",
       )

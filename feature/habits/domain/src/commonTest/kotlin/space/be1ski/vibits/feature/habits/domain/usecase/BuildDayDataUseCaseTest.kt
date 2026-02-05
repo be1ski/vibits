@@ -2,7 +2,7 @@ package space.be1ski.vibits.feature.habits.domain.usecase
 
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
-import space.be1ski.vibits.feature.habits.domain.model.DailyMemoInfo
+import space.be1ski.vibits.feature.habits.domain.model.DailyMemo
 import space.be1ski.vibits.feature.habits.domain.model.DayBuildContext
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitsConfigEntry
@@ -226,7 +226,7 @@ class BuildDayDataUseCaseTest {
 
   @Test
   fun `when habit is completed in dailyMemo then count is 1`() {
-    val dailyMemo = DailyMemoInfo(name = "daily", content = "#habits/test done!")
+    val dailyMemo = DailyMemo(name = "daily", content = "#habits/test done!")
     val context =
       DayBuildContext(
         date = LocalDate(2024, 1, 12),
@@ -265,7 +265,7 @@ class BuildDayDataUseCaseTest {
 
   @Test
   fun `when habit tag not in dailyMemo then count is 0`() {
-    val dailyMemo = DailyMemoInfo(name = "daily", content = "just some text without habits")
+    val dailyMemo = DailyMemo(name = "daily", content = "just some text without habits")
     val context =
       DayBuildContext(
         date = LocalDate(2024, 1, 12),
@@ -304,7 +304,7 @@ class BuildDayDataUseCaseTest {
                 "Meditation | #habits/meditation",
           ),
       )
-    val dailyMemo = DailyMemoInfo(name = "daily", content = "#habits/exercise #habits/reading")
+    val dailyMemo = DailyMemo(name = "daily", content = "#habits/exercise #habits/reading")
     val context =
       DayBuildContext(
         date = LocalDate(2024, 1, 12),

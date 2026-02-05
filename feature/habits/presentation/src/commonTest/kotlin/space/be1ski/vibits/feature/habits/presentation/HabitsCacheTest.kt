@@ -3,9 +3,9 @@ import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
+import space.be1ski.vibits.feature.habits.domain.model.ActivitySummary
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
-import space.be1ski.vibits.feature.habits.domain.model.ActivityWeekData
-import space.be1ski.vibits.feature.habits.domain.model.CachedActivityData
+import space.be1ski.vibits.feature.habits.domain.model.CachedActivity
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.effect.HabitsEffect
 import space.be1ski.vibits.feature.habits.presentation.reducer.habitsReducer
@@ -28,9 +28,9 @@ class HabitsCacheTest {
     val week1Range = ActivityRange.Week(LocalDate(2026, 1, 20))
     val demoKey = ActivityCacheKey(week1Range, ActivityMode.HABITS, AppMode.DEMO)
     val demoData =
-      CachedActivityData(
+      CachedActivity(
         weekData =
-          ActivityWeekData(
+          ActivitySummary(
             weeks = listOf(ActivityWeek(startDate = week1Range.startDate, days = emptyList(), weeklyCount = 0)),
             maxDaily = 0,
             maxWeekly = 0,
@@ -60,8 +60,8 @@ class HabitsCacheTest {
     val week2Range = ActivityRange.Week(LocalDate(2026, 1, 20))
     val week1Key = ActivityCacheKey(week1Range, ActivityMode.HABITS, appMode)
     val cachedData1 =
-      CachedActivityData(
-        weekData = ActivityWeekData(weeks = emptyList(), maxDaily = 0, maxWeekly = 0),
+      CachedActivity(
+        weekData = ActivitySummary(weeks = emptyList(), maxDaily = 0, maxWeekly = 0),
         configTimeline = emptyList(),
         successRate = null,
       )
@@ -118,8 +118,8 @@ class HabitsCacheTest {
     val week1Key = ActivityCacheKey(week1Range, ActivityMode.HABITS, appMode)
     val week2Key = ActivityCacheKey(week2Range, ActivityMode.HABITS, appMode)
     val cachedData =
-      CachedActivityData(
-        weekData = ActivityWeekData(weeks = emptyList(), maxDaily = 0, maxWeekly = 0),
+      CachedActivity(
+        weekData = ActivitySummary(weeks = emptyList(), maxDaily = 0, maxWeekly = 0),
         configTimeline = emptyList(),
         successRate = null,
       )

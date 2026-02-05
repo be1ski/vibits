@@ -4,15 +4,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
+import space.be1ski.vibits.feature.habits.domain.model.ActivitySummary
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
-import space.be1ski.vibits.feature.habits.domain.model.ActivityWeekData
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
 
 /**
  * UI state for rendering the contribution grid.
  */
 data class ContributionGridState(
-  val weekData: ActivityWeekData,
+  val weekData: ActivitySummary,
   val range: ActivityRange,
   val selectedDay: ContributionDay?,
   val selectedWeekStart: LocalDate?,
@@ -41,7 +41,7 @@ private val DEFAULT_WEEKEND_DAYS =
  * UI state for rendering a weekly bar chart.
  */
 data class WeeklyBarChartState(
-  val weekData: ActivityWeekData,
+  val weekData: ActivitySummary,
   val selectedWeek: ActivityWeek?,
   val scrollState: ScrollState,
   val showWeekdayLegend: Boolean,

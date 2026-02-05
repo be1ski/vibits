@@ -6,7 +6,7 @@ import space.be1ski.vibits.core.date.DAYS_IN_WEEK
 /**
  * Fully prepared dataset for activity charts.
  */
-data class ActivityWeekData(
+data class ActivitySummary(
   /** Ordered list of week entries. */
   val weeks: List<ActivityWeek>,
   /** Maximum posts for a single day in range. */
@@ -18,7 +18,7 @@ data class ActivityWeekData(
 /**
  * Returns the last 7 in-range days.
  */
-fun ActivityWeekData.lastSevenDays(): List<ContributionDay> {
+fun ActivitySummary.lastSevenDays(): List<ContributionDay> {
   val days = weeks.flatMap { it.days }.filter { it.inRange }
   return days.takeLast(DAYS_IN_WEEK)
 }
@@ -26,7 +26,7 @@ fun ActivityWeekData.lastSevenDays(): List<ContributionDay> {
 /**
  * Finds a contribution day by date.
  */
-fun ActivityWeekData.findDayByDate(date: LocalDate): ContributionDay? =
+fun ActivitySummary.findDayByDate(date: LocalDate): ContributionDay? =
   weeks.firstNotNullOfOrNull { week ->
     week.days.firstOrNull { it.date == date }
   }
@@ -34,7 +34,7 @@ fun ActivityWeekData.findDayByDate(date: LocalDate): ContributionDay? =
 /**
  * Filters activity data for a single habit.
  */
-fun ActivityWeekData.forHabit(habit: HabitConfig): ActivityWeekData {
+fun ActivitySummary.forHabit(habit: HabitConfig): ActivitySummary {
   val filteredWeeks =
     weeks.map { week ->
       val days =
@@ -66,5 +66,5 @@ fun ActivityWeekData.forHabit(habit: HabitConfig): ActivityWeekData {
     }
   val newMaxDaily = filteredWeeks.maxOfOrNull { week -> week.days.maxOfOrNull { it.count } ?: 0 } ?: 0
   val newMaxWeekly = filteredWeeks.maxOfOrNull { it.weeklyCount } ?: 0
-  return ActivityWeekData(weeks = filteredWeeks, maxDaily = newMaxDaily, maxWeekly = newMaxWeekly)
+  return ActivitySummary(weeks = filteredWeeks, maxDaily = newMaxDaily, maxWeekly = newMaxWeekly)
 }

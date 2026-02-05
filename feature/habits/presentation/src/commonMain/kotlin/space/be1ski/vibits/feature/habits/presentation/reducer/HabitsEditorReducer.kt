@@ -7,7 +7,7 @@ import space.be1ski.vibits.feature.habits.domain.buildDailyContent
 import space.be1ski.vibits.feature.habits.domain.buildHabitStatuses
 import space.be1ski.vibits.feature.habits.domain.buildHabitsEditorSelections
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
-import space.be1ski.vibits.feature.habits.domain.model.DailyMemoInfo
+import space.be1ski.vibits.feature.habits.domain.model.DailyMemo
 import space.be1ski.vibits.feature.habits.domain.usecase.parseDailyDateFromContent
 import space.be1ski.vibits.feature.habits.domain.usecase.parseMemoDate
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
@@ -38,7 +38,7 @@ internal val editorReducer: Reducer<HabitsAction.Editor, HabitsState, HabitsEffe
                 totalHabits = action.config.size,
                 completionRatio = if (action.config.isNotEmpty()) completedCount.toFloat() / action.config.size else 0f,
                 habitStatuses = habitStatuses,
-                dailyMemo = DailyMemoInfo(name = action.memo.name, content = action.memo.content),
+                dailyMemo = DailyMemo(name = action.memo.name, content = action.memo.content),
                 inRange = true,
                 isClickable = true,
               )

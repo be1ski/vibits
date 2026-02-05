@@ -2,19 +2,19 @@ package space.be1ski.vibits.feature.habits.domain.usecase
 
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
-import space.be1ski.vibits.feature.habits.domain.model.ActivityWeekData
-import space.be1ski.vibits.feature.habits.domain.model.SuccessRateData
+import space.be1ski.vibits.feature.habits.domain.model.ActivitySummary
+import space.be1ski.vibits.feature.habits.domain.model.SuccessRate
 
 /**
  * Calculates success rate for habits within a given time range.
  */
 object CalculateSuccessRateUseCase {
   operator fun invoke(
-    weekData: ActivityWeekData,
+    weekData: ActivitySummary,
     range: ActivityRange,
     today: LocalDate,
     configStartDate: LocalDate? = null,
-  ): SuccessRateData {
+  ): SuccessRate {
     val bounds = GetRangeBoundsUseCase(range)
     val effectiveStart =
       if (configStartDate != null && configStartDate > bounds.start) {
@@ -33,6 +33,6 @@ object CalculateSuccessRateUseCase {
     val total = days.sumOf { it.totalHabits }
     val rate = if (total > 0) completed.toFloat() / total else 0f
 
-    return SuccessRateData(completed, total, rate)
+    return SuccessRate(completed, total, rate)
   }
 }

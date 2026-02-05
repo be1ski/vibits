@@ -16,7 +16,7 @@ import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.date.DateFormatter
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
-import space.be1ski.vibits.feature.habits.domain.model.ActivityWeekData
+import space.be1ski.vibits.feature.habits.domain.model.ActivitySummary
 import space.be1ski.vibits.feature.habits.domain.model.findDayByDate
 import space.be1ski.vibits.feature.habits.domain.usecase.ExtractDailyMemosUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
@@ -67,7 +67,7 @@ private fun rememberStatsScreenDerived(
   // Read from TEA cache
   val emptyWeekData =
     remember {
-      ActivityWeekData(
+      ActivitySummary(
         weeks = emptyList(),
         maxDaily = 0,
         maxWeekly = 0,
@@ -75,7 +75,7 @@ private fun rememberStatsScreenDerived(
     }
   val weekData = cachedData?.weekData ?: emptyWeekData
   val habitsConfigTimeline = cachedData?.configTimeline.orEmpty()
-  val successRateData = cachedData?.successRate
+  val successRate = cachedData?.successRate
 
   val currentHabitsConfig =
     remember(habitsConfigTimeline) {
@@ -121,8 +121,7 @@ private fun rememberStatsScreenDerived(
     remember(habitsConfigTimeline) {
       habitsConfigTimeline.firstOrNull()?.date
     }
-  // Success rate comes from TEA cache
-  val finalSuccessRateData = successRateData
+  val finalSuccessRate = successRate
   val periodPosts =
     remember(memos, range, timeZone) {
       GetPeriodPostsUseCase(memos, range, timeZone)
@@ -144,7 +143,7 @@ private fun rememberStatsScreenDerived(
     todayDay = todayDay,
     today = today,
     timeZone = timeZone,
-    successRateData = finalSuccessRateData,
+    successRate = finalSuccessRate,
     periodPosts = periodPosts,
     dateFormatter = dateFormatter,
     configStartDate = configStartDate,
