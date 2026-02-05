@@ -7,9 +7,6 @@ import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.homescreen.domain.model.Screen
 import space.be1ski.vibits.feature.settings.domain.model.TimeRangeTab
 
-/**
- * Actions for the App coordinator feature.
- */
 sealed interface AppAction : Action {
   /** Navigation actions. */
   sealed interface Navigation : AppAction {

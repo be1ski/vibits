@@ -22,7 +22,6 @@ import space.be1ski.vibits.feature.auth.data.CredentialsRepositoryImpl
 import space.be1ski.vibits.feature.auth.data.platform.CredentialsStore
 import space.be1ski.vibits.feature.auth.data.platform.createCredentialsStore
 import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
-import space.be1ski.vibits.feature.homescreen.AppInitializer
 import space.be1ski.vibits.feature.memos.data.ConnectionTesterImpl
 import space.be1ski.vibits.feature.memos.data.MemoStorageManagerImpl
 import space.be1ski.vibits.feature.memos.data.ModeAwareMemosRepository
@@ -63,7 +62,6 @@ abstract class AppGraph {
   abstract val appDependencies: AppDependencies
   abstract val appFeaturesFactory: AppFeaturesFactory
   abstract val appCoroutineScope: CoroutineScope
-  abstract val appInitializer: AppInitializer
 
   companion object {
     private var instance: AppGraph? = null
@@ -75,10 +73,6 @@ abstract class AppGraph {
     fun getFeaturesFactory(): AppFeaturesFactory = getGraph().appFeaturesFactory
 
     fun getAppScope(): CoroutineScope = getGraph().appCoroutineScope
-
-    fun initializeApp() {
-      getGraph().appInitializer()
-    }
 
     fun resetGraph() {
       instance = null
