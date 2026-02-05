@@ -29,7 +29,6 @@ import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,7 +42,6 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
@@ -68,10 +66,7 @@ import space.be1ski.vibits.core.strings.generated.action_reset_settings_only
 import space.be1ski.vibits.core.strings.generated.action_reset_with_memos
 import space.be1ski.vibits.core.strings.generated.action_save
 import space.be1ski.vibits.core.strings.generated.action_view_logs
-import space.be1ski.vibits.core.strings.generated.hint_base_url
-import space.be1ski.vibits.core.strings.generated.label_access_token
 import space.be1ski.vibits.core.strings.generated.label_app_mode
-import space.be1ski.vibits.core.strings.generated.label_base_url
 import space.be1ski.vibits.core.strings.generated.label_credentials
 import space.be1ski.vibits.core.strings.generated.label_environment
 import space.be1ski.vibits.core.strings.generated.label_language
@@ -103,10 +98,8 @@ import space.be1ski.vibits.core.strings.generated.language_uzbek
 import space.be1ski.vibits.core.strings.generated.mode_demo_title
 import space.be1ski.vibits.core.strings.generated.mode_offline_title
 import space.be1ski.vibits.core.strings.generated.mode_online_title
-import space.be1ski.vibits.core.strings.generated.msg_connection_failed
 import space.be1ski.vibits.core.strings.generated.msg_export_failed
 import space.be1ski.vibits.core.strings.generated.msg_export_success
-import space.be1ski.vibits.core.strings.generated.msg_fill_all_fields
 import space.be1ski.vibits.core.strings.generated.msg_no_logs
 import space.be1ski.vibits.core.strings.generated.msg_reset_choose_option
 import space.be1ski.vibits.core.strings.generated.msg_restart_required
@@ -119,6 +112,8 @@ import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.LogViewer
 import space.be1ski.vibits.core.ui.SegmentedSelector
 import space.be1ski.vibits.core.utils.logging.Log
+import space.be1ski.vibits.feature.auth.presentation.view.CredentialFields
+import space.be1ski.vibits.feature.auth.presentation.view.credentialValidationErrorMessage
 import space.be1ski.vibits.feature.memos.data.export.ExportResult
 import space.be1ski.vibits.feature.memos.data.export.Exporter
 import space.be1ski.vibits.feature.memos.data.platform.createOfflineMemoStorage
@@ -163,23 +158,18 @@ private fun SettingsDialogBody(
   state: SettingsState,
   dispatch: (SettingsAction) -> Unit,
 ) {
-  val validationErrorMessage =
-    state.validationError?.let { errorKey ->
-      when (errorKey) {
-        "fill_all_fields" -> stringResource(Res.string.msg_fill_all_fields)
-        "connection_failed" -> stringResource(Res.string.msg_connection_failed)
-        else -> errorKey
-      }
-    }
-
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
     AppModeSelector(
       currentMode = state.appMode,
       isValidating = state.isValidating,
       onModeChange = { mode -> dispatch(SettingsAction.Input.SelectMode(mode)) },
     )
-    validationErrorMessage?.let { error ->
-      Text(error, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+    state.validationError?.let { error ->
+      Text(
+        credentialValidationErrorMessage(error),
+        color = MaterialTheme.colorScheme.error,
+        style = MaterialTheme.typography.bodySmall,
+      )
     }
     SegmentedSelector(
       label = stringResource(Res.string.label_theme),
@@ -206,21 +196,11 @@ private fun SettingsDialogBody(
       )
     }
     if (state.appMode == AppMode.ONLINE) {
-      TextField(
-        value = state.editBaseUrl,
-        onValueChange = { dispatch(SettingsAction.Input.UpdateBaseUrl(it)) },
-        label = { Text(stringResource(Res.string.label_base_url)) },
-        placeholder = { Text(stringResource(Res.string.hint_base_url)) },
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth(),
-      )
-      TextField(
-        value = state.editToken,
-        onValueChange = { dispatch(SettingsAction.Input.UpdateToken(it)) },
-        label = { Text(stringResource(Res.string.label_access_token)) },
-        visualTransformation = PasswordVisualTransformation(),
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth(),
+      CredentialFields(
+        baseUrl = state.editBaseUrl,
+        token = state.editToken,
+        onBaseUrlChange = { dispatch(SettingsAction.Input.UpdateBaseUrl(it)) },
+        onTokenChange = { dispatch(SettingsAction.Input.UpdateToken(it)) },
       )
     }
     ActionsRow(

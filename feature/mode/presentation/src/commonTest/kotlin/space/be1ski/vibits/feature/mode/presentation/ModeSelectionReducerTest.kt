@@ -2,11 +2,11 @@ package space.be1ski.vibits.feature.mode.presentation
 
 import space.be1ski.vibits.core.elm.test.test
 import space.be1ski.vibits.core.platform.mode.AppMode
+import space.be1ski.vibits.feature.auth.domain.model.CredentialValidationError
 import space.be1ski.vibits.feature.mode.presentation.action.ModeSelectionAction
 import space.be1ski.vibits.feature.mode.presentation.effect.ModeSelectionEffect.Command
 import space.be1ski.vibits.feature.mode.presentation.effect.ModeSelectionEffect.Notification
 import space.be1ski.vibits.feature.mode.presentation.reducer.modeSelectionReducer
-import space.be1ski.vibits.feature.mode.presentation.state.ModeSelectionError
 import space.be1ski.vibits.feature.mode.presentation.state.ModeSelectionState
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -14,7 +14,7 @@ import kotlin.test.assertEquals
 class ModeSelectionReducerTest {
   @Test
   fun `when Dialog Show then shows dialog and clears error`() =
-    modeSelectionReducer.test(ModeSelectionState(error = ModeSelectionError.FILL_ALL_FIELDS)) {
+    modeSelectionReducer.test(ModeSelectionState(error = CredentialValidationError.FILL_ALL_FIELDS)) {
       send(ModeSelectionAction.Dialog.Show)
 
       assertState { showCredentialsDialog && error == null }
@@ -29,7 +29,7 @@ class ModeSelectionReducerTest {
         baseUrl = "https://api.com",
         token = "secret",
         isValidating = true,
-        error = ModeSelectionError.CONNECTION_FAILED,
+        error = CredentialValidationError.CONNECTION_FAILED,
       ),
     ) {
       send(ModeSelectionAction.Dialog.Dismiss)
@@ -46,7 +46,7 @@ class ModeSelectionReducerTest {
 
   @Test
   fun `when Input UpdateBaseUrl then updates baseUrl and clears error`() =
-    modeSelectionReducer.test(ModeSelectionState(error = ModeSelectionError.FILL_ALL_FIELDS)) {
+    modeSelectionReducer.test(ModeSelectionState(error = CredentialValidationError.FILL_ALL_FIELDS)) {
       send(ModeSelectionAction.Input.UpdateBaseUrl("https://new.api.com"))
 
       assertState { baseUrl == "https://new.api.com" && error == null }
@@ -55,7 +55,7 @@ class ModeSelectionReducerTest {
 
   @Test
   fun `when Input UpdateToken then updates token and clears error`() =
-    modeSelectionReducer.test(ModeSelectionState(error = ModeSelectionError.FILL_ALL_FIELDS)) {
+    modeSelectionReducer.test(ModeSelectionState(error = CredentialValidationError.FILL_ALL_FIELDS)) {
       send(ModeSelectionAction.Input.UpdateToken("new-token"))
 
       assertState { token == "new-token" && error == null }
@@ -67,7 +67,7 @@ class ModeSelectionReducerTest {
     modeSelectionReducer.test(ModeSelectionState(baseUrl = "", token = "")) {
       send(ModeSelectionAction.Validation.Submit)
 
-      assertState { error == ModeSelectionError.FILL_ALL_FIELDS && !isValidating }
+      assertState { error == CredentialValidationError.FILL_ALL_FIELDS && !isValidating }
       assertNoEffects()
     }
 
@@ -76,7 +76,7 @@ class ModeSelectionReducerTest {
     modeSelectionReducer.test(ModeSelectionState(baseUrl = "  ", token = "token123")) {
       send(ModeSelectionAction.Validation.Submit)
 
-      assertState { error == ModeSelectionError.FILL_ALL_FIELDS }
+      assertState { error == CredentialValidationError.FILL_ALL_FIELDS }
       assertNoEffects()
     }
 
@@ -85,7 +85,7 @@ class ModeSelectionReducerTest {
     modeSelectionReducer.test(ModeSelectionState(baseUrl = "https://api.com", token = "  ")) {
       send(ModeSelectionAction.Validation.Submit)
 
-      assertState { error == ModeSelectionError.FILL_ALL_FIELDS }
+      assertState { error == CredentialValidationError.FILL_ALL_FIELDS }
       assertNoEffects()
     }
 
@@ -174,7 +174,7 @@ class ModeSelectionReducerTest {
     modeSelectionReducer.test(ModeSelectionState(isValidating = true)) {
       send(ModeSelectionAction.Validation.Failed)
 
-      assertState { !isValidating && error == ModeSelectionError.CONNECTION_FAILED }
+      assertState { !isValidating && error == CredentialValidationError.CONNECTION_FAILED }
       assertNoEffects()
     }
 

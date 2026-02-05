@@ -3,10 +3,10 @@ package space.be1ski.vibits.feature.mode.presentation.reducer
 import space.be1ski.vibits.core.elm.Reducer
 import space.be1ski.vibits.core.elm.reducer
 import space.be1ski.vibits.core.platform.mode.AppMode
+import space.be1ski.vibits.feature.auth.domain.model.CredentialValidationError
 import space.be1ski.vibits.feature.mode.presentation.action.ModeSelectionAction
 import space.be1ski.vibits.feature.mode.presentation.effect.ModeSelectionEffect.Command
 import space.be1ski.vibits.feature.mode.presentation.effect.ModeSelectionEffect.Notification
-import space.be1ski.vibits.feature.mode.presentation.state.ModeSelectionError
 import space.be1ski.vibits.feature.mode.presentation.state.ModeSelectionState
 
 internal val validationReducer: Reducer<ModeSelectionAction.Validation, ModeSelectionState, Command, Notification> =
@@ -16,7 +16,7 @@ internal val validationReducer: Reducer<ModeSelectionAction.Validation, ModeSele
         val baseUrl = state.baseUrl.trim()
         val token = state.token.trim()
         if (baseUrl.isBlank() || token.isBlank()) {
-          state { state.copy(error = ModeSelectionError.FILL_ALL_FIELDS) }
+          state { state.copy(error = CredentialValidationError.FILL_ALL_FIELDS) }
         } else {
           state { state.copy(isValidating = true, error = null) }
           command(Command.ValidateCredentials(baseUrl, token))
@@ -45,7 +45,7 @@ internal val validationReducer: Reducer<ModeSelectionAction.Validation, ModeSele
       }
 
       is ModeSelectionAction.Validation.Failed -> {
-        state { state.copy(isValidating = false, error = ModeSelectionError.CONNECTION_FAILED) }
+        state { state.copy(isValidating = false, error = CredentialValidationError.CONNECTION_FAILED) }
       }
     }
   }

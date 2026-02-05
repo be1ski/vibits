@@ -13,6 +13,7 @@ kotlin {
         implementation(projects.core.ui)
         implementation(projects.core.utils)
         implementation(projects.feature.auth.domain)
+        implementation(projects.feature.auth.presentation)
         implementation(projects.feature.memos.domain)
         implementation(projects.feature.mode.domain)
         implementation(libs.compose.resources)
