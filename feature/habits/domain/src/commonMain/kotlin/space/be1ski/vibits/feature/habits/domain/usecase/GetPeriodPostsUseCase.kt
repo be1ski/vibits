@@ -5,12 +5,12 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
-import space.be1ski.vibits.core.date.DAYS_IN_WEEK
-import space.be1ski.vibits.core.date.FIRST_DAY_OF_MONTH
-import space.be1ski.vibits.core.date.FIRST_MONTH_OF_YEAR
-import space.be1ski.vibits.core.date.LAST_DAY_OF_DECEMBER
-import space.be1ski.vibits.core.date.MONTHS_IN_QUARTER
-import space.be1ski.vibits.core.date.MONTHS_IN_YEAR
+import space.be1ski.vibits.core.utils.date.DAYS_IN_WEEK
+import space.be1ski.vibits.core.utils.date.FIRST_DAY_OF_MONTH
+import space.be1ski.vibits.core.utils.date.FIRST_MONTH_OF_YEAR
+import space.be1ski.vibits.core.utils.date.LAST_DAY_OF_DECEMBER
+import space.be1ski.vibits.core.utils.date.MONTHS_IN_QUARTER
+import space.be1ski.vibits.core.utils.date.MONTHS_IN_YEAR
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 

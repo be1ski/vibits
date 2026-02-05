@@ -1,4 +1,4 @@
-package space.be1ski.vibits.core.logging
+package space.be1ski.vibits.core.utils.logging
 
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized

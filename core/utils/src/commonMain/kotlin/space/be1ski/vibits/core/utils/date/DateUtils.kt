@@ -1,4 +1,4 @@
-package space.be1ski.vibits.core.date
+package space.be1ski.vibits.core.utils.date
 
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DayOfWeek

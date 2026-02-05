@@ -1,7 +1,7 @@
 package space.be1ski.vibits.feature.habits.domain.model
 
 import kotlinx.datetime.LocalDate
-import space.be1ski.vibits.core.date.DAYS_IN_WEEK
+import space.be1ski.vibits.core.utils.date.DAYS_IN_WEEK
 
 /**
  * Fully prepared dataset for activity charts.

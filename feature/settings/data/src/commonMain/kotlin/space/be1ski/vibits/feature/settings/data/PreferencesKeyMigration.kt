@@ -1,7 +1,7 @@
 package space.be1ski.vibits.feature.settings.data
 
-import space.be1ski.vibits.core.logging.Log
 import space.be1ski.vibits.core.platform.storage.KeyValueStore
+import space.be1ski.vibits.core.utils.logging.Log
 
 private const val TAG = "PrefsMigration"
 

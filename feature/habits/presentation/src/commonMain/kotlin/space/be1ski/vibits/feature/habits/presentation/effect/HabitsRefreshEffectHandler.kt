@@ -3,7 +3,7 @@ package space.be1ski.vibits.feature.habits.presentation.effect
 import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.core.elm.EffectHandler
 import space.be1ski.vibits.core.elm.sideEffect
-import space.be1ski.vibits.core.logging.Log
+import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 
 private const val TAG = "HabitsRefreshEffect"

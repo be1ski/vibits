@@ -1,7 +1,7 @@
 package space.be1ski.vibits.feature.sync.data
 
 import kotlinx.coroutines.delay
-import space.be1ski.vibits.core.logging.Log
+import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.data.mapper.MemoMapper
 import space.be1ski.vibits.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.feature.sync.domain.SyncLogTags
