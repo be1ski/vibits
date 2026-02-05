@@ -12,17 +12,11 @@ import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
 
 private const val TAG = "Credentials"
 
-/**
- * Repository implementation backed by platform credential storage.
- */
 @Inject
 @SingleIn(AppScope::class)
 class CredentialsRepositoryImpl(
   private val credentialsStore: CredentialsStore,
 ) : CredentialsRepository {
-  /**
-   * Loads stored credentials from the platform store.
-   */
   override fun load(): Credentials {
     val local = credentialsStore.load()
     val hasToken = local.token.isNotBlank()
@@ -30,9 +24,6 @@ class CredentialsRepositoryImpl(
     return Credentials(baseUrl = local.baseUrl, token = local.token)
   }
 
-  /**
-   * Persists credentials to the platform store.
-   */
   override fun save(credentials: Credentials) {
     val trimmed = credentials.trimmed()
     Log.i(TAG, "save() baseUrl='${trimmed.baseUrl.maskUrl()}'")

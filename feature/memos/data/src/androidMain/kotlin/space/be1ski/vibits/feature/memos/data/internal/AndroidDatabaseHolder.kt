@@ -5,9 +5,6 @@ import space.be1ski.vibits.core.platform.app.AndroidContextHolder
 import space.be1ski.vibits.feature.memos.data.room.MIGRATION_1_2
 import space.be1ski.vibits.feature.memos.data.room.MemoDatabase
 
-/**
- * Singleton holder for the shared database instance on Android.
- */
 object AndroidDatabaseHolder {
   private var database: MemoDatabase? = null
 

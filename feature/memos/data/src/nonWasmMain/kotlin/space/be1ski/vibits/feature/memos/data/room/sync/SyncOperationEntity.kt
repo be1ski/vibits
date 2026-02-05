@@ -3,9 +3,6 @@ package space.be1ski.vibits.feature.memos.data.room.sync
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-/**
- * Room entity for pending sync operations.
- */
 @Entity(tableName = "sync_operations")
 data class SyncOperationEntity(
   @PrimaryKey val id: String,
