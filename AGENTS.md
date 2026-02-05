@@ -11,6 +11,7 @@ core/
   platform/      — Platform abstractions (expect/actual)
   strings/       — Localized string resources
   ui/            — Compose UI components and theme
+  utils/         — Shared utilities (date, logging)
 feature/
   auth/          — Authentication (domain, data)
   habits/        — Habits tracking (domain, presentation)
@@ -47,6 +48,17 @@ The project follows strict package organization to maintain clean architecture a
   - `core.ui.date.DateFormatter` — UI helpers with @Composable functions
   - Any code containing @Composable functions
   - **Excluded from coverage** (@Composable cannot be unit tested)
+
+- **`core.date.*`** — Date/time utilities (module: `core/utils`):
+  - `DateConstants` — Calendar constants (`DAYS_IN_WEEK`, `MONTHS_IN_QUARTER`, etc.)
+  - `DateUtils` — Pure functions: `startOfWeek(LocalDate)`, `quarterIndex(LocalDate|Month)`
+  - Uses `kotlinx-datetime`; no platform-specific code
+
+- **`core.logging.*`** — In-memory logging (module: `core/utils`):
+  - `Log` — Thread-safe singleton log store (max 500 entries), delegates to `platformLog()`
+  - `LogEntry` — Data class: timestamp, level, tag, message
+  - `String.maskUrl()` — Truncates URLs for safe logging
+  - Uses `kotlinx-atomicfu` for synchronization
 
 - **`core.*` (other)** — Pure business logic:
   - Must not contain @Composable functions
