@@ -10,9 +10,6 @@ import space.be1ski.vibits.feature.memos.data.room.MIGRATION_1_2
 import space.be1ski.vibits.feature.memos.data.room.MemoDatabase
 import space.be1ski.vibits.feature.memos.data.room.MemoDatabaseConstructor
 
-/**
- * Singleton holder for the shared database instance on iOS.
- */
 object IosDatabaseHolder {
   val database: MemoDatabase by lazy { createDatabase() }
 

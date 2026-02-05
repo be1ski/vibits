@@ -7,13 +7,7 @@ import space.be1ski.vibits.feature.memos.domain.model.PostFilter
 import space.be1ski.vibits.feature.sync.domain.model.SyncConflict
 import space.be1ski.vibits.feature.sync.domain.model.SyncStatus
 
-/**
- * Actions for the Memos feature.
- */
 sealed interface MemosAction : Action {
-  /**
-   * Credentials input.
-   */
   sealed interface Credentials : MemosAction {
     data class UpdateBaseUrl(
       val value: String,
@@ -31,9 +25,6 @@ sealed interface MemosAction : Action {
     ) : Credentials
   }
 
-  /**
-   * Loading and filtering.
-   */
   sealed interface Loading : MemosAction {
     data object LoadMemos : Loading
 
@@ -59,9 +50,6 @@ sealed interface MemosAction : Action {
     ) : Loading
   }
 
-  /**
-   * CRUD operations.
-   */
   sealed interface Crud : MemosAction {
     data class CreateMemo(
       val content: String,
@@ -93,9 +81,6 @@ sealed interface MemosAction : Action {
     ) : Crud
   }
 
-  /**
-   * Create dialog.
-   */
   sealed interface CreateDialog : MemosAction {
     data object ShowCreateDialog : CreateDialog
 
@@ -108,9 +93,6 @@ sealed interface MemosAction : Action {
     data object ConfirmCreateDialog : CreateDialog
   }
 
-  /**
-   * Edit dialog.
-   */
   sealed interface EditDialog : MemosAction {
     data class ShowEditDialog(
       val memo: Memo,
@@ -125,29 +107,21 @@ sealed interface MemosAction : Action {
     data object ConfirmEditDialog : EditDialog
   }
 
-  /**
-   * Sync operations.
-   */
   sealed interface Sync : MemosAction {
-    /** User requested sync. */
     data object StartSync : Sync
 
-    /** Sync completed successfully. */
     data class SyncCompleted(
       val memos: List<Memo>,
     ) : Sync
 
-    /** Sync detected conflicts. */
     data class SyncConflictDetected(
       val conflicts: List<SyncConflict>,
     ) : Sync
 
-    /** Sync failed. */
     data class SyncFailed(
       val error: String,
     ) : Sync
 
-    /** Update sync status from queue. */
     data class SyncStatusUpdated(
       val status: SyncStatus,
     ) : Sync
@@ -158,13 +132,10 @@ sealed interface MemosAction : Action {
     /** User chose to keep server data. */
     data object ResolveKeepServer : Sync
 
-    /** Dismiss conflict dialog. */
     data object DismissConflictDialog : Sync
 
-    /** Show sync log dialog. */
     data object ShowSyncLogDialog : Sync
 
-    /** Dismiss sync log dialog. */
     data object DismissSyncLogDialog : Sync
   }
 }

@@ -5,9 +5,6 @@ import space.be1ski.vibits.feature.memos.domain.model.PostFilter
 import space.be1ski.vibits.feature.sync.domain.model.SyncConflict
 import space.be1ski.vibits.feature.sync.domain.model.SyncStatus
 
-/**
- * State for the Memos feature.
- */
 data class MemosState(
   val memos: List<Memo> = emptyList(),
   val memosRevision: Int = 0,

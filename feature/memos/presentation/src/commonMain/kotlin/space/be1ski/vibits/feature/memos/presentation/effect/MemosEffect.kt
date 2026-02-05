@@ -1,8 +1,5 @@
 package space.be1ski.vibits.feature.memos.presentation.effect
 
-/**
- * Side effects for the Memos feature.
- */
 sealed interface MemosEffect {
   sealed interface Credentials : MemosEffect
 
@@ -39,7 +36,6 @@ sealed interface MemosEffect {
     val name: String,
   ) : Write
 
-  /** Perform sync with server. */
   data object PerformSync : Sync
 
   /** Force sync with local changes overwriting server. */
@@ -48,9 +44,7 @@ sealed interface MemosEffect {
   /** Force sync with server data overwriting local. */
   data object ForceServerSync : Sync
 
-  /** Load current sync status. */
   data object LoadSyncStatus : Sync
 
-  /** Observe sync status changes. */
   data object ObserveSyncStatus : Sync
 }

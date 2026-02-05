@@ -1,8 +1,5 @@
 package space.be1ski.vibits.feature.settings.domain.model
 
-/**
- * Supported app languages.
- */
 enum class AppLanguage(
   val localeCode: String?,
 ) {
