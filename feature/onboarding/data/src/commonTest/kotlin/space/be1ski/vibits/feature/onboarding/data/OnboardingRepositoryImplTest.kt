@@ -1,8 +1,8 @@
 package space.be1ski.vibits.feature.onboarding.data
 
 import kotlinx.coroutines.test.runTest
-import space.be1ski.vibits.feature.homescreen.test.FakeOfflineMemoStorage
-import space.be1ski.vibits.feature.homescreen.test.FakeOnboardingStore
+import space.be1ski.vibits.feature.memos.data.test.FakeOfflineMemoStorage
+import space.be1ski.vibits.feature.onboarding.domain.test.FakeOnboardingStore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

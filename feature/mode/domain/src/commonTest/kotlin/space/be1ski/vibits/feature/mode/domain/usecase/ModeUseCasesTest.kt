@@ -2,12 +2,12 @@ package space.be1ski.vibits.feature.mode.domain.usecase
 
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
+import space.be1ski.vibits.feature.auth.domain.test.FakeCredentialsRepository
 import space.be1ski.vibits.feature.auth.domain.usecase.LoadCredentialsUseCase
-import space.be1ski.vibits.feature.homescreen.test.FakeAppModeRepository
-import space.be1ski.vibits.feature.homescreen.test.FakeCredentialsRepository
-import space.be1ski.vibits.feature.homescreen.test.FakeMemoStorageManager
-import space.be1ski.vibits.feature.homescreen.test.FakeOnboardingStore
-import space.be1ski.vibits.feature.homescreen.test.FakePreferencesRepository
+import space.be1ski.vibits.feature.memos.domain.test.FakeMemoStorageManager
+import space.be1ski.vibits.feature.mode.domain.test.FakeAppModeRepository
+import space.be1ski.vibits.feature.onboarding.domain.test.FakeOnboardingStore
+import space.be1ski.vibits.feature.settings.domain.test.FakePreferencesRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

@@ -3,8 +3,8 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.feature.homescreen.presentation.effect.AppEffect
 import space.be1ski.vibits.feature.homescreen.presentation.effect.AppEffectHandler
-import space.be1ski.vibits.feature.homescreen.test.FakePreferencesRepository
 import space.be1ski.vibits.feature.settings.domain.model.TimeRangeTab
+import space.be1ski.vibits.feature.settings.domain.test.FakePreferencesRepository
 import space.be1ski.vibits.feature.settings.domain.usecase.SaveTimeRangeTabUseCase
 import kotlin.test.Test
 import kotlin.test.assertEquals

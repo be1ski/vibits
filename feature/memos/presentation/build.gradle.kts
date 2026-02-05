@@ -31,7 +31,6 @@ kotlin {
     commonTest {
       dependencies {
         implementation(projects.core.elm.test)
-        implementation(projects.feature.homescreen)
         implementation(kotlin("test"))
         implementation(libs.kotlinx.coroutines.test)
       }

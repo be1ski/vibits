@@ -1,8 +1,8 @@
 package space.be1ski.vibits.feature.auth.domain.usecase
 
+import space.be1ski.vibits.core.platform.test.createFakeLocalConfigProvider
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
-import space.be1ski.vibits.feature.homescreen.test.FakeCredentialsRepository
-import space.be1ski.vibits.feature.homescreen.test.createFakeLocalConfigProvider
+import space.be1ski.vibits.feature.auth.domain.test.FakeCredentialsRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
