@@ -3,13 +3,11 @@ package space.be1ski.vibits.feature.memos.presentation
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
+import space.be1ski.vibits.feature.auth.domain.test.FakeCredentialsRepository
 import space.be1ski.vibits.feature.auth.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.vibits.feature.auth.domain.usecase.SaveCredentialsUseCase
-import space.be1ski.vibits.feature.homescreen.test.FakeCredentialsRepository
-import space.be1ski.vibits.feature.homescreen.test.FakeMemosRepository
-import space.be1ski.vibits.feature.homescreen.test.FakeSyncEngine
-import space.be1ski.vibits.feature.homescreen.test.FakeSyncQueueRepository
 import space.be1ski.vibits.feature.memos.domain.model.Memo
+import space.be1ski.vibits.feature.memos.domain.test.FakeMemosRepository
 import space.be1ski.vibits.feature.memos.domain.usecase.CreateMemoUseCase
 import space.be1ski.vibits.feature.memos.domain.usecase.DeleteMemoUseCase
 import space.be1ski.vibits.feature.memos.domain.usecase.LoadCachedMemosUseCase
@@ -22,6 +20,8 @@ import space.be1ski.vibits.feature.memos.presentation.effect.MemosEffectHandler
 import space.be1ski.vibits.feature.memos.presentation.effect.MemosLoadEffectHandler
 import space.be1ski.vibits.feature.memos.presentation.effect.MemosSyncEffectHandler
 import space.be1ski.vibits.feature.memos.presentation.effect.MemosWriteEffectHandler
+import space.be1ski.vibits.feature.sync.domain.test.FakeSyncEngine
+import space.be1ski.vibits.feature.sync.domain.test.FakeSyncQueueRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

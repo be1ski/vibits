@@ -2,10 +2,10 @@ package space.be1ski.vibits.feature.mode.presentation
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.core.platform.mode.AppMode
+import space.be1ski.vibits.feature.auth.domain.test.FakeCredentialsRepository
 import space.be1ski.vibits.feature.auth.domain.usecase.SaveCredentialsUseCase
-import space.be1ski.vibits.feature.homescreen.test.FakeAppModeRepository
-import space.be1ski.vibits.feature.homescreen.test.FakeCredentialsRepository
 import space.be1ski.vibits.feature.memos.domain.repository.ConnectionTester
+import space.be1ski.vibits.feature.mode.domain.test.FakeAppModeRepository
 import space.be1ski.vibits.feature.mode.domain.usecase.SaveAppModeUseCase
 import space.be1ski.vibits.feature.mode.presentation.action.ModeSelectionAction
 import space.be1ski.vibits.feature.mode.presentation.effect.ModeSelectionCredentialsEffectHandler
@@ -72,7 +72,7 @@ class ModeSelectionEffectHandlerTest {
     runTest {
       val credentialsRepo = FakeCredentialsRepository()
       val configProvider =
-        space.be1ski.vibits.feature.homescreen.test.createFakeLocalConfigProvider(
+        space.be1ski.vibits.core.platform.test.createFakeLocalConfigProvider(
           config =
             mapOf(
               "memos.baseUrl" to "https://config.com",
@@ -91,7 +91,7 @@ class ModeSelectionEffectHandlerTest {
     runTest {
       val credentialsRepo = FakeCredentialsRepository()
       val configProvider =
-        space.be1ski.vibits.feature.homescreen.test
+        space.be1ski.vibits.core.platform.test
           .createFakeLocalConfigProvider(config = emptyMap())
       val handler = createHandler(credentialsRepository = credentialsRepo, localConfigProvider = configProvider)
 
@@ -170,7 +170,7 @@ class ModeSelectionEffectHandlerTest {
     credentialsRepository: FakeCredentialsRepository = FakeCredentialsRepository(),
     appModeRepository: FakeAppModeRepository = FakeAppModeRepository(),
     localConfigProvider: space.be1ski.vibits.core.platform.env.LocalConfigProvider =
-      space.be1ski.vibits.feature.homescreen.test
+      space.be1ski.vibits.core.platform.test
         .createFakeLocalConfigProvider(),
   ): ModeSelectionEffectHandler {
     return ModeSelectionEffectHandler(

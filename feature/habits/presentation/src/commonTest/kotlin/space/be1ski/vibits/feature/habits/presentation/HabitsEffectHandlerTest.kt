@@ -12,8 +12,8 @@ import space.be1ski.vibits.feature.habits.presentation.effect.HabitsEffect
 import space.be1ski.vibits.feature.habits.presentation.effect.HabitsEffectHandler
 import space.be1ski.vibits.feature.habits.presentation.effect.HabitsMemoEffectHandler
 import space.be1ski.vibits.feature.habits.presentation.effect.HabitsRefreshEffectHandler
-import space.be1ski.vibits.feature.homescreen.test.FakeMemosRepository
 import space.be1ski.vibits.feature.memos.domain.model.Memo
+import space.be1ski.vibits.feature.memos.domain.test.FakeMemosRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

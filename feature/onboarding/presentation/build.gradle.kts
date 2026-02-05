@@ -28,7 +28,9 @@ kotlin {
     commonTest {
       dependencies {
         implementation(projects.core.elm.test)
-        implementation(projects.feature.homescreen)
+        implementation(projects.feature.memos.data)
+        implementation(projects.feature.memos.domain)
+        implementation(projects.feature.onboarding.data)
         implementation(kotlin("test"))
         implementation(libs.kotlinx.coroutines.test)
       }

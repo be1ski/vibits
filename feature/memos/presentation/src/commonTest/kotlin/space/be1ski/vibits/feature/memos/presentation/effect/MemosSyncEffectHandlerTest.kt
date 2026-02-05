@@ -2,8 +2,6 @@ package space.be1ski.vibits.feature.memos.presentation.effect
 
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import space.be1ski.vibits.feature.homescreen.test.FakeSyncEngine
-import space.be1ski.vibits.feature.homescreen.test.FakeSyncQueueRepository
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.feature.sync.domain.model.ConflictType
@@ -12,6 +10,8 @@ import space.be1ski.vibits.feature.sync.domain.model.SyncOperation
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperationType
 import space.be1ski.vibits.feature.sync.domain.model.SyncResult
 import space.be1ski.vibits.feature.sync.domain.model.SyncStatus
+import space.be1ski.vibits.feature.sync.domain.test.FakeSyncEngine
+import space.be1ski.vibits.feature.sync.domain.test.FakeSyncQueueRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

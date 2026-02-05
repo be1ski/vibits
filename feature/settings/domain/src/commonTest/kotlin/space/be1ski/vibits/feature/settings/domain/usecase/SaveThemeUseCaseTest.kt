@@ -1,10 +1,10 @@
 package space.be1ski.vibits.feature.settings.domain.usecase
 
 import space.be1ski.vibits.core.platform.locale.AppLanguage
-import space.be1ski.vibits.feature.homescreen.test.FakePreferencesRepository
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.feature.settings.domain.model.UserPreferences
+import space.be1ski.vibits.feature.settings.domain.test.FakePreferencesRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
