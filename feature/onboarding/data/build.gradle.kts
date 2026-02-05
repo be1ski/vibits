@@ -18,6 +18,8 @@ kotlin {
     }
     commonTest {
       dependencies {
+        implementation(projects.feature.memos.data.testing)
+        implementation(projects.feature.onboarding.domain.testing)
         implementation(kotlin("test"))
         implementation(libs.kotlinx.coroutines.test)
       }
