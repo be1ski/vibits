@@ -6,13 +6,7 @@ import space.be1ski.vibits.feature.sync.domain.model.SyncOperationStatus
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperationType
 import kotlin.time.Instant
 
-/**
- * Maps sync operation entities to domain models and back.
- */
 object SyncOperationEntityMapper {
-  /**
-   * Converts an entity to a domain model.
-   */
   fun toDomain(entity: SyncOperationEntity): SyncOperation =
     SyncOperation(
       id = entity.id,
@@ -23,9 +17,6 @@ object SyncOperationEntityMapper {
       status = SyncOperationStatus.valueOf(entity.status),
     )
 
-  /**
-   * Converts a domain model to an entity.
-   */
   fun toEntity(operation: SyncOperation): SyncOperationEntity =
     SyncOperationEntity(
       id = operation.id,
