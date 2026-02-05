@@ -23,7 +23,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.time.Instant
 
-class MemosRepositoryImplTest {
+class OnlineMemosRepositoryTest {
   @Test
   fun `when listMemos called then paginates and caches results`() {
     val calls = mutableListOf<String?>()
@@ -46,7 +46,7 @@ class MemosRepositoryImplTest {
       val credentials = FakeCredentialsRepository(Credentials(baseUrl = "https://example.com", token = "token"))
       val cache = FakeMemoCache()
       val repository =
-        MemosRepositoryImpl(
+        OnlineMemosRepository(
           memosApi = MemosApi(client),
           credentialsRepository = credentials,
           memoCache = cache,
@@ -71,7 +71,7 @@ class MemosRepositoryImplTest {
           memos = listOf(Memo(name = "memos/1", content = "Cached", createTime = Instant.parse("2024-01-01T00:00:00Z"))),
         )
       val repository =
-        MemosRepositoryImpl(
+        OnlineMemosRepository(
           memosApi = MemosApi(client),
           credentialsRepository = FakeCredentialsRepository(Credentials(baseUrl = "https://example.com", token = "token")),
           memoCache = cache,
@@ -99,7 +99,7 @@ class MemosRepositoryImplTest {
     ) { client ->
       val cache = FakeMemoCache()
       val repository =
-        MemosRepositoryImpl(
+        OnlineMemosRepository(
           memosApi = MemosApi(client),
           credentialsRepository = FakeCredentialsRepository(Credentials(baseUrl = "https://example.com", token = "token")),
           memoCache = cache,
@@ -128,7 +128,7 @@ class MemosRepositoryImplTest {
     ) { client ->
       val cache = FakeMemoCache()
       val repository =
-        MemosRepositoryImpl(
+        OnlineMemosRepository(
           memosApi = MemosApi(client),
           credentialsRepository = FakeCredentialsRepository(Credentials(baseUrl = "https://example.com", token = "token")),
           memoCache = cache,
@@ -150,7 +150,7 @@ class MemosRepositoryImplTest {
     ) { client ->
       val cache = FakeMemoCache()
       val repository =
-        MemosRepositoryImpl(
+        OnlineMemosRepository(
           memosApi = MemosApi(client),
           credentialsRepository = FakeCredentialsRepository(Credentials(baseUrl = "https://example.com", token = "token")),
           memoCache = cache,
@@ -167,7 +167,7 @@ class MemosRepositoryImplTest {
       handler = { respond("") },
     ) { client ->
       val repository =
-        MemosRepositoryImpl(
+        OnlineMemosRepository(
           memosApi = MemosApi(client),
           credentialsRepository = FakeCredentialsRepository(Credentials(baseUrl = "", token = "")),
           memoCache = FakeMemoCache(),

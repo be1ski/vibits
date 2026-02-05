@@ -20,7 +20,7 @@ private val TAG = SyncLogTags.MODE_AWARE_REPO
 @SingleIn(AppScope::class)
 class ModeAwareMemosRepository(
   private val appModeRepository: AppModeRepository,
-  private val onlineRepository: MemosRepositoryImpl,
+  private val onlineRepository: OnlineMemosRepository,
   private val offlineRepository: OfflineMemosRepository,
   private val demoRepository: DemoMemosRepository,
   private val memoCache: MemoCache,

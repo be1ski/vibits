@@ -21,7 +21,7 @@ private const val TAG = "MemosRepository"
  */
 @Inject
 @SingleIn(AppScope::class)
-class MemosRepositoryImpl(
+class OnlineMemosRepository(
   private val memosApi: MemosApi,
   private val credentialsRepository: CredentialsRepository,
   private val memoCache: MemoCache,
