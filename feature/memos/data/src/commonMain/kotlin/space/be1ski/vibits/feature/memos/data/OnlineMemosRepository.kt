@@ -16,9 +16,6 @@ import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
 
 private const val TAG = "MemosRepository"
 
-/**
- * Repository implementation that loads memos from the network and caches them locally.
- */
 @Inject
 @SingleIn(AppScope::class)
 class OnlineMemosRepository(
@@ -26,9 +23,6 @@ class OnlineMemosRepository(
   private val credentialsRepository: CredentialsRepository,
   private val memoCache: MemoCache,
 ) : MemosRepository {
-  /**
-   * Loads memos from the server using stored credentials and paginated API calls.
-   */
   override suspend fun listMemos(): List<Memo> {
     val (baseUrl, token) = credentialsRepository.load().requireFilled()
     val allMemos = mutableListOf<Memo>()
@@ -61,18 +55,12 @@ class OnlineMemosRepository(
     return allMemos
   }
 
-  /**
-   * Loads cached memos from local storage.
-   */
   override suspend fun cachedMemos(): List<Memo> {
     val memos = memoCache.readMemos()
     Log.d(TAG, "Read ${memos.size} memos from cache")
     return memos
   }
 
-  /**
-   * Updates memo content in the API.
-   */
   override suspend fun updateMemo(
     name: String,
     content: String,
@@ -91,9 +79,6 @@ class OnlineMemosRepository(
     return updated
   }
 
-  /**
-   * Creates a new memo in the API.
-   */
   override suspend fun createMemo(content: String): Memo {
     Log.d(TAG, "Creating memo...")
     val (baseUrl, token) = credentialsRepository.load().requireFilled()
@@ -109,9 +94,6 @@ class OnlineMemosRepository(
     return created
   }
 
-  /**
-   * Deletes a memo in the API.
-   */
   override suspend fun deleteMemo(name: String) {
     Log.d(TAG, "Deleting memo: $name")
     val (baseUrl, token) = credentialsRepository.load().requireFilled()

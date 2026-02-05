@@ -10,9 +10,6 @@ import space.be1ski.vibits.feature.habits.domain.model.DayBuildContext
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitStatus
 
-/**
- * Use case for building a single ContributionDay from context.
- */
 @Inject
 class BuildDayDataUseCase {
   operator fun invoke(context: DayBuildContext): ContributionDay {
@@ -96,9 +93,6 @@ class BuildDayDataUseCase {
     completed: Int,
   ): Float = if (totalHabits > 0) completed.toFloat() / totalHabits.toFloat() else 0f
 
-  /**
-   * Internal state for habit selection computation.
-   */
   private data class HabitSelectionState(
     val useHabits: Boolean,
     val habitStatuses: List<HabitStatus>,

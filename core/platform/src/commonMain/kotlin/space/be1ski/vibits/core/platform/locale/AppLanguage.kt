@@ -1,8 +1,5 @@
 package space.be1ski.vibits.core.platform.locale
 
-/**
- * Supported app languages.
- */
 enum class AppLanguage(
   val localeCode: String?,
 ) {

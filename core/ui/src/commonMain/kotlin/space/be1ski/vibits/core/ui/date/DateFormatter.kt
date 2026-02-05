@@ -31,10 +31,6 @@ import space.be1ski.vibits.core.strings.generated.month_sep
 private const val MONTH_FALLBACK_LENGTH = 3
 private const val DAY_FALLBACK_LENGTH = 2
 
-/**
- * Date formatter using localized strings from Compose Resources.
- * Create via [rememberDateFormatter] composable.
- */
 class DateFormatter(
   private val months: Map<Month, String>,
   private val days: Map<DayOfWeek, String>,

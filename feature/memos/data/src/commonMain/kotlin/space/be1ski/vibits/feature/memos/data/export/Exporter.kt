@@ -8,9 +8,6 @@ import space.be1ski.vibits.feature.memos.data.offline.OfflineMemosFileDto
 import space.be1ski.vibits.feature.memos.data.platform.OfflineMemoStorage
 import kotlin.time.Clock
 
-/**
- * Handles exporting app data to files.
- */
 @Inject
 class Exporter(
   private val fileExporter: FileExporter,
@@ -23,10 +20,6 @@ class Exporter(
       prettyPrint = true
     }
 
-  /**
-   * Export logs to a text file.
-   * @return ExportResult with file name on success or error message on failure
-   */
   fun exportLogs(): ExportResult {
     val fileName = generateFileName("logs", "txt")
     val content = Log.export()
@@ -38,10 +31,6 @@ class Exporter(
     }
   }
 
-  /**
-   * Export offline memos to a JSON file.
-   * @return ExportResult with file name on success or error message on failure
-   */
   fun exportMemos(): ExportResult {
     val fileName = generateFileName("memos", "json")
     val data = offlineMemoStorage.load()

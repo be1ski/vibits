@@ -13,9 +13,6 @@ import space.be1ski.vibits.core.date.QUARTERS_IN_YEAR
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.RangeBounds
 
-/**
- * Calculates date bounds for an activity range.
- */
 object GetRangeBoundsUseCase {
   operator fun invoke(range: ActivityRange): RangeBounds =
     when (range) {

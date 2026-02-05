@@ -1,8 +1,5 @@
 package space.be1ski.vibits.core.platform.app
 
-/**
- * Application details for settings and diagnostics.
- */
 data class AppDetails(
   val version: String,
   val environment: String,
