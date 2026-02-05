@@ -11,10 +11,6 @@ import kotlin.time.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-/**
- * Repository implementation for offline mode.
- * Stores memos in local JSON file.
- */
 @Inject
 @SingleIn(AppScope::class)
 class OfflineMemosRepository(

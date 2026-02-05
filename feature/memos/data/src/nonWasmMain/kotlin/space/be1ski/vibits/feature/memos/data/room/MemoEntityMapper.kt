@@ -3,13 +3,7 @@ package space.be1ski.vibits.feature.memos.data.room
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import kotlin.time.Instant
 
-/**
- * Maps memo entities to domain models and back.
- */
 object MemoEntityMapper {
-  /**
-   * Converts a cached entity into a domain memo.
-   */
   fun toDomain(entity: MemoEntity): Memo =
     Memo(
       name = entity.name,
@@ -18,9 +12,6 @@ object MemoEntityMapper {
       updateTime = entity.updateTimeMillis?.let(Instant::fromEpochMilliseconds),
     )
 
-  /**
-   * Converts a domain memo into a cached entity.
-   */
   fun toEntity(memo: Memo): MemoEntity =
     MemoEntity(
       name = memo.name,

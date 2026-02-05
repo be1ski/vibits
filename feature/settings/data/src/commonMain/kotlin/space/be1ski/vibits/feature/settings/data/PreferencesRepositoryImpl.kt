@@ -12,9 +12,6 @@ import space.be1ski.vibits.feature.settings.domain.repository.PreferencesReposit
 
 private const val TAG = "Preferences"
 
-/**
- * Repository implementation backed by platform preferences storage.
- */
 @Inject
 @SingleIn(AppScope::class)
 class PreferencesRepositoryImpl(
