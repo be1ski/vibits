@@ -1,7 +1,7 @@
 package space.be1ski.vibits.feature.auth.data
 
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
-import space.be1ski.vibits.feature.main.test.FakeCredentialsStore
+import space.be1ski.vibits.feature.homescreen.test.FakeCredentialsStore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

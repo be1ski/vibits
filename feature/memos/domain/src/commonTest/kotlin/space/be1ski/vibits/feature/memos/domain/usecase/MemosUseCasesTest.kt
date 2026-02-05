@@ -1,7 +1,7 @@
 package space.be1ski.vibits.feature.memos.domain.usecase
 
 import kotlinx.coroutines.test.runTest
-import space.be1ski.vibits.feature.main.test.FakeMemosRepository
+import space.be1ski.vibits.feature.homescreen.test.FakeMemosRepository
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import kotlin.test.Test
 import kotlin.test.assertEquals

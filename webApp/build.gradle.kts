@@ -23,7 +23,7 @@ kotlin {
         implementation(libs.compose.runtime)
         implementation(libs.compose.ui)
         implementation(libs.kotlinx.browser)
-        implementation(project(":feature:main"))
+        implementation(project(":feature:homescreen"))
       }
     }
   }

@@ -3,8 +3,8 @@ package space.be1ski.vibits.web
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
 import kotlinx.browser.document
-import space.be1ski.vibits.feature.main.di.AppGraph
-import space.be1ski.vibits.feature.main.view.AppRoot
+import space.be1ski.vibits.feature.homescreen.di.AppGraph
+import space.be1ski.vibits.feature.homescreen.presentation.view.AppRoot
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {

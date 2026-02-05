@@ -1,6 +1,6 @@
 package space.be1ski.vibits.feature.settings.domain.usecase
 
-import space.be1ski.vibits.feature.main.test.FakePreferencesRepository
+import space.be1ski.vibits.feature.homescreen.test.FakePreferencesRepository
 import space.be1ski.vibits.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.feature.settings.domain.model.UserPreferences
 import kotlin.test.Test

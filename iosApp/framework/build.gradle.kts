@@ -14,7 +14,7 @@ kotlin {
       if (buildType == NativeBuildType.RELEASE) {
         freeCompilerArgs += listOf("-Xdisable-phases=Devirtualization")
       }
-      export(projects.feature.main)
+      export(projects.feature.homescreen)
       xcframework.add(this)
     }
   }
@@ -22,12 +22,12 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
-        api(projects.feature.main)
+        api(projects.feature.homescreen)
       }
     }
     iosMain {
       dependencies {
-        api(projects.feature.main)
+        api(projects.feature.homescreen)
       }
     }
   }

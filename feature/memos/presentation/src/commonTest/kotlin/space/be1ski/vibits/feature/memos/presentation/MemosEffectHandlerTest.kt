@@ -5,10 +5,10 @@ import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.feature.auth.domain.usecase.LoadCredentialsUseCase
 import space.be1ski.vibits.feature.auth.domain.usecase.SaveCredentialsUseCase
-import space.be1ski.vibits.feature.main.test.FakeCredentialsRepository
-import space.be1ski.vibits.feature.main.test.FakeMemosRepository
-import space.be1ski.vibits.feature.main.test.FakeSyncEngine
-import space.be1ski.vibits.feature.main.test.FakeSyncQueueRepository
+import space.be1ski.vibits.feature.homescreen.test.FakeCredentialsRepository
+import space.be1ski.vibits.feature.homescreen.test.FakeMemosRepository
+import space.be1ski.vibits.feature.homescreen.test.FakeSyncEngine
+import space.be1ski.vibits.feature.homescreen.test.FakeSyncQueueRepository
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.usecase.CreateMemoUseCase
 import space.be1ski.vibits.feature.memos.domain.usecase.DeleteMemoUseCase

@@ -13,8 +13,8 @@ import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
-import space.be1ski.vibits.feature.main.test.FakeCredentialsRepository
-import space.be1ski.vibits.feature.main.test.FakeMemoCache
+import space.be1ski.vibits.feature.homescreen.test.FakeCredentialsRepository
+import space.be1ski.vibits.feature.homescreen.test.FakeMemoCache
 import space.be1ski.vibits.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import kotlin.test.Test

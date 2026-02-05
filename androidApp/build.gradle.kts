@@ -70,7 +70,7 @@ dependencies {
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.material.components)
   implementation(platform(libs.androidx.compose.bom))
-  implementation(project(":feature:main"))
+  implementation(project(":feature:homescreen"))
   debugImplementation(libs.androidx.compose.ui.tooling)
   releaseImplementation(platform(libs.firebase.bom))
   releaseImplementation(libs.firebase.analytics)
