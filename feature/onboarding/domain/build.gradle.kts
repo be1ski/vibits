@@ -15,7 +15,9 @@ kotlin {
     }
     commonTest {
       dependencies {
-        implementation(projects.feature.homescreen)
+        implementation(projects.core.ui)
+        implementation(projects.feature.memos.data)
+        implementation(projects.feature.onboarding.data)
         implementation(kotlin("test"))
         implementation(libs.kotlinx.coroutines.test)
       }

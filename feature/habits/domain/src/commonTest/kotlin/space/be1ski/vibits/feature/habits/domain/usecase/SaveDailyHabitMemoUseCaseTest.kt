@@ -6,9 +6,9 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.SaveDailyMemoResult
-import space.be1ski.vibits.feature.homescreen.test.FakeMemosRepository
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
+import space.be1ski.vibits.feature.memos.domain.test.FakeMemosRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
