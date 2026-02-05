@@ -35,7 +35,7 @@ internal fun rememberScaffoldCallbacks(
   onMemosAction: (MemosAction) -> Unit,
   feedListState: LazyListState,
   scope: CoroutineScope,
-  todayData: TodayData,
+  todayHabits: TodayHabits,
 ): ScaffoldCallbacks {
   val onClearSelection =
     remember(onHabitsAction) {
@@ -53,9 +53,9 @@ internal fun rememberScaffoldCallbacks(
       { onMemosAction(MemosAction.CreateDialog.ShowCreateDialog) }
     }
   val onOpenTodayEditor =
-    remember(onHabitsAction, todayData) {
+    remember(onHabitsAction, todayHabits) {
       {
-        todayData.day?.let { onHabitsAction(HabitsAction.Editor.OpenEditor(day = it, config = todayData.config)) }
+        todayHabits.day?.let { onHabitsAction(HabitsAction.Editor.OpenEditor(day = it, config = todayHabits.config)) }
         Unit
       }
     }
