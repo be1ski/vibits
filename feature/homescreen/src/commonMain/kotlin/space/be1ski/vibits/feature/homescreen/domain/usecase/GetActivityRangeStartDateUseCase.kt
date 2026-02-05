@@ -2,8 +2,8 @@ package space.be1ski.vibits.feature.homescreen.domain.usecase
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
-import space.be1ski.vibits.core.date.FIRST_DAY_OF_MONTH
-import space.be1ski.vibits.core.date.MONTHS_IN_QUARTER
+import space.be1ski.vibits.core.utils.date.FIRST_DAY_OF_MONTH
+import space.be1ski.vibits.core.utils.date.MONTHS_IN_QUARTER
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 
 /**

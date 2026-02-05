@@ -6,8 +6,8 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import space.be1ski.vibits.core.logging.Log
 import space.be1ski.vibits.core.platform.di.AppScope
+import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.habits.domain.buildDailyContent
 import space.be1ski.vibits.feature.habits.domain.extractCompletedHabits
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig

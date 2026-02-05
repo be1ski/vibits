@@ -4,8 +4,8 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import space.be1ski.vibits.core.logging.Log
 import space.be1ski.vibits.core.platform.di.AppScope
+import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.sync.domain.SyncLogTags

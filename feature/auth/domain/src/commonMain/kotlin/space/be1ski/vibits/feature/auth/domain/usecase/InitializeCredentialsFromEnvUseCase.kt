@@ -1,9 +1,9 @@
 package space.be1ski.vibits.feature.auth.domain.usecase
 
 import dev.zacsweers.metro.Inject
-import space.be1ski.vibits.core.logging.Log
-import space.be1ski.vibits.core.logging.maskUrl
 import space.be1ski.vibits.core.platform.env.LocalConfigProvider
+import space.be1ski.vibits.core.utils.logging.Log
+import space.be1ski.vibits.core.utils.logging.maskUrl
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
 
 private const val TAG = "InitCredentialsFromConfig"

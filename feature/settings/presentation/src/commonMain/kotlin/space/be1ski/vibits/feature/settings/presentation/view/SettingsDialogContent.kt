@@ -49,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.core.logging.Log
 import space.be1ski.vibits.core.platform.app.AppDetails
 import space.be1ski.vibits.core.platform.export.createFileExporter
 import space.be1ski.vibits.core.platform.locale.AppLanguage
@@ -119,6 +118,7 @@ import space.be1ski.vibits.core.strings.generated.title_logs
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.LogViewer
 import space.be1ski.vibits.core.ui.SegmentedSelector
+import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.data.export.ExportResult
 import space.be1ski.vibits.feature.memos.data.export.Exporter
 import space.be1ski.vibits.feature.memos.data.platform.createOfflineMemoStorage

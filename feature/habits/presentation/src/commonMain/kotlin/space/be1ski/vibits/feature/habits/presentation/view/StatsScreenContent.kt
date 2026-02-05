@@ -38,7 +38,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.core.date.DAYS_IN_WEEK
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_configure_habits
 import space.be1ski.vibits.core.strings.generated.action_hide_memos
@@ -59,6 +58,7 @@ import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.date.DateFormatter
 import space.be1ski.vibits.core.ui.theme.AppColors
 import space.be1ski.vibits.core.ui.theme.resolve
+import space.be1ski.vibits.core.utils.date.DAYS_IN_WEEK
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay

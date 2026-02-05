@@ -9,14 +9,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.core.logging.Log
-import space.be1ski.vibits.core.logging.LogEntry
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_clear
 import space.be1ski.vibits.core.strings.generated.action_close
 import space.be1ski.vibits.core.strings.generated.msg_no_logs
 import space.be1ski.vibits.core.strings.generated.title_sync_logs
 import space.be1ski.vibits.core.ui.LogViewer
+import space.be1ski.vibits.core.utils.logging.Log
+import space.be1ski.vibits.core.utils.logging.LogEntry
 import space.be1ski.vibits.feature.sync.domain.SyncLogTags
 
 /**

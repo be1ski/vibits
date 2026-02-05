@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import space.be1ski.vibits.core.elm.EffectHandler
 import space.be1ski.vibits.core.elm.actions
-import space.be1ski.vibits.core.logging.Log
+import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.feature.sync.domain.SyncEngine
 import space.be1ski.vibits.feature.sync.domain.SyncLogTags

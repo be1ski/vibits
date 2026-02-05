@@ -2,8 +2,8 @@ package space.be1ski.vibits.feature.memos.data
 
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import space.be1ski.vibits.core.logging.Log
 import space.be1ski.vibits.core.platform.di.AppScope
+import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.auth.domain.model.requireFilled
 import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.feature.memos.data.mapper.MemoMapper

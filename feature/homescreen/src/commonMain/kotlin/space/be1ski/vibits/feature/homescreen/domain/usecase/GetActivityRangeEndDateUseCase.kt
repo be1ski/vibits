@@ -5,10 +5,10 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import space.be1ski.vibits.core.date.DAYS_IN_WEEK
-import space.be1ski.vibits.core.date.FIRST_DAY_OF_MONTH
-import space.be1ski.vibits.core.date.MONTHS_IN_QUARTER
-import space.be1ski.vibits.core.date.MONTHS_IN_YEAR
+import space.be1ski.vibits.core.utils.date.DAYS_IN_WEEK
+import space.be1ski.vibits.core.utils.date.FIRST_DAY_OF_MONTH
+import space.be1ski.vibits.core.utils.date.MONTHS_IN_QUARTER
+import space.be1ski.vibits.core.utils.date.MONTHS_IN_YEAR
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 
 object GetActivityRangeEndDateUseCase {

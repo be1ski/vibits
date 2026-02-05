@@ -3,7 +3,7 @@ package space.be1ski.vibits.feature.memos.presentation.effect
 import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.core.elm.EffectHandler
 import space.be1ski.vibits.core.elm.actions
-import space.be1ski.vibits.core.logging.Log
+import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.domain.usecase.CreateMemoUseCase
 import space.be1ski.vibits.feature.memos.domain.usecase.DeleteMemoUseCase
 import space.be1ski.vibits.feature.memos.domain.usecase.UpdateMemoUseCase
