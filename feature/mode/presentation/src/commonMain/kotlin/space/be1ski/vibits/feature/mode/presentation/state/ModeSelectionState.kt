@@ -1,5 +1,7 @@
 package space.be1ski.vibits.feature.mode.presentation.state
 
+import space.be1ski.vibits.feature.auth.domain.model.CredentialValidationError
+
 data class ModeSelectionState(
   val showCredentialsDialog: Boolean = false,
   val showQuickOnlineDialog: Boolean = false,
@@ -7,10 +9,5 @@ data class ModeSelectionState(
   val baseUrl: String = "",
   val token: String = "",
   val isValidating: Boolean = false,
-  val error: ModeSelectionError? = null,
+  val error: CredentialValidationError? = null,
 )
-
-enum class ModeSelectionError {
-  FILL_ALL_FIELDS,
-  CONNECTION_FAILED,
-}
