@@ -6,10 +6,6 @@ import space.be1ski.vibits.feature.habits.domain.model.DailyMemo
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.model.isDailyMemo
 
-/**
- * Extracts daily memos from a list of memos.
- * Daily memos are identified by PostTags.HABITS_DAILY or PostTags.DAILY tags.
- */
 object ExtractDailyMemosUseCase {
   operator fun invoke(
     memos: List<Memo>,
@@ -33,9 +29,6 @@ object ExtractDailyMemosUseCase {
       }.toMap()
   }
 
-  /**
-   * Finds daily memo for a specific date.
-   */
   fun forDate(
     memos: List<Memo>,
     timeZone: TimeZone,
