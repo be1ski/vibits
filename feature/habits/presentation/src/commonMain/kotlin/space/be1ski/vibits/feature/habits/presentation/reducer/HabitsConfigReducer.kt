@@ -10,9 +10,6 @@ import space.be1ski.vibits.feature.habits.presentation.state.EditableHabit
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
 import kotlin.random.Random
 
-/**
- * Sub-reducer for config dialog management.
- */
 internal val configReducer: Reducer<HabitsAction.Config, HabitsState, HabitsEffect, Nothing> =
   reducer { action, state ->
     when (action) {
@@ -21,9 +18,7 @@ internal val configReducer: Reducer<HabitsAction.Config, HabitsState, HabitsEffe
           action.currentConfig.mapIndexed { index, config ->
             EditableHabit.fromHabitConfig(config, "habit_$index")
           }
-        state {
-          state.copy(showConfigDialog = true, editingHabits = editableHabits, editingConfigMemo = action.existingMemo)
-        }
+        state { state.copy(showConfigDialog = true, editingHabits = editableHabits, editingConfigMemo = action.existingMemo) }
       }
 
       is HabitsAction.Config.CloseConfigDialog -> {
@@ -31,59 +26,28 @@ internal val configReducer: Reducer<HabitsAction.Config, HabitsState, HabitsEffe
       }
 
       is HabitsAction.Config.AddHabit -> {
-        val newId = "habit_${Random.nextLong()}"
-        val newHabit =
-          EditableHabit(
-            id = newId,
-            tag = "",
-            label = "",
-            color = DefaultHabitColor,
-          )
+        val newHabit = EditableHabit(id = "habit_${Random.nextLong()}", tag = "", label = "", color = DefaultHabitColor)
         state { state.copy(editingHabits = state.editingHabits + newHabit) }
       }
 
       is HabitsAction.Config.UpdateHabitLabel -> {
-        val updated =
-          state.editingHabits.map { habit ->
-            if (habit.id == action.id) {
-              habit.copy(label = action.label)
-            } else {
-              habit
-            }
-          }
-        state { state.copy(editingHabits = updated) }
+        state { state.copy(editingHabits = state.editingHabits.withUpdated(action.id) { it.copy(label = action.label) }) }
       }
 
       is HabitsAction.Config.UpdateHabitColor -> {
-        val updated =
-          state.editingHabits.map { habit ->
-            if (habit.id == action.id) {
-              habit.copy(color = action.color)
-            } else {
-              habit
-            }
-          }
-        state { state.copy(editingHabits = updated) }
+        state { state.copy(editingHabits = state.editingHabits.withUpdated(action.id) { it.copy(color = action.color) }) }
       }
 
       is HabitsAction.Config.DeleteHabit -> {
-        val updated = state.editingHabits.filter { it.id != action.id }
-        state { state.copy(editingHabits = updated) }
+        state { state.copy(editingHabits = state.editingHabits.filter { it.id != action.id }) }
       }
 
       is HabitsAction.Config.SaveConfigDialog -> {
-        val validHabits =
-          state.editingHabits
-            .filter { it.label.isNotBlank() }
-            .map { it.toHabitConfig() }
+        val validHabits = state.editingHabits.filter { it.label.isNotBlank() }.map { it.toHabitConfig() }
         val existingMemo = state.editingConfigMemo
         if (existingMemo != null) {
           state {
-            state.copy(
-              showEditConfigWarning = true,
-              pendingConfigEdit = validHabits,
-              showConfigDialog = false,
-            )
+            state.copy(showEditConfigWarning = true, pendingConfigEdit = validHabits, showConfigDialog = false)
           }
         } else {
           val content = buildHabitsConfigContentFromList(validHabits)
@@ -93,3 +57,8 @@ internal val configReducer: Reducer<HabitsAction.Config, HabitsState, HabitsEffe
       }
     }
   }
+
+private inline fun List<EditableHabit>.withUpdated(
+  id: String,
+  update: (EditableHabit) -> EditableHabit,
+): List<EditableHabit> = map { if (it.id == id) update(it) else it }
