@@ -16,6 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
+import space.be1ski.vibits.core.strings.generated.Res
+import space.be1ski.vibits.core.strings.generated.msg_no_habits_tracked
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.date.DateFormatter
 import space.be1ski.vibits.feature.habits.domain.extractCompletedHabits
@@ -90,7 +93,7 @@ internal fun HabitsTrackingCard(
       }
     } else {
       Text(
-        text = "No habits tracked",
+        text = stringResource(Res.string.msg_no_habits_tracked),
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
       )

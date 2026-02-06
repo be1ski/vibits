@@ -1,5 +1,6 @@
 <resources>
     <!-- Actions -->
+    <string name="action_back">返回</string>
     <string name="action_cancel">取消</string>
     <string name="action_create_new_config">创建新配置（推荐）</string>
     <string name="action_edit_anyway">仍然编辑</string>
@@ -70,6 +71,7 @@
     <string name="format_habits_progress">已完成 %1$d / %2$d 个习惯</string>
     <string name="format_memos_db">备忘数据库: %1$s</string>
     <string name="format_offline_storage">离线: %1$s</string>
+    <string name="format_quarter_label">%2$d年第%1$d季度</string>
     <string name="format_memos_count">%1$d 条备忘</string>
     <string name="format_memos_today">今天 %1$d 条备忘</string>
     <string name="format_memos_this_week">本周 %1$d 条备忘</string>
@@ -104,6 +106,7 @@
     <string name="label_language">语言</string>
     <string name="label_memos_db">备忘数据库</string>
     <string name="label_post_filter">筛选</string>
+    <string name="label_selected">已选择</string>
     <string name="label_storage">存储</string>
     <string name="label_success_rate">成功率</string>
     <string name="label_theme">主题</string>
@@ -121,6 +124,7 @@
     <string name="filter_regular">普通</string>
 
     <!-- Messages -->
+    <string name="format_conflicts_detected">检测到 %1$d 个冲突</string>
     <string name="format_active_since">自 %1$s 起生效</string>
     <string name="msg_connection_failed">连接失败</string>
     <string name="msg_edit_config_warning">您即将编辑现有配置。这将影响所有历史数据。\n\n不建议编辑旧配置，因为它会改变过去数据的显示方式。例如，如果您添加新习惯，所有过去的日期都会显示为"未完成"，即使当时它还不存在。\n\n最佳实践：创建新配置。您的历史数据将保留旧配置，新数据将使用新配置。</string>
@@ -131,6 +135,7 @@
     <string name="msg_fill_all_fields">请填写所有字段</string>
     <string name="msg_habit_name_required">习惯名称为必填项</string>
     <string name="msg_habit_setup">为您的习惯起一个有意义的名称。</string>
+    <string name="msg_no_habits_tracked">未记录任何习惯</string>
     <string name="msg_no_habits_yet">尚未配置任何习惯。</string>
     <string name="msg_no_logs">暂无日志</string>
     <string name="msg_no_memos_yet">该时期暂无备忘。</string>

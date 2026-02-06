@@ -1,5 +1,6 @@
 <resources>
     <!-- Actions -->
+    <string name="action_back">Назад</string>
     <string name="action_cancel">Отмена</string>
     <string name="action_clear">Очистить</string>
     <string name="action_close">Закрыть</string>
@@ -64,6 +65,7 @@
     <string name="month_dec">Дек</string>
 
     <!-- Format strings -->
+    <string name="format_conflicts_detected">Обнаружено конфликтов: %1$d</string>
     <string name="format_active_since">Активно с %1$s</string>
     <string name="format_app_version">Версия: %1$s</string>
     <string name="format_credentials">Данные для входа: %1$s</string>
@@ -73,6 +75,7 @@
     <string name="format_offline_storage">Офлайн: %1$s</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d привычек</string>
     <string name="format_tooltip_memos">%1$s: %2$d воспоминаний</string>
+    <string name="format_quarter_label">К%1$d %2$d</string>
     <string name="format_memos_count">%1$d воспоминаний</string>
     <string name="format_memos_today">%1$d воспоминаний сегодня</string>
     <string name="format_memos_this_week">%1$d воспоминаний за неделю</string>
@@ -105,6 +108,7 @@
     <string name="label_language">Язык</string>
     <string name="label_memos_db">База Memos</string>
     <string name="label_post_filter">Фильтр записей</string>
+    <string name="label_selected">Выбрано</string>
     <string name="label_storage">Хранилище</string>
     <string name="label_success_rate">Процент выполнения</string>
     <string name="label_time_day">День</string>
@@ -130,6 +134,7 @@
     <string name="msg_fill_all_fields">Заполни все поля</string>
     <string name="msg_habit_name_required">Нужно название привычки</string>
     <string name="msg_habit_setup">Придумай осмысленное название для своей привычки.</string>
+    <string name="msg_no_habits_tracked">Привычки не отслежены</string>
     <string name="msg_no_habits_yet">Пока нет привычек.</string>
     <string name="msg_no_logs">Логов пока нет</string>
     <string name="msg_no_memos_yet">За этот период воспоминаний нет.</string>

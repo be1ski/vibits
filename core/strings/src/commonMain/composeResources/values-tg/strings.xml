@@ -1,6 +1,7 @@
 <resources>
     <!-- Actions -->
     <string name="action_add_first_habit">Одати аввалро илова кунед</string>
+    <string name="action_back">Бозгашт</string>
     <string name="action_cancel">Бекор кардан</string>
     <string name="action_clear">Тоза кардан</string>
     <string name="action_continue">Идома додан</string>
@@ -70,6 +71,7 @@
     <string name="format_habits_progress">%2$d одатҳо аз %1$d иҷро шуд</string>
     <string name="format_memos_db">Базаи ёддоштҳо: %1$s</string>
     <string name="format_offline_storage">Офлайн: %1$s</string>
+    <string name="format_quarter_label">С%1$d %2$d</string>
     <string name="format_memos_count">%1$d ёддошт</string>
     <string name="format_memos_today">Имрӯз %1$d ёддошт</string>
     <string name="format_memos_this_week">Ин ҳафта %1$d ёддошт</string>
@@ -104,6 +106,7 @@
     <string name="label_language">Забон</string>
     <string name="label_memos_db">Базаи ёддоштҳо</string>
     <string name="label_post_filter">Филтр</string>
+    <string name="label_selected">Интихобшуда</string>
     <string name="label_storage">Анбор</string>
     <string name="label_success_rate">Дараҷаи муваффақият</string>
     <string name="label_theme">Мавзуъ</string>
@@ -121,6 +124,7 @@
     <string name="filter_regular">Оддӣ</string>
 
     <!-- Messages -->
+    <string name="format_conflicts_detected">%1$d мухолифат ошкор шуд</string>
     <string name="format_active_since">Фаъол аз %1$s</string>
     <string name="msg_connection_failed">Хатои пайвастшавӣ</string>
     <string name="msg_edit_config_warning">Шумо мехоҳед конфигуратсияи мавҷударо таҳрир кунед. Ин ба ҳамаи маълумоти таърихӣ таъсир мерасонад.
@@ -135,6 +139,7 @@
     <string name="msg_empty_state_no_habits">Барои оғози назорат дар реҷаи офлайн одат эҷод кунед.</string>
     <string name="msg_habit_name_required">Номи одат зарур аст</string>
     <string name="msg_habit_setup">Барои одати худ номи маънидор интихоб кунед.</string>
+    <string name="msg_no_habits_tracked">Одатҳо пайгирӣ нашуданд</string>
     <string name="msg_no_habits_yet">Одатҳо ҳанӯз танзим нашудаанд.</string>
     <string name="msg_no_logs">Логҳо ҳанӯз нестанд</string>
     <string name="msg_no_memos_yet">Дар ин давра ёддоштҳо нестанд.</string>
