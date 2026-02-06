@@ -9,8 +9,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.mode.AppMode
+import space.be1ski.vibits.core.ui.platform.theme.rememberSystemDarkTheme
 import space.be1ski.vibits.core.ui.theme.VibitsTheme
-import space.be1ski.vibits.core.ui.theme.rememberSystemDarkTheme
 import space.be1ski.vibits.feature.homescreen.di.AppDependencies
 import space.be1ski.vibits.feature.homescreen.di.AppGraph
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
