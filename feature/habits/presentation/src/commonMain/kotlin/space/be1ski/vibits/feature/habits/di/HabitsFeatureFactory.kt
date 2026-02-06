@@ -36,18 +36,18 @@ fun createHabitsFeature(
             onRefresh = onRefresh,
           ),
         activityHandler =
-          HabitsActivityEffectHandler(
-            calculateActivityDataUseCase =
+          run {
+            val calculateActivityData =
               CalculateActivityDataUseCase(
                 buildActivityDataUseCase = dependencies.buildActivityDataUseCase,
-              ),
-            prewarmActivityDataUseCase =
-              PrewarmActivityDataUseCase(
-                calculateActivityDataUseCase =
-                  CalculateActivityDataUseCase(
-                    buildActivityDataUseCase = dependencies.buildActivityDataUseCase,
-                  ),
-              ),
-          ),
+              )
+            HabitsActivityEffectHandler(
+              calculateActivityDataUseCase = calculateActivityData,
+              prewarmActivityDataUseCase =
+                PrewarmActivityDataUseCase(
+                  calculateActivityDataUseCase = calculateActivityData,
+                ),
+            )
+          },
       ),
   )
