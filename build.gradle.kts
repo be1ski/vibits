@@ -63,9 +63,51 @@ subprojects {
   }
 }
 
+tasks.register("checkConventions") {
+  group = "verification"
+  description = "Checks architecture conventions across source files"
+  doLast {
+    val violations = mutableListOf<String>()
+    val sourceSets = listOf("commonMain", "androidMain", "desktopMain", "iosMain", "wasmJsMain")
+
+    subprojects.forEach { sub ->
+      sourceSets.forEach { sourceSet ->
+        val srcDir = sub.file("src/$sourceSet/kotlin")
+        if (!srcDir.exists()) return@forEach
+        srcDir.walkTopDown().filter { it.extension == "kt" }.forEach { file ->
+          val relativePath = file.relativeTo(rootDir).path
+          val pkg = file.readLines().firstOrNull { it.startsWith("package ") }?.removePrefix("package ")?.trim() ?: ""
+          val content = file.readText()
+          val inUiOrView = pkg.contains(".ui.") || pkg.contains(".view.") || pkg.endsWith(".ui") || pkg.endsWith(".view")
+          val inPlatformOrRoom = pkg.contains(".platform.") || pkg.contains(".room.") || pkg.endsWith(".platform") || pkg.endsWith(".room")
+          val inTest = pkg.contains(".test.") || pkg.contains(".testing.") || pkg.endsWith(".test") || pkg.endsWith(".testing")
+
+          if (!inUiOrView && content.contains("@Composable")) {
+            violations += "$relativePath: @Composable found outside ui/view package ($pkg)"
+          }
+          if (!inPlatformOrRoom && content.contains(Regex("\\bexpect\\s+(fun|class|interface|object|val|var|abstract|annotation)\\b"))) {
+            violations += "$relativePath: expect declaration found outside platform/room package ($pkg)"
+          }
+          if (sourceSet == "commonMain" && !inTest && file.name.startsWith("Fake")) {
+            violations += "$relativePath: Fake class in production code, should be in testing/ module ($pkg)"
+          }
+        }
+      }
+    }
+
+    if (violations.isNotEmpty()) {
+      violations.forEach { logger.error(it) }
+      throw GradleException("Found ${violations.size} convention violation(s):\n${violations.joinToString("\n")}")
+    } else {
+      logger.lifecycle("Convention check passed — no violations found.")
+    }
+  }
+}
+
 tasks.register("checkJvm") {
   group = "verification"
   description = "Runs JVM checks: detekt, compile, and tests (Linux-safe)"
+  dependsOn("checkConventions")
   subprojects {
     plugins.withId("org.jetbrains.kotlin.multiplatform") {
       tasks.findByName("detekt")?.let { dependsOn(it) }
