@@ -6,6 +6,8 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
+import space.be1ski.vibits.core.ui.platform.theme.ConfigureSystemBars
+import space.be1ski.vibits.core.ui.platform.theme.rememberSystemDarkTheme
 
 /**
  * CompositionLocal for the current dark theme state.

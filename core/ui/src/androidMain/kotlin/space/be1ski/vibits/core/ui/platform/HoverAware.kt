@@ -1,8 +1,8 @@
-package space.be1ski.vibits.core.ui
+package space.be1ski.vibits.core.ui.platform
 
 import androidx.compose.ui.Modifier
 
 /**
- * Hover events are not available on iOS; return the modifier unchanged.
+ * Hover events are not available on Android; return the modifier unchanged.
  */
 actual fun Modifier.hoverAware(onHoverChange: (Boolean) -> Unit): Modifier = this

@@ -1,4 +1,4 @@
-package space.be1ski.vibits.core.ui
+package space.be1ski.vibits.core.ui.platform
 
 import androidx.compose.ui.Modifier
 
