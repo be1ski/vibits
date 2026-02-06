@@ -26,7 +26,7 @@ androidApp/      — Android entry point
 desktopApp/      — Desktop entry point
 iosApp/          — iOS wrapper
 webApp/          — Web entry (WASM)
-build-logic/     — Convention plugins (vibits.kmp.*)
+build-logic/     — Convention plugins (vibits.kmp.*, vibits.checks.*)
 ```
 
 Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if any) live under module `src/.../res`.
@@ -371,12 +371,14 @@ We follow TDD for business logic and aim for high coverage.
 
 Manual fakes are the standard approach (no MockK/Mockito — they don't support KMP).
 
+- **Naming:** `Fake*` is the standard prefix for test doubles (e.g., `FakeMemosRepository`). Behavioral variants use `Recording*`, `Tracking*`, or `Stateful*` prefixes when tracking specific operations.
 - **Same-module fakes** (used only within own module's tests) → place in `commonTest`
 - **Cross-module fakes** (used by other modules' tests) → place in `<module>/testing/` submodule
   - The `testing/` module's `commonMain` depends on parent via `api()` and contains fake implementations
   - Consumers add `implementation(projects.feature.<name>.domain.testing)` to their `commonTest`
   - Packages stay in `*.test` namespace (e.g., `space.be1ski.vibits.feature.auth.domain.test`)
 - **Test-specific fakes** (with custom tracking) → define `private class` locally in the test file
+- **Enforced by `checkConventions`:** Files with `Fake*`, `Recording*`, `Tracking*`, or `Stateful*` prefixes in production `commonMain` code will fail the build. They must live in `testing/` modules or `commonTest`.
 
 ### Avoiding Test Rot
 
@@ -436,7 +438,7 @@ ignore:
   # etc.
 ```
 
-Kover is applied to all modules via `vibits.kmp.library` convention plugin and generates full coverage reports without exclusions. Codecov applies ignore rules when calculating coverage percentage.
+Kover is applied per-module via `vibits.kmp.library` and aggregated at root via `vibits.checks.coverage`. Codecov applies ignore rules when calculating coverage percentage.
 
 ## Linting & Formatting
 
@@ -446,6 +448,26 @@ Kover is applied to all modules via `vibits.kmp.library` convention plugin and g
 - `./gradlew checkAll` — manually run all checks if needed.
 
 **Never use `@Suppress` for new code** — always refactor to fix the underlying issue. When touching existing code that triggers lint warnings, refactor it immediately rather than suppressing. Only use `@Suppress` when the lint rule fundamentally doesn't apply (e.g., `LongParameterList` for DI containers, `ktlint:standard:function-naming` for factory functions).
+
+### Convention Plugins
+
+All build checks are configured via convention plugins in `build-logic/convention/`, applied to the root project:
+
+| Plugin | Responsibility |
+|--------|---------------|
+| `vibits.checks.codestyle` | Applies ktlint + detekt to all Kotlin modules |
+| `vibits.checks.structure` | `checkConventions` task — enforces package placement rules |
+| `vibits.checks.coverage` | Kover aggregation for coverage reports |
+| `vibits.checks.verification` | Aggregate tasks: `checkJvm`, `checkIos`, `checkAll`, `installGitHooks` |
+
+KMP module plugins:
+
+| Plugin | Responsibility |
+|--------|---------------|
+| `vibits.kmp.library` | KMP targets, Android namespace, Kover per-module |
+| `vibits.kmp.compose` | Compose Multiplatform + Kotlin Compose compiler |
+| `vibits.kmp.metro` | Metro DI plugin |
+| `vibits.kmp.room` | Room KMP + KSP |
 
 ## Commit & Pull Request Guidelines
 
