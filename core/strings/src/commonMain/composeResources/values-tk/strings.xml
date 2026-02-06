@@ -1,6 +1,7 @@
 <resources>
     <!-- Actions -->
     <string name="action_add_first_habit">Ilkinji endigi goş</string>
+    <string name="action_back">Yza</string>
     <string name="action_cancel">Ýatyr</string>
     <string name="action_clear">Arassala</string>
     <string name="action_continue">Dowam et</string>
@@ -70,6 +71,7 @@
     <string name="format_habits_progress">%2$d endikden %1$d ýerine ýetirildi</string>
     <string name="format_memos_db">Bellikler bazasy: %1$s</string>
     <string name="format_offline_storage">Oflaýn: %1$s</string>
+    <string name="format_quarter_label">Ç%1$d %2$d</string>
     <string name="format_memos_count">%1$d bellik</string>
     <string name="format_memos_today">Şu gün %1$d bellik</string>
     <string name="format_memos_this_week">Bu hepde %1$d bellik</string>
@@ -104,6 +106,7 @@
     <string name="label_language">Dil</string>
     <string name="label_memos_db">Bellikler bazasy</string>
     <string name="label_post_filter">Filtr</string>
+    <string name="label_selected">Saýlanan</string>
     <string name="label_storage">Ammar</string>
     <string name="label_success_rate">Üstünlik derejesi</string>
     <string name="label_theme">Tema</string>
@@ -121,6 +124,7 @@
     <string name="filter_regular">Adaty</string>
 
     <!-- Messages -->
+    <string name="format_conflicts_detected">%1$d gapma-garşylyk ýüze çykaryldy</string>
     <string name="format_active_since">%1$s-den bäri işjeň</string>
     <string name="msg_connection_failed">Baglanşyk ýalňyşlygy</string>
     <string name="msg_edit_config_warning">Bar bolan konfigurasiýany redaktirlemekçi bolýarsyňyz. Bu ähli taryhy maglumatlara täsir eder.
@@ -135,6 +139,7 @@ Iň gowy usul: täze konfigurasiýa dörediň. Taryhy maglumatlar köne konfigur
     <string name="msg_empty_state_no_habits">Awtonom režimde yzarlamagy başlamak üçin endik dörediň.</string>
     <string name="msg_habit_name_required">Endik ady hökmany</string>
     <string name="msg_habit_setup">Endikiňiz üçin many-manyly at oýlap tapyň.</string>
+    <string name="msg_no_habits_tracked">Endikler yzarlanmady</string>
     <string name="msg_no_habits_yet">Endikler heniz düzülmedi.</string>
     <string name="msg_no_logs">Loglar heniz ýok</string>
     <string name="msg_no_memos_yet">Bu döwürde bellik ýok.</string>

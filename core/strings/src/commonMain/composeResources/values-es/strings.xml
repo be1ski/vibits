@@ -1,5 +1,6 @@
 <resources>
     <!-- Actions -->
+    <string name="action_back">Atrás</string>
     <string name="action_cancel">Cancelar</string>
     <string name="action_create_new_config">Crear Nueva Configuración (Recomendado)</string>
     <string name="action_edit_anyway">Editar De Todos Modos</string>
@@ -70,6 +71,7 @@
     <string name="format_habits_progress">%1$d de %2$d hábitos completados</string>
     <string name="format_memos_db">Base de datos: %1$s</string>
     <string name="format_offline_storage">Sin conexión: %1$s</string>
+    <string name="format_quarter_label">T%1$d %2$d</string>
     <string name="format_memos_count">%1$d notas</string>
     <string name="format_memos_today">%1$d notas hoy</string>
     <string name="format_memos_this_week">%1$d notas esta semana</string>
@@ -104,6 +106,7 @@
     <string name="label_language">Idioma</string>
     <string name="label_memos_db">Base de notas</string>
     <string name="label_post_filter">Filtro</string>
+    <string name="label_selected">Seleccionado</string>
     <string name="label_storage">Almacenamiento</string>
     <string name="label_success_rate">Tasa de éxito</string>
     <string name="label_theme">Tema</string>
@@ -121,6 +124,7 @@
     <string name="filter_regular">Normales</string>
 
     <!-- Messages -->
+    <string name="format_conflicts_detected">%1$d conflicto(s) detectado(s)</string>
     <string name="format_active_since">Activo desde %1$s</string>
     <string name="msg_connection_failed">Error de conexión</string>
     <string name="msg_edit_config_warning">Está a punto de editar una configuración existente. Esto afectará a todos los datos históricos.\n\nNo se recomienda editar una configuración antigua porque cambia la apariencia de sus datos pasados. Por ejemplo, si agrega un nuevo hábito, todos los días pasados lo mostrarán como "no completado" aunque no existiera en ese momento.\n\nMejor práctica: Cree una nueva configuración en su lugar. Sus datos históricos mantendrán la configuración antigua, y los nuevos datos usarán la nueva configuración.</string>
@@ -131,6 +135,7 @@
     <string name="msg_fill_all_fields">Por favor, complete todos los campos</string>
     <string name="msg_habit_name_required">El nombre del hábito es obligatorio</string>
     <string name="msg_habit_setup">Dale a tu hábito un nombre significativo.</string>
+    <string name="msg_no_habits_tracked">Sin hábitos registrados</string>
     <string name="msg_no_habits_yet">Aún no hay hábitos configurados.</string>
     <string name="msg_no_logs">Aún no hay registros</string>
     <string name="msg_no_memos_yet">No hay notas en este período.</string>

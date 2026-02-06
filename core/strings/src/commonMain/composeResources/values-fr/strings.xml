@@ -1,5 +1,6 @@
 <resources>
     <!-- Actions -->
+    <string name="action_back">Retour</string>
     <string name="action_cancel">Annuler</string>
     <string name="action_create_new_config">Créer une nouvelle configuration (recommandé)</string>
     <string name="action_edit_anyway">Modifier quand même</string>
@@ -70,6 +71,7 @@
     <string name="format_habits_progress">%1$d sur %2$d habitudes accomplies</string>
     <string name="format_memos_db">Base de données : %1$s</string>
     <string name="format_offline_storage">Hors ligne : %1$s</string>
+    <string name="format_quarter_label">T%1$d %2$d</string>
     <string name="format_memos_count">%1$d notes</string>
     <string name="format_memos_today">%1$d notes aujourd\'hui</string>
     <string name="format_memos_this_week">%1$d notes cette semaine</string>
@@ -104,6 +106,7 @@
     <string name="label_language">Langue</string>
     <string name="label_memos_db">Base de notes</string>
     <string name="label_post_filter">Filtre</string>
+    <string name="label_selected">Sélectionné</string>
     <string name="label_storage">Stockage</string>
     <string name="label_success_rate">Taux de réussite</string>
     <string name="label_theme">Thème</string>
@@ -121,6 +124,7 @@
     <string name="filter_regular">Normaux</string>
 
     <!-- Messages -->
+    <string name="format_conflicts_detected">%1$d conflit(s) détecté(s)</string>
     <string name="format_active_since">Actif depuis %1$s</string>
     <string name="msg_connection_failed">Échec de la connexion</string>
     <string name="msg_edit_config_warning">Vous êtes sur le point de modifier une configuration existante. Cela affectera toutes les données historiques.
@@ -135,6 +139,7 @@ Bonne pratique : créez une nouvelle configuration. Vos données historiques con
     <string name="msg_fill_all_fields">Veuillez remplir tous les champs</string>
     <string name="msg_habit_name_required">Le nom de l\'habitude est requis</string>
     <string name="msg_habit_setup">Donnez un nom significatif à votre habitude.</string>
+    <string name="msg_no_habits_tracked">Aucune habitude suivie</string>
     <string name="msg_no_habits_yet">Aucune habitude configurée pour l\'instant.</string>
     <string name="msg_no_logs">Aucun journal pour l\'instant</string>
     <string name="msg_no_memos_yet">Aucune note pour cette période.</string>

@@ -1,5 +1,6 @@
 <resources>
     <!-- Actions -->
+    <string name="action_back">पीछे</string>
     <string name="action_cancel">रद्द करें</string>
     <string name="action_create_new_config">नई कॉन्फ़िगरेशन बनाएँ (अनुशंसित)</string>
     <string name="action_edit_anyway">फिर भी संपादित करें</string>
@@ -70,6 +71,7 @@
     <string name="format_habits_progress">%2$d में से %1$d आदतें पूरी</string>
     <string name="format_memos_db">मेमो DB: %1$s</string>
     <string name="format_offline_storage">ऑफ़लाइन: %1$s</string>
+    <string name="format_quarter_label">Q%1$d %2$d</string>
     <string name="format_memos_count">%1$d मेमो</string>
     <string name="format_memos_today">आज %1$d मेमो</string>
     <string name="format_memos_this_week">इस सप्ताह %1$d मेमो</string>
@@ -104,6 +106,7 @@
     <string name="label_language">भाषा</string>
     <string name="label_memos_db">मेमो DB</string>
     <string name="label_post_filter">फ़िल्टर</string>
+    <string name="label_selected">चयनित</string>
     <string name="label_storage">स्टोरेज</string>
     <string name="label_success_rate">सफलता दर</string>
     <string name="label_theme">थीम</string>
@@ -121,6 +124,7 @@
     <string name="filter_regular">सामान्य</string>
 
     <!-- Messages -->
+    <string name="format_conflicts_detected">%1$d विरोध पाया गया</string>
     <string name="format_active_since">%1$s से सक्रिय</string>
     <string name="msg_connection_failed">कनेक्शन विफल</string>
     <string name="msg_edit_config_warning">आप एक मौजूदा कॉन्फ़िगरेशन संपादित करने वाले हैं। इससे सभी ऐतिहासिक डेटा प्रभावित होगा।
@@ -135,6 +139,7 @@
     <string name="msg_fill_all_fields">कृपया सभी फ़ील्ड भरें</string>
     <string name="msg_habit_name_required">आदत का नाम आवश्यक है</string>
     <string name="msg_habit_setup">अपनी आदत के लिए एक सार्थक नाम सोचें।</string>
+    <string name="msg_no_habits_tracked">कोई आदत ट्रैक नहीं की गई</string>
     <string name="msg_no_habits_yet">अभी तक कोई आदत कॉन्फ़िगर नहीं।</string>
     <string name="msg_no_logs">अभी कोई लॉग नहीं</string>
     <string name="msg_no_memos_yet">इस अवधि में कोई मेमो नहीं।</string>

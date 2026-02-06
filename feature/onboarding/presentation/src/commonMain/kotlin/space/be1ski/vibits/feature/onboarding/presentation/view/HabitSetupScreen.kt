@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.strings.generated.Res
+import space.be1ski.vibits.core.strings.generated.action_back
 import space.be1ski.vibits.core.strings.generated.action_start_tracking
 import space.be1ski.vibits.core.strings.generated.hint_habit_name
 import space.be1ski.vibits.core.strings.generated.label_habit_color
@@ -98,7 +99,7 @@ fun HabitSetupScreen(
       modifier = Modifier.fillMaxWidth(),
     ) {
       IconButton(onClick = onBack, enabled = !isCreating) {
-        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = textColor)
+        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.action_back), tint = textColor)
       }
       Text(
         text = stringResource(Res.string.title_habit_setup),

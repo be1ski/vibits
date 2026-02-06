@@ -1,5 +1,6 @@
 <resources>
     <!-- Actions -->
+    <string name="action_back">Geri</string>
     <string name="action_cancel">Ləğv et</string>
     <string name="action_create_new_config">Yeni konfiqurasiya yarat (tövsiyə olunur)</string>
     <string name="action_edit_anyway">Yenə də redaktə et</string>
@@ -70,6 +71,7 @@
     <string name="format_habits_progress">%2$d vərdişdən %1$d tamamlandı</string>
     <string name="format_memos_db">Qeydlər bazası: %1$s</string>
     <string name="format_offline_storage">Oflayn: %1$s</string>
+    <string name="format_quarter_label">R%1$d %2$d</string>
     <string name="format_memos_count">%1$d qeyd</string>
     <string name="format_memos_today">Bu gün %1$d qeyd</string>
     <string name="format_memos_this_week">Bu həftə %1$d qeyd</string>
@@ -104,6 +106,7 @@
     <string name="label_language">Dil</string>
     <string name="label_memos_db">Qeydlər bazası</string>
     <string name="label_post_filter">Filtr</string>
+    <string name="label_selected">Seçilmiş</string>
     <string name="label_storage">Yaddaş</string>
     <string name="label_success_rate">Uğur dərəcəsi</string>
     <string name="label_theme">Tema</string>
@@ -121,6 +124,7 @@
     <string name="filter_regular">Adi</string>
 
     <!-- Messages -->
+    <string name="format_conflicts_detected">%1$d münaqişə aşkarlandı</string>
     <string name="format_active_since">%1$s-dən aktiv</string>
     <string name="msg_connection_failed">Əlaqə xətası</string>
     <string name="msg_edit_config_warning">Mövcud konfiqurasiyanı redaktə etmək üzrəsiniz. Bu, bütün tarixi məlumatlara təsir edəcək.
@@ -135,6 +139,7 @@ Köhnə konfiqurasiyanı redaktə etmək tövsiyə olunmur, çünki bu, əvvəlk
     <string name="msg_fill_all_fields">Bütün sahələri doldurun</string>
     <string name="msg_habit_name_required">Vərdiş adı tələb olunur</string>
     <string name="msg_habit_setup">Vərdişiniz üçün mənalı ad düşünün.</string>
+    <string name="msg_no_habits_tracked">Heç bir vərdiş izlənməyib</string>
     <string name="msg_no_habits_yet">Vərdişlər hələ tənzimlənməyib.</string>
     <string name="msg_no_logs">Loglar hələ yoxdur</string>
     <string name="msg_no_memos_yet">Bu dövrdə qeyd yoxdur.</string>

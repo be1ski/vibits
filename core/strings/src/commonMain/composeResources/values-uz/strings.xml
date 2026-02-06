@@ -1,5 +1,6 @@
 <resources>
     <!-- Actions -->
+    <string name="action_back">Orqaga</string>
     <string name="action_cancel">Bekor qilish</string>
     <string name="action_create_new_config">Yangi konfiguratsiya yaratish (tavsiya etiladi)</string>
     <string name="action_edit_anyway">Baribir tahrirlash</string>
@@ -70,6 +71,7 @@
     <string name="format_habits_progress">%2$d ta odatdan %1$d bajarildi</string>
     <string name="format_memos_db">Eslatmalar bazasi: %1$s</string>
     <string name="format_offline_storage">Oflayn: %1$s</string>
+    <string name="format_quarter_label">Ch%1$d %2$d</string>
     <string name="format_memos_count">%1$d ta eslatma</string>
     <string name="format_memos_today">Bugun %1$d ta eslatma</string>
     <string name="format_memos_this_week">Bu hafta %1$d ta eslatma</string>
@@ -104,6 +106,7 @@
     <string name="label_language">Til</string>
     <string name="label_memos_db">Eslatmalar bazasi</string>
     <string name="label_post_filter">Filtr</string>
+    <string name="label_selected">Tanlangan</string>
     <string name="label_storage">Saqlash joyi</string>
     <string name="label_success_rate">Muvaffaqiyat darajasi</string>
     <string name="label_theme">Mavzu</string>
@@ -121,6 +124,7 @@
     <string name="filter_regular">Oddiy</string>
 
     <!-- Messages -->
+    <string name="format_conflicts_detected">%1$d ziddiyat aniqlandi</string>
     <string name="format_active_since">%1$s dan beri faol</string>
     <string name="msg_connection_failed">Ulanish xatosi</string>
     <string name="msg_edit_config_warning">Siz mavjud konfiguratsiyani tahrirlash arafasidiz. Bu barcha tarixiy ma'lumotlarga ta'sir qiladi.
@@ -135,6 +139,7 @@ Eng yaxshi yechim: yangi konfiguratsiya yarating. Tarixiy ma'lumotlar eski konfi
     <string name="msg_fill_all_fields">Barcha maydonlarni to\'ldiring</string>
     <string name="msg_habit_name_required">Odat nomi majburiy</string>
     <string name="msg_habit_setup">Odatingiz uchun mazmunli nom o\'ylab toping.</string>
+    <string name="msg_no_habits_tracked">Odatlar kuzatilmagan</string>
     <string name="msg_no_habits_yet">Odatlar hali sozlanmagan.</string>
     <string name="msg_no_logs">Loglar hali yo\'q</string>
     <string name="msg_no_memos_yet">Bu davrda eslatmalar yo\'q.</string>
