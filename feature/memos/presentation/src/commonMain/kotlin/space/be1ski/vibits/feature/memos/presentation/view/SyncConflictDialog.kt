@@ -20,6 +20,7 @@ import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_cancel
 import space.be1ski.vibits.core.strings.generated.action_keep_local
 import space.be1ski.vibits.core.strings.generated.action_keep_server
+import space.be1ski.vibits.core.strings.generated.format_conflicts_detected
 import space.be1ski.vibits.core.strings.generated.msg_sync_conflict
 import space.be1ski.vibits.core.strings.generated.title_sync_conflict
 import space.be1ski.vibits.core.ui.Indent
@@ -47,7 +48,7 @@ fun SyncConflictDialog(
         )
         Spacer(modifier = Modifier.height(Indent.s))
         Text(
-          text = "$conflictCount conflict(s) detected",
+          text = stringResource(Res.string.format_conflicts_detected, conflictCount),
           style = MaterialTheme.typography.bodySmall,
           color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

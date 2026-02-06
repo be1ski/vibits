@@ -37,8 +37,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.strings.generated.Res
+import space.be1ski.vibits.core.strings.generated.action_back
 import space.be1ski.vibits.core.strings.generated.action_continue
 import space.be1ski.vibits.core.strings.generated.label_habit_preset_custom
+import space.be1ski.vibits.core.strings.generated.label_selected
 import space.be1ski.vibits.core.strings.generated.title_choose_starter_habit
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.theme.AppColors
@@ -76,7 +78,7 @@ fun ChoosePresetScreen(
       modifier = Modifier.fillMaxWidth(),
     ) {
       IconButton(onClick = onBack) {
-        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = textColor)
+        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.action_back), tint = textColor)
       }
       Text(
         text = stringResource(Res.string.title_choose_starter_habit),
@@ -167,7 +169,7 @@ private fun PresetCard(
       if (isSelected) {
         Icon(
           Icons.Default.Check,
-          contentDescription = "Selected",
+          contentDescription = stringResource(Res.string.label_selected),
           tint = AppColors.habitBlue.resolve(),
         )
       }

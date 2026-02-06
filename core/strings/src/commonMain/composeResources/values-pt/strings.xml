@@ -1,5 +1,6 @@
 <resources>
     <!-- Actions -->
+    <string name="action_back">Voltar</string>
     <string name="action_cancel">Cancelar</string>
     <string name="action_create_new_config">Criar nova configuração (recomendado)</string>
     <string name="action_edit_anyway">Editar mesmo assim</string>
@@ -70,6 +71,7 @@
     <string name="format_habits_progress">%1$d de %2$d hábitos concluídos</string>
     <string name="format_memos_db">Banco de dados: %1$s</string>
     <string name="format_offline_storage">Offline: %1$s</string>
+    <string name="format_quarter_label">T%1$d %2$d</string>
     <string name="format_memos_count">%1$d notas</string>
     <string name="format_memos_today">%1$d notas hoje</string>
     <string name="format_memos_this_week">%1$d notas esta semana</string>
@@ -104,6 +106,7 @@
     <string name="label_language">Idioma</string>
     <string name="label_memos_db">Banco de notas</string>
     <string name="label_post_filter">Filtro</string>
+    <string name="label_selected">Selecionado</string>
     <string name="label_storage">Armazenamento</string>
     <string name="label_success_rate">Taxa de sucesso</string>
     <string name="label_theme">Tema</string>
@@ -121,6 +124,7 @@
     <string name="filter_regular">Normais</string>
 
     <!-- Messages -->
+    <string name="format_conflicts_detected">%1$d conflito(s) detectado(s)</string>
     <string name="format_active_since">Ativo desde %1$s</string>
     <string name="msg_connection_failed">Falha na conexão</string>
     <string name="msg_edit_config_warning">Você está prestes a editar uma configuração existente. Isso afetará todos os dados históricos.
@@ -135,6 +139,7 @@ Melhor prática: crie uma nova configuração. Seus dados históricos manterão 
     <string name="msg_fill_all_fields">Por favor, preencha todos os campos</string>
     <string name="msg_habit_name_required">O nome do hábito é obrigatório</string>
     <string name="msg_habit_setup">Dê um nome significativo ao seu hábito.</string>
+    <string name="msg_no_habits_tracked">Nenhum hábito registrado</string>
     <string name="msg_no_habits_yet">Nenhum hábito configurado ainda.</string>
     <string name="msg_no_logs">Sem logs ainda</string>
     <string name="msg_no_memos_yet">Sem notas neste período.</string>

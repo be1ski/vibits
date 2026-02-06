@@ -28,6 +28,7 @@ import space.be1ski.vibits.core.platform.date.currentLocalDate
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_next
 import space.be1ski.vibits.core.strings.generated.action_previous
+import space.be1ski.vibits.core.strings.generated.format_quarter_label
 import space.be1ski.vibits.core.strings.generated.time_months
 import space.be1ski.vibits.core.strings.generated.time_quarters
 import space.be1ski.vibits.core.strings.generated.time_weeks
@@ -126,6 +127,7 @@ private fun TimeRangeNavigator(
   }
 }
 
+@Composable
 internal fun formatRangeLabel(
   range: ActivityRange,
   formatter: DateFormatter,
@@ -137,7 +139,7 @@ internal fun formatRangeLabel(
       formatter.weekRange(range.startDate, endDate, currentYear)
     }
     is ActivityRange.Month -> "${formatter.monthShort(range.month)} ${range.year}"
-    is ActivityRange.Quarter -> "Q${range.index} ${range.year}"
+    is ActivityRange.Quarter -> stringResource(Res.string.format_quarter_label, range.index, range.year)
     is ActivityRange.Year -> range.year.toString()
   }
 

@@ -1,5 +1,6 @@
 <resources>
     <!-- Actions -->
+    <string name="action_back">رجوع</string>
     <string name="action_cancel">إلغاء</string>
     <string name="action_create_new_config">إنشاء تكوين جديد (موصى به)</string>
     <string name="action_edit_anyway">تحرير على أي حال</string>
@@ -70,6 +71,7 @@
     <string name="format_habits_progress">%1$d من %2$d عادات مكتملة</string>
     <string name="format_memos_db">قاعدة بيانات المذكرات: %1$s</string>
     <string name="format_offline_storage">غير متصل: %1$s</string>
+    <string name="format_quarter_label">الربع %1$d %2$d</string>
     <string name="format_memos_count">%1$d مذكرة</string>
     <string name="format_memos_today">%1$d مذكرة اليوم</string>
     <string name="format_memos_this_week">%1$d مذكرة هذا الأسبوع</string>
@@ -104,6 +106,7 @@
     <string name="label_language">اللغة</string>
     <string name="label_memos_db">قاعدة بيانات المذكرات</string>
     <string name="label_post_filter">تصفية</string>
+    <string name="label_selected">محدد</string>
     <string name="label_storage">التخزين</string>
     <string name="label_success_rate">معدل النجاح</string>
     <string name="label_theme">السمة</string>
@@ -121,6 +124,7 @@
     <string name="filter_regular">عادي</string>
 
     <!-- Messages -->
+    <string name="format_conflicts_detected">تم اكتشاف %1$d تعارض</string>
     <string name="format_active_since">نشط منذ %1$s</string>
     <string name="msg_connection_failed">فشل الاتصال</string>
     <string name="msg_edit_config_warning">أنت على وشك تعديل تكوين موجود. سيؤثر ذلك على جميع البيانات التاريخية.
@@ -135,6 +139,7 @@
     <string name="msg_fill_all_fields">يرجى ملء جميع الحقول</string>
     <string name="msg_habit_name_required">اسم العادة مطلوب</string>
     <string name="msg_habit_setup">اختر اسماً ذا معنى لعادتك.</string>
+    <string name="msg_no_habits_tracked">لم يتم تتبع أي عادات</string>
     <string name="msg_no_habits_yet">لم يتم تكوين عادات بعد.</string>
     <string name="msg_no_logs">لا توجد سجلات بعد</string>
     <string name="msg_no_memos_yet">لا توجد مذكرات في هذه الفترة.</string>

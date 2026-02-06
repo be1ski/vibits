@@ -1,6 +1,7 @@
 <resources>
     <!-- Actions -->
     <string name="action_add_first_habit">Adaugă primul tău obicei</string>
+    <string name="action_back">Înapoi</string>
     <string name="action_cancel">Anulare</string>
     <string name="action_clear">Curăță</string>
     <string name="action_continue">Continuă</string>
@@ -70,6 +71,7 @@
     <string name="format_habits_progress">%1$d din %2$d obiceiuri finalizate</string>
     <string name="format_memos_db">Baza de date note: %1$s</string>
     <string name="format_offline_storage">Offline: %1$s</string>
+    <string name="format_quarter_label">T%1$d %2$d</string>
     <string name="format_memos_count">%1$d note</string>
     <string name="format_memos_today">%1$d note astăzi</string>
     <string name="format_memos_this_week">%1$d note săptămâna aceasta</string>
@@ -104,6 +106,7 @@
     <string name="label_language">Limbă</string>
     <string name="label_memos_db">Baza de date note</string>
     <string name="label_post_filter">Filtru</string>
+    <string name="label_selected">Selectat</string>
     <string name="label_storage">Stocare</string>
     <string name="label_success_rate">Rată de succes</string>
     <string name="label_theme">Temă</string>
@@ -121,6 +124,7 @@
     <string name="filter_regular">Obișnuite</string>
 
     <!-- Messages -->
+    <string name="format_conflicts_detected">%1$d conflict(e) detectat(e)</string>
     <string name="format_active_since">Activ din %1$s</string>
     <string name="msg_connection_failed">Conexiune eșuată</string>
     <string name="msg_edit_config_warning">Ești pe cale să editezi o configurație existentă. Acest lucru va afecta toate datele istorice.
@@ -135,6 +139,7 @@ Cea mai bună practică: creează o configurație nouă. Datele tale istorice vo
     <string name="msg_empty_state_no_habits">Creează unul pentru a începe urmărirea offline.</string>
     <string name="msg_habit_name_required">Numele obiceiului este obligatoriu</string>
     <string name="msg_habit_setup">Dă-i obiceiului tău un nume semnificativ.</string>
+    <string name="msg_no_habits_tracked">Niciun obicei urmărit</string>
     <string name="msg_no_habits_yet">Niciun obicei configurat încă.</string>
     <string name="msg_no_logs">Niciun log încă</string>
     <string name="msg_no_memos_yet">Nicio notă în această perioadă.</string>

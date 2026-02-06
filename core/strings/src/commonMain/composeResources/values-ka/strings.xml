@@ -1,5 +1,6 @@
 <resources>
     <!-- Actions -->
+    <string name="action_back">უკან</string>
     <string name="action_cancel">გაუქმება</string>
     <string name="action_create_new_config">ახალი კონფიგურაციის შექმნა (რეკომენდებულია)</string>
     <string name="action_edit_anyway">მაინც რედაქტირება</string>
@@ -70,6 +71,7 @@
     <string name="format_habits_progress">%2$d ჩვევიდან %1$d შესრულებულია</string>
     <string name="format_memos_db">ჩანაწერების ბაზა: %1$s</string>
     <string name="format_offline_storage">ოფლაინ: %1$s</string>
+    <string name="format_quarter_label">Q%1$d %2$d</string>
     <string name="format_memos_count">%1$d ჩანაწერი</string>
     <string name="format_memos_today">დღეს %1$d ჩანაწერი</string>
     <string name="format_memos_this_week">ამ კვირაში %1$d ჩანაწერი</string>
@@ -104,6 +106,7 @@
     <string name="label_language">ენა</string>
     <string name="label_memos_db">ჩანაწერების ბაზა</string>
     <string name="label_post_filter">ფილტრი</string>
+    <string name="label_selected">არჩეული</string>
     <string name="label_storage">საცავი</string>
     <string name="label_success_rate">წარმატების მაჩვენებელი</string>
     <string name="label_theme">თემა</string>
@@ -121,6 +124,7 @@
     <string name="filter_regular">ჩვეულებრივი</string>
 
     <!-- Messages -->
+    <string name="format_conflicts_detected">აღმოჩენილია %1$d კონფლიქტი</string>
     <string name="format_active_since">აქტიური %1$s-დან</string>
     <string name="msg_connection_failed">კავშირის შეცდომა</string>
     <string name="msg_edit_config_warning">თქვენ აპირებთ არსებული კონფიგურაციის რედაქტირებას. ეს ყველა ისტორიულ მონაცემზე იმოქმედებს.
@@ -135,6 +139,7 @@
     <string name="msg_fill_all_fields">შეავსეთ ყველა ველი</string>
     <string name="msg_habit_name_required">ჩვევის სახელი აუცილებელია</string>
     <string name="msg_habit_setup">გამოიგონეთ მნიშვნელოვანი სახელი თქვენი ჩვევისთვის.</string>
+    <string name="msg_no_habits_tracked">ჩვევები არ არის აღრიცხული</string>
     <string name="msg_no_habits_yet">ჩვევები ჯერ არ არის კონფიგურირებული.</string>
     <string name="msg_no_logs">ლოგები ჯერ არ არის</string>
     <string name="msg_no_memos_yet">ამ პერიოდში ჩანაწერები არ არის.</string>
