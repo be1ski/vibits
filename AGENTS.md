@@ -46,6 +46,7 @@ The project follows strict package organization to maintain clean architecture a
 
 - **`core.ui.*`** — UI layer with Compose code:
   - `core.ui.theme.*` — Theming, colors, typography
+  - `core.ui.platform.*` — UI-specific expect/actual declarations (`hoverAware`, `ConfigureSystemBars`, `rememberSystemDarkTheme`)
   - `core.ui.date.DateFormatter` — UI helpers with @Composable functions
   - Any code containing @Composable functions
   - **Excluded from coverage** (@Composable cannot be unit tested)
@@ -72,6 +73,7 @@ Within `feature/<name>/data/`:
 
 - **`data/room/`** — Room database implementations (platform-specific):
   - DAO interfaces, entities, database classes
+  - **Exception:** `MemoDatabaseConstructor` expect/actual lives here (not in `data/platform/`) because Room KMP requires `@ConstructedBy` object to be in the same package as the `@Database` class
   - Excluded from coverage (platform-specific, tested via integration tests)
 
 - **`data/platform/`** — **ONLY expect/actual declarations**:

@@ -1,4 +1,4 @@
-package space.be1ski.vibits.core.ui.theme
+package space.be1ski.vibits.core.ui.platform.theme
 
 import android.app.Activity
 import androidx.activity.ComponentActivity

@@ -61,7 +61,7 @@ import space.be1ski.vibits.core.strings.generated.title_create_day
 import space.be1ski.vibits.core.strings.generated.title_edit_day
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.date.DateFormatter
-import space.be1ski.vibits.core.ui.hoverAware
+import space.be1ski.vibits.core.ui.platform.hoverAware
 import space.be1ski.vibits.core.ui.theme.AppColors
 import space.be1ski.vibits.core.ui.theme.resolve
 import space.be1ski.vibits.core.utils.date.DAYS_IN_WEEK
