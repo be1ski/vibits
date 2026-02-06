@@ -6,62 +6,43 @@ import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.effect.HabitsEffect
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
 
-/**
- * Sub-reducer for API response handling.
- */
 internal val responseReducer: Reducer<HabitsAction.Response, HabitsState, HabitsEffect, Nothing> =
   reducer { action, state ->
     when (action) {
       is HabitsAction.Response.MemoCreated, is HabitsAction.Response.MemoUpdated -> {
-        state {
-          state.copy(
-            isLoading = false,
-            editorDay = null,
-            editorConfig = emptyList(),
-            editorSelections = emptyMap(),
-            editorExisting = null,
-            editorError = null,
-            showConfigDialog = false,
-            editingHabits = emptyList(),
-            singleToggleDay = null,
-            singleToggleHabitTag = null,
-            singleToggleHabitLabel = null,
-            singleToggleConfig = emptyList(),
-          )
-        }
+        state { state.resetAfterOperation().copy(showConfigDialog = false, editingHabits = emptyList()) }
         command(HabitsEffect.RefreshMemos)
       }
 
       is HabitsAction.Response.MemoDeleted -> {
-        state {
-          state.copy(
-            isLoading = false,
-            editorDay = null,
-            editorConfig = emptyList(),
-            editorSelections = emptyMap(),
-            editorExisting = null,
-            editorError = null,
-            showDeleteConfirm = false,
-            singleToggleDay = null,
-            singleToggleHabitTag = null,
-            singleToggleHabitLabel = null,
-            singleToggleConfig = emptyList(),
-          )
-        }
+        state { state.resetAfterOperation().copy(showDeleteConfirm = false) }
         command(HabitsEffect.RefreshMemos)
       }
 
       is HabitsAction.Response.MemoOperationFailed -> {
-        state {
-          state.copy(
-            isLoading = false,
-            editorError = action.error,
-            singleToggleDay = null,
-            singleToggleHabitTag = null,
-            singleToggleHabitLabel = null,
-            singleToggleConfig = emptyList(),
-          )
-        }
+        state { state.resetToggle().copy(isLoading = false, editorError = action.error) }
       }
     }
   }
+
+private fun HabitsState.resetAfterOperation() =
+  copy(
+    isLoading = false,
+    editorDay = null,
+    editorConfig = emptyList(),
+    editorSelections = emptyMap(),
+    editorExisting = null,
+    editorError = null,
+    singleToggleDay = null,
+    singleToggleHabitTag = null,
+    singleToggleHabitLabel = null,
+    singleToggleConfig = emptyList(),
+  )
+
+private fun HabitsState.resetToggle() =
+  copy(
+    singleToggleDay = null,
+    singleToggleHabitTag = null,
+    singleToggleHabitLabel = null,
+    singleToggleConfig = emptyList(),
+  )
