@@ -74,45 +74,10 @@ object AppColors {
       light = Color(0xFF2196F3),
       dark = Color(0xFF60A5FA),
     )
-  val habitRed =
-    ColorPair(
-      light = Color(0xFFF44336),
-      dark = Color(0xFFF87171),
-    )
-  val habitOrange =
-    ColorPair(
-      light = Color(0xFFFF9800),
-      dark = Color(0xFFFBBF24),
-    )
   val habitPurple =
     ColorPair(
       light = Color(0xFF9C27B0),
       dark = Color(0xFFC084FC),
-    )
-  val habitCyan =
-    ColorPair(
-      light = Color(0xFF00BCD4),
-      dark = Color(0xFF22D3EE),
-    )
-  val habitPink =
-    ColorPair(
-      light = Color(0xFFE91E63),
-      dark = Color(0xFFF472B6),
-    )
-  val habitBrown =
-    ColorPair(
-      light = Color(0xFF795548),
-      dark = Color(0xFFA8A29E),
-    )
-  val habitBlueGrey =
-    ColorPair(
-      light = Color(0xFF607D8B),
-      dark = Color(0xFF94A3B8),
-    )
-  val habitYellow =
-    ColorPair(
-      light = Color(0xFFFFEB3B),
-      dark = Color(0xFFFDE047),
     )
 
   // Onboarding colors

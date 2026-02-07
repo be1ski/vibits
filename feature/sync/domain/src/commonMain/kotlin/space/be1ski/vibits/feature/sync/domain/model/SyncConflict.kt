@@ -25,14 +25,3 @@ enum class ConflictType {
   /** Memo was modified on both server and locally. */
   BOTH_MODIFIED,
 }
-
-/**
- * User's choice for resolving a sync conflict.
- */
-enum class ConflictResolution {
-  /** Keep local changes and overwrite server. */
-  KEEP_LOCAL,
-
-  /** Keep server data and discard local changes. */
-  KEEP_SERVER,
-}

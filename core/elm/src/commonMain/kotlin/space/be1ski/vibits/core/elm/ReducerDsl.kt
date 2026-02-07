@@ -153,32 +153,6 @@ public class ReducerContext<State, Command, Notification> {
     notifications.add(notification)
   }
 
-  /**
-   * Emits multiple notifications to external observers.
-   *
-   * ```
-   * notifications(MyNotification.Saved, MyNotification.DialogClosed)
-   * ```
-   *
-   * @param notifications The notifications to emit
-   */
-  public fun notifications(vararg notifications: Notification) {
-    notifications(notifications.toList())
-  }
-
-  /**
-   * Emits a list of notifications to external observers.
-   *
-   * ```
-   * notifications(listOf(MyNotification.Saved, MyNotification.DialogClosed))
-   * ```
-   *
-   * @param notifications The list of notifications to emit
-   */
-  public fun notifications(notifications: List<Notification>) {
-    this.notifications.addAll(notifications)
-  }
-
   internal fun getResult(initialState: State): ReducerResult<State, Command, Notification> =
     ReducerResult(
       state = stateUpdate(initialState),
