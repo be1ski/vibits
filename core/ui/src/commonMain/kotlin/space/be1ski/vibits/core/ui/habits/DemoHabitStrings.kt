@@ -11,18 +11,19 @@ import space.be1ski.vibits.core.strings.generated.demo_habit_no_sugar
 import space.be1ski.vibits.core.strings.generated.demo_habit_reading
 import space.be1ski.vibits.core.strings.generated.demo_habit_walking
 import space.be1ski.vibits.core.strings.generated.demo_habit_water
+import space.be1ski.vibits.core.utils.habits.DemoHabitStringKeys
 
 @Composable
 fun localizedDemoHabitName(nameKey: String): String =
   when (nameKey) {
-    "demo_habit_exercise" -> stringResource(Res.string.demo_habit_exercise)
-    "demo_habit_water" -> stringResource(Res.string.demo_habit_water)
-    "demo_habit_reading" -> stringResource(Res.string.demo_habit_reading)
-    "demo_habit_meditation" -> stringResource(Res.string.demo_habit_meditation)
-    "demo_habit_walking" -> stringResource(Res.string.demo_habit_walking)
-    "demo_habit_learning" -> stringResource(Res.string.demo_habit_learning)
-    "demo_habit_no_sugar" -> stringResource(Res.string.demo_habit_no_sugar)
-    "demo_habit_early_sleep" -> stringResource(Res.string.demo_habit_early_sleep)
+    DemoHabitStringKeys.EXERCISE -> stringResource(Res.string.demo_habit_exercise)
+    DemoHabitStringKeys.WATER -> stringResource(Res.string.demo_habit_water)
+    DemoHabitStringKeys.READING -> stringResource(Res.string.demo_habit_reading)
+    DemoHabitStringKeys.MEDITATION -> stringResource(Res.string.demo_habit_meditation)
+    DemoHabitStringKeys.WALKING -> stringResource(Res.string.demo_habit_walking)
+    DemoHabitStringKeys.LEARNING -> stringResource(Res.string.demo_habit_learning)
+    DemoHabitStringKeys.NO_SUGAR -> stringResource(Res.string.demo_habit_no_sugar)
+    DemoHabitStringKeys.EARLY_SLEEP -> stringResource(Res.string.demo_habit_early_sleep)
     else -> nameKey
   }
 

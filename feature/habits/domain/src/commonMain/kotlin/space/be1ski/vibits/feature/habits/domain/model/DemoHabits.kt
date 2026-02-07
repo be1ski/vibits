@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.habits.domain.model
 
+import space.be1ski.vibits.core.utils.habits.DemoHabitStringKeys
 import space.be1ski.vibits.feature.memos.domain.model.PostTags
 
 /**
@@ -26,20 +27,6 @@ object DemoHabits {
       "${PostTags.HABITS_PREFIX}$NO_SUGAR",
       "${PostTags.HABITS_PREFIX}$EARLY_SLEEP",
     )
-}
-
-/**
- * String resource keys for demo habits.
- */
-object DemoHabitStringKeys {
-  const val EXERCISE = "demo_habit_exercise"
-  const val READING = "demo_habit_reading"
-  const val MEDITATION = "demo_habit_meditation"
-  const val WATER = "demo_habit_water"
-  const val LEARNING = "demo_habit_learning"
-  const val WALKING = "demo_habit_walking"
-  const val NO_SUGAR = "demo_habit_no_sugar"
-  const val EARLY_SLEEP = "demo_habit_early_sleep"
 }
 
 /**
