@@ -1,4 +1,7 @@
 package space.be1ski.vibits.feature.habits.presentation.view.components
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -14,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,11 +32,14 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
 
 private val WEEKLY_BAR_MAX_HEIGHT = 72.dp
 private val WEEKLY_BAR_MIN_HEIGHT = 4.dp
+private const val BAR_HEIGHT_ANIMATION_MS = 320
+private const val BAR_COLOR_ANIMATION_MS = 180
 
 /**
  * Tooltip payload for a selected week.
@@ -105,6 +112,7 @@ private fun WeeklyBarChartBars(
             maxCount = state.weekData.maxWeekly,
             width = layout.columnSize,
             isSelected = state.selectedWeek?.startDate == week.startDate,
+            weekStart = week.startDate,
             onClick = { offset ->
               onWeekSelected(week)
               onTooltipChange(WeekTooltip(week, offset))
@@ -151,17 +159,33 @@ private fun WeeklyBar(
   maxCount: Int,
   width: Dp,
   isSelected: Boolean,
+  weekStart: LocalDate,
   onClick: (IntOffset) -> Unit,
 ) {
   var coordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
   val maxHeight = WEEKLY_BAR_MAX_HEIGHT
-  val height =
+  val targetHeight =
     if (maxCount <= 0) {
       WEEKLY_BAR_MIN_HEIGHT
     } else {
       (maxHeight.value * (count.toFloat() / maxCount.toFloat())).dp
     }
-  val color = if (isSelected) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.outlineVariant
+  var animateIn by remember(weekStart) { mutableStateOf(false) }
+  LaunchedEffect(weekStart) { animateIn = true }
+  val height by animateDpAsState(
+    targetValue = if (animateIn) targetHeight else WEEKLY_BAR_MIN_HEIGHT,
+    animationSpec = tween(durationMillis = BAR_HEIGHT_ANIMATION_MS),
+  )
+  val targetColor =
+    if (isSelected) {
+      MaterialTheme.colorScheme.outline
+    } else {
+      MaterialTheme.colorScheme.outlineVariant
+    }
+  val color by animateColorAsState(
+    targetValue = targetColor,
+    animationSpec = tween(durationMillis = BAR_COLOR_ANIMATION_MS),
+  )
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Bottom,

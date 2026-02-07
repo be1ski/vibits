@@ -1,6 +1,13 @@
 @file:Suppress("TooManyFunctions")
 
 package space.be1ski.vibits.feature.habits.presentation.view
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +35,7 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -392,7 +400,15 @@ internal fun StatsCollapsiblePosts(
         },
       )
     }
-    if (expanded) {
+    AnimatedVisibility(
+      visible = expanded,
+      enter =
+        fadeIn(animationSpec = tween(durationMillis = POSTS_LIST_ANIMATION_MS)) +
+          expandVertically(animationSpec = tween(durationMillis = POSTS_LIST_ANIMATION_MS)),
+      exit =
+        fadeOut(animationSpec = tween(durationMillis = POSTS_LIST_ANIMATION_MS)) +
+          shrinkVertically(animationSpec = tween(durationMillis = POSTS_LIST_ANIMATION_MS)),
+    ) {
       Column(
         modifier =
           Modifier
@@ -415,6 +431,8 @@ internal fun StatsCollapsiblePosts(
 
 private val POSTS_LIST_MAX_HEIGHT = 200.dp
 private const val DIVIDER_ALPHA = 0.5f
+private const val DISABLED_CELL_ALPHA = 0.3f
+private const val POSTS_LIST_ANIMATION_MS = 200
 
 @Composable
 private fun CompactPostRow(
@@ -451,6 +469,7 @@ private fun CompactPostRow(
 }
 
 private const val COMPACT_POST_MAX_LENGTH = 50
+private const val MATRIX_CELL_FILL_MS = 220
 
 @Suppress("LongMethod")
 @Composable
@@ -715,14 +734,18 @@ private fun LastSevenDaysMatrix(
           )
           days.forEach { day ->
             val done = day.habitStatuses.firstOrNull { status -> status.tag == habit.tag }?.done == true
-            val baseColor =
+            val alpha = if (!day.isClickable) DISABLED_CELL_ALPHA else 1f
+            val targetColor =
               if (done) {
                 androidx.compose.ui.graphics
                   .Color(habit.color.argb)
               } else {
                 pendingColor
               }
-            val cellColor = if (!day.isClickable) baseColor.copy(alpha = 0.3f) else baseColor
+            val cellColor by animateColorAsState(
+              targetValue = targetColor.copy(alpha = alpha),
+              animationSpec = tween(durationMillis = MATRIX_CELL_FILL_MS),
+            )
             Box(
               modifier =
                 Modifier
