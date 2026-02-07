@@ -29,13 +29,3 @@ tasks.register("checkAll") {
   description = "Runs all checks including iOS (requires macOS)"
   dependsOn("checkJvm", "checkIos")
 }
-
-tasks.register<Copy>("installGitHooks") {
-  group = "setup"
-  description = "Installs git pre-commit hook"
-  from("scripts/pre-commit")
-  into(".git/hooks")
-  filePermissions {
-    unix("rwxr-xr-x")
-  }
-}
