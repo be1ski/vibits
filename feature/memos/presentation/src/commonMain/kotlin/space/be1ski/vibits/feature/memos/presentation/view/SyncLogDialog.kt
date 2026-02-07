@@ -26,8 +26,11 @@ import space.be1ski.vibits.feature.sync.domain.SyncLogTags
  * Filters the app logs to show only sync-related entries.
  */
 @Composable
-fun SyncLogDialog(onDismiss: () -> Unit) {
-  var syncLogs by remember { mutableStateOf(filterSyncLogs(Log.logs)) }
+fun SyncLogDialog(
+  onDismiss: () -> Unit,
+  initialLogs: List<LogEntry> = filterSyncLogs(Log.logs),
+) {
+  var syncLogs by remember { mutableStateOf(initialLogs) }
 
   AlertDialog(
     onDismissRequest = onDismiss,
@@ -57,4 +60,4 @@ fun SyncLogDialog(onDismiss: () -> Unit) {
   )
 }
 
-private fun filterSyncLogs(logs: List<LogEntry>): List<LogEntry> = logs.filter { entry -> entry.tag in SyncLogTags.allTags }
+internal fun filterSyncLogs(logs: List<LogEntry>): List<LogEntry> = logs.filter { entry -> entry.tag in SyncLogTags.allTags }

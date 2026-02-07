@@ -29,7 +29,7 @@ class ModeSelectionScreenshotTest {
       setThemedContent { ModeSelectionScreen(createFeature()) }
 
       onNodeWithTag(ModeSelectionTestTags.ONLINE_CARD).assertIsDisplayed()
-      saveScreenshot("mode", "ModeSelectionScreenshotTest", "mode_selection_default")
+      saveScreenshot("mode_selection_default")
     }
 
   @Test
@@ -38,7 +38,7 @@ class ModeSelectionScreenshotTest {
       setThemedContent { ModeSelectionScreen(createFeature(ModeSelectionState(showQuickOnlineDialog = true))) }
 
       onNodeWithTag(ModeSelectionTestTags.QUICK_ONLINE_DIALOG).assertIsDisplayed()
-      saveScreenshot("mode", "ModeSelectionScreenshotTest", "mode_selection_quick_online_dialog")
+      saveScreenshot("mode_selection_quick_online_dialog")
     }
 
   @Test
@@ -47,7 +47,7 @@ class ModeSelectionScreenshotTest {
       setThemedContent { ModeSelectionScreen(createFeature(ModeSelectionState(showCredentialsDialog = true))) }
 
       onNodeWithTag(ModeSelectionTestTags.CREDENTIALS_DIALOG).assertIsDisplayed()
-      saveScreenshot("mode", "ModeSelectionScreenshotTest", "mode_selection_credentials_dialog")
+      saveScreenshot("mode_selection_credentials_dialog")
     }
 
   @Test
@@ -63,6 +63,6 @@ class ModeSelectionScreenshotTest {
       setThemedContent { ModeSelectionScreen(feature) }
 
       onNodeWithTag(ModeSelectionTestTags.CREDENTIALS_DIALOG).assertIsDisplayed()
-      saveScreenshot("mode", "ModeSelectionScreenshotTest", "mode_selection_credentials_error")
+      saveScreenshot("mode_selection_credentials_error")
     }
 }
