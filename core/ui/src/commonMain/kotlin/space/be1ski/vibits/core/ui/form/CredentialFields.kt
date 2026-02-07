@@ -1,6 +1,5 @@
 package space.be1ski.vibits.core.ui.form
 
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -16,7 +15,7 @@ import space.be1ski.vibits.core.strings.generated.msg_connection_failed
 import space.be1ski.vibits.core.strings.generated.msg_fill_all_fields
 
 @Composable
-fun ColumnScope.CredentialFields(
+fun CredentialFields(
   baseUrl: String,
   token: String,
   onBaseUrlChange: (String) -> Unit,

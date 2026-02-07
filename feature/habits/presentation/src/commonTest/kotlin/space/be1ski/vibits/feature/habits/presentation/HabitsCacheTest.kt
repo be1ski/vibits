@@ -69,7 +69,7 @@ class HabitsCacheTest {
 
     // When: manually invalidate for week 2
     val memos = emptyList<space.be1ski.vibits.feature.memos.domain.model.Memo>()
-    val (newState, effects) =
+    val (newState, _) =
       reducer.invoke(
         HabitsAction.Cache.InvalidateCache(
           range = week2Range,

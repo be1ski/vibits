@@ -13,7 +13,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
-private val TAG = SyncLogTags.SYNC_OPERATION_APPLIER
+private const val TAG = SyncLogTags.SYNC_OPERATION_APPLIER
 
 private const val DEFAULT_MAX_RETRIES = 3
 private val DEFAULT_INITIAL_DELAY = 500.milliseconds

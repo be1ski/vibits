@@ -69,7 +69,7 @@ class SyncModelsTest {
     val after =
       kotlin.time.Clock.System
         .now()
-    assertTrue(operation.createdAt >= before && operation.createdAt <= after)
+    assertTrue(operation.createdAt in before..after)
   }
 
   @Test

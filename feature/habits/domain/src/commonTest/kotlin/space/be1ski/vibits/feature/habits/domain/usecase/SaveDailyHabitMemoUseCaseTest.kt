@@ -122,7 +122,6 @@ class SaveDailyHabitMemoUseCaseTest {
   @Test
   fun `when concurrent calls for same date then does not create duplicates`() =
     runTest {
-      val createdMemo = Memo(name = "memos/1", content = "#habits/daily 2026-01-30\n\nexercise")
       val repository = StatefulFakeMemosRepository()
       val useCase = SaveDailyHabitMemoUseCase(repository)
 

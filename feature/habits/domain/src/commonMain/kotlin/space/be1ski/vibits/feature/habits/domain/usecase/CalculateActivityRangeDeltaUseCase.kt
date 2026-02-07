@@ -7,7 +7,7 @@ import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 
 /**
  * Calculates the number of periods between two activity ranges.
- * Returns positive if [to] is after [from], negative otherwise.
+ * Returns positive if `to` is after `from`, negative otherwise.
  */
 object CalculateActivityRangeDeltaUseCase {
   operator fun invoke(

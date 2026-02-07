@@ -18,7 +18,7 @@ import space.be1ski.vibits.feature.sync.domain.model.SyncResult
 import space.be1ski.vibits.feature.sync.domain.repository.SyncQueueRepository
 import space.be1ski.vibits.feature.sync.domain.usecase.DetectSyncConflictsUseCase
 
-private val TAG = SyncLogTags.SYNC_ENGINE
+private const val TAG = SyncLogTags.SYNC_ENGINE
 private const val LOG_CONTENT_PREVIEW_LENGTH = 50
 
 @Inject
