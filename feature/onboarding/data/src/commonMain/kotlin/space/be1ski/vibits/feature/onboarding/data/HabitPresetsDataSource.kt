@@ -3,7 +3,7 @@ package space.be1ski.vibits.feature.onboarding.data
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.core.platform.di.AppScope
-import space.be1ski.vibits.feature.habits.domain.model.DemoHabitStringKeys
+import space.be1ski.vibits.core.utils.habits.DemoHabitStringKeys
 import space.be1ski.vibits.feature.habits.domain.model.DemoHabits
 import space.be1ski.vibits.feature.onboarding.domain.model.CUSTOM_PRESET_ID
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
