@@ -36,11 +36,7 @@ fun ComposeUiTest.setThemedContent(content: @Composable () -> Unit) {
 }
 
 @OptIn(ExperimentalTestApi::class)
-fun ComposeUiTest.saveScreenshot(
-  feature: String,
-  testClass: String,
-  scenario: String,
-) {
+fun ComposeUiTest.saveScreenshot(scenario: String) {
   waitForIdle()
   val roots = onAllNodes(isRoot())
   val firstImage = roots[0].captureToImage().toAwtImage()
@@ -53,6 +49,6 @@ fun ComposeUiTest.saveScreenshot(
     g.drawImage(layerImage, 0, 0, null)
   }
   g.dispose()
-  val dir = File("build/ui-screenshots/$feature/$testClass").also { it.mkdirs() }
+  val dir = File("build/ui-screenshots").also { it.mkdirs() }
   ImageIO.write(composite, "png", File(dir, "$scenario.png"))
 }

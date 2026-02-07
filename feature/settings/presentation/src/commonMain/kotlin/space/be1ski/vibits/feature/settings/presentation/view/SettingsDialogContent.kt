@@ -114,6 +114,7 @@ import space.be1ski.vibits.core.ui.SegmentedSelector
 import space.be1ski.vibits.core.ui.form.CredentialFields
 import space.be1ski.vibits.core.ui.form.credentialValidationErrorMessage
 import space.be1ski.vibits.core.utils.logging.Log
+import space.be1ski.vibits.core.utils.logging.LogEntry
 import space.be1ski.vibits.feature.memos.domain.model.ExportResult
 import space.be1ski.vibits.feature.memos.domain.repository.ExportService
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
@@ -125,6 +126,7 @@ fun SettingsDialog(
   state: SettingsState,
   dispatch: (SettingsAction) -> Unit,
   exportService: ExportService,
+  testLogs: List<LogEntry>? = null,
 ) {
   if (!state.isOpen) {
     return
@@ -141,7 +143,10 @@ fun SettingsDialog(
   )
 
   if (state.showLogsDialog) {
-    LogsDialog(onDismiss = { dispatch(SettingsAction.SaveAndLogs.CloseLogs) })
+    LogsDialog(
+      onDismiss = { dispatch(SettingsAction.SaveAndLogs.CloseLogs) },
+      initialLogs = testLogs ?: Log.logs,
+    )
   }
 
   if (state.showResetConfirmation) {
@@ -620,8 +625,11 @@ private fun ResetOptionsDialog(
 }
 
 @Composable
-private fun LogsDialog(onDismiss: () -> Unit) {
-  var logs by remember { mutableStateOf(Log.logs) }
+private fun LogsDialog(
+  onDismiss: () -> Unit,
+  initialLogs: List<LogEntry> = Log.logs,
+) {
+  var logs by remember { mutableStateOf(initialLogs) }
 
   AlertDialog(
     onDismissRequest = onDismiss,

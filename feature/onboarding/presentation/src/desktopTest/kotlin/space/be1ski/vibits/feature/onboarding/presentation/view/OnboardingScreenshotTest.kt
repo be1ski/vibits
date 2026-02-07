@@ -27,7 +27,7 @@ class OnboardingScreenshotTest {
       }
 
       onNodeWithTag(OnboardingTestTags.WELCOME_SCREEN).assertIsDisplayed()
-      saveScreenshot("onboarding", "OnboardingScreenshotTest", "onboarding_welcome")
+      saveScreenshot("onboarding_welcome")
     }
 
   @Test
@@ -46,7 +46,7 @@ class OnboardingScreenshotTest {
       }
 
       onNodeWithTag(OnboardingTestTags.CHOOSE_PRESET_SCREEN).assertIsDisplayed()
-      saveScreenshot("onboarding", "OnboardingScreenshotTest", "onboarding_choose_preset")
+      saveScreenshot("onboarding_choose_preset")
     }
 
   @Test
@@ -66,7 +66,7 @@ class OnboardingScreenshotTest {
       }
 
       onNodeWithTag(OnboardingTestTags.HABIT_SETUP_SCREEN).assertIsDisplayed()
-      saveScreenshot("onboarding", "OnboardingScreenshotTest", "onboarding_habit_setup")
+      saveScreenshot("onboarding_habit_setup")
     }
 
   @Test
@@ -87,7 +87,7 @@ class OnboardingScreenshotTest {
       }
 
       onNodeWithTag(OnboardingTestTags.HABIT_SETUP_SCREEN).assertIsDisplayed()
-      saveScreenshot("onboarding", "OnboardingScreenshotTest", "onboarding_habit_setup_error")
+      saveScreenshot("onboarding_habit_setup_error")
     }
 
   @Test
@@ -101,6 +101,6 @@ class OnboardingScreenshotTest {
       }
 
       onNodeWithTag(OnboardingTestTags.SUCCESS_SCREEN).assertIsDisplayed()
-      saveScreenshot("onboarding", "OnboardingScreenshotTest", "onboarding_success")
+      saveScreenshot("onboarding_success")
     }
 }

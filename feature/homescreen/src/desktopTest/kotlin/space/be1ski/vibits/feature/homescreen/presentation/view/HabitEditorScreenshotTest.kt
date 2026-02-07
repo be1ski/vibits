@@ -54,6 +54,6 @@ class HabitEditorScreenshotTest {
       }
 
       onNodeWithTag(AppShellTestTags.HABIT_EDITOR_DIALOG).assertIsDisplayed()
-      saveScreenshot("habits", "HabitEditorScreenshotTest", "habit_editor_dialog")
+      saveScreenshot("habit_editor_dialog")
     }
 }
