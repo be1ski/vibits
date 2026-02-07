@@ -166,7 +166,7 @@ private fun SettingsDialogBody(
     )
     state.validationError?.let { error ->
       Text(
-        credentialValidationErrorMessage(error.name),
+        credentialValidationErrorMessage(error),
         color = MaterialTheme.colorScheme.error,
         style = MaterialTheme.typography.bodySmall,
       )

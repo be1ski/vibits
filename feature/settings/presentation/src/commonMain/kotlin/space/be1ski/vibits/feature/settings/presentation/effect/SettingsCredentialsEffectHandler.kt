@@ -3,8 +3,8 @@ package space.be1ski.vibits.feature.settings.presentation.effect
 import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.core.elm.EffectHandler
 import space.be1ski.vibits.core.elm.actions
+import space.be1ski.vibits.core.ui.form.CredentialValidationError
 import space.be1ski.vibits.core.utils.logging.Log
-import space.be1ski.vibits.feature.auth.domain.model.CredentialValidationError
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.vibits.feature.memos.domain.repository.ConnectionTester

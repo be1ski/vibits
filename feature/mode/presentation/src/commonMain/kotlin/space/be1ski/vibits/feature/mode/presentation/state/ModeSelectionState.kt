@@ -1,6 +1,6 @@
 package space.be1ski.vibits.feature.mode.presentation.state
 
-import space.be1ski.vibits.feature.auth.domain.model.CredentialValidationError
+import space.be1ski.vibits.core.ui.form.CredentialValidationError
 
 data class ModeSelectionState(
   val showCredentialsDialog: Boolean = false,

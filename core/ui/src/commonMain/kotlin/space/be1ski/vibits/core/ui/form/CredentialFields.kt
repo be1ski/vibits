@@ -44,9 +44,8 @@ fun ColumnScope.CredentialFields(
 }
 
 @Composable
-fun credentialValidationErrorMessage(errorName: String): String =
-  when (errorName) {
-    "FILL_ALL_FIELDS" -> stringResource(Res.string.msg_fill_all_fields)
-    "CONNECTION_FAILED" -> stringResource(Res.string.msg_connection_failed)
-    else -> errorName
+fun credentialValidationErrorMessage(error: CredentialValidationError): String =
+  when (error) {
+    CredentialValidationError.FILL_ALL_FIELDS -> stringResource(Res.string.msg_fill_all_fields)
+    CredentialValidationError.CONNECTION_FAILED -> stringResource(Res.string.msg_connection_failed)
   }
