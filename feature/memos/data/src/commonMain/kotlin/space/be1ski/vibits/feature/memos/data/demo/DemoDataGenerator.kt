@@ -6,10 +6,10 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
-import space.be1ski.vibits.core.ui.theme.HabitColors
 import space.be1ski.vibits.feature.habits.domain.formatHexColor
 import space.be1ski.vibits.feature.habits.domain.labelFromTag
 import space.be1ski.vibits.feature.habits.domain.model.DemoHabits
+import space.be1ski.vibits.feature.habits.domain.model.HabitColors
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.model.PostTags
 import kotlin.random.Random

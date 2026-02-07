@@ -1,6 +1,6 @@
 @file:Suppress("MagicNumber")
 
-package space.be1ski.vibits.core.ui.theme
+package space.be1ski.vibits.feature.habits.domain.model
 
 val HabitColors =
   listOf(
@@ -15,3 +15,5 @@ val HabitColors =
     0xFF607D8BL, // Blue Grey
     0xFFFFEB3BL, // Yellow
   )
+
+val DefaultHabitColor: Long = HabitColors.first()

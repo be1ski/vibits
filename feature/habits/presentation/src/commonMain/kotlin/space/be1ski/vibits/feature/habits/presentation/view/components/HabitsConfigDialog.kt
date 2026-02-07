@@ -43,7 +43,7 @@ import space.be1ski.vibits.core.strings.generated.label_habits_config
 import space.be1ski.vibits.core.strings.generated.msg_delete_config_warning
 import space.be1ski.vibits.core.strings.generated.title_delete_config
 import space.be1ski.vibits.core.ui.Indent
-import space.be1ski.vibits.core.ui.theme.HabitColors
+import space.be1ski.vibits.feature.habits.domain.model.HabitColors
 import space.be1ski.vibits.feature.habits.domain.model.isDemoHabit
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.state.EditableHabit

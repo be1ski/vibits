@@ -4,7 +4,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import space.be1ski.vibits.feature.habits.domain.model.DEFAULT_HABIT_COLOR
+import space.be1ski.vibits.feature.habits.domain.model.DefaultHabitColor
 import space.be1ski.vibits.feature.memos.data.test.FakeOfflineMemoStorage
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.test.FakeMemosRepository
@@ -54,7 +54,7 @@ class OnboardingEffectHandlerTest {
           OnboardingEffect.Command.CreateFirstHabit(
             name = "Morning Exercise",
             presetId = "custom",
-            color = DEFAULT_HABIT_COLOR,
+            color = DefaultHabitColor,
           ),
         ).toList()
 
@@ -75,7 +75,7 @@ class OnboardingEffectHandlerTest {
           OnboardingEffect.Command.CreateFirstHabit(
             name = "Exercise",
             presetId = "custom",
-            color = DEFAULT_HABIT_COLOR,
+            color = DefaultHabitColor,
           ),
         ).toList()
 
@@ -99,7 +99,7 @@ class OnboardingEffectHandlerTest {
           OnboardingEffect.Command.CreateFirstHabit(
             name = "Exercise",
             presetId = "custom",
-            color = DEFAULT_HABIT_COLOR,
+            color = DefaultHabitColor,
           ),
         ).toList()
 

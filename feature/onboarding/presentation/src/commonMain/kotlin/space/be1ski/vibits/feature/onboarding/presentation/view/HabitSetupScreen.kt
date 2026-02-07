@@ -45,8 +45,8 @@ import space.be1ski.vibits.core.strings.generated.msg_habit_setup
 import space.be1ski.vibits.core.strings.generated.title_habit_setup
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.theme.AppColors
-import space.be1ski.vibits.core.ui.theme.HabitColors
 import space.be1ski.vibits.core.ui.theme.resolve
+import space.be1ski.vibits.feature.habits.domain.model.HabitColors
 import space.be1ski.vibits.feature.habits.presentation.view.components.localizedDemoHabitName
 import space.be1ski.vibits.feature.onboarding.domain.model.CUSTOM_PRESET_ID
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
