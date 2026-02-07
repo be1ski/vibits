@@ -6,7 +6,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
-import space.be1ski.vibits.core.utils.habits.DemoHabitIds
+import space.be1ski.vibits.core.utils.habits.DemoHabit
 import space.be1ski.vibits.feature.habits.domain.formatHexColor
 import space.be1ski.vibits.feature.habits.domain.labelFromTag
 import space.be1ski.vibits.feature.habits.domain.model.HabitColor
@@ -16,31 +16,25 @@ import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.Instant
 
-/**
- * Demo habit configuration with completion probability.
- */
-internal data class DemoHabit(
+internal data class DemoHabitSpec(
   val tag: String,
   val color: String,
   val baseCompletionRate: Float,
   val weekendModifier: Float = 1.0f,
 )
 
-/**
- * Generates mock memos for demo mode with realistic habit data.
- */
 @Suppress("MagicNumber")
 internal object DemoDataGenerator {
   private val demoHabits =
     listOf(
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.EXERCISE}", formatHexColor(HabitColor(0xFF4CAF50L)), 0.85f, 0.7f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.READING}", formatHexColor(HabitColor(0xFFFF9800L)), 0.70f, 1.1f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.MEDITATION}", formatHexColor(HabitColor(0xFF9C27B0L)), 0.60f, 1.0f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.WATER}", formatHexColor(HabitColor(0xFF00BCD4L)), 0.90f, 0.95f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.LEARNING}", formatHexColor(HabitColor(0xFFE91E63L)), 0.50f, 0.6f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.WALKING}", formatHexColor(HabitColor(0xFF607D8BL)), 0.65f, 1.2f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.NO_SUGAR}", formatHexColor(HabitColor(0xFFF44336L)), 0.45f, 0.8f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.EARLY_SLEEP}", formatHexColor(HabitColor(0xFF2196F3L)), 0.55f, 0.7f),
+      DemoHabitSpec("${PostTags.HABITS_PREFIX}${DemoHabit.EXERCISE.id}", formatHexColor(HabitColor(0xFF4CAF50L)), 0.85f, 0.7f),
+      DemoHabitSpec("${PostTags.HABITS_PREFIX}${DemoHabit.READING.id}", formatHexColor(HabitColor(0xFFFF9800L)), 0.70f, 1.1f),
+      DemoHabitSpec("${PostTags.HABITS_PREFIX}${DemoHabit.MEDITATION.id}", formatHexColor(HabitColor(0xFF9C27B0L)), 0.60f, 1.0f),
+      DemoHabitSpec("${PostTags.HABITS_PREFIX}${DemoHabit.WATER.id}", formatHexColor(HabitColor(0xFF00BCD4L)), 0.90f, 0.95f),
+      DemoHabitSpec("${PostTags.HABITS_PREFIX}${DemoHabit.LEARNING.id}", formatHexColor(HabitColor(0xFFE91E63L)), 0.50f, 0.6f),
+      DemoHabitSpec("${PostTags.HABITS_PREFIX}${DemoHabit.WALKING.id}", formatHexColor(HabitColor(0xFF607D8BL)), 0.65f, 1.2f),
+      DemoHabitSpec("${PostTags.HABITS_PREFIX}${DemoHabit.NO_SUGAR.id}", formatHexColor(HabitColor(0xFFF44336L)), 0.45f, 0.8f),
+      DemoHabitSpec("${PostTags.HABITS_PREFIX}${DemoHabit.EARLY_SLEEP.id}", formatHexColor(HabitColor(0xFF2196F3L)), 0.55f, 0.7f),
     )
 
   private const val MONTHS_OF_HISTORY = 18
@@ -53,9 +47,6 @@ internal object DemoDataGenerator {
   private const val POST_GENERATION_CHANCE = 0.15f
   private val DAILY_HOURS = listOf(7, 9, 12, 14, 18, 21, 23)
 
-  /**
-   * Generates all demo memos including config and daily memos.
-   */
   fun generateDemoMemos(): List<Memo> {
     val memos = mutableListOf<Memo>()
     val now = Clock.System.now()
@@ -114,7 +105,7 @@ internal object DemoDataGenerator {
 
   private fun createDailyMemo(
     date: LocalDate,
-    completedHabits: List<DemoHabit>,
+    completedHabits: List<DemoHabitSpec>,
     createTime: Instant,
   ): Memo {
     val content =
@@ -136,7 +127,7 @@ internal object DemoDataGenerator {
   private fun selectCompletedHabits(
     date: LocalDate,
     random: Random,
-  ): List<DemoHabit> {
+  ): List<DemoHabitSpec> {
     val isWeekend = date.dayOfWeek == DayOfWeek.SATURDAY || date.dayOfWeek == DayOfWeek.SUNDAY
     return demoHabits.filter { habit ->
       val rate =

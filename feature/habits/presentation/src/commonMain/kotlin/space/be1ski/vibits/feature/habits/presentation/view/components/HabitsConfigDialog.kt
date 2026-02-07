@@ -45,7 +45,7 @@ import space.be1ski.vibits.core.strings.generated.title_delete_config
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.theme.ColorPalette
 import space.be1ski.vibits.feature.habits.domain.model.HabitColor
-import space.be1ski.vibits.feature.habits.domain.model.isDemoHabit
+import space.be1ski.vibits.feature.habits.domain.model.demoHabit
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.state.EditableHabit
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
@@ -163,7 +163,7 @@ private fun HabitConfigItem(
   onDelete: () -> Unit,
 ) {
   val habitConfig = habit.toHabitConfig()
-  val isDemoHabit = demoMode && habitConfig.isDemoHabit()
+  val isDemoHabit = demoMode && habitConfig.demoHabit() != null
 
   OutlinedCard(modifier = Modifier.fillMaxWidth()) {
     Column(
@@ -202,7 +202,7 @@ private fun HabitLabelEditor(
   onDelete: () -> Unit,
 ) {
   val habitConfig = habit.toHabitConfig()
-  val isDemoHabit = demoMode && habitConfig.isDemoHabit()
+  val isDemoHabit = demoMode && habitConfig.demoHabit() != null
   val displayLabel = if (isDemoHabit) habitConfig.localizedLabel(demoMode) else habit.label
 
   Row(
