@@ -25,12 +25,16 @@ import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.feature.memos.data.ConnectionTesterImpl
 import space.be1ski.vibits.feature.memos.data.MemoStorageManagerImpl
 import space.be1ski.vibits.feature.memos.data.ModeAwareMemosRepository
-import space.be1ski.vibits.feature.memos.data.platform.MemoCache
+import space.be1ski.vibits.feature.memos.data.export.ExportServiceImpl
 import space.be1ski.vibits.feature.memos.data.platform.OfflineMemoStorage
 import space.be1ski.vibits.feature.memos.data.platform.createMemoCache
 import space.be1ski.vibits.feature.memos.data.platform.createOfflineMemoStorage
+import space.be1ski.vibits.feature.memos.data.remote.MemosRemoteSourceImpl
 import space.be1ski.vibits.feature.memos.domain.repository.ConnectionTester
+import space.be1ski.vibits.feature.memos.domain.repository.ExportService
+import space.be1ski.vibits.feature.memos.domain.repository.MemoCache
 import space.be1ski.vibits.feature.memos.domain.repository.MemoStorageManager
+import space.be1ski.vibits.feature.memos.domain.repository.MemosRemoteSource
 import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.feature.mode.data.AppModeRepositoryImpl
 import space.be1ski.vibits.feature.mode.data.platform.AppModeStore
@@ -139,10 +143,16 @@ abstract class AppGraph {
   abstract fun bindConnectionTester(impl: ConnectionTesterImpl): ConnectionTester
 
   @Binds
+  abstract fun bindExportService(impl: ExportServiceImpl): ExportService
+
+  @Binds
   abstract fun bindCredentialsRepository(impl: CredentialsRepositoryImpl): CredentialsRepository
 
   @Binds
   abstract fun bindMemoStorageManager(impl: MemoStorageManagerImpl): MemoStorageManager
+
+  @Binds
+  abstract fun bindMemosRemoteSource(impl: MemosRemoteSourceImpl): MemosRemoteSource
 
   @Binds
   abstract fun bindMemosRepository(impl: ModeAwareMemosRepository): MemosRepository

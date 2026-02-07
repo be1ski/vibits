@@ -43,7 +43,8 @@ import space.be1ski.vibits.core.strings.generated.label_habits_config
 import space.be1ski.vibits.core.strings.generated.msg_delete_config_warning
 import space.be1ski.vibits.core.strings.generated.title_delete_config
 import space.be1ski.vibits.core.ui.Indent
-import space.be1ski.vibits.core.ui.theme.HabitColors
+import space.be1ski.vibits.core.ui.theme.ColorPalette
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.habits.domain.model.isDemoHabit
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.state.EditableHabit
@@ -158,7 +159,7 @@ private fun HabitConfigItem(
   habit: EditableHabit,
   demoMode: Boolean,
   onLabelChange: (String) -> Unit,
-  onColorChange: (Long) -> Unit,
+  onColorChange: (HabitColor) -> Unit,
   onDelete: () -> Unit,
 ) {
   val habitConfig = habit.toHabitConfig()
@@ -180,7 +181,8 @@ private fun HabitConfigItem(
         horizontalArrangement = Arrangement.spacedBy(Indent.xs),
         verticalArrangement = Arrangement.spacedBy(Indent.xs),
       ) {
-        HabitColors.forEach { color ->
+        ColorPalette.forEach { colorLong ->
+          val color = HabitColor(colorLong)
           ColorCircle(
             color = color,
             isSelected = habit.color == color,
@@ -212,7 +214,7 @@ private fun HabitLabelEditor(
         Modifier
           .size(COLOR_CIRCLE_SIZE)
           .clip(CircleShape)
-          .background(Color(habit.color)),
+          .background(Color(habit.color.argb)),
     )
     TextField(
       value = displayLabel,
@@ -234,7 +236,7 @@ private fun HabitLabelEditor(
 
 @Composable
 private fun ColorCircle(
-  color: Long,
+  color: HabitColor,
   isSelected: Boolean,
   onClick: () -> Unit,
 ) {
@@ -250,7 +252,7 @@ private fun ColorCircle(
       Modifier
         .size(COLOR_CIRCLE_SIZE)
         .clip(CircleShape)
-        .background(Color(color))
+        .background(Color(color.argb))
         .border(SELECTED_BORDER_WIDTH, borderColor, CircleShape)
         .clickable(onClick = onClick),
   )

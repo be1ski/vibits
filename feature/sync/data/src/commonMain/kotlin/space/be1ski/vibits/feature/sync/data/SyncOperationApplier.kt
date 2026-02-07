@@ -2,8 +2,7 @@ package space.be1ski.vibits.feature.sync.data
 
 import kotlinx.coroutines.delay
 import space.be1ski.vibits.core.utils.logging.Log
-import space.be1ski.vibits.feature.memos.data.mapper.MemoMapper
-import space.be1ski.vibits.feature.memos.data.remote.MemosApi
+import space.be1ski.vibits.feature.memos.domain.repository.MemosRemoteSource
 import space.be1ski.vibits.feature.sync.domain.SyncLogTags
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperation
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperationStatus
@@ -33,24 +32,16 @@ data class RetryConfig(
  * Applies sync operations to the server with automatic retry and exponential backoff.
  */
 internal class SyncOperationApplier(
-  private val memosApi: MemosApi,
+  private val memosRemoteSource: MemosRemoteSource,
   private val syncQueue: SyncQueueRepository,
   private val offlineFirstRepository: OfflineFirstMemosRepository,
   private val retryConfig: RetryConfig = RetryConfig(),
 ) {
-  suspend fun applyOperations(
-    operations: List<SyncOperation>,
-    baseUrl: String,
-    token: String,
-  ) {
-    operations.forEach { operation -> applyOperation(operation, baseUrl, token) }
+  suspend fun applyOperations(operations: List<SyncOperation>) {
+    operations.forEach { operation -> applyOperation(operation) }
   }
 
-  private suspend fun applyOperation(
-    operation: SyncOperation,
-    baseUrl: String,
-    token: String,
-  ) {
+  private suspend fun applyOperation(operation: SyncOperation) {
     syncQueue.updateStatus(operation.id, SyncOperationStatus.IN_PROGRESS)
 
     var lastException: Exception? = null
@@ -60,9 +51,9 @@ internal class SyncOperationApplier(
       val result =
         runCatching {
           when (operation.type) {
-            SyncOperationType.CREATE -> applyCreateOperation(operation, baseUrl, token)
-            SyncOperationType.UPDATE -> applyUpdateOperation(operation, baseUrl, token)
-            SyncOperationType.DELETE -> applyDeleteOperation(operation, baseUrl, token)
+            SyncOperationType.CREATE -> applyCreateOperation(operation)
+            SyncOperationType.UPDATE -> applyUpdateOperation(operation)
+            SyncOperationType.DELETE -> applyDeleteOperation(operation)
           }
         }
 
@@ -90,13 +81,9 @@ internal class SyncOperationApplier(
     throw lastException ?: Exception("Unknown error syncing operation ${operation.id}")
   }
 
-  private suspend fun applyCreateOperation(
-    operation: SyncOperation,
-    baseUrl: String,
-    token: String,
-  ): Boolean {
+  private suspend fun applyCreateOperation(operation: SyncOperation): Boolean {
     val content = operation.content ?: return false
-    val serverMemo = MemoMapper.toDomain(memosApi.createMemo(baseUrl, token, content))
+    val serverMemo = memosRemoteSource.createMemo(content)
 
     operation.memoName?.let { tempName ->
       offlineFirstRepository.updateLocalMemo(tempName, serverMemo)
@@ -105,11 +92,7 @@ internal class SyncOperationApplier(
     return true
   }
 
-  private suspend fun applyUpdateOperation(
-    operation: SyncOperation,
-    baseUrl: String,
-    token: String,
-  ): Boolean {
+  private suspend fun applyUpdateOperation(operation: SyncOperation): Boolean {
     val name = operation.memoName
     val content = operation.content
 
@@ -120,19 +103,15 @@ internal class SyncOperationApplier(
         false
       }
       else -> {
-        memosApi.updateMemo(baseUrl, token, name, content)
+        memosRemoteSource.updateMemo(name, content)
         true
       }
     }
   }
 
-  private suspend fun applyDeleteOperation(
-    operation: SyncOperation,
-    baseUrl: String,
-    token: String,
-  ): Boolean {
+  private suspend fun applyDeleteOperation(operation: SyncOperation): Boolean {
     val name = operation.memoName ?: return false
-    memosApi.deleteMemo(baseUrl, token, name)
+    memosRemoteSource.deleteMemo(name)
     return true
   }
 }

@@ -1,7 +1,8 @@
 package space.be1ski.vibits.feature.onboarding.presentation
 
 import space.be1ski.vibits.core.elm.test.test
-import space.be1ski.vibits.feature.habits.domain.model.DEFAULT_HABIT_COLOR
+import space.be1ski.vibits.feature.habits.domain.model.DefaultHabitColor
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
 import space.be1ski.vibits.feature.onboarding.presentation.action.OnboardingAction
 import space.be1ski.vibits.feature.onboarding.presentation.effect.OnboardingEffect.Command
@@ -38,7 +39,7 @@ class OnboardingReducerTest {
         currentStep = OnboardingStep.ChoosePreset,
         selectedPresetId = "water",
         selectedPresetName = "Drink Water",
-        selectedColor = DEFAULT_HABIT_COLOR,
+        selectedColor = DefaultHabitColor,
       ),
     ) {
       send(OnboardingAction.Navigation.Continue)
@@ -51,7 +52,7 @@ class OnboardingReducerTest {
       val effect = assertHasCommand<Command.CreateFirstHabit>()
       assertEquals("Drink Water", effect.name)
       assertEquals("water", effect.presetId)
-      assertEquals(DEFAULT_HABIT_COLOR, effect.color)
+      assertEquals(DefaultHabitColor, effect.color)
     }
 
   @Test
@@ -129,9 +130,9 @@ class OnboardingReducerTest {
   @Test
   fun `when UpdateHabitColor then updates selectedColor`() =
     onboardingReducer.test(OnboardingState()) {
-      send(OnboardingAction.Habit.UpdateHabitColor(0xFF2196F3L))
+      send(OnboardingAction.Habit.UpdateHabitColor(HabitColor(0xFF2196F3L)))
 
-      assertState { selectedColor == 0xFF2196F3L }
+      assertState { selectedColor == HabitColor(0xFF2196F3L) }
       assertNoEffects()
     }
 
@@ -142,7 +143,7 @@ class OnboardingReducerTest {
         currentStep = OnboardingStep.HabitSetup,
         habitName = "Exercise",
         selectedPresetId = "custom",
-        selectedColor = 0xFF4CAF50L,
+        selectedColor = HabitColor(0xFF4CAF50L),
       ),
     ) {
       send(OnboardingAction.Habit.CreateHabit)
@@ -151,7 +152,7 @@ class OnboardingReducerTest {
       val effect = assertHasCommand<Command.CreateFirstHabit>()
       assertEquals("Exercise", effect.name)
       assertEquals("custom", effect.presetId)
-      assertEquals(0xFF4CAF50L, effect.color)
+      assertEquals(HabitColor(0xFF4CAF50L), effect.color)
     }
 
   @Test
@@ -283,7 +284,7 @@ class OnboardingReducerTest {
         currentStep = OnboardingStep.HabitSetup,
         habitName = "Exercise",
         selectedPresetId = "custom",
-        selectedColor = 0xFF4CAF50L,
+        selectedColor = HabitColor(0xFF4CAF50L),
       ),
     ) {
       send(OnboardingAction.Navigation.Continue)
@@ -292,7 +293,7 @@ class OnboardingReducerTest {
       val effect = assertHasCommand<Command.CreateFirstHabit>()
       assertEquals("Exercise", effect.name)
       assertEquals("custom", effect.presetId)
-      assertEquals(0xFF4CAF50L, effect.color)
+      assertEquals(HabitColor(0xFF4CAF50L), effect.color)
     }
 
   @Test

@@ -49,6 +49,7 @@ fun AppRoot(dependencies: AppDependencies) {
         featuresState = featuresState,
         appTheme = appTheme,
         appLanguage = appLanguage,
+        exportService = dependencies.settingsDependencies.exportService,
         onResetApp = {
           resetApp(
             dependencies = dependencies,

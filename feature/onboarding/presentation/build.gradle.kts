@@ -13,7 +13,6 @@ kotlin {
         implementation(projects.core.ui)
         implementation(projects.core.utils)
         implementation(projects.feature.habits.domain)
-        implementation(projects.feature.habits.presentation)
         implementation(projects.feature.onboarding.domain)
         implementation(libs.compose.resources)
         implementation(libs.compose.foundation)
@@ -28,8 +27,6 @@ kotlin {
     commonTest {
       dependencies {
         implementation(projects.core.elm.test)
-        implementation(projects.feature.memos.data)
-        implementation(projects.feature.memos.data.testing)
         implementation(projects.feature.memos.domain)
         implementation(projects.feature.memos.domain.testing)
         implementation(projects.feature.onboarding.data)

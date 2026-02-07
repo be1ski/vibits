@@ -4,8 +4,8 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.core.platform.di.AppScope
 import space.be1ski.vibits.core.utils.logging.Log
-import space.be1ski.vibits.feature.memos.data.platform.OfflineMemoStorage
 import space.be1ski.vibits.feature.memos.domain.model.isConfigMemo
+import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
 import space.be1ski.vibits.feature.onboarding.domain.repository.OnboardingRepository
 import space.be1ski.vibits.feature.onboarding.domain.repository.OnboardingStore
@@ -17,7 +17,7 @@ private const val TAG = "Onboarding"
 class OnboardingRepositoryImpl(
   private val onboardingStore: OnboardingStore,
   private val presetsDataSource: HabitPresetsDataSource,
-  private val offlineMemoStorage: OfflineMemoStorage,
+  private val memosRepository: MemosRepository,
 ) : OnboardingRepository {
   override suspend fun isOnboardingCompleted(): Boolean {
     val completed = onboardingStore.isOnboardingCompleted()
@@ -37,9 +37,8 @@ class OnboardingRepositoryImpl(
   }
 
   override suspend fun hasHabitsConfig(): Boolean {
-    val memosFile = offlineMemoStorage.load()
     val hasConfig =
-      memosFile.memos.any { memo ->
+      memosRepository.cachedMemos().any { memo ->
         memo.content.isConfigMemo()
       }
     Log.d(TAG, "hasHabitsConfig() = $hasConfig")

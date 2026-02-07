@@ -15,6 +15,7 @@ import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.homescreen.di.AppDependencies
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
+import space.be1ski.vibits.feature.memos.domain.repository.ExportService
 import space.be1ski.vibits.feature.mode.presentation.view.ModeSelectionScreen
 import space.be1ski.vibits.feature.onboarding.presentation.view.OnboardingScreen
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
@@ -57,6 +58,7 @@ internal fun AppContent(
   featuresState: FeaturesState,
   appTheme: AppTheme,
   appLanguage: AppLanguage,
+  exportService: ExportService,
   onResetApp: () -> Unit,
   onThemeChanged: (AppTheme) -> Unit,
   onLanguageChanged: (AppLanguage) -> Unit,
@@ -75,6 +77,7 @@ internal fun AppContent(
         features = featuresState.app,
         appTheme = appTheme,
         appLanguage = appLanguage,
+        exportService = exportService,
         onResetApp = onResetApp,
         onThemeChanged = onThemeChanged,
         onLanguageChanged = onLanguageChanged,
@@ -88,6 +91,7 @@ private fun AppWithLoadingScreen(
   features: AppFeatures,
   appTheme: AppTheme,
   appLanguage: AppLanguage,
+  exportService: ExportService,
   onResetApp: () -> Unit,
   onThemeChanged: (AppTheme) -> Unit,
   onLanguageChanged: (AppLanguage) -> Unit,
@@ -101,6 +105,7 @@ private fun AppWithLoadingScreen(
       features = features,
       currentTheme = appTheme,
       currentLanguage = appLanguage,
+      exportService = exportService,
       onResetApp = onResetApp,
       onThemeChanged = onThemeChanged,
       onLanguageChanged = onLanguageChanged,

@@ -3,6 +3,7 @@ package space.be1ski.vibits.feature.habits.presentation.effect
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.usecase.SaveDailyHabitMemoUseCase
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
@@ -17,8 +18,8 @@ class HabitsMemoEffectHandlerTest {
   private val date = LocalDate(2026, 1, 30)
   private val habitsConfig =
     listOf(
-      HabitConfig(tag = "#habits/exercise", label = "Exercise", color = 0xFF000000),
-      HabitConfig(tag = "#habits/meditation", label = "Meditation", color = 0xFF000000),
+      HabitConfig(tag = "#habits/exercise", label = "Exercise", color = HabitColor(0xFF000000)),
+      HabitConfig(tag = "#habits/meditation", label = "Meditation", color = HabitColor(0xFF000000)),
     )
 
   private fun createHandler(repository: MemosRepository = FakeMemosRepository()): HabitsMemoEffectHandler {

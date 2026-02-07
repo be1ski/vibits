@@ -1,6 +1,7 @@
 package space.be1ski.vibits.feature.memos.data.platform
 
 import space.be1ski.vibits.feature.memos.domain.model.Memo
+import space.be1ski.vibits.feature.memos.domain.repository.MemoCache
 
 actual fun createMemoCache(): MemoCache = WasmMemoCache()
 

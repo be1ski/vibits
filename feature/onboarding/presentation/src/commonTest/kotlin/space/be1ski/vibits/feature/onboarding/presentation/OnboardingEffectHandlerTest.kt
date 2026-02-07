@@ -4,8 +4,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import space.be1ski.vibits.feature.habits.domain.model.DEFAULT_HABIT_COLOR
-import space.be1ski.vibits.feature.memos.data.test.FakeOfflineMemoStorage
+import space.be1ski.vibits.feature.habits.domain.model.DefaultHabitColor
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.test.FakeMemosRepository
 import space.be1ski.vibits.feature.memos.domain.usecase.CreateMemoUseCase
@@ -54,7 +53,7 @@ class OnboardingEffectHandlerTest {
           OnboardingEffect.Command.CreateFirstHabit(
             name = "Morning Exercise",
             presetId = "custom",
-            color = DEFAULT_HABIT_COLOR,
+            color = DefaultHabitColor,
           ),
         ).toList()
 
@@ -75,7 +74,7 @@ class OnboardingEffectHandlerTest {
           OnboardingEffect.Command.CreateFirstHabit(
             name = "Exercise",
             presetId = "custom",
-            color = DEFAULT_HABIT_COLOR,
+            color = DefaultHabitColor,
           ),
         ).toList()
 
@@ -99,7 +98,7 @@ class OnboardingEffectHandlerTest {
           OnboardingEffect.Command.CreateFirstHabit(
             name = "Exercise",
             presetId = "custom",
-            color = DEFAULT_HABIT_COLOR,
+            color = DefaultHabitColor,
           ),
         ).toList()
 
@@ -154,8 +153,7 @@ class OnboardingEffectHandlerTest {
   private fun createHandler(memosRepository: FakeMemosRepository = FakeMemosRepository()): OnboardingEffectHandler {
     val onboardingStore = FakeOnboardingStore()
     val presetsDataSource = HabitPresetsDataSourceImpl()
-    val offlineMemoStorage = FakeOfflineMemoStorage()
-    val repository = OnboardingRepositoryImpl(onboardingStore, presetsDataSource, offlineMemoStorage)
+    val repository = OnboardingRepositoryImpl(onboardingStore, presetsDataSource, memosRepository)
 
     return OnboardingEffectHandler(
       presetsHandler =

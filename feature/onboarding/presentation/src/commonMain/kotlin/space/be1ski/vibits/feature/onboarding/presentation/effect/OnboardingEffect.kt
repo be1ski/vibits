@@ -1,5 +1,7 @@
 package space.be1ski.vibits.feature.onboarding.presentation.effect
 
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
+
 sealed interface OnboardingEffect {
   /**
    * Commands handled by OnboardingEffectHandler (async operations).
@@ -16,7 +18,7 @@ sealed interface OnboardingEffect {
     data class CreateFirstHabit(
       val name: String,
       val presetId: String?,
-      val color: Long,
+      val color: HabitColor,
     ) : Setup
 
     data object MarkFirstCheckIn : Setup

@@ -43,10 +43,10 @@ import space.be1ski.vibits.core.strings.generated.label_habit_preset_custom
 import space.be1ski.vibits.core.strings.generated.label_selected
 import space.be1ski.vibits.core.strings.generated.title_choose_starter_habit
 import space.be1ski.vibits.core.ui.Indent
+import space.be1ski.vibits.core.ui.habits.localizedDemoHabitName
 import space.be1ski.vibits.core.ui.theme.AppColors
 import space.be1ski.vibits.core.ui.theme.resolve
 import space.be1ski.vibits.feature.habits.domain.model.DemoHabits
-import space.be1ski.vibits.feature.habits.presentation.view.components.localizedDemoHabitName
 import space.be1ski.vibits.feature.onboarding.domain.model.CUSTOM_PRESET_ID
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
 

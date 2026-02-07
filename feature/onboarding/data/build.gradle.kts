@@ -10,7 +10,6 @@ kotlin {
         implementation(projects.core.platform)
         implementation(projects.core.utils)
         implementation(projects.feature.habits.domain)
-        implementation(projects.feature.memos.data)
         implementation(projects.feature.memos.domain)
         implementation(projects.feature.onboarding.domain)
         implementation(libs.kotlinx.datetime)
@@ -18,7 +17,7 @@ kotlin {
     }
     commonTest {
       dependencies {
-        implementation(projects.feature.memos.data.testing)
+        implementation(projects.feature.memos.domain.testing)
         implementation(projects.feature.onboarding.domain.testing)
         implementation(kotlin("test"))
         implementation(libs.kotlinx.coroutines.test)

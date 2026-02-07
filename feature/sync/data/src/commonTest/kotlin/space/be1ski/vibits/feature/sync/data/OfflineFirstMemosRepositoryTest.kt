@@ -3,8 +3,8 @@ package space.be1ski.vibits.feature.sync.data
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import space.be1ski.vibits.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.feature.memos.domain.model.Memo
+import space.be1ski.vibits.feature.memos.domain.repository.MemoCache
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperation
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperationStatus
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperationType

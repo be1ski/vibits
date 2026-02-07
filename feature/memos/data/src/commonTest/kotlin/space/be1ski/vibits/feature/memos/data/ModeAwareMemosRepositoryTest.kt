@@ -9,10 +9,10 @@ import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.feature.memos.data.demo.DemoMemosRepository
 import space.be1ski.vibits.feature.memos.data.offline.OfflineMemosFileDto
 import space.be1ski.vibits.feature.memos.data.offline.OfflineMemosRepository
-import space.be1ski.vibits.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.feature.memos.data.platform.OfflineMemoStorage
 import space.be1ski.vibits.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.feature.memos.domain.model.Memo
+import space.be1ski.vibits.feature.memos.domain.repository.MemoCache
 import space.be1ski.vibits.feature.mode.domain.repository.AppModeRepository
 import space.be1ski.vibits.feature.sync.data.OfflineFirstMemosRepository
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperation

@@ -2,6 +2,7 @@ package space.be1ski.vibits.feature.onboarding.domain.usecase
 
 import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.feature.habits.domain.formatHexColor
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.memos.domain.model.PostTags
 import space.be1ski.vibits.feature.memos.domain.usecase.CreateMemoUseCase
 
@@ -12,7 +13,7 @@ class CreateFirstHabitUseCase(
   suspend operator fun invoke(
     name: String,
     presetId: String?,
-    color: Long,
+    color: HabitColor,
   ): Result<Unit> =
     runCatching {
       val habitTag = name.lowercase().replace(" ", "_")

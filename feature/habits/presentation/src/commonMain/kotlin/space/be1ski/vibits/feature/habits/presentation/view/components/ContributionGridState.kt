@@ -7,6 +7,7 @@ import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.ActivitySummary
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 
 /**
  * UI state for rendering the contribution grid.
@@ -27,7 +28,7 @@ data class ContributionGridState(
   val calendarLayout: Boolean = false,
   val weekendDays: Set<kotlinx.datetime.DayOfWeek> = DEFAULT_WEEKEND_DAYS,
   val today: LocalDate? = null,
-  val habitColor: Long? = null,
+  val habitColor: HabitColor? = null,
   val demoMode: Boolean = false,
 )
 
@@ -60,5 +61,5 @@ internal data class ContributionCellState(
   val showDayNumber: Boolean,
   val isToday: Boolean = false,
   val isWeekend: Boolean = false,
-  val habitColor: Long? = null,
+  val habitColor: HabitColor? = null,
 )
