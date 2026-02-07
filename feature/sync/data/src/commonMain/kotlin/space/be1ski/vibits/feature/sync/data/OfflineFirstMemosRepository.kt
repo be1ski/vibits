@@ -17,7 +17,7 @@ import space.be1ski.vibits.feature.sync.domain.repository.OfflineFirstMemoOperat
 import space.be1ski.vibits.feature.sync.domain.repository.SyncQueueRepository
 import kotlin.time.Clock
 
-private val TAG = SyncLogTags.OFFLINE_FIRST_MEMOS
+private const val TAG = SyncLogTags.OFFLINE_FIRST_MEMOS
 
 /**
  * Thread-safe offline-first memo operations.

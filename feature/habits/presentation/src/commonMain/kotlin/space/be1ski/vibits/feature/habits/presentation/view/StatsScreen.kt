@@ -121,7 +121,6 @@ private fun rememberStatsScreenDerived(
     remember(habitsConfigTimeline) {
       habitsConfigTimeline.firstOrNull()?.date
     }
-  val finalSuccessRate = successRate
   val periodPosts =
     remember(memos, range, timeZone) {
       GetPeriodPostsUseCase(memos, range, timeZone)
@@ -143,7 +142,7 @@ private fun rememberStatsScreenDerived(
     todayDay = todayDay,
     today = today,
     timeZone = timeZone,
-    successRate = finalSuccessRate,
+    successRate = successRate,
     periodPosts = periodPosts,
     dateFormatter = dateFormatter,
     configStartDate = configStartDate,

@@ -14,7 +14,7 @@ import space.be1ski.vibits.feature.mode.domain.repository.AppModeRepository
 import space.be1ski.vibits.feature.sync.domain.SyncLogTags
 import space.be1ski.vibits.feature.sync.domain.repository.OfflineFirstMemoOperations
 
-private val TAG = SyncLogTags.MODE_AWARE_REPO
+private const val TAG = SyncLogTags.MODE_AWARE_REPO
 
 @Inject
 @SingleIn(AppScope::class)

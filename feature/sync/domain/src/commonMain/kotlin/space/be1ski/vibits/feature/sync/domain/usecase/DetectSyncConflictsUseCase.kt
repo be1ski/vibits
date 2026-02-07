@@ -9,7 +9,7 @@ import space.be1ski.vibits.feature.sync.domain.model.SyncOperation
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperationType
 import space.be1ski.vibits.feature.sync.domain.model.TempMemoName
 
-private val TAG = SyncLogTags.SYNC_ENGINE
+private const val TAG = SyncLogTags.SYNC_ENGINE
 
 object DetectSyncConflictsUseCase {
   operator fun invoke(

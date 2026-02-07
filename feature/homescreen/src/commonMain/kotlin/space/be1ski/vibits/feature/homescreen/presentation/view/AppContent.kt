@@ -63,16 +63,27 @@ internal fun AppContent(
   onThemeChanged: (AppTheme) -> Unit,
   onLanguageChanged: (AppLanguage) -> Unit,
 ) {
-  when {
-    appMode == AppMode.NOT_SELECTED -> ModeSelectionScreen(feature = featuresState.modeSelection)
-    appMode == AppMode.OFFLINE && showOnboarding -> {
-      val onboardingState by featuresState.onboarding.state.collectAsState()
-      OnboardingScreen(
-        state = onboardingState,
-        onAction = featuresState.onboarding::send,
-      )
-    }
-    appMode == AppMode.ONLINE || appMode == AppMode.OFFLINE || appMode == AppMode.DEMO -> {
+  when (appMode) {
+    AppMode.NOT_SELECTED -> ModeSelectionScreen(feature = featuresState.modeSelection)
+    AppMode.OFFLINE ->
+      if (showOnboarding) {
+        val onboardingState by featuresState.onboarding.state.collectAsState()
+        OnboardingScreen(
+          state = onboardingState,
+          onAction = featuresState.onboarding::send,
+        )
+      } else {
+        AppWithLoadingScreen(
+          features = featuresState.app,
+          appTheme = appTheme,
+          appLanguage = appLanguage,
+          exportService = exportService,
+          onResetApp = onResetApp,
+          onThemeChanged = onThemeChanged,
+          onLanguageChanged = onLanguageChanged,
+        )
+      }
+    AppMode.ONLINE, AppMode.DEMO -> {
       AppWithLoadingScreen(
         features = featuresState.app,
         appTheme = appTheme,

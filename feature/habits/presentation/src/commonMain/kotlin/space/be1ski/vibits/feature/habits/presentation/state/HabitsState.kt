@@ -22,7 +22,7 @@ data class EditableHabit(
   val color: HabitColor,
 ) {
   fun toHabitConfig(): HabitConfig {
-    val finalTag = if (tag.isBlank()) normalizeHabitTag(label) else tag
+    val finalTag = tag.ifBlank { normalizeHabitTag(label) }
     return HabitConfig(tag = finalTag, label = label, color = color)
   }
 
