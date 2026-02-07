@@ -46,7 +46,7 @@ import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.habits.localizedDemoHabitName
 import space.be1ski.vibits.core.ui.theme.AppColors
 import space.be1ski.vibits.core.ui.theme.resolve
-import space.be1ski.vibits.feature.habits.domain.model.DemoHabits
+import space.be1ski.vibits.core.utils.habits.DemoHabitIds
 import space.be1ski.vibits.feature.onboarding.domain.model.CUSTOM_PRESET_ID
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
 
@@ -179,14 +179,14 @@ private fun PresetCard(
 
 private fun HabitPreset.iconVector(): ImageVector? =
   when (id) {
-    DemoHabits.EXERCISE -> Icons.Default.FitnessCenter
-    DemoHabits.WATER -> Icons.Default.WaterDrop
-    DemoHabits.READING -> Icons.AutoMirrored.Filled.MenuBook
-    DemoHabits.MEDITATION -> Icons.Default.SelfImprovement
-    DemoHabits.WALKING -> Icons.AutoMirrored.Filled.DirectionsWalk
-    DemoHabits.LEARNING -> Icons.Default.School
-    DemoHabits.NO_SUGAR -> Icons.Default.NoFood
-    DemoHabits.EARLY_SLEEP -> Icons.Default.Bedtime
+    DemoHabitIds.EXERCISE -> Icons.Default.FitnessCenter
+    DemoHabitIds.WATER -> Icons.Default.WaterDrop
+    DemoHabitIds.READING -> Icons.AutoMirrored.Filled.MenuBook
+    DemoHabitIds.MEDITATION -> Icons.Default.SelfImprovement
+    DemoHabitIds.WALKING -> Icons.AutoMirrored.Filled.DirectionsWalk
+    DemoHabitIds.LEARNING -> Icons.Default.School
+    DemoHabitIds.NO_SUGAR -> Icons.Default.NoFood
+    DemoHabitIds.EARLY_SLEEP -> Icons.Default.Bedtime
     CUSTOM_PRESET_ID -> Icons.Default.AutoAwesome
     else -> null
   }
