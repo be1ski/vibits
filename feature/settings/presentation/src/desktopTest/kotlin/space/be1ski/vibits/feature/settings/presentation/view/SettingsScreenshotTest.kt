@@ -3,11 +3,13 @@ package space.be1ski.vibits.feature.settings.presentation.view
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
+import space.be1ski.vibits.core.platform.logging.LogLevel
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.core.ui.form.CredentialValidationError
 import space.be1ski.vibits.core.ui.test.runAppUiTest
 import space.be1ski.vibits.core.ui.test.saveScreenshot
 import space.be1ski.vibits.core.ui.test.setThemedContent
+import space.be1ski.vibits.core.utils.logging.LogEntry
 import space.be1ski.vibits.feature.memos.domain.model.ExportResult
 import space.be1ski.vibits.feature.memos.domain.repository.ExportService
 import space.be1ski.vibits.feature.settings.presentation.state.SettingsState
@@ -40,7 +42,7 @@ class SettingsScreenshotTest {
       }
 
       onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
-      saveScreenshot("settings", "SettingsScreenshotTest", "settings_online")
+      saveScreenshot("settings_online")
     }
 
   @Test
@@ -59,7 +61,7 @@ class SettingsScreenshotTest {
       }
 
       onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
-      saveScreenshot("settings", "SettingsScreenshotTest", "settings_offline")
+      saveScreenshot("settings_offline")
     }
 
   @Test
@@ -78,7 +80,7 @@ class SettingsScreenshotTest {
       }
 
       onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
-      saveScreenshot("settings", "SettingsScreenshotTest", "settings_demo")
+      saveScreenshot("settings_demo")
     }
 
   @Test
@@ -100,8 +102,16 @@ class SettingsScreenshotTest {
       }
 
       onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
-      saveScreenshot("settings", "SettingsScreenshotTest", "settings_validation_error")
+      saveScreenshot("settings_validation_error")
     }
+
+  private val testLogs =
+    listOf(
+      LogEntry("2025-01-06 10:00:00", LogLevel.INFO, "SyncEngine", "Sync started"),
+      LogEntry("2025-01-06 10:00:01", LogLevel.DEBUG, "SyncEngine", "Fetching 42 memos from server"),
+      LogEntry("2025-01-06 10:00:02", LogLevel.WARN, "SyncEngine", "Slow network detected"),
+      LogEntry("2025-01-06 10:00:03", LogLevel.INFO, "SyncEngine", "Sync completed successfully"),
+    )
 
   @Test
   fun `when logs dialog open then captures logs dialog`() =
@@ -116,11 +126,11 @@ class SettingsScreenshotTest {
             ),
           dispatch = {},
           exportService = fakeExportService,
+          testLogs = testLogs,
         )
       }
-
       onNodeWithTag(SettingsTestTags.LOGS_DIALOG).assertIsDisplayed()
-      saveScreenshot("settings", "SettingsScreenshotTest", "settings_logs_dialog")
+      saveScreenshot("settings_logs_dialog")
     }
 
   @Test
@@ -140,6 +150,6 @@ class SettingsScreenshotTest {
       }
 
       onNodeWithTag(SettingsTestTags.RESET_OPTIONS_DIALOG).assertIsDisplayed()
-      saveScreenshot("settings", "SettingsScreenshotTest", "settings_reset_options_dialog")
+      saveScreenshot("settings_reset_options_dialog")
     }
 }

@@ -91,7 +91,7 @@ class AppShellScreenshotTest {
       }
 
       onNodeWithTag(AppShellTestTags.LOADING_SCREEN).assertIsDisplayed()
-      saveScreenshot("homescreen", "AppShellScreenshotTest", "app_loading")
+      saveScreenshot("app_loading")
     }
 
   @Test
@@ -99,7 +99,7 @@ class AppShellScreenshotTest {
     runAppUiTest {
       setVibitsApp(Screen.HABITS)
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
-      saveScreenshot("homescreen", "AppShellScreenshotTest", "app_habits_tab")
+      saveScreenshot("app_habits_tab")
     }
 
   @Test
@@ -107,7 +107,7 @@ class AppShellScreenshotTest {
     runAppUiTest {
       setVibitsApp(Screen.STATS)
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_STATS).assertIsDisplayed()
-      saveScreenshot("homescreen", "AppShellScreenshotTest", "app_stats_tab")
+      saveScreenshot("app_stats_tab")
     }
 
   @Test
@@ -115,6 +115,6 @@ class AppShellScreenshotTest {
     runAppUiTest {
       setVibitsApp(Screen.FEED)
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_FEED).assertIsDisplayed()
-      saveScreenshot("homescreen", "AppShellScreenshotTest", "app_feed_tab")
+      saveScreenshot("app_feed_tab")
     }
 }
