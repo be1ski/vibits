@@ -3,7 +3,7 @@ package space.be1ski.vibits.feature.settings.presentation.reducer
 import space.be1ski.vibits.core.elm.Reducer
 import space.be1ski.vibits.core.elm.reducer
 import space.be1ski.vibits.core.platform.mode.AppMode
-import space.be1ski.vibits.feature.auth.domain.model.CredentialValidationError
+import space.be1ski.vibits.core.ui.form.CredentialValidationError
 import space.be1ski.vibits.feature.settings.presentation.action.SettingsAction
 import space.be1ski.vibits.feature.settings.presentation.effect.SettingsEffect
 import space.be1ski.vibits.feature.settings.presentation.state.SettingsState
