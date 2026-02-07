@@ -37,7 +37,7 @@ fun <Action, State, Command, Notification> Reducer<Action, State, Command, Notif
   ReducerTestScope(this, initialState).apply(block)
 }
 
-@Suppress("TooManyFunctions") // Test DSL requires many helper methods
+@Suppress("TooManyFunctions", "unused") // Library API — not all methods are used yet
 class ReducerTestScope<Action, State, Command, Notification>(
   private val reducer: Reducer<Action, State, Command, Notification>,
   initialState: State,
@@ -45,6 +45,7 @@ class ReducerTestScope<Action, State, Command, Notification>(
   private var currentState: State = initialState
   private var lastResult: ReducerResult<State, Command, Notification>? = null
   private val allCommands = mutableListOf<Command>()
+  private val allNotifications = mutableListOf<Notification>()
 
   /**
    * Sends an action to the reducer and captures the result.
@@ -53,6 +54,7 @@ class ReducerTestScope<Action, State, Command, Notification>(
     lastResult = reducer(action, currentState)
     currentState = lastResult!!.state
     allCommands.addAll(lastResult!!.commands)
+    allNotifications.addAll(lastResult!!.notifications)
   }
 
   /**
@@ -74,6 +76,11 @@ class ReducerTestScope<Action, State, Command, Notification>(
    * Returns all commands accumulated from all sent actions.
    */
   val allEmittedCommands: List<Command> get() = allCommands.toList()
+
+  /**
+   * Returns all notifications accumulated from all sent actions.
+   */
+  val allEmittedNotifications: List<Notification> get() = allNotifications.toList()
 
   /**
    * Asserts that the current state equals the expected state.
@@ -125,10 +132,24 @@ class ReducerTestScope<Action, State, Command, Notification>(
   }
 
   /**
+   * Asserts that the last action emitted exactly these commands in order.
+   */
+  fun assertCommands(expected: List<Command>) {
+    assertEquals(expected, commands, "Commands mismatch")
+  }
+
+  /**
    * Asserts that the last action emitted exactly these notifications in order.
    */
   fun assertNotifications(vararg expected: Notification) {
     assertEquals(expected.toList(), notifications, "Notifications mismatch")
+  }
+
+  /**
+   * Asserts that the last action emitted exactly these notifications in order.
+   */
+  fun assertNotifications(expected: List<Notification>) {
+    assertEquals(expected, notifications, "Notifications mismatch")
   }
 
   /**
@@ -162,9 +183,26 @@ class ReducerTestScope<Action, State, Command, Notification>(
   }
 
   /**
+   * Asserts that the last action emitted a notification matching the predicate.
+   */
+  inline fun <reified N : Notification> assertHasNotification(predicate: (N) -> Boolean): N {
+    val notification =
+      notifications.filterIsInstance<N>().firstOrNull(predicate)
+        ?: fail("Expected notification of type ${N::class.simpleName} matching predicate but got: $notifications")
+    return notification
+  }
+
+  /**
    * Asserts the number of commands emitted from the last action.
    */
   fun assertCommandCount(expected: Int) {
     assertEquals(expected, commands.size, "Command count mismatch")
+  }
+
+  /**
+   * Asserts the number of notifications emitted from the last action.
+   */
+  fun assertNotificationCount(expected: Int) {
+    assertEquals(expected, notifications.size, "Notification count mismatch")
   }
 }
