@@ -1,74 +1,62 @@
 package space.be1ski.vibits.feature.habits.domain.model
 
+import space.be1ski.vibits.core.utils.habits.DemoHabit
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 class DemoHabitsTest {
   @Test
-  fun `when tag is demo exercise then demoLabelKey returns exercise key`() {
+  fun `when tag is demo exercise then demoHabit returns EXERCISE`() {
     val habit = HabitConfig(tag = "#habits/exercise", label = "Exercise")
-    assertEquals("demo_habit_exercise", habit.demoLabelKey())
+    assertEquals(DemoHabit.EXERCISE, habit.demoHabit())
   }
 
   @Test
-  fun `when tag is demo water then demoLabelKey returns water key`() {
+  fun `when tag is demo water then demoHabit returns WATER`() {
     val habit = HabitConfig(tag = "#habits/water", label = "Water")
-    assertEquals("demo_habit_water", habit.demoLabelKey())
+    assertEquals(DemoHabit.WATER, habit.demoHabit())
   }
 
   @Test
-  fun `when tag is demo reading then demoLabelKey returns reading key`() {
+  fun `when tag is demo reading then demoHabit returns READING`() {
     val habit = HabitConfig(tag = "#habits/reading", label = "Reading")
-    assertEquals("demo_habit_reading", habit.demoLabelKey())
+    assertEquals(DemoHabit.READING, habit.demoHabit())
   }
 
   @Test
-  fun `when tag is demo meditation then demoLabelKey returns meditation key`() {
+  fun `when tag is demo meditation then demoHabit returns MEDITATION`() {
     val habit = HabitConfig(tag = "#habits/meditation", label = "Meditation")
-    assertEquals("demo_habit_meditation", habit.demoLabelKey())
+    assertEquals(DemoHabit.MEDITATION, habit.demoHabit())
   }
 
   @Test
-  fun `when tag is demo walking then demoLabelKey returns walking key`() {
+  fun `when tag is demo walking then demoHabit returns WALKING`() {
     val habit = HabitConfig(tag = "#habits/walking", label = "Walking")
-    assertEquals("demo_habit_walking", habit.demoLabelKey())
+    assertEquals(DemoHabit.WALKING, habit.demoHabit())
   }
 
   @Test
-  fun `when tag is demo learning then demoLabelKey returns learning key`() {
+  fun `when tag is demo learning then demoHabit returns LEARNING`() {
     val habit = HabitConfig(tag = "#habits/learning", label = "Learning")
-    assertEquals("demo_habit_learning", habit.demoLabelKey())
+    assertEquals(DemoHabit.LEARNING, habit.demoHabit())
   }
 
   @Test
-  fun `when tag is demo no_sugar then demoLabelKey returns no_sugar key`() {
+  fun `when tag is demo no_sugar then demoHabit returns NO_SUGAR`() {
     val habit = HabitConfig(tag = "#habits/no_sugar", label = "No Sugar")
-    assertEquals("demo_habit_no_sugar", habit.demoLabelKey())
+    assertEquals(DemoHabit.NO_SUGAR, habit.demoHabit())
   }
 
   @Test
-  fun `when tag is demo early_sleep then demoLabelKey returns early_sleep key`() {
+  fun `when tag is demo early_sleep then demoHabit returns EARLY_SLEEP`() {
     val habit = HabitConfig(tag = "#habits/early_sleep", label = "Early Sleep")
-    assertEquals("demo_habit_early_sleep", habit.demoLabelKey())
+    assertEquals(DemoHabit.EARLY_SLEEP, habit.demoHabit())
   }
 
   @Test
-  fun `when tag is not a demo habit then demoLabelKey returns null`() {
+  fun `when tag is not a demo habit then demoHabit returns null`() {
     val habit = HabitConfig(tag = "#habits/custom", label = "Custom")
-    assertNull(habit.demoLabelKey())
-  }
-
-  @Test
-  fun `when tag is a demo habit then isDemoHabit returns true`() {
-    val habit = HabitConfig(tag = "#habits/exercise", label = "Exercise")
-    assertTrue(habit.isDemoHabit())
-  }
-
-  @Test
-  fun `when tag is not a demo habit then isDemoHabit returns false`() {
-    val habit = HabitConfig(tag = "#habits/custom", label = "Custom")
-    assertEquals(false, habit.isDemoHabit())
+    assertNull(habit.demoHabit())
   }
 }

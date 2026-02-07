@@ -1,4 +1,5 @@
 package space.be1ski.vibits.feature.onboarding.presentation.view
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,16 +47,13 @@ import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.habits.localizedDemoHabitName
 import space.be1ski.vibits.core.ui.theme.AppColors
 import space.be1ski.vibits.core.ui.theme.resolve
-import space.be1ski.vibits.core.utils.habits.DemoHabitIds
-import space.be1ski.vibits.feature.onboarding.domain.model.CUSTOM_PRESET_ID
+import space.be1ski.vibits.core.utils.habits.DemoHabit
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
 
 @Composable
 private fun HabitPreset.localizedName(): String =
-  when (nameKey) {
-    "label_habit_preset_custom" -> stringResource(Res.string.label_habit_preset_custom)
-    else -> localizedDemoHabitName(nameKey)
-  }
+  demoHabit?.let { localizedDemoHabitName(it) }
+    ?: stringResource(Res.string.label_habit_preset_custom)
 
 @Composable
 fun ChoosePresetScreen(
@@ -178,15 +176,14 @@ private fun PresetCard(
 }
 
 private fun HabitPreset.iconVector(): ImageVector? =
-  when (id) {
-    DemoHabitIds.EXERCISE -> Icons.Default.FitnessCenter
-    DemoHabitIds.WATER -> Icons.Default.WaterDrop
-    DemoHabitIds.READING -> Icons.AutoMirrored.Filled.MenuBook
-    DemoHabitIds.MEDITATION -> Icons.Default.SelfImprovement
-    DemoHabitIds.WALKING -> Icons.AutoMirrored.Filled.DirectionsWalk
-    DemoHabitIds.LEARNING -> Icons.Default.School
-    DemoHabitIds.NO_SUGAR -> Icons.Default.NoFood
-    DemoHabitIds.EARLY_SLEEP -> Icons.Default.Bedtime
-    CUSTOM_PRESET_ID -> Icons.Default.AutoAwesome
-    else -> null
+  when (demoHabit) {
+    DemoHabit.EXERCISE -> Icons.Default.FitnessCenter
+    DemoHabit.WATER -> Icons.Default.WaterDrop
+    DemoHabit.READING -> Icons.AutoMirrored.Filled.MenuBook
+    DemoHabit.MEDITATION -> Icons.Default.SelfImprovement
+    DemoHabit.WALKING -> Icons.AutoMirrored.Filled.DirectionsWalk
+    DemoHabit.LEARNING -> Icons.Default.School
+    DemoHabit.NO_SUGAR -> Icons.Default.NoFood
+    DemoHabit.EARLY_SLEEP -> Icons.Default.Bedtime
+    null -> Icons.Default.AutoAwesome
   }

@@ -12,33 +12,29 @@ import space.be1ski.vibits.core.strings.generated.demo_habit_no_sugar
 import space.be1ski.vibits.core.strings.generated.demo_habit_reading
 import space.be1ski.vibits.core.strings.generated.demo_habit_walking
 import space.be1ski.vibits.core.strings.generated.demo_habit_water
-import space.be1ski.vibits.core.utils.habits.DEMO_HABIT_KEY_PREFIX
-import space.be1ski.vibits.core.utils.habits.DemoHabitIds
+import space.be1ski.vibits.core.utils.habits.DemoHabit
 
-private val demoHabitResources: Map<String, StringResource> =
+private val demoHabitResources: Map<DemoHabit, StringResource> =
   mapOf(
-    DemoHabitIds.EXERCISE to Res.string.demo_habit_exercise,
-    DemoHabitIds.WATER to Res.string.demo_habit_water,
-    DemoHabitIds.READING to Res.string.demo_habit_reading,
-    DemoHabitIds.MEDITATION to Res.string.demo_habit_meditation,
-    DemoHabitIds.WALKING to Res.string.demo_habit_walking,
-    DemoHabitIds.LEARNING to Res.string.demo_habit_learning,
-    DemoHabitIds.NO_SUGAR to Res.string.demo_habit_no_sugar,
-    DemoHabitIds.EARLY_SLEEP to Res.string.demo_habit_early_sleep,
+    DemoHabit.EXERCISE to Res.string.demo_habit_exercise,
+    DemoHabit.WATER to Res.string.demo_habit_water,
+    DemoHabit.READING to Res.string.demo_habit_reading,
+    DemoHabit.MEDITATION to Res.string.demo_habit_meditation,
+    DemoHabit.WALKING to Res.string.demo_habit_walking,
+    DemoHabit.LEARNING to Res.string.demo_habit_learning,
+    DemoHabit.NO_SUGAR to Res.string.demo_habit_no_sugar,
+    DemoHabit.EARLY_SLEEP to Res.string.demo_habit_early_sleep,
   )
 
 @Composable
-fun localizedDemoHabitName(nameKey: String): String {
-  val habitId = nameKey.removePrefix(DEMO_HABIT_KEY_PREFIX)
-  return demoHabitResources[habitId]?.let { stringResource(it) } ?: nameKey
-}
+fun localizedDemoHabitName(habit: DemoHabit): String = demoHabitResources[habit]?.let { stringResource(it) } ?: habit.id
 
 @Composable
 fun localizedHabitLabel(
   label: String,
-  demoLabelKey: String?,
+  demoHabit: DemoHabit?,
   demoMode: Boolean,
 ): String {
-  if (!demoMode || demoLabelKey == null) return label
-  return localizedDemoHabitName(demoLabelKey)
+  if (!demoMode || demoHabit == null) return label
+  return localizedDemoHabitName(demoHabit)
 }
