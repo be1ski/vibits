@@ -6,6 +6,7 @@ import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.ActivitySummary
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.feature.habits.domain.model.SuccessRate
@@ -36,7 +37,7 @@ internal data class HabitActivitySectionState(
   val range: ActivityRange,
   val demoMode: Boolean,
   val today: LocalDate? = null,
-  val habitColor: Long? = null,
+  val habitColor: HabitColor? = null,
 )
 
 @Suppress("LongParameterList")

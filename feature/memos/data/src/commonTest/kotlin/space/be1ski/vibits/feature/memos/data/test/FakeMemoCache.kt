@@ -1,7 +1,7 @@
 package space.be1ski.vibits.feature.memos.data.test
 
-import space.be1ski.vibits.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.feature.memos.domain.model.Memo
+import space.be1ski.vibits.feature.memos.domain.repository.MemoCache
 
 class FakeMemoCache(
   private var memos: List<Memo> = emptyList(),

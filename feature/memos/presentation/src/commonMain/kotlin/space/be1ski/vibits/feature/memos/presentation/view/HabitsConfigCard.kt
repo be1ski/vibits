@@ -66,7 +66,7 @@ internal fun HabitsConfigCard(
             Modifier
               .size(16.dp)
               .clip(RoundedCornerShape(4.dp))
-              .background(Color(habit.color)),
+              .background(Color(habit.color.argb)),
         )
         Column(modifier = Modifier.weight(1f)) {
           Text(

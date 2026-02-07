@@ -5,6 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
+import space.be1ski.vibits.feature.memos.domain.repository.ExportService
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.feature.settings.presentation.view.SettingsDialog
 
@@ -13,6 +14,7 @@ internal fun VibitsApp(
   features: AppFeatures,
   currentTheme: AppTheme,
   currentLanguage: AppLanguage,
+  exportService: ExportService,
   onResetApp: () -> Unit = {},
   onThemeChanged: (AppTheme) -> Unit = {},
   onLanguageChanged: (AppLanguage) -> Unit = {},
@@ -43,7 +45,7 @@ internal fun VibitsApp(
     currentTheme = currentTheme,
   )
 
-  SettingsDialog(state = settingsState, dispatch = features.settings::send)
+  SettingsDialog(state = settingsState, dispatch = features.settings::send, exportService = exportService)
   MemoCreateDialog(state = memosState, dispatch = features.memos::send)
   MemoEditDialog(state = memosState, dispatch = features.memos::send)
   HabitsDialogs(appState = appState, habitsState = habitsState, dispatch = features.habits::send)

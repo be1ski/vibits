@@ -1,28 +1,14 @@
 package space.be1ski.vibits.feature.sync.data
 
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.MockRequestHandleScope
-import io.ktor.client.engine.mock.respond
-import io.ktor.client.engine.mock.respondError
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.HttpRequestData
-import io.ktor.client.request.HttpResponseData
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.json.Json
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.feature.auth.domain.test.FakeCredentialsRepository
-import space.be1ski.vibits.feature.memos.data.platform.MemoCache
-import space.be1ski.vibits.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.feature.memos.domain.model.Memo
+import space.be1ski.vibits.feature.memos.domain.repository.MemoCache
+import space.be1ski.vibits.feature.memos.domain.repository.MemosPage
+import space.be1ski.vibits.feature.memos.domain.repository.MemosRemoteSource
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperation
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperationStatus
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperationType
@@ -39,23 +25,10 @@ import kotlin.time.Clock
 class SyncEngineImplTest {
   private fun createEngine(
     credentials: Credentials = Credentials(baseUrl = "https://memos.example.com", token = "test-token"),
-    handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData,
+    remoteSource: FakeMemosRemoteSource = FakeMemosRemoteSource(),
     initialCachedMemos: List<Memo> = emptyList(),
     pendingOperations: List<SyncOperation> = emptyList(),
   ): Triple<SyncEngineImpl, FakeMemoCache, FakeSyncQueueRepository> {
-    val engine = MockEngine(handler)
-    val client =
-      HttpClient(engine) {
-        install(ContentNegotiation) {
-          json(
-            Json {
-              ignoreUnknownKeys = true
-              isLenient = true
-            },
-          )
-        }
-      }
-
     val credentialsRepository = FakeCredentialsRepository(credentials)
     val syncQueue = FakeSyncQueueRepository()
     pendingOperations.forEach { syncQueue.operations.add(it) }
@@ -65,7 +38,7 @@ class SyncEngineImplTest {
 
     val syncEngine =
       SyncEngineImpl(
-        memosApi = MemosApi(client),
+        memosRemoteSource = remoteSource,
         credentialsRepository = credentialsRepository,
         syncQueue = syncQueue,
         offlineFirstRepository = offlineFirstRepository,
@@ -73,33 +46,6 @@ class SyncEngineImplTest {
 
     return Triple(syncEngine, memoCache, syncQueue)
   }
-
-  private fun successResponse(memos: String = "[]"): suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData =
-    { request ->
-      when (request.method) {
-        HttpMethod.Get ->
-          respond(
-            content = """{"memos":$memos,"nextPageToken":null}""",
-            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-          )
-        HttpMethod.Post ->
-          respond(
-            content = """{"name":"memos/new-1","content":"created","createTime":"2024-01-01T00:00:00Z"}""",
-            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-          )
-        HttpMethod.Patch ->
-          respond(
-            content = """{"name":"memos/1","content":"updated","updateTime":"2024-01-01T00:00:00Z"}""",
-            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-          )
-        HttpMethod.Delete ->
-          respond(
-            content = "",
-            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-          )
-        else -> respondError(HttpStatusCode.NotFound)
-      }
-    }
 
   // ========== performSync Tests ==========
 
@@ -109,7 +55,6 @@ class SyncEngineImplTest {
       val (engine, _, _) =
         createEngine(
           credentials = Credentials(baseUrl = "", token = ""),
-          handler = successResponse(),
         )
 
       val result = engine.performSync()
@@ -123,7 +68,6 @@ class SyncEngineImplTest {
       val (engine, _, _) =
         createEngine(
           credentials = Credentials(baseUrl = "   ", token = "valid-token"),
-          handler = successResponse(),
         )
 
       val result = engine.performSync()
@@ -137,7 +81,6 @@ class SyncEngineImplTest {
       val (engine, _, _) =
         createEngine(
           credentials = Credentials(baseUrl = "https://example.com", token = "   "),
-          handler = successResponse(),
         )
 
       val result = engine.performSync()
@@ -148,9 +91,11 @@ class SyncEngineImplTest {
   @Test
   fun `when performSync with no pending operations then replaces local memos with server memos`() =
     runTest {
+      val serverMemo = Memo(name = "memos/1", content = "server content")
+      val remoteSource = FakeMemosRemoteSource(memos = listOf(serverMemo))
       val (engine, cache, _) =
         createEngine(
-          handler = successResponse("""[{"name":"memos/1","content":"server content"}]"""),
+          remoteSource = remoteSource,
           pendingOperations = emptyList(),
         )
 
@@ -165,26 +110,10 @@ class SyncEngineImplTest {
   @Test
   fun `when performSync with pending CREATE operation then creates memo on server`() =
     runTest {
-      var createCalled = false
+      val remoteSource = FakeMemosRemoteSource()
       val (engine, _, _) =
         createEngine(
-          handler = { request ->
-            when (request.method) {
-              HttpMethod.Get ->
-                respond(
-                  content = """{"memos":[],"nextPageToken":null}""",
-                  headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-                )
-              HttpMethod.Post -> {
-                createCalled = true
-                respond(
-                  content = """{"name":"memos/new-1","content":"new content","createTime":"2024-01-01T00:00:00Z"}""",
-                  headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-                )
-              }
-              else -> respondError(HttpStatusCode.NotFound)
-            }
-          },
+          remoteSource = remoteSource,
           initialCachedMemos = listOf(Memo(name = "local_123_456", content = "new content")),
           pendingOperations =
             listOf(
@@ -202,16 +131,15 @@ class SyncEngineImplTest {
       val result = engine.performSync()
 
       assertIs<SyncResult.Success>(result)
-      assertTrue(createCalled)
+      assertTrue(remoteSource.createCalls > 0)
     }
 
   @Test
   fun `when performSync with api error then returns Error`() =
     runTest {
+      val remoteSource = FakeMemosRemoteSource(shouldFail = true)
       val (engine, _, _) =
-        createEngine(
-          handler = { respondError(HttpStatusCode.InternalServerError) },
-        )
+        createEngine(remoteSource = remoteSource)
 
       val result = engine.performSync()
 
@@ -230,16 +158,16 @@ class SyncEngineImplTest {
           createdAt = Clock.System.now(),
           status = SyncOperationStatus.IN_PROGRESS,
         )
+      val serverMemo = Memo(name = "memos/1", content = "server")
+      val remoteSource = FakeMemosRemoteSource(memos = listOf(serverMemo))
       val (engine, _, syncQueue) =
         createEngine(
-          handler = successResponse("""[{"name":"memos/1","content":"server"}]"""),
+          remoteSource = remoteSource,
           pendingOperations = listOf(inProgressOp),
         )
 
       engine.performSync()
 
-      // The operation should have been reset from IN_PROGRESS
-      // (the resetInProgressToPending call happens at the start of sync)
       assertTrue(syncQueue.resetInProgressCalls > 0)
     }
 
@@ -251,7 +179,6 @@ class SyncEngineImplTest {
       val (engine, _, _) =
         createEngine(
           credentials = Credentials(baseUrl = "", token = ""),
-          handler = successResponse(),
         )
 
       val result = engine.forceServerSync()
@@ -271,9 +198,11 @@ class SyncEngineImplTest {
           createdAt = Clock.System.now(),
           status = SyncOperationStatus.PENDING,
         )
+      val serverMemo = Memo(name = "memos/1", content = "server content")
+      val remoteSource = FakeMemosRemoteSource(memos = listOf(serverMemo))
       val (engine, cache, syncQueue) =
         createEngine(
-          handler = successResponse("""[{"name":"memos/1","content":"server content"}]"""),
+          remoteSource = remoteSource,
           pendingOperations = listOf(operation),
         )
 
@@ -287,10 +216,9 @@ class SyncEngineImplTest {
   @Test
   fun `when forceServerSync with api error then returns Error`() =
     runTest {
+      val remoteSource = FakeMemosRemoteSource(shouldFail = true)
       val (engine, _, _) =
-        createEngine(
-          handler = { respondError(HttpStatusCode.InternalServerError) },
-        )
+        createEngine(remoteSource = remoteSource)
 
       val result = engine.forceServerSync()
 
@@ -305,7 +233,6 @@ class SyncEngineImplTest {
       val (engine, _, _) =
         createEngine(
           credentials = Credentials(baseUrl = "", token = ""),
-          handler = successResponse(),
         )
 
       val result = engine.forceLocalSync()
@@ -316,7 +243,7 @@ class SyncEngineImplTest {
   @Test
   fun `when forceLocalSync then applies all pending operations`() =
     runTest {
-      var createCalled = false
+      val remoteSource = FakeMemosRemoteSource()
       val operation =
         SyncOperation(
           id = "op-1",
@@ -328,39 +255,22 @@ class SyncEngineImplTest {
         )
       val (engine, _, _) =
         createEngine(
-          handler = { request ->
-            when (request.method) {
-              HttpMethod.Get ->
-                respond(
-                  content = """{"memos":[],"nextPageToken":null}""",
-                  headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-                )
-              HttpMethod.Post -> {
-                createCalled = true
-                respond(
-                  content = """{"name":"memos/new-1","content":"local content","createTime":"2024-01-01T00:00:00Z"}""",
-                  headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-                )
-              }
-              else -> respondError(HttpStatusCode.NotFound)
-            }
-          },
+          remoteSource = remoteSource,
           pendingOperations = listOf(operation),
         )
 
       val result = engine.forceLocalSync()
 
       assertIs<SyncResult.Success>(result)
-      assertTrue(createCalled)
+      assertTrue(remoteSource.createCalls > 0)
     }
 
   @Test
   fun `when forceLocalSync with api error then returns Error`() =
     runTest {
+      val remoteSource = FakeMemosRemoteSource(shouldFail = true)
       val (engine, _, _) =
-        createEngine(
-          handler = { respondError(HttpStatusCode.InternalServerError) },
-        )
+        createEngine(remoteSource = remoteSource)
 
       val result = engine.forceLocalSync()
 
@@ -372,10 +282,7 @@ class SyncEngineImplTest {
   @Test
   fun `when not syncing then isSyncing is false`() =
     runTest {
-      val (engine, _, _) =
-        createEngine(
-          handler = successResponse(),
-        )
+      val (engine, _, _) = createEngine()
 
       assertFalse(engine.isSyncing)
     }
@@ -385,7 +292,6 @@ class SyncEngineImplTest {
   @Test
   fun `when performSync with conflicts then returns Conflict`() =
     runTest {
-      // Create operation with old timestamp so server version is "newer"
       val oldTimestamp = kotlin.time.Instant.parse("2024-01-01T00:00:00Z")
       val localMemo = Memo(name = "memos/1", content = "local content")
       val pendingUpdate =
@@ -397,21 +303,16 @@ class SyncEngineImplTest {
           createdAt = oldTimestamp,
           status = SyncOperationStatus.PENDING,
         )
+      val serverMemo =
+        Memo(
+          name = "memos/1",
+          content = "server",
+          updateTime = kotlin.time.Instant.parse("2024-01-02T00:00:00Z"),
+        )
+      val remoteSource = FakeMemosRemoteSource(memos = listOf(serverMemo))
       val (engine, _, _) =
         createEngine(
-          handler = { request ->
-            when (request.method) {
-              HttpMethod.Get -> {
-                // Server has updateTime newer than operation's createdAt
-                val memosJson = """[{"name":"memos/1","content":"server","updateTime":"2024-01-02T00:00:00Z"}]"""
-                respond(
-                  content = """{"memos":$memosJson,"nextPageToken":null}""",
-                  headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-                )
-              }
-              else -> respondError(HttpStatusCode.NotFound)
-            }
-          },
+          remoteSource = remoteSource,
           initialCachedMemos = listOf(localMemo),
           pendingOperations = listOf(pendingUpdate),
         )
@@ -425,7 +326,7 @@ class SyncEngineImplTest {
   @Test
   fun `when performSync with pending DELETE operation then deletes on server`() =
     runTest {
-      var deleteCalled = false
+      val remoteSource = FakeMemosRemoteSource()
       val pendingDelete =
         SyncOperation(
           id = "op-1",
@@ -437,36 +338,23 @@ class SyncEngineImplTest {
         )
       val (engine, _, _) =
         createEngine(
-          handler = { request ->
-            when (request.method) {
-              HttpMethod.Get ->
-                respond(
-                  content = """{"memos":[],"nextPageToken":null}""",
-                  headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-                )
-              HttpMethod.Delete -> {
-                deleteCalled = true
-                respond(
-                  content = "",
-                  headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-                )
-              }
-              else -> respondError(HttpStatusCode.NotFound)
-            }
-          },
+          remoteSource = remoteSource,
           pendingOperations = listOf(pendingDelete),
         )
 
       val result = engine.performSync()
 
       assertIs<SyncResult.Success>(result)
-      assertTrue(deleteCalled)
+      assertTrue(remoteSource.deleteCalls > 0)
     }
 
   @Test
   fun `when performSync with pending UPDATE operation then updates on server`() =
     runTest {
-      var updateCalled = false
+      val remoteSource =
+        FakeMemosRemoteSource(
+          memos = listOf(Memo(name = "memos/1", content = "original")),
+        )
       val pendingUpdate =
         SyncOperation(
           id = "op-1",
@@ -479,23 +367,7 @@ class SyncEngineImplTest {
       val localMemo = Memo(name = "memos/1", content = "updated content")
       val (engine, _, _) =
         createEngine(
-          handler = { request ->
-            when (request.method) {
-              HttpMethod.Get ->
-                respond(
-                  content = """{"memos":[{"name":"memos/1","content":"original"}],"nextPageToken":null}""",
-                  headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-                )
-              HttpMethod.Patch -> {
-                updateCalled = true
-                respond(
-                  content = """{"name":"memos/1","content":"updated content","updateTime":"2024-01-01T00:00:00Z"}""",
-                  headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-                )
-              }
-              else -> respondError(HttpStatusCode.NotFound)
-            }
-          },
+          remoteSource = remoteSource,
           initialCachedMemos = listOf(localMemo),
           pendingOperations = listOf(pendingUpdate),
         )
@@ -503,7 +375,7 @@ class SyncEngineImplTest {
       val result = engine.performSync()
 
       assertIs<SyncResult.Success>(result)
-      assertTrue(updateCalled)
+      assertTrue(remoteSource.updateCalls > 0)
     }
 
   // ========== Pagination Tests ==========
@@ -511,37 +383,72 @@ class SyncEngineImplTest {
   @Test
   fun `when performSync with pagination then fetches all pages`() =
     runTest {
-      var pagesCalled = 0
-      val (engine, _, _) =
-        createEngine(
-          handler = { request ->
-            if (request.method == HttpMethod.Get) {
-              pagesCalled++
-              val pageToken = request.url.parameters["pageToken"]
-              val response =
-                if (pageToken == null) {
-                  """{"memos":[{"name":"memos/1","content":"page1"}],"nextPageToken":"page2"}"""
-                } else {
-                  """{"memos":[{"name":"memos/2","content":"page2"}],"nextPageToken":null}"""
-                }
-              respond(
-                content = response,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-              )
-            } else {
-              respondError(HttpStatusCode.NotFound)
-            }
-          },
-        )
+      val page1 = listOf(Memo(name = "memos/1", content = "page1"))
+      val page2 = listOf(Memo(name = "memos/2", content = "page2"))
+      val remoteSource = FakeMemosRemoteSource(pages = listOf(page1, page2))
+      val (engine, _, _) = createEngine(remoteSource = remoteSource)
 
       val result = engine.performSync()
 
       assertIs<SyncResult.Success>(result)
-      assertEquals(2, pagesCalled)
+      assertEquals(2, remoteSource.listCalls)
       assertEquals(2, result.syncedMemos.size)
     }
 
   // ========== Fake Implementations ==========
+
+  private class FakeMemosRemoteSource(
+    private val memos: List<Memo> = emptyList(),
+    private val pages: List<List<Memo>>? = null,
+    private val shouldFail: Boolean = false,
+  ) : MemosRemoteSource {
+    var createCalls = 0
+      private set
+    var updateCalls = 0
+      private set
+    var deleteCalls = 0
+      private set
+    var listCalls = 0
+      private set
+    private var pageIndex = 0
+
+    override suspend fun listMemos(
+      pageSize: Int,
+      pageToken: String?,
+    ): MemosPage {
+      listCalls++
+      if (shouldFail) throw RuntimeException("Remote source error")
+
+      if (pages != null) {
+        val currentPage = pages[pageIndex]
+        pageIndex++
+        val nextToken = if (pageIndex < pages.size) "page-$pageIndex" else null
+        return MemosPage(memos = currentPage, nextPageToken = nextToken)
+      }
+
+      return MemosPage(memos = memos, nextPageToken = null)
+    }
+
+    override suspend fun createMemo(content: String): Memo {
+      createCalls++
+      if (shouldFail) throw RuntimeException("Remote source error")
+      return Memo(name = "memos/new-1", content = content)
+    }
+
+    override suspend fun updateMemo(
+      name: String,
+      content: String,
+    ): Memo {
+      updateCalls++
+      if (shouldFail) throw RuntimeException("Remote source error")
+      return Memo(name = name, content = content)
+    }
+
+    override suspend fun deleteMemo(name: String) {
+      deleteCalls++
+      if (shouldFail) throw RuntimeException("Remote source error")
+    }
+  }
 
   private class FakeMemoCache(
     private val memos: MutableList<Memo> = mutableListOf(),

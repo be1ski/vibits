@@ -114,7 +114,7 @@ private fun CompletedHabitRow(
     Icon(
       imageVector = Icons.Filled.CheckCircle,
       contentDescription = null,
-      tint = Color(habit.color),
+      tint = Color(habit.color.argb),
       modifier = Modifier.size(20.dp),
     )
     Text(

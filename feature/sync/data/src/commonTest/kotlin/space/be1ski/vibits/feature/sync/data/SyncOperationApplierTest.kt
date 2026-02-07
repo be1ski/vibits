@@ -1,26 +1,12 @@
 package space.be1ski.vibits.feature.sync.data
 
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.MockRequestHandleScope
-import io.ktor.client.engine.mock.respond
-import io.ktor.client.engine.mock.respondError
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.HttpRequestData
-import io.ktor.client.request.HttpResponseData
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.json.Json
-import space.be1ski.vibits.feature.memos.data.platform.MemoCache
-import space.be1ski.vibits.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.feature.memos.domain.model.Memo
+import space.be1ski.vibits.feature.memos.domain.repository.MemoCache
+import space.be1ski.vibits.feature.memos.domain.repository.MemosPage
+import space.be1ski.vibits.feature.memos.domain.repository.MemosRemoteSource
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperation
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperationStatus
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperationType
@@ -33,70 +19,27 @@ import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 
 class SyncOperationApplierTest {
-  private val baseUrl = "https://memos.example.com"
-  private val token = "test-token"
-
   private fun createApplier(
-    handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData,
-  ): Triple<SyncOperationApplier, FakeSyncQueue, RequestTracker> = createApplierWithRetry(RetryConfig(maxRetries = 0), handler)
+    remoteSource: FakeMemosRemoteSource = FakeMemosRemoteSource(),
+  ): Triple<SyncOperationApplier, FakeSyncQueue, FakeMemosRemoteSource> = createApplierWithRetry(RetryConfig(maxRetries = 0), remoteSource)
 
   private fun createApplierWithRetry(
     retryConfig: RetryConfig,
-    handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData,
-  ): Triple<SyncOperationApplier, FakeSyncQueue, RequestTracker> {
-    val tracker = RequestTracker()
-    val engine =
-      MockEngine { request ->
-        tracker.record(request)
-        handler(request)
-      }
-    val client =
-      HttpClient(engine) {
-        install(ContentNegotiation) {
-          json(
-            Json {
-              ignoreUnknownKeys = true
-              isLenient = true
-            },
-          )
-        }
-      }
-
+    remoteSource: FakeMemosRemoteSource = FakeMemosRemoteSource(),
+  ): Triple<SyncOperationApplier, FakeSyncQueue, FakeMemosRemoteSource> {
     val fakeQueue = FakeSyncQueue()
     val fakeCache = FakeMemoCache()
     val fakeOfflineRepo = OfflineFirstMemosRepository(fakeCache, fakeQueue)
-    val applier = SyncOperationApplier(MemosApi(client), fakeQueue, fakeOfflineRepo, retryConfig)
-    return Triple(applier, fakeQueue, tracker)
+    val applier = SyncOperationApplier(remoteSource, fakeQueue, fakeOfflineRepo, retryConfig)
+    return Triple(applier, fakeQueue, remoteSource)
   }
-
-  private fun successResponse(): suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData =
-    { request ->
-      when (request.method) {
-        HttpMethod.Post ->
-          respond(
-            content = """{"name":"memos/created-1","content":"created","createTime":"2024-01-01T00:00:00Z"}""",
-            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-          )
-        HttpMethod.Patch ->
-          respond(
-            content = """{"name":"memos/1","content":"updated","updateTime":"2024-01-01T00:00:00Z"}""",
-            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-          )
-        HttpMethod.Delete ->
-          respond(
-            content = "",
-            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-          )
-        else -> respondError(HttpStatusCode.NotFound)
-      }
-    }
 
   // ========== CREATE Operation Tests ==========
 
   @Test
   fun `when applyOperations with CREATE then calls createMemo`() =
     runTest {
-      val (applier, fakeQueue, tracker) = createApplier(successResponse())
+      val (applier, fakeQueue, remoteSource) = createApplier()
       val operation =
         SyncOperation(
           id = "op-1",
@@ -108,15 +51,15 @@ class SyncOperationApplierTest {
         )
       fakeQueue.operations.add(operation)
 
-      applier.applyOperations(listOf(operation), baseUrl, token)
+      applier.applyOperations(listOf(operation))
 
-      assertEquals(1, tracker.postCalls)
+      assertEquals(1, remoteSource.createCalls)
     }
 
   @Test
   fun `when CREATE operation succeeds then status becomes SYNCED`() =
     runTest {
-      val (applier, fakeQueue, _) = createApplier(successResponse())
+      val (applier, fakeQueue, _) = createApplier()
       val operation =
         SyncOperation(
           id = "op-1",
@@ -128,7 +71,7 @@ class SyncOperationApplierTest {
         )
       fakeQueue.operations.add(operation)
 
-      applier.applyOperations(listOf(operation), baseUrl, token)
+      applier.applyOperations(listOf(operation))
 
       assertEquals(SyncOperationStatus.SYNCED, fakeQueue.statusHistory["op-1"]?.last())
     }
@@ -136,7 +79,7 @@ class SyncOperationApplierTest {
   @Test
   fun `when CREATE operation has null content then skips and marks as SYNCED`() =
     runTest {
-      val (applier, fakeQueue, tracker) = createApplier(successResponse())
+      val (applier, fakeQueue, remoteSource) = createApplier()
       val operation =
         SyncOperation(
           id = "op-1",
@@ -148,16 +91,16 @@ class SyncOperationApplierTest {
         )
       fakeQueue.operations.add(operation)
 
-      applier.applyOperations(listOf(operation), baseUrl, token)
+      applier.applyOperations(listOf(operation))
 
-      assertEquals(0, tracker.postCalls)
+      assertEquals(0, remoteSource.createCalls)
       assertEquals(SyncOperationStatus.SYNCED, fakeQueue.statusHistory["op-1"]?.last())
     }
 
   @Test
   fun `when CREATE operation updates memo name from temp to real`() =
     runTest {
-      val (applier, fakeQueue, _) = createApplier(successResponse())
+      val (applier, fakeQueue, _) = createApplier()
       val operation =
         SyncOperation(
           id = "op-1",
@@ -169,7 +112,7 @@ class SyncOperationApplierTest {
         )
       fakeQueue.operations.add(operation)
 
-      applier.applyOperations(listOf(operation), baseUrl, token)
+      applier.applyOperations(listOf(operation))
 
       assertEquals("memos/created-1", fakeQueue.updatedMemoNames["op-1"])
     }
@@ -179,7 +122,7 @@ class SyncOperationApplierTest {
   @Test
   fun `when applyOperations with UPDATE then calls updateMemo`() =
     runTest {
-      val (applier, fakeQueue, tracker) = createApplier(successResponse())
+      val (applier, fakeQueue, remoteSource) = createApplier()
       val operation =
         SyncOperation(
           id = "op-1",
@@ -191,15 +134,15 @@ class SyncOperationApplierTest {
         )
       fakeQueue.operations.add(operation)
 
-      applier.applyOperations(listOf(operation), baseUrl, token)
+      applier.applyOperations(listOf(operation))
 
-      assertEquals(1, tracker.patchCalls)
+      assertEquals(1, remoteSource.updateCalls)
     }
 
   @Test
   fun `when UPDATE operation succeeds then status becomes SYNCED`() =
     runTest {
-      val (applier, fakeQueue, _) = createApplier(successResponse())
+      val (applier, fakeQueue, _) = createApplier()
       val operation =
         SyncOperation(
           id = "op-1",
@@ -211,7 +154,7 @@ class SyncOperationApplierTest {
         )
       fakeQueue.operations.add(operation)
 
-      applier.applyOperations(listOf(operation), baseUrl, token)
+      applier.applyOperations(listOf(operation))
 
       assertEquals(SyncOperationStatus.SYNCED, fakeQueue.statusHistory["op-1"]?.last())
     }
@@ -219,7 +162,7 @@ class SyncOperationApplierTest {
   @Test
   fun `when UPDATE operation has null name then skips and marks as SYNCED`() =
     runTest {
-      val (applier, fakeQueue, tracker) = createApplier(successResponse())
+      val (applier, fakeQueue, remoteSource) = createApplier()
       val operation =
         SyncOperation(
           id = "op-1",
@@ -231,16 +174,16 @@ class SyncOperationApplierTest {
         )
       fakeQueue.operations.add(operation)
 
-      applier.applyOperations(listOf(operation), baseUrl, token)
+      applier.applyOperations(listOf(operation))
 
-      assertEquals(0, tracker.patchCalls)
+      assertEquals(0, remoteSource.updateCalls)
       assertEquals(SyncOperationStatus.SYNCED, fakeQueue.statusHistory["op-1"]?.last())
     }
 
   @Test
   fun `when UPDATE operation has null content then skips and marks as SYNCED`() =
     runTest {
-      val (applier, fakeQueue, tracker) = createApplier(successResponse())
+      val (applier, fakeQueue, remoteSource) = createApplier()
       val operation =
         SyncOperation(
           id = "op-1",
@@ -252,16 +195,16 @@ class SyncOperationApplierTest {
         )
       fakeQueue.operations.add(operation)
 
-      applier.applyOperations(listOf(operation), baseUrl, token)
+      applier.applyOperations(listOf(operation))
 
-      assertEquals(0, tracker.patchCalls)
+      assertEquals(0, remoteSource.updateCalls)
       assertEquals(SyncOperationStatus.SYNCED, fakeQueue.statusHistory["op-1"]?.last())
     }
 
   @Test
   fun `when UPDATE operation has temp name then skips update`() =
     runTest {
-      val (applier, fakeQueue, tracker) = createApplier(successResponse())
+      val (applier, fakeQueue, remoteSource) = createApplier()
       val operation =
         SyncOperation(
           id = "op-1",
@@ -273,9 +216,9 @@ class SyncOperationApplierTest {
         )
       fakeQueue.operations.add(operation)
 
-      applier.applyOperations(listOf(operation), baseUrl, token)
+      applier.applyOperations(listOf(operation))
 
-      assertEquals(0, tracker.patchCalls)
+      assertEquals(0, remoteSource.updateCalls)
       assertEquals(SyncOperationStatus.SYNCED, fakeQueue.statusHistory["op-1"]?.last())
     }
 
@@ -284,7 +227,7 @@ class SyncOperationApplierTest {
   @Test
   fun `when applyOperations with DELETE then calls deleteMemo`() =
     runTest {
-      val (applier, fakeQueue, tracker) = createApplier(successResponse())
+      val (applier, fakeQueue, remoteSource) = createApplier()
       val operation =
         SyncOperation(
           id = "op-1",
@@ -296,15 +239,15 @@ class SyncOperationApplierTest {
         )
       fakeQueue.operations.add(operation)
 
-      applier.applyOperations(listOf(operation), baseUrl, token)
+      applier.applyOperations(listOf(operation))
 
-      assertEquals(1, tracker.deleteCalls)
+      assertEquals(1, remoteSource.deleteCalls)
     }
 
   @Test
   fun `when DELETE operation succeeds then status becomes SYNCED`() =
     runTest {
-      val (applier, fakeQueue, _) = createApplier(successResponse())
+      val (applier, fakeQueue, _) = createApplier()
       val operation =
         SyncOperation(
           id = "op-1",
@@ -316,7 +259,7 @@ class SyncOperationApplierTest {
         )
       fakeQueue.operations.add(operation)
 
-      applier.applyOperations(listOf(operation), baseUrl, token)
+      applier.applyOperations(listOf(operation))
 
       assertEquals(SyncOperationStatus.SYNCED, fakeQueue.statusHistory["op-1"]?.last())
     }
@@ -324,7 +267,7 @@ class SyncOperationApplierTest {
   @Test
   fun `when DELETE operation has null name then skips and marks as SYNCED`() =
     runTest {
-      val (applier, fakeQueue, tracker) = createApplier(successResponse())
+      val (applier, fakeQueue, remoteSource) = createApplier()
       val operation =
         SyncOperation(
           id = "op-1",
@@ -336,9 +279,9 @@ class SyncOperationApplierTest {
         )
       fakeQueue.operations.add(operation)
 
-      applier.applyOperations(listOf(operation), baseUrl, token)
+      applier.applyOperations(listOf(operation))
 
-      assertEquals(0, tracker.deleteCalls)
+      assertEquals(0, remoteSource.deleteCalls)
       assertEquals(SyncOperationStatus.SYNCED, fakeQueue.statusHistory["op-1"]?.last())
     }
 
@@ -347,7 +290,8 @@ class SyncOperationApplierTest {
   @Test
   fun `when operation fails then status becomes FAILED and exception is rethrown`() =
     runTest {
-      val (applier, fakeQueue, _) = createApplier { respondError(HttpStatusCode.InternalServerError) }
+      val remoteSource = FakeMemosRemoteSource(shouldFail = true)
+      val (applier, fakeQueue, _) = createApplier(remoteSource)
       val operation =
         SyncOperation(
           id = "op-1",
@@ -361,7 +305,7 @@ class SyncOperationApplierTest {
 
       var exceptionThrown = false
       try {
-        applier.applyOperations(listOf(operation), baseUrl, token)
+        applier.applyOperations(listOf(operation))
       } catch (e: Exception) {
         exceptionThrown = true
       }
@@ -373,7 +317,7 @@ class SyncOperationApplierTest {
   @Test
   fun `when applyOperations with multiple operations then processes all in order`() =
     runTest {
-      val (applier, fakeQueue, tracker) = createApplier(successResponse())
+      val (applier, fakeQueue, remoteSource) = createApplier()
       val operations =
         listOf(
           SyncOperation(
@@ -403,17 +347,17 @@ class SyncOperationApplierTest {
         )
       operations.forEach { fakeQueue.operations.add(it) }
 
-      applier.applyOperations(operations, baseUrl, token)
+      applier.applyOperations(operations)
 
-      assertEquals(1, tracker.postCalls)
-      assertEquals(1, tracker.patchCalls)
-      assertEquals(1, tracker.deleteCalls)
+      assertEquals(1, remoteSource.createCalls)
+      assertEquals(1, remoteSource.updateCalls)
+      assertEquals(1, remoteSource.deleteCalls)
     }
 
   @Test
   fun `when operation starts then status becomes IN_PROGRESS first`() =
     runTest {
-      val (applier, fakeQueue, _) = createApplier(successResponse())
+      val (applier, fakeQueue, _) = createApplier()
       val operation =
         SyncOperation(
           id = "op-1",
@@ -425,7 +369,7 @@ class SyncOperationApplierTest {
         )
       fakeQueue.operations.add(operation)
 
-      applier.applyOperations(listOf(operation), baseUrl, token)
+      applier.applyOperations(listOf(operation))
 
       val statusHistory = fakeQueue.statusHistory["op-1"]!!
       assertEquals(SyncOperationStatus.IN_PROGRESS, statusHistory.first())
@@ -437,20 +381,9 @@ class SyncOperationApplierTest {
   @Test
   fun `when operation fails and retries succeed then status becomes SYNCED`() =
     runTest {
-      var callCount = 0
+      val remoteSource = FakeMemosRemoteSource(failUntilCall = 2)
       val retryConfig = RetryConfig(maxRetries = 2, initialDelay = 1.milliseconds, maxDelay = 10.milliseconds)
-      val (applier, fakeQueue, tracker) =
-        createApplierWithRetry(retryConfig) { request ->
-          callCount++
-          if (callCount < 2) {
-            respondError(HttpStatusCode.InternalServerError)
-          } else {
-            respond(
-              content = """{"name":"memos/created-1","content":"created","createTime":"2024-01-01T00:00:00Z"}""",
-              headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-            )
-          }
-        }
+      val (applier, fakeQueue, _) = createApplierWithRetry(retryConfig, remoteSource)
       val operation =
         SyncOperation(
           id = "op-1",
@@ -462,18 +395,18 @@ class SyncOperationApplierTest {
         )
       fakeQueue.operations.add(operation)
 
-      applier.applyOperations(listOf(operation), baseUrl, token)
+      applier.applyOperations(listOf(operation))
 
-      assertEquals(2, tracker.postCalls)
+      assertEquals(2, remoteSource.createCalls)
       assertEquals(SyncOperationStatus.SYNCED, fakeQueue.statusHistory["op-1"]?.last())
     }
 
   @Test
   fun `when operation fails all retries then status becomes FAILED`() =
     runTest {
+      val remoteSource = FakeMemosRemoteSource(shouldFail = true)
       val retryConfig = RetryConfig(maxRetries = 2, initialDelay = 1.milliseconds, maxDelay = 10.milliseconds)
-      val (applier, fakeQueue, tracker) =
-        createApplierWithRetry(retryConfig) { respondError(HttpStatusCode.InternalServerError) }
+      val (applier, fakeQueue, _) = createApplierWithRetry(retryConfig, remoteSource)
       val operation =
         SyncOperation(
           id = "op-1",
@@ -487,33 +420,22 @@ class SyncOperationApplierTest {
 
       var exceptionThrown = false
       try {
-        applier.applyOperations(listOf(operation), baseUrl, token)
+        applier.applyOperations(listOf(operation))
       } catch (e: Exception) {
         exceptionThrown = true
       }
 
       assertTrue(exceptionThrown)
-      assertEquals(3, tracker.postCalls) // Initial + 2 retries
+      assertEquals(3, remoteSource.createCalls) // Initial + 2 retries
       assertEquals(SyncOperationStatus.FAILED, fakeQueue.statusHistory["op-1"]?.last())
     }
 
   @Test
   fun `when operation succeeds on third retry then makes expected number of calls`() =
     runTest {
-      var callCount = 0
+      val remoteSource = FakeMemosRemoteSource(failUntilCall = 3)
       val retryConfig = RetryConfig(maxRetries = 3, initialDelay = 1.milliseconds, maxDelay = 10.milliseconds)
-      val (applier, fakeQueue, tracker) =
-        createApplierWithRetry(retryConfig) { request ->
-          callCount++
-          if (callCount <= 2) {
-            respondError(HttpStatusCode.ServiceUnavailable)
-          } else {
-            respond(
-              content = """{"name":"memos/created-1","content":"created","createTime":"2024-01-01T00:00:00Z"}""",
-              headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-            )
-          }
-        }
+      val (applier, fakeQueue, _) = createApplierWithRetry(retryConfig, remoteSource)
       val operation =
         SyncOperation(
           id = "op-1",
@@ -525,18 +447,18 @@ class SyncOperationApplierTest {
         )
       fakeQueue.operations.add(operation)
 
-      applier.applyOperations(listOf(operation), baseUrl, token)
+      applier.applyOperations(listOf(operation))
 
-      assertEquals(3, tracker.postCalls)
+      assertEquals(3, remoteSource.createCalls)
       assertEquals(SyncOperationStatus.SYNCED, fakeQueue.statusHistory["op-1"]?.last())
     }
 
   @Test
   fun `when retry config has zero retries then fails immediately without retry`() =
     runTest {
+      val remoteSource = FakeMemosRemoteSource(shouldFail = true)
       val retryConfig = RetryConfig(maxRetries = 0, initialDelay = 1.milliseconds, maxDelay = 10.milliseconds)
-      val (applier, fakeQueue, tracker) =
-        createApplierWithRetry(retryConfig) { respondError(HttpStatusCode.InternalServerError) }
+      val (applier, fakeQueue, _) = createApplierWithRetry(retryConfig, remoteSource)
       val operation =
         SyncOperation(
           id = "op-1",
@@ -550,32 +472,60 @@ class SyncOperationApplierTest {
 
       var exceptionThrown = false
       try {
-        applier.applyOperations(listOf(operation), baseUrl, token)
+        applier.applyOperations(listOf(operation))
       } catch (e: Exception) {
         exceptionThrown = true
       }
 
       assertTrue(exceptionThrown)
-      assertEquals(1, tracker.postCalls)
+      assertEquals(1, remoteSource.createCalls)
       assertEquals(SyncOperationStatus.FAILED, fakeQueue.statusHistory["op-1"]?.last())
     }
 
   // ========== Helper Classes ==========
 
-  private class RequestTracker {
-    var postCalls = 0
+  private class FakeMemosRemoteSource(
+    private val shouldFail: Boolean = false,
+    private val failUntilCall: Int = 0,
+  ) : MemosRemoteSource {
+    var createCalls = 0
       private set
-    var patchCalls = 0
+    var updateCalls = 0
       private set
     var deleteCalls = 0
       private set
+    private var totalCalls = 0
 
-    fun record(request: HttpRequestData) {
-      when (request.method) {
-        HttpMethod.Post -> postCalls++
-        HttpMethod.Patch -> patchCalls++
-        HttpMethod.Delete -> deleteCalls++
+    private fun checkFail() {
+      totalCalls++
+      if (shouldFail || totalCalls < failUntilCall) {
+        throw RuntimeException("Remote source error")
       }
+    }
+
+    override suspend fun listMemos(
+      pageSize: Int,
+      pageToken: String?,
+    ): MemosPage = MemosPage(memos = emptyList(), nextPageToken = null)
+
+    override suspend fun createMemo(content: String): Memo {
+      createCalls++
+      checkFail()
+      return Memo(name = "memos/created-1", content = content)
+    }
+
+    override suspend fun updateMemo(
+      name: String,
+      content: String,
+    ): Memo {
+      updateCalls++
+      checkFail()
+      return Memo(name = name, content = content)
+    }
+
+    override suspend fun deleteMemo(name: String) {
+      deleteCalls++
+      checkFail()
     }
   }
 

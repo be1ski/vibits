@@ -2,7 +2,7 @@
 
 package space.be1ski.vibits.core.ui.theme
 
-val HabitColors =
+val ColorPalette: List<Long> =
   listOf(
     0xFF4CAF50L, // Green
     0xFF2196F3L, // Blue

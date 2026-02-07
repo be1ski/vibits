@@ -659,7 +659,7 @@ private fun ContributionCell(
   val (startColor, endColor) =
     remember(state.habitColor, defaultStartColor, defaultEndColor) {
       if (state.habitColor != null) {
-        val base = Color(state.habitColor)
+        val base = Color(state.habitColor.argb)
         val light = lerp(Color.White, base, HABIT_COLOR_LIGHT_RATIO)
         light to base
       } else {

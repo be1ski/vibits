@@ -1,4 +1,4 @@
-package space.be1ski.vibits.feature.auth.presentation.view
+package space.be1ski.vibits.core.ui.form
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,12 +14,7 @@ import space.be1ski.vibits.core.strings.generated.label_access_token
 import space.be1ski.vibits.core.strings.generated.label_base_url
 import space.be1ski.vibits.core.strings.generated.msg_connection_failed
 import space.be1ski.vibits.core.strings.generated.msg_fill_all_fields
-import space.be1ski.vibits.feature.auth.domain.model.CredentialValidationError
 
-/**
- * Emits two TextFields (base URL + access token) into the calling Column scope.
- * Does not wrap in its own Column so consumers control spacing and layout.
- */
 @Composable
 fun ColumnScope.CredentialFields(
   baseUrl: String,
@@ -49,8 +44,9 @@ fun ColumnScope.CredentialFields(
 }
 
 @Composable
-fun credentialValidationErrorMessage(error: CredentialValidationError): String =
-  when (error) {
-    CredentialValidationError.FILL_ALL_FIELDS -> stringResource(Res.string.msg_fill_all_fields)
-    CredentialValidationError.CONNECTION_FAILED -> stringResource(Res.string.msg_connection_failed)
+fun credentialValidationErrorMessage(errorName: String): String =
+  when (errorName) {
+    "FILL_ALL_FIELDS" -> stringResource(Res.string.msg_fill_all_fields)
+    "CONNECTION_FAILED" -> stringResource(Res.string.msg_connection_failed)
+    else -> errorName
   }

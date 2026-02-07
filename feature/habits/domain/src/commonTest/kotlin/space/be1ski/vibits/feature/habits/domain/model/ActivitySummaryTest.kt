@@ -109,7 +109,7 @@ class ActivitySummaryTest {
 
   @Test
   fun `when forHabit with matching habit then filters correctly`() {
-    val habit = HabitConfig(tag = "exercise", label = "Exercise", color = 0L)
+    val habit = HabitConfig(tag = "exercise", label = "Exercise", color = HabitColor(0L))
     val habitStatuses =
       listOf(
         HabitStatus(tag = "exercise", label = "Exercise", done = true),
@@ -144,7 +144,7 @@ class ActivitySummaryTest {
 
   @Test
   fun `when forHabit with non-matching habit then returns zero counts`() {
-    val habit = HabitConfig(tag = "meditation", label = "Meditation", color = 0L)
+    val habit = HabitConfig(tag = "meditation", label = "Meditation", color = HabitColor(0L))
     val habitStatuses =
       listOf(
         HabitStatus(tag = "exercise", label = "Exercise", done = true),
@@ -175,7 +175,7 @@ class ActivitySummaryTest {
 
   @Test
   fun `when forHabit with no config then returns zero totals`() {
-    val habit = HabitConfig(tag = "exercise", label = "Exercise", color = 0L)
+    val habit = HabitConfig(tag = "exercise", label = "Exercise", color = HabitColor(0L))
     val days =
       listOf(
         ContributionDay(
@@ -202,7 +202,7 @@ class ActivitySummaryTest {
 
   @Test
   fun `when forHabit then recalculates maxDaily and maxWeekly`() {
-    val habit = HabitConfig(tag = "exercise", label = "Exercise", color = 0L)
+    val habit = HabitConfig(tag = "exercise", label = "Exercise", color = HabitColor(0L))
     val days1 =
       listOf(
         ContributionDay(

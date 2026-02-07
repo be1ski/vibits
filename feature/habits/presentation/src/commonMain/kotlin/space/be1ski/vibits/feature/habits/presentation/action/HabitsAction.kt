@@ -7,6 +7,7 @@ import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.ActivitySummary
 import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.feature.habits.domain.model.SuccessRate
@@ -59,7 +60,7 @@ sealed interface HabitsAction : Action {
 
     data class UpdateHabitColor(
       val id: String,
-      val color: Long,
+      val color: HabitColor,
     ) : Config
 
     data class DeleteHabit(

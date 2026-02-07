@@ -6,21 +6,23 @@ import space.be1ski.vibits.core.platform.export.FileExporter
 import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.data.offline.OfflineMemosFileDto
 import space.be1ski.vibits.feature.memos.data.platform.OfflineMemoStorage
+import space.be1ski.vibits.feature.memos.domain.model.ExportResult
+import space.be1ski.vibits.feature.memos.domain.repository.ExportService
 import kotlin.time.Clock
 
 @Inject
-class Exporter(
+class ExportServiceImpl(
   private val fileExporter: FileExporter,
   private val offlineMemoStorage: OfflineMemoStorage,
   private val clock: Clock = Clock.System,
-) {
+) : ExportService {
   private val json =
     Json {
       ignoreUnknownKeys = true
       prettyPrint = true
     }
 
-  fun exportLogs(): ExportResult {
+  override fun exportLogs(): ExportResult {
     val fileName = generateFileName("logs", "txt")
     val content = Log.export()
     val filePath = fileExporter.export(fileName, content)
@@ -31,7 +33,7 @@ class Exporter(
     }
   }
 
-  fun exportMemos(): ExportResult {
+  override fun exportMemos(): ExportResult {
     val fileName = generateFileName("memos", "json")
     val data = offlineMemoStorage.load()
     val content = json.encodeToString(OfflineMemosFileDto.serializer(), data)
@@ -60,12 +62,4 @@ class Exporter(
   private companion object {
     const val TIMESTAMP_LENGTH = 19
   }
-}
-
-sealed interface ExportResult {
-  data class Success(
-    val filePath: String,
-  ) : ExportResult
-
-  data object Failure : ExportResult
 }

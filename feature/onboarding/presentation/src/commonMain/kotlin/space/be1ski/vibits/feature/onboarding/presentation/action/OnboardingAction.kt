@@ -1,6 +1,7 @@
 package space.be1ski.vibits.feature.onboarding.presentation.action
 
 import space.be1ski.vibits.core.elm.Action
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
 
 sealed interface OnboardingAction : Action {
@@ -40,7 +41,7 @@ sealed interface OnboardingAction : Action {
     ) : Habit
 
     data class UpdateHabitColor(
-      val color: Long,
+      val color: HabitColor,
     ) : Habit
 
     data object CreateHabit : Habit

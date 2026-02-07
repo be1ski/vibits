@@ -3,18 +3,19 @@ package space.be1ski.vibits.feature.memos.data.export
 import space.be1ski.vibits.core.platform.export.FileExporter
 import space.be1ski.vibits.feature.memos.data.offline.OfflineMemosFileDto
 import space.be1ski.vibits.feature.memos.data.platform.OfflineMemoStorage
+import space.be1ski.vibits.feature.memos.domain.model.ExportResult
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.time.Clock
 import kotlin.time.Instant
 
-class ExporterTest {
+class ExportServiceImplTest {
   @Test
   fun `when exportLogs succeeds then returns Success with file path`() {
     val fakeFileExporter = FakeFileExporter(exportResult = "/path/to/logs.txt")
     val fakeStorage = FakeOfflineMemoStorage()
-    val exporter = Exporter(fakeFileExporter, fakeStorage)
+    val exporter = ExportServiceImpl(fakeFileExporter, fakeStorage)
 
     val result = exporter.exportLogs()
 
@@ -26,7 +27,7 @@ class ExporterTest {
   fun `when exportLogs fails then returns Failure`() {
     val fakeFileExporter = FakeFileExporter(exportResult = null)
     val fakeStorage = FakeOfflineMemoStorage()
-    val exporter = Exporter(fakeFileExporter, fakeStorage)
+    val exporter = ExportServiceImpl(fakeFileExporter, fakeStorage)
 
     val result = exporter.exportLogs()
 
@@ -37,7 +38,7 @@ class ExporterTest {
   fun `when exportMemos succeeds then returns Success with file path`() {
     val fakeFileExporter = FakeFileExporter(exportResult = "/path/to/memos.json")
     val fakeStorage = FakeOfflineMemoStorage()
-    val exporter = Exporter(fakeFileExporter, fakeStorage)
+    val exporter = ExportServiceImpl(fakeFileExporter, fakeStorage)
 
     val result = exporter.exportMemos()
 
@@ -49,7 +50,7 @@ class ExporterTest {
   fun `when exportMemos fails then returns Failure`() {
     val fakeFileExporter = FakeFileExporter(exportResult = null)
     val fakeStorage = FakeOfflineMemoStorage()
-    val exporter = Exporter(fakeFileExporter, fakeStorage)
+    val exporter = ExportServiceImpl(fakeFileExporter, fakeStorage)
 
     val result = exporter.exportMemos()
 
@@ -61,7 +62,7 @@ class ExporterTest {
     val fakeFileExporter = FakeFileExporter(exportResult = "/path/to/file")
     val fakeStorage = FakeOfflineMemoStorage()
     val fakeClock = FakeClock(Instant.parse("2024-01-15T10:30:45.123Z"))
-    val exporter = Exporter(fakeFileExporter, fakeStorage, fakeClock)
+    val exporter = ExportServiceImpl(fakeFileExporter, fakeStorage, fakeClock)
 
     exporter.exportLogs()
 
@@ -73,7 +74,7 @@ class ExporterTest {
     val fakeFileExporter = FakeFileExporter(exportResult = "/path/to/file")
     val fakeStorage = FakeOfflineMemoStorage()
     val fakeClock = FakeClock(Instant.parse("2024-01-15T10:30:45.123Z"))
-    val exporter = Exporter(fakeFileExporter, fakeStorage, fakeClock)
+    val exporter = ExportServiceImpl(fakeFileExporter, fakeStorage, fakeClock)
 
     exporter.exportMemos()
 

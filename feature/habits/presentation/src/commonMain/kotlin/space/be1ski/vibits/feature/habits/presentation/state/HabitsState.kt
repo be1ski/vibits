@@ -5,6 +5,7 @@ import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
 import space.be1ski.vibits.feature.habits.domain.model.CachedActivity
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.feature.habits.domain.model.DailyMemo
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitTag
 import space.be1ski.vibits.feature.habits.domain.model.IsSelected
@@ -18,7 +19,7 @@ data class EditableHabit(
   val id: String,
   val tag: String,
   val label: String,
-  val color: Long,
+  val color: HabitColor,
 ) {
   fun toHabitConfig(): HabitConfig {
     val finalTag = if (tag.isBlank()) normalizeHabitTag(label) else tag
