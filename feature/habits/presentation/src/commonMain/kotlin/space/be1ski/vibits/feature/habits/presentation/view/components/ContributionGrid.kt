@@ -1,6 +1,10 @@
 @file:Suppress("TooManyFunctions")
 
 package space.be1ski.vibits.feature.habits.presentation.view.components
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,12 +26,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.lerp
@@ -84,6 +90,9 @@ private const val REGULAR_CELL_DP = 10
 private const val MAX_COMPACT_CELL_DP = 40
 
 private const val HABIT_COLOR_LIGHT_RATIO = 0.3f
+private const val CELL_BORDER_ANIMATION_MS = 140
+private const val CELL_FILL_ANIMATION_MS = 220
+private const val GRID_ENTER_ANIMATION_MS = 220
 
 /**
  * Renders GitHub-style daily activity grid for the provided [state].
@@ -102,8 +111,16 @@ fun ContributionGrid(
   if (!state.isActiveSelection && interaction.tooltip != null) {
     interaction.tooltip = null
   }
+  var animateIn by remember(state.range, state.weekData.weeks, state.calendarLayout) { mutableStateOf(false) }
+  LaunchedEffect(state.range, state.weekData.weeks, state.calendarLayout) { animateIn = true }
+  val contentAlpha by animateFloatAsState(
+    targetValue = if (animateIn) 1f else 0f,
+    animationSpec = tween(durationMillis = GRID_ENTER_ANIMATION_MS),
+  )
   Column(modifier = modifier) {
-    ContributionGridLayout(state, dateFormatter, onDaySelected, onClearSelection, interaction)
+    Box(modifier = Modifier.alpha(contentAlpha)) {
+      ContributionGridLayout(state, dateFormatter, onDaySelected, onClearSelection, interaction)
+    }
     ContributionGridTooltip(state, interaction, onEditRequested, onCreateRequested)
   }
 }
@@ -655,6 +672,7 @@ private fun ContributionCell(
   val defaultStartColor = AppColors.habitGradientStart.resolve()
   val defaultEndColor = AppColors.habitGradientEnd.resolve()
   val inactiveCellColor = AppColors.inactiveCell.resolve()
+  val disabledCellColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
   val (startColor, endColor) =
     remember(state.habitColor, defaultStartColor, defaultEndColor) {
       if (state.habitColor != null) {
@@ -665,40 +683,46 @@ private fun ContributionCell(
         defaultStartColor to defaultEndColor
       }
     }
-  val color =
-    when {
-      !state.enabled -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-      else -> {
-        val ratio =
-          if (state.day.totalHabits > 0) {
-            state.day.completionRatio
-          } else if (state.maxCount > 0) {
-            state.day.count.toFloat() / state.maxCount.toFloat()
-          } else {
-            0f
-          }
-        if (ratio <= 0f) {
-          inactiveCellColor
-        } else {
-          lerp(startColor, endColor, ratio.coerceIn(0f, 1f))
-        }
-      }
+  val targetRatio =
+    if (!state.enabled) {
+      0f
+    } else if (state.day.totalHabits > 0) {
+      state.day.completionRatio
+    } else if (state.maxCount > 0) {
+      state.day.count.toFloat() / state.maxCount.toFloat()
+    } else {
+      0f
     }
+  val animatedRatio by animateFloatAsState(
+    targetValue = targetRatio.coerceIn(0f, 1f),
+    animationSpec = tween(durationMillis = CELL_FILL_ANIMATION_MS),
+  )
 
   // Apply subtle highlight for today and weekends
   val todayOverlay = AppColors.todayHighlight.resolve()
   val weekendOverlay = Color.Black.copy(alpha = WEEKEND_CELL_ALPHA)
-  val baseColor =
-    if (state.isWeekend && state.enabled) {
-      color.compositeOver(weekendOverlay)
+
+  fun applyOverlays(color: Color): Color {
+    if (!state.enabled) return color
+    val weekendApplied =
+      if (state.isWeekend) {
+        color.compositeOver(weekendOverlay)
+      } else {
+        color
+      }
+    return if (state.isToday) {
+      weekendApplied.compositeOver(todayOverlay)
     } else {
-      color
+      weekendApplied
     }
+  }
   val cellColor =
-    if (state.isToday && state.enabled) {
-      baseColor.compositeOver(todayOverlay)
+    if (!state.enabled) {
+      disabledCellColor
+    } else if (animatedRatio <= 0f) {
+      applyOverlays(inactiveCellColor)
     } else {
-      baseColor
+      applyOverlays(lerp(startColor, endColor, animatedRatio))
     }
 
   val borderColor =
@@ -714,13 +738,20 @@ private fun ContributionCell(
       state.isHovered || state.isWeekSelected -> Indent.x5s
       else -> 0.dp
     }
-
+  val animatedBorderColor by animateColorAsState(
+    targetValue = borderColor,
+    animationSpec = tween(durationMillis = CELL_BORDER_ANIMATION_MS),
+  )
+  val animatedBorderWidth by animateDpAsState(
+    targetValue = borderWidth,
+    animationSpec = tween(durationMillis = CELL_BORDER_ANIMATION_MS),
+  )
   Box(
     modifier =
       Modifier
         .size(state.size)
         .background(color = cellColor, shape = MaterialTheme.shapes.extraSmall)
-        .border(width = borderWidth, color = borderColor, shape = MaterialTheme.shapes.extraSmall)
+        .border(width = animatedBorderWidth, color = animatedBorderColor, shape = MaterialTheme.shapes.extraSmall)
         .onGloballyPositioned { coordinates = it }
         .then(
           if (onHoverChange != null) {
