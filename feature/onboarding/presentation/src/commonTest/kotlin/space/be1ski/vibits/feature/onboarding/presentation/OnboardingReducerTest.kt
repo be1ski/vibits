@@ -1,6 +1,7 @@
 package space.be1ski.vibits.feature.onboarding.presentation
 
 import space.be1ski.vibits.core.elm.test.test
+import space.be1ski.vibits.core.utils.habits.DemoHabit
 import space.be1ski.vibits.feature.habits.domain.model.DefaultHabitColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
@@ -89,8 +90,8 @@ class OnboardingReducerTest {
     onboardingReducer.test(OnboardingState()) {
       val presets =
         listOf(
-          HabitPreset(id = "water", nameKey = "demo_habit_water"),
-          HabitPreset(id = "walking", nameKey = "demo_habit_walking"),
+          HabitPreset(demoHabit = DemoHabit.WATER),
+          HabitPreset(demoHabit = DemoHabit.WALKING),
         )
       send(OnboardingAction.Preset.PresetsLoaded(presets))
 

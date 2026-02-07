@@ -7,6 +7,7 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
+        implementation(projects.core.utils)
         implementation(projects.feature.habits.domain)
         implementation(projects.feature.memos.domain)
         implementation(libs.kotlinx.coroutines.core)

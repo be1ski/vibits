@@ -1,4 +1,5 @@
 package space.be1ski.vibits.feature.onboarding.presentation.view
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -39,7 +40,6 @@ import space.be1ski.vibits.core.strings.generated.action_start_tracking
 import space.be1ski.vibits.core.strings.generated.hint_habit_name
 import space.be1ski.vibits.core.strings.generated.label_habit_color
 import space.be1ski.vibits.core.strings.generated.label_habit_name
-import space.be1ski.vibits.core.strings.generated.label_habit_preset_custom
 import space.be1ski.vibits.core.strings.generated.msg_habit_name_required
 import space.be1ski.vibits.core.strings.generated.msg_habit_setup
 import space.be1ski.vibits.core.strings.generated.title_habit_setup
@@ -49,7 +49,6 @@ import space.be1ski.vibits.core.ui.theme.AppColors
 import space.be1ski.vibits.core.ui.theme.ColorPalette
 import space.be1ski.vibits.core.ui.theme.resolve
 import space.be1ski.vibits.feature.habits.domain.model.HabitColor
-import space.be1ski.vibits.feature.onboarding.domain.model.CUSTOM_PRESET_ID
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
 
 private val COLOR_CIRCLE_SIZE = 40.dp
@@ -75,9 +74,7 @@ fun HabitSetupScreen(
 ) {
   val selectedPreset = presets.find { it.id == selectedPresetId }
   val localizedPresetName =
-    selectedPreset?.let {
-      if (it.id != CUSTOM_PRESET_ID) getLocalizedPresetName(it.nameKey) else ""
-    } ?: ""
+    selectedPreset?.demoHabit?.let { localizedDemoHabitName(it) } ?: ""
 
   // Auto-fill habit name from localized preset name
   LaunchedEffect(selectedPresetId) {
@@ -176,13 +173,6 @@ private fun resolveErrorMessage(error: String?): String? =
       "habit_name_required" -> stringResource(Res.string.msg_habit_name_required)
       else -> errorKey
     }
-  }
-
-@Composable
-private fun getLocalizedPresetName(nameKey: String): String =
-  when (nameKey) {
-    "label_habit_preset_custom" -> stringResource(Res.string.label_habit_preset_custom)
-    else -> localizedDemoHabitName(nameKey)
   }
 
 @Composable
