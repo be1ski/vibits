@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.filled.StickyNote2
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -148,7 +148,7 @@ internal fun MemosBottomNavigation(
     NavigationBarItem(
       selected = appState.selectedScreen == Screen.HABITS,
       onClick = { onTabClick(Screen.HABITS) },
-      icon = { Icon(Icons.Filled.CheckCircle, contentDescription = stringResource(Res.string.nav_habits)) },
+      icon = { Icon(Icons.Outlined.CheckCircle, contentDescription = stringResource(Res.string.nav_habits)) },
       label = { Text(stringResource(Res.string.nav_habits)) },
       modifier = Modifier.testTag(AppShellTestTags.BOTTOM_NAV_HABITS),
     )
