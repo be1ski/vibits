@@ -55,6 +55,7 @@ public fun <Action, State, Command, Notification> reducer(
  * If [state] is called multiple times, only the last transformation is applied.
  * Commands and notifications accumulate with each call.
  */
+@Suppress("unused") // Library API — not all methods are used yet
 @ReducerDslMarker
 public class ReducerContext<State, Command, Notification> {
   private var stateUpdate: (State.() -> State) = { this }
@@ -151,6 +152,32 @@ public class ReducerContext<State, Command, Notification> {
    */
   public fun notify(notification: Notification) {
     notifications.add(notification)
+  }
+
+  /**
+   * Emits multiple notifications to external observers.
+   *
+   * ```
+   * notifications(MyNotification.Saved, MyNotification.DialogClosed)
+   * ```
+   *
+   * @param notifications The notifications to emit
+   */
+  public fun notifications(vararg notifications: Notification) {
+    notifications(notifications.toList())
+  }
+
+  /**
+   * Emits a list of notifications to external observers.
+   *
+   * ```
+   * notifications(listOf(MyNotification.Saved, MyNotification.DialogClosed))
+   * ```
+   *
+   * @param notifications The list of notifications to emit
+   */
+  public fun notifications(notifications: List<Notification>) {
+    this.notifications.addAll(notifications)
   }
 
   internal fun getResult(initialState: State): ReducerResult<State, Command, Notification> =

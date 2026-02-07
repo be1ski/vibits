@@ -2,6 +2,7 @@ package space.be1ski.vibits.core.ui
 
 import androidx.compose.ui.unit.dp
 
+@Suppress("unused") // Design system — not all values are used yet
 object Indent {
   val x5s = 1.dp
   val x4s = 2.dp
@@ -13,4 +14,8 @@ object Indent {
   val l = 20.dp
   val xl = 24.dp
   val x2l = 32.dp
+  val x3l = 40.dp
+  val x4l = 48.dp
+  val x5l = 56.dp
+  val x6l = 64.dp
 }
