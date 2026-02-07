@@ -14,7 +14,7 @@ core/
   ui/            — Compose UI components and theme
   utils/         — Shared utilities (date, logging)
 feature/
-  auth/          — Authentication (domain, domain/testing, data, presentation)
+  auth/          — Authentication (domain, domain/testing, data)
   habits/        — Habits tracking (domain, presentation)
   homescreen/    — App graph, DI wiring, coordinator
   memos/         — Memos API (domain, domain/testing, data, data/testing, presentation)

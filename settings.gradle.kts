@@ -43,7 +43,6 @@ include(
   ":feature:auth:domain",
   ":feature:auth:domain:testing",
   ":feature:auth:data",
-  ":feature:auth:presentation",
 
   ":feature:memos:domain",
   ":feature:memos:domain:testing",
