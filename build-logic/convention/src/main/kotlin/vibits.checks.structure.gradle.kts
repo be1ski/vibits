@@ -7,6 +7,7 @@
  * - Test fakes belong in testing/ modules, not production code
  * - core/ modules only depend on other core/ modules (never on feature/)
  * - Feature layers follow dependency rules: domain <- data, domain <- presentation
+ * - No empty modules (registered in settings.gradle.kts but containing no Kotlin sources)
  */
 
 // region Constants
@@ -176,6 +177,20 @@ fun checkFeatureLayerDependencies(
   }
 }
 
+fun checkEmptyModules(violations: MutableList<String>) {
+  val allPaths = subprojects.map { it.path }.toSet()
+  subprojects
+    .filter { it.path.startsWith(featureModulePrefix) || it.path.startsWith(coreModulePrefix) }
+    .filter { sub -> allPaths.none { it != sub.path && it.startsWith("${sub.path}:") } }
+    .forEach { sub ->
+      val srcDir = sub.file("src")
+      val hasFiles = srcDir.exists() && srcDir.walkTopDown().any { it.isFile }
+      if (!hasFiles) {
+        violations += "${sub.path} — module has no source files. Remove it from settings.gradle.kts or add source files."
+      }
+    }
+}
+
 tasks.register("checkConventions") {
   group = "verification"
   description = "Checks project structure conventions across source files"
@@ -203,6 +218,7 @@ tasks.register("checkConventions") {
 
     checkCoreDependencies(violations)
     checkFeatureLayerDependencies(violations)
+    checkEmptyModules(violations)
 
     if (violations.isNotEmpty()) {
       val summary = violations.joinToString("\n") { "  - $it" }
