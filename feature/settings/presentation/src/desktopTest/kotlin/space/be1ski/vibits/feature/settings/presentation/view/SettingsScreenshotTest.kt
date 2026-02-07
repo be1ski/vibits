@@ -63,6 +63,25 @@ class SettingsScreenshotTest {
     }
 
   @Test
+  fun `when demo mode then captures demo settings`() =
+    runAppUiTest {
+      setThemedContent {
+        SettingsDialog(
+          state =
+            SettingsState(
+              isOpen = true,
+              appMode = AppMode.DEMO,
+            ),
+          dispatch = {},
+          exportService = fakeExportService,
+        )
+      }
+
+      onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
+      saveScreenshot("settings", "SettingsScreenshotTest", "settings_demo")
+    }
+
+  @Test
   fun `when validation error then captures error state`() =
     runAppUiTest {
       setThemedContent {
