@@ -4,12 +4,13 @@ plugins {
   id("org.jetbrains.kotlin.plugin.compose")
 }
 
-@OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+val libs = the<VersionCatalogsExtension>().named("libs")
+
 kotlin {
   sourceSets {
     val desktopTest by getting {
       dependencies {
-        implementation(compose.uiTest)
+        implementation(libs.findLibrary("compose-ui-test").get())
         implementation(compose.desktop.currentOs)
       }
     }
