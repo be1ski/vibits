@@ -19,6 +19,12 @@ class ReducerContextTest {
     ) : TestEffect
   }
 
+  private sealed interface TestNotification {
+    data object Saved : TestNotification
+
+    data object Closed : TestNotification
+  }
+
   @Test
   fun `when no changes then getResult returns initial state with empty effects`() {
     val context = ReducerContext<TestState, TestEffect, Nothing>()
@@ -125,5 +131,26 @@ class ReducerContextTest {
 
     assertEquals(initialState, result.state)
     assertEquals(listOf(TestEffect.EffectA), result.commands)
+  }
+
+  @Test
+  fun `when notifications called with vararg then all notifications are added`() {
+    val context = ReducerContext<TestState, TestEffect, TestNotification>()
+    context.notifications(TestNotification.Saved, TestNotification.Closed)
+
+    val result = context.getResult(TestState())
+
+    assertEquals(listOf(TestNotification.Saved, TestNotification.Closed), result.notifications)
+  }
+
+  @Test
+  fun `when notifications called with list then all notifications are added`() {
+    val context = ReducerContext<TestState, TestEffect, TestNotification>()
+    val notificationList = listOf(TestNotification.Saved, TestNotification.Closed)
+    context.notifications(notificationList)
+
+    val result = context.getResult(TestState())
+
+    assertEquals(notificationList, result.notifications)
   }
 }
