@@ -14,10 +14,12 @@ kotlin {
 dependencies {
   implementation(libs.android.gradle.plugin)
   implementation(libs.compose.multiplatform.plugin)
+  implementation(libs.detekt.plugin)
   implementation(libs.kotlin.gradle.plugin)
   implementation(libs.kotlin.compose.plugin)
   implementation(libs.kover.plugin)
   implementation(libs.ksp.plugin)
+  implementation(libs.ktlint.plugin)
   implementation(libs.metro.plugin)
   implementation(libs.room.plugin)
 }
