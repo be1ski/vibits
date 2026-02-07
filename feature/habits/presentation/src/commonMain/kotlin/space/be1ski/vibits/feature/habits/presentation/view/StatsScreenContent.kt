@@ -718,7 +718,7 @@ private fun LastSevenDaysMatrix(
             val baseColor =
               if (done) {
                 androidx.compose.ui.graphics
-                  .Color(habit.color)
+                  .Color(habit.color.argb)
               } else {
                 pendingColor
               }

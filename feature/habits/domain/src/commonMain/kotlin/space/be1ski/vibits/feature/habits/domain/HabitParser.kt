@@ -1,6 +1,7 @@
 package space.be1ski.vibits.feature.habits.domain
 
 import space.be1ski.vibits.feature.habits.domain.model.DefaultHabitColor
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitStatus
 import space.be1ski.vibits.feature.memos.domain.model.PostTags
@@ -58,7 +59,7 @@ fun parseHabitConfigLine(line: String): HabitConfig? {
       else -> {
         val lbl = parts[0]
         val tag = normalizeHabitTag(parts[1])
-        val clr = parseHexColor(parts[2]) ?: DefaultHabitColor
+        val clr = parseHexColor(parts[2])?.let(::HabitColor) ?: DefaultHabitColor
         Triple(lbl, tag, clr)
       }
     }
@@ -81,8 +82,8 @@ fun parseHexColor(hex: String): Long? {
 /**
  * Formats an ARGB Long color to hex string (#RRGGBB).
  */
-fun formatHexColor(color: Long): String {
-  val rgb = color and RGB_MASK
+fun formatHexColor(color: HabitColor): String {
+  val rgb = color.argb and RGB_MASK
   return "#${rgb.toString(HEX_RADIX).uppercase().padStart(HEX_RGB_LENGTH, '0')}"
 }
 

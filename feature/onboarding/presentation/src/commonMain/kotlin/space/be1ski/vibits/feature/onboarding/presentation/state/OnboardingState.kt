@@ -1,6 +1,7 @@
 package space.be1ski.vibits.feature.onboarding.presentation.state
 
 import space.be1ski.vibits.feature.habits.domain.model.DefaultHabitColor
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
 
 data class OnboardingState(
@@ -9,7 +10,7 @@ data class OnboardingState(
   val selectedPresetId: String? = null,
   val selectedPresetName: String? = null,
   val habitName: String = "",
-  val selectedColor: Long = DefaultHabitColor,
+  val selectedColor: HabitColor = DefaultHabitColor,
   val isCreatingHabit: Boolean = false,
   val creationError: String? = null,
   val habitCreated: Boolean = false,

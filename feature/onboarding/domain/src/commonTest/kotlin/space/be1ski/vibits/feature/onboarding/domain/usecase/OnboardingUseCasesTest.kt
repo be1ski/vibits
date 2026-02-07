@@ -5,6 +5,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import space.be1ski.vibits.feature.habits.domain.model.DefaultHabitColor
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.memos.data.offline.OfflineMemoDto
 import space.be1ski.vibits.feature.memos.data.offline.OfflineMemosFileDto
 import space.be1ski.vibits.feature.memos.data.test.FakeOfflineMemoStorage
@@ -103,7 +104,7 @@ class OnboardingUseCasesTest {
       val createMemo = CreateMemoUseCase(memosRepository)
       val useCase = CreateFirstHabitUseCase(createMemo)
 
-      val result = useCase("Exercise", "custom", 0xFF2196F3L)
+      val result = useCase("Exercise", "custom", HabitColor(0xFF2196F3L))
 
       assertTrue(result.isSuccess)
       val createdContent = memosRepository.lastCreatedContent

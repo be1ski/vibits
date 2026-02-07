@@ -8,6 +8,6 @@ data class HabitConfig(
   val tag: String,
   /** User-friendly label. */
   val label: String,
-  /** Habit color as ARGB Long. */
-  val color: Long = DefaultHabitColor,
+  /** Habit color. */
+  val color: HabitColor = DefaultHabitColor,
 )

@@ -2,6 +2,7 @@ package space.be1ski.vibits.feature.habits.domain
 
 import kotlinx.datetime.LocalDate
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitStatus
 import kotlin.test.Test
@@ -139,8 +140,8 @@ class HabitContentBuilderTest {
   fun `when entries exist then builds config content with header`() {
     val entries =
       listOf(
-        HabitConfig("#habits/exercise", "Exercise", 0xFF4CAF50L),
-        HabitConfig("#habits/reading", "Reading", 0xFF2196F3L),
+        HabitConfig("#habits/exercise", "Exercise", HabitColor(0xFF4CAF50L)),
+        HabitConfig("#habits/reading", "Reading", HabitColor(0xFF2196F3L)),
       )
 
     val result = buildHabitsConfigContentFromList(entries)

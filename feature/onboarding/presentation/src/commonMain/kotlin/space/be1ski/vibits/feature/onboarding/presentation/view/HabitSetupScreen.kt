@@ -45,8 +45,9 @@ import space.be1ski.vibits.core.strings.generated.msg_habit_setup
 import space.be1ski.vibits.core.strings.generated.title_habit_setup
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.theme.AppColors
+import space.be1ski.vibits.core.ui.theme.ColorPalette
 import space.be1ski.vibits.core.ui.theme.resolve
-import space.be1ski.vibits.feature.habits.domain.model.HabitColors
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.habits.presentation.view.components.localizedDemoHabitName
 import space.be1ski.vibits.feature.onboarding.domain.model.CUSTOM_PRESET_ID
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
@@ -63,11 +64,11 @@ fun HabitSetupScreen(
   selectedPresetId: String?,
   presets: List<HabitPreset>,
   habitName: String,
-  selectedColor: Long,
+  selectedColor: HabitColor,
   isCreating: Boolean,
   error: String?,
   onUpdateName: (String) -> Unit,
-  onColorChange: (Long) -> Unit,
+  onColorChange: (HabitColor) -> Unit,
   onCreate: () -> Unit,
   onBack: () -> Unit,
   modifier: Modifier = Modifier,
@@ -141,7 +142,8 @@ fun HabitSetupScreen(
       horizontalArrangement = Arrangement.spacedBy(Indent.s),
       verticalArrangement = Arrangement.spacedBy(Indent.s),
     ) {
-      HabitColors.forEach { color ->
+      ColorPalette.forEach { colorLong ->
+        val color = HabitColor(colorLong)
         ColorCircle(
           color = color,
           isSelected = selectedColor == color,
@@ -185,11 +187,11 @@ private fun getLocalizedPresetName(nameKey: String): String =
 
 @Composable
 private fun ColorCircle(
-  color: Long,
+  color: HabitColor,
   isSelected: Boolean,
   onClick: () -> Unit,
 ) {
-  val circleColor = Color(color)
+  val circleColor = Color(color.argb)
   val borderColor =
     if (isSelected) {
       MaterialTheme.colorScheme.primary

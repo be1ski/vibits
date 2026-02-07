@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.habits.domain
 
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -47,7 +48,7 @@ class HabitParserTest {
     val result = parseHabitConfigLine("Exercise | #habits/exercise | #4CAF50")
     assertEquals("Exercise", result?.label)
     assertEquals("#habits/exercise", result?.tag)
-    assertEquals(0xFF4CAF50L, result?.color)
+    assertEquals(HabitColor(0xFF4CAF50L), result?.color)
   }
 
   @Test
@@ -55,7 +56,7 @@ class HabitParserTest {
     val result = parseHabitConfigLine("  Morning Run  |  #habits/morning_run  |  #FF5733  ")
     assertEquals("Morning Run", result?.label)
     assertEquals("#habits/morning_run", result?.tag)
-    assertEquals(0xFFFF5733L, result?.color)
+    assertEquals(HabitColor(0xFFFF5733L), result?.color)
   }
 
   @Test
@@ -272,13 +273,13 @@ class HabitParserTest {
 
   @Test
   fun `when color is valid then formats with hash and uppercase`() {
-    val result = formatHexColor(0xFF5733L)
+    val result = formatHexColor(HabitColor(0xFF5733L))
     assertEquals("#FF5733", result)
   }
 
   @Test
   fun `when color has leading zeros then pads correctly`() {
-    val result = formatHexColor(0x000033L)
+    val result = formatHexColor(HabitColor(0x000033L))
     assertEquals("#000033", result)
   }
 
@@ -299,10 +300,10 @@ class HabitParserTest {
     assertEquals(3, result.size)
     assertEquals("Exercise", result[0].label)
     assertEquals("#habits/exercise", result[0].tag)
-    assertEquals(0xFF4CAF50L, result[0].color)
+    assertEquals(HabitColor(0xFF4CAF50L), result[0].color)
     assertEquals("Reading", result[1].label)
     assertEquals("#habits/reading", result[1].tag)
-    assertEquals(0xFFFF5733L, result[1].color)
+    assertEquals(HabitColor(0xFFFF5733L), result[1].color)
     assertEquals("Meditation", result[2].label)
     assertEquals("#habits/Meditation", result[2].tag)
   }
@@ -349,7 +350,7 @@ class HabitParserTest {
     assertEquals(1, result.size)
     assertEquals("Exercise", result[0].label)
     assertEquals("#habits/exercise", result[0].tag)
-    assertEquals(0xFF4CAF50L, result[0].color)
+    assertEquals(HabitColor(0xFF4CAF50L), result[0].color)
   }
 
   @Test

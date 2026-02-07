@@ -31,6 +31,12 @@ build-logic/     — Convention plugins (vibits.kmp.*, vibits.checks.*)
 
 Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if any) live under module `src/.../res`.
 
+### Module Dependency Rules
+
+- **`core/` modules** can only depend on other `core/` modules and external libraries. Never on `feature/` or app modules.
+- **`feature/` modules** can depend on `core/` modules and other `feature/` modules.
+- **App modules** (`androidApp`, `desktopApp`, etc.) can depend on anything.
+
 ## Package Organization Rules
 
 The project follows strict package organization to maintain clean architecture and enable automatic test coverage exclusions:

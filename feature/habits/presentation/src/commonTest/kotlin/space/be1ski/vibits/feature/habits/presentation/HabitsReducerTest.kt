@@ -9,6 +9,7 @@ import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
 import space.be1ski.vibits.feature.habits.domain.model.CachedActivity
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.feature.habits.domain.model.DailyMemo
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitStatus
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
@@ -344,7 +345,7 @@ class HabitsReducerTest {
     habitsReducer.test(
       HabitsState(
         showConfigDialog = true,
-        editingHabits = listOf(EditableHabit("1", "#habits/test", "Test", 0xFF0000L)),
+        editingHabits = listOf(EditableHabit("1", "#habits/test", "Test", HabitColor(0xFF0000L))),
       ),
     ) {
       send(HabitsAction.Config.CloseConfigDialog)
@@ -365,7 +366,7 @@ class HabitsReducerTest {
   @Test
   fun `when UpdateHabitLabel then updates label only`() =
     habitsReducer.test(
-      HabitsState(editingHabits = listOf(EditableHabit("habit_1", "", "", 0xFF0000L))),
+      HabitsState(editingHabits = listOf(EditableHabit("habit_1", "", "", HabitColor(0xFF0000L)))),
     ) {
       send(HabitsAction.Config.UpdateHabitLabel("habit_1", "Morning Run"))
 
@@ -378,7 +379,7 @@ class HabitsReducerTest {
 
   @Test
   fun `when toHabitConfig with empty tag then generates tag from label`() {
-    val editable = EditableHabit("habit_1", "", "Morning Run", 0xFF0000L)
+    val editable = EditableHabit("habit_1", "", "Morning Run", HabitColor(0xFF0000L))
     val config = editable.toHabitConfig()
 
     assertEquals("#habits/Morning_Run", config.tag)
@@ -387,7 +388,7 @@ class HabitsReducerTest {
 
   @Test
   fun `when toHabitConfig with existing tag then keeps the tag`() {
-    val editable = EditableHabit("habit_1", "#habits/custom", "Morning Run", 0xFF0000L)
+    val editable = EditableHabit("habit_1", "#habits/custom", "Morning Run", HabitColor(0xFF0000L))
     val config = editable.toHabitConfig()
 
     assertEquals("#habits/custom", config.tag)
@@ -396,7 +397,7 @@ class HabitsReducerTest {
 
   @Test
   fun `when toHabitConfig with cyrillic label then generates correct tag`() {
-    val editable = EditableHabit("habit_1", "", "фывфывфывфыв", 0xFF0000L)
+    val editable = EditableHabit("habit_1", "", "фывфывфывфыв", HabitColor(0xFF0000L))
     val config = editable.toHabitConfig()
 
     assertEquals("#habits/фывфывфывфыв", config.tag)
@@ -409,8 +410,8 @@ class HabitsReducerTest {
       HabitsState(
         editingHabits =
           listOf(
-            EditableHabit("habit_1", "#habits/a", "A", 0xFF0000L),
-            EditableHabit("habit_2", "#habits/b", "B", 0x00FF00L),
+            EditableHabit("habit_1", "#habits/a", "A", HabitColor(0xFF0000L)),
+            EditableHabit("habit_2", "#habits/b", "B", HabitColor(0x00FF00L)),
           ),
       ),
     ) {
@@ -426,11 +427,11 @@ class HabitsReducerTest {
   @Test
   fun `when UpdateHabitColor then updates color`() =
     habitsReducer.test(
-      HabitsState(editingHabits = listOf(EditableHabit("habit_1", "#habits/test", "Test", 0xFF0000L))),
+      HabitsState(editingHabits = listOf(EditableHabit("habit_1", "#habits/test", "Test", HabitColor(0xFF0000L)))),
     ) {
-      send(HabitsAction.Config.UpdateHabitColor("habit_1", 0x00FF00L))
+      send(HabitsAction.Config.UpdateHabitColor("habit_1", HabitColor(0x00FF00L)))
 
-      assertState { editingHabits.first().color == 0x00FF00L }
+      assertState { editingHabits.first().color == HabitColor(0x00FF00L) }
       assertNoEffects()
     }
 
@@ -440,16 +441,16 @@ class HabitsReducerTest {
       HabitsState(
         editingHabits =
           listOf(
-            EditableHabit("habit_1", "#habits/a", "A", 0xFF0000L),
-            EditableHabit("habit_2", "#habits/b", "B", 0x00FF00L),
+            EditableHabit("habit_1", "#habits/a", "A", HabitColor(0xFF0000L)),
+            EditableHabit("habit_2", "#habits/b", "B", HabitColor(0x00FF00L)),
           ),
       ),
     ) {
-      send(HabitsAction.Config.UpdateHabitColor("habit_1", 0xFFFFFFFL))
+      send(HabitsAction.Config.UpdateHabitColor("habit_1", HabitColor(0xFFFFFFFL)))
 
       assertState {
-        editingHabits[0].color == 0xFFFFFFFL &&
-          editingHabits[1].color == 0x00FF00L
+        editingHabits[0].color == HabitColor(0xFFFFFFFL) &&
+          editingHabits[1].color == HabitColor(0x00FF00L)
       }
     }
 
@@ -459,8 +460,8 @@ class HabitsReducerTest {
       HabitsState(
         editingHabits =
           listOf(
-            EditableHabit("habit_1", "#habits/a", "A", 0xFF0000L),
-            EditableHabit("habit_2", "#habits/b", "B", 0x00FF00L),
+            EditableHabit("habit_1", "#habits/a", "A", HabitColor(0xFF0000L)),
+            EditableHabit("habit_2", "#habits/b", "B", HabitColor(0x00FF00L)),
           ),
       ),
     ) {
@@ -474,7 +475,7 @@ class HabitsReducerTest {
   fun `when SaveConfigDialog then emits CreateMemo with config content`() =
     habitsReducer.test(
       HabitsState(
-        editingHabits = listOf(EditableHabit("habit_1", "#habits/exercise", "Exercise", 0xFF0000L)),
+        editingHabits = listOf(EditableHabit("habit_1", "#habits/exercise", "Exercise", HabitColor(0xFF0000L))),
       ),
     ) {
       send(HabitsAction.Config.SaveConfigDialog)
@@ -489,9 +490,9 @@ class HabitsReducerTest {
       HabitsState(
         editingHabits =
           listOf(
-            EditableHabit("habit_1", "#habits/exercise", "Exercise", 0xFF0000L),
-            EditableHabit("habit_2", "", "", 0x00FF00L),
-            EditableHabit("habit_3", "#habits/reading", "Reading", 0x0000FFL),
+            EditableHabit("habit_1", "#habits/exercise", "Exercise", HabitColor(0xFF0000L)),
+            EditableHabit("habit_2", "", "", HabitColor(0x00FF00L)),
+            EditableHabit("habit_3", "#habits/reading", "Reading", HabitColor(0x0000FFL)),
           ),
       ),
     ) {
@@ -619,8 +620,8 @@ class HabitsReducerTest {
         showConfigDialog = true,
         editingHabits =
           listOf(
-            EditableHabit("1", "#habits/exercise", "Exercise", 0xFF4CAF50L),
-            EditableHabit("2", "#habits/reading", "Reading", 0xFF2196F3L),
+            EditableHabit("1", "#habits/exercise", "Exercise", HabitColor(0xFF4CAF50L)),
+            EditableHabit("2", "#habits/reading", "Reading", HabitColor(0xFF2196F3L)),
           ),
         editingConfigMemo = testConfigMemo,
       ),
@@ -642,7 +643,7 @@ class HabitsReducerTest {
         showConfigDialog = true,
         editingHabits =
           listOf(
-            EditableHabit("1", "#habits/exercise", "Exercise", 0xFF4CAF50L),
+            EditableHabit("1", "#habits/exercise", "Exercise", HabitColor(0xFF4CAF50L)),
           ),
         editingConfigMemo = null,
       ),
