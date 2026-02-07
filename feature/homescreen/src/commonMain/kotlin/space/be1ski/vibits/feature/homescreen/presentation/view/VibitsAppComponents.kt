@@ -18,6 +18,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.platform.date.currentLocalDate
 import space.be1ski.vibits.core.platform.isDesktop
@@ -130,60 +131,40 @@ internal fun MemosBottomNavigation(
   onClearSelection: () -> Unit,
   onFeedScrollToTop: () -> Unit,
 ) {
+  val onTabClick = { screen: Screen ->
+    onClearSelection()
+    if (appState.selectedScreen == screen) {
+      if (screen == Screen.FEED) {
+        onFeedScrollToTop()
+      } else {
+        onAppAction(AppAction.TimeRange.ResetToHome(currentLocalDate()))
+      }
+    } else {
+      onAppAction(AppAction.Navigation.SelectScreen(screen))
+    }
+  }
+
   NavigationBar {
     NavigationBarItem(
       selected = appState.selectedScreen == Screen.HABITS,
-      onClick = {
-        onClearSelection()
-        if (appState.selectedScreen == Screen.HABITS) {
-          onAppAction(AppAction.TimeRange.ResetToHome(currentLocalDate()))
-        } else {
-          onAppAction(AppAction.Navigation.SelectScreen(Screen.HABITS))
-        }
-      },
-      icon = {
-        Icon(
-          imageVector = Icons.Filled.CheckCircle,
-          contentDescription = stringResource(Res.string.nav_habits),
-        )
-      },
+      onClick = { onTabClick(Screen.HABITS) },
+      icon = { Icon(Icons.Filled.CheckCircle, contentDescription = stringResource(Res.string.nav_habits)) },
       label = { Text(stringResource(Res.string.nav_habits)) },
+      modifier = Modifier.testTag(AppShellTestTags.BOTTOM_NAV_HABITS),
     )
     NavigationBarItem(
       selected = appState.selectedScreen == Screen.STATS,
-      onClick = {
-        onClearSelection()
-        if (appState.selectedScreen == Screen.STATS) {
-          onAppAction(AppAction.TimeRange.ResetToHome(currentLocalDate()))
-        } else {
-          onAppAction(AppAction.Navigation.SelectScreen(Screen.STATS))
-        }
-      },
-      icon = {
-        Icon(
-          imageVector = Icons.AutoMirrored.Filled.StickyNote2,
-          contentDescription = stringResource(Res.string.nav_memos),
-        )
-      },
+      onClick = { onTabClick(Screen.STATS) },
+      icon = { Icon(Icons.AutoMirrored.Filled.StickyNote2, contentDescription = stringResource(Res.string.nav_memos)) },
       label = { Text(stringResource(Res.string.nav_memos)) },
+      modifier = Modifier.testTag(AppShellTestTags.BOTTOM_NAV_STATS),
     )
     NavigationBarItem(
       selected = appState.selectedScreen == Screen.FEED,
-      onClick = {
-        onClearSelection()
-        if (appState.selectedScreen == Screen.FEED) {
-          onFeedScrollToTop()
-        } else {
-          onAppAction(AppAction.Navigation.SelectScreen(Screen.FEED))
-        }
-      },
-      icon = {
-        Icon(
-          imageVector = Icons.AutoMirrored.Filled.List,
-          contentDescription = stringResource(Res.string.nav_feed),
-        )
-      },
+      onClick = { onTabClick(Screen.FEED) },
+      icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = stringResource(Res.string.nav_feed)) },
       label = { Text(stringResource(Res.string.nav_feed)) },
+      modifier = Modifier.testTag(AppShellTestTags.BOTTOM_NAV_FEED),
     )
   }
 }

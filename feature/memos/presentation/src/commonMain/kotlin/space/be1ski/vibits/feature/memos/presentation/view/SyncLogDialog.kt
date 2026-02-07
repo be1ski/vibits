@@ -8,6 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_clear
@@ -29,6 +31,7 @@ fun SyncLogDialog(onDismiss: () -> Unit) {
 
   AlertDialog(
     onDismissRequest = onDismiss,
+    modifier = Modifier.testTag(FeedTestTags.SYNC_LOG_DIALOG),
     title = { Text(stringResource(Res.string.title_sync_logs, syncLogs.size)) },
     text = {
       LogViewer(

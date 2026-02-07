@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.strings.generated.Res
@@ -89,6 +90,7 @@ fun HabitSetupScreen(
   Column(
     modifier =
       modifier
+        .testTag(OnboardingTestTags.HABIT_SETUP_SCREEN)
         .padding(Indent.xl),
     verticalArrangement = Arrangement.spacedBy(Indent.m),
   ) {
@@ -126,7 +128,7 @@ fun HabitSetupScreen(
         errorMessage?.let {
           { Text(it, color = AppColors.errorColor.resolve()) }
         },
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier.fillMaxWidth().testTag(OnboardingTestTags.HABIT_SETUP_NAME_FIELD),
     )
 
     Text(
@@ -154,7 +156,7 @@ fun HabitSetupScreen(
     Button(
       onClick = onCreate,
       enabled = !isCreating && habitName.isNotBlank(),
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier.fillMaxWidth().testTag(OnboardingTestTags.HABIT_SETUP_CREATE_BUTTON),
     ) {
       if (isCreating) {
         CircularProgressIndicator(

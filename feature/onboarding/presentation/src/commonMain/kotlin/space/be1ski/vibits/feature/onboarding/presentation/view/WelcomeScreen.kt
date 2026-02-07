@@ -1,4 +1,5 @@
 package space.be1ski.vibits.feature.onboarding.presentation.view
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +13,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_create_first_habit
@@ -32,6 +34,7 @@ fun WelcomeScreen(
   Column(
     modifier =
       modifier
+        .testTag(OnboardingTestTags.WELCOME_SCREEN)
         .padding(Indent.xl),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center,
@@ -54,7 +57,7 @@ fun WelcomeScreen(
 
     Button(
       onClick = onContinue,
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier.fillMaxWidth().testTag(OnboardingTestTags.WELCOME_CONTINUE_BUTTON),
     ) {
       Text(stringResource(Res.string.action_create_first_habit))
     }
@@ -63,7 +66,7 @@ fun WelcomeScreen(
 
     TextButton(
       onClick = onSkip,
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier.fillMaxWidth().testTag(OnboardingTestTags.WELCOME_SKIP_BUTTON),
     ) {
       Text(stringResource(Res.string.action_maybe_later))
     }

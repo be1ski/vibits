@@ -22,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.elm.Feature
@@ -81,6 +82,8 @@ fun ModeSelectionScreen(
       description = stringResource(Res.string.mode_online_desc),
       isPrimary = true,
       onClick = { dispatch(ModeSelectionAction.Dialog.Show) },
+      modifier = Modifier.testTag(ModeSelectionTestTags.ONLINE_CARD),
+      buttonTag = ModeSelectionTestTags.ONLINE_BUTTON,
     )
 
     Spacer(modifier = Modifier.height(Indent.m))
@@ -90,6 +93,8 @@ fun ModeSelectionScreen(
       description = stringResource(Res.string.mode_offline_desc),
       isPrimary = false,
       onClick = { dispatch(ModeSelectionAction.Selection.SelectMode(AppMode.OFFLINE)) },
+      modifier = Modifier.testTag(ModeSelectionTestTags.OFFLINE_CARD),
+      buttonTag = ModeSelectionTestTags.OFFLINE_BUTTON,
     )
 
     Spacer(modifier = Modifier.height(Indent.m))
@@ -99,21 +104,24 @@ fun ModeSelectionScreen(
       description = stringResource(Res.string.mode_demo_desc),
       isPrimary = false,
       onClick = { dispatch(ModeSelectionAction.Selection.SelectMode(AppMode.DEMO)) },
+      modifier = Modifier.testTag(ModeSelectionTestTags.DEMO_CARD),
+      buttonTag = ModeSelectionTestTags.DEMO_BUTTON,
     )
   }
 
+  ModeSelectionDialogs(state = state, dispatch = dispatch)
+}
+
+@Composable
+private fun ModeSelectionDialogs(
+  state: ModeSelectionState,
+  dispatch: (ModeSelectionAction) -> Unit,
+) {
   if (state.showQuickOnlineDialog) {
-    QuickOnlineDialog(
-      state = state,
-      dispatch = dispatch,
-    )
+    QuickOnlineDialog(state = state, dispatch = dispatch)
   }
-
   if (state.showCredentialsDialog) {
-    CredentialsSetupDialog(
-      state = state,
-      dispatch = dispatch,
-    )
+    CredentialsSetupDialog(state = state, dispatch = dispatch)
   }
 }
 
@@ -124,6 +132,7 @@ private fun QuickOnlineDialog(
 ) {
   AlertDialog(
     onDismissRequest = { if (!state.isValidating) dispatch(ModeSelectionAction.QuickOnline.Dismiss) },
+    modifier = Modifier.testTag(ModeSelectionTestTags.QUICK_ONLINE_DIALOG),
     title = { Text(stringResource(Res.string.mode_quick_online_title)) },
     text = { Text(stringResource(Res.string.mode_quick_online_desc)) },
     confirmButton = {
@@ -160,6 +169,7 @@ private fun CredentialsSetupDialog(
 ) {
   AlertDialog(
     onDismissRequest = { if (!state.isValidating) dispatch(ModeSelectionAction.Dialog.Dismiss) },
+    modifier = Modifier.testTag(ModeSelectionTestTags.CREDENTIALS_DIALOG),
     title = { Text(stringResource(Res.string.mode_online_title)) },
     text = {
       Column(verticalArrangement = Arrangement.spacedBy(Indent.s)) {
@@ -212,9 +222,11 @@ private fun ModeCard(
   description: String,
   isPrimary: Boolean,
   onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  buttonTag: String? = null,
 ) {
   OutlinedCard(
-    modifier = Modifier.fillMaxWidth(),
+    modifier = modifier.fillMaxWidth(),
   ) {
     Column(
       modifier = Modifier.padding(Indent.m),
@@ -229,17 +241,23 @@ private fun ModeCard(
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
       )
+      val buttonModifier =
+        if (buttonTag != null) {
+          Modifier.fillMaxWidth().testTag(buttonTag)
+        } else {
+          Modifier.fillMaxWidth()
+        }
       if (isPrimary) {
         Button(
           onClick = onClick,
-          modifier = Modifier.fillMaxWidth(),
+          modifier = buttonModifier,
         ) {
           Text(title)
         }
       } else {
         OutlinedButton(
           onClick = onClick,
-          modifier = Modifier.fillMaxWidth(),
+          modifier = buttonModifier,
         ) {
           Text(title)
         }
