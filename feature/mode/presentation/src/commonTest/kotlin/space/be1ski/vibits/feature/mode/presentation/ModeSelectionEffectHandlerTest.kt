@@ -4,7 +4,6 @@ import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.auth.domain.test.FakeCredentialsRepository
 import space.be1ski.vibits.feature.auth.domain.usecase.SaveCredentialsUseCase
-import space.be1ski.vibits.feature.memos.domain.repository.ConnectionTester
 import space.be1ski.vibits.feature.mode.domain.test.FakeAppModeRepository
 import space.be1ski.vibits.feature.mode.domain.usecase.SaveAppModeUseCase
 import space.be1ski.vibits.feature.mode.presentation.action.ModeSelectionAction
@@ -176,7 +175,7 @@ class ModeSelectionEffectHandlerTest {
     return ModeSelectionEffectHandler(
       credentialsHandler =
         ModeSelectionCredentialsEffectHandler(
-          connectionTester = ConnectionTester { _, _ -> connectionResult },
+          connectionTester = { _, _ -> connectionResult },
           initializeCredentialsFromEnv =
             space.be1ski.vibits.feature.auth.domain.usecase.InitializeCredentialsFromEnvUseCase(
               loadCredentials =

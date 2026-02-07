@@ -10,7 +10,6 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -159,7 +158,7 @@ private fun ContributionGridLayout(
 }
 
 @Composable
-private fun BoxWithConstraintsScope.ContributionGridContent(
+private fun ContributionGridContent(
   state: ContributionGridState,
   dateFormatter: DateFormatter,
   onDaySelected: (ContributionDay) -> Unit,
@@ -216,7 +215,7 @@ private fun BoxWithConstraintsScope.ContributionGridContent(
 }
 
 @Composable
-private fun BoxWithConstraintsScope.CalendarGridLayout(
+private fun CalendarGridLayout(
   state: ContributionGridState,
   onDaySelected: (ContributionDay) -> Unit,
   interaction: ContributionGridInteractionState,

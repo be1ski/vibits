@@ -40,7 +40,7 @@ public object StateUpdateScope
  * }
  * ```
  *
- * Inside [state] block, [command] and [notify] are NOT accessible due to [ReducerDslMarker].
+ * Inside `state` block, `command` and `notify` are NOT accessible due to [ReducerDslMarker].
  */
 public fun <Action, State, Command, Notification> reducer(
   reduce: ReducerContext<State, Command, Notification>.(Action, State) -> Unit,

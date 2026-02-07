@@ -167,7 +167,7 @@ class OfflineFirstMemosRepositoryTest {
   @Test
   fun `when updateMemoLocally with temp memo then finds correct CREATE among multiple operations`() =
     runTest {
-      val (repository, cache, queue) = createRepository()
+      val (repository, _, queue) = createRepository()
 
       // Add some unrelated operations to the queue first
       queue.addOperation(
@@ -242,7 +242,7 @@ class OfflineFirstMemosRepositoryTest {
   @Test
   fun `when updateMemoLocally with existing memo among others then finds correct one`() =
     runTest {
-      val (repository, cache, queue) = createRepository()
+      val (repository, cache, _) = createRepository()
       // Add multiple memos, only one matches
       cache.memos.add(Memo(name = "memos/other1", content = "Other 1"))
       cache.memos.add(Memo(name = "memos/target", content = "Original", createTime = Instant.fromEpochMilliseconds(1000L)))

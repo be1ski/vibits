@@ -12,7 +12,7 @@ import space.be1ski.vibits.feature.memos.domain.model.stripHabitPrefixes
 /** Regex for matching whitespace sequences (for tag normalization). */
 private val WHITESPACE_REGEX = Regex("\\s+")
 
-/** Regex for matching checkbox format: "- [x] habit" or "* [X] habit". */
+/** Regex for matching checkbox format: "- \[x\] habit" or "* \[X\] habit". */
 private val CHECKBOX_REGEX = Regex("^\\s*[-*]\\s*\\[(x|X)\\]\\s+(.+)$")
 
 /** Regex for extracting habit tags from content. */
