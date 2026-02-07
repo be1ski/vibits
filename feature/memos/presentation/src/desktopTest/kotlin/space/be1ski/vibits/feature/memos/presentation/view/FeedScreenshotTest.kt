@@ -83,6 +83,22 @@ class FeedScreenshotTest {
     }
 
   @Test
+  fun `when demo mode then captures feed with localized habit labels`() =
+    runAppUiTest {
+      setThemedContent {
+        FeedScreen(
+          memos = testMemos,
+          dateFormatter = testDateFormatter,
+          enablePullRefresh = false,
+          demoMode = true,
+        )
+      }
+
+      onNodeWithTag(FeedTestTags.FEED_SCREEN).assertIsDisplayed()
+      saveScreenshot("memos", "FeedScreenshotTest", "feed_demo_mode")
+    }
+
+  @Test
   fun `when sync conflict dialog shown then captures dialog`() =
     runAppUiTest {
       setThemedContent {

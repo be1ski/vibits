@@ -7,7 +7,8 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 jobs:
   check-jvm:
@@ -57,11 +58,15 @@ jobs:
             cp "$f" "build/ui-screenshots/$rel"
           done
 
-      - name: Upload screenshots to Argos
+      - name: Visual regression test
         if: always()
-        run: npx --yes @argos-ci/cli upload build/ui-screenshots/
-        env:
-          ARGOS_TOKEN: ${{ secrets.ARGOS_TOKEN }}
+        uses: reg-viz/reg-actions@v3
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          image-directory-path: "./build/ui-screenshots"
+          artifact-name: "ui-screenshots"
+          comment-report-format: "summarized"
+          enable-antialias: "true"
 
   check-ios:
     runs-on: macos-latest
