@@ -14,7 +14,6 @@ kotlin {
         implementation(projects.core.utils)
         implementation(projects.feature.auth.domain)
         implementation(projects.feature.habits.domain)
-        implementation(projects.feature.habits.presentation)
         implementation(projects.feature.memos.domain)
         implementation(projects.feature.sync.domain)
         implementation(libs.compose.resources)

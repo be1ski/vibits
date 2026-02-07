@@ -22,8 +22,9 @@ import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.format_active_since
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.date.DateFormatter
+import space.be1ski.vibits.core.ui.habits.localizedHabitLabel
+import space.be1ski.vibits.feature.habits.domain.model.demoLabelKey
 import space.be1ski.vibits.feature.habits.domain.parseHabitConfigLine
-import space.be1ski.vibits.feature.habits.presentation.view.components.localizedLabel
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.model.isConfigTag
 
@@ -70,7 +71,7 @@ internal fun HabitsConfigCard(
         )
         Column(modifier = Modifier.weight(1f)) {
           Text(
-            text = habit.localizedLabel(demoMode),
+            text = localizedHabitLabel(habit.label, habit.demoLabelKey(), demoMode),
             style = MaterialTheme.typography.bodyLarge,
           )
           Text(
