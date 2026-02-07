@@ -1,4 +1,5 @@
 package space.be1ski.vibits.feature.onboarding.presentation.view
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +17,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
@@ -38,6 +40,7 @@ fun SuccessScreen(
   Column(
     modifier =
       modifier
+        .testTag(OnboardingTestTags.SUCCESS_SCREEN)
         .padding(Indent.xl),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center,
@@ -71,7 +74,7 @@ fun SuccessScreen(
 
     Button(
       onClick = onMarkFirstCheckIn,
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier.fillMaxWidth().testTag(OnboardingTestTags.SUCCESS_CHECKIN_BUTTON),
     ) {
       Text(stringResource(Res.string.action_mark_first_checkin))
     }
@@ -80,7 +83,7 @@ fun SuccessScreen(
 
     TextButton(
       onClick = onGoToDashboard,
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier.fillMaxWidth().testTag(OnboardingTestTags.SUCCESS_DASHBOARD_BUTTON),
     ) {
       Text(stringResource(Res.string.action_go_to_dashboard))
     }

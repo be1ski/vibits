@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.strings.generated.Res
@@ -69,13 +70,14 @@ fun ChoosePresetScreen(
   Column(
     modifier =
       modifier
+        .testTag(OnboardingTestTags.CHOOSE_PRESET_SCREEN)
         .padding(Indent.xl),
   ) {
     Row(
       verticalAlignment = Alignment.CenterVertically,
       modifier = Modifier.fillMaxWidth(),
     ) {
-      IconButton(onClick = onBack) {
+      IconButton(onClick = onBack, modifier = Modifier.testTag(OnboardingTestTags.CHOOSE_PRESET_BACK_BUTTON)) {
         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.action_back), tint = textColor)
       }
       Text(
@@ -109,7 +111,7 @@ fun ChoosePresetScreen(
     Button(
       onClick = onContinue,
       enabled = selectedPresetId != null,
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier.fillMaxWidth().testTag(OnboardingTestTags.CHOOSE_PRESET_CONTINUE_BUTTON),
     ) {
       Text(stringResource(Res.string.action_continue))
     }
