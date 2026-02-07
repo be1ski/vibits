@@ -27,7 +27,7 @@
 
 /* Begin PBXFileReference section */
 		5444D14F2F1579250075CCCE /* vibits.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = vibits.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5444D1602F157A210075CCCE /* shared.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = shared.xcframework; path = ../../shared/build/XCFrameworks/debug/shared.xcframework; sourceTree = "<group>"; };
+		5444D1602F157A210075CCCE /* shared.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = shared.xcframework; path = ../framework/build/XCFrameworks/debug/shared.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
