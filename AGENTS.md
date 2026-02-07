@@ -34,7 +34,12 @@ Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if a
 ### Module Dependency Rules
 
 - **`core/` modules** can only depend on other `core/` modules and external libraries. Never on `feature/` or app modules.
-- **`feature/` modules** can depend on `core/` modules and other `feature/` modules.
+- **`feature/` modules** follow layered architecture. Cross-feature dependencies are only allowed on `domain` modules:
+  - **`domain`** → `core/*`, other features' `domain`. Never `data` or `presentation`.
+  - **`data`** → `core/*`, own `domain`, other features' `domain`. Never `presentation` or other features' `data`.
+  - **`presentation`** → `core/*`, own `domain`, other features' `domain`. Never `data` or other features' `presentation`.
+  - **`homescreen`** is exempt (DI wiring/coordinator that depends on all layers).
+  - **`testing`** modules are exempt (cross-module test fakes).
 - **App modules** (`androidApp`, `desktopApp`, etc.) can depend on anything.
 
 ## Package Organization Rules

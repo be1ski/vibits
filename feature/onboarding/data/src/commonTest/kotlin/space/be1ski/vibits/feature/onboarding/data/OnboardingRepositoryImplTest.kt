@@ -1,7 +1,7 @@
 package space.be1ski.vibits.feature.onboarding.data
 
 import kotlinx.coroutines.test.runTest
-import space.be1ski.vibits.feature.memos.data.test.FakeOfflineMemoStorage
+import space.be1ski.vibits.feature.memos.domain.test.FakeMemosRepository
 import space.be1ski.vibits.feature.onboarding.domain.test.FakeOnboardingStore
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -14,8 +14,8 @@ class OnboardingRepositoryImplTest {
     runTest {
       val store = FakeOnboardingStore(completed = false)
       val dataSource = HabitPresetsDataSourceImpl()
-      val storage = FakeOfflineMemoStorage()
-      val repository = OnboardingRepositoryImpl(store, dataSource, storage)
+      val memosRepository = FakeMemosRepository()
+      val repository = OnboardingRepositoryImpl(store, dataSource, memosRepository)
 
       val result = repository.isOnboardingCompleted()
 
@@ -27,8 +27,8 @@ class OnboardingRepositoryImplTest {
     runTest {
       val store = FakeOnboardingStore(completed = true)
       val dataSource = HabitPresetsDataSourceImpl()
-      val storage = FakeOfflineMemoStorage()
-      val repository = OnboardingRepositoryImpl(store, dataSource, storage)
+      val memosRepository = FakeMemosRepository()
+      val repository = OnboardingRepositoryImpl(store, dataSource, memosRepository)
 
       val result = repository.isOnboardingCompleted()
 
@@ -40,8 +40,8 @@ class OnboardingRepositoryImplTest {
     runTest {
       val store = FakeOnboardingStore(completed = false)
       val dataSource = HabitPresetsDataSourceImpl()
-      val storage = FakeOfflineMemoStorage()
-      val repository = OnboardingRepositoryImpl(store, dataSource, storage)
+      val memosRepository = FakeMemosRepository()
+      val repository = OnboardingRepositoryImpl(store, dataSource, memosRepository)
 
       repository.markOnboardingCompleted()
 
@@ -53,8 +53,8 @@ class OnboardingRepositoryImplTest {
     runTest {
       val store = FakeOnboardingStore()
       val dataSource = HabitPresetsDataSourceImpl()
-      val storage = FakeOfflineMemoStorage()
-      val repository = OnboardingRepositoryImpl(store, dataSource, storage)
+      val memosRepository = FakeMemosRepository()
+      val repository = OnboardingRepositoryImpl(store, dataSource, memosRepository)
 
       val result = repository.getHabitPresets()
 

@@ -8,12 +8,10 @@ import kotlinx.coroutines.sync.withLock
 import space.be1ski.vibits.core.platform.di.AppScope
 import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.auth.domain.model.isFilled
-import space.be1ski.vibits.feature.auth.domain.model.trimmed
 import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
-import space.be1ski.vibits.feature.memos.data.mapper.MemoMapper
-import space.be1ski.vibits.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.feature.memos.domain.config.MemosDefaults
 import space.be1ski.vibits.feature.memos.domain.model.Memo
+import space.be1ski.vibits.feature.memos.domain.repository.MemosRemoteSource
 import space.be1ski.vibits.feature.sync.domain.SyncEngine
 import space.be1ski.vibits.feature.sync.domain.SyncLogTags
 import space.be1ski.vibits.feature.sync.domain.model.SyncResult
@@ -23,14 +21,10 @@ import space.be1ski.vibits.feature.sync.domain.usecase.DetectSyncConflictsUseCas
 private val TAG = SyncLogTags.SYNC_ENGINE
 private const val LOG_CONTENT_PREVIEW_LENGTH = 50
 
-/**
- * Thread-safe sync engine that processes pending operations and syncs with the server.
- * Only one sync operation can run at a time.
- */
 @Inject
 @SingleIn(AppScope::class)
 class SyncEngineImpl(
-  private val memosApi: MemosApi,
+  private val memosRemoteSource: MemosRemoteSource,
   private val credentialsRepository: CredentialsRepository,
   private val syncQueue: SyncQueueRepository,
   private val offlineFirstRepository: OfflineFirstMemosRepository,
@@ -40,7 +34,7 @@ class SyncEngineImpl(
   override val isSyncing: Boolean get() = _isSyncing.value
 
   private val operationApplier by lazy {
-    SyncOperationApplier(memosApi, syncQueue, offlineFirstRepository)
+    SyncOperationApplier(memosRemoteSource, syncQueue, offlineFirstRepository)
   }
 
   override suspend fun performSync(): SyncResult = withSyncLock { performSyncInternal() }
@@ -65,25 +59,21 @@ class SyncEngineImpl(
       Log.w(TAG, "No credentials configured")
       return SyncResult.NoCredentials
     }
-    val (baseUrl, token) = credentials.trimmed()
 
     // Reset any IN_PROGRESS operations from previous crash/kill
     syncQueue.resetInProgressToPending()
 
     return runCatching {
       Log.i(TAG, "Starting sync...")
-      executeSyncFlow(baseUrl, token)
+      executeSyncFlow()
     }.getOrElse { e ->
       Log.e(TAG, "Sync failed", e)
       SyncResult.Error(e.message ?: "Sync failed", e)
     }
   }
 
-  private suspend fun executeSyncFlow(
-    baseUrl: String,
-    token: String,
-  ): SyncResult {
-    val serverMemos = fetchServerMemos(baseUrl, token)
+  private suspend fun executeSyncFlow(): SyncResult {
+    val serverMemos = fetchServerMemos()
     Log.d(TAG, "Fetched ${serverMemos.size} memos from server")
 
     val pendingOperations = syncQueue.getPendingOperations()
@@ -128,8 +118,8 @@ class SyncEngineImpl(
       }
       SyncResult.Conflict(conflicts)
     } else {
-      operationApplier.applyOperations(pendingOperations, baseUrl, token)
-      val updatedMemos = fetchServerMemos(baseUrl, token)
+      operationApplier.applyOperations(pendingOperations)
+      val updatedMemos = fetchServerMemos()
       offlineFirstRepository.replaceAllMemos(updatedMemos)
       syncQueue.clearOperations(syncedOnly = true)
       Log.i(TAG, "Sync completed successfully")
@@ -142,11 +132,10 @@ class SyncEngineImpl(
     if (!credentials.isFilled) {
       return SyncResult.NoCredentials
     }
-    val (baseUrl, token) = credentials.trimmed()
 
     return runCatching {
       Log.i(TAG, "Forcing server sync...")
-      val serverMemos = fetchServerMemos(baseUrl, token)
+      val serverMemos = fetchServerMemos()
 
       val pendingOperations = syncQueue.getPendingOperations()
       pendingOperations.forEach { syncQueue.removeOperation(it.id) }
@@ -166,14 +155,13 @@ class SyncEngineImpl(
     if (!credentials.isFilled) {
       return SyncResult.NoCredentials
     }
-    val (baseUrl, token) = credentials.trimmed()
 
     return runCatching {
       Log.i(TAG, "Forcing local sync...")
       val pendingOperations = syncQueue.getPendingOperations()
 
-      operationApplier.applyOperations(pendingOperations, baseUrl, token)
-      val updatedMemos = fetchServerMemos(baseUrl, token)
+      operationApplier.applyOperations(pendingOperations)
+      val updatedMemos = fetchServerMemos()
       offlineFirstRepository.replaceAllMemos(updatedMemos)
       syncQueue.clearOperations(syncedOnly = true)
 
@@ -185,23 +173,18 @@ class SyncEngineImpl(
     }
   }
 
-  private suspend fun fetchServerMemos(
-    baseUrl: String,
-    token: String,
-  ): List<Memo> {
+  private suspend fun fetchServerMemos(): List<Memo> {
     val allMemos = mutableListOf<Memo>()
     var nextPageToken: String? = null
 
     do {
-      val response =
-        memosApi.listMemos(
-          baseUrl = baseUrl,
-          token = token,
+      val page =
+        memosRemoteSource.listMemos(
           pageSize = MemosDefaults.DEFAULT_PAGE_SIZE,
           pageToken = nextPageToken,
         )
-      allMemos += MemoMapper.toDomainList(response.memos)
-      nextPageToken = response.nextPageToken?.takeIf { it.isNotBlank() }
+      allMemos += page.memos
+      nextPageToken = page.nextPageToken
     } while (nextPageToken != null)
 
     return allMemos

@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.habits.domain
 
+import space.be1ski.vibits.feature.habits.domain.model.DefaultHabitColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import kotlin.test.Test
@@ -57,6 +58,14 @@ class HabitParserTest {
     assertEquals("Morning Run", result?.label)
     assertEquals("#habits/morning_run", result?.tag)
     assertEquals(HabitColor(0xFFFF5733L), result?.color)
+  }
+
+  @Test
+  fun `when line has label tag and invalid color then uses default color`() {
+    val result = parseHabitConfigLine("Exercise | #habits/exercise | invalid")
+    assertEquals("Exercise", result?.label)
+    assertEquals("#habits/exercise", result?.tag)
+    assertEquals(DefaultHabitColor, result?.color)
   }
 
   @Test

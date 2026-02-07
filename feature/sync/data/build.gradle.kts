@@ -9,6 +9,7 @@ kotlin {
       dependsOn(commonMain.get())
       dependencies {
         implementation(libs.androidx.room.runtime)
+        implementation(projects.feature.memos.data)
       }
     }
 
@@ -17,14 +18,11 @@ kotlin {
         implementation(projects.core.platform)
         implementation(projects.core.utils)
         implementation(projects.feature.auth.domain)
-        implementation(projects.feature.memos.data)
         implementation(projects.feature.memos.domain)
         implementation(projects.feature.sync.domain)
         implementation(libs.kotlinx.atomicfu)
+        implementation(libs.kotlinx.coroutines.core)
         implementation(libs.kotlinx.datetime)
-        implementation(libs.ktor.client.content.negotiation)
-        implementation(libs.ktor.client.core)
-        implementation(libs.ktor.serialization.kotlinx.json)
       }
     }
 
@@ -33,7 +31,6 @@ kotlin {
         implementation(projects.feature.auth.domain.testing)
         implementation(kotlin("test"))
         implementation(libs.kotlinx.coroutines.test)
-        implementation(libs.ktor.client.mock)
       }
     }
 

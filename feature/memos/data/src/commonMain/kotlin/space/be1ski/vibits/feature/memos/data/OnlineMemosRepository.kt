@@ -7,11 +7,11 @@ import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.auth.domain.model.requireFilled
 import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.feature.memos.data.mapper.MemoMapper
-import space.be1ski.vibits.feature.memos.data.platform.MemoCache
 import space.be1ski.vibits.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.feature.memos.data.remote.MemosPagination
 import space.be1ski.vibits.feature.memos.domain.config.MemosDefaults
 import space.be1ski.vibits.feature.memos.domain.model.Memo
+import space.be1ski.vibits.feature.memos.domain.repository.MemoCache
 import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
 
 private const val TAG = "MemosRepository"

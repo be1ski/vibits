@@ -6,6 +6,7 @@
  * - expect/actual declarations belong in platform/room packages
  * - Test fakes belong in testing/ modules, not production code
  * - core/ modules only depend on other core/ modules (never on feature/)
+ * - Feature layers follow dependency rules: domain <- data, domain <- presentation
  */
 
 // region Constants
@@ -22,8 +23,23 @@ val expectDeclarationPattern = Regex("""\bexpect\s+(fun|class|interface|object|v
 val featureDependencyPattern = Regex("""projects\.feature\.|project\(":feature:""")
 
 val coreModulePrefix = ":core:"
+val featureModulePrefix = ":feature:"
 val composableAnnotation = "@Composable"
 val productionSourceSet = "commonMain"
+
+val featureLayers = setOf("domain", "data", "presentation")
+val exemptFeatures = setOf("homescreen")
+
+// Known cross-feature dependencies that can't be removed yet (deeply coupled composables).
+// Format: "sourceFeature:sourceLayer -> depFeature:depLayer"
+val allowedCrossFeatureDeps = setOf(
+  "memos:presentation -> habits:presentation", // PostsScreen uses StatsScreen, HabitsState, HabitsAction
+)
+
+// Matches feature deps like: projects.feature.memos.data or project(":feature:memos:data")
+// Captures: feature name and layer
+val typeSafeFeatureDepPattern = Regex("""projects\.feature\.(\w+)\.(domain|data|presentation)(?!\.\w)""")
+val stringFeatureDepPattern = Regex("""project\(":feature:(\w+):(domain|data|presentation)"\)""")
 
 // endregion
 
@@ -77,6 +93,97 @@ fun checkCoreDependencies(
   }
 }
 
+/**
+ * Extracts feature name and layer from a project path like ":feature:habits:domain".
+ * Returns null for non-feature, exempt, or testing modules.
+ */
+fun extractFeatureLayer(projectPath: String): Pair<String, String>? {
+  if (!projectPath.startsWith(featureModulePrefix)) return null
+  val segments = projectPath.removePrefix(featureModulePrefix).split(":")
+  if (segments.size < 2) return null
+  val featureName = segments[0]
+  val layer = segments[1]
+  if (featureName in exemptFeatures) return null
+  if (layer !in featureLayers) return null
+  if (segments.size > 2 && segments[2] == "testing") return null
+  return featureName to layer
+}
+
+/**
+ * Extracts the content of the commonMain { } block from a build file.
+ * Platform source sets (nonWasmMain, androidMain, etc.) may have legitimate cross-layer
+ * dependencies (e.g., Room shared database), so only commonMain is checked.
+ * Looks for `commonMain {` or `commonMain{` pattern to find the block declaration.
+ */
+fun extractCommonMainBlock(text: String): String {
+  val pattern = Regex("""commonMain\s*\{""")
+  val match = pattern.find(text) ?: return ""
+  val blockStart = match.range.last // position of '{'
+  var depth = 1
+  for (i in (blockStart + 1) until text.length) {
+    if (text[i] == '{') depth++
+    else if (text[i] == '}') {
+      depth--
+      if (depth == 0) return text.substring(blockStart, i + 1)
+    }
+  }
+  return text.substring(blockStart)
+}
+
+fun checkFeatureLayerDependencies(
+  violations: MutableList<String>,
+) {
+  subprojects.forEach { sub ->
+    val (featureName, layer) = extractFeatureLayer(sub.path) ?: return@forEach
+    val buildFile = sub.file("build.gradle.kts")
+    if (!buildFile.exists()) return@forEach
+
+    // Only check commonMain dependencies (platform source sets may have legitimate cross-layer deps for Room)
+    val content = extractCommonMainBlock(buildFile.readText())
+    val relativePath = buildFile.relativeTo(rootDir).path
+
+    // Collect all feature dependencies (excluding .testing references)
+    val deps = mutableListOf<Triple<String, String, String>>() // depFeature, depLayer, matchText
+    typeSafeFeatureDepPattern.findAll(content).forEach { match ->
+      deps += Triple(match.groupValues[1], match.groupValues[2], match.value)
+    }
+    stringFeatureDepPattern.findAll(content).forEach { match ->
+      deps += Triple(match.groupValues[1], match.groupValues[2], match.value)
+    }
+
+    for ((depFeature, depLayer, matchText) in deps) {
+      val isSameFeature = depFeature == featureName
+      val isCrossFeature = !isSameFeature
+      val depKey = "$featureName:$layer -> $depFeature:$depLayer"
+      if (depKey in allowedCrossFeatureDeps) continue
+
+      when (layer) {
+        "domain" -> {
+          if (depLayer == "data" || depLayer == "presentation") {
+            violations += "$relativePath — domain depends on $depLayer ($matchText). Domain can only depend on other domains."
+          }
+        }
+        "data" -> {
+          if (depLayer == "presentation") {
+            violations += "$relativePath — data depends on presentation ($matchText). Data cannot depend on presentation."
+          }
+          if (isCrossFeature && depLayer == "data") {
+            violations += "$relativePath — data depends on other feature's data ($matchText). Cross-feature dependencies are only allowed on domain."
+          }
+        }
+        "presentation" -> {
+          if (depLayer == "data") {
+            violations += "$relativePath — presentation depends on data ($matchText). Presentation cannot depend on data."
+          }
+          if (isCrossFeature && depLayer == "presentation") {
+            violations += "$relativePath — presentation depends on other feature's presentation ($matchText). Cross-feature dependencies are only allowed on domain."
+          }
+        }
+      }
+    }
+  }
+}
+
 tasks.register("checkConventions") {
   group = "verification"
   description = "Checks project structure conventions across source files"
@@ -103,6 +210,7 @@ tasks.register("checkConventions") {
     }
 
     checkCoreDependencies(violations)
+    checkFeatureLayerDependencies(violations)
 
     if (violations.isNotEmpty()) {
       val summary = violations.joinToString("\n") { "  - $it" }

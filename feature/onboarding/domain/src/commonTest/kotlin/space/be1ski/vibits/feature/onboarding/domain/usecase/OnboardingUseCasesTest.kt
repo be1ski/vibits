@@ -6,9 +6,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import space.be1ski.vibits.feature.habits.domain.model.DefaultHabitColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitColor
-import space.be1ski.vibits.feature.memos.data.offline.OfflineMemoDto
-import space.be1ski.vibits.feature.memos.data.offline.OfflineMemosFileDto
-import space.be1ski.vibits.feature.memos.data.test.FakeOfflineMemoStorage
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.test.FakeMemosRepository
 import space.be1ski.vibits.feature.memos.domain.usecase.CreateMemoUseCase
@@ -26,8 +23,8 @@ class OnboardingUseCasesTest {
     runTest {
       val store = FakeOnboardingStore(completed = false)
       val dataSource = HabitPresetsDataSourceImpl()
-      val storage = FakeOfflineMemoStorage()
-      val repository = OnboardingRepositoryImpl(store, dataSource, storage)
+      val memosRepository = FakeMemosRepository()
+      val repository = OnboardingRepositoryImpl(store, dataSource, memosRepository)
       val useCase = IsOnboardingCompletedUseCase(repository)
 
       val result = useCase()
@@ -40,8 +37,8 @@ class OnboardingUseCasesTest {
     runTest {
       val store = FakeOnboardingStore(completed = false)
       val dataSource = HabitPresetsDataSourceImpl()
-      val storage = FakeOfflineMemoStorage()
-      val repository = OnboardingRepositoryImpl(store, dataSource, storage)
+      val memosRepository = FakeMemosRepository()
+      val repository = OnboardingRepositoryImpl(store, dataSource, memosRepository)
       val markCompleted = MarkOnboardingCompletedUseCase(repository)
       val isCompleted = IsOnboardingCompletedUseCase(repository)
 
@@ -55,8 +52,8 @@ class OnboardingUseCasesTest {
     runTest {
       val store = FakeOnboardingStore()
       val dataSource = HabitPresetsDataSourceImpl()
-      val storage = FakeOfflineMemoStorage()
-      val repository = OnboardingRepositoryImpl(store, dataSource, storage)
+      val memosRepository = FakeMemosRepository()
+      val repository = OnboardingRepositoryImpl(store, dataSource, memosRepository)
       val useCase = GetHabitPresetsUseCase(repository)
 
       val result = useCase()
@@ -192,9 +189,9 @@ class OnboardingUseCasesTest {
   fun `when should show onboarding and onboarding completed then returns false`() =
     runTest {
       val store = FakeOnboardingStore(completed = true)
-      val storage = FakeOfflineMemoStorage()
+      val memosRepository = FakeMemosRepository()
       val dataSource = HabitPresetsDataSourceImpl()
-      val repository = OnboardingRepositoryImpl(store, dataSource, storage)
+      val repository = OnboardingRepositoryImpl(store, dataSource, memosRepository)
       val useCase = ShouldShowOnboardingUseCase(repository)
 
       val result = useCase()
@@ -206,20 +203,18 @@ class OnboardingUseCasesTest {
   fun `when should show onboarding and habits config exists then returns false`() =
     runTest {
       val store = FakeOnboardingStore(completed = false)
-      val storage =
-        FakeOfflineMemoStorage(
-          initial =
-            OfflineMemosFileDto(
-              listOf(
-                OfflineMemoDto(
-                  name = "memos/1",
-                  content = "#habits/config\nWater | #habits/water",
-                ),
+      val memosRepository =
+        FakeMemosRepository().apply {
+          cachedMemosResult =
+            listOf(
+              Memo(
+                name = "memos/1",
+                content = "#habits/config\nWater | #habits/water",
               ),
-            ),
-        )
+            )
+        }
       val dataSource = HabitPresetsDataSourceImpl()
-      val repository = OnboardingRepositoryImpl(store, dataSource, storage)
+      val repository = OnboardingRepositoryImpl(store, dataSource, memosRepository)
       val useCase = ShouldShowOnboardingUseCase(repository)
 
       val result = useCase()
@@ -231,9 +226,9 @@ class OnboardingUseCasesTest {
   fun `when should show onboarding and no habits config then returns true`() =
     runTest {
       val store = FakeOnboardingStore(completed = false)
-      val storage = FakeOfflineMemoStorage()
+      val memosRepository = FakeMemosRepository()
       val dataSource = HabitPresetsDataSourceImpl()
-      val repository = OnboardingRepositoryImpl(store, dataSource, storage)
+      val repository = OnboardingRepositoryImpl(store, dataSource, memosRepository)
       val useCase = ShouldShowOnboardingUseCase(repository)
 
       val result = useCase()
@@ -245,20 +240,18 @@ class OnboardingUseCasesTest {
   fun `when should show onboarding and alternative habits config exists then returns false`() =
     runTest {
       val store = FakeOnboardingStore(completed = false)
-      val storage =
-        FakeOfflineMemoStorage(
-          initial =
-            OfflineMemosFileDto(
-              listOf(
-                OfflineMemoDto(
-                  name = "memos/1",
-                  content = "#habits_config\nWater | #habits/water",
-                ),
+      val memosRepository =
+        FakeMemosRepository().apply {
+          cachedMemosResult =
+            listOf(
+              Memo(
+                name = "memos/1",
+                content = "#habits_config\nWater | #habits/water",
               ),
-            ),
-        )
+            )
+        }
       val dataSource = HabitPresetsDataSourceImpl()
-      val repository = OnboardingRepositoryImpl(store, dataSource, storage)
+      val repository = OnboardingRepositoryImpl(store, dataSource, memosRepository)
       val useCase = ShouldShowOnboardingUseCase(repository)
 
       val result = useCase()

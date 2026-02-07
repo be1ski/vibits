@@ -41,8 +41,8 @@ import space.be1ski.vibits.core.strings.generated.mode_quick_online_title
 import space.be1ski.vibits.core.strings.generated.mode_select_subtitle
 import space.be1ski.vibits.core.strings.generated.mode_select_title
 import space.be1ski.vibits.core.ui.Indent
-import space.be1ski.vibits.feature.auth.presentation.view.CredentialFields
-import space.be1ski.vibits.feature.auth.presentation.view.credentialValidationErrorMessage
+import space.be1ski.vibits.core.ui.form.CredentialFields
+import space.be1ski.vibits.core.ui.form.credentialValidationErrorMessage
 import space.be1ski.vibits.feature.mode.presentation.action.ModeSelectionAction
 import space.be1ski.vibits.feature.mode.presentation.effect.ModeSelectionEffect
 import space.be1ski.vibits.feature.mode.presentation.state.ModeSelectionState
@@ -172,7 +172,7 @@ private fun CredentialsSetupDialog(
         )
         state.error?.let { error ->
           Text(
-            text = credentialValidationErrorMessage(error),
+            text = credentialValidationErrorMessage(error.name),
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.bodySmall,
           )

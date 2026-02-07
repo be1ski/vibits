@@ -48,7 +48,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.platform.app.AppDetails
-import space.be1ski.vibits.core.platform.export.createFileExporter
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.logging.LogLevel
 import space.be1ski.vibits.core.platform.mode.AppMode
@@ -111,12 +110,11 @@ import space.be1ski.vibits.core.strings.generated.title_logs
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.LogViewer
 import space.be1ski.vibits.core.ui.SegmentedSelector
+import space.be1ski.vibits.core.ui.form.CredentialFields
+import space.be1ski.vibits.core.ui.form.credentialValidationErrorMessage
 import space.be1ski.vibits.core.utils.logging.Log
-import space.be1ski.vibits.feature.auth.presentation.view.CredentialFields
-import space.be1ski.vibits.feature.auth.presentation.view.credentialValidationErrorMessage
-import space.be1ski.vibits.feature.memos.data.export.ExportResult
-import space.be1ski.vibits.feature.memos.data.export.Exporter
-import space.be1ski.vibits.feature.memos.data.platform.createOfflineMemoStorage
+import space.be1ski.vibits.feature.memos.domain.model.ExportResult
+import space.be1ski.vibits.feature.memos.domain.repository.ExportService
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.feature.settings.presentation.action.SettingsAction
 import space.be1ski.vibits.feature.settings.presentation.state.SettingsState
@@ -125,6 +123,7 @@ import space.be1ski.vibits.feature.settings.presentation.state.SettingsState
 fun SettingsDialog(
   state: SettingsState,
   dispatch: (SettingsAction) -> Unit,
+  exportService: ExportService,
 ) {
   if (!state.isOpen) {
     return
@@ -133,7 +132,7 @@ fun SettingsDialog(
     onDismissRequest = { dispatch(SettingsAction.Dialog.Dismiss) },
     title = { Text(stringResource(Res.string.nav_settings)) },
     text = {
-      SettingsDialogBody(state = state, dispatch = dispatch)
+      SettingsDialogBody(state = state, dispatch = dispatch, exportService = exportService)
     },
     confirmButton = { SettingsDialogConfirmButton(dispatch) },
     dismissButton = { SettingsDialogDismissButton(dispatch) },
@@ -157,6 +156,7 @@ fun SettingsDialog(
 private fun SettingsDialogBody(
   state: SettingsState,
   dispatch: (SettingsAction) -> Unit,
+  exportService: ExportService,
 ) {
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
     AppModeSelector(
@@ -166,7 +166,7 @@ private fun SettingsDialogBody(
     )
     state.validationError?.let { error ->
       Text(
-        credentialValidationErrorMessage(error),
+        credentialValidationErrorMessage(error.name),
         color = MaterialTheme.colorScheme.error,
         style = MaterialTheme.typography.bodySmall,
       )
@@ -207,6 +207,7 @@ private fun SettingsDialogBody(
       showMemos = state.appMode == AppMode.OFFLINE,
       onOpenLogs = { dispatch(SettingsAction.SaveAndLogs.OpenLogs) },
       onReset = { dispatch(SettingsAction.Reset.RequestReset) },
+      exportService = exportService,
     )
     state.appDetails?.let { appDetails ->
       AppDetailsSection(appDetails, state.appMode)
@@ -474,13 +475,13 @@ private fun ActionsRow(
   showMemos: Boolean,
   onOpenLogs: () -> Unit,
   onReset: () -> Unit,
+  exportService: ExportService,
 ) {
   val scope = rememberCoroutineScope()
   var exportExpanded by remember { mutableStateOf(false) }
   var exportStatus by remember { mutableStateOf<String?>(null) }
   val exportFailedMsg = stringResource(Res.string.msg_export_failed)
   val exportSuccessTemplate = stringResource(Res.string.msg_export_success, "%s")
-  val exporter = remember { Exporter(createFileExporter(), createOfflineMemoStorage()) }
 
   val onExport: (ExportResult) -> Unit = { result ->
     exportExpanded = false
@@ -534,12 +535,12 @@ private fun ActionsRow(
         ) {
           DropdownMenuItem(
             text = { Text(stringResource(Res.string.action_export_logs)) },
-            onClick = { onExport(exporter.exportLogs()) },
+            onClick = { onExport(exportService.exportLogs()) },
           )
           if (showMemos) {
             DropdownMenuItem(
               text = { Text(stringResource(Res.string.action_export_memos)) },
-              onClick = { onExport(exporter.exportMemos()) },
+              onClick = { onExport(exportService.exportMemos()) },
             )
           }
         }
