@@ -13,5 +13,7 @@ plugins {
   id("vibits.checks.codestyle")
   id("vibits.checks.structure")
   id("vibits.checks.coverage")
+  id("vibits.checks.githooks")
+  id("vibits.checks.screenshots")
   id("vibits.checks.verification")
 }
