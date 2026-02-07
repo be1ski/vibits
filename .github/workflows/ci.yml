@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
 
 jobs:
@@ -48,71 +48,25 @@ jobs:
           path: "**/build/reports/tests/desktopTest/"
           retention-days: 7
 
-      - name: Upload UI screenshots
-        uses: actions/upload-artifact@v6
+      - name: Collect UI screenshots
         if: always()
+        run: |
+          mkdir -p build/ui-screenshots
+          find . -path "*/build/ui-screenshots/*" -name "*.png" | while read -r f; do
+            rel=$(echo "$f" | sed 's|.*/build/ui-screenshots/||')
+            mkdir -p "build/ui-screenshots/$(dirname "$rel")"
+            cp "$f" "build/ui-screenshots/$rel"
+          done
+
+      - name: Visual regression test
+        if: always()
+        uses: reg-viz/reg-actions@v3
         with:
-          name: ui-screenshots
-          path: "**/build/ui-screenshots/**/*.png"
-          retention-days: 7
-          if-no-files-found: warn
-
-      - name: Comment screenshots on PR
-        if: always() && github.event_name == 'pull_request'
-        uses: actions/github-script@v8
-        with:
-          script: |
-            const { execSync } = require('child_process');
-
-            const files = execSync('find . -path "*/build/ui-screenshots/*.png" | sort')
-              .toString().trim().split('\n').filter(Boolean);
-
-            if (files.length === 0) return;
-
-            const features = new Map();
-            for (const file of files) {
-              const match = file.match(/ui-screenshots\/([^/]+)\/([^/]+)\/(.+)\.png$/);
-              if (!match) continue;
-              const [, feature, , scenario] = match;
-              if (!features.has(feature)) features.set(feature, []);
-              features.get(feature).push(scenario);
-            }
-
-            const marker = '<!-- ui-screenshots -->';
-            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-
-            let body = `${marker}\n## UI Screenshots\n\n`;
-            body += `**${files.length} screenshots** across ${features.size} features`;
-            body += ` | [Download artifact](${runUrl}#artifacts)\n\n`;
-
-            for (const [feature, scenarios] of features) {
-              body += `<details><summary><b>${feature}</b> (${scenarios.length})</summary>\n\n`;
-              for (const s of scenarios) body += `- \`${s}\`\n`;
-              body += `\n</details>\n\n`;
-            }
-
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-            const existing = comments.find(c => c.body?.includes(marker));
-
-            if (existing) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: existing.id,
-                body,
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body,
-              });
-            }
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          image-directory-path: "./build/ui-screenshots"
+          artifact-name: "ui-screenshots"
+          comment-report-format: "summarized"
+          enable-antialias: "true"
 
   check-ios:
     runs-on: macos-latest

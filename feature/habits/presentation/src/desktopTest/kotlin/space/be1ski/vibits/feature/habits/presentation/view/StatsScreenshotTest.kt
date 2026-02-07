@@ -119,6 +119,29 @@ class StatsScreenshotTest {
     }
 
   @Test
+  fun `when demo mode then captures config dialog with localized labels`() =
+    runAppUiTest {
+      setThemedContent {
+        HabitsConfigDialog(
+          habitsState =
+            HabitsState(
+              showConfigDialog = true,
+              editingHabits =
+                listOf(
+                  EditableHabit(id = "1", tag = "#habits/exercise", label = "Exercise", color = HabitColor(0xFF4CAF50)),
+                  EditableHabit(id = "2", tag = "#habits/water", label = "Water", color = HabitColor(0xFF2196F3)),
+                ),
+            ),
+          demoMode = true,
+          dispatch = {},
+        )
+      }
+
+      onNodeWithTag(StatsTestTags.HABITS_CONFIG_DIALOG).assertIsDisplayed()
+      saveScreenshot("habits", "StatsScreenshotTest", "habits_config_dialog_demo")
+    }
+
+  @Test
   fun `when edit config warning shown then captures warning dialog`() =
     runAppUiTest {
       setThemedContent {
