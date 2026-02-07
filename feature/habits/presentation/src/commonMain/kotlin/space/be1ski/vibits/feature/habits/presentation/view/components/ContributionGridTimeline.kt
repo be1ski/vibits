@@ -46,6 +46,8 @@ internal fun buildTimelineLabels(
   }
 }
 
+private const val QUARTER_START_DAY_LIMIT = 7
+
 private fun isQuarterStart(date: LocalDate): Boolean =
   date.day <= QUARTER_START_DAY_LIMIT &&
     date.month in setOf(Month.JANUARY, Month.APRIL, Month.JULY, Month.OCTOBER)
