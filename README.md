@@ -24,6 +24,7 @@ Habit tracker powered by [Memos](https://github.com/usememos/memos)
 - `./gradlew checkJvm` — JVM-only checks
 - `./gradlew checkIos` — iOS checks
 - `./gradlew koverXmlReport` — coverage report
+- `./gradlew screenshotTests` — UI screenshot tests
 - `./gradlew :androidApp:assembleRelease` — Android APK
 - `./gradlew :desktopApp:packageDmg` — macOS DMG
 - `./gradlew :desktopApp:packageMsi` — Windows MSI
