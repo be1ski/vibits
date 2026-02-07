@@ -9,7 +9,6 @@ kotlin {
       dependencies {
         implementation(projects.core.platform)
         implementation(projects.core.utils)
-        implementation(projects.feature.habits.domain)
         implementation(projects.feature.memos.domain)
         implementation(projects.feature.onboarding.domain)
         implementation(libs.kotlinx.datetime)
