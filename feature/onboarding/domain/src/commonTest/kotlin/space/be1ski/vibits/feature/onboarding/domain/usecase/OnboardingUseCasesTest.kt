@@ -80,7 +80,7 @@ class OnboardingUseCasesTest {
       val createMemo = CreateMemoUseCase(memosRepository)
       val useCase = CreateFirstHabitUseCase(createMemo)
 
-      val result = useCase("Morning Exercise", "custom", DefaultHabitColor)
+      val result = useCase("Morning Exercise", DefaultHabitColor)
 
       assertTrue(result.isSuccess)
       assertEquals(1, memosRepository.createMemoCalls)
@@ -101,7 +101,7 @@ class OnboardingUseCasesTest {
       val createMemo = CreateMemoUseCase(memosRepository)
       val useCase = CreateFirstHabitUseCase(createMemo)
 
-      val result = useCase("Exercise", "custom", HabitColor(0xFF2196F3L))
+      val result = useCase("Exercise", HabitColor(0xFF2196F3L))
 
       assertTrue(result.isSuccess)
       val createdContent = memosRepository.lastCreatedContent
@@ -161,7 +161,7 @@ class OnboardingUseCasesTest {
       val createMemo = CreateMemoUseCase(memosRepository)
       val useCase = CreateFirstHabitUseCase(createMemo)
 
-      val result = useCase("Exercise", "custom", DefaultHabitColor)
+      val result = useCase("Exercise", DefaultHabitColor)
 
       assertTrue(result.isFailure)
       assertEquals(1, memosRepository.createMemoCalls)
@@ -177,7 +177,7 @@ class OnboardingUseCasesTest {
       val createMemo = CreateMemoUseCase(memosRepository)
       val useCase = CreateFirstHabitUseCase(createMemo)
 
-      val result = useCase("Read Every Day", "read", DefaultHabitColor)
+      val result = useCase("Read Every Day", DefaultHabitColor)
 
       assertTrue(result.isSuccess)
       val createdContent = memosRepository.lastCreatedContent

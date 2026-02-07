@@ -12,7 +12,6 @@ class CreateFirstHabitUseCase(
 ) {
   suspend operator fun invoke(
     name: String,
-    presetId: String?,
     color: HabitColor,
   ): Result<Unit> =
     runCatching {

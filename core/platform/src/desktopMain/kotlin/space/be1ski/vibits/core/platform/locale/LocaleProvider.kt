@@ -9,8 +9,6 @@ import java.util.Locale
 actual class LocaleProvider {
   private val originalSystemLocale: Locale = Locale.getDefault()
 
-  actual fun getSystemLocale(): String = originalSystemLocale.language
-
   actual fun configureLocale(language: AppLanguage): Boolean {
     val locale = language.localeCode?.let { Locale.forLanguageTag(it) } ?: originalSystemLocale
     Locale.setDefault(locale)
