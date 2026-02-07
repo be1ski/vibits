@@ -25,3 +25,13 @@ fun localizedDemoHabitName(nameKey: String): String =
     "demo_habit_early_sleep" -> stringResource(Res.string.demo_habit_early_sleep)
     else -> nameKey
   }
+
+@Composable
+fun localizedHabitLabel(
+  label: String,
+  demoLabelKey: String?,
+  demoMode: Boolean,
+): String {
+  if (!demoMode || demoLabelKey == null) return label
+  return localizedDemoHabitName(demoLabelKey)
+}

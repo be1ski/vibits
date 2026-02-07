@@ -21,11 +21,12 @@ import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.msg_no_habits_tracked
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.date.DateFormatter
+import space.be1ski.vibits.core.ui.habits.localizedHabitLabel
 import space.be1ski.vibits.feature.habits.domain.extractCompletedHabits
 import space.be1ski.vibits.feature.habits.domain.extractDateFromTrackingContent
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
+import space.be1ski.vibits.feature.habits.domain.model.demoLabelKey
 import space.be1ski.vibits.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
-import space.be1ski.vibits.feature.habits.presentation.view.components.localizedLabel
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 
 @Composable
@@ -118,7 +119,7 @@ private fun CompletedHabitRow(
       modifier = Modifier.size(20.dp),
     )
     Text(
-      text = habit.localizedLabel(demoMode),
+      text = localizedHabitLabel(habit.label, habit.demoLabelKey(), demoMode),
       style = MaterialTheme.typography.bodyMedium,
     )
   }

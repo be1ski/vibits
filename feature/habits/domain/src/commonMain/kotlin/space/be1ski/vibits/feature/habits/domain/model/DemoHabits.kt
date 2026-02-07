@@ -46,3 +46,19 @@ object DemoHabitStringKeys {
  * Checks if the habit is a predefined demo habit.
  */
 fun HabitConfig.isDemoHabit(): Boolean = DemoHabits.TAGS.contains(tag)
+
+/**
+ * Returns the string resource key for a demo habit's localized label, or null if not a demo habit.
+ */
+fun HabitConfig.demoLabelKey(): String? =
+  when (tag) {
+    "${PostTags.HABITS_PREFIX}${DemoHabits.EXERCISE}" -> DemoHabitStringKeys.EXERCISE
+    "${PostTags.HABITS_PREFIX}${DemoHabits.READING}" -> DemoHabitStringKeys.READING
+    "${PostTags.HABITS_PREFIX}${DemoHabits.MEDITATION}" -> DemoHabitStringKeys.MEDITATION
+    "${PostTags.HABITS_PREFIX}${DemoHabits.WATER}" -> DemoHabitStringKeys.WATER
+    "${PostTags.HABITS_PREFIX}${DemoHabits.LEARNING}" -> DemoHabitStringKeys.LEARNING
+    "${PostTags.HABITS_PREFIX}${DemoHabits.WALKING}" -> DemoHabitStringKeys.WALKING
+    "${PostTags.HABITS_PREFIX}${DemoHabits.NO_SUGAR}" -> DemoHabitStringKeys.NO_SUGAR
+    "${PostTags.HABITS_PREFIX}${DemoHabits.EARLY_SLEEP}" -> DemoHabitStringKeys.EARLY_SLEEP
+    else -> null
+  }
