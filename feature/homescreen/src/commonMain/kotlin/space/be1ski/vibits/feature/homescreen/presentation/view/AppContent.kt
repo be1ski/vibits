@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.homescreen.di.AppDependencies
@@ -131,7 +132,7 @@ private fun LoadingScreen() {
     color = MaterialTheme.colorScheme.background,
   ) {
     Box(
-      modifier = Modifier.fillMaxSize(),
+      modifier = Modifier.fillMaxSize().testTag(AppShellTestTags.LOADING_SCREEN),
       contentAlignment = Alignment.Center,
     ) {
       CircularProgressIndicator()

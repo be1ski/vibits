@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.core.platform.date.currentLocalDate
 import space.be1ski.vibits.core.platform.mode.AppMode
@@ -165,7 +166,7 @@ private fun StatsScreenContent(
 
   Column(
     verticalArrangement = Arrangement.spacedBy(Indent.s),
-    modifier = columnModifier,
+    modifier = columnModifier.testTag(StatsTestTags.STATS_SCREEN),
   ) {
     StatsHeaderRow()
     StatsHabitsEmptyState(derived, dispatch)

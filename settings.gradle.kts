@@ -38,6 +38,7 @@ include(
   ":core:platform:testing",
   ":core:strings",
   ":core:ui",
+  ":core:ui:testing",
   ":core:utils",
 
   ":feature:auth:domain",

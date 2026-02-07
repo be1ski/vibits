@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.strings.generated.Res
@@ -49,6 +50,7 @@ import space.be1ski.vibits.feature.habits.domain.model.demoHabit
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.state.EditableHabit
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
+import space.be1ski.vibits.feature.habits.presentation.view.StatsTestTags
 
 private val COLOR_CIRCLE_SIZE = 24.dp
 private val SELECTED_BORDER_WIDTH = 2.dp
@@ -65,6 +67,7 @@ fun HabitsConfigDialog(
 
   AlertDialog(
     onDismissRequest = { dispatch(HabitsAction.Config.CloseConfigDialog) },
+    modifier = Modifier.testTag(StatsTestTags.HABITS_CONFIG_DIALOG),
     title = { Text(stringResource(Res.string.label_habits_config)) },
     text = { HabitsConfigDialogContent(habitsState, demoMode, dispatch) },
     confirmButton = {

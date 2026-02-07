@@ -15,6 +15,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_cancel
@@ -34,6 +35,7 @@ fun SyncConflictDialog(
 ) {
   AlertDialog(
     onDismissRequest = onDismiss,
+    modifier = Modifier.testTag(FeedTestTags.SYNC_CONFLICT_DIALOG),
     title = {
       Text(
         text = stringResource(Res.string.title_sync_conflict),

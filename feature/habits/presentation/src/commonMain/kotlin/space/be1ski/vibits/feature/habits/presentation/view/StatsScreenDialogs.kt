@@ -4,6 +4,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_cancel
@@ -29,6 +31,7 @@ internal fun EmptyDeleteDialog(
   }
   AlertDialog(
     onDismissRequest = { dispatch(HabitsAction.Editor.CancelDelete) },
+    modifier = Modifier.testTag(StatsTestTags.EMPTY_DELETE_DIALOG),
     title = { Text(stringResource(Res.string.title_delete_day)) },
     text = { Text(stringResource(Res.string.msg_delete_day_confirm)) },
     confirmButton = {
@@ -69,6 +72,7 @@ internal fun SingleHabitToggleDialog(
 
   AlertDialog(
     onDismissRequest = { dispatch(HabitsAction.SingleToggle.CancelSingleHabitToggle) },
+    modifier = Modifier.testTag(StatsTestTags.SINGLE_TOGGLE_DIALOG),
     title = { Text(stringResource(titleRes)) },
     text = {
       Text(stringResource(messageRes, displayLabel, day.date.toString()))

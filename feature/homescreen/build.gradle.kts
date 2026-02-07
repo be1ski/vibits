@@ -63,6 +63,11 @@ kotlin {
         implementation(libs.kotlinx.coroutines.test)
       }
     }
+    val desktopTest by getting {
+      dependencies {
+        implementation(projects.core.ui.testing)
+      }
+    }
     androidMain {
       dependencies {
         implementation(libs.androidx.appcompat)

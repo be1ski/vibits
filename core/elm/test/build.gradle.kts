@@ -8,6 +8,7 @@ kotlin {
       dependencies {
         api(projects.core.elm)
         implementation(kotlin("test"))
+        implementation(libs.kotlinx.coroutines.core)
       }
     }
   }

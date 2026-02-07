@@ -31,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -85,7 +86,7 @@ fun FeedScreen(
 
   val filteredMemos = FilterMemosByTypeUseCase(memos, activeFilter)
 
-  Column(modifier = Modifier.fillMaxSize()) {
+  Column(modifier = Modifier.fillMaxSize().testTag(FeedTestTags.FEED_SCREEN)) {
     Column(modifier = Modifier.padding(horizontal = Indent.s, vertical = Indent.s)) {
       SegmentedSelector(
         label = stringResource(Res.string.label_post_filter),
