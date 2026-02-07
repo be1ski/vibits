@@ -1,4 +1,4 @@
-package space.be1ski.vibits.feature.auth.domain.model
+package space.be1ski.vibits.core.ui.form
 
 enum class CredentialValidationError {
   FILL_ALL_FIELDS,

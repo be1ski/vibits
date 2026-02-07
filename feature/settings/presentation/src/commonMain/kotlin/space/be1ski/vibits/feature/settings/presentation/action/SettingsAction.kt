@@ -3,7 +3,7 @@ package space.be1ski.vibits.feature.settings.presentation.action
 import space.be1ski.vibits.core.elm.Action
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.mode.AppMode
-import space.be1ski.vibits.feature.auth.domain.model.CredentialValidationError
+import space.be1ski.vibits.core.ui.form.CredentialValidationError
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
 
 sealed interface SettingsAction : Action {

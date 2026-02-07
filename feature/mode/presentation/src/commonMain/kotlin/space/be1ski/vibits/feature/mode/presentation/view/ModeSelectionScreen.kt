@@ -172,7 +172,7 @@ private fun CredentialsSetupDialog(
         )
         state.error?.let { error ->
           Text(
-            text = credentialValidationErrorMessage(error.name),
+            text = credentialValidationErrorMessage(error),
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.bodySmall,
           )
