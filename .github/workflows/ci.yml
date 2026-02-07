@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
 
 jobs:
@@ -57,6 +57,43 @@ jobs:
           retention-days: 7
           if-no-files-found: warn
 
+      - name: Publish screenshots to branch
+        if: always() && github.event_name == 'pull_request'
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+
+          # Collect screenshots into flat structure
+          mkdir -p /tmp/screenshots
+          find . -path "*/build/ui-screenshots/*" -name "*.png" | while read -r f; do
+            rel=$(echo "$f" | sed 's|.*/build/ui-screenshots/||')
+            mkdir -p "/tmp/screenshots/$(dirname "$rel")"
+            cp "$f" "/tmp/screenshots/$rel"
+          done
+
+          [ -z "$(ls /tmp/screenshots)" ] && exit 0
+
+          # Push to ci-screenshots branch
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin ci-screenshots 2>/dev/null || true
+
+          if git rev-parse origin/ci-screenshots >/dev/null 2>&1; then
+            git worktree add /tmp/branch ci-screenshots
+          else
+            git worktree add --detach /tmp/branch
+            cd /tmp/branch
+            git checkout --orphan ci-screenshots
+            git rm -rf . 2>/dev/null || true
+          fi
+
+          cd /tmp/branch
+          rm -rf "pr-${PR_NUMBER}"
+          cp -r /tmp/screenshots "pr-${PR_NUMBER}"
+          git add .
+          git commit -m "Screenshots for PR #${PR_NUMBER}" --allow-empty
+          git push origin ci-screenshots
+
       - name: Comment screenshots on PR
         if: always() && github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -73,22 +110,28 @@ jobs:
             for (const file of files) {
               const match = file.match(/ui-screenshots\/([^/]+)\/([^/]+)\/(.+)\.png$/);
               if (!match) continue;
-              const [, feature, , scenario] = match;
+              const [, feature, testClass, scenario] = match;
               if (!features.has(feature)) features.set(feature, []);
-              features.get(feature).push(scenario);
+              features.get(feature).push({ testClass, scenario });
             }
 
             const marker = '<!-- ui-screenshots -->';
+            const pr = context.issue.number;
+            const baseUrl = `https://raw.githubusercontent.com/${context.repo.owner}/${context.repo.repo}/ci-screenshots/pr-${pr}`;
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
 
             let body = `${marker}\n## UI Screenshots\n\n`;
             body += `**${files.length} screenshots** across ${features.size} features`;
             body += ` | [Download artifact](${runUrl}#artifacts)\n\n`;
 
-            for (const [feature, scenarios] of features) {
-              body += `<details><summary><b>${feature}</b> (${scenarios.length})</summary>\n\n`;
-              for (const s of scenarios) body += `- \`${s}\`\n`;
-              body += `\n</details>\n\n`;
+            for (const [feature, items] of features) {
+              body += `<details><summary><b>${feature}</b> (${items.length})</summary>\n\n`;
+              for (const { testClass, scenario } of items) {
+                const url = `${baseUrl}/${feature}/${testClass}/${scenario}.png`;
+                body += `**${scenario}**\n\n`;
+                body += `![${scenario}](${url})\n\n`;
+              }
+              body += `</details>\n\n`;
             }
 
             const { data: comments } = await github.rest.issues.listComments({
