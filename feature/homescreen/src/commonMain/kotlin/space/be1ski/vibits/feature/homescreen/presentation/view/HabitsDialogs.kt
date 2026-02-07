@@ -19,11 +19,13 @@ import space.be1ski.vibits.core.strings.generated.action_create
 import space.be1ski.vibits.core.strings.generated.action_delete
 import space.be1ski.vibits.core.strings.generated.action_update
 import space.be1ski.vibits.core.strings.generated.msg_delete_day_warning
+import space.be1ski.vibits.core.strings.generated.msg_select_habit
 import space.be1ski.vibits.core.strings.generated.title_create_day
 import space.be1ski.vibits.core.strings.generated.title_delete_day
 import space.be1ski.vibits.core.strings.generated.title_update_day
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.feature.habits.presentation.state.EditorError
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.feature.habits.presentation.view.components.EditConfigWarningDialog
 import space.be1ski.vibits.feature.habits.presentation.view.components.HabitsConfigDialog
@@ -100,7 +102,12 @@ private fun HabitEditorContent(
       }
     }
   }
-  habitsState.editorError?.let { message ->
+  habitsState.editorError?.let { error ->
+    val message =
+      when (error) {
+        is EditorError.NoHabitSelected -> stringResource(Res.string.msg_select_habit)
+        is EditorError.OperationFailed -> error.message
+      }
     Text(message, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
   }
 }

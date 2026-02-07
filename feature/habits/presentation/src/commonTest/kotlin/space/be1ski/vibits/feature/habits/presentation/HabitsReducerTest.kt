@@ -16,6 +16,7 @@ import space.be1ski.vibits.feature.habits.presentation.effect.HabitsEffect
 import space.be1ski.vibits.feature.habits.presentation.reducer.habitsReducer
 import space.be1ski.vibits.feature.habits.presentation.state.ActivityCacheKey
 import space.be1ski.vibits.feature.habits.presentation.state.EditableHabit
+import space.be1ski.vibits.feature.habits.presentation.state.EditorError
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import kotlin.test.Test
@@ -109,7 +110,7 @@ class HabitsReducerTest {
         editorDay = testDay,
         editorConfig = testConfig,
         editorSelections = mapOf("#habits/exercise" to true),
-        editorError = "some error",
+        editorError = EditorError.OperationFailed("some error"),
         showDeleteConfirm = true,
       ),
     ) {
@@ -162,7 +163,7 @@ class HabitsReducerTest {
     ) {
       send(HabitsAction.Editor.ConfirmEditor)
 
-      assertState { editorError == "Select at least one habit." }
+      assertState { editorError == EditorError.NoHabitSelected }
       assertNoEffects()
     }
 
@@ -325,7 +326,7 @@ class HabitsReducerTest {
     habitsReducer.test(HabitsState(isLoading = true)) {
       send(HabitsAction.Response.MemoOperationFailed("Network error"))
 
-      assertState { !isLoading && editorError == "Network error" }
+      assertState { !isLoading && editorError == EditorError.OperationFailed("Network error") }
       assertNoEffects()
     }
 

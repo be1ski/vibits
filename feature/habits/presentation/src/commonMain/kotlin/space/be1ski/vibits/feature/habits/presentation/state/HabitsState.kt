@@ -48,7 +48,7 @@ data class HabitsState(
   val editorConfig: List<HabitConfig> = emptyList(),
   val editorSelections: Map<HabitTag, IsSelected> = emptyMap(),
   val editorExisting: DailyMemo? = null,
-  val editorError: String? = null,
+  val editorError: EditorError? = null,
   // Delete confirmation
   val showDeleteConfirm: Boolean = false,
   // Single habit toggle state
