@@ -4,6 +4,7 @@ import space.be1ski.vibits.core.elm.Reducer
 import space.be1ski.vibits.core.elm.reducer
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.effect.HabitsEffect
+import space.be1ski.vibits.feature.habits.presentation.state.EditorError
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
 
 internal val responseReducer: Reducer<HabitsAction.Response, HabitsState, HabitsEffect, Nothing> =
@@ -20,7 +21,7 @@ internal val responseReducer: Reducer<HabitsAction.Response, HabitsState, Habits
       }
 
       is HabitsAction.Response.MemoOperationFailed -> {
-        state { state.resetToggle().copy(isLoading = false, editorError = action.error) }
+        state { state.resetToggle().copy(isLoading = false, editorError = EditorError.OperationFailed(action.error)) }
       }
     }
   }

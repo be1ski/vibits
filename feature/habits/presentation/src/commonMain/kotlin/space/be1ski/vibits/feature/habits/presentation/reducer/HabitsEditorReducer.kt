@@ -13,6 +13,7 @@ import space.be1ski.vibits.feature.habits.domain.usecase.parseDailyDateFromConte
 import space.be1ski.vibits.feature.habits.domain.usecase.parseMemoDate
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.effect.HabitsEffect
+import space.be1ski.vibits.feature.habits.presentation.state.EditorError
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 
@@ -49,7 +50,7 @@ internal val editorReducer: Reducer<HabitsAction.Editor, HabitsState, HabitsEffe
             state { state.copy(showDeleteConfirm = true) }
           }
           !hasSelection -> {
-            state { state.copy(editorError = "Select at least one habit.") }
+            state { state.copy(editorError = EditorError.NoHabitSelected) }
           }
           else -> {
             val day = state.editorDay ?: return@reducer

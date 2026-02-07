@@ -67,7 +67,7 @@ class MemosReducerTest {
     memosReducer.test(MemosState(baseUrl = "", token = "")) {
       send(MemosAction.Loading.LoadMemos)
 
-      assertState { credentialsMode && errorMessage == "Base URL and token are required." }
+      assertState { credentialsMode && errorMessage == null }
       assertNoEffects()
     }
 

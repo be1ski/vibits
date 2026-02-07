@@ -15,7 +15,6 @@ kotlin {
     }
     commonTest {
       dependencies {
-        implementation(projects.core.ui)
         implementation(projects.feature.memos.data)
         implementation(projects.feature.memos.data.testing)
         implementation(projects.feature.memos.domain.testing)
