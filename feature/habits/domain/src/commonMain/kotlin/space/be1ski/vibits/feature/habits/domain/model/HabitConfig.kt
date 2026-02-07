@@ -1,6 +1,9 @@
+@file:Suppress("MagicNumber")
+
 package space.be1ski.vibits.feature.habits.domain.model
 
-import space.be1ski.vibits.core.ui.theme.DefaultHabitColor
+/** Material Green 500 — default color when none is specified in config. */
+const val DEFAULT_HABIT_COLOR: Long = 0xFF4CAF50L
 
 /**
  * Habit configuration entry.
@@ -11,5 +14,5 @@ data class HabitConfig(
   /** User-friendly label. */
   val label: String,
   /** Habit color as ARGB Long. */
-  val color: Long = DefaultHabitColor,
+  val color: Long = DEFAULT_HABIT_COLOR,
 )

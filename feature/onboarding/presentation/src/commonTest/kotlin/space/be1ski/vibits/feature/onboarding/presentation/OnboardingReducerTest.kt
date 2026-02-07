@@ -1,7 +1,7 @@
 package space.be1ski.vibits.feature.onboarding.presentation
 
 import space.be1ski.vibits.core.elm.test.test
-import space.be1ski.vibits.core.ui.theme.DefaultHabitColor
+import space.be1ski.vibits.feature.habits.domain.model.DEFAULT_HABIT_COLOR
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
 import space.be1ski.vibits.feature.onboarding.presentation.action.OnboardingAction
 import space.be1ski.vibits.feature.onboarding.presentation.effect.OnboardingEffect.Command
@@ -38,7 +38,7 @@ class OnboardingReducerTest {
         currentStep = OnboardingStep.ChoosePreset,
         selectedPresetId = "water",
         selectedPresetName = "Drink Water",
-        selectedColor = DefaultHabitColor,
+        selectedColor = DEFAULT_HABIT_COLOR,
       ),
     ) {
       send(OnboardingAction.Navigation.Continue)
@@ -51,7 +51,7 @@ class OnboardingReducerTest {
       val effect = assertHasCommand<Command.CreateFirstHabit>()
       assertEquals("Drink Water", effect.name)
       assertEquals("water", effect.presetId)
-      assertEquals(DefaultHabitColor, effect.color)
+      assertEquals(DEFAULT_HABIT_COLOR, effect.color)
     }
 
   @Test

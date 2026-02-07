@@ -2,10 +2,6 @@
 
 package space.be1ski.vibits.core.ui.theme
 
-/**
- * Predefined habit color palette (Material Design colors).
- * Used in UI for habit configuration color picker.
- */
 val HabitColors =
   listOf(
     0xFF4CAF50L, // Green
@@ -19,9 +15,3 @@ val HabitColors =
     0xFF607D8BL, // Blue Grey
     0xFFFFEB3BL, // Yellow
   )
-
-/**
- * Default habit color (first color from palette - Material Green 500).
- * Used when no color is specified in habit configuration.
- */
-val DefaultHabitColor: Long = HabitColors.first()

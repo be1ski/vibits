@@ -7,7 +7,7 @@
  * - Test fakes belong in testing/ modules, not production code
  */
 
-val kotlinSourceSets = listOf("commonMain", "androidMain", "desktopMain", "iosMain", "wasmJsMain")
+val kotlinSourceSets = listOf("commonMain", "androidMain", "desktopMain", "iosMain", "nonWasmMain", "wasmJsMain")
 
 val uiPackageSegments = listOf(".ui.", ".view.")
 val platformPackageSegments = listOf(".platform.", ".room.")

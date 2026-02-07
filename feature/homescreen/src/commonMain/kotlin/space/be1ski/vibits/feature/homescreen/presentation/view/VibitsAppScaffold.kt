@@ -32,6 +32,7 @@ import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_create_memo
 import space.be1ski.vibits.core.strings.generated.action_track_today
+import space.be1ski.vibits.core.strings.generated.msg_fill_all_fields
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.date.DateFormatter
 import space.be1ski.vibits.core.ui.date.rememberDateFormatter
@@ -196,7 +197,10 @@ private fun ScaffoldContent(
       currentLanguage,
       currentTheme,
     )
-    memosState.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+    val errorText =
+      memosState.errorMessage
+        ?: if (memosState.credentialsMode && memosState.needsCredentials) stringResource(Res.string.msg_fill_all_fields) else null
+    errorText?.let { Text(it, color = MaterialTheme.colorScheme.error) }
 
     if (appState.selectedScreen != Screen.FEED) {
       val successRate = rememberSuccessRateIfNeeded(appState, habitsTimeline, activityRange, habitsState)

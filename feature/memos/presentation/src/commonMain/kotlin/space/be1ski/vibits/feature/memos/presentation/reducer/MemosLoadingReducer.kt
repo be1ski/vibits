@@ -12,7 +12,7 @@ internal val loadingReducer: Reducer<MemosAction.Loading, MemosState, MemosEffec
     when (action) {
       is MemosAction.Loading.LoadMemos -> {
         if (state.needsCredentials) {
-          state { state.copy(credentialsMode = true, errorMessage = "Base URL and token are required.") }
+          state { state.copy(credentialsMode = true, errorMessage = null) }
         } else {
           state { state.copy(isLoading = true, errorMessage = null, credentialsMode = false) }
           if (!state.isOfflineMode) {

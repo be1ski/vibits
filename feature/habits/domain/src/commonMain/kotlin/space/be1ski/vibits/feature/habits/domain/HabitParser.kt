@@ -1,6 +1,6 @@
 package space.be1ski.vibits.feature.habits.domain
 
-import space.be1ski.vibits.core.ui.theme.DefaultHabitColor
+import space.be1ski.vibits.feature.habits.domain.model.DEFAULT_HABIT_COLOR
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitStatus
 import space.be1ski.vibits.feature.memos.domain.model.PostTags
@@ -48,17 +48,17 @@ fun parseHabitConfigLine(line: String): HabitConfig? {
           } else {
             raw
           }
-        Triple(lbl, tag, DefaultHabitColor)
+        Triple(lbl, tag, DEFAULT_HABIT_COLOR)
       }
       2 -> {
         val lbl = parts[0]
         val tag = normalizeHabitTag(parts[1])
-        Triple(lbl, tag, DefaultHabitColor)
+        Triple(lbl, tag, DEFAULT_HABIT_COLOR)
       }
       else -> {
         val lbl = parts[0]
         val tag = normalizeHabitTag(parts[1])
-        val clr = parseHexColor(parts[2]) ?: DefaultHabitColor
+        val clr = parseHexColor(parts[2]) ?: DEFAULT_HABIT_COLOR
         Triple(lbl, tag, clr)
       }
     }

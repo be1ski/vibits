@@ -2,8 +2,8 @@ package space.be1ski.vibits.feature.habits.presentation.reducer
 
 import space.be1ski.vibits.core.elm.Reducer
 import space.be1ski.vibits.core.elm.reducer
-import space.be1ski.vibits.core.ui.theme.DefaultHabitColor
 import space.be1ski.vibits.feature.habits.domain.buildHabitsConfigContentFromList
+import space.be1ski.vibits.feature.habits.domain.model.DEFAULT_HABIT_COLOR
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.effect.HabitsEffect
 import space.be1ski.vibits.feature.habits.presentation.state.EditableHabit
@@ -26,7 +26,7 @@ internal val configReducer: Reducer<HabitsAction.Config, HabitsState, HabitsEffe
       }
 
       is HabitsAction.Config.AddHabit -> {
-        val newHabit = EditableHabit(id = "habit_${Random.nextLong()}", tag = "", label = "", color = DefaultHabitColor)
+        val newHabit = EditableHabit(id = "habit_${Random.nextLong()}", tag = "", label = "", color = DEFAULT_HABIT_COLOR)
         state { state.copy(editingHabits = state.editingHabits + newHabit) }
       }
 
