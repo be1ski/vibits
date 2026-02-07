@@ -6,9 +6,9 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
+import space.be1ski.vibits.core.utils.habits.DemoHabitIds
 import space.be1ski.vibits.feature.habits.domain.formatHexColor
 import space.be1ski.vibits.feature.habits.domain.labelFromTag
-import space.be1ski.vibits.feature.habits.domain.model.DemoHabits
 import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.model.PostTags
@@ -33,14 +33,14 @@ internal data class DemoHabit(
 internal object DemoDataGenerator {
   private val demoHabits =
     listOf(
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.EXERCISE}", formatHexColor(HabitColor(0xFF4CAF50L)), 0.85f, 0.7f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.READING}", formatHexColor(HabitColor(0xFFFF9800L)), 0.70f, 1.1f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.MEDITATION}", formatHexColor(HabitColor(0xFF9C27B0L)), 0.60f, 1.0f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.WATER}", formatHexColor(HabitColor(0xFF00BCD4L)), 0.90f, 0.95f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.LEARNING}", formatHexColor(HabitColor(0xFFE91E63L)), 0.50f, 0.6f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.WALKING}", formatHexColor(HabitColor(0xFF607D8BL)), 0.65f, 1.2f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.NO_SUGAR}", formatHexColor(HabitColor(0xFFF44336L)), 0.45f, 0.8f),
-      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabits.EARLY_SLEEP}", formatHexColor(HabitColor(0xFF2196F3L)), 0.55f, 0.7f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.EXERCISE}", formatHexColor(HabitColor(0xFF4CAF50L)), 0.85f, 0.7f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.READING}", formatHexColor(HabitColor(0xFFFF9800L)), 0.70f, 1.1f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.MEDITATION}", formatHexColor(HabitColor(0xFF9C27B0L)), 0.60f, 1.0f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.WATER}", formatHexColor(HabitColor(0xFF00BCD4L)), 0.90f, 0.95f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.LEARNING}", formatHexColor(HabitColor(0xFFE91E63L)), 0.50f, 0.6f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.WALKING}", formatHexColor(HabitColor(0xFF607D8BL)), 0.65f, 1.2f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.NO_SUGAR}", formatHexColor(HabitColor(0xFFF44336L)), 0.45f, 0.8f),
+      DemoHabit("${PostTags.HABITS_PREFIX}${DemoHabitIds.EARLY_SLEEP}", formatHexColor(HabitColor(0xFF2196F3L)), 0.55f, 0.7f),
     )
 
   private const val MONTHS_OF_HISTORY = 18
