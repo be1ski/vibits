@@ -7,50 +7,41 @@
 
 ![Vibits](.github/hero.webp)
 
-Habit tracker powered by [Memos](https://github.com/usememos/memos). Kotlin Multiplatform + Compose Multiplatform.
+Habit tracker powered by [Memos](https://github.com/usememos/memos)
 
-**Platforms:** Android · iOS · Desktop · Web<br>
-**Modes:** Online (Memos sync) · Offline · Demo<br>
-**Localization:** 🇬🇧 🇪🇸 🇨🇳 🇮🇳 🇸🇦 🇧🇷 🇷🇺 🇺🇦 🇧🇾 🇰🇿 🇺🇿 🇬🇪 🇦🇿 🇰🇬 🇹🇯 🇷🇴 🇹🇲 🇯🇵 🇩🇪 🇫🇷
+- **Platforms:** Android · iOS · macOS · Windows · Web
+- **Modes:** Online (Memos sync) · Offline · Demo
+- **Locales:** 🇬🇧 🇪🇸 🇨🇳 🇮🇳 🇸🇦 🇧🇷 🇷🇺 🇺🇦 🇧🇾 🇰🇿 🇺🇿 🇬🇪 🇦🇿 🇰🇬 🇹🇯 🇷🇴 🇹🇲 🇯🇵 🇩🇪 🇫🇷
 
-## Run
+## Highlights
+- Kotlin Multiplatform with platform entry points for Android, iOS, desktop, and web
+- Compose Multiplatform UI with TEA (Elm Architecture) state management
+- Stack — Metro DI, Ktor, Room, kotlinx serialization/datetime
+- Quality gates: ktlint, detekt, and Kover coverage reports
 
+## Build & Test
+- `./gradlew checkAll` — lint, detekt, compile, tests
+- `./gradlew checkJvm` — JVM-only checks
+- `./gradlew checkIos` — iOS checks
+- `./gradlew koverXmlReport` — coverage report
+- `./gradlew :androidApp:assembleRelease` — Android APK
+- `./gradlew :desktopApp:packageDmg` — macOS DMG
+- `./gradlew :desktopApp:packageMsi` — Windows MSI
+- iOS — Xcode project at `iosApp/vibits/vibits.xcodeproj`
+
+## Repo Layout
 ```
-./gradlew :desktopApp:run
-./gradlew :androidApp:installDebug
-./gradlew :webApp:wasmJsBrowserDevelopmentRun
-```
-
-## Build
-
-```
-./gradlew checkAll                                                    # lint, detekt, compile, tests (macOS)
-./gradlew checkJvm                                                    # JVM checks only (Linux)
-./gradlew koverXmlReport                                              # coverage report
-./gradlew :androidApp:assembleRelease                                 # Android APK
-./gradlew :iosApp:framework:assembleSharedReleaseXCFramework          # iOS framework
-./gradlew :desktopApp:packageDmg                                      # macOS DMG
-./gradlew :desktopApp:packageMsi                                      # Windows MSI
+core/         — TEA foundation, UI, strings, platform abstractions
+feature/      — feature modules (auth, habits, memos, sync, settings, onboarding, mode)
+build-logic/  — Gradle convention plugins
+androidApp/   — Android entry point
+desktopApp/   — Desktop entry point
+iosApp/       — iOS wrapper (Xcode project + framework)
+webApp/       — Web entry point
 ```
 
 ## CI/CD
-
-[One-click release](https://github.com/be1ski/vibits/actions/workflows/release.yml) → builds all platforms in parallel:
+CI runs `checkJvm` (Linux) and `checkIos` (macOS). [Release workflow](https://github.com/be1ski/vibits/actions/workflows/release.yml) builds and publishes in parallel:
 - **Android APK** → GitHub Releases + Firebase App Distribution
 - **macOS DMG / Windows MSI** → GitHub Releases
 - **Web** → GitHub Releases + GitHub Pages
-
-## Structure
-
-```
-core/       — shared infrastructure (TEA, UI, strings, platform)
-feature/    — feature modules
-androidApp/ — Android entry point
-desktopApp/ — Desktop entry point
-iosApp/     — iOS entry point (Xcode app + framework)
-webApp/     — Web entry point (WASM)
-```
-
-## Architecture
-
-TEA (The Elm Architecture) · ~95% shared code
