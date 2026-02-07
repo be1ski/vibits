@@ -30,12 +30,6 @@ val productionSourceSet = "commonMain"
 val featureLayers = setOf("domain", "data", "presentation")
 val exemptFeatures = setOf("homescreen")
 
-// Known cross-feature dependencies that can't be removed yet (deeply coupled composables).
-// Format: "sourceFeature:sourceLayer -> depFeature:depLayer"
-val allowedCrossFeatureDeps = setOf(
-  "memos:presentation -> habits:presentation", // PostsScreen uses StatsScreen, HabitsState, HabitsAction
-)
-
 // Matches feature deps like: projects.feature.memos.data or project(":feature:memos:data")
 // Captures: feature name and layer
 val typeSafeFeatureDepPattern = Regex("""projects\.feature\.(\w+)\.(domain|data|presentation)(?!\.\w)""")
@@ -154,8 +148,6 @@ fun checkFeatureLayerDependencies(
     for ((depFeature, depLayer, matchText) in deps) {
       val isSameFeature = depFeature == featureName
       val isCrossFeature = !isSameFeature
-      val depKey = "$featureName:$layer -> $depFeature:$depLayer"
-      if (depKey in allowedCrossFeatureDeps) continue
 
       when (layer) {
         "domain" -> {

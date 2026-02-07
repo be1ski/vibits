@@ -38,7 +38,6 @@ import space.be1ski.vibits.feature.memos.domain.usecase.ClassifyPostTypeUseCase
 import space.be1ski.vibits.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.feature.memos.presentation.state.MemosState
 import space.be1ski.vibits.feature.memos.presentation.view.FeedScreen
-import space.be1ski.vibits.feature.memos.presentation.view.PostsScreen
 import space.be1ski.vibits.feature.settings.domain.model.TimeRangeTab
 
 private const val PAGER_CENTER_PAGE = 500
@@ -207,15 +206,21 @@ private fun MemosTabContent(
         onHabitsAction = onHabitsAction,
       )
     Screen.STATS ->
-      PostsScreen(
-        memos = memos,
-        range = activityRange,
+      StatsScreen(
+        state =
+          StatsScreenState(
+            memos = memos,
+            range = activityRange,
+            activityMode = ActivityMode.POSTS,
+            useVerticalScroll = true,
+            enablePullRefresh = false,
+            demoMode = appState.isDemoMode,
+            postsListExpanded = appState.postsListExpanded,
+          ),
         appMode = appState.appMode,
-        demoMode = appState.isDemoMode,
         dateFormatter = dateFormatter,
         habitsState = habitsState,
         onHabitsAction = onHabitsAction,
-        postsListExpanded = appState.postsListExpanded,
         onPostsListExpandedChange = { onAppAction(AppAction.UI.SetPostsListExpanded(it)) },
       )
     Screen.FEED ->
