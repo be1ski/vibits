@@ -16,7 +16,7 @@ class MemosRemoteSourceImpl(
   private val memosApi: MemosApi,
   private val credentialsRepository: CredentialsRepository,
 ) : MemosRemoteSource {
-  private suspend fun credentials(): Pair<String, String> {
+  private fun credentials(): Pair<String, String> {
     val creds = credentialsRepository.load().requireFilled()
     return creds.baseUrl to creds.token
   }

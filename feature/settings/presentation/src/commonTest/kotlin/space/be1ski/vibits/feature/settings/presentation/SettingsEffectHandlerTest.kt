@@ -6,7 +6,6 @@ import space.be1ski.vibits.core.platform.locale.LocaleProvider
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.auth.domain.test.FakeCredentialsRepository
 import space.be1ski.vibits.feature.auth.domain.usecase.SaveCredentialsUseCase
-import space.be1ski.vibits.feature.memos.domain.repository.ConnectionTester
 import space.be1ski.vibits.feature.memos.domain.test.FakeMemoStorageManager
 import space.be1ski.vibits.feature.mode.domain.test.FakeAppModeRepository
 import space.be1ski.vibits.feature.mode.domain.usecase.ResetAppUseCase
@@ -154,7 +153,7 @@ class SettingsEffectHandlerTest {
     return SettingsEffectHandler(
       credentialsHandler =
         SettingsCredentialsEffectHandler(
-          connectionTester = ConnectionTester { _, _ -> connectionResult },
+          connectionTester = { _, _ -> connectionResult },
           saveCredentials = SaveCredentialsUseCase(credentialsRepository),
         ),
       modeHandler =

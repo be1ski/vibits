@@ -13,8 +13,4 @@ object Indent {
   val l = 20.dp
   val xl = 24.dp
   val x2l = 32.dp
-  val x3l = 40.dp
-  val x4l = 48.dp
-  val x5l = 56.dp
-  val x6l = 64.dp
 }

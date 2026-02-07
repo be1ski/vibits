@@ -11,7 +11,7 @@ import space.be1ski.vibits.feature.sync.domain.SyncLogTags
 import space.be1ski.vibits.feature.sync.domain.model.SyncResult
 import space.be1ski.vibits.feature.sync.domain.repository.SyncQueueRepository
 
-private val TAG = SyncLogTags.MEMOS_SYNC_EFFECT
+private const val TAG = SyncLogTags.MEMOS_SYNC_EFFECT
 
 class MemosSyncEffectHandler(
   private val syncEngine: SyncEngine,

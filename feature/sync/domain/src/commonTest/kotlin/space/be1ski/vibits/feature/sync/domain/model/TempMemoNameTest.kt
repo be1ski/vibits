@@ -1,6 +1,7 @@
 package space.be1ski.vibits.feature.sync.domain.model
 
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
@@ -37,8 +38,7 @@ class TempMemoNameTest {
   @Test
   fun `when generating multiple names then all are unique`() {
     val names = (1..100).map { TempMemoName.generate() }.toSet()
-    // All generated names should be unique
-    assertTrue(names.size == 100)
+    assertEquals(100, names.size)
   }
 
   @Test
@@ -46,11 +46,11 @@ class TempMemoNameTest {
     val name = TempMemoName.generate()
     // Format: local_{timestamp}_{random}
     val parts = name.removePrefix("local_").split("_")
-    assertTrue(parts.size == 2)
+    assertEquals(2, parts.size)
     // First part is timestamp (long number)
     assertTrue(parts[0].all { it.isDigit() })
     // Second part is random (9 digit number)
-    assertTrue(parts[1].length == 9)
+    assertEquals(9, parts[1].length)
     assertTrue(parts[1].all { it.isDigit() })
   }
 }
