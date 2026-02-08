@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.memos.presentation.effect
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.feature.memos.domain.model.Memo
@@ -9,6 +10,7 @@ import space.be1ski.vibits.feature.memos.domain.usecase.LoadMemosUseCase
 import space.be1ski.vibits.feature.memos.presentation.action.MemosAction
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.time.Clock
 
@@ -181,6 +183,18 @@ class MemosLoadEffectHandlerTest {
       assertEquals(1, actions.size)
       val action = actions[0] as MemosAction.Loading.MemosLoaded
       assertEquals(2, action.memos.size)
+    }
+
+  // ========== Cancellation Tests ==========
+
+  @Test
+  fun `when LoadRemoteMemos cancelled then CancellationException propagates`() =
+    runTest {
+      val handler = createHandler(listMemosResult = Result.failure(CancellationException("cancelled")))
+
+      assertFailsWith<CancellationException> {
+        handler(MemosEffect.LoadRemoteMemos).toList()
+      }
     }
 
   // ========== Effect Routing Tests ==========

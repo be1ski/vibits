@@ -3,6 +3,7 @@ package space.be1ski.vibits.feature.memos.presentation.effect
 import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.core.elm.EffectHandler
 import space.be1ski.vibits.core.elm.actions
+import space.be1ski.vibits.core.utils.coroutines.runSuspendCatching
 import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.domain.usecase.LoadCachedMemosUseCase
 import space.be1ski.vibits.feature.memos.domain.usecase.LoadMemosUseCase
@@ -24,14 +25,14 @@ class MemosLoadEffectHandler(
   private fun handleLoadCachedMemos(): Flow<MemosAction> =
     actions {
       Log.d(TAG, "Loading cached memos")
-      runCatching { loadCachedMemos() }
+      runSuspendCatching { loadCachedMemos() }
         .onSuccess { memos -> emit(MemosAction.Loading.CachedMemosLoaded(memos)) }
     }
 
   private fun handleRefreshMemos(): Flow<MemosAction> =
     actions {
       Log.d(TAG, "Refreshing memos from cache")
-      runCatching { loadCachedMemos() }
+      runSuspendCatching { loadCachedMemos() }
         .onSuccess { memos ->
           Log.d(TAG, "Refreshed ${memos.size} memos")
           emit(MemosAction.Loading.MemosLoaded(memos))
@@ -41,7 +42,7 @@ class MemosLoadEffectHandler(
   private fun handleLoadRemoteMemos(): Flow<MemosAction> =
     actions {
       Log.d(TAG, "Loading memos")
-      runCatching { loadMemos() }
+      runSuspendCatching { loadMemos() }
         .onSuccess { memos -> emit(MemosAction.Loading.MemosLoaded(memos)) }
         .onFailure { error ->
           Log.e(TAG, "Failed to load memos", error)

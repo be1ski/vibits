@@ -6,6 +6,7 @@ import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import space.be1ski.vibits.core.platform.di.AppScope
+import space.be1ski.vibits.core.utils.coroutines.runSuspendCatching
 import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.auth.domain.model.isFilled
 import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
@@ -63,7 +64,7 @@ class SyncEngineImpl(
     // Reset any IN_PROGRESS operations from previous crash/kill
     syncQueue.resetInProgressToPending()
 
-    return runCatching {
+    return runSuspendCatching {
       Log.i(TAG, "Starting sync...")
       executeSyncFlow()
     }.getOrElse { e ->
@@ -133,7 +134,7 @@ class SyncEngineImpl(
       return SyncResult.NoCredentials
     }
 
-    return runCatching {
+    return runSuspendCatching {
       Log.i(TAG, "Forcing server sync...")
       val serverMemos = fetchServerMemos()
 
@@ -156,7 +157,7 @@ class SyncEngineImpl(
       return SyncResult.NoCredentials
     }
 
-    return runCatching {
+    return runSuspendCatching {
       Log.i(TAG, "Forcing local sync...")
       val pendingOperations = syncQueue.getPendingOperations()
 
