@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.memos.presentation.effect
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.feature.memos.domain.model.Memo
@@ -10,6 +11,7 @@ import space.be1ski.vibits.feature.memos.domain.usecase.UpdateMemoUseCase
 import space.be1ski.vibits.feature.memos.presentation.action.MemosAction
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.time.Clock
 
@@ -164,6 +166,38 @@ class MemosWriteEffectHandlerTest {
       assertIs<MemosAction.Crud.OperationFailed>(actions[0])
       val action = actions[0] as MemosAction.Crud.OperationFailed
       assertEquals("Failed to delete memo", action.error)
+    }
+
+  // ========== Cancellation Tests ==========
+
+  @Test
+  fun `when CreateMemo cancelled then CancellationException propagates`() =
+    runTest {
+      val handler = createHandler(createMemoResult = Result.failure(CancellationException("cancelled")))
+
+      assertFailsWith<CancellationException> {
+        handler(MemosEffect.CreateMemo("content")).toList()
+      }
+    }
+
+  @Test
+  fun `when UpdateMemo cancelled then CancellationException propagates`() =
+    runTest {
+      val handler = createHandler(updateMemoResult = Result.failure(CancellationException("cancelled")))
+
+      assertFailsWith<CancellationException> {
+        handler(MemosEffect.UpdateMemo("memos/1", "content")).toList()
+      }
+    }
+
+  @Test
+  fun `when DeleteMemo cancelled then CancellationException propagates`() =
+    runTest {
+      val handler = createHandler(deleteMemoResult = Result.failure(CancellationException("cancelled")))
+
+      assertFailsWith<CancellationException> {
+        handler(MemosEffect.DeleteMemo("memos/1")).toList()
+      }
     }
 
   // ========== Effect Routing Tests ==========

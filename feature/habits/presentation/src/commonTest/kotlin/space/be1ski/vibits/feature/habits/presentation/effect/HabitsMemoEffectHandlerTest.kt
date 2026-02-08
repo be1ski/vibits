@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.habits.presentation.effect
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
@@ -12,6 +13,7 @@ import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.feature.memos.domain.test.FakeMemosRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 
 class HabitsMemoEffectHandlerTest {
@@ -279,6 +281,50 @@ class HabitsMemoEffectHandlerTest {
       val action = actions[0]
       assertIs<HabitsAction.Response.MemoOperationFailed>(action)
       assertEquals("Delete failed", action.error)
+    }
+
+  // ========== Cancellation Tests ==========
+
+  @Test
+  fun `when CreateMemo config cancelled then CancellationException propagates`() =
+    runTest {
+      val repository =
+        FakeMemosRepository().apply {
+          createMemoResult = Result.failure(CancellationException("cancelled"))
+        }
+      val handler = createHandler(repository)
+
+      assertFailsWith<CancellationException> {
+        handler(HabitsEffect.CreateMemo("#habits/config\ntest")).toList()
+      }
+    }
+
+  @Test
+  fun `when UpdateMemo cancelled then CancellationException propagates`() =
+    runTest {
+      val repository =
+        FakeMemosRepository().apply {
+          updateMemoResult = Result.failure(CancellationException("cancelled"))
+        }
+      val handler = createHandler(repository)
+
+      assertFailsWith<CancellationException> {
+        handler(HabitsEffect.UpdateMemo("memos/1", "updated")).toList()
+      }
+    }
+
+  @Test
+  fun `when DeleteMemo cancelled then CancellationException propagates`() =
+    runTest {
+      val repository =
+        FakeMemosRepository().apply {
+          deleteMemoResult = Result.failure(CancellationException("cancelled"))
+        }
+      val handler = createHandler(repository)
+
+      assertFailsWith<CancellationException> {
+        handler(HabitsEffect.DeleteMemo("memos/1")).toList()
+      }
     }
 
   // ========== Helper Classes ==========

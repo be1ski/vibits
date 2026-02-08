@@ -34,8 +34,6 @@ val runCatchingBaseline = setOf(
   "ConnectionTesterImpl.kt",
   "CreateFirstHabitUseCase.kt",
   "CreateFirstCheckInUseCase.kt",
-  "SyncOperationApplier.kt",
-  "SyncEngineImpl.kt",
 )
 
 val coreModulePrefix = ":core:"

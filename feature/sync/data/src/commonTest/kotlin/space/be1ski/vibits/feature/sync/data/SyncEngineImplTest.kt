@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.sync.data
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -17,6 +18,7 @@ import space.be1ski.vibits.feature.sync.domain.model.SyncStatus
 import space.be1ski.vibits.feature.sync.domain.repository.SyncQueueRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
@@ -378,6 +380,44 @@ class SyncEngineImplTest {
       assertTrue(remoteSource.updateCalls > 0)
     }
 
+  // ========== Cancellation Tests ==========
+
+  @Test
+  fun `when performSync cancelled then CancellationException propagates`() =
+    runTest {
+      val cancellingSource =
+        FakeMemosRemoteSource(exceptionToThrow = CancellationException("cancelled"))
+      val (engine, _, _) = createEngine(remoteSource = cancellingSource)
+
+      assertFailsWith<CancellationException> {
+        engine.performSync()
+      }
+    }
+
+  @Test
+  fun `when forceServerSync cancelled then CancellationException propagates`() =
+    runTest {
+      val cancellingSource =
+        FakeMemosRemoteSource(exceptionToThrow = CancellationException("cancelled"))
+      val (engine, _, _) = createEngine(remoteSource = cancellingSource)
+
+      assertFailsWith<CancellationException> {
+        engine.forceServerSync()
+      }
+    }
+
+  @Test
+  fun `when forceLocalSync cancelled then CancellationException propagates`() =
+    runTest {
+      val cancellingSource =
+        FakeMemosRemoteSource(exceptionToThrow = CancellationException("cancelled"))
+      val (engine, _, _) = createEngine(remoteSource = cancellingSource)
+
+      assertFailsWith<CancellationException> {
+        engine.forceLocalSync()
+      }
+    }
+
   // ========== Pagination Tests ==========
 
   @Test
@@ -401,6 +441,7 @@ class SyncEngineImplTest {
     private val memos: List<Memo> = emptyList(),
     private val pages: List<List<Memo>>? = null,
     private val shouldFail: Boolean = false,
+    private val exceptionToThrow: Exception? = null,
   ) : MemosRemoteSource {
     var createCalls = 0
       private set
@@ -417,6 +458,7 @@ class SyncEngineImplTest {
       pageToken: String?,
     ): MemosPage {
       listCalls++
+      exceptionToThrow?.let { throw it }
       if (shouldFail) throw RuntimeException("Remote source error")
 
       if (pages != null) {
