@@ -7,6 +7,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.core.platform.di.AppScope
+import space.be1ski.vibits.core.utils.coroutines.runSuspendCatching
 import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.habits.domain.buildDailyContent
 import space.be1ski.vibits.feature.habits.domain.extractCompletedHabits
@@ -52,7 +53,7 @@ class SaveDailyHabitMemoUseCase(
 
       Log.d(TAG, "Saving daily memo for date: $date")
 
-      runCatching {
+      runSuspendCatching {
         // Get current cached memos to check for existing daily memo
         val cachedMemos = memosRepository.cachedMemos()
         val existingMemo =
@@ -95,7 +96,7 @@ class SaveDailyHabitMemoUseCase(
     mutex.withLock {
       Log.d(TAG, "Toggling habit $habitTag for date $date")
 
-      runCatching {
+      runSuspendCatching {
         // Get current cached memos
         val cachedMemos = memosRepository.cachedMemos()
         val existingMemoInfo =

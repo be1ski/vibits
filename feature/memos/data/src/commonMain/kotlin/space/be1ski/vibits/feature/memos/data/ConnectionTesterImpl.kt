@@ -3,6 +3,7 @@ package space.be1ski.vibits.feature.memos.data
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.core.platform.di.AppScope
+import space.be1ski.vibits.core.utils.coroutines.runSuspendCatching
 import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.data.remote.MemosApi
 import space.be1ski.vibits.feature.memos.domain.repository.ConnectionTester
@@ -19,7 +20,7 @@ class ConnectionTesterImpl(
     token: String,
   ): Result<Unit> {
     Log.d(TAG, "Testing connection...")
-    return runCatching {
+    return runSuspendCatching {
       memosApi.listMemos(
         baseUrl = baseUrl,
         token = token,
