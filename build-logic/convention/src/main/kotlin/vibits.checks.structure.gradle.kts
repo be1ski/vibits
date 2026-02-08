@@ -26,10 +26,6 @@ val featureDependencyPattern = Regex("""projects\.feature\.|project\(":feature:"
 val rawRunCatchingPattern = Regex("""\brunCatching\s*[\(\{]""")
 val suspendPattern = Regex("""\bsuspend\b""")
 
-// Baseline: existing files with raw runCatching that will be migrated in follow-up PRs.
-// Remove entries as files are migrated to runSuspendCatching.
-val runCatchingBaseline = emptySet<String>()
-
 val coreModulePrefix = ":core:"
 val featureModulePrefix = ":feature:"
 val composableAnnotation = "@Composable"
@@ -94,7 +90,6 @@ fun checkRawRunCatching(
 ) {
   if (!sourceSet.endsWith("Main")) return
   if (fileName == "RunSuspendCatching.kt") return
-  if (fileName in runCatchingBaseline) return
   if (!suspendPattern.containsMatchIn(content)) return
 
   lines.forEachIndexed { index, line ->

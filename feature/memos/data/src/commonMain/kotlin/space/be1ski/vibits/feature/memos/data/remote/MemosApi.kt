@@ -14,8 +14,8 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
-import kotlinx.coroutines.CancellationException
 import space.be1ski.vibits.core.platform.di.AppScope
+import space.be1ski.vibits.core.utils.coroutines.runSuspendCatching
 import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.data.remote.dto.CreateMemoRequestDto
 import space.be1ski.vibits.feature.memos.data.remote.dto.ListMemosResponseDto
@@ -28,7 +28,6 @@ private fun String.normalizeBaseUrl(): String = trim().trimEnd('/')
 
 @Inject
 @SingleIn(AppScope::class)
-@Suppress("TooGenericExceptionCaught")
 class MemosApi(
   private val httpClient: HttpClient,
 ) {
@@ -40,7 +39,7 @@ class MemosApi(
   ): ListMemosResponseDto {
     val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/v1/memos"
     Log.i(TAG, "GET $fullUrl")
-    return try {
+    return runSuspendCatching {
       val response: ListMemosResponseDto =
         httpClient
           .get(fullUrl) {
@@ -53,12 +52,9 @@ class MemosApi(
           }.body()
       Log.i(TAG, "GET $fullUrl -> OK, ${response.memos.size} memos")
       response
-    } catch (ce: CancellationException) {
-      throw ce
-    } catch (e: Exception) {
+    }.onFailure { e ->
       Log.e(TAG, "GET $fullUrl -> FAILED", e)
-      throw e
-    }
+    }.getOrThrow()
   }
 
   suspend fun updateMemo(
@@ -69,7 +65,7 @@ class MemosApi(
   ): MemoDto {
     val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/v1/$name"
     Log.i(TAG, "PATCH $fullUrl")
-    return try {
+    return runSuspendCatching {
       val response: MemoDto =
         httpClient
           .patch(fullUrl) {
@@ -80,12 +76,9 @@ class MemosApi(
           }.body()
       Log.i(TAG, "PATCH $fullUrl -> OK")
       response
-    } catch (ce: CancellationException) {
-      throw ce
-    } catch (e: Exception) {
+    }.onFailure { e ->
       Log.e(TAG, "PATCH $fullUrl -> FAILED", e)
-      throw e
-    }
+    }.getOrThrow()
   }
 
   suspend fun createMemo(
@@ -95,7 +88,7 @@ class MemosApi(
   ): MemoDto {
     val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/v1/memos"
     Log.i(TAG, "POST $fullUrl")
-    return try {
+    return runSuspendCatching {
       val response: MemoDto =
         httpClient
           .post(fullUrl) {
@@ -105,12 +98,9 @@ class MemosApi(
           }.body()
       Log.i(TAG, "POST $fullUrl -> OK")
       response
-    } catch (ce: CancellationException) {
-      throw ce
-    } catch (e: Exception) {
+    }.onFailure { e ->
       Log.e(TAG, "POST $fullUrl -> FAILED", e)
-      throw e
-    }
+    }.getOrThrow()
   }
 
   suspend fun deleteMemo(
@@ -120,16 +110,13 @@ class MemosApi(
   ) {
     val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/v1/$name"
     Log.i(TAG, "DELETE $fullUrl")
-    try {
+    runSuspendCatching {
       httpClient.delete(fullUrl) {
         header(HttpHeaders.Authorization, "Bearer $token")
       }
       Log.i(TAG, "DELETE $fullUrl -> OK")
-    } catch (ce: CancellationException) {
-      throw ce
-    } catch (e: Exception) {
+    }.onFailure { e ->
       Log.e(TAG, "DELETE $fullUrl -> FAILED", e)
-      throw e
-    }
+    }.getOrThrow()
   }
 }
