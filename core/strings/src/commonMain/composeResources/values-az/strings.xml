@@ -245,6 +245,7 @@ Köhnə konfiqurasiyanı redaktə etmək tövsiyə olunmur, çünki bu, əvvəlk
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">URL və giriş tokenini yoxlayın, sonra yenidən cəhd edin.</string>
+    <string name="msg_credentials_stored_locally">Sizin məlumatlarınız bu cihazda təhlükəsiz saxlanılır.</string>
     <string name="msg_feed_empty_all">Xatirələriniz yaradıldıqdan sonra burada görünəcək.</string>
     <string name="msg_feed_empty_filtered">Bu filtrə uyğun xatirə yoxdur.</string>
     <string name="msg_logs_empty_hint">Tətbiq sinxronlaşdırma və məlumat emal etdikcə jurnallar burada görünəcək.</string>

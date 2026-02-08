@@ -245,6 +245,7 @@
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">تحقق من الرابط ورمز الوصول، ثم حاول مرة أخرى.</string>
+    <string name="msg_credentials_stored_locally">يتم تخزين بيانات اعتمادك بأمان على هذا الجهاز.</string>
     <string name="msg_feed_empty_all">ستظهر ذكرياتك هنا بعد إنشائها.</string>
     <string name="msg_feed_empty_filtered">لا توجد ذكريات تطابق هذا الفلتر.</string>
     <string name="msg_logs_empty_hint">تظهر السجلات هنا أثناء مزامنة التطبيق ومعالجة البيانات.</string>

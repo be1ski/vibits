@@ -169,7 +169,6 @@ private fun StatsScreenContent(
     verticalArrangement = Arrangement.spacedBy(Indent.s),
     modifier = Modifier.fillMaxSize().then(columnModifier).testTag(StatsTestTags.STATS_SCREEN),
   ) {
-    StatsHeaderRow()
     StatsHabitsEmptyState(derived, dispatch)
     StatsInfoCard(derived, dispatch)
     StatsPostsInfoCard(derived)

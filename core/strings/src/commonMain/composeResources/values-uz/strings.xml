@@ -245,6 +245,7 @@ Eng yaxshi yechim: yangi konfiguratsiya yarating. Tarixiy ma'lumotlar eski konfi
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">URL va kirish tokenini tekshiring, keyin qaytadan urinib ko'ring.</string>
+    <string name="msg_credentials_stored_locally">Sizning hisob maʼlumotlaringiz ushbu qurilmada xavfsiz saqlanadi.</string>
     <string name="msg_feed_empty_all">Xotiralaringiz yaratilgandan keyin bu yerda koʻrinadi.</string>
     <string name="msg_feed_empty_filtered">Bu filtrga mos xotira topilmadi.</string>
     <string name="msg_logs_empty_hint">Ilova sinxronlash va maʼlumotlarni qayta ishlash jarayonida jurnallar bu yerda paydo bo'ladi.</string>

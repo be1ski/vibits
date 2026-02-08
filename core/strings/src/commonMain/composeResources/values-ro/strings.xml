@@ -245,6 +245,7 @@ Cea mai bună practică: creează o configurație nouă. Datele tale istorice vo
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">Verifică URL-ul și tokenul de acces, apoi încearcă din nou.</string>
+    <string name="msg_credentials_stored_locally">Datele tale de autentificare sunt stocate în siguranță pe acest dispozitiv.</string>
     <string name="msg_feed_empty_all">Amintirile tale vor apărea aici după creare.</string>
     <string name="msg_feed_empty_filtered">Nicio amintire nu corespunde acestui filtru.</string>
     <string name="msg_logs_empty_hint">Jurnalele apar aici pe măsură ce aplicația sincronizează și procesează datele.</string>

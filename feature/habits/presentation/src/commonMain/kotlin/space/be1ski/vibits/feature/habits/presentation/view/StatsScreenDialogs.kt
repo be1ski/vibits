@@ -1,6 +1,8 @@
 package space.be1ski.vibits.feature.habits.presentation.view
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -35,7 +37,10 @@ internal fun EmptyDeleteDialog(
     title = { Text(stringResource(Res.string.title_delete_day)) },
     text = { Text(stringResource(Res.string.msg_delete_day_confirm)) },
     confirmButton = {
-      Button(onClick = { dispatch(HabitsAction.Editor.ConfirmDelete) }) {
+      Button(
+        onClick = { dispatch(HabitsAction.Editor.ConfirmDelete) },
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+      ) {
         Text(stringResource(Res.string.action_delete))
       }
     },

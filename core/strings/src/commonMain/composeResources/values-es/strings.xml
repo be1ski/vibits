@@ -241,6 +241,7 @@
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">Verifica la URL y el token de acceso, luego intenta de nuevo.</string>
+    <string name="msg_credentials_stored_locally">Tus credenciales se almacenan de forma segura en este dispositivo.</string>
     <string name="msg_feed_empty_all">Tus recuerdos aparecerán aquí una vez creados.</string>
     <string name="msg_feed_empty_filtered">No hay recuerdos con este filtro.</string>
     <string name="msg_logs_empty_hint">Los registros aparecen aquí a medida que la app sincroniza y procesa datos.</string>

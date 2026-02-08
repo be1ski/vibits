@@ -245,6 +245,7 @@ Melhor prática: crie uma nova configuração. Seus dados históricos manterão 
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">Verifique a URL e o token de acesso e tente novamente.</string>
+    <string name="msg_credentials_stored_locally">Suas credenciais são armazenadas com segurança neste dispositivo.</string>
     <string name="msg_feed_empty_all">Suas memórias aparecerão aqui após serem criadas.</string>
     <string name="msg_feed_empty_filtered">Nenhuma memória corresponde a este filtro.</string>
     <string name="msg_logs_empty_hint">Os registros aparecem aqui conforme o app sincroniza e processa dados.</string>
