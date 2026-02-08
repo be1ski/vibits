@@ -517,6 +517,7 @@ KMP module plugins:
 
 **All changes must go through pull requests** — never commit directly to `main`. This ensures CI checks pass before merging and keeps the main branch green.
 
+- **Always `git fetch origin main` before starting work.** Rebase onto `origin/main` to avoid conflicts and ensure you're working with the latest code.
 - Create a feature branch, push, and open a PR.
 - Use auto-merge with squash (`gh pr merge --auto --squash --delete-branch`).
 - **When user requests changes to existing PR:** amend commits and force-push to the same branch. Do NOT close and recreate PRs.

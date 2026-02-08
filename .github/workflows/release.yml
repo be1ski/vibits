@@ -80,7 +80,21 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Run checks
-        run: ./gradlew checkJvm
+        run: xvfb-run ./gradlew checkJvm
+
+      - name: Collect and package screenshots
+        env:
+          APP_VERSION: ${{ needs.resolve-version.outputs.version }}
+        run: |
+          mkdir -p build/ui-screenshots
+          find . -path "*/build/ui-screenshots/*.png" -exec cp {} build/ui-screenshots/ \;
+          cd build && zip -r Vibits-${APP_VERSION#v}-screenshots.zip ui-screenshots/
+
+      - name: Upload screenshots to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.resolve-version.outputs.version }}
+          files: build/Vibits-*-screenshots.zip
 
   check-ios:
     runs-on: macos-latest
