@@ -243,6 +243,13 @@
     <string name="demo_habit_no_sugar">बिना चीनी</string>
     <string name="demo_habit_early_sleep">रात 11 बजे तक सोना</string>
 
+    <!-- State panels -->
+    <string name="msg_feed_empty_all">आपकी यादें बनाने के बाद यहाँ दिखाई देंगी।</string>
+    <string name="msg_feed_empty_filtered">इस फ़िल्टर से कोई याद नहीं मिली।</string>
+    <string name="msg_state_loading">आदतें और यादें तैयार हो रही हैं…</string>
+    <string name="title_feed_empty">यहाँ कोई याद नहीं है</string>
+    <string name="title_state_loading">डेटा लोड हो रहा है</string>
+
     <!-- Sync -->
     <string name="action_sync">सिंक करें</string>
     <string name="action_keep_local">स्थानीय रखें</string>

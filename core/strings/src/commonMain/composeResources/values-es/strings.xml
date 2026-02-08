@@ -239,6 +239,13 @@
     <string name="demo_habit_no_sugar">Sin azúcar</string>
     <string name="demo_habit_early_sleep">Dormir antes de las 23h</string>
 
+    <!-- State panels -->
+    <string name="msg_feed_empty_all">Tus recuerdos aparecerán aquí una vez creados.</string>
+    <string name="msg_feed_empty_filtered">No hay recuerdos con este filtro.</string>
+    <string name="msg_state_loading">Preparando hábitos y recuerdos…</string>
+    <string name="title_feed_empty">No hay recuerdos aquí</string>
+    <string name="title_state_loading">Cargando tus datos</string>
+
     <!-- Sync -->
     <string name="action_sync">Sincronizar</string>
     <string name="action_keep_local">Mantener local</string>

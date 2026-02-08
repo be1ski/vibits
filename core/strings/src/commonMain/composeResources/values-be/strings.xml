@@ -243,6 +243,13 @@
     <string name="demo_habit_no_sugar">Без цукру</string>
     <string name="demo_habit_early_sleep">Сон да 23:00</string>
 
+    <!-- State panels -->
+    <string name="msg_feed_empty_all">Вашы ўспаміны з\'явяцца тут пасля стварэння.</string>
+    <string name="msg_feed_empty_filtered">Няма ўспамінаў па гэтым фільтры.</string>
+    <string name="msg_state_loading">Падрыхтоўка звычак і ўспамінаў…</string>
+    <string name="title_feed_empty">Тут пакуль пуста</string>
+    <string name="title_state_loading">Загрузка даных</string>
+
     <!-- Sync -->
     <string name="action_sync">Сінхранізаваць</string>
     <string name="action_keep_local">Пакінуць лакальныя</string>

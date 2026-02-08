@@ -243,6 +243,13 @@
     <string name="demo_habit_no_sugar">Кантсыз</string>
     <string name="demo_habit_early_sleep">23:00гө чейин уктоо</string>
 
+    <!-- State panels -->
+    <string name="msg_feed_empty_all">Эскерүүлөрүңүз түзүлгөндөн кийин бул жерде көрүнөт.</string>
+    <string name="msg_feed_empty_filtered">Бул чыпкага туура келген эскерүү жок.</string>
+    <string name="msg_state_loading">Адаттар жана эскерүүлөр даярдалууда…</string>
+    <string name="title_feed_empty">Бул жерде эскерүү жок</string>
+    <string name="title_state_loading">Маалыматтар жүктөлүүдө</string>
+
     <!-- Sync -->
     <string name="action_sync">Шайкештирүү</string>
     <string name="action_keep_local">Жергиликтүү сактоо</string>

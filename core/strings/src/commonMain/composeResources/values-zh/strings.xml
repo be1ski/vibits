@@ -239,6 +239,13 @@
     <string name="demo_habit_no_sugar">无糖</string>
     <string name="demo_habit_early_sleep">23点前睡觉</string>
 
+    <!-- State panels -->
+    <string name="msg_feed_empty_all">创建后，你的备忘录会显示在这里。</string>
+    <string name="msg_feed_empty_filtered">没有符合此筛选条件的备忘录。</string>
+    <string name="msg_state_loading">正在准备习惯和备忘录…</string>
+    <string name="title_feed_empty">这里还没有备忘录</string>
+    <string name="title_state_loading">正在加载数据</string>
+
     <!-- Sync -->
     <string name="action_sync">同步</string>
     <string name="action_keep_local">保留本地</string>

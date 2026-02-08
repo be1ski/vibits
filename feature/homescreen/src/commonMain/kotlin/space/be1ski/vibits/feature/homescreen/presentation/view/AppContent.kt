@@ -2,6 +2,7 @@ package space.be1ski.vibits.feature.homescreen.presentation.view
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -12,8 +13,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.mode.AppMode
+import space.be1ski.vibits.core.strings.generated.Res
+import space.be1ski.vibits.core.strings.generated.msg_state_loading
+import space.be1ski.vibits.core.strings.generated.title_state_loading
+import space.be1ski.vibits.core.ui.Indent
+import space.be1ski.vibits.core.ui.StatePanel
 import space.be1ski.vibits.feature.homescreen.di.AppDependencies
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
 import space.be1ski.vibits.feature.memos.domain.repository.ExportService
@@ -132,10 +139,18 @@ private fun LoadingScreen() {
     color = MaterialTheme.colorScheme.background,
   ) {
     Box(
-      modifier = Modifier.fillMaxSize().testTag(AppShellTestTags.LOADING_SCREEN),
+      modifier =
+        Modifier
+          .fillMaxSize()
+          .padding(Indent.xl)
+          .testTag(AppShellTestTags.LOADING_SCREEN),
       contentAlignment = Alignment.Center,
     ) {
-      CircularProgressIndicator()
+      StatePanel(
+        title = stringResource(Res.string.title_state_loading),
+        message = stringResource(Res.string.msg_state_loading),
+        icon = { CircularProgressIndicator() },
+      )
     }
   }
 }

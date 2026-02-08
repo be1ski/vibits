@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -44,9 +45,13 @@ import space.be1ski.vibits.core.strings.generated.filter_config
 import space.be1ski.vibits.core.strings.generated.filter_habit_tracking
 import space.be1ski.vibits.core.strings.generated.filter_regular
 import space.be1ski.vibits.core.strings.generated.label_post_filter
+import space.be1ski.vibits.core.strings.generated.msg_feed_empty_all
+import space.be1ski.vibits.core.strings.generated.msg_feed_empty_filtered
 import space.be1ski.vibits.core.strings.generated.title_delete_memo
+import space.be1ski.vibits.core.strings.generated.title_feed_empty
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.SegmentedSelector
+import space.be1ski.vibits.core.ui.StatePanel
 import space.be1ski.vibits.core.ui.date.DateFormatter
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.model.PostFilter
@@ -110,42 +115,49 @@ fun FeedScreen(
           .fillMaxSize()
           .then(containerModifier),
     ) {
-      LazyColumn(state = listState, verticalArrangement = Arrangement.spacedBy(Indent.s)) {
-        items(filteredMemos) { memo ->
-          Card(
-            modifier =
-              Modifier
-                .fillMaxWidth()
-                .clickable { onMemoClick(memo) },
-          ) {
-            Row(
-              modifier = Modifier.padding(start = 0.dp, top = Indent.s, bottom = Indent.s, end = Indent.xs),
-              verticalAlignment = Alignment.Top,
+      if (filteredMemos.isEmpty()) {
+        FeedEmptyState(
+          isFiltered = activeFilter != PostFilter.ALL,
+          modifier = Modifier.align(Alignment.Center).padding(horizontal = Indent.xl),
+        )
+      } else {
+        LazyColumn(state = listState, verticalArrangement = Arrangement.spacedBy(Indent.s)) {
+          items(filteredMemos) { memo ->
+            Card(
+              modifier =
+                Modifier
+                  .fillMaxWidth()
+                  .clickable { onMemoClick(memo) },
             ) {
-              PostTypeIndicator(memo = memo)
-              Column(
-                modifier = Modifier.weight(1f).padding(start = Indent.s),
-                verticalArrangement = Arrangement.spacedBy(Indent.x2s),
+              Row(
+                modifier = Modifier.padding(start = 0.dp, top = Indent.s, bottom = Indent.s, end = Indent.xs),
+                verticalAlignment = Alignment.Top,
               ) {
-                MemoCardContent(
-                  memo = memo,
-                  allMemos = memos,
-                  dateFormatter = dateFormatter,
-                  timeZone = timeZone,
-                  demoMode = demoMode,
-                )
-              }
-              if (onDeleteMemo != null && memo.canDeleteFromFeed) {
-                IconButton(
-                  onClick = { memoToDelete = memo },
-                  modifier = Modifier.size(36.dp),
+                PostTypeIndicator(memo = memo)
+                Column(
+                  modifier = Modifier.weight(1f).padding(start = Indent.s),
+                  verticalArrangement = Arrangement.spacedBy(Indent.x2s),
                 ) {
-                  Icon(
-                    imageVector = Icons.Filled.Delete,
-                    contentDescription = stringResource(Res.string.action_delete),
-                    modifier = Modifier.size(18.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                  MemoCardContent(
+                    memo = memo,
+                    allMemos = memos,
+                    dateFormatter = dateFormatter,
+                    timeZone = timeZone,
+                    demoMode = demoMode,
                   )
+                }
+                if (onDeleteMemo != null && memo.canDeleteFromFeed) {
+                  IconButton(
+                    onClick = { memoToDelete = memo },
+                    modifier = Modifier.size(36.dp),
+                  ) {
+                    Icon(
+                      imageVector = Icons.Filled.Delete,
+                      contentDescription = stringResource(Res.string.action_delete),
+                      modifier = Modifier.size(18.dp),
+                      tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                  }
                 }
               }
             }
@@ -215,4 +227,29 @@ private fun memoDateLabel(
 ): String {
   val instant = memo.createTime ?: return ""
   return formatter.dateTime(instant.toLocalDateTime(timeZone))
+}
+
+@Composable
+private fun FeedEmptyState(
+  isFiltered: Boolean,
+  modifier: Modifier = Modifier,
+) {
+  StatePanel(
+    title = stringResource(Res.string.title_feed_empty),
+    message =
+      if (isFiltered) {
+        stringResource(Res.string.msg_feed_empty_filtered)
+      } else {
+        stringResource(Res.string.msg_feed_empty_all)
+      },
+    icon = {
+      Icon(
+        imageVector = Icons.Outlined.Description,
+        contentDescription = null,
+        modifier = Modifier.size(48.dp),
+        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+      )
+    },
+    modifier = modifier.testTag(FeedTestTags.FEED_EMPTY_STATE),
+  )
 }
