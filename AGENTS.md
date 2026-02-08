@@ -468,21 +468,17 @@ Screenshot tests capture UI state as PNG images for visual regression testing. T
 All screenshots are saved flat in `build/ui-screenshots/` (no subdirectories). The `screenshotTests` Gradle task runs `desktopTest` for all KMP modules and collects PNGs into the root `build/ui-screenshots/`.
 
 **Writing screenshot tests:**
-- Place in `src/desktopTest/kotlin/.../view/` alongside the screen being tested
+- Most screenshots render through `VibitsApp` in `feature/homescreen/src/desktopTest/` to show the full app (bottom bar, toolbar, tabs)
+- Pre-app screens (onboarding, mode selection) render their own composables directly
 - Use deterministic data: fixed dates, `Random(seed)`, no `Clock.System.now()`
-- For composables that read from global singletons (e.g., `Log.logs`), add an `initialLogs`/`initialData` parameter to inject test data
+- Pre-compute `activityDataCache` using domain use cases for populated stats views
 - Use past time ranges where data is fully populated (avoid current/future dates with empty cells)
-- Wrap standalone screens in `Box(modifier = Modifier.padding(Indent.m))` to match real app padding
-- Name pattern: `<feature>_<variant>.png` (e.g., `stats_week_habits`, `feed_demo_data`, `settings_online`)
+- Name pattern: `app_<feature>_<variant>.png` (e.g., `app_habits_week`, `app_feed_empty`, `app_settings_online`)
 
 **Existing test files:**
 | File | Screenshots |
 |------|-------------|
-| `feature/habits/presentation/.../StatsScreenshotTest.kt` | Stats grids (week/month/quarter/year × habits/posts), config dialog, edit warning, delete confirm, single toggle |
-| `feature/memos/presentation/.../FeedScreenshotTest.kt` | Feed (demo data, empty, filtered), sync conflict/log dialogs |
-| `feature/homescreen/.../AppShellScreenshotTest.kt` | App shell (loading, tabs) |
-| `feature/homescreen/.../HabitEditorScreenshotTest.kt` | Habit editor dialog |
-| `feature/settings/presentation/.../SettingsScreenshotTest.kt` | Settings (online/offline/demo, validation error, logs, reset) |
+| `feature/homescreen/.../AppShellScreenshotTest.kt` | Full app: loading, habits (week/month/quarter/year), posts (week/month), feed, settings dialogs, habit editor/config/delete/toggle, sync conflict |
 | `feature/onboarding/presentation/.../OnboardingScreenshotTest.kt` | Onboarding flow steps |
 | `feature/mode/presentation/.../ModeSelectionScreenshotTest.kt` | Mode selection + credentials dialogs |
 
