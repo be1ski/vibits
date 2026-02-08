@@ -90,15 +90,6 @@ jobs:
           find . -path "*/build/ui-screenshots/*.png" -exec cp {} build/ui-screenshots/ \;
           cd build && zip -r Vibits-${APP_VERSION#v}-screenshots.zip ui-screenshots/
 
-      - name: Visual regression (release-to-release)
-        if: always()
-        uses: reg-viz/reg-actions@v3
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-          image-directory-path: "./build/ui-screenshots"
-          artifact-name: "release-screenshots"
-          enable-antialias: "true"
-
       - name: Upload screenshots to Release
         uses: softprops/action-gh-release@v2
         with:
