@@ -4,6 +4,7 @@ package space.be1ski.vibits.feature.habits.presentation.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -166,7 +167,7 @@ private fun StatsScreenContent(
 
   Column(
     verticalArrangement = Arrangement.spacedBy(Indent.s),
-    modifier = columnModifier.testTag(StatsTestTags.STATS_SCREEN),
+    modifier = Modifier.fillMaxSize().then(columnModifier).testTag(StatsTestTags.STATS_SCREEN),
   ) {
     StatsHeaderRow()
     StatsHabitsEmptyState(derived, dispatch)
