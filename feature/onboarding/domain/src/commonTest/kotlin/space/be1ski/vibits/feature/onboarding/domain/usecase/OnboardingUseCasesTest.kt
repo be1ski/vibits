@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.onboarding.domain.usecase
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -14,6 +15,7 @@ import space.be1ski.vibits.feature.onboarding.data.OnboardingRepositoryImpl
 import space.be1ski.vibits.feature.onboarding.domain.test.FakeOnboardingStore
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -234,6 +236,48 @@ class OnboardingUseCasesTest {
       val result = useCase()
 
       assertTrue(result)
+    }
+
+  // ========== Cancellation Tests ==========
+
+  @Test
+  fun `when CreateFirstHabitUseCase cancelled then CancellationException propagates`() =
+    runTest {
+      val memosRepository =
+        FakeMemosRepository().apply {
+          createMemoResult = Result.failure(CancellationException("cancelled"))
+        }
+      val createMemo = CreateMemoUseCase(memosRepository)
+      val useCase = CreateFirstHabitUseCase(createMemo)
+
+      assertFailsWith<CancellationException> {
+        useCase("Exercise", DefaultHabitColor)
+      }
+    }
+
+  @Test
+  fun `when CreateFirstCheckInUseCase cancelled then CancellationException propagates`() =
+    runTest {
+      val habitConfigContent = "#habits/config\nWater | #habits/water"
+      val configCreateTime = LocalDate(2026, 1, 28).atStartOfDayIn(TimeZone.UTC)
+      val memosRepository =
+        FakeMemosRepository().apply {
+          cachedMemosResult =
+            listOf(
+              Memo(
+                name = "memos/1",
+                content = habitConfigContent,
+                createTime = configCreateTime,
+              ),
+            )
+          createMemoResult = Result.failure(CancellationException("cancelled"))
+        }
+      val createMemo = CreateMemoUseCase(memosRepository)
+      val useCase = CreateFirstCheckInUseCase(memosRepository, createMemo)
+
+      assertFailsWith<CancellationException> {
+        useCase(LocalDate(2026, 1, 29))
+      }
     }
 
   @Test

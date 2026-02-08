@@ -28,13 +28,7 @@ val suspendPattern = Regex("""\bsuspend\b""")
 
 // Baseline: existing files with raw runCatching that will be migrated in follow-up PRs.
 // Remove entries as files are migrated to runSuspendCatching.
-val runCatchingBaseline = setOf(
-  "SaveDailyHabitMemoUseCase.kt",
-  "OnlineMemosRepository.kt",
-  "ConnectionTesterImpl.kt",
-  "CreateFirstHabitUseCase.kt",
-  "CreateFirstCheckInUseCase.kt",
-)
+val runCatchingBaseline = emptySet<String>()
 
 val coreModulePrefix = ":core:"
 val featureModulePrefix = ":feature:"

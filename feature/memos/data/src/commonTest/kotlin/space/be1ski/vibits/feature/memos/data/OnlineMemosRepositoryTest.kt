@@ -11,6 +11,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.json.Json
 import space.be1ski.vibits.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.feature.auth.domain.test.FakeCredentialsRepository
@@ -159,6 +160,21 @@ class OnlineMemosRepositoryTest {
       repository.deleteMemo("memos/3")
 
       assertEquals("memos/3", cache.deletedName)
+    }
+
+  @Test
+  fun `when listMemos cancelled then CancellationException propagates`() =
+    runRepositoryTest(
+      handler = { throw CancellationException("cancelled") },
+    ) { client ->
+      val repository =
+        OnlineMemosRepository(
+          memosApi = MemosApi(client),
+          credentialsRepository = FakeCredentialsRepository(Credentials(baseUrl = "https://example.com", token = "token")),
+          memoCache = FakeMemoCache(),
+        )
+
+      assertFailsWith<CancellationException> { repository.listMemos() }
     }
 
   @Test

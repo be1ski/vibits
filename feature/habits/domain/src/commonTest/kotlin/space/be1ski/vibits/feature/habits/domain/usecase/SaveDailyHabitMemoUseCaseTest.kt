@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.habits.domain.usecase
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.test.runTest
@@ -12,6 +13,7 @@ import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
 import space.be1ski.vibits.feature.memos.domain.test.FakeMemosRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class SaveDailyHabitMemoUseCaseTest {
@@ -243,6 +245,42 @@ class SaveDailyHabitMemoUseCaseTest {
 
       assertTrue(result is SaveDailyMemoResult.Deleted)
       assertEquals(0, repository.memos.size)
+    }
+
+  // ========== Cancellation Tests ==========
+
+  @Test
+  fun `when invoke cancelled then CancellationException propagates`() =
+    runTest {
+      val repository =
+        FakeMemosRepository().apply {
+          cachedMemosResult = emptyList()
+          createMemoResult = Result.failure(CancellationException("cancelled"))
+        }
+      val useCase = SaveDailyHabitMemoUseCase(repository)
+
+      assertFailsWith<CancellationException> {
+        useCase("#habits/daily 2026-01-30\n\nexercise")
+      }
+    }
+
+  @Test
+  fun `when toggleHabit cancelled then CancellationException propagates`() =
+    runTest {
+      val repository =
+        FakeMemosRepository().apply {
+          cachedMemosResult = emptyList()
+          createMemoResult = Result.failure(CancellationException("cancelled"))
+        }
+      val useCase = SaveDailyHabitMemoUseCase(repository)
+      val config =
+        listOf(
+          HabitConfig(tag = "#habits/exercise", label = "Exercise", color = HabitColor(0xFF000000)),
+        )
+
+      assertFailsWith<CancellationException> {
+        useCase.toggleHabit(LocalDate(2026, 1, 30), "#habits/exercise", config)
+      }
     }
 
   @Test

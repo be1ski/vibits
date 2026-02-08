@@ -3,6 +3,7 @@ package space.be1ski.vibits.feature.onboarding.domain.usecase
 import dev.zacsweers.metro.Inject
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import space.be1ski.vibits.core.utils.coroutines.runSuspendCatching
 import space.be1ski.vibits.feature.habits.domain.buildDailyContent
 import space.be1ski.vibits.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
@@ -14,7 +15,7 @@ class CreateFirstCheckInUseCase(
   private val createMemo: CreateMemoUseCase,
 ) {
   suspend operator fun invoke(date: LocalDate): Result<Unit> =
-    runCatching {
+    runSuspendCatching {
       val memos = memosRepository.cachedMemos()
       val timeZone = TimeZone.currentSystemDefault()
       val configEntries = ExtractHabitsConfigUseCase(memos, timeZone)

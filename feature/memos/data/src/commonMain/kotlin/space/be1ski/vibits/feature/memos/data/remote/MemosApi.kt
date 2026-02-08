@@ -14,6 +14,7 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
+import kotlinx.coroutines.CancellationException
 import space.be1ski.vibits.core.platform.di.AppScope
 import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.data.remote.dto.CreateMemoRequestDto
@@ -52,6 +53,8 @@ class MemosApi(
           }.body()
       Log.i(TAG, "GET $fullUrl -> OK, ${response.memos.size} memos")
       response
+    } catch (ce: CancellationException) {
+      throw ce
     } catch (e: Exception) {
       Log.e(TAG, "GET $fullUrl -> FAILED", e)
       throw e
@@ -77,6 +80,8 @@ class MemosApi(
           }.body()
       Log.i(TAG, "PATCH $fullUrl -> OK")
       response
+    } catch (ce: CancellationException) {
+      throw ce
     } catch (e: Exception) {
       Log.e(TAG, "PATCH $fullUrl -> FAILED", e)
       throw e
@@ -100,6 +105,8 @@ class MemosApi(
           }.body()
       Log.i(TAG, "POST $fullUrl -> OK")
       response
+    } catch (ce: CancellationException) {
+      throw ce
     } catch (e: Exception) {
       Log.e(TAG, "POST $fullUrl -> FAILED", e)
       throw e
@@ -118,6 +125,8 @@ class MemosApi(
         header(HttpHeaders.Authorization, "Bearer $token")
       }
       Log.i(TAG, "DELETE $fullUrl -> OK")
+    } catch (ce: CancellationException) {
+      throw ce
     } catch (e: Exception) {
       Log.e(TAG, "DELETE $fullUrl -> FAILED", e)
       throw e
