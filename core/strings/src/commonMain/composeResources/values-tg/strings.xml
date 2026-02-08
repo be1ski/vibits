@@ -244,8 +244,10 @@
     <string name="demo_habit_early_sleep">Хоб то 23:00</string>
 
     <!-- State panels -->
+    <string name="msg_connection_failed_hint">URL ва токени дастрасиро санҷед, сипас дубора кӯшиш кунед.</string>
     <string name="msg_feed_empty_all">Хотираҳои шумо пас аз эҷод дар ин ҷо пайдо мешаванд.</string>
     <string name="msg_feed_empty_filtered">Ягон хотира ба ин филтр мувофиқ нест.</string>
+    <string name="msg_logs_empty_hint">Ҳангоми ҳамоҳангсозӣ ва коркарди маълумот журналҳо дар ин ҷо пайдо мешаванд.</string>
     <string name="msg_state_loading">Одатҳо ва хотираҳо омода мешаванд…</string>
     <string name="title_feed_empty">Дар ин ҷо хотира нест</string>
     <string name="title_state_loading">Маълумот бор мешавад</string>

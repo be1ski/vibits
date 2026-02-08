@@ -244,8 +244,10 @@
     <string name="demo_habit_early_sleep">ძილი 23:00-მდე</string>
 
     <!-- State panels -->
+    <string name="msg_connection_failed_hint">შეამოწმეთ URL და წვდომის ტოკენი, შემდეგ სცადეთ ხელახლა.</string>
     <string name="msg_feed_empty_all">შენი მოგონებები აქ გამოჩნდება შექმნის შემდეგ.</string>
     <string name="msg_feed_empty_filtered">ამ ფილტრს მოგონება არ შეესაბამება.</string>
+    <string name="msg_logs_empty_hint">ჟურნალები აქ გამოჩნდება, როცა აპი სინქრონიზაციას და მონაცემთა დამუშავებას ახორციელებს.</string>
     <string name="msg_state_loading">ჩვევებისა და მოგონებების მომზადება…</string>
     <string name="title_feed_empty">აქ მოგონება არ არის</string>
     <string name="title_state_loading">მონაცემები იტვირთება</string>

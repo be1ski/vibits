@@ -244,8 +244,10 @@ Iň gowy usul: täze konfigurasiýa dörediň. Taryhy maglumatlar köne konfigur
     <string name="demo_habit_early_sleep">23:00-a çenli uky</string>
 
     <!-- State panels -->
+    <string name="msg_connection_failed_hint">URL we giriş tokenini barlaň, soňra gaýtadan synanyşyň.</string>
     <string name="msg_feed_empty_all">Ýatlamalarыňyz döredilenden soň bu ýerde görüner.</string>
     <string name="msg_feed_empty_filtered">Bu süzgüçe gabat gelýän ýatlama ýok.</string>
+    <string name="msg_logs_empty_hint">Programma sinhronlaşdyranda we maglumatlary işlände žurnallar bu ýerde görkeziler.</string>
     <string name="msg_state_loading">Endikler we ýatlamalar taýýarlanylýar…</string>
     <string name="title_feed_empty">Bu ýerde ýatlama ýok</string>
     <string name="title_state_loading">Maglumatlar ýüklenýär</string>

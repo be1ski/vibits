@@ -100,6 +100,7 @@ import space.be1ski.vibits.core.strings.generated.mode_offline_title
 import space.be1ski.vibits.core.strings.generated.mode_online_title
 import space.be1ski.vibits.core.strings.generated.msg_export_failed
 import space.be1ski.vibits.core.strings.generated.msg_export_success
+import space.be1ski.vibits.core.strings.generated.msg_logs_empty_hint
 import space.be1ski.vibits.core.strings.generated.msg_no_logs
 import space.be1ski.vibits.core.strings.generated.msg_reset_choose_option
 import space.be1ski.vibits.core.strings.generated.msg_restart_required
@@ -639,6 +640,7 @@ private fun LogsDialog(
       LogViewer(
         logs = logs,
         emptyMessage = stringResource(Res.string.msg_no_logs),
+        emptyHint = stringResource(Res.string.msg_logs_empty_hint),
       )
     },
     confirmButton = {

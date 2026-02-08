@@ -244,8 +244,10 @@
     <string name="demo_habit_early_sleep">النوم قبل 11 مساءً</string>
 
     <!-- State panels -->
+    <string name="msg_connection_failed_hint">تحقق من الرابط ورمز الوصول، ثم حاول مرة أخرى.</string>
     <string name="msg_feed_empty_all">ستظهر ذكرياتك هنا بعد إنشائها.</string>
     <string name="msg_feed_empty_filtered">لا توجد ذكريات تطابق هذا الفلتر.</string>
+    <string name="msg_logs_empty_hint">تظهر السجلات هنا أثناء مزامنة التطبيق ومعالجة البيانات.</string>
     <string name="msg_state_loading">جارٍ إعداد العادات والذكريات…</string>
     <string name="title_feed_empty">لا توجد ذكريات هنا</string>
     <string name="title_state_loading">جارٍ تحميل البيانات</string>

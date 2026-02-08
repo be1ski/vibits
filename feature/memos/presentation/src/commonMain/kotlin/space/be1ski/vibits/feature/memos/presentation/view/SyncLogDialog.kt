@@ -14,6 +14,7 @@ import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_clear
 import space.be1ski.vibits.core.strings.generated.action_close
+import space.be1ski.vibits.core.strings.generated.msg_logs_empty_hint
 import space.be1ski.vibits.core.strings.generated.msg_no_logs
 import space.be1ski.vibits.core.strings.generated.title_sync_logs
 import space.be1ski.vibits.core.ui.LogViewer
@@ -40,6 +41,7 @@ fun SyncLogDialog(
       LogViewer(
         logs = syncLogs,
         emptyMessage = stringResource(Res.string.msg_no_logs),
+        emptyHint = stringResource(Res.string.msg_logs_empty_hint),
       )
     },
     confirmButton = {
