@@ -451,6 +451,43 @@ ignore:
 
 Kover is applied per-module via `vibits.kmp.library` and aggregated at root via `vibits.checks.coverage`. Codecov applies ignore rules when calculating coverage percentage.
 
+### Screenshot Tests
+
+Screenshot tests capture UI state as PNG images for visual regression testing. They run as desktop Compose UI tests and are compared across PRs using [reg-actions](https://github.com/reg-viz/reg-actions).
+
+**Running screenshot tests:**
+```bash
+./gradlew screenshotTests       # run tests + collect all PNGs into build/ui-screenshots/
+```
+
+**Infrastructure** (`core/ui/testing`):
+- `runAppUiTest { }` — runs a desktop Compose test at 540×1080 px
+- `setThemedContent { }` — wraps content in `VibitsTheme` + `Surface`
+- `saveScreenshot("scenario_name")` — captures all root layers, composites them, saves to `build/ui-screenshots/<scenario>.png`
+
+All screenshots are saved flat in `build/ui-screenshots/` (no subdirectories). The `screenshotTests` Gradle task runs `desktopTest` for all KMP modules and collects PNGs into the root `build/ui-screenshots/`.
+
+**Writing screenshot tests:**
+- Place in `src/desktopTest/kotlin/.../view/` alongside the screen being tested
+- Use deterministic data: fixed dates, `Random(seed)`, no `Clock.System.now()`
+- For composables that read from global singletons (e.g., `Log.logs`), add an `initialLogs`/`initialData` parameter to inject test data
+- Use past time ranges where data is fully populated (avoid current/future dates with empty cells)
+- Wrap standalone screens in `Box(modifier = Modifier.padding(Indent.m))` to match real app padding
+- Name pattern: `<feature>_<variant>.png` (e.g., `stats_week_habits`, `feed_demo_data`, `settings_online`)
+
+**Existing test files:**
+| File | Screenshots |
+|------|-------------|
+| `feature/habits/presentation/.../StatsScreenshotTest.kt` | Stats grids (week/month/quarter/year × habits/posts), config dialog, edit warning, delete confirm, single toggle |
+| `feature/memos/presentation/.../FeedScreenshotTest.kt` | Feed (demo data, empty, filtered), sync conflict/log dialogs |
+| `feature/homescreen/.../AppShellScreenshotTest.kt` | App shell (loading, tabs) |
+| `feature/homescreen/.../HabitEditorScreenshotTest.kt` | Habit editor dialog |
+| `feature/settings/presentation/.../SettingsScreenshotTest.kt` | Settings (online/offline/demo, validation error, logs, reset) |
+| `feature/onboarding/presentation/.../OnboardingScreenshotTest.kt` | Onboarding flow steps |
+| `feature/mode/presentation/.../ModeSelectionScreenshotTest.kt` | Mode selection + credentials dialogs |
+
+**CI integration:** The CI workflow collects screenshots from all modules and runs `reg-actions` for visual diff comparison on PRs.
+
 ## Linting & Formatting
 
 **Pre-commit hook handles all checks automatically.** Install it once with `./gradlew installGitHooks`.
