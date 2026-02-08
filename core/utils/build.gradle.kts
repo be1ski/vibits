@@ -8,6 +8,7 @@ kotlin {
       dependencies {
         implementation(projects.core.platform)
         implementation(libs.kotlinx.atomicfu)
+        implementation(libs.kotlinx.coroutines.core)
         implementation(libs.kotlinx.datetime)
       }
     }

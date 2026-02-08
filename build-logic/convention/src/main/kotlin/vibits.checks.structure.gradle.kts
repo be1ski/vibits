@@ -8,6 +8,7 @@
  * - core/ modules only depend on other core/ modules (never on feature/)
  * - Feature layers follow dependency rules: domain <- data, domain <- presentation
  * - No empty modules (registered in settings.gradle.kts but containing no Kotlin sources)
+ * - No raw runCatching in suspend code (use runSuspendCatching instead)
  */
 
 // region Constants
@@ -22,6 +23,20 @@ val testFakePrefixes = listOf("Fake", "Recording", "Tracking", "Stateful")
 
 val expectDeclarationPattern = Regex("""\bexpect\s+(fun|class|interface|object|val|var|abstract|annotation)\b""")
 val featureDependencyPattern = Regex("""projects\.feature\.|project\(":feature:""")
+val rawRunCatchingPattern = Regex("""\brunCatching\s*[\(\{]""")
+val suspendPattern = Regex("""\bsuspend\b""")
+
+// Baseline: existing files with raw runCatching that will be migrated in follow-up PRs.
+// Remove entries as files are migrated to runSuspendCatching.
+val runCatchingBaseline = setOf(
+  "SaveDailyHabitMemoUseCase.kt",
+  "OnlineMemosRepository.kt",
+  "ConnectionTesterImpl.kt",
+  "CreateFirstHabitUseCase.kt",
+  "CreateFirstCheckInUseCase.kt",
+  "SyncOperationApplier.kt",
+  "SyncEngineImpl.kt",
+)
 
 val coreModulePrefix = ":core:"
 val featureModulePrefix = ":feature:"
@@ -74,6 +89,26 @@ fun checkTestFakePlacement(
   val matchedPrefix = testFakePrefixes.firstOrNull { fileName.startsWith(it) }
   if (matchedPrefix != null) {
     violations += "$relativePath — ${matchedPrefix}* class in production code. Move to a testing/ module or commonTest source set."
+  }
+}
+
+fun checkRawRunCatching(
+  fileName: String,
+  sourceSet: String,
+  content: String,
+  lines: List<String>,
+  relativePath: String,
+  violations: MutableList<String>,
+) {
+  if (!sourceSet.endsWith("Main")) return
+  if (fileName == "RunSuspendCatching.kt") return
+  if (fileName in runCatchingBaseline) return
+  if (!suspendPattern.containsMatchIn(content)) return
+
+  lines.forEachIndexed { index, line ->
+    if (rawRunCatchingPattern.containsMatchIn(line)) {
+      violations += "$relativePath:${index + 1} — raw runCatching in suspend code. Use runSuspendCatching to avoid swallowing CancellationException."
+    }
   }
 }
 
@@ -213,6 +248,7 @@ tasks.register("checkConventions") {
           checkComposablePlacement(pkg, content, relativePath, violations)
           checkExpectDeclarationPlacement(pkg, content, relativePath, violations)
           checkTestFakePlacement(pkg, file.name, sourceSet, relativePath, violations)
+          checkRawRunCatching(file.name, sourceSet, content, lines, relativePath, violations)
         }
       }
     }

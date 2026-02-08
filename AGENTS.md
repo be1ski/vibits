@@ -12,7 +12,7 @@ core/
   platform/testing/ — Test fakes for platform interfaces
   strings/       — Localized string resources
   ui/            — Compose UI components and theme
-  utils/         — Shared utilities (date, logging)
+  utils/         — Shared utilities (date, logging, coroutines)
 feature/
   auth/          — Authentication (domain, domain/testing, data)
   habits/        — Habits tracking (domain, presentation)
@@ -343,6 +343,33 @@ We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
 - Prefer clean refactors over quick reuse: avoid introducing or keeping code smells, and leave the codebase cleaner than you found it.
 - Keep Gradle dependencies and `gradle/libs.versions.toml` entries alphabetically sorted within each block.
 
+## Coroutine Cancellation Policy
+
+`CancellationException` must never be swallowed in suspend code. It must always propagate to maintain structured concurrency.
+
+**Rules:**
+- **Never use raw `runCatching` in suspend code.** Use `runSuspendCatching` from `core/utils` — it rethrows `CancellationException` and wraps other exceptions in `Result.failure`.
+- **Never use `catch (e: Exception)` or `catch (e: Throwable)` in suspend code** without a preceding `catch (ce: CancellationException) { throw ce }`.
+- **`TimeoutCancellationException` is always rethrown** — no special-casing.
+- `checkConventions` enforces these rules and will fail the build on violations.
+
+**Allowed patterns:**
+```kotlin
+// Pattern A: runSuspendCatching (preferred)
+runSuspendCatching { suspendCall() }
+  .onSuccess { emit(Success(it)) }
+  .onFailure { emit(Failed(it)) }
+
+// Pattern B: explicit try/catch with cancellation guard
+try {
+  suspendCall()
+} catch (ce: CancellationException) {
+  throw ce
+} catch (e: Exception) {
+  // business error handling
+}
+```
+
 ## Localization
 
 - **Never hardcode user-facing strings.** All text displayed to users must use string resources from `composeResources/values/strings.xml`.
@@ -525,7 +552,7 @@ All build checks are configured via convention plugins in `build-logic/conventio
 | Plugin | Responsibility |
 |--------|---------------|
 | `vibits.checks.codestyle` | Applies ktlint + detekt to all Kotlin modules |
-| `vibits.checks.structure` | `checkConventions` task — enforces package placement rules |
+| `vibits.checks.structure` | `checkConventions` task — enforces package placement rules and cancellation policy |
 | `vibits.checks.coverage` | Kover aggregation for coverage reports |
 | `vibits.checks.verification` | Aggregate tasks: `checkJvm`, `checkIos`, `checkAll`, `installGitHooks` |
 
