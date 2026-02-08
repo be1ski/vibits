@@ -13,6 +13,7 @@
     <string name="action_create_memo">Créer une note</string>
     <string name="action_continue">Continuer</string>
     <string name="action_delete">Supprimer</string>
+    <string name="action_details">Détails</string>
     <string name="action_add_first_habit">Ajoutez votre première habitude</string>
     <string name="action_go_to_dashboard">Aller au tableau de bord</string>
     <string name="action_hide_details">Masquer les détails</string>
@@ -127,11 +128,8 @@
     <string name="format_conflicts_detected">%1$d conflit(s) détecté(s)</string>
     <string name="format_active_since">Actif depuis %1$s</string>
     <string name="msg_connection_failed">Échec de la connexion</string>
-    <string name="msg_edit_config_warning">Vous êtes sur le point de modifier une configuration existante. Cela affectera toutes les données historiques.
-
-Modifier une ancienne configuration n’est pas recommandé, car cela change l’affichage de vos données passées. Par exemple, si vous ajoutez une nouvelle habitude, tous les jours passés l’afficheront comme « non effectuée », même si elle n’existait pas à l’époque.
-
-Bonne pratique : créez une nouvelle configuration. Vos données historiques conserveront l’ancienne configuration et les nouvelles données utiliseront la nouvelle.</string>
+    <string name="msg_edit_config_warning">Modifier cette configuration affectera toutes les données historiques. Les nouvelles habitudes apparaîtront comme « non effectuée » pour les jours passés.</string>
+    <string name="msg_edit_config_warning_detail">Bonne pratique : créez une nouvelle configuration. Les données historiques conserveront l\'ancienne configuration et les nouvelles données utiliseront la nouvelle.</string>
     <string name="msg_delete_config_warning">Êtes-vous sûr de vouloir supprimer cette configuration ? Cela supprimera définitivement la publication de configuration de vos notes.</string>
     <string name="msg_delete_day_confirm">Aucune habitude sélectionnée. L\'entrée du jour sera supprimée.</string>
     <string name="msg_delete_day_warning">Êtes-vous sûr de vouloir supprimer l\'entrée de ce jour ? Cela supprimera définitivement la publication de suivi de vos notes.</string>

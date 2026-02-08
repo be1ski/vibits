@@ -12,6 +12,7 @@
     <string name="action_create_new_config">Создать новую конфигурацию (рекомендуется)</string>
     <string name="action_continue">Продолжить</string>
     <string name="action_delete">Удалить</string>
+    <string name="action_details">Подробности</string>
     <string name="action_add_first_habit">Добавить первую привычку</string>
     <string name="action_edit_anyway">Всё равно редактировать</string>
     <string name="action_go_to_dashboard">Перейти на главную</string>
@@ -129,7 +130,8 @@
     <string name="msg_delete_config_warning">Точно удалить эту конфигурацию? Запись с конфигурацией будет навсегда удалена из твоих воспоминаний.</string>
     <string name="msg_delete_day_confirm">Привычки не выбраны. Запись за день будет удалена.</string>
     <string name="msg_delete_day_warning">Точно удалить день? Запись с отметками будет навсегда удалена из твоих воспоминаний.</string>
-    <string name="msg_edit_config_warning">Ты собираешься отредактировать существующую конфигурацию. Это повлияет на все исторические данные.\n\nРедактировать старую конфигурацию не рекомендуется, потому что это меняет отображение прошлых данных. Например, если добавить новую привычку, прошлые дни покажут её как «не выполнено», хотя тогда её ещё не существовало.\n\nЛучшее решение: создай новую конфигурацию. Исторические данные сохранят старую конфигурацию, а новые данные будут использовать новую.</string>
+    <string name="msg_edit_config_warning">Редактирование этой конфигурации повлияет на все исторические данные. Новые привычки будут отображаться как «не выполнено» для прошлых дней.</string>
+    <string name="msg_edit_config_warning_detail">Лучшее решение: создай новую конфигурацию. Исторические данные сохранят старую конфигурацию, а новые данные будут использовать новую.</string>
     <string name="msg_empty_state_no_habits">Создай привычку, чтобы начать отслеживание офлайн.</string>
     <string name="msg_fill_all_fields">Заполни все поля</string>
     <string name="msg_habit_name_required">Нужно название привычки</string>

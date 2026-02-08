@@ -13,6 +13,7 @@
     <string name="action_create_memo">Crear nota</string>
     <string name="action_continue">Continuar</string>
     <string name="action_delete">Eliminar</string>
+    <string name="action_details">Detalles</string>
     <string name="action_add_first_habit">Añadir tu primer hábito</string>
     <string name="action_go_to_dashboard">Ir al panel</string>
     <string name="action_hide_details">Ocultar detalles</string>
@@ -127,7 +128,8 @@
     <string name="format_conflicts_detected">%1$d conflicto(s) detectado(s)</string>
     <string name="format_active_since">Activo desde %1$s</string>
     <string name="msg_connection_failed">Error de conexión</string>
-    <string name="msg_edit_config_warning">Está a punto de editar una configuración existente. Esto afectará a todos los datos históricos.\n\nNo se recomienda editar una configuración antigua porque cambia la apariencia de sus datos pasados. Por ejemplo, si agrega un nuevo hábito, todos los días pasados lo mostrarán como "no completado" aunque no existiera en ese momento.\n\nMejor práctica: Cree una nueva configuración en su lugar. Sus datos históricos mantendrán la configuración antigua, y los nuevos datos usarán la nueva configuración.</string>
+    <string name="msg_edit_config_warning">Editar esta configuración afectará a todos los datos históricos. Los nuevos hábitos aparecerán como "no completado" en los días pasados.</string>
+    <string name="msg_edit_config_warning_detail">Mejor práctica: cree una nueva configuración en su lugar. Los datos históricos mantendrán la configuración antigua, y los nuevos datos usarán la nueva.</string>
     <string name="msg_delete_config_warning">¿Estás seguro de que quieres eliminar esta configuración? Esto eliminará permanentemente la publicación de configuración de tus notas.</string>
     <string name="msg_delete_day_confirm">No hay hábitos seleccionados. Se eliminará la entrada del día.</string>
     <string name="msg_delete_day_warning">¿Estás seguro de que quieres eliminar la entrada de este día? Esto eliminará permanentemente la publicación de seguimiento de tus notas.</string>

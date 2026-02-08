@@ -13,6 +13,7 @@
     <string name="action_create_memo">Стварыць нататку</string>
     <string name="action_continue">Працягнуць</string>
     <string name="action_delete">Выдаліць</string>
+    <string name="action_details">Падрабязнасці</string>
     <string name="action_add_first_habit">Дадаць першую звычку</string>
     <string name="action_go_to_dashboard">Перайсці да панэлі</string>
     <string name="action_hide_details">Схаваць дэталі</string>
@@ -126,11 +127,8 @@
     <string name="format_conflicts_detected">Выяўлена канфліктаў: %1$d</string>
     <string name="format_active_since">Актыўна з %1$s</string>
     <string name="msg_connection_failed">Памылка падключэння</string>
-    <string name="msg_edit_config_warning">Вы збіраецеся рэдагаваць існуючую канфігурацыю. Гэта паўплывае на ўсе гістарычныя даныя.
-
-Рэдагаваць старую канфігурацыю не рэкамендуецца, бо гэта змяняе адлюстраванне вашых мінулых даных. Напрыклад, калі дадаць новую звычку, усе мінулыя дні пакажуць яе як «не выканана», хоць тады яе яшчэ не існавала.
-
-Лепшая практыка: стварыце новую канфігурацыю. Вашы гістарычныя даныя захаваюць старую канфігурацыю, а новыя даныя будуць выкарыстоўваць новую.</string>
+    <string name="msg_edit_config_warning">Рэдагаванне гэтай канфігурацыі паўплывае на ўсе гістарычныя даныя. Новыя звычкі будуць паказвацца як «не выканана» для мінулых дзён.</string>
+    <string name="msg_edit_config_warning_detail">Лепшая практыка: стварыце новую канфігурацыю. Гістарычныя даныя захаваюць старую канфігурацыю, а новыя даныя будуць выкарыстоўваць новую.</string>
     <string name="msg_delete_config_warning">Вы ўпэўненыя, што хочаце выдаліць гэты канфіг? Допіс з канфігурацыяй будзе выдалены з вашых нататак назаўжды.</string>
     <string name="msg_delete_day_confirm">Звычкі не абраны. Запіс за гэты дзень будзе выдалены.</string>
     <string name="msg_delete_day_warning">Вы ўпэўнены, што жадаеце выдаліць запіс за гэты дзень? Допіс з адзнакамі будзе выдалены з вашых нататак назаўсёды.</string>

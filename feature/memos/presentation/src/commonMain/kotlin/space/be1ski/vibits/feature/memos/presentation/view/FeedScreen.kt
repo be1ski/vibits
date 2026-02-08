@@ -19,6 +19,8 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -179,10 +181,16 @@ fun FeedScreen(
       onDismissRequest = { memoToDelete = null },
       title = { Text(stringResource(Res.string.title_delete_memo)) },
       confirmButton = {
-        TextButton(onClick = {
-          onDeleteMemo?.invoke(memo)
-          memoToDelete = null
-        }) {
+        Button(
+          onClick = {
+            onDeleteMemo?.invoke(memo)
+            memoToDelete = null
+          },
+          colors =
+            ButtonDefaults.buttonColors(
+              containerColor = MaterialTheme.colorScheme.error,
+            ),
+        ) {
           Text(stringResource(Res.string.action_delete))
         }
       },

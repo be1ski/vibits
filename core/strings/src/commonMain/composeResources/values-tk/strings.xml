@@ -14,6 +14,7 @@
     <string name="action_create_first_habit">Ilkinji endigi döret</string>
     <string name="action_create_memo">Bellik döret</string>
     <string name="action_delete">Poz</string>
+    <string name="action_details">Jikme-jiklik</string>
     <string name="action_hide_details">Jikme-jiklikleri gizle</string>
     <string name="action_mark_first_checkin">Ilkinji belligi goý</string>
     <string name="action_maybe_later">Soň bolsa</string>
@@ -127,11 +128,8 @@
     <string name="format_conflicts_detected">%1$d gapma-garşylyk ýüze çykaryldy</string>
     <string name="format_active_since">%1$s-den bäri işjeň</string>
     <string name="msg_connection_failed">Baglanşyk ýalňyşlygy</string>
-    <string name="msg_edit_config_warning">Bar bolan konfigurasiýany redaktirlemekçi bolýarsyňyz. Bu ähli taryhy maglumatlara täsir eder.
-
-Köne konfigurasiýany redaktirlemek maslahat berilmeýär, sebäbi bu geçmişdäki maglumatlaryň görünüşini üýtgedýär. Mysal üçin, täze endik goşsaňyz, öňki günleriň hemmesi ony «tamamlanmady» diýip görkezer, ol wagtda bolsa ol ýokdy.
-
-Iň gowy usul: täze konfigurasiýa dörediň. Taryhy maglumatlar köne konfigurasiýada galar, täze maglumatlar bolsa täzesini ulanar.</string>
+    <string name="msg_edit_config_warning">Bu konfigurasiýany redaktirlemek ähli taryhy maglumatlara täsir eder. Täze endikler öňki günler üçin «tamamlanmady» diýip görkeziler.</string>
+    <string name="msg_edit_config_warning_detail">Iň gowy usul: täze konfigurasiýa dörediň. Taryhy maglumatlar köne konfigurasiýada galar, täze maglumatlar bolsa täzesini ulanar.</string>
     <string name="msg_delete_config_warning">Bu konfigurasiýany öçürmek isleýärsiňizmi? Bu ýazgy postyny ýazgylardan hemişelik aýyrar.</string>
     <string name="msg_delete_day_confirm">Endik saýlanmady. Gündelik ýazgy öçüriler.</string>
     <string name="msg_delete_day_warning">Bu günüň ýazgysyny öçürmek isleýärsiňizmi? Bu yzarlamak ýazgysyny belliklerňizden hemişelik aýyrar.</string>

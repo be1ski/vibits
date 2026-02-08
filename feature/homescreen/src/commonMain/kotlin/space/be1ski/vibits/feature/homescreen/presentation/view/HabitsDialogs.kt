@@ -66,7 +66,7 @@ private fun HabitEditorDialog(
     },
     text = { HabitEditorContent(habitsState, demoMode, dispatch) },
     confirmButton = { HabitEditorConfirmButton(habitsState, dispatch) },
-    dismissButton = { HabitEditorDismissButton(habitsState, dispatch) },
+    dismissButton = { HabitEditorDismissButton(dispatch) },
   )
 }
 
@@ -120,26 +120,26 @@ private fun HabitEditorConfirmButton(
   habitsState: HabitsState,
   dispatch: (HabitsAction) -> Unit,
 ) {
-  Button(onClick = { dispatch(HabitsAction.Editor.ConfirmEditor) }) {
-    val actionRes = if (habitsState.isEditing) Res.string.action_update else Res.string.action_create
-    Text(stringResource(actionRes))
+  Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs)) {
+    if (habitsState.isEditing) {
+      TextButton(
+        onClick = { dispatch(HabitsAction.Editor.RequestDelete) },
+        colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error),
+      ) {
+        Text(stringResource(Res.string.action_delete))
+      }
+    }
+    Button(onClick = { dispatch(HabitsAction.Editor.ConfirmEditor) }) {
+      val actionRes = if (habitsState.isEditing) Res.string.action_update else Res.string.action_create
+      Text(stringResource(actionRes))
+    }
   }
 }
 
 @Composable
-private fun HabitEditorDismissButton(
-  habitsState: HabitsState,
-  dispatch: (HabitsAction) -> Unit,
-) {
-  Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs)) {
-    if (habitsState.isEditing) {
-      TextButton(onClick = { dispatch(HabitsAction.Editor.RequestDelete) }) {
-        Text(stringResource(Res.string.action_delete))
-      }
-    }
-    TextButton(onClick = { dispatch(HabitsAction.Editor.CloseEditor) }) {
-      Text(stringResource(Res.string.action_cancel))
-    }
+private fun HabitEditorDismissButton(dispatch: (HabitsAction) -> Unit) {
+  TextButton(onClick = { dispatch(HabitsAction.Editor.CloseEditor) }) {
+    Text(stringResource(Res.string.action_cancel))
   }
 }
 

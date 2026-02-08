@@ -13,6 +13,7 @@
     <string name="action_create_memo">Створити нотатку</string>
     <string name="action_continue">Продовжити</string>
     <string name="action_delete">Видалити</string>
+    <string name="action_details">Деталі</string>
     <string name="action_add_first_habit">Додати першу звичку</string>
     <string name="action_go_to_dashboard">Перейти до панелі</string>
     <string name="action_hide_details">Сховати деталі</string>
@@ -126,11 +127,8 @@
     <string name="format_conflicts_detected">Виявлено конфліктів: %1$d</string>
     <string name="format_active_since">Активно з %1$s</string>
     <string name="msg_connection_failed">Помилка підключення</string>
-    <string name="msg_edit_config_warning">Ви збираєтеся редагувати наявну конфігурацію. Це вплине на всі історичні дані.
-
-Редагувати стару конфігурацію не рекомендується, бо це змінює відображення ваших минулих даних. Наприклад, якщо додати нову звичку, усі минулі дні покажуть її як «не виконано», хоча тоді її ще не існувало.
-
-Найкраща практика: створіть нову конфігурацію. Історичні дані збережуть стару конфігурацію, а нові дані використовуватимуть нову.</string>
+    <string name="msg_edit_config_warning">Редагування цієї конфігурації вплине на всі історичні дані. Нові звички відображатимуться як «не виконано» для минулих днів.</string>
+    <string name="msg_edit_config_warning_detail">Найкраща практика: створіть нову конфігурацію. Історичні дані збережуть стару конфігурацію, а нові дані використовуватимуть нову.</string>
     <string name="msg_delete_config_warning">Ви впевнені, що хочете видалити цей конфіг? Пост з конфігурацією буде видалено з ваших нотаток назавжди.</string>
     <string name="msg_delete_day_confirm">Звички не обрано. Запис за цей день буде видалено.</string>
     <string name="msg_delete_day_warning">Ви впевнені, що хочете видалити запис за цей день? Пост з відмітками буде видалено з ваших нотаток назавжди.</string>
