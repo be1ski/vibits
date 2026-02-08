@@ -25,14 +25,28 @@ fun runAppUiTest(block: suspend DesktopComposeUiTest.() -> Unit) =
   runDesktopComposeUiTest(width = APP_WIDTH, height = APP_HEIGHT, block = block)
 
 @OptIn(ExperimentalTestApi::class)
-fun ComposeUiTest.setThemedContent(content: @Composable () -> Unit) {
+fun ComposeUiTest.setThemedContent(
+  darkTheme: Boolean = false,
+  content: @Composable () -> Unit,
+) {
   setContent {
-    VibitsTheme(darkTheme = false) {
+    VibitsTheme(darkTheme = darkTheme) {
       Surface(modifier = Modifier.fillMaxSize()) {
         content()
       }
     }
   }
+}
+
+@OptIn(ExperimentalTestApi::class)
+fun ComposeUiTest.captureInBothThemes(
+  name: String,
+  content: @Composable () -> Unit,
+) {
+  setThemedContent(darkTheme = false, content = content)
+  saveScreenshot(name)
+  setThemedContent(darkTheme = true, content = content)
+  saveScreenshot("${name}_dark")
 }
 
 @OptIn(ExperimentalTestApi::class)

@@ -481,23 +481,25 @@ When modifying UI code, always:
 
 **Infrastructure** (`core/ui/testing`):
 - `runAppUiTest { }` — runs a desktop Compose test at 540x1080 px
-- `setThemedContent { }` — wraps content in `VibitsTheme` + `Surface`
+- `setThemedContent(darkTheme = false) { }` — wraps content in `VibitsTheme` + `Surface`
+- `captureInBothThemes("name") { }` — renders content in light and dark theme, saving `<name>.png` and `<name>_dark.png`
 - `saveScreenshot("scenario_name")` — captures all root layers (including dialogs/popups), composites them, saves to `build/ui-screenshots/<scenario>.png`
 
 **Writing screenshot tests:**
+- **Every screenshot must be captured in both light and dark themes.** Use `captureInBothThemes` for standalone composables or `captureApp` (in `AppScreenshotTest`) for full-app screenshots. This produces `<name>.png` (light) and `<name>_dark.png` (dark) automatically.
 - Most screenshots render through `VibitsApp` in `feature/homescreen/src/desktopTest/` to show the full app (bottom bar, toolbar, tabs)
-- Pre-app screens (onboarding, mode selection) render their own composables directly via `setThemedContent`
+- Pre-app screens (onboarding, mode selection) render their own composables directly via `captureInBothThemes`
 - Use deterministic data: fixed dates, `Random(seed)`, no `Clock.System.now()`
 - Pre-compute `activityDataCache` using domain use cases for populated stats views
 - Use past time ranges where data is fully populated (avoid current/future dates with empty cells)
-- **Always assert the key UI element is displayed before calling `saveScreenshot`** — this catches regressions where the target UI fails to render but the test silently passes by capturing the wrong screen
-- Name pattern: `app_<feature>_<variant>.png` (e.g., `app_habits_week`, `app_feed_empty`, `app_settings_online`)
+- **Always assert the key UI element is displayed after capturing** — this catches regressions where the target UI fails to render but the test silently passes by capturing the wrong screen
+- Name pattern: `app_<feature>_<variant>.png` (light) / `app_<feature>_<variant>_dark.png` (dark)
 - **Match the screenshot to where the UI is reachable from.** If a dialog is only accessible from the feed tab, the screenshot must use `feedAppState()`, not `habitsAppState()`. Name it `app_feed_*`, not `app_habits_*`.
 
 **Existing test files:**
 | File | Screenshots |
 |------|-------------|
-| `feature/homescreen/.../AppShellScreenshotTest.kt` | Full app: loading, habits (week/month/quarter/year), posts (week/month), feed, settings dialogs, habit editor/config/delete/toggle, edit config warning, sync conflict |
+| `feature/homescreen/.../AppScreenshotTest.kt` | Full app: loading, habits (week/month/quarter/year), posts (week/month), feed, settings dialogs, habit editor/config/delete/toggle, edit config warning, sync conflict |
 | `feature/onboarding/presentation/.../OnboardingScreenshotTest.kt` | Onboarding flow steps |
 | `feature/mode/presentation/.../ModeSelectionScreenshotTest.kt` | Mode selection + credentials dialogs |
 
