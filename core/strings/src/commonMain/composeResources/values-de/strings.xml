@@ -13,6 +13,7 @@
     <string name="action_create_memo">Notiz erstellen</string>
     <string name="action_continue">Weiter</string>
     <string name="action_delete">Löschen</string>
+    <string name="action_details">Details</string>
     <string name="action_add_first_habit">Fügen Sie Ihre erste Gewohnheit hinzu</string>
     <string name="action_go_to_dashboard">Zum Dashboard</string>
     <string name="action_hide_details">Details ausblenden</string>
@@ -127,11 +128,8 @@
     <string name="format_conflicts_detected">%1$d Konflikt(e) erkannt</string>
     <string name="format_active_since">Aktiv seit %1$s</string>
     <string name="msg_connection_failed">Verbindung fehlgeschlagen</string>
-    <string name="msg_edit_config_warning">Du bist dabei, eine bestehende Konfiguration zu bearbeiten. Das wirkt sich auf alle historischen Daten aus.
-
-Das Bearbeiten einer alten Konfiguration wird nicht empfohlen, weil es die Darstellung früherer Daten verändert. Wenn du zum Beispiel eine neue Gewohnheit hinzufügst, werden alle vergangenen Tage sie als „nicht erledigt“ anzeigen, obwohl sie damals noch nicht existierte.
-
-Empfehlung: Erstelle stattdessen eine neue Konfiguration. Deine historischen Daten behalten die alte Konfiguration, und neue Daten verwenden die neue.</string>
+    <string name="msg_edit_config_warning">Das Bearbeiten dieser Konfiguration wirkt sich auf alle historischen Daten aus. Neue Gewohnheiten werden für vergangene Tage als „nicht erledigt" angezeigt.</string>
+    <string name="msg_edit_config_warning_detail">Empfehlung: Erstelle stattdessen eine neue Konfiguration. Historische Daten behalten die alte Konfiguration, neue Daten verwenden die neue.</string>
     <string name="msg_delete_config_warning">Sind Sie sicher, dass Sie diese Konfiguration löschen möchten? Der Konfigurationsbeitrag wird dauerhaft aus Ihren Notizen entfernt.</string>
     <string name="msg_delete_day_confirm">Keine Gewohnheiten ausgewählt. Der Tageseintrag wird gelöscht.</string>
     <string name="msg_delete_day_warning">Sind Sie sicher, dass Sie den Eintrag für diesen Tag löschen möchten? Der Tracking-Beitrag wird dauerhaft aus Ihren Notizen entfernt.</string>

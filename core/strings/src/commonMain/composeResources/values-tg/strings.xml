@@ -14,6 +14,7 @@
     <string name="action_create_first_habit">Одати аввалро эҷод кунед</string>
     <string name="action_create_memo">Эҷоди ёддошт</string>
     <string name="action_delete">Нест кардан</string>
+    <string name="action_details">Тафсилот</string>
     <string name="action_hide_details">Пинҳон кардани тафсилот</string>
     <string name="action_mark_first_checkin">Аввалин қайдро гузоштан</string>
     <string name="action_maybe_later">Баъдтар</string>
@@ -127,11 +128,8 @@
     <string name="format_conflicts_detected">%1$d мухолифат ошкор шуд</string>
     <string name="format_active_since">Фаъол аз %1$s</string>
     <string name="msg_connection_failed">Хатои пайвастшавӣ</string>
-    <string name="msg_edit_config_warning">Шумо мехоҳед конфигуратсияи мавҷударо таҳрир кунед. Ин ба ҳамаи маълумоти таърихӣ таъсир мерасонад.
-
-Таҳрири конфигуратсияи кӯҳна тавсия намешавад, зеро он намуди маълумоти гузаштаатонро тағйир медиҳад. Масалан, агар одати нав илова кунед, ҳамаи рӯзҳои гузашта онро ҳамчун «иҷро нашудааст» нишон медиҳанд, гарчанде он вақт вуҷуд надошт.
-
-Амали беҳтарин: конфигуратсияи нав эҷод кунед. Маълумоти таърихӣ бо конфигуратсияи кӯҳна мемонад, маълумоти нав бошад конфигуратсияи навро истифода мебарад.</string>
+    <string name="msg_edit_config_warning">Таҳрири ин конфигуратсия ба ҳамаи маълумоти таърихӣ таъсир мерасонад. Одатҳои нав барои рӯзҳои гузашта ҳамчун «иҷро нашудааст» нишон дода мешаванд.</string>
+    <string name="msg_edit_config_warning_detail">Амали беҳтарин: конфигуратсияи нав эҷод кунед. Маълумоти таърихӣ бо конфигуратсияи кӯҳна мемонад, маълумоти нав бошад конфигуратсияи навро истифода мебарад.</string>
     <string name="msg_delete_config_warning">Шумо мутмаин ҳастед, ки мехоҳед ин конфигро нест кунед? Ин постро аз хотиротҳои шумо назди ҳамеша нест мекунад.</string>
     <string name="msg_delete_day_confirm">Одат интихоб нашудааст. Сабти рӯзона нест мешавад.</string>
     <string name="msg_delete_day_warning">Оё шумо мутмаин ҳастед, ки мехоҳед сабти ин рӯзро нест кунед? Ин постро аз ёддоштҳои шумо ҳамешагӣ нест мекунад.</string>

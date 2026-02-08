@@ -14,6 +14,7 @@
     <string name="action_create_first_habit">Creează primul tău obicei</string>
     <string name="action_create_memo">Creează notă</string>
     <string name="action_delete">Șterge</string>
+    <string name="action_details">Detalii</string>
     <string name="action_hide_details">Ascunde detalii</string>
     <string name="action_mark_first_checkin">Marchează prima verificare</string>
     <string name="action_maybe_later">Poate mai târziu</string>
@@ -127,11 +128,8 @@
     <string name="format_conflicts_detected">%1$d conflict(e) detectat(e)</string>
     <string name="format_active_since">Activ din %1$s</string>
     <string name="msg_connection_failed">Conexiune eșuată</string>
-    <string name="msg_edit_config_warning">Ești pe cale să editezi o configurație existentă. Acest lucru va afecta toate datele istorice.
-
-Editarea unei configurații vechi nu este recomandată, deoarece schimbă modul în care apar datele tale anterioare. De exemplu, dacă adaugi un obicei nou, toate zilele trecute îl vor arăta ca «nefinalizat», deși atunci nu exista.
-
-Cea mai bună practică: creează o configurație nouă. Datele tale istorice vor păstra configurația veche, iar datele noi vor folosi configurația nouă.</string>
+    <string name="msg_edit_config_warning">Editarea acestei configurații va afecta toate datele istorice. Obiceiurile noi vor apărea ca «nefinalizat» pentru zilele trecute.</string>
+    <string name="msg_edit_config_warning_detail">Cea mai bună practică: creează o configurație nouă. Datele istorice vor păstra configurația veche, iar datele noi vor folosi configurația nouă.</string>
     <string name="msg_delete_config_warning">Sigur doriți să ștergeți această configurație? Aceasta va elimina definitiv postarea de configurare din notele dvs.</string>
     <string name="msg_delete_day_confirm">Niciun obicei selectat. Înregistrarea zilnică va fi ștearsă.</string>
     <string name="msg_delete_day_warning">Sunteți sigur că doriți să ștergeți înregistrarea acestei zile? Aceasta va elimina definitiv postarea de urmărire din notițele dumneavoastră.</string>

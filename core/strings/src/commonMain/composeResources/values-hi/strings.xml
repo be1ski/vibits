@@ -13,6 +13,7 @@
     <string name="action_create_memo">मेमो बनाएं</string>
     <string name="action_continue">जारी रखें</string>
     <string name="action_delete">हटाएं</string>
+    <string name="action_details">विवरण</string>
     <string name="action_add_first_habit">पहली आदत जोड़ें</string>
     <string name="action_go_to_dashboard">डैशबोर्ड पर जाएं</string>
     <string name="action_hide_details">विवरण छुपाएं</string>
@@ -127,11 +128,8 @@
     <string name="format_conflicts_detected">%1$d विरोध पाया गया</string>
     <string name="format_active_since">%1$s से सक्रिय</string>
     <string name="msg_connection_failed">कनेक्शन विफल</string>
-    <string name="msg_edit_config_warning">आप एक मौजूदा कॉन्फ़िगरेशन संपादित करने वाले हैं। इससे सभी ऐतिहासिक डेटा प्रभावित होगा।
-
-पुरानी कॉन्फ़िगरेशन संपादित करना अनुशंसित नहीं है, क्योंकि इससे आपके पुराने डेटा का दिखना बदल जाता है। उदाहरण के लिए, यदि आप एक नया habit जोड़ते हैं, तो सभी पुराने दिनों में वह "पूरा नहीं" दिखेगा, जबकि उस समय वह मौजूद नहीं था।
-
-बेहतर तरीका: नई कॉन्फ़िगरेशन बनाएँ। आपका ऐतिहासिक डेटा पुरानी कॉन्फ़िगरेशन के साथ रहेगा और नया डेटा नई कॉन्फ़िगरेशन का उपयोग करेगा।</string>
+    <string name="msg_edit_config_warning">इस कॉन्फ़िगरेशन को संपादित करने से सभी ऐतिहासिक डेटा प्रभावित होगा। नई आदतें पुराने दिनों के लिए "पूरा नहीं" दिखेंगी।</string>
+    <string name="msg_edit_config_warning_detail">बेहतर तरीका: नई कॉन्फ़िगरेशन बनाएँ। ऐतिहासिक डेटा पुरानी कॉन्फ़िगरेशन के साथ रहेगा और नया डेटा नई कॉन्फ़िगरेशन का उपयोग करेगा।</string>
     <string name="msg_delete_config_warning">क्या आप वाकई इस कॉन्फ़िग को हटाना चाहते हैं? यह आपके मेमो से कॉन्फ़िगरेशन पोस्ट को स्थायी रूप से हटा देगा।</string>
     <string name="msg_delete_day_confirm">कोई आदत चयनित नहीं। दैनिक प्रविष्टि हटा दी जाएगी।</string>
     <string name="msg_delete_day_warning">क्या आप वाकई इस दिन की प्रविष्टि को हटाना चाहते हैं? यह ट्रैकिंग पोस्ट को आपके मेमो से स्थायी रूप से हटा देगा।</string>

@@ -13,6 +13,7 @@
     <string name="action_create_memo">Жазба жасау</string>
     <string name="action_continue">Жалғастыру</string>
     <string name="action_delete">Жою</string>
+    <string name="action_details">Толығырақ</string>
     <string name="action_add_first_habit">Бірінші әдетті қосу</string>
     <string name="action_go_to_dashboard">Панельге өту</string>
     <string name="action_hide_details">Мәліметтерді жасыру</string>
@@ -126,11 +127,8 @@
     <string name="format_conflicts_detected">%1$d қақтығыс анықталды</string>
     <string name="format_active_since">%1$s бастап белсенді</string>
     <string name="msg_connection_failed">Қосылу қатесі</string>
-    <string name="msg_edit_config_warning">Сіз қолданыстағы конфигурацияны өңдемекшісіз. Бұл барлық тарихи деректерге әсер етеді.
-
-Ескі конфигурацияны өңдеу ұсынылмайды, өйткені бұл өткен деректердің көрінісін өзгертеді. Мысалы, жаңа әдет қоссanız, өткен күндердің бәрі оны «орындалмаған» деп көрсетеді, ол кезде ол әлі жоқ еді.
-
-Ең дұрыс тәсіл: жаңа конфигурация жасаңыз. Тарихи деректер ескі конфигурацияда қалады, ал жаңа деректер жаңасын қолданады.</string>
+    <string name="msg_edit_config_warning">Бұл конфигурацияны өңдеу барлық тарихи деректерге әсер етеді. Жаңа әдеттер өткен күндер үшін «орындалмаған» деп көрінеді.</string>
+    <string name="msg_edit_config_warning_detail">Ең дұрыс тәсіл: жаңа конфигурация жасаңыз. Тарихи деректер ескі конфигурацияда қалады, ал жаңа деректер жаңасын қолданады.</string>
     <string name="msg_delete_config_warning">Бұл конфигті жойғыңыз келетініне сенімдісіз бе? Бұл конфигурация жазбасын жазбаларыңыздан біржола жояды.</string>
     <string name="msg_delete_day_confirm">Әдеттер таңдалмаған. Күндік жазба жойылады.</string>
     <string name="msg_delete_day_warning">Осы күннің жазбасын жоюға сенімдісіз бе? Бұл бақылау жазбасын жазбаларыңыздан біржола жояды.</string>

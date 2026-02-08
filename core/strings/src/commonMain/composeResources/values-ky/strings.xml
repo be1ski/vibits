@@ -14,6 +14,7 @@
     <string name="action_create_first_habit">Биринчи адатты түзүү</string>
     <string name="action_create_memo">Жазуу түзүү</string>
     <string name="action_delete">Өчүрүү</string>
+    <string name="action_details">Кеңири</string>
     <string name="action_hide_details">Деталдарды жашыруу</string>
     <string name="action_mark_first_checkin">Биринчи белгини коюу</string>
     <string name="action_maybe_later">Кийинчерээк</string>
@@ -127,11 +128,8 @@
     <string name="format_conflicts_detected">%1$d чыр-чатак аныкталды</string>
     <string name="format_active_since">%1$sдөн бери активдүү</string>
     <string name="msg_connection_failed">Байланыш катасы</string>
-    <string name="msg_edit_config_warning">Сиз бар болгон конфигурацияны түзөтүүгө баратасыз. Бул бардык тарыхый маалыматтарга таасир этет.
-
-Эски конфигурацияны түзөтүү сунушталбайт, анткени бул мурунку маалыматтардын көрүнүшүн өзгөртөт. Мисалы, жаңы адат кошсоңуз, өткөн күндөрдүн баары аны «аткарылган жок» деп көрсөтөт, ал убакта ал жок болчу.
-
-Эң туурасы: жаңы конфигурация түзүңүз. Тарыхый маалыматтар эски конфигурацияда калат, ал эми жаңы маалыматтар жаңысын колдонушат.</string>
+    <string name="msg_edit_config_warning">Бул конфигурацияны түзөтүү бардык тарыхый маалыматтарга таасир этет. Жаңы адаттар өткөн күндөр үчүн «аткарылган жок» деп көрүнөт.</string>
+    <string name="msg_edit_config_warning_detail">Эң туурасы: жаңы конфигурация түзүңүз. Тарыхый маалыматтар эски конфигурацияда калат, ал жаңы маалыматтар жаңысын колдонот.</string>
     <string name="msg_delete_config_warning">Бул конфигди өчүргүңүз келгеніне ишенесизби? Бул конфигурация постун жазууларыңыздан биротоло өчүрөт.</string>
     <string name="msg_delete_day_confirm">Адаттар тандалган эмес. Күндүк жазуу өчүрүлөт.</string>
     <string name="msg_delete_day_warning">Бул күндүн жазуусун өчүргүңүз келгенине ишенесизби? Бул көзөмөл постун эстеликтериңизден биротоло өчүрөт.</string>
