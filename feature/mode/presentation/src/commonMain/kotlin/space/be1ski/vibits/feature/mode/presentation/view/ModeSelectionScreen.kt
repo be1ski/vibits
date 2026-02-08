@@ -1,7 +1,6 @@
 package space.be1ski.vibits.feature.mode.presentation.view
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -67,61 +67,62 @@ fun ModeSelectionScreen(
   val state by feature.state.collectAsState()
   val dispatch: (ModeSelectionAction) -> Unit = feature::send
 
-  Column(
-    modifier =
-      Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.background)
-        .padding(Indent.l),
-    horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.Center,
+  Surface(
+    modifier = Modifier.fillMaxSize(),
+    color = MaterialTheme.colorScheme.background,
   ) {
-    Text(
-      text = stringResource(Res.string.mode_select_title),
-      style = MaterialTheme.typography.headlineMedium,
-      color = MaterialTheme.colorScheme.onBackground,
-    )
-    Spacer(modifier = Modifier.height(Indent.xs))
-    Text(
-      text = stringResource(Res.string.mode_select_subtitle),
-      style = MaterialTheme.typography.bodyMedium,
-      color = MaterialTheme.colorScheme.onSurfaceVariant,
-    )
-    Spacer(modifier = Modifier.height(Indent.l))
+    Column(
+      modifier = Modifier.fillMaxSize().padding(Indent.l),
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.Center,
+    ) {
+      Text(
+        text = stringResource(Res.string.mode_select_title),
+        style = MaterialTheme.typography.headlineMedium,
+        color = MaterialTheme.colorScheme.onBackground,
+      )
+      Spacer(modifier = Modifier.height(Indent.xs))
+      Text(
+        text = stringResource(Res.string.mode_select_subtitle),
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+      )
+      Spacer(modifier = Modifier.height(Indent.l))
 
-    ModeCard(
-      icon = Icons.Outlined.Cloud,
-      title = stringResource(Res.string.mode_online_title),
-      description = stringResource(Res.string.mode_online_desc),
-      isPrimary = true,
-      onClick = { dispatch(ModeSelectionAction.Dialog.Show) },
-      modifier = Modifier.testTag(ModeSelectionTestTags.ONLINE_CARD),
-      buttonTag = ModeSelectionTestTags.ONLINE_BUTTON,
-    )
+      ModeCard(
+        icon = Icons.Outlined.Cloud,
+        title = stringResource(Res.string.mode_online_title),
+        description = stringResource(Res.string.mode_online_desc),
+        isPrimary = true,
+        onClick = { dispatch(ModeSelectionAction.Dialog.Show) },
+        modifier = Modifier.testTag(ModeSelectionTestTags.ONLINE_CARD),
+        buttonTag = ModeSelectionTestTags.ONLINE_BUTTON,
+      )
 
-    Spacer(modifier = Modifier.height(Indent.m))
+      Spacer(modifier = Modifier.height(Indent.m))
 
-    ModeCard(
-      icon = Icons.Outlined.PhoneAndroid,
-      title = stringResource(Res.string.mode_offline_title),
-      description = stringResource(Res.string.mode_offline_desc),
-      isPrimary = false,
-      onClick = { dispatch(ModeSelectionAction.Selection.SelectMode(AppMode.OFFLINE)) },
-      modifier = Modifier.testTag(ModeSelectionTestTags.OFFLINE_CARD),
-      buttonTag = ModeSelectionTestTags.OFFLINE_BUTTON,
-    )
+      ModeCard(
+        icon = Icons.Outlined.PhoneAndroid,
+        title = stringResource(Res.string.mode_offline_title),
+        description = stringResource(Res.string.mode_offline_desc),
+        isPrimary = false,
+        onClick = { dispatch(ModeSelectionAction.Selection.SelectMode(AppMode.OFFLINE)) },
+        modifier = Modifier.testTag(ModeSelectionTestTags.OFFLINE_CARD),
+        buttonTag = ModeSelectionTestTags.OFFLINE_BUTTON,
+      )
 
-    Spacer(modifier = Modifier.height(Indent.m))
+      Spacer(modifier = Modifier.height(Indent.m))
 
-    ModeCard(
-      icon = Icons.Outlined.PlayCircle,
-      title = stringResource(Res.string.mode_demo_title),
-      description = stringResource(Res.string.mode_demo_desc),
-      isPrimary = false,
-      onClick = { dispatch(ModeSelectionAction.Selection.SelectMode(AppMode.DEMO)) },
-      modifier = Modifier.testTag(ModeSelectionTestTags.DEMO_CARD),
-      buttonTag = ModeSelectionTestTags.DEMO_BUTTON,
-    )
+      ModeCard(
+        icon = Icons.Outlined.PlayCircle,
+        title = stringResource(Res.string.mode_demo_title),
+        description = stringResource(Res.string.mode_demo_desc),
+        isPrimary = false,
+        onClick = { dispatch(ModeSelectionAction.Selection.SelectMode(AppMode.DEMO)) },
+        modifier = Modifier.testTag(ModeSelectionTestTags.DEMO_CARD),
+        buttonTag = ModeSelectionTestTags.DEMO_BUTTON,
+      )
+    }
   }
 
   ModeSelectionDialogs(state = state, dispatch = dispatch)

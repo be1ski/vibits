@@ -481,7 +481,7 @@ When modifying UI code, always:
 
 **Infrastructure** (`core/ui/testing`):
 - `runAppUiTest { }` — runs a desktop Compose test at 540x1080 px
-- `setThemedContent(darkTheme = false) { }` — wraps content in `VibitsTheme` + `Surface`
+- `setThemedContent(darkTheme = false) { }` — wraps content in `VibitsTheme` only (no `Surface` — screens must provide their own)
 - `captureInBothThemes("name") { }` — renders content in light and dark theme, saving `<name>.png` and `<name>_dark.png`
 - `saveScreenshot("scenario_name")` — captures all root layers (including dialogs/popups), composites them, saves to `build/ui-screenshots/<scenario>.png`
 
