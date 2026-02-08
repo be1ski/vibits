@@ -1,6 +1,7 @@
 package space.be1ski.vibits.feature.habits.presentation.view.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -8,8 +9,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_cancel
@@ -41,10 +44,27 @@ fun EditConfigWarningDialog(
       )
     },
     text = {
-      Text(
-        text = stringResource(Res.string.msg_edit_config_warning),
-        style = MaterialTheme.typography.bodyMedium,
-      )
+      val fullText = stringResource(Res.string.msg_edit_config_warning)
+      val paragraphs = remember(fullText) { fullText.split("\n\n") }
+      Column(verticalArrangement = Arrangement.spacedBy(Indent.s)) {
+        paragraphs.forEachIndexed { index, paragraph ->
+          Text(
+            text = paragraph,
+            style =
+              if (index == 0) {
+                MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
+              } else {
+                MaterialTheme.typography.bodySmall
+              },
+            color =
+              if (index == 0) {
+                MaterialTheme.colorScheme.onSurface
+              } else {
+                MaterialTheme.colorScheme.onSurfaceVariant
+              },
+          )
+        }
+      }
     },
     confirmButton = {
       Button(onClick = { dispatch(HabitsAction.ConfigWarning.CreateNewConfigInstead) }) {

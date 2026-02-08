@@ -244,8 +244,10 @@
     <string name="demo_habit_early_sleep">23:00-ге дейін ұйықтау</string>
 
     <!-- State panels -->
+    <string name="msg_connection_failed_hint">URL мен кіру токенін тексеріңіз, содан кейін қайталап көріңіз.</string>
     <string name="msg_feed_empty_all">Естеліктеріңіз жасалғаннан кейін осында пайда болады.</string>
     <string name="msg_feed_empty_filtered">Бұл сүзгіге сәйкес естелік жоқ.</string>
+    <string name="msg_logs_empty_hint">Қолданба синхрондалып, деректерді өңдеген сайын журналдар мұнда көрсетіледі.</string>
     <string name="msg_state_loading">Әдеттер мен естеліктер дайындалуда…</string>
     <string name="title_feed_empty">Мұнда естелік жоқ</string>
     <string name="title_state_loading">Деректер жүктелуде</string>

@@ -33,6 +33,7 @@ private val FontSize = 11.sp
 fun LogViewer(
   logs: List<LogEntry>,
   emptyMessage: String,
+  emptyHint: String,
   modifier: Modifier = Modifier,
 ) {
   LazyColumn(
@@ -47,11 +48,18 @@ fun LogViewer(
     }
     if (logs.isEmpty()) {
       item {
-        Text(
-          emptyMessage,
-          style = MaterialTheme.typography.bodyMedium,
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+        Column(verticalArrangement = Arrangement.spacedBy(ItemSpacing)) {
+          Text(
+            emptyMessage,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+          )
+          Text(
+            emptyHint,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+          )
+        }
       }
     }
   }

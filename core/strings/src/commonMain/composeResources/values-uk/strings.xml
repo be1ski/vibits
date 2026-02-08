@@ -244,8 +244,10 @@
     <string name="demo_habit_early_sleep">Сон до 23:00</string>
 
     <!-- State panels -->
+    <string name="msg_connection_failed_hint">Перевірте URL і токен доступу, потім спробуйте знову.</string>
     <string name="msg_feed_empty_all">Ваші спогади з\'являться тут після створення.</string>
     <string name="msg_feed_empty_filtered">Немає спогадів за цим фільтром.</string>
+    <string name="msg_logs_empty_hint">Журнали з\'являються тут у міру синхронізації та обробки даних.</string>
     <string name="msg_state_loading">Підготовка звичок та спогадів…</string>
     <string name="title_feed_empty">Тут поки порожньо</string>
     <string name="title_state_loading">Завантаження даних</string>

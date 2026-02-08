@@ -244,8 +244,10 @@
     <string name="demo_habit_early_sleep">Сон да 23:00</string>
 
     <!-- State panels -->
+    <string name="msg_connection_failed_hint">Праверце URL і токен доступу, потым паспрабуйце зноў.</string>
     <string name="msg_feed_empty_all">Вашы ўспаміны з\'явяцца тут пасля стварэння.</string>
     <string name="msg_feed_empty_filtered">Няма ўспамінаў па гэтым фільтры.</string>
+    <string name="msg_logs_empty_hint">Журналы з\'яўляюцца тут па меры сінхранізацыі і апрацоўкі дадзеных.</string>
     <string name="msg_state_loading">Падрыхтоўка звычак і ўспамінаў…</string>
     <string name="title_feed_empty">Тут пакуль пуста</string>
     <string name="title_state_loading">Загрузка даных</string>
