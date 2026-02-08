@@ -1,9 +1,6 @@
 package space.be1ski.vibits.core.ui.test
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.DesktopComposeUiTest
@@ -31,9 +28,7 @@ fun ComposeUiTest.setThemedContent(
 ) {
   setContent {
     VibitsTheme(darkTheme = darkTheme) {
-      Surface(modifier = Modifier.fillMaxSize()) {
-        content()
-      }
+      content()
     }
   }
 }
