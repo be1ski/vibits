@@ -504,22 +504,6 @@ class AppShellScreenshotTest {
     }
 
   @Test
-  fun `when edit config warning shown then captures warning dialog`() =
-    runAppUiTest {
-      val range = ActivityRange.Week(LocalDate(2024, 12, 9))
-      setVibitsApp(
-        appState = habitsAppState(),
-        habitsState =
-          habitsStateWithCache(range).copy(
-            showEditConfigWarning = true,
-          ),
-      )
-
-      onNodeWithTag(StatsTestTags.EDIT_CONFIG_WARNING_DIALOG).assertIsDisplayed()
-      saveScreenshot("app_habits_edit_warning")
-    }
-
-  @Test
   fun `when delete confirm shown then captures delete dialog`() =
     runAppUiTest {
       val testDay =
@@ -589,7 +573,20 @@ class AppShellScreenshotTest {
 
   // endregion
 
-  // region Sync dialogs
+  // region Feed dialogs
+
+  @Test
+  fun `when edit config warning shown then captures warning dialog`() =
+    runAppUiTest {
+      setVibitsApp(
+        appState = feedAppState(),
+        habitsState =
+          HabitsState(showEditConfigWarning = true),
+      )
+
+      onNodeWithTag(StatsTestTags.EDIT_CONFIG_WARNING_DIALOG).assertIsDisplayed()
+      saveScreenshot("app_feed_edit_warning")
+    }
 
   @Test
   fun `when sync conflict dialog shown then captures conflict dialog`() =
