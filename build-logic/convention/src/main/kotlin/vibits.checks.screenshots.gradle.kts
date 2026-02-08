@@ -1,3 +1,9 @@
+val screenshotDirs: List<File> = subprojects
+  .filter { it.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform") }
+  .map { it.layout.buildDirectory.dir("ui-screenshots").get().asFile }
+
+val outputDir: File = rootProject.layout.buildDirectory.dir("ui-screenshots").get().asFile
+
 tasks.register("screenshotTests") {
   group = "verification"
   description = "Runs screenshot tests and collects screenshots into build/ui-screenshots"
@@ -9,13 +15,11 @@ tasks.register("screenshotTests") {
   }
 
   doLast {
-    val outputDir = rootProject.layout.buildDirectory.dir("ui-screenshots").get().asFile
     outputDir.deleteRecursively()
     outputDir.mkdirs()
-    rootProject.subprojects.forEach { sub ->
-      val screenshotsDir = sub.layout.buildDirectory.dir("ui-screenshots").get().asFile
-      if (screenshotsDir.exists()) {
-        screenshotsDir.walkTopDown().filter { it.isFile && it.extension == "png" }.forEach { file ->
+    screenshotDirs.forEach { dir ->
+      if (dir.exists()) {
+        dir.walkTopDown().filter { it.isFile && it.extension == "png" }.forEach { file ->
           file.copyTo(File(outputDir, file.name), overwrite = true)
         }
       }
