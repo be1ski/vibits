@@ -455,34 +455,57 @@ Kover is applied per-module via `vibits.kmp.library` and aggregated at root via 
 
 Screenshot tests capture UI state as PNG images for visual regression testing. They run as desktop Compose UI tests and are compared across PRs using [reg-actions](https://github.com/reg-viz/reg-actions).
 
-**Running screenshot tests:**
+**CRITICAL: When you touch UI code, use screenshots to validate your changes.** Screenshot tests run as part of `checkJvm` / `checkAll` (via `desktopTest`). After running checks, look at the generated PNGs in each module's `build/ui-screenshots/` to visually confirm your changes look correct. This is especially important for changes to composables, themes, layouts, or state that affects rendering.
+
+**How screenshots are produced:**
+
+1. Screenshot tests are regular `desktopTest` tests that call `saveScreenshot("name")`
+2. Each module saves PNGs into its own `<module>/build/ui-screenshots/`
+3. `checkJvm` runs `desktopTest` for all KMP modules, so **screenshots are generated as a side effect of every check run**
+4. To collect all PNGs into one place: `./gradlew screenshotTests` (runs `desktopTest` + copies all PNGs into root `build/ui-screenshots/`)
+
+**Validating UI changes:**
 ```bash
-./gradlew screenshotTests       # run tests + collect all PNGs into build/ui-screenshots/
+# After running checks, view the screenshots you care about:
+open feature/homescreen/build/ui-screenshots/   # or any module
+
+# Or collect everything into one directory:
+./gradlew screenshotTests
+open build/ui-screenshots/
 ```
 
-**Infrastructure** (`core/ui/testing`):
-- `runAppUiTest { }` — runs a desktop Compose test at 540×1080 px
-- `setThemedContent { }` — wraps content in `VibitsTheme` + `Surface`
-- `saveScreenshot("scenario_name")` — captures all root layers, composites them, saves to `build/ui-screenshots/<scenario>.png`
+When modifying UI code, always:
+1. Run `checkJvm` (or the module's `desktopTest`)
+2. Open the relevant screenshots from `build/ui-screenshots/` to verify the change looks correct
+3. If a screenshot doesn't exist for the UI you changed, consider adding one
 
-All screenshots are saved flat in `build/ui-screenshots/` (no subdirectories). The `screenshotTests` Gradle task runs `desktopTest` for all KMP modules and collects PNGs into the root `build/ui-screenshots/`.
+**Infrastructure** (`core/ui/testing`):
+- `runAppUiTest { }` — runs a desktop Compose test at 540x1080 px
+- `setThemedContent { }` — wraps content in `VibitsTheme` + `Surface`
+- `saveScreenshot("scenario_name")` — captures all root layers (including dialogs/popups), composites them, saves to `build/ui-screenshots/<scenario>.png`
 
 **Writing screenshot tests:**
 - Most screenshots render through `VibitsApp` in `feature/homescreen/src/desktopTest/` to show the full app (bottom bar, toolbar, tabs)
-- Pre-app screens (onboarding, mode selection) render their own composables directly
+- Pre-app screens (onboarding, mode selection) render their own composables directly via `setThemedContent`
 - Use deterministic data: fixed dates, `Random(seed)`, no `Clock.System.now()`
 - Pre-compute `activityDataCache` using domain use cases for populated stats views
 - Use past time ranges where data is fully populated (avoid current/future dates with empty cells)
+- **Always assert the key UI element is displayed before calling `saveScreenshot`** — this catches regressions where the target UI fails to render but the test silently passes by capturing the wrong screen
 - Name pattern: `app_<feature>_<variant>.png` (e.g., `app_habits_week`, `app_feed_empty`, `app_settings_online`)
+- **Match the screenshot to where the UI is reachable from.** If a dialog is only accessible from the feed tab, the screenshot must use `feedAppState()`, not `habitsAppState()`. Name it `app_feed_*`, not `app_habits_*`.
 
 **Existing test files:**
 | File | Screenshots |
 |------|-------------|
-| `feature/homescreen/.../AppShellScreenshotTest.kt` | Full app: loading, habits (week/month/quarter/year), posts (week/month), feed, settings dialogs, habit editor/config/delete/toggle, sync conflict |
+| `feature/homescreen/.../AppShellScreenshotTest.kt` | Full app: loading, habits (week/month/quarter/year), posts (week/month), feed, settings dialogs, habit editor/config/delete/toggle, edit config warning, sync conflict |
 | `feature/onboarding/presentation/.../OnboardingScreenshotTest.kt` | Onboarding flow steps |
 | `feature/mode/presentation/.../ModeSelectionScreenshotTest.kt` | Mode selection + credentials dialogs |
 
-**CI integration:** The CI workflow collects screenshots from all modules and runs `reg-actions` for visual diff comparison on PRs.
+**CI integration:**
+- `check-jvm` CI job runs `checkJvm` which includes `desktopTest` — screenshots are produced automatically
+- CI collects all PNGs from module `build/ui-screenshots/` directories into one folder
+- [reg-actions](https://github.com/reg-viz/reg-actions) compares screenshots between the PR branch and the base branch, posting a visual diff report as a PR comment
+- Release workflow packages all screenshots into a zip and attaches them to the GitHub release
 
 ## Linting & Formatting
 
