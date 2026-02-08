@@ -2,6 +2,7 @@
 
 package space.be1ski.vibits.feature.homescreen.presentation.view
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
@@ -15,6 +16,7 @@ import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.core.ui.test.runAppUiTest
 import space.be1ski.vibits.core.ui.test.saveScreenshot
 import space.be1ski.vibits.core.ui.test.setThemedContent
+import space.be1ski.vibits.core.ui.theme.VibitsTheme
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.CachedActivity
@@ -54,7 +56,7 @@ import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 
 @OptIn(ExperimentalTestApi::class)
-class AppShellScreenshotTest {
+class AppScreenshotTest {
   private val configDate = LocalDate(2024, 1, 1)
   private val configInstant = kotlin.time.Instant.fromEpochMilliseconds(1_704_067_200_000) // 2024-01-01T00:00:00Z
   private val timeZone = TimeZone.UTC
@@ -176,6 +178,7 @@ class AppShellScreenshotTest {
     memosState: MemosState = MemosState(memos = demoMemos, initialDataLoaded = true),
     habitsState: HabitsState = HabitsState(),
     settingsState: SettingsState = SettingsState(),
+    darkTheme: Boolean = false,
   ) {
     val features =
       AppFeatures(
@@ -185,13 +188,28 @@ class AppShellScreenshotTest {
         settings = RecordingFeature(settingsState),
       )
     setContent {
-      VibitsApp(
-        features = features,
-        currentTheme = AppTheme.SYSTEM,
-        currentLanguage = AppLanguage.ENGLISH,
-        exportService = fakeExportService,
-      )
+      VibitsTheme(darkTheme = darkTheme) {
+        VibitsApp(
+          features = features,
+          currentTheme = AppTheme.SYSTEM,
+          currentLanguage = AppLanguage.ENGLISH,
+          exportService = fakeExportService,
+        )
+      }
     }
+  }
+
+  private fun ComposeUiTest.captureApp(
+    name: String,
+    appState: AppState,
+    memosState: MemosState = MemosState(memos = demoMemos, initialDataLoaded = true),
+    habitsState: HabitsState = HabitsState(),
+    settingsState: SettingsState = SettingsState(),
+  ) {
+    setVibitsApp(appState, memosState, habitsState, settingsState, darkTheme = false)
+    saveScreenshot(name)
+    setVibitsApp(appState, memosState, habitsState, settingsState, darkTheme = true)
+    saveScreenshot("${name}_dark")
   }
 
   private fun habitsAppState(
@@ -224,11 +242,6 @@ class AppShellScreenshotTest {
       autoLoaded = true,
     )
 
-  @OptIn(ExperimentalTestApi::class)
-  private fun ComposeUiTest.setSettingsApp(settingsState: SettingsState) {
-    setVibitsApp(appState = habitsAppState(), settingsState = settingsState)
-  }
-
   private fun habitsStateWithCache(
     range: ActivityRange,
     mode: ActivityMode = ActivityMode.HABITS,
@@ -252,7 +265,7 @@ class AppShellScreenshotTest {
           habits = RecordingFeature(HabitsState()),
           settings = RecordingFeature(SettingsState()),
         )
-      setThemedContent {
+      val content: @Composable () -> Unit = {
         AppContent(
           appMode = AppMode.DEMO,
           showOnboarding = false,
@@ -271,8 +284,13 @@ class AppShellScreenshotTest {
         )
       }
 
+      setThemedContent(darkTheme = false, content = content)
       onNodeWithTag(AppShellTestTags.LOADING_SCREEN).assertIsDisplayed()
       saveScreenshot("app_loading")
+
+      setThemedContent(darkTheme = true, content = content)
+      onNodeWithTag(AppShellTestTags.LOADING_SCREEN).assertIsDisplayed()
+      saveScreenshot("app_loading_dark")
     }
 
   // endregion
@@ -284,13 +302,13 @@ class AppShellScreenshotTest {
     runAppUiTest {
       val periodStart = LocalDate(2024, 12, 9)
       val range = ActivityRange.Week(periodStart)
-      setVibitsApp(
+      captureApp(
+        name = "app_habits_week",
         appState = habitsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = periodStart),
         habitsState = habitsStateWithCache(range),
       )
 
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
-      saveScreenshot("app_habits_week")
     }
 
   @Test
@@ -298,13 +316,13 @@ class AppShellScreenshotTest {
     runAppUiTest {
       val periodStart = LocalDate(2024, 11, 1)
       val range = ActivityRange.Month(2024, Month.NOVEMBER)
-      setVibitsApp(
+      captureApp(
+        name = "app_habits_month",
         appState = habitsAppState(tab = TimeRangeTab.MONTHS, periodStartDate = periodStart),
         habitsState = habitsStateWithCache(range),
       )
 
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
-      saveScreenshot("app_habits_month")
     }
 
   @Test
@@ -312,13 +330,13 @@ class AppShellScreenshotTest {
     runAppUiTest {
       val periodStart = LocalDate(2024, 10, 1)
       val range = ActivityRange.Quarter(2024, 4)
-      setVibitsApp(
+      captureApp(
+        name = "app_habits_quarter",
         appState = habitsAppState(tab = TimeRangeTab.QUARTERS, periodStartDate = periodStart),
         habitsState = habitsStateWithCache(range),
       )
 
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
-      saveScreenshot("app_habits_quarter")
     }
 
   @Test
@@ -326,13 +344,13 @@ class AppShellScreenshotTest {
     runAppUiTest {
       val periodStart = LocalDate(2024, 6, 15)
       val range = ActivityRange.Year(2024)
-      setVibitsApp(
+      captureApp(
+        name = "app_habits_year",
         appState = habitsAppState(tab = TimeRangeTab.YEARS, periodStartDate = periodStart),
         habitsState = habitsStateWithCache(range),
       )
 
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
-      saveScreenshot("app_habits_year")
     }
 
   // endregion
@@ -344,13 +362,13 @@ class AppShellScreenshotTest {
     runAppUiTest {
       val periodStart = LocalDate(2024, 12, 9)
       val range = ActivityRange.Week(periodStart)
-      setVibitsApp(
+      captureApp(
+        name = "app_stats_week",
         appState = postsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = periodStart),
         habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS),
       )
 
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_STATS).assertIsDisplayed()
-      saveScreenshot("app_stats_week")
     }
 
   @Test
@@ -358,13 +376,13 @@ class AppShellScreenshotTest {
     runAppUiTest {
       val periodStart = LocalDate(2024, 11, 1)
       val range = ActivityRange.Month(2024, Month.NOVEMBER)
-      setVibitsApp(
+      captureApp(
+        name = "app_stats_month",
         appState = postsAppState(tab = TimeRangeTab.MONTHS, periodStartDate = periodStart),
         habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS),
       )
 
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_STATS).assertIsDisplayed()
-      saveScreenshot("app_stats_month")
     }
 
   // endregion
@@ -374,22 +392,24 @@ class AppShellScreenshotTest {
   @Test
   fun `when feed has data then captures feed screen`() =
     runAppUiTest {
-      setVibitsApp(appState = feedAppState())
+      captureApp(
+        name = "app_feed",
+        appState = feedAppState(),
+      )
 
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_FEED).assertIsDisplayed()
-      saveScreenshot("app_feed")
     }
 
   @Test
   fun `when feed is empty then captures empty feed`() =
     runAppUiTest {
-      setVibitsApp(
+      captureApp(
+        name = "app_feed_empty",
         appState = feedAppState(),
         memosState = MemosState(memos = emptyList(), initialDataLoaded = true),
       )
 
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_FEED).assertIsDisplayed()
-      saveScreenshot("app_feed_empty")
     }
 
   // endregion
@@ -399,44 +419,55 @@ class AppShellScreenshotTest {
   @Test
   fun `when settings open in online mode then captures online settings`() =
     runAppUiTest {
-      setSettingsApp(
-        SettingsState(
-          isOpen = true,
-          appMode = AppMode.ONLINE,
-          editBaseUrl = "https://memos.example.com",
-          editToken = "test-token-123",
-        ),
+      captureApp(
+        name = "app_settings_online",
+        appState = habitsAppState(),
+        settingsState =
+          SettingsState(
+            isOpen = true,
+            appMode = AppMode.ONLINE,
+            editBaseUrl = "https://memos.example.com",
+            editToken = "test-token-123",
+          ),
       )
 
       onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
-      saveScreenshot("app_settings_online")
     }
 
   @Test
   fun `when settings open in demo mode then captures demo settings`() =
     runAppUiTest {
-      setSettingsApp(SettingsState(isOpen = true, appMode = AppMode.DEMO))
+      captureApp(
+        name = "app_settings_demo",
+        appState = habitsAppState(),
+        settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO),
+      )
 
       onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
-      saveScreenshot("app_settings_demo")
     }
 
   @Test
   fun `when logs dialog open then captures logs`() =
     runAppUiTest {
-      setSettingsApp(SettingsState(isOpen = true, appMode = AppMode.DEMO, showLogsDialog = true))
+      captureApp(
+        name = "app_settings_logs",
+        appState = habitsAppState(),
+        settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO, showLogsDialog = true),
+      )
 
       onNodeWithTag(SettingsTestTags.LOGS_DIALOG).assertIsDisplayed()
-      saveScreenshot("app_settings_logs")
     }
 
   @Test
   fun `when reset confirmation open then captures reset dialog`() =
     runAppUiTest {
-      setSettingsApp(SettingsState(isOpen = true, appMode = AppMode.DEMO, showResetConfirmation = true))
+      captureApp(
+        name = "app_settings_reset",
+        appState = habitsAppState(),
+        settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO, showResetConfirmation = true),
+      )
 
       onNodeWithTag(SettingsTestTags.RESET_OPTIONS_DIALOG).assertIsDisplayed()
-      saveScreenshot("app_settings_reset")
     }
 
   // endregion
@@ -463,7 +494,8 @@ class AppShellScreenshotTest {
           inRange = true,
         )
       val range = ActivityRange.Week(LocalDate(2024, 12, 9))
-      setVibitsApp(
+      captureApp(
+        name = "app_habit_editor",
         appState = habitsAppState(),
         habitsState =
           habitsStateWithCache(range).copy(
@@ -480,14 +512,14 @@ class AppShellScreenshotTest {
       )
 
       onNodeWithTag(AppShellTestTags.HABIT_EDITOR_DIALOG).assertIsDisplayed()
-      saveScreenshot("app_habit_editor")
     }
 
   @Test
   fun `when config dialog open then captures habits config`() =
     runAppUiTest {
       val range = ActivityRange.Week(LocalDate(2024, 12, 9))
-      setVibitsApp(
+      captureApp(
+        name = "app_habits_config",
         appState = habitsAppState(),
         habitsState =
           habitsStateWithCache(range).copy(
@@ -500,7 +532,6 @@ class AppShellScreenshotTest {
       )
 
       onNodeWithTag(StatsTestTags.HABITS_CONFIG_DIALOG).assertIsDisplayed()
-      saveScreenshot("app_habits_config")
     }
 
   @Test
@@ -523,7 +554,8 @@ class AppShellScreenshotTest {
           inRange = true,
         )
       val range = ActivityRange.Week(LocalDate(2024, 12, 9))
-      setVibitsApp(
+      captureApp(
+        name = "app_habits_delete",
         appState = habitsAppState(),
         habitsState =
           habitsStateWithCache(range).copy(
@@ -533,7 +565,6 @@ class AppShellScreenshotTest {
       )
 
       onNodeWithTag(StatsTestTags.EMPTY_DELETE_DIALOG).assertIsDisplayed()
-      saveScreenshot("app_habits_delete")
     }
 
   @Test
@@ -556,7 +587,8 @@ class AppShellScreenshotTest {
           inRange = true,
         )
       val range = ActivityRange.Week(LocalDate(2024, 12, 9))
-      setVibitsApp(
+      captureApp(
+        name = "app_habits_toggle",
         appState = habitsAppState(),
         habitsState =
           habitsStateWithCache(range).copy(
@@ -568,7 +600,6 @@ class AppShellScreenshotTest {
       )
 
       onNodeWithTag(StatsTestTags.SINGLE_TOGGLE_DIALOG).assertIsDisplayed()
-      saveScreenshot("app_habits_toggle")
     }
 
   // endregion
@@ -578,20 +609,20 @@ class AppShellScreenshotTest {
   @Test
   fun `when edit config warning shown then captures warning dialog`() =
     runAppUiTest {
-      setVibitsApp(
+      captureApp(
+        name = "app_feed_edit_warning",
         appState = feedAppState(),
-        habitsState =
-          HabitsState(showEditConfigWarning = true),
+        habitsState = HabitsState(showEditConfigWarning = true),
       )
 
       onNodeWithTag(StatsTestTags.EDIT_CONFIG_WARNING_DIALOG).assertIsDisplayed()
-      saveScreenshot("app_feed_edit_warning")
     }
 
   @Test
   fun `when sync conflict dialog shown then captures conflict dialog`() =
     runAppUiTest {
-      setVibitsApp(
+      captureApp(
+        name = "app_sync_conflict",
         appState = feedAppState(),
         memosState =
           MemosState(
@@ -616,7 +647,6 @@ class AppShellScreenshotTest {
       )
 
       onNodeWithTag(FeedTestTags.SYNC_CONFLICT_DIALOG).assertIsDisplayed()
-      saveScreenshot("app_sync_conflict")
     }
 
   // endregion
