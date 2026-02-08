@@ -243,6 +243,13 @@ Köhnə konfiqurasiyanı redaktə etmək tövsiyə olunmur, çünki bu, əvvəlk
     <string name="demo_habit_no_sugar">Şəkərsiz</string>
     <string name="demo_habit_early_sleep">23:00-a qədər yat</string>
 
+    <!-- State panels -->
+    <string name="msg_feed_empty_all">Xatirələriniz yaradıldıqdan sonra burada görünəcək.</string>
+    <string name="msg_feed_empty_filtered">Bu filtrə uyğun xatirə yoxdur.</string>
+    <string name="msg_state_loading">Vərdişlər və xatirələr hazırlanır…</string>
+    <string name="title_feed_empty">Burada xatirə yoxdur</string>
+    <string name="title_state_loading">Məlumatlar yüklənir</string>
+
     <!-- Sync -->
     <string name="action_sync">Sinxronizasiya</string>
     <string name="action_keep_local">Yerli saxla</string>

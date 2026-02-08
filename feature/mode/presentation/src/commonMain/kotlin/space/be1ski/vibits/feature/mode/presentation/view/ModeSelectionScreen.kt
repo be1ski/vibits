@@ -3,15 +3,21 @@ package space.be1ski.vibits.feature.mode.presentation.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Cloud
+import androidx.compose.material.icons.outlined.PhoneAndroid
+import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
@@ -22,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
@@ -78,6 +85,7 @@ fun ModeSelectionScreen(
     Spacer(modifier = Modifier.height(Indent.l))
 
     ModeCard(
+      icon = Icons.Outlined.Cloud,
       title = stringResource(Res.string.mode_online_title),
       description = stringResource(Res.string.mode_online_desc),
       isPrimary = true,
@@ -89,6 +97,7 @@ fun ModeSelectionScreen(
     Spacer(modifier = Modifier.height(Indent.m))
 
     ModeCard(
+      icon = Icons.Outlined.PhoneAndroid,
       title = stringResource(Res.string.mode_offline_title),
       description = stringResource(Res.string.mode_offline_desc),
       isPrimary = false,
@@ -100,6 +109,7 @@ fun ModeSelectionScreen(
     Spacer(modifier = Modifier.height(Indent.m))
 
     ModeCard(
+      icon = Icons.Outlined.PlayCircle,
       title = stringResource(Res.string.mode_demo_title),
       description = stringResource(Res.string.mode_demo_desc),
       isPrimary = false,
@@ -218,6 +228,7 @@ private fun CredentialsSetupDialog(
 
 @Composable
 private fun ModeCard(
+  icon: ImageVector,
   title: String,
   description: String,
   isPrimary: Boolean,
@@ -232,10 +243,21 @@ private fun ModeCard(
       modifier = Modifier.padding(Indent.m),
       verticalArrangement = Arrangement.spacedBy(Indent.s),
     ) {
-      Text(
-        text = title,
-        style = MaterialTheme.typography.titleMedium,
-      )
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Indent.s),
+      ) {
+        Icon(
+          imageVector = icon,
+          contentDescription = null,
+          modifier = Modifier.size(Indent.xl),
+          tint = if (isPrimary) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Text(
+          text = title,
+          style = MaterialTheme.typography.titleMedium,
+        )
+      }
       Text(
         text = description,
         style = MaterialTheme.typography.bodySmall,

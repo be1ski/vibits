@@ -243,6 +243,13 @@ Melhor prática: crie uma nova configuração. Seus dados históricos manterão 
     <string name="demo_habit_no_sugar">Sem açúcar</string>
     <string name="demo_habit_early_sleep">Dormir até 23h</string>
 
+    <!-- State panels -->
+    <string name="msg_feed_empty_all">Suas memórias aparecerão aqui após serem criadas.</string>
+    <string name="msg_feed_empty_filtered">Nenhuma memória corresponde a este filtro.</string>
+    <string name="msg_state_loading">Preparando hábitos e memórias…</string>
+    <string name="title_feed_empty">Nenhuma memória aqui</string>
+    <string name="title_state_loading">Carregando seus dados</string>
+
     <!-- Sync -->
     <string name="action_sync">Sincronizar</string>
     <string name="action_keep_local">Manter local</string>

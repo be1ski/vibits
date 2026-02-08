@@ -243,6 +243,13 @@ Empfehlung: Erstelle stattdessen eine neue Konfiguration. Deine historischen Dat
     <string name="demo_habit_no_sugar">Kein Zucker</string>
     <string name="demo_habit_early_sleep">Vor 23 Uhr schlafen</string>
 
+    <!-- State panels -->
+    <string name="msg_feed_empty_all">Deine Erinnerungen erscheinen hier nach dem Erstellen.</string>
+    <string name="msg_feed_empty_filtered">Keine Erinnerungen für diesen Filter.</string>
+    <string name="msg_state_loading">Gewohnheiten und Erinnerungen werden vorbereitet…</string>
+    <string name="title_feed_empty">Noch keine Erinnerungen</string>
+    <string name="title_state_loading">Daten werden geladen</string>
+
     <!-- Sync -->
     <string name="action_sync">Synchronisieren</string>
     <string name="action_keep_local">Lokal behalten</string>
