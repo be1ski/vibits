@@ -1,8 +1,13 @@
 package space.be1ski.vibits.feature.habits.presentation.view.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -13,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_cancel
@@ -37,32 +43,34 @@ fun EditConfigWarningDialog(
   AlertDialog(
     onDismissRequest = { dispatch(HabitsAction.ConfigWarning.DismissEditConfigWarning) },
     modifier = Modifier.testTag(StatsTestTags.EDIT_CONFIG_WARNING_DIALOG),
-    title = {
-      Text(
-        text = stringResource(Res.string.title_edit_config_warning),
-        style = MaterialTheme.typography.headlineSmall,
-      )
-    },
+    title = { Text(stringResource(Res.string.title_edit_config_warning), style = MaterialTheme.typography.headlineSmall) },
     text = {
-      val fullText = stringResource(Res.string.msg_edit_config_warning)
-      val paragraphs = remember(fullText) { fullText.split("\n\n") }
+      val paragraphs = stringResource(Res.string.msg_edit_config_warning).let { remember(it) { it.split("\n\n") } }
       Column(verticalArrangement = Arrangement.spacedBy(Indent.s)) {
         paragraphs.forEachIndexed { index, paragraph ->
-          Text(
-            text = paragraph,
-            style =
-              if (index == 0) {
-                MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
-              } else {
-                MaterialTheme.typography.bodySmall
-              },
-            color =
-              if (index == 0) {
-                MaterialTheme.colorScheme.onSurface
-              } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
-              },
-          )
+          if (index == 0) {
+            Text(
+              text = paragraph,
+              style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+              color = MaterialTheme.colorScheme.onSurface,
+            )
+          } else {
+            Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs)) {
+              Box(
+                modifier =
+                  Modifier
+                    .padding(top = BULLET_TOP_OFFSET)
+                    .size(BULLET_SIZE)
+                    .background(MaterialTheme.colorScheme.onSurfaceVariant, CircleShape),
+              )
+              Text(
+                text = paragraph,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.weight(1f),
+              )
+            }
+          }
         }
       }
     },
@@ -83,3 +91,6 @@ fun EditConfigWarningDialog(
     },
   )
 }
+
+private val BULLET_SIZE = 5.dp
+private val BULLET_TOP_OFFSET = 7.dp

@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.mode.presentation.view
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.outlined.PhoneAndroid
 import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -247,6 +249,18 @@ private fun ModeCard(
 ) {
   OutlinedCard(
     modifier = modifier.fillMaxWidth(),
+    colors =
+      if (isPrimary) {
+        CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = CARD_HIGHLIGHT_ALPHA))
+      } else {
+        CardDefaults.outlinedCardColors()
+      },
+    border =
+      if (isPrimary) {
+        BorderStroke(CARD_BORDER_WIDTH, MaterialTheme.colorScheme.primary.copy(alpha = CARD_BORDER_ALPHA))
+      } else {
+        CardDefaults.outlinedCardBorder()
+      },
   ) {
     Column(
       modifier = Modifier.padding(Indent.m),
@@ -272,27 +286,16 @@ private fun ModeCard(
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
       )
-      val buttonModifier =
-        if (buttonTag != null) {
-          Modifier.fillMaxWidth().testTag(buttonTag)
-        } else {
-          Modifier.fillMaxWidth()
-        }
+      val buttonModifier = Modifier.fillMaxWidth().then(buttonTag?.let { Modifier.testTag(it) } ?: Modifier)
       if (isPrimary) {
-        Button(
-          onClick = onClick,
-          modifier = buttonModifier,
-        ) {
-          Text(title)
-        }
+        Button(onClick = onClick, modifier = buttonModifier) { Text(title) }
       } else {
-        OutlinedButton(
-          onClick = onClick,
-          modifier = buttonModifier,
-        ) {
-          Text(title)
-        }
+        OutlinedButton(onClick = onClick, modifier = buttonModifier) { Text(title) }
       }
     }
   }
 }
+
+private const val CARD_HIGHLIGHT_ALPHA = 0.15f
+private const val CARD_BORDER_ALPHA = 0.5f
+private val CARD_BORDER_WIDTH = 1.5.dp
