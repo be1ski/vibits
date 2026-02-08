@@ -243,6 +243,13 @@ Iň gowy usul: täze konfigurasiýa dörediň. Taryhy maglumatlar köne konfigur
     <string name="demo_habit_no_sugar">Şekersiz</string>
     <string name="demo_habit_early_sleep">23:00-a çenli uky</string>
 
+    <!-- State panels -->
+    <string name="msg_feed_empty_all">Ýatlamalarыňyz döredilenden soň bu ýerde görüner.</string>
+    <string name="msg_feed_empty_filtered">Bu süzgüçe gabat gelýän ýatlama ýok.</string>
+    <string name="msg_state_loading">Endikler we ýatlamalar taýýarlanylýar…</string>
+    <string name="title_feed_empty">Bu ýerde ýatlama ýok</string>
+    <string name="title_state_loading">Maglumatlar ýüklenýär</string>
+
     <!-- Sync -->
     <string name="action_sync">Sinhronizasiýa</string>
     <string name="action_keep_local">Ýerli sakla</string>

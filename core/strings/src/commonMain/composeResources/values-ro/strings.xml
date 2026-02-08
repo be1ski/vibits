@@ -243,6 +243,13 @@ Cea mai bună practică: creează o configurație nouă. Datele tale istorice vo
     <string name="demo_habit_no_sugar">Fără zahăr</string>
     <string name="demo_habit_early_sleep">Somn până la 23:00</string>
 
+    <!-- State panels -->
+    <string name="msg_feed_empty_all">Amintirile tale vor apărea aici după creare.</string>
+    <string name="msg_feed_empty_filtered">Nicio amintire nu corespunde acestui filtru.</string>
+    <string name="msg_state_loading">Se pregătesc obiceiurile și amintirile…</string>
+    <string name="title_feed_empty">Nicio amintire aici</string>
+    <string name="title_state_loading">Se încarcă datele</string>
+
     <!-- Sync -->
     <string name="action_sync">Sincronizare</string>
     <string name="action_keep_local">Păstrează local</string>

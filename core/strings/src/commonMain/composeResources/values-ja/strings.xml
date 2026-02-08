@@ -243,6 +243,13 @@
     <string name="demo_habit_no_sugar">砂糖なし</string>
     <string name="demo_habit_early_sleep">23時までに就寝</string>
 
+    <!-- State panels -->
+    <string name="msg_feed_empty_all">作成されたメモはここに表示されます。</string>
+    <string name="msg_feed_empty_filtered">このフィルターに一致するメモはありません。</string>
+    <string name="msg_state_loading">習慣とメモを準備中…</string>
+    <string name="title_feed_empty">メモはまだありません</string>
+    <string name="title_state_loading">データを読み込んでいます</string>
+
     <!-- Sync -->
     <string name="action_sync">同期</string>
     <string name="action_keep_local">ローカルを保持</string>
