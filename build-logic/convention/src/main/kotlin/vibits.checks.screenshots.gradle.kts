@@ -7,6 +7,7 @@ val outputDir: File = rootProject.layout.buildDirectory.dir("ui-screenshots").ge
 tasks.register("screenshotTests") {
   group = "verification"
   description = "Runs screenshot tests and collects screenshots into build/ui-screenshots"
+  notCompatibleWithConfigurationCache("walks subproject build directories at execution time")
 
   subprojects {
     plugins.withId("org.jetbrains.kotlin.multiplatform") {
