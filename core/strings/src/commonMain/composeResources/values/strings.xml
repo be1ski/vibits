@@ -12,6 +12,7 @@
     <string name="action_create_new_config">Create new config (recommended)</string>
     <string name="action_continue">Continue</string>
     <string name="action_delete">Delete</string>
+    <string name="action_details">Details</string>
     <string name="action_add_first_habit">Add your first habit</string>
     <string name="action_edit_anyway">Edit anyway</string>
     <string name="action_go_to_dashboard">Go to dashboard</string>
@@ -130,7 +131,8 @@
     <string name="msg_empty_state_no_habits">Create one to start tracking offline.</string>
     <string name="msg_delete_day_confirm">No habits selected. The daily entry will be deleted.</string>
     <string name="msg_delete_day_warning">Are you sure you want to delete this day's entry? This will permanently remove the tracking post from your memos.</string>
-    <string name="msg_edit_config_warning">You're about to edit an existing config. This will affect all historical data.\n\nEditing an old config is not recommended because it changes how your past data appears. For example, if you add a new habit, all past days will show it as "not completed" even though it didn't exist back then.\n\nBest practice: Create a new config instead. Your historical data will keep the old config, and new data will use the new config.</string>
+    <string name="msg_edit_config_warning">Editing this config will affect all historical data. New habits will appear as "not completed" for past days.</string>
+    <string name="msg_edit_config_warning_detail">Best practice: create a new config instead. Historical data keeps the old config, new data uses the new one.</string>
     <string name="msg_fill_all_fields">Please fill in all fields</string>
     <string name="msg_habit_name_required">Habit name is required</string>
     <string name="msg_habit_setup">Give your habit a meaningful name.</string>

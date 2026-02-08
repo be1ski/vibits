@@ -13,6 +13,7 @@
     <string name="action_create_memo">Qeyd yarat</string>
     <string name="action_continue">Davam et</string>
     <string name="action_delete">Sil</string>
+    <string name="action_details">Təfərrüatlar</string>
     <string name="action_add_first_habit">İlk vərdişi əlavə et</string>
     <string name="action_go_to_dashboard">Panelə get</string>
     <string name="action_hide_details">Detalları gizlət</string>
@@ -127,11 +128,8 @@
     <string name="format_conflicts_detected">%1$d münaqişə aşkarlandı</string>
     <string name="format_active_since">%1$s-dən aktiv</string>
     <string name="msg_connection_failed">Əlaqə xətası</string>
-    <string name="msg_edit_config_warning">Mövcud konfiqurasiyanı redaktə etmək üzrəsiniz. Bu, bütün tarixi məlumatlara təsir edəcək.
-
-Köhnə konfiqurasiyanı redaktə etmək tövsiyə olunmur, çünki bu, əvvəlki məlumatların görünüşünü dəyişir. Məsələn, yeni bir vərdiş əlavə etsəniz, keçmiş günlərin hamısında o, «tamamlanmayıb» kimi görünəcək, halbuki o vaxt mövcud deyildi.
-
-Ən yaxşı təcrübə: yeni konfiqurasiya yaradın. Tarixi məlumatlar köhnə konfiqurasiyada qalacaq, yeni məlumatlar isə yenisini istifadə edəcək.</string>
+    <string name="msg_edit_config_warning">Bu konfiqurasiyanı redaktə etmək bütün tarixi məlumatlara təsir edəcək. Yeni vərdişlər əvvəlki günlər üçün «tamamlanmayıb» kimi görünəcək.</string>
+    <string name="msg_edit_config_warning_detail">Ən yaxşı təcrübə: yeni konfiqurasiya yaradın. Tarixi məlumatlar köhnə konfiqurasiyada qalar, yeni məlumatlar isə yenisini istifadə edər.</string>
     <string name="msg_delete_config_warning">Bu konfiqurasiyanı silmək istədiyinizə əminsiniz? Bu, konfiqurasiya yazısını qeydlərinizdən birdəfəlik siləcək.</string>
     <string name="msg_delete_day_confirm">Vərdiş seçilməyib. Günlük qeyd silinəcək.</string>
     <string name="msg_delete_day_warning">Bu günün qeydini silmək istədiyinizdən əminsiniz? Bu, izləmə yazısını qeydlərinizdən birdəfəlik siləcək.</string>

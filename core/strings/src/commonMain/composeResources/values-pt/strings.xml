@@ -13,6 +13,7 @@
     <string name="action_create_memo">Criar nota</string>
     <string name="action_continue">Continuar</string>
     <string name="action_delete">Excluir</string>
+    <string name="action_details">Detalhes</string>
     <string name="action_add_first_habit">Adicione seu primeiro hábito</string>
     <string name="action_go_to_dashboard">Ir para painel</string>
     <string name="action_hide_details">Ocultar detalhes</string>
@@ -127,11 +128,8 @@
     <string name="format_conflicts_detected">%1$d conflito(s) detectado(s)</string>
     <string name="format_active_since">Ativo desde %1$s</string>
     <string name="msg_connection_failed">Falha na conexão</string>
-    <string name="msg_edit_config_warning">Você está prestes a editar uma configuração existente. Isso afetará todos os dados históricos.
-
-Editar uma configuração antiga não é recomendado, pois altera a forma como seus dados anteriores aparecem. Por exemplo, se você adicionar um novo hábito, todos os dias anteriores o mostrarão como "não concluído", mesmo que ele não existisse na época.
-
-Melhor prática: crie uma nova configuração. Seus dados históricos manterão a configuração antiga, e os dados novos usarão a nova.</string>
+    <string name="msg_edit_config_warning">Editar esta configuração afetará todos os dados históricos. Novos hábitos aparecerão como "não concluído" nos dias anteriores.</string>
+    <string name="msg_edit_config_warning_detail">Melhor prática: crie uma nova configuração. Os dados históricos manterão a configuração antiga, e os dados novos usarão a nova.</string>
     <string name="msg_delete_config_warning">Tem certeza de que deseja excluir esta configuração? Isso removerá permanentemente a publicação de configuração de suas notas.</string>
     <string name="msg_delete_day_confirm">Nenhum hábito selecionado. A entrada diária será excluída.</string>
     <string name="msg_delete_day_warning">Tem certeza de que deseja excluir a entrada deste dia? Isso removerá permanentemente a publicação de rastreamento das suas notas.</string>

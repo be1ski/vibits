@@ -13,6 +13,7 @@
     <string name="action_create_memo">Eslatma yaratish</string>
     <string name="action_continue">Davom etish</string>
     <string name="action_delete">O'chirish</string>
+    <string name="action_details">Tafsilotlar</string>
     <string name="action_add_first_habit">Birinchi odatni qo'shish</string>
     <string name="action_go_to_dashboard">Boshqaruv paneliga o'tish</string>
     <string name="action_hide_details">Tafsilotlarni yashirish</string>
@@ -127,11 +128,8 @@
     <string name="format_conflicts_detected">%1$d ziddiyat aniqlandi</string>
     <string name="format_active_since">%1$s dan beri faol</string>
     <string name="msg_connection_failed">Ulanish xatosi</string>
-    <string name="msg_edit_config_warning">Siz mavjud konfiguratsiyani tahrirlash arafasidiz. Bu barcha tarixiy ma'lumotlarga ta'sir qiladi.
-
-Eski konfiguratsiyani tahrirlash tavsiya etilmaydi, chunki bu o'tgan ma'lumotlarning ko'rinishini o'zgartiradi. Masalan, yangi odat qo'shsangiz, o'tgan kunlarning barchasi uni «bajarilmagan» deb ko'rsatadi, garchi u o'shanda mavjud bo'lmagan.
-
-Eng yaxshi yechim: yangi konfiguratsiya yarating. Tarixiy ma'lumotlar eski konfiguratsiyada qoladi, yangi ma'lumotlar esa yangisini ishlatadi.</string>
+    <string name="msg_edit_config_warning">Bu konfiguratsiyani tahrirlash barcha tarixiy ma'lumotlarga ta'sir qiladi. Yangi odatlar o'tgan kunlar uchun «bajarilmagan» deb ko'rsatiladi.</string>
+    <string name="msg_edit_config_warning_detail">Eng yaxshi yechim: yangi konfiguratsiya yarating. Tarixiy ma'lumotlar eski konfiguratsiyada qoladi, yangi ma'lumotlar esa yangisini ishlatadi.</string>
     <string name="msg_delete_config_warning">Ushbu konfigni o'chirishga ishonchingiz komilmi? Bu konfiguratsiya postini eslatmalaringizdan butunlay o'chiradi.</string>
     <string name="msg_delete_day_confirm">Odatlar tanlanmagan. Kunlik yozuv o\'chiriladi.</string>
     <string name="msg_delete_day_warning">Ushbu kunning yozuvini o\'chirishga aminmisiz? Bu kuzatuv postini eslatmalaringizdan butunlay olib tashlaydi.</string>

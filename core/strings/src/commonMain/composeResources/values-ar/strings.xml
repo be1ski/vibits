@@ -13,6 +13,7 @@
     <string name="action_create_memo">إنشاء مذكرة</string>
     <string name="action_continue">متابعة</string>
     <string name="action_delete">حذف</string>
+    <string name="action_details">التفاصيل</string>
     <string name="action_add_first_habit">إضافة أول عادة</string>
     <string name="action_go_to_dashboard">الانتقال إلى لوحة التحكم</string>
     <string name="action_hide_details">إخفاء التفاصيل</string>
@@ -127,11 +128,8 @@
     <string name="format_conflicts_detected">تم اكتشاف %1$d تعارض</string>
     <string name="format_active_since">نشط منذ %1$s</string>
     <string name="msg_connection_failed">فشل الاتصال</string>
-    <string name="msg_edit_config_warning">أنت على وشك تعديل تكوين موجود. سيؤثر ذلك على جميع البيانات التاريخية.
-
-لا يُنصح بتعديل تكوين قديم لأنه يغيّر كيفية ظهور بياناتك السابقة. على سبيل المثال، إذا أضفت عادة جديدة فستظهر جميع الأيام السابقة على أنها «غير مكتملة» رغم أنها لم تكن موجودة حينها.
-
-أفضل ممارسة: أنشئ تكوينًا جديدًا. ستبقى بياناتك التاريخية على التكوين القديم، وستستخدم البيانات الجديدة التكوين الجديد.</string>
+    <string name="msg_edit_config_warning">تعديل هذا التكوين سيؤثر على جميع البيانات التاريخية. ستظهر العادات الجديدة على أنها «غير مكتملة» للأيام السابقة.</string>
+    <string name="msg_edit_config_warning_detail">أفضل ممارسة: أنشئ تكوينًا جديدًا. ستبقى البيانات التاريخية على التكوين القديم، والبيانات الجديدة ستستخدم التكوين الجديد.</string>
     <string name="msg_delete_config_warning">هل أنت متأكد من حذف هذه الإعدادات؟ سيتم حذف منشور التكوين من مذكراتك نهائيًا.</string>
     <string name="msg_delete_day_confirm">لم يتم اختيار عادات. سيتم حذف إدخال اليوم.</string>
     <string name="msg_delete_day_warning">هل أنت متأكد من رغبتك في حذف إدخال هذا اليوم؟ سيؤدي هذا إلى إزالة منشور التتبع من مذكراتك بشكل دائم.</string>

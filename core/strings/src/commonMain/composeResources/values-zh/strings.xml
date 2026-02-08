@@ -13,6 +13,7 @@
     <string name="action_create_memo">创建备忘</string>
     <string name="action_continue">继续</string>
     <string name="action_delete">删除</string>
+    <string name="action_details">详情</string>
     <string name="action_add_first_habit">添加第一个习惯</string>
     <string name="action_go_to_dashboard">前往仪表板</string>
     <string name="action_hide_details">隐藏详情</string>
@@ -127,7 +128,8 @@
     <string name="format_conflicts_detected">检测到 %1$d 个冲突</string>
     <string name="format_active_since">自 %1$s 起生效</string>
     <string name="msg_connection_failed">连接失败</string>
-    <string name="msg_edit_config_warning">您即将编辑现有配置。这将影响所有历史数据。\n\n不建议编辑旧配置，因为它会改变过去数据的显示方式。例如，如果您添加新习惯，所有过去的日期都会显示为"未完成"，即使当时它还不存在。\n\n最佳实践：创建新配置。您的历史数据将保留旧配置，新数据将使用新配置。</string>
+    <string name="msg_edit_config_warning">编辑此配置将影响所有历史数据。新习惯在过去的日期中将显示为"未完成"。</string>
+    <string name="msg_edit_config_warning_detail">最佳实践：创建新配置。历史数据将保留旧配置，新数据将使用新配置。</string>
     <string name="msg_delete_config_warning">您确定要删除此配置吗？这将永久删除您备忘录中的配置帖子。</string>
     <string name="msg_delete_day_confirm">未选择任何习惯。该日记录将被删除。</string>
     <string name="msg_delete_day_warning">您确定要删除这一天的条目吗？这将永久删除您备忘录中的跟踪帖子。</string>

@@ -71,11 +71,6 @@ fun HabitsConfigDialog(
     title = { Text(stringResource(Res.string.label_habits_config)) },
     text = { HabitsConfigDialogContent(habitsState, demoMode, dispatch) },
     confirmButton = {
-      Button(onClick = { dispatch(HabitsAction.Config.SaveConfigDialog) }) {
-        Text(stringResource(Res.string.action_save))
-      }
-    },
-    dismissButton = {
       Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs)) {
         if (habitsState.editingConfigMemo != null) {
           TextButton(
@@ -88,9 +83,14 @@ fun HabitsConfigDialog(
             Text(stringResource(Res.string.action_delete))
           }
         }
-        TextButton(onClick = { dispatch(HabitsAction.Config.CloseConfigDialog) }) {
-          Text(stringResource(Res.string.action_cancel))
+        Button(onClick = { dispatch(HabitsAction.Config.SaveConfigDialog) }) {
+          Text(stringResource(Res.string.action_save))
         }
+      }
+    },
+    dismissButton = {
+      TextButton(onClick = { dispatch(HabitsAction.Config.CloseConfigDialog) }) {
+        Text(stringResource(Res.string.action_cancel))
       }
     },
   )

@@ -13,6 +13,7 @@
     <string name="action_create_memo">ჩანაწერის შექმნა</string>
     <string name="action_continue">გაგრძელება</string>
     <string name="action_delete">წაშლა</string>
+    <string name="action_details">დეტალები</string>
     <string name="action_add_first_habit">პირველი ჩვევის დამატება</string>
     <string name="action_go_to_dashboard">პანელზე გადასვლა</string>
     <string name="action_hide_details">დეტალების დამალვა</string>
@@ -127,11 +128,8 @@
     <string name="format_conflicts_detected">აღმოჩენილია %1$d კონფლიქტი</string>
     <string name="format_active_since">აქტიური %1$s-დან</string>
     <string name="msg_connection_failed">კავშირის შეცდომა</string>
-    <string name="msg_edit_config_warning">თქვენ აპირებთ არსებული კონფიგურაციის რედაქტირებას. ეს ყველა ისტორიულ მონაცემზე იმოქმედებს.
-
-ძველი კონფიგურაციის რედაქტირება არ არის რეკომენდებული, რადგან ეს ცვლის წარსული მონაცემების ჩვენებას. მაგალითად, თუ დაამატებთ ახალ ჩვევას, ყველა წარსული დღე მას «შეუსრულებლად» აჩვენებს, მიუხედავად იმისა, რომ მაშინ ის არ არსებობდა.
-
-საუკეთესო პრაქტიკა: შექმენით ახალი კონფიგურაცია. ისტორიული მონაცემები დარჩება ძველ კონფიგურაციაზე, ხოლო ახალი მონაცემები გამოიყენებს ახალს.</string>
+    <string name="msg_edit_config_warning">ამ კონფიგურაციის რედაქტირება ყველა ისტორიულ მონაცემზე იმოქმედებს. ახალი ჩვევები წარსულ დღეებში «შეუსრულებლად» გამოჩნდება.</string>
+    <string name="msg_edit_config_warning_detail">საუკეთესო პრაქტიკა: შექმენით ახალი კონფიგურაცია. ისტორიული მონაცემები დარჩება ძველ კონფიგურაციაზე, ხოლო ახალი მონაცემები გამოიყენებს ახალს.</string>
     <string name="msg_delete_config_warning">დარწმუნებული ხართ, რომ გსურთ ამ კონფიგურაციის წაშლა? ეს სამუდამოდ წაშლის კონფიგურაციის ჩანაწერს თქვენი შენიშვნებიდან.</string>
     <string name="msg_delete_day_confirm">ჩვევები არ არის არჩეული. დღიური ჩანაწერი წაიშლება.</string>
     <string name="msg_delete_day_warning">დარწმუნებული ხართ, რომ გსურთ ამ დღის ჩანაწერის წაშლა? ეს სამუდამოდ წაშლის თვალთვალის ჩანაწერს თქვენი შენიშვნებიდან.</string>
