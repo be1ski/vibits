@@ -194,6 +194,7 @@ fun checkEmptyModules(violations: MutableList<String>) {
 tasks.register("checkConventions") {
   group = "verification"
   description = "Checks project structure conventions across source files"
+  notCompatibleWithConfigurationCache("walks subproject source trees at execution time")
   doLast {
     val violations = mutableListOf<String>()
 
