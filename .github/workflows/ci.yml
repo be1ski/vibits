@@ -63,6 +63,7 @@ jobs:
           artifact-name: "ui-screenshots"
           comment-report-format: "summarized"
           enable-antialias: "true"
+          retention-days: "7"
 
   check-ios:
     runs-on: macos-latest
