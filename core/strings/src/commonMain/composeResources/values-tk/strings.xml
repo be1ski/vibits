@@ -245,6 +245,7 @@ Iň gowy usul: täze konfigurasiýa dörediň. Taryhy maglumatlar köne konfigur
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">URL we giriş tokenini barlaň, soňra gaýtadan synanyşyň.</string>
+    <string name="msg_credentials_stored_locally">Siziň hasap maglumatlaryňyz bu enjamda ygtybarly saklanýar.</string>
     <string name="msg_feed_empty_all">Ýatlamalarыňyz döredilenden soň bu ýerde görüner.</string>
     <string name="msg_feed_empty_filtered">Bu süzgüçe gabat gelýän ýatlama ýok.</string>
     <string name="msg_logs_empty_hint">Programma sinhronlaşdyranda we maglumatlary işlände žurnallar bu ýerde görkeziler.</string>

@@ -245,6 +245,7 @@
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">URL мен кіру токенін тексеріңіз, содан кейін қайталап көріңіз.</string>
+    <string name="msg_credentials_stored_locally">Сіздің тіркелгі деректеріңіз осы құрылғыда қауіпсіз сақталады.</string>
     <string name="msg_feed_empty_all">Естеліктеріңіз жасалғаннан кейін осында пайда болады.</string>
     <string name="msg_feed_empty_filtered">Бұл сүзгіге сәйкес естелік жоқ.</string>
     <string name="msg_logs_empty_hint">Қолданба синхрондалып, деректерді өңдеген сайын журналдар мұнда көрсетіледі.</string>

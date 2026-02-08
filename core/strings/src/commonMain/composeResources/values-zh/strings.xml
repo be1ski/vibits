@@ -241,6 +241,7 @@
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">检查URL和访问令牌，然后重试。</string>
+    <string name="msg_credentials_stored_locally">您的凭据安全地存储在此设备上。</string>
     <string name="msg_feed_empty_all">创建后，你的备忘录会显示在这里。</string>
     <string name="msg_feed_empty_filtered">没有符合此筛选条件的备忘录。</string>
     <string name="msg_logs_empty_hint">应用同步和处理数据时，日志会显示在此处。</string>

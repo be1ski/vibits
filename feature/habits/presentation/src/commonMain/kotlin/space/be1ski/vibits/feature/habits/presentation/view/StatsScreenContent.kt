@@ -55,7 +55,6 @@ import space.be1ski.vibits.core.strings.generated.format_habits_progress
 import space.be1ski.vibits.core.strings.generated.format_memos_count
 import space.be1ski.vibits.core.strings.generated.format_memos_today
 import space.be1ski.vibits.core.strings.generated.hint_add_habits_config
-import space.be1ski.vibits.core.strings.generated.label_activity
 import space.be1ski.vibits.core.strings.generated.label_habits_config
 import space.be1ski.vibits.core.strings.generated.label_time_day
 import space.be1ski.vibits.core.strings.generated.label_time_evening
@@ -127,11 +126,6 @@ internal fun StatsInfoCard(
       }
     },
   )
-}
-
-@Composable
-internal fun StatsHeaderRow() {
-  Text(stringResource(Res.string.label_activity), style = MaterialTheme.typography.titleMedium)
 }
 
 @Composable

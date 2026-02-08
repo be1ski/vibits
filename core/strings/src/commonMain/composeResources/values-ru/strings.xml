@@ -241,6 +241,7 @@
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">Проверьте URL и токен доступа, затем попробуйте снова.</string>
+    <string name="msg_credentials_stored_locally">Ваши учётные данные надёжно хранятся на этом устройстве.</string>
     <string name="msg_feed_empty_all">Воспоминания появятся здесь после создания.</string>
     <string name="msg_feed_empty_filtered">Нет воспоминаний по этому фильтру.</string>
     <string name="msg_logs_empty_hint">Журналы появляются по мере синхронизации и обработки данных.</string>

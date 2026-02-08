@@ -245,6 +245,7 @@ Bonne pratique : créez une nouvelle configuration. Vos données historiques con
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">Vérifiez l\'URL et le jeton d\'accès, puis réessayez.</string>
+    <string name="msg_credentials_stored_locally">Vos identifiants sont stockés en toute sécurité sur cet appareil.</string>
     <string name="msg_feed_empty_all">Vos souvenirs apparaîtront ici une fois créés.</string>
     <string name="msg_feed_empty_filtered">Aucun souvenir ne correspond à ce filtre.</string>
     <string name="msg_logs_empty_hint">Les journaux apparaissent ici au fur et à mesure que l\'app synchronise et traite les données.</string>

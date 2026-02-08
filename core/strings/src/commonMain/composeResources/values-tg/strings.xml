@@ -245,6 +245,7 @@
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">URL ва токени дастрасиро санҷед, сипас дубора кӯшиш кунед.</string>
+    <string name="msg_credentials_stored_locally">Маълумоти эътборномаи шумо дар ин дастгоҳ бехатар нигоҳ дошта мешавад.</string>
     <string name="msg_feed_empty_all">Хотираҳои шумо пас аз эҷод дар ин ҷо пайдо мешаванд.</string>
     <string name="msg_feed_empty_filtered">Ягон хотира ба ин филтр мувофиқ нест.</string>
     <string name="msg_logs_empty_hint">Ҳангоми ҳамоҳангсозӣ ва коркарди маълумот журналҳо дар ин ҷо пайдо мешаванд.</string>
