@@ -548,6 +548,7 @@ class AppShellScreenshotTest {
           ),
       )
 
+      onNodeWithTag(StatsTestTags.EMPTY_DELETE_DIALOG).assertIsDisplayed()
       saveScreenshot("app_habits_delete")
     }
 
