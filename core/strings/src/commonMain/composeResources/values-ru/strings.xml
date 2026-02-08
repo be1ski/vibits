@@ -240,8 +240,10 @@
     <string name="demo_habit_early_sleep">Сон до 23:00</string>
 
     <!-- State panels -->
+    <string name="msg_connection_failed_hint">Проверьте URL и токен доступа, затем попробуйте снова.</string>
     <string name="msg_feed_empty_all">Воспоминания появятся здесь после создания.</string>
     <string name="msg_feed_empty_filtered">Нет воспоминаний по этому фильтру.</string>
+    <string name="msg_logs_empty_hint">Журналы появляются по мере синхронизации и обработки данных.</string>
     <string name="msg_state_loading">Подготовка привычек и воспоминаний…</string>
     <string name="title_feed_empty">Здесь пока пусто</string>
     <string name="title_state_loading">Загрузка данных</string>

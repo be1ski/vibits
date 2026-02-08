@@ -244,8 +244,10 @@ Eng yaxshi yechim: yangi konfiguratsiya yarating. Tarixiy ma'lumotlar eski konfi
     <string name="demo_habit_early_sleep">23:00 gacha uxlash</string>
 
     <!-- State panels -->
+    <string name="msg_connection_failed_hint">URL va kirish tokenini tekshiring, keyin qaytadan urinib ko'ring.</string>
     <string name="msg_feed_empty_all">Xotiralaringiz yaratilgandan keyin bu yerda koʻrinadi.</string>
     <string name="msg_feed_empty_filtered">Bu filtrga mos xotira topilmadi.</string>
+    <string name="msg_logs_empty_hint">Ilova sinxronlash va maʼlumotlarni qayta ishlash jarayonida jurnallar bu yerda paydo bo'ladi.</string>
     <string name="msg_state_loading">Odatlar va xotiralar tayyorlanmoqda…</string>
     <string name="title_feed_empty">Bu yerda xotira yoʻq</string>
     <string name="title_state_loading">Maʼlumotlar yuklanmoqda</string>

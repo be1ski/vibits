@@ -240,8 +240,10 @@
     <string name="demo_habit_early_sleep">Sleep by 11pm</string>
 
     <!-- State panels -->
+    <string name="msg_connection_failed_hint">Check the URL and access token, then try again.</string>
     <string name="msg_feed_empty_all">Your memos will appear here once created.</string>
     <string name="msg_feed_empty_filtered">No memos match this filter.</string>
+    <string name="msg_logs_empty_hint">Logs appear here as the app syncs and processes data.</string>
     <string name="msg_state_loading">Setting up your habits and memos…</string>
     <string name="title_feed_empty">No memos here</string>
     <string name="title_state_loading">Loading your data</string>

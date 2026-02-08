@@ -48,8 +48,10 @@ import space.be1ski.vibits.core.strings.generated.mode_quick_online_desc
 import space.be1ski.vibits.core.strings.generated.mode_quick_online_title
 import space.be1ski.vibits.core.strings.generated.mode_select_subtitle
 import space.be1ski.vibits.core.strings.generated.mode_select_title
+import space.be1ski.vibits.core.strings.generated.msg_connection_failed_hint
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.form.CredentialFields
+import space.be1ski.vibits.core.ui.form.CredentialValidationError
 import space.be1ski.vibits.core.ui.form.credentialValidationErrorMessage
 import space.be1ski.vibits.feature.mode.presentation.action.ModeSelectionAction
 import space.be1ski.vibits.feature.mode.presentation.effect.ModeSelectionEffect
@@ -196,6 +198,13 @@ private fun CredentialsSetupDialog(
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.bodySmall,
           )
+          if (error == CredentialValidationError.CONNECTION_FAILED) {
+            Text(
+              text = stringResource(Res.string.msg_connection_failed_hint),
+              style = MaterialTheme.typography.bodySmall,
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+          }
         }
       }
     },

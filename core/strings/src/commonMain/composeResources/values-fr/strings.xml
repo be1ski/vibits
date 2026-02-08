@@ -244,8 +244,10 @@ Bonne pratique : créez une nouvelle configuration. Vos données historiques con
     <string name="demo_habit_early_sleep">Dormir avant 23h</string>
 
     <!-- State panels -->
+    <string name="msg_connection_failed_hint">Vérifiez l\'URL et le jeton d\'accès, puis réessayez.</string>
     <string name="msg_feed_empty_all">Vos souvenirs apparaîtront ici une fois créés.</string>
     <string name="msg_feed_empty_filtered">Aucun souvenir ne correspond à ce filtre.</string>
+    <string name="msg_logs_empty_hint">Les journaux apparaissent ici au fur et à mesure que l\'app synchronise et traite les données.</string>
     <string name="msg_state_loading">Préparation des habitudes et souvenirs…</string>
     <string name="title_feed_empty">Aucun souvenir ici</string>
     <string name="title_state_loading">Chargement de vos données</string>

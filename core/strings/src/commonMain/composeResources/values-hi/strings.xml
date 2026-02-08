@@ -244,8 +244,10 @@
     <string name="demo_habit_early_sleep">रात 11 बजे तक सोना</string>
 
     <!-- State panels -->
+    <string name="msg_connection_failed_hint">URL और एक्सेस टोकन जांचें, फिर दोबारा प्रयास करें।</string>
     <string name="msg_feed_empty_all">आपकी यादें बनाने के बाद यहाँ दिखाई देंगी।</string>
     <string name="msg_feed_empty_filtered">इस फ़िल्टर से कोई याद नहीं मिली।</string>
+    <string name="msg_logs_empty_hint">ऐप के सिंक और डेटा प्रोसेस करने पर लॉग यहां दिखाई देंगे।</string>
     <string name="msg_state_loading">आदतें और यादें तैयार हो रही हैं…</string>
     <string name="title_feed_empty">यहाँ कोई याद नहीं है</string>
     <string name="title_state_loading">डेटा लोड हो रहा है</string>
