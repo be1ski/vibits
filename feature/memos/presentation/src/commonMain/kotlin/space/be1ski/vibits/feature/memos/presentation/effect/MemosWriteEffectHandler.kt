@@ -3,6 +3,7 @@ package space.be1ski.vibits.feature.memos.presentation.effect
 import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.core.elm.EffectHandler
 import space.be1ski.vibits.core.elm.actions
+import space.be1ski.vibits.core.utils.coroutines.runSuspendCatching
 import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.domain.usecase.CreateMemoUseCase
 import space.be1ski.vibits.feature.memos.domain.usecase.DeleteMemoUseCase
@@ -26,7 +27,7 @@ class MemosWriteEffectHandler(
   private fun handleCreateMemo(effect: MemosEffect.CreateMemo): Flow<MemosAction> =
     actions {
       Log.d(TAG, "Creating memo")
-      runCatching { createMemo(effect.content) }
+      runSuspendCatching { createMemo(effect.content) }
         .onSuccess { memo -> emit(MemosAction.Crud.MemoCreated(memo)) }
         .onFailure { error ->
           Log.e(TAG, "Failed to create memo", error)
@@ -37,7 +38,7 @@ class MemosWriteEffectHandler(
   private fun handleUpdateMemo(effect: MemosEffect.UpdateMemo): Flow<MemosAction> =
     actions {
       Log.d(TAG, "Updating memo: ${effect.name}")
-      runCatching { updateMemo(effect.name, effect.content) }
+      runSuspendCatching { updateMemo(effect.name, effect.content) }
         .onSuccess { memo -> emit(MemosAction.Crud.MemoUpdated(memo)) }
         .onFailure { error ->
           Log.e(TAG, "Failed to update memo", error)
@@ -48,7 +49,7 @@ class MemosWriteEffectHandler(
   private fun handleDeleteMemo(effect: MemosEffect.DeleteMemo): Flow<MemosAction> =
     actions {
       Log.d(TAG, "Deleting memo: ${effect.name}")
-      runCatching { deleteMemo(effect.name) }
+      runSuspendCatching { deleteMemo(effect.name) }
         .onSuccess { emit(MemosAction.Crud.MemoDeleted(effect.name)) }
         .onFailure { error ->
           Log.e(TAG, "Failed to delete memo", error)

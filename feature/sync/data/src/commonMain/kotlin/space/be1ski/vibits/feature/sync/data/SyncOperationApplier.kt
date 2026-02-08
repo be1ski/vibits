@@ -1,6 +1,7 @@
 package space.be1ski.vibits.feature.sync.data
 
 import kotlinx.coroutines.delay
+import space.be1ski.vibits.core.utils.coroutines.runSuspendCatching
 import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.domain.repository.MemosRemoteSource
 import space.be1ski.vibits.feature.sync.domain.SyncLogTags
@@ -49,7 +50,7 @@ internal class SyncOperationApplier(
 
     for (attempt in 0..retryConfig.maxRetries) {
       val result =
-        runCatching {
+        runSuspendCatching {
           when (operation.type) {
             SyncOperationType.CREATE -> applyCreateOperation(operation)
             SyncOperationType.UPDATE -> applyUpdateOperation(operation)

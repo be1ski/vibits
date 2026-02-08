@@ -10,10 +10,12 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import space.be1ski.vibits.feature.memos.data.remote.MemosApi
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class ConnectionTesterImplTest {
@@ -37,6 +39,17 @@ class ConnectionTesterImplTest {
       val result = tester("https://example.com", "token")
 
       assertTrue(result.isFailure)
+    }
+
+  @Test
+  fun `when api cancelled then CancellationException propagates`() =
+    runTest {
+      val client = createMockClient { throw CancellationException("cancelled") }
+      val tester = ConnectionTesterImpl(MemosApi(client))
+
+      assertFailsWith<CancellationException> {
+        tester("https://example.com", "token")
+      }
     }
 
   private fun createMockClient(

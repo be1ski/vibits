@@ -1,6 +1,7 @@
 package space.be1ski.vibits.feature.onboarding.domain.usecase
 
 import dev.zacsweers.metro.Inject
+import space.be1ski.vibits.core.utils.coroutines.runSuspendCatching
 import space.be1ski.vibits.feature.habits.domain.formatHexColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.memos.domain.model.PostTags
@@ -14,7 +15,7 @@ class CreateFirstHabitUseCase(
     name: String,
     color: HabitColor,
   ): Result<Unit> =
-    runCatching {
+    runSuspendCatching {
       val habitTag = name.lowercase().replace(" ", "_")
       val hexColor = formatHexColor(color)
       val content =
