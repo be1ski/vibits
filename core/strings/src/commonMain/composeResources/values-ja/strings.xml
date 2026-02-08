@@ -245,6 +245,7 @@
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">URLとアクセストークンを確認して、もう一度お試しください。</string>
+    <string name="msg_credentials_stored_locally">認証情報はこのデバイスに安全に保存されます。</string>
     <string name="msg_feed_empty_all">作成されたメモはここに表示されます。</string>
     <string name="msg_feed_empty_filtered">このフィルターに一致するメモはありません。</string>
     <string name="msg_logs_empty_hint">アプリが同期やデータ処理を行うと、ここにログが表示されます。</string>

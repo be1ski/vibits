@@ -245,6 +245,7 @@
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">URL और एक्सेस टोकन जांचें, फिर दोबारा प्रयास करें।</string>
+    <string name="msg_credentials_stored_locally">आपके प्रमाण-पत्र इस डिवाइस पर सुरक्षित रूप से संग्रहीत हैं।</string>
     <string name="msg_feed_empty_all">आपकी यादें बनाने के बाद यहाँ दिखाई देंगी।</string>
     <string name="msg_feed_empty_filtered">इस फ़िल्टर से कोई याद नहीं मिली।</string>
     <string name="msg_logs_empty_hint">ऐप के सिंक और डेटा प्रोसेस करने पर लॉग यहां दिखाई देंगे।</string>

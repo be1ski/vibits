@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -36,9 +37,7 @@ fun EditConfigWarningDialog(
   habitsState: HabitsState,
   dispatch: (HabitsAction) -> Unit,
 ) {
-  if (!habitsState.showEditConfigWarning) {
-    return
-  }
+  if (!habitsState.showEditConfigWarning) return
 
   AlertDialog(
     onDismissRequest = { dispatch(HabitsAction.ConfigWarning.DismissEditConfigWarning) },
@@ -84,7 +83,10 @@ fun EditConfigWarningDialog(
         TextButton(onClick = { dispatch(HabitsAction.ConfigWarning.DismissEditConfigWarning) }) {
           Text(stringResource(Res.string.action_cancel))
         }
-        TextButton(onClick = { dispatch(HabitsAction.ConfigWarning.ConfirmEditExistingConfig) }) {
+        TextButton(
+          onClick = { dispatch(HabitsAction.ConfigWarning.ConfirmEditExistingConfig) },
+          colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error),
+        ) {
           Text(stringResource(Res.string.action_edit_anyway))
         }
       }

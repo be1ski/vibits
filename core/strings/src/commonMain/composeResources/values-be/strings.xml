@@ -245,6 +245,7 @@
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">Праверце URL і токен доступу, потым паспрабуйце зноў.</string>
+    <string name="msg_credentials_stored_locally">Вашы ўліковыя даныя надзейна захоўваюцца на гэтай прыладзе.</string>
     <string name="msg_feed_empty_all">Вашы ўспаміны з\'явяцца тут пасля стварэння.</string>
     <string name="msg_feed_empty_filtered">Няма ўспамінаў па гэтым фільтры.</string>
     <string name="msg_logs_empty_hint">Журналы з\'яўляюцца тут па меры сінхранізацыі і апрацоўкі дадзеных.</string>

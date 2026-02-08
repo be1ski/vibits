@@ -245,6 +245,7 @@
 
     <!-- State panels -->
     <string name="msg_connection_failed_hint">შეამოწმეთ URL და წვდომის ტოკენი, შემდეგ სცადეთ ხელახლა.</string>
+    <string name="msg_credentials_stored_locally">თქვენი ავტორიზაციის მონაცემები უსაფრთხოდ ინახება ამ მოწყობილობაზე.</string>
     <string name="msg_feed_empty_all">შენი მოგონებები აქ გამოჩნდება შექმნის შემდეგ.</string>
     <string name="msg_feed_empty_filtered">ამ ფილტრს მოგონება არ შეესაბამება.</string>
     <string name="msg_logs_empty_hint">ჟურნალები აქ გამოჩნდება, როცა აპი სინქრონიზაციას და მონაცემთა დამუშავებას ახორციელებს.</string>

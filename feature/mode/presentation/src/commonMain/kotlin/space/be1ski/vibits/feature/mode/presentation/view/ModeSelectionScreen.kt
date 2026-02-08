@@ -51,6 +51,7 @@ import space.be1ski.vibits.core.strings.generated.mode_quick_online_title
 import space.be1ski.vibits.core.strings.generated.mode_select_subtitle
 import space.be1ski.vibits.core.strings.generated.mode_select_title
 import space.be1ski.vibits.core.strings.generated.msg_connection_failed_hint
+import space.be1ski.vibits.core.strings.generated.msg_credentials_stored_locally
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.form.CredentialFields
 import space.be1ski.vibits.core.ui.form.CredentialValidationError
@@ -194,27 +195,30 @@ private fun CredentialsSetupDialog(
           onTokenChange = { dispatch(ModeSelectionAction.Input.UpdateToken(it)) },
           enabled = !state.isValidating,
         )
-        state.error?.let { error ->
+        if (state.error != null) {
           Text(
-            text = credentialValidationErrorMessage(error),
+            text = credentialValidationErrorMessage(state.error),
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.bodySmall,
           )
-          if (error == CredentialValidationError.CONNECTION_FAILED) {
+          if (state.error == CredentialValidationError.CONNECTION_FAILED) {
             Text(
               text = stringResource(Res.string.msg_connection_failed_hint),
               style = MaterialTheme.typography.bodySmall,
               color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
           }
+        } else {
+          Text(
+            stringResource(Res.string.msg_credentials_stored_locally),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+          )
         }
       }
     },
     confirmButton = {
-      Button(
-        onClick = { dispatch(ModeSelectionAction.Validation.Submit) },
-        enabled = !state.isValidating,
-      ) {
+      Button(onClick = { dispatch(ModeSelectionAction.Validation.Submit) }, enabled = !state.isValidating) {
         if (state.isValidating) {
           CircularProgressIndicator(
             modifier = Modifier.size(16.dp),
@@ -227,10 +231,7 @@ private fun CredentialsSetupDialog(
       }
     },
     dismissButton = {
-      TextButton(
-        onClick = { dispatch(ModeSelectionAction.Dialog.Dismiss) },
-        enabled = !state.isValidating,
-      ) {
+      TextButton(onClick = { dispatch(ModeSelectionAction.Dialog.Dismiss) }, enabled = !state.isValidating) {
         Text(stringResource(Res.string.action_cancel))
       }
     },
