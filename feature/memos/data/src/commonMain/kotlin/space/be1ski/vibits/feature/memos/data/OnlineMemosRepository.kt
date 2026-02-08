@@ -3,6 +3,7 @@ package space.be1ski.vibits.feature.memos.data
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.core.platform.di.AppScope
+import space.be1ski.vibits.core.utils.coroutines.runSuspendCatching
 import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.auth.domain.model.requireFilled
 import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
@@ -49,7 +50,7 @@ class OnlineMemosRepository(
     } while (nextPageToken != null && pages < MemosPagination.MAX_PAGES && allMemos.isNotEmpty())
 
     Log.i(TAG, "Loaded ${allMemos.size} memos in $pages pages")
-    runCatching { memoCache.replaceMemos(allMemos) }
+    runSuspendCatching { memoCache.replaceMemos(allMemos) }
       .onSuccess { Log.d(TAG, "Cache updated") }
       .onFailure { Log.e(TAG, "Cache update failed", it) }
     return allMemos
@@ -74,7 +75,7 @@ class OnlineMemosRepository(
         content = content,
       )
     val updated = MemoMapper.toDomain(dto)
-    runCatching { memoCache.upsertMemo(updated) }
+    runSuspendCatching { memoCache.upsertMemo(updated) }
     Log.i(TAG, "Updated memo: $name")
     return updated
   }
@@ -89,7 +90,7 @@ class OnlineMemosRepository(
         content = content,
       )
     val created = MemoMapper.toDomain(dto)
-    runCatching { memoCache.upsertMemo(created) }
+    runSuspendCatching { memoCache.upsertMemo(created) }
     Log.i(TAG, "Created memo: ${created.name}")
     return created
   }
@@ -102,7 +103,7 @@ class OnlineMemosRepository(
       token = token,
       name = name,
     )
-    runCatching { memoCache.deleteMemo(name) }
+    runSuspendCatching { memoCache.deleteMemo(name) }
     Log.i(TAG, "Deleted memo: $name")
   }
 }

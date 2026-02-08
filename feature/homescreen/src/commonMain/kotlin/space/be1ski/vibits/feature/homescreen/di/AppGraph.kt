@@ -9,6 +9,7 @@ import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import space.be1ski.vibits.core.platform.app.AppDetailsProvider
 import space.be1ski.vibits.core.platform.di.AppScope
 import space.be1ski.vibits.core.platform.env.LocalConfigProvider
@@ -79,6 +80,7 @@ abstract class AppGraph {
     fun getAppScope(): CoroutineScope = getGraph().appCoroutineScope
 
     fun resetGraph() {
+      instance?.appCoroutineScope?.cancel()
       instance = null
     }
   }

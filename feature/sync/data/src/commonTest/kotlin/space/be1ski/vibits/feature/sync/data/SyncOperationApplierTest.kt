@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.sync.data
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -14,6 +15,7 @@ import space.be1ski.vibits.feature.sync.domain.model.SyncStatus
 import space.be1ski.vibits.feature.sync.domain.repository.SyncQueueRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
@@ -482,11 +484,42 @@ class SyncOperationApplierTest {
       assertEquals(SyncOperationStatus.FAILED, fakeQueue.statusHistory["op-1"]?.last())
     }
 
+  // ========== Cancellation Tests ==========
+
+  @Test
+  fun `when operation cancelled then CancellationException propagates without FAILED status`() =
+    runTest {
+      val remoteSource = FakeMemosRemoteSource(exceptionToThrow = CancellationException("cancelled"))
+      val retryConfig = RetryConfig(maxRetries = 3, initialDelay = 1.milliseconds, maxDelay = 10.milliseconds)
+      val (applier, fakeQueue, _) = createApplierWithRetry(retryConfig, remoteSource)
+      val operation =
+        SyncOperation(
+          id = "op-1",
+          type = SyncOperationType.CREATE,
+          memoName = "local_123_456",
+          content = "content",
+          createdAt = Clock.System.now(),
+          status = SyncOperationStatus.PENDING,
+        )
+      fakeQueue.operations.add(operation)
+
+      assertFailsWith<CancellationException> {
+        applier.applyOperations(listOf(operation))
+      }
+
+      // Should not be marked as FAILED — cancellation exits immediately
+      val lastStatus = fakeQueue.statusHistory["op-1"]?.last()
+      assertEquals(SyncOperationStatus.IN_PROGRESS, lastStatus)
+      // Only one attempt — no retries on cancellation
+      assertEquals(1, remoteSource.createCalls)
+    }
+
   // ========== Helper Classes ==========
 
   private class FakeMemosRemoteSource(
     private val shouldFail: Boolean = false,
     private val failUntilCall: Int = 0,
+    private val exceptionToThrow: Exception? = null,
   ) : MemosRemoteSource {
     var createCalls = 0
       private set
@@ -498,6 +531,7 @@ class SyncOperationApplierTest {
 
     private fun checkFail() {
       totalCalls++
+      exceptionToThrow?.let { throw it }
       if (shouldFail || totalCalls < failUntilCall) {
         throw RuntimeException("Remote source error")
       }

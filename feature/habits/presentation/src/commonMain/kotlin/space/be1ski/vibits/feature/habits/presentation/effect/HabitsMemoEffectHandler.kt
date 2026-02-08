@@ -3,6 +3,7 @@ package space.be1ski.vibits.feature.habits.presentation.effect
 import kotlinx.coroutines.flow.Flow
 import space.be1ski.vibits.core.elm.EffectHandler
 import space.be1ski.vibits.core.elm.actions
+import space.be1ski.vibits.core.utils.coroutines.runSuspendCatching
 import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.habits.domain.model.SaveDailyMemoResult
 import space.be1ski.vibits.feature.habits.domain.usecase.SaveDailyHabitMemoUseCase
@@ -51,7 +52,7 @@ class HabitsMemoEffectHandler(
     actions {
       if (effect.content.isConfigTag()) {
         Log.d(TAG, "Creating config memo")
-        runCatching { memosRepository.createMemo(effect.content) }
+        runSuspendCatching { memosRepository.createMemo(effect.content) }
           .onSuccess { memo ->
             Log.d(TAG, "Config memo created: ${memo.name}")
             emit(HabitsAction.Response.MemoCreated(memo))
@@ -86,7 +87,7 @@ class HabitsMemoEffectHandler(
   private fun handleUpdateMemo(effect: HabitsEffect.UpdateMemo): Flow<HabitsAction> =
     actions {
       Log.d(TAG, "Updating habit memo: ${effect.name}")
-      runCatching { memosRepository.updateMemo(effect.name, effect.content) }
+      runSuspendCatching { memosRepository.updateMemo(effect.name, effect.content) }
         .onSuccess { memo -> emit(HabitsAction.Response.MemoUpdated(memo)) }
         .onFailure { error ->
           Log.e(TAG, "Failed to update habit memo", error)
@@ -97,7 +98,7 @@ class HabitsMemoEffectHandler(
   private fun handleDeleteMemo(effect: HabitsEffect.DeleteMemo): Flow<HabitsAction> =
     actions {
       Log.d(TAG, "Deleting habit memo: ${effect.name}")
-      runCatching { memosRepository.deleteMemo(effect.name) }
+      runSuspendCatching { memosRepository.deleteMemo(effect.name) }
         .onSuccess { emit(HabitsAction.Response.MemoDeleted(effect.name)) }
         .onFailure { error ->
           Log.e(TAG, "Failed to delete habit memo", error)
