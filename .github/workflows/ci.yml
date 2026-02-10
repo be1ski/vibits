@@ -30,7 +30,11 @@ jobs:
       - name: Run checks
         run: |
           START=$SECONDS
-          xvfb-run ./gradlew checkJvm
+          CACHE_FLAG=""
+          if [ "${{ github.event_name }}" == "push" ]; then
+            CACHE_FLAG="--no-build-cache"
+          fi
+          xvfb-run ./gradlew checkJvm $CACHE_FLAG
           echo "BUILD_SECONDS=$((SECONDS - START))" >> "$GITHUB_ENV"
 
       - name: Generate coverage report
