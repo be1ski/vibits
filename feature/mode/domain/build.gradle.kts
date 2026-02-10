@@ -22,8 +22,6 @@ kotlin {
         implementation(projects.feature.mode.domain.testing)
         implementation(projects.feature.onboarding.domain.testing)
         implementation(projects.feature.settings.domain.testing)
-        implementation(kotlin("test"))
-        implementation(libs.kotlinx.coroutines.test)
       }
     }
   }
