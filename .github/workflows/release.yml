@@ -263,12 +263,6 @@ jobs:
           tag_name: ${{ needs.resolve-version.outputs.version }}
           files: webApp/build/dist/wasmJs/Vibits-*-web.tar.gz
 
-      - name: Include benchmark charts
-        run: |
-          git fetch origin benchmark-data
-          git checkout origin/benchmark-data -- bench
-          mv bench webApp/build/dist/wasmJs/productionExecutable/bench
-
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
