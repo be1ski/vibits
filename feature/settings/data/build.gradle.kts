@@ -12,11 +12,5 @@ kotlin {
         implementation(projects.feature.settings.domain)
       }
     }
-    commonTest {
-      dependencies {
-        implementation(kotlin("test"))
-        implementation(libs.kotlinx.coroutines.test)
-      }
-    }
   }
 }

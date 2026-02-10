@@ -34,8 +34,6 @@ kotlin {
         implementation(projects.feature.onboarding.domain)
         implementation(projects.feature.onboarding.domain.testing)
         implementation(projects.feature.settings.domain.testing)
-        implementation(kotlin("test"))
-        implementation(libs.kotlinx.coroutines.test)
       }
     }
     val desktopTest by getting {

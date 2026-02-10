@@ -15,8 +15,6 @@ kotlin {
     commonTest {
       dependencies {
         implementation(projects.feature.settings.domain.testing)
-        implementation(kotlin("test"))
-        implementation(libs.kotlinx.coroutines.test)
       }
     }
   }

@@ -9,14 +9,28 @@ plugins {
   alias(libs.plugins.firebase.appdistribution)
 }
 
+val sdkCompile =
+  buildConfig.versions.compileSdk
+    .get()
+    .toInt()
+val sdkMin =
+  buildConfig.versions.minSdk
+    .get()
+    .toInt()
+val sdkTarget =
+  buildConfig.versions.targetSdk
+    .get()
+    .toInt()
+val javaVersion = JavaVersion.toVersion(buildConfig.versions.javaVersion.get())
+
 android {
   namespace = "space.be1ski.vibits.android"
-  compileSdk = 36
+  compileSdk = sdkCompile
 
   defaultConfig {
     applicationId = "space.be1ski.vibits"
-    minSdk = 31
-    targetSdk = 36
+    minSdk = sdkMin
+    targetSdk = sdkTarget
     versionCode = appVersion.replace(".", "").toIntOrNull() ?: 1
     versionName = appVersion
   }
@@ -48,8 +62,8 @@ android {
     }
   }
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
   }
   buildFeatures {
     compose = true

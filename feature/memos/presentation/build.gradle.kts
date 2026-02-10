@@ -33,8 +33,6 @@ kotlin {
         implementation(projects.feature.auth.domain.testing)
         implementation(projects.feature.memos.domain.testing)
         implementation(projects.feature.sync.domain.testing)
-        implementation(kotlin("test"))
-        implementation(libs.kotlinx.coroutines.test)
       }
     }
     val desktopTest by getting {

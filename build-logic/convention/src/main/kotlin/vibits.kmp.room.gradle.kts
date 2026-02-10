@@ -4,16 +4,15 @@ plugins {
   id("androidx.room")
 }
 
-val libs = the<VersionCatalogsExtension>().named("libs")
+val libs = the<org.gradle.accessors.dm.LibrariesForLibs>()
 
 room {
   schemaDirectory("$projectDir/schemas")
 }
 
 dependencies {
-  add("kspAndroid", libs.findLibrary("androidx-room-compiler").get())
-  add("kspDesktop", libs.findLibrary("androidx-room-compiler").get())
-  add("kspIosArm64", libs.findLibrary("androidx-room-compiler").get())
-  add("kspIosSimulatorArm64", libs.findLibrary("androidx-room-compiler").get())
-  add("kspIosX64", libs.findLibrary("androidx-room-compiler").get())
+  val roomCompiler = libs.androidx.room.compiler
+  listOf("kspAndroid", "kspDesktop", "kspIosArm64", "kspIosSimulatorArm64", "kspIosX64").forEach {
+    add(it, roomCompiler)
+  }
 }

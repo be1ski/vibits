@@ -16,8 +16,6 @@ kotlin {
       dependencies {
         implementation(projects.core.platform.testing)
         implementation(projects.feature.auth.domain.testing)
-        implementation(kotlin("test"))
-        implementation(libs.kotlinx.coroutines.test)
       }
     }
   }
