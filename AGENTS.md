@@ -562,6 +562,7 @@ KMP module plugins:
 |--------|---------------|
 | `vibits.kmp.library` | KMP targets, Android namespace, Kover per-module |
 | `vibits.kmp.compose` | Compose Multiplatform + Kotlin Compose compiler |
+| `vibits.kmp.feature.presentation` | Compose + Metro + common presentation deps (core modules, compose libs, test utilities) |
 | `vibits.kmp.metro` | Metro DI plugin |
 | `vibits.kmp.room` | Room KMP + KSP |
 

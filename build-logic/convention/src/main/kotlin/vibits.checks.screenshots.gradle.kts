@@ -1,14 +1,12 @@
 val outputDir: File = rootProject.layout.buildDirectory.dir("ui-screenshots").get().asFile
 
 // Screenshot PNGs are side-effects of desktopTest not declared as task outputs,
-// so Gradle's build cache doesn't restore them. Force re-execution when collecting screenshots.
-if (gradle.startParameter.taskNames.any { it.contains("screenshotTests") }) {
-  subprojects {
-    plugins.withId("org.jetbrains.kotlin.multiplatform") {
-      tasks.matching { it.name == "desktopTest" }.configureEach {
-        outputs.cacheIf { false }
-        outputs.upToDateWhen { false }
-      }
+// so Gradle's build cache doesn't restore them. Disable caching unconditionally
+// because CI always collects screenshots for visual regression testing.
+subprojects {
+  plugins.withId("org.jetbrains.kotlin.multiplatform") {
+    tasks.matching { it.name == "desktopTest" }.configureEach {
+      outputs.cacheIf { false }
     }
   }
 }
