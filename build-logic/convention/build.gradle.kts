@@ -2,7 +2,7 @@ plugins {
   `kotlin-dsl`
 }
 
-val javaVersion = buildConfig.versions.javaVersion.get()
+val javaVersion = buildConfig.versions.java.get()
 
 java {
   sourceCompatibility = JavaVersion.toVersion(javaVersion)

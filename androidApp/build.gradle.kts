@@ -21,7 +21,7 @@ val sdkTarget =
   buildConfig.versions.targetSdk
     .get()
     .toInt()
-val javaVersion = JavaVersion.toVersion(buildConfig.versions.javaVersion.get())
+val javaVersion = JavaVersion.toVersion(buildConfig.versions.java.get())
 
 android {
   namespace = "space.be1ski.vibits.android"

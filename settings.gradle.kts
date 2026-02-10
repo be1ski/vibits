@@ -20,7 +20,7 @@ dependencyResolutionManagement {
   }
   versionCatalogs {
     create("buildConfig") {
-      from(files("gradle/buildConfig.versions.toml"))
+      from(files("gradle/build-config.versions.toml"))
     }
   }
 }
