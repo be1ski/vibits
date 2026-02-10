@@ -82,7 +82,7 @@ jobs:
           tool: 'customSmallerIsBetter'
           output-file-path: benchmark-result.json
           gh-pages-branch: benchmark-data
-          benchmark-data-dir-path: dev/bench
+          benchmark-data-dir-path: bench
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: true
           summary-always: true
