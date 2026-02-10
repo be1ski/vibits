@@ -18,6 +18,11 @@ dependencyResolutionManagement {
     google()
     mavenCentral()
   }
+  versionCatalogs {
+    create("buildConfig") {
+      from(files("gradle/build-config.versions.toml"))
+    }
+  }
 }
 
 rootProject.name = "Vibits"

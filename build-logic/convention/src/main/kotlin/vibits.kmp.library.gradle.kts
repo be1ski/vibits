@@ -4,11 +4,14 @@ plugins {
   id("org.jetbrains.kotlinx.kover")
 }
 
+val buildConfig = the<org.gradle.accessors.dm.LibrariesForBuildConfig>()
+val libs = the<org.gradle.accessors.dm.LibrariesForLibs>()
+
 kotlin {
   androidLibrary {
     namespace = project.androidNamespace()
-    compileSdk = 36
-    minSdk = 31
+    compileSdk = buildConfig.versions.compileSdk.get().toInt()
+    minSdk = buildConfig.versions.minSdk.get().toInt()
     // Required for Compose Multiplatform resources to work with the new KMP Android plugin
     androidResources.enable = true
   }
@@ -28,6 +31,15 @@ kotlin {
   iosSimulatorArm64()
 
   applyDefaultHierarchyTemplate()
+
+  sourceSets {
+    commonTest {
+      dependencies {
+        implementation(kotlin("test"))
+        implementation(libs.kotlinx.coroutines.test)
+      }
+    }
+  }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
@@ -38,5 +50,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().con
 
 fun Project.androidNamespace(): String {
   val pathSegments = path.split(":").filter { it.isNotEmpty() }
-  return "space.be1ski.vibits.${pathSegments.joinToString(".")}"
+  val packagePrefix = providers.gradleProperty("vibits.packagePrefix").get()
+  return "$packagePrefix.${pathSegments.joinToString(".")}"
 }

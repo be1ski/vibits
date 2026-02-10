@@ -1,0 +1,5 @@
+[versions]
+compileSdk = "36"
+java = "21"
+minSdk = "31"
+targetSdk = "36"
