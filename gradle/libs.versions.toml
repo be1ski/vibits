@@ -1,5 +1,5 @@
 [versions]
-activityCompose = "1.12.3"
+activityCompose = "1.12.4"
 atomicfu = "0.31.0"
 appcompat = "1.7.1"
 ktlint = "14.0.1"
