@@ -41,6 +41,10 @@ sealed interface SettingsEffect {
     data class SaveTheme(
       val theme: AppTheme,
     ) : Preferences
+
+    data class SaveSyncDebounce(
+      val seconds: Int,
+    ) : Preferences
   }
 
   /**

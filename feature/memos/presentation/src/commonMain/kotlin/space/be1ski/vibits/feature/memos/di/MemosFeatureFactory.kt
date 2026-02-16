@@ -52,8 +52,13 @@ fun createMemosFeature(
           MemosSyncEffectHandler(
             syncEngine = dependencies.syncEngine,
             syncQueueRepository = dependencies.syncQueueRepository,
+            loadSyncDebounceDuration = dependencies.loadSyncDebounceDuration,
           ),
       ),
-    initialCommands = if (!needsCredentials) listOf(MemosEffect.LoadCachedMemos) else emptyList(),
+    initialCommands =
+      buildList {
+        if (!needsCredentials) add(MemosEffect.LoadCachedMemos)
+        if (!isOfflineMode) add(MemosEffect.ObserveSyncStatus)
+      },
   )
 }

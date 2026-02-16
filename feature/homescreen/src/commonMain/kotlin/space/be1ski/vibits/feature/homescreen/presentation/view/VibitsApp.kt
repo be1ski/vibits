@@ -43,6 +43,7 @@ internal fun VibitsApp(
     habitsState = habitsState,
     currentLanguage = currentLanguage,
     currentTheme = currentTheme,
+    syncDebounceSeconds = settingsState.selectedSyncDebounceSeconds,
   )
 
   SettingsDialog(state = settingsState, dispatch = features.settings::send, exportService = exportService)

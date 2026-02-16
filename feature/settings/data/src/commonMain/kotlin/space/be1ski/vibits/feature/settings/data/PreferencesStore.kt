@@ -1,6 +1,7 @@
 package space.be1ski.vibits.feature.settings.data
 
 import space.be1ski.vibits.core.platform.storage.KeyValueStore
+import space.be1ski.vibits.feature.settings.domain.model.DEFAULT_SYNC_DEBOUNCE_SECONDS
 
 interface PreferencesStore {
   fun load(): LocalUserPreferences
@@ -17,11 +18,17 @@ class PreferencesStoreImpl(
     val defaultTab = LocalUserPreferences.DEFAULT_TIME_RANGE_TAB
     val defaultLanguage = LocalUserPreferences.DEFAULT_LANGUAGE
     val defaultTheme = LocalUserPreferences.DEFAULT_THEME
+    val defaultMemosAutoSyncDebounceSeconds = DEFAULT_SYNC_DEBOUNCE_SECONDS.toLong()
     return LocalUserPreferences(
       habitsTimeRangeTab = store.getString(KEY_HABITS_TAB, defaultTab) ?: defaultTab,
       postsTimeRangeTab = store.getString(KEY_POSTS_TAB, defaultTab) ?: defaultTab,
       language = store.getString(KEY_LANGUAGE, defaultLanguage) ?: defaultLanguage,
       theme = store.getString(KEY_THEME, defaultTheme) ?: defaultTheme,
+      memosAutoSyncDebounceSeconds =
+        store
+          .getString(KEY_MEMOS_AUTO_SYNC_DEBOUNCE_SECONDS, defaultMemosAutoSyncDebounceSeconds.toString())
+          ?.toLongOrNull()
+          ?: defaultMemosAutoSyncDebounceSeconds,
     )
   }
 
@@ -30,6 +37,10 @@ class PreferencesStoreImpl(
     store.putString(KEY_POSTS_TAB, preferences.postsTimeRangeTab)
     store.putString(KEY_LANGUAGE, preferences.language)
     store.putString(KEY_THEME, preferences.theme)
+    store.putString(
+      KEY_MEMOS_AUTO_SYNC_DEBOUNCE_SECONDS,
+      preferences.memosAutoSyncDebounceSeconds.toString(),
+    )
   }
 
   private companion object {
@@ -38,5 +49,6 @@ class PreferencesStoreImpl(
     const val KEY_POSTS_TAB = "ui_posts_time_range_tab"
     const val KEY_LANGUAGE = "ui_language"
     const val KEY_THEME = "ui_theme"
+    const val KEY_MEMOS_AUTO_SYNC_DEBOUNCE_SECONDS = "ui_memos_auto_sync_debounce_seconds"
   }
 }

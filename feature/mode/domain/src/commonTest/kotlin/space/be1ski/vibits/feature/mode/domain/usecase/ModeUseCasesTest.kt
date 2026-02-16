@@ -10,6 +10,8 @@ import space.be1ski.vibits.feature.onboarding.domain.test.FakeOnboardingStore
 import space.be1ski.vibits.feature.settings.domain.test.FakePreferencesRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class LoadAppModeUseCaseTest {
   @Test
@@ -101,45 +103,49 @@ class ResetAppUseCaseTest {
 
 class SwitchAppModeUseCaseTest {
   @Test
-  fun `when mode is different then saves new mode`() {
+  fun `when mode is different then saves and returns true`() {
     val repository = FakeAppModeRepository(initial = AppMode.NOT_SELECTED)
     val useCase = SwitchAppModeUseCase(repository)
 
-    useCase(AppMode.ONLINE)
+    val changed = useCase(AppMode.ONLINE)
 
+    assertTrue(changed)
     assertEquals(AppMode.ONLINE, repository.storedMode)
     assertEquals(1, repository.saveCalls)
   }
 
   @Test
-  fun `when mode is same then does not save`() {
+  fun `when mode is same then does not save and returns false`() {
     val repository = FakeAppModeRepository(initial = AppMode.OFFLINE)
     val useCase = SwitchAppModeUseCase(repository)
 
-    useCase(AppMode.OFFLINE)
+    val changed = useCase(AppMode.OFFLINE)
 
+    assertFalse(changed)
     assertEquals(AppMode.OFFLINE, repository.storedMode)
     assertEquals(0, repository.saveCalls)
   }
 
   @Test
-  fun `when switching from Demo to Online then saves`() {
+  fun `when switching from Demo to Online then saves and returns true`() {
     val repository = FakeAppModeRepository(initial = AppMode.DEMO)
     val useCase = SwitchAppModeUseCase(repository)
 
-    useCase(AppMode.ONLINE)
+    val changed = useCase(AppMode.ONLINE)
 
+    assertTrue(changed)
     assertEquals(AppMode.ONLINE, repository.storedMode)
     assertEquals(1, repository.saveCalls)
   }
 
   @Test
-  fun `when switching from Online to Offline then saves`() {
+  fun `when switching from Online to Offline then saves and returns true`() {
     val repository = FakeAppModeRepository(initial = AppMode.ONLINE)
     val useCase = SwitchAppModeUseCase(repository)
 
-    useCase(AppMode.OFFLINE)
+    val changed = useCase(AppMode.OFFLINE)
 
+    assertTrue(changed)
     assertEquals(AppMode.OFFLINE, repository.storedMode)
     assertEquals(1, repository.saveCalls)
   }

@@ -110,6 +110,7 @@
     <string name="label_selected">चयनित</string>
     <string name="label_storage">स्टोरेज</string>
     <string name="label_success_rate">सफलता दर</string>
+    <string name="label_sync_debounce">स्वतः-सिंक विलंब</string>
     <string name="label_theme">थीम</string>
     <string name="label_time_day">दिन</string>
     <string name="label_time_evening">शाम</string>
@@ -256,6 +257,7 @@
     <string name="action_keep_local">स्थानीय रखें</string>
     <string name="action_keep_server">सर्वर रखें</string>
     <string name="format_pending_sync">%1$d लंबित परिवर्तन</string>
+    <string name="format_sync_debounce_seconds">%1$d सेकंड</string>
     <string name="msg_sync_conflict">आपके स्थानीय परिवर्तन सर्वर के साथ विरोध में हैं। कौन सा संस्करण रखना है चुनें।</string>
     <string name="msg_sync_failed">सिंक विफल: %1$s</string>
     <string name="msg_syncing">सिंक हो रहा है...</string>

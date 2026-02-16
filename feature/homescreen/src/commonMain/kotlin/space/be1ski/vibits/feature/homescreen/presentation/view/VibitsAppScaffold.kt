@@ -60,6 +60,7 @@ internal fun VibitsAppScaffold(
   habitsState: HabitsState,
   currentLanguage: AppLanguage,
   currentTheme: AppTheme,
+  syncDebounceSeconds: Int,
 ) {
   val timeZone = remember { TimeZone.currentSystemDefault() }
   val today = currentLocalDate()
@@ -133,6 +134,7 @@ internal fun VibitsAppScaffold(
       callbacks = callbacks,
       currentLanguage = currentLanguage,
       currentTheme = currentTheme,
+      syncDebounceSeconds = syncDebounceSeconds,
       feedListState = feedListState,
       dateFormatter = dateFormatter,
     )
@@ -175,6 +177,7 @@ private fun ScaffoldContent(
   callbacks: ScaffoldCallbacks,
   currentLanguage: AppLanguage,
   currentTheme: AppTheme,
+  syncDebounceSeconds: Int,
   feedListState: LazyListState,
   dateFormatter: DateFormatter,
 ) {
@@ -196,6 +199,7 @@ private fun ScaffoldContent(
       features.settings::send,
       currentLanguage,
       currentTheme,
+      syncDebounceSeconds,
     )
     val errorText =
       memosState.errorMessage

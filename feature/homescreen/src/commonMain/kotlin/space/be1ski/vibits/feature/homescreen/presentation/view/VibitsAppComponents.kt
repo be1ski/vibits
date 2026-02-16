@@ -50,6 +50,7 @@ internal fun MemosHeader(
   dispatchSettings: (SettingsAction) -> Unit,
   language: AppLanguage,
   theme: AppTheme,
+  syncDebounceSeconds: Int,
 ) {
   Row(
     modifier = Modifier.fillMaxWidth(),
@@ -94,6 +95,7 @@ internal fun MemosHeader(
               appMode = appState.appMode,
               language = language,
               theme = theme,
+              syncDebounceSeconds = syncDebounceSeconds,
             ),
           )
         },

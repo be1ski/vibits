@@ -110,6 +110,7 @@
     <string name="label_selected">Таңдалған</string>
     <string name="label_storage">Сақтау орны</string>
     <string name="label_success_rate">Сәттілік деңгейі</string>
+    <string name="label_sync_debounce">Автосинхрондау кешігуі</string>
     <string name="label_time_day">Күн</string>
     <string name="label_time_evening">Кеш</string>
     <string name="label_time_morning">Таң</string>
@@ -256,6 +257,7 @@
     <string name="action_keep_local">Жергілікті сақтау</string>
     <string name="action_keep_server">Серверді сақтау</string>
     <string name="format_pending_sync">%1$d күтудегі өзгеріс</string>
+    <string name="format_sync_debounce_seconds">%1$d сек</string>
     <string name="msg_sync_conflict">Жергілікті өзгерістеріңіз сервермен қайшы келеді. Қай нұсқаны сақтау керектігін таңдаңыз.</string>
     <string name="msg_sync_failed">Синхрондау сәтсіз аяқталды: %1$s</string>
     <string name="msg_syncing">Синхрондалуда...</string>

@@ -1,4 +1,5 @@
 package space.be1ski.vibits.feature.settings.presentation
+
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.core.platform.locale.AppLanguage
@@ -15,6 +16,7 @@ import space.be1ski.vibits.feature.onboarding.domain.test.FakeOnboardingStore
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.feature.settings.domain.test.FakePreferencesRepository
 import space.be1ski.vibits.feature.settings.domain.usecase.SaveLanguageUseCase
+import space.be1ski.vibits.feature.settings.domain.usecase.SaveSyncDebounceUseCase
 import space.be1ski.vibits.feature.settings.domain.usecase.SaveThemeUseCase
 import space.be1ski.vibits.feature.settings.presentation.action.SettingsAction
 import space.be1ski.vibits.feature.settings.presentation.effect.SettingsCredentialsEffectHandler
@@ -25,6 +27,7 @@ import space.be1ski.vibits.feature.settings.presentation.effect.SettingsPreferen
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.seconds
 
 class SettingsEffectHandlerTest {
   @Test
@@ -63,7 +66,7 @@ class SettingsEffectHandlerTest {
     }
 
   @Test
-  fun `when SwitchMode then saves mode and emits ModeSwitched`() =
+  fun `when SwitchMode to different mode then saves and emits ModeSwitched`() =
     runTest {
       val appModeRepo = FakeAppModeRepository(initial = AppMode.ONLINE)
       val handler = createHandler(appModeRepository = appModeRepo)
@@ -72,6 +75,17 @@ class SettingsEffectHandlerTest {
 
       assertEquals(listOf(SettingsAction.Input.ModeSwitched), actions)
       assertEquals(AppMode.OFFLINE, appModeRepo.storedMode)
+    }
+
+  @Test
+  fun `when SwitchMode to same mode then does not emit ModeSwitched`() =
+    runTest {
+      val appModeRepo = FakeAppModeRepository(initial = AppMode.ONLINE)
+      val handler = createHandler(appModeRepository = appModeRepo)
+
+      val actions = handler(SettingsEffect.Command.SwitchMode(mode = AppMode.ONLINE)).toList()
+
+      assertTrue(actions.isEmpty())
     }
 
   @Test
@@ -136,6 +150,17 @@ class SettingsEffectHandlerTest {
       assertEquals(AppTheme.DARK, prefsRepo.stored.theme)
     }
 
+  @Test
+  fun `when SaveSyncDebounce then saves debounce to repository`() =
+    runTest {
+      val prefsRepo = FakePreferencesRepository()
+      val handler = createHandler(preferencesRepository = prefsRepo)
+
+      handler(SettingsEffect.Command.SaveSyncDebounce(seconds = 60)).toList()
+
+      assertEquals(60.seconds, prefsRepo.stored.memosAutoSyncDebounceDuration)
+    }
+
   private fun createHandler(
     connectionResult: Result<Unit> = Result.success(Unit),
     appModeRepository: FakeAppModeRepository = FakeAppModeRepository(),
@@ -166,6 +191,7 @@ class SettingsEffectHandlerTest {
         SettingsPreferencesEffectHandler(
           saveLanguage = SaveLanguageUseCase(preferencesRepository, LocaleProvider()),
           saveTheme = SaveThemeUseCase(preferencesRepository),
+          saveSyncDebounce = SaveSyncDebounceUseCase(preferencesRepository),
         ),
     )
   }

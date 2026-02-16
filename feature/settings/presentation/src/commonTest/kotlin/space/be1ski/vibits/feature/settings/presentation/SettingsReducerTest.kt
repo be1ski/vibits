@@ -23,6 +23,7 @@ class SettingsReducerTest {
           appMode = AppMode.ONLINE,
           language = AppLanguage.SYSTEM,
           theme = AppTheme.SYSTEM,
+          syncDebounceSeconds = 45,
         ),
       )
 
@@ -31,6 +32,7 @@ class SettingsReducerTest {
           editBaseUrl == "https://api.com" &&
           editToken == "secret" &&
           appMode == AppMode.ONLINE &&
+          selectedSyncDebounceSeconds == 45 &&
           !isValidating &&
           validationError == null &&
           !showResetConfirmation &&
@@ -124,6 +126,15 @@ class SettingsReducerTest {
     }
 
   @Test
+  fun `when SelectSyncDebounce then updates sync debounce seconds`() =
+    settingsReducer.test(SettingsState()) {
+      send(SettingsAction.Input.SelectSyncDebounce(60))
+
+      assertState { selectedSyncDebounceSeconds == 60 }
+      assertNoEffects()
+    }
+
+  @Test
   fun `when ValidationSucceeded then saves all settings and closes dialog`() =
     settingsReducer.test(
       SettingsState(
@@ -134,16 +145,18 @@ class SettingsReducerTest {
         editToken = "token123",
         selectedLanguage = AppLanguage.ENGLISH,
         selectedTheme = AppTheme.DARK,
+        selectedSyncDebounceSeconds = 45,
       ),
     ) {
       send(SettingsAction.Validation.ValidationSucceeded)
 
       assertState { !isValidating && !isOpen && !pendingSave && appMode == AppMode.ONLINE }
-      assertCommandCount(4)
+      assertCommandCount(5)
       assertHasCommand<SettingsEffect.Command.SaveCredentials>()
       assertHasCommand<SettingsEffect.Command.SwitchMode>()
       assertHasCommand<SettingsEffect.Command.SaveLanguage>()
       assertHasCommand<SettingsEffect.Command.SaveTheme>()
+      assertHasCommand<SettingsEffect.Command.SaveSyncDebounce> { it.seconds == 45 }
       assertHasNotification<SettingsEffect.Notification.LanguageChanged>()
       assertHasNotification<SettingsEffect.Notification.ThemeChanged>()
       assertHasNotification<SettingsEffect.Notification.CredentialsSaved>()
@@ -248,16 +261,18 @@ class SettingsReducerTest {
         appMode = AppMode.OFFLINE,
         selectedLanguage = AppLanguage.RUSSIAN,
         selectedTheme = AppTheme.LIGHT,
+        selectedSyncDebounceSeconds = 60,
       ),
     ) {
       send(SettingsAction.SaveAndLogs.Save)
 
       assertState { !isOpen }
-      assertCommandCount(4)
+      assertCommandCount(5)
       assertHasCommand<SettingsEffect.Command.SaveCredentials>()
       assertHasCommand<SettingsEffect.Command.SwitchMode>()
       assertHasCommand<SettingsEffect.Command.SaveLanguage>()
       assertHasCommand<SettingsEffect.Command.SaveTheme>()
+      assertHasCommand<SettingsEffect.Command.SaveSyncDebounce> { it.seconds == 60 }
     }
 
   @Test

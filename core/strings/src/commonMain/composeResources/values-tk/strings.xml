@@ -110,6 +110,7 @@
     <string name="label_selected">Saýlanan</string>
     <string name="label_storage">Ammar</string>
     <string name="label_success_rate">Üstünlik derejesi</string>
+    <string name="label_sync_debounce">Awtomatik sinhronlaşdyrma gijikdirmesi</string>
     <string name="label_theme">Tema</string>
     <string name="label_time_day">Gündiz</string>
     <string name="label_time_evening">Agşam</string>
@@ -256,6 +257,7 @@
     <string name="action_keep_local">Ýerli sakla</string>
     <string name="action_keep_server">Serveri sakla</string>
     <string name="format_pending_sync">%1$d garaşýan üýtgeşme</string>
+    <string name="format_sync_debounce_seconds">%1$d sek</string>
     <string name="msg_sync_conflict">Ýerli üýtgeşmeleriňiz server bilen gapma-garşy. Haýsy wersiýany saklamalydygyny saýlaň.</string>
     <string name="msg_sync_failed">Sinhronizasiýa şowsuz: %1$s</string>
     <string name="msg_syncing">Sinhronizasiýa edilýär...</string>

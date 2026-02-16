@@ -19,8 +19,11 @@ internal val syncReducer: Reducer<MemosAction.Sync, MemosState, MemosEffect, Not
 
     when (action) {
       is MemosAction.Sync.StartSync -> {
-        state { state.copy(isSyncing = true, errorMessage = null) }
         command(MemosEffect.PerformSync)
+      }
+
+      is MemosAction.Sync.SyncStarted -> {
+        state { state.copy(isSyncing = true, errorMessage = null) }
       }
 
       is MemosAction.Sync.SyncCompleted -> {

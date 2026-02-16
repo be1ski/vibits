@@ -29,6 +29,10 @@ internal val inputReducer: Reducer<SettingsAction.Input, SettingsState, Settings
         state { state.copy(selectedTheme = action.theme) }
       }
 
+      is SettingsAction.Input.SelectSyncDebounce -> {
+        state { state.copy(selectedSyncDebounceSeconds = action.seconds) }
+      }
+
       is SettingsAction.Input.ModeSwitched -> {
         notify(SettingsEffect.Notification.ModeChanged(state.appMode))
       }

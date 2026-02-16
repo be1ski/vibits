@@ -1,11 +1,15 @@
 package space.be1ski.vibits.feature.memos.presentation.effect
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import space.be1ski.vibits.core.elm.EffectHandler
 import space.be1ski.vibits.core.elm.actions
 import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.feature.settings.domain.usecase.LoadSyncDebounceDurationUseCase
 import space.be1ski.vibits.feature.sync.domain.SyncEngine
 import space.be1ski.vibits.feature.sync.domain.SyncLogTags
 import space.be1ski.vibits.feature.sync.domain.model.SyncResult
@@ -16,7 +20,11 @@ private const val TAG = SyncLogTags.MEMOS_SYNC_EFFECT
 class MemosSyncEffectHandler(
   private val syncEngine: SyncEngine,
   private val syncQueueRepository: SyncQueueRepository,
+  private val loadSyncDebounceDuration: LoadSyncDebounceDurationUseCase,
 ) : EffectHandler<MemosEffect.Sync, MemosAction> {
+  private val debounceMutex = Mutex()
+  private var latestPerformSyncRequestId = 0L
+
   override fun invoke(effect: MemosEffect.Sync): Flow<MemosAction> =
     when (effect) {
       is MemosEffect.PerformSync -> handlePerformSync()
@@ -28,7 +36,15 @@ class MemosSyncEffectHandler(
 
   private fun handlePerformSync(): Flow<MemosAction> =
     actions {
+      val requestId = registerPerformSyncRequest()
+      delay(loadSyncDebounceDuration())
+      if (!isLatestPerformSyncRequest(requestId)) {
+        Log.d(TAG, "Skipping stale sync request")
+        return@actions
+      }
+
       Log.d(TAG, "Performing sync")
+      emit(MemosAction.Sync.SyncStarted)
       when (val result = syncEngine.performSync()) {
         is SyncResult.Success -> {
           Log.i(TAG, "Sync completed: ${result.syncedMemos.size} memos")
@@ -102,5 +118,16 @@ class MemosSyncEffectHandler(
   private fun handleObserveSyncStatus(): Flow<MemosAction> =
     syncQueueRepository.observeSyncStatus().map { status ->
       MemosAction.Sync.SyncStatusUpdated(status)
+    }
+
+  private suspend fun registerPerformSyncRequest(): Long =
+    debounceMutex.withLock {
+      latestPerformSyncRequestId += 1
+      latestPerformSyncRequestId
+    }
+
+  private suspend fun isLatestPerformSyncRequest(requestId: Long): Boolean =
+    debounceMutex.withLock {
+      requestId == latestPerformSyncRequestId
     }
 }
