@@ -17,6 +17,7 @@ fun createSettingsFeature(
   dependencies: SettingsDependencies,
   initialMode: AppMode,
   appDetails: AppDetails,
+  initialSyncDebounceSeconds: Int,
   initialState: SettingsState = SettingsState(),
 ): Feature<SettingsAction, SettingsState, SettingsEffect.Command, SettingsEffect.Notification> =
   FeatureImpl(
@@ -24,6 +25,7 @@ fun createSettingsFeature(
       initialState.copy(
         appMode = initialMode,
         appDetails = appDetails,
+        selectedSyncDebounceSeconds = initialSyncDebounceSeconds,
       ),
     reducer = settingsReducer,
     effectHandler =
@@ -43,6 +45,7 @@ fun createSettingsFeature(
           SettingsPreferencesEffectHandler(
             saveLanguage = dependencies.saveLanguage,
             saveTheme = dependencies.saveTheme,
+            saveSyncDebounce = dependencies.saveSyncDebounce,
           ),
       ),
   )

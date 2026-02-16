@@ -8,6 +8,7 @@ import space.be1ski.vibits.feature.mode.domain.usecase.ResetAppUseCase
 import space.be1ski.vibits.feature.mode.domain.usecase.ResetAppWithMemosUseCase
 import space.be1ski.vibits.feature.mode.domain.usecase.SwitchAppModeUseCase
 import space.be1ski.vibits.feature.settings.domain.usecase.SaveLanguageUseCase
+import space.be1ski.vibits.feature.settings.domain.usecase.SaveSyncDebounceUseCase
 import space.be1ski.vibits.feature.settings.domain.usecase.SaveThemeUseCase
 
 @Inject
@@ -20,5 +21,6 @@ class SettingsDependencies(
   val resetAppWithMemos: ResetAppWithMemosUseCase,
   val saveLanguage: SaveLanguageUseCase,
   val saveTheme: SaveThemeUseCase,
+  val saveSyncDebounce: SaveSyncDebounceUseCase,
   val exportService: ExportService,
 )

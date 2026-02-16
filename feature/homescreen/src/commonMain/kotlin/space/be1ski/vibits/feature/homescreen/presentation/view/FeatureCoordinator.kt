@@ -33,7 +33,18 @@ internal fun FeatureCoordinator(
   // Cross-feature coordination via Settings notifications
   LaunchedEffect(features.settings) {
     features.settings.notifications.collect { notification ->
-      handleNotification(notification, dispatchApp, dispatchMemos, dispatchHabits, onResetApp, onThemeChanged, onLanguageChanged)
+      val currentMemosState = features.memos.state.value
+      handleNotification(
+        notification,
+        currentMemosState.baseUrl,
+        currentMemosState.token,
+        dispatchApp,
+        dispatchMemos,
+        dispatchHabits,
+        onResetApp,
+        onThemeChanged,
+        onLanguageChanged,
+      )
     }
   }
 
@@ -48,6 +59,7 @@ internal fun FeatureCoordinator(
           appMode = appState.appMode,
           language = currentLanguage,
           theme = currentTheme,
+          syncDebounceSeconds = settingsState.selectedSyncDebounceSeconds,
         ),
       )
     }
@@ -71,6 +83,8 @@ internal fun FeatureCoordinator(
 @Suppress("LongParameterList")
 private fun handleNotification(
   effect: SettingsEffect.Notification,
+  currentMemosBaseUrl: String,
+  currentMemosToken: String,
   dispatchApp: (AppAction) -> Unit,
   dispatchMemos: (MemosAction) -> Unit,
   dispatchHabits: (HabitsAction) -> Unit,
@@ -87,9 +101,12 @@ private fun handleNotification(
     }
     is SettingsEffect.Notification.ResetCompleted -> onResetApp()
     is SettingsEffect.Notification.CredentialsSaved -> {
+      val credentialsChanged = effect.baseUrl != currentMemosBaseUrl || effect.token != currentMemosToken
       dispatchMemos(MemosAction.Credentials.UpdateBaseUrl(effect.baseUrl))
       dispatchMemos(MemosAction.Credentials.UpdateToken(effect.token))
-      dispatchMemos(MemosAction.Loading.LoadMemos)
+      if (credentialsChanged) {
+        dispatchMemos(MemosAction.Loading.LoadMemos)
+      }
     }
     is SettingsEffect.Notification.ThemeChanged -> onThemeChanged(effect.theme)
     is SettingsEffect.Notification.LanguageChanged -> onLanguageChanged(effect.language)

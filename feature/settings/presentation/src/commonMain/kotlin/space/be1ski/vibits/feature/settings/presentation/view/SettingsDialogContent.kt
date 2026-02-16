@@ -27,6 +27,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -66,12 +67,14 @@ import space.be1ski.vibits.core.strings.generated.action_reset_settings_only
 import space.be1ski.vibits.core.strings.generated.action_reset_with_memos
 import space.be1ski.vibits.core.strings.generated.action_save
 import space.be1ski.vibits.core.strings.generated.action_view_logs
+import space.be1ski.vibits.core.strings.generated.format_sync_debounce_seconds
 import space.be1ski.vibits.core.strings.generated.label_app_mode
 import space.be1ski.vibits.core.strings.generated.label_credentials
 import space.be1ski.vibits.core.strings.generated.label_environment
 import space.be1ski.vibits.core.strings.generated.label_language
 import space.be1ski.vibits.core.strings.generated.label_memos_db
 import space.be1ski.vibits.core.strings.generated.label_storage
+import space.be1ski.vibits.core.strings.generated.label_sync_debounce
 import space.be1ski.vibits.core.strings.generated.label_theme
 import space.be1ski.vibits.core.strings.generated.label_version
 import space.be1ski.vibits.core.strings.generated.language_arabic
@@ -119,6 +122,8 @@ import space.be1ski.vibits.core.utils.logging.LogEntry
 import space.be1ski.vibits.feature.memos.domain.model.ExportResult
 import space.be1ski.vibits.feature.memos.domain.repository.ExportService
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
+import space.be1ski.vibits.feature.settings.domain.model.MAX_SYNC_DEBOUNCE_SECONDS
+import space.be1ski.vibits.feature.settings.domain.model.MIN_SYNC_DEBOUNCE_SECONDS
 import space.be1ski.vibits.feature.settings.presentation.action.SettingsAction
 import space.be1ski.vibits.feature.settings.presentation.state.SettingsState
 
@@ -210,6 +215,10 @@ private fun SettingsDialogBody(
         onBaseUrlChange = { dispatch(SettingsAction.Input.UpdateBaseUrl(it)) },
         onTokenChange = { dispatch(SettingsAction.Input.UpdateToken(it)) },
       )
+      SyncDebounceSlider(
+        seconds = state.selectedSyncDebounceSeconds,
+        onSecondsChange = { dispatch(SettingsAction.Input.SelectSyncDebounce(it)) },
+      )
     }
     ActionsRow(
       showMemos = state.appMode == AppMode.OFFLINE,
@@ -261,6 +270,32 @@ private fun AppModeSelector(
         Text(stringResource(Res.string.mode_demo_title))
       }
     }
+  }
+}
+
+@Composable
+private fun SyncDebounceSlider(
+  seconds: Int,
+  onSecondsChange: (Int) -> Unit,
+) {
+  Column(verticalArrangement = Arrangement.spacedBy(Indent.x3s)) {
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+      Text(stringResource(Res.string.label_sync_debounce))
+      Text(
+        stringResource(Res.string.format_sync_debounce_seconds, seconds),
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+      )
+    }
+    Slider(
+      value = seconds.toFloat(),
+      onValueChange = { onSecondsChange(it.toInt()) },
+      valueRange = MIN_SYNC_DEBOUNCE_SECONDS.toFloat()..MAX_SYNC_DEBOUNCE_SECONDS.toFloat(),
+      modifier = Modifier.fillMaxWidth(),
+    )
   }
 }
 

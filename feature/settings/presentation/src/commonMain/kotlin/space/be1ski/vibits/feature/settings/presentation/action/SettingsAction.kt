@@ -17,6 +17,7 @@ sealed interface SettingsAction : Action {
       val appMode: AppMode,
       val language: AppLanguage,
       val theme: AppTheme,
+      val syncDebounceSeconds: Int,
     ) : Dialog
 
     data object Close : Dialog
@@ -46,6 +47,10 @@ sealed interface SettingsAction : Action {
 
     data class SelectTheme(
       val theme: AppTheme,
+    ) : Input
+
+    data class SelectSyncDebounce(
+      val seconds: Int,
     ) : Input
 
     data object ModeSwitched : Input

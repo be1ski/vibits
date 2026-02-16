@@ -5,6 +5,7 @@ import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.core.ui.form.CredentialValidationError
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
+import space.be1ski.vibits.feature.settings.domain.model.DEFAULT_SYNC_DEBOUNCE_SECONDS
 
 data class SettingsState(
   val isOpen: Boolean = false,
@@ -14,6 +15,7 @@ data class SettingsState(
   val selectedLanguage: AppLanguage = AppLanguage.SYSTEM,
   val languageChanged: Boolean = false,
   val selectedTheme: AppTheme = AppTheme.SYSTEM,
+  val selectedSyncDebounceSeconds: Int = DEFAULT_SYNC_DEBOUNCE_SECONDS,
   val isValidating: Boolean = false,
   val validationError: CredentialValidationError? = null,
   val showResetConfirmation: Boolean = false,
