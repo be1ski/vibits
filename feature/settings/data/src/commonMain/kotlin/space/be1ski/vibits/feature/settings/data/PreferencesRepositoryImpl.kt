@@ -6,9 +6,12 @@ import space.be1ski.vibits.core.platform.di.AppScope
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
+import space.be1ski.vibits.feature.settings.domain.model.DEFAULT_MEMOS_AUTO_SYNC_DEBOUNCE_DURATION
 import space.be1ski.vibits.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.feature.settings.domain.model.UserPreferences
 import space.be1ski.vibits.feature.settings.domain.repository.PreferencesRepository
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 private const val TAG = "Preferences"
 
@@ -23,23 +26,30 @@ class PreferencesRepositoryImpl(
     val postsTab = parseTimeRangeTab(local.postsTimeRangeTab)
     val language = parseLanguage(local.language)
     val theme = parseTheme(local.theme)
-    Log.d(TAG, "Loaded: theme=$theme, lang=$language")
+    val memosAutoSyncDebounceDuration = parseMemosAutoSyncDebounceDuration(local.memosAutoSyncDebounceSeconds)
+    Log.d(TAG, "Loaded: theme=$theme, lang=$language, syncDebounce=${memosAutoSyncDebounceDuration.inWholeSeconds}s")
     return UserPreferences(
       habitsTimeRangeTab = habitsTab,
       postsTimeRangeTab = postsTab,
       language = language,
       theme = theme,
+      memosAutoSyncDebounceDuration = memosAutoSyncDebounceDuration,
     )
   }
 
   override fun save(preferences: UserPreferences) {
-    Log.i(TAG, "Saving: theme=${preferences.theme}, lang=${preferences.language}")
+    Log.i(
+      TAG,
+      "Saving: theme=${preferences.theme}, lang=${preferences.language}, " +
+        "syncDebounce=${preferences.memosAutoSyncDebounceDuration.inWholeSeconds}s",
+    )
     val local =
       LocalUserPreferences(
         habitsTimeRangeTab = preferences.habitsTimeRangeTab.name,
         postsTimeRangeTab = preferences.postsTimeRangeTab.name,
         language = preferences.language.name,
         theme = preferences.theme.name,
+        memosAutoSyncDebounceSeconds = preferences.memosAutoSyncDebounceDuration.inWholeSeconds,
       )
     preferencesStore.save(local)
   }
@@ -49,4 +59,7 @@ class PreferencesRepositoryImpl(
   private fun parseLanguage(value: String): AppLanguage = runCatching { AppLanguage.valueOf(value) }.getOrDefault(AppLanguage.SYSTEM)
 
   private fun parseTheme(value: String): AppTheme = runCatching { AppTheme.valueOf(value) }.getOrDefault(AppTheme.SYSTEM)
+
+  private fun parseMemosAutoSyncDebounceDuration(value: Long): Duration =
+    if (value > 0) value.seconds else DEFAULT_MEMOS_AUTO_SYNC_DEBOUNCE_DURATION
 }

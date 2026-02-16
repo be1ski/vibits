@@ -6,6 +6,7 @@ import space.be1ski.vibits.feature.settings.domain.model.TimeRangeTab
 import space.be1ski.vibits.feature.settings.domain.model.UserPreferences
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.Duration.Companion.seconds
 
 class PreferencesRepositoryImplTest {
   @Test
@@ -17,6 +18,7 @@ class PreferencesRepositoryImplTest {
           postsTimeRangeTab = "QUARTERS",
           language = "ENGLISH",
           theme = "DARK",
+          memosAutoSyncDebounceSeconds = 45,
         ),
       )
     val repository = PreferencesRepositoryImpl(store)
@@ -27,6 +29,7 @@ class PreferencesRepositoryImplTest {
     assertEquals(TimeRangeTab.QUARTERS, result.postsTimeRangeTab)
     assertEquals(AppLanguage.ENGLISH, result.language)
     assertEquals(AppTheme.DARK, result.theme)
+    assertEquals(45.seconds, result.memosAutoSyncDebounceDuration)
   }
 
   @Test
@@ -110,6 +113,7 @@ class PreferencesRepositoryImplTest {
           postsTimeRangeTab = "Y",
           language = "Z",
           theme = "W",
+          memosAutoSyncDebounceSeconds = -1,
         ),
       )
     val repository = PreferencesRepositoryImpl(store)
@@ -120,6 +124,7 @@ class PreferencesRepositoryImplTest {
     assertEquals(TimeRangeTab.WEEKS, result.postsTimeRangeTab)
     assertEquals(AppLanguage.SYSTEM, result.language)
     assertEquals(AppTheme.SYSTEM, result.theme)
+    assertEquals(5.seconds, result.memosAutoSyncDebounceDuration)
   }
 
   @Test
@@ -132,6 +137,7 @@ class PreferencesRepositoryImplTest {
         postsTimeRangeTab = TimeRangeTab.MONTHS,
         language = AppLanguage.RUSSIAN,
         theme = AppTheme.LIGHT,
+        memosAutoSyncDebounceDuration = 90.seconds,
       )
 
     repository.save(preferences)
@@ -140,6 +146,7 @@ class PreferencesRepositoryImplTest {
     assertEquals("MONTHS", store.saved?.postsTimeRangeTab)
     assertEquals("RUSSIAN", store.saved?.language)
     assertEquals("LIGHT", store.saved?.theme)
+    assertEquals(90, store.saved?.memosAutoSyncDebounceSeconds)
   }
 }
 

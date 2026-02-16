@@ -35,6 +35,7 @@ internal val saveAndLogsReducer: Reducer<SettingsAction.SaveAndLogs, SettingsSta
           command(SettingsEffect.Command.SwitchMode(state.appMode))
           command(SettingsEffect.Command.SaveLanguage(state.selectedLanguage))
           command(SettingsEffect.Command.SaveTheme(state.selectedTheme))
+          command(SettingsEffect.Command.SaveSyncDebounce(state.selectedSyncDebounceSeconds))
           notify(SettingsEffect.Notification.LanguageChanged(state.selectedLanguage))
           notify(SettingsEffect.Notification.ThemeChanged(state.selectedTheme))
           notify(SettingsEffect.Notification.CredentialsSaved(state.editBaseUrl, state.editToken))

@@ -110,6 +110,7 @@
     <string name="label_selected">Seleccionado</string>
     <string name="label_storage">Almacenamiento</string>
     <string name="label_success_rate">Tasa de éxito</string>
+    <string name="label_sync_debounce">Retardo de sincronización</string>
     <string name="label_theme">Tema</string>
     <string name="label_time_day">Día</string>
     <string name="label_time_evening">Tarde</string>
@@ -256,6 +257,7 @@
     <string name="action_keep_local">Mantener local</string>
     <string name="action_keep_server">Mantener servidor</string>
     <string name="format_pending_sync">%1$d cambios pendientes</string>
+    <string name="format_sync_debounce_seconds">%1$d seg</string>
     <string name="msg_sync_conflict">Sus cambios locales están en conflicto con el servidor. Elija qué versión mantener.</string>
     <string name="msg_sync_failed">Error de sincronización: %1$s</string>
     <string name="msg_syncing">Sincronizando...</string>

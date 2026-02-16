@@ -1,9 +1,18 @@
 package space.be1ski.vibits.feature.memos.presentation.effect
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.presentation.action.MemosAction
+import space.be1ski.vibits.feature.settings.domain.model.DEFAULT_MEMOS_AUTO_SYNC_DEBOUNCE_DURATION
+import space.be1ski.vibits.feature.settings.domain.model.TimeRangeTab
+import space.be1ski.vibits.feature.settings.domain.model.UserPreferences
+import space.be1ski.vibits.feature.settings.domain.test.FakePreferencesRepository
+import space.be1ski.vibits.feature.settings.domain.usecase.LoadSyncDebounceDurationUseCase
 import space.be1ski.vibits.feature.sync.domain.model.ConflictType
 import space.be1ski.vibits.feature.sync.domain.model.SyncConflict
 import space.be1ski.vibits.feature.sync.domain.model.SyncOperation
@@ -16,11 +25,17 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.seconds
 
 class MemosSyncEffectHandlerTest {
   private val fakeSyncEngine = FakeSyncEngine()
   private val fakeSyncQueue = FakeSyncQueueRepository()
-  private val handler = MemosSyncEffectHandler(fakeSyncEngine, fakeSyncQueue)
+  private val handler =
+    MemosSyncEffectHandler(
+      syncEngine = fakeSyncEngine,
+      syncQueueRepository = fakeSyncQueue,
+      loadSyncDebounceDuration = LoadSyncDebounceDurationUseCase(FakePreferencesRepository()),
+    )
 
   private val testMemo =
     Memo(
@@ -31,19 +46,20 @@ class MemosSyncEffectHandlerTest {
     )
 
   @Test
-  fun `when PerformSync succeeds then emits SyncCompleted`() =
+  fun `when PerformSync succeeds then emits SyncStarted and SyncCompleted`() =
     runTest {
       fakeSyncEngine.performSyncResult = SyncResult.Success(listOf(testMemo))
 
       val actions = handler(MemosEffect.PerformSync).toList()
 
-      assertEquals(1, actions.size)
-      val action = actions[0] as MemosAction.Sync.SyncCompleted
+      assertEquals(2, actions.size)
+      assertTrue(actions[0] is MemosAction.Sync.SyncStarted)
+      val action = actions[1] as MemosAction.Sync.SyncCompleted
       assertEquals(1, action.memos.size)
     }
 
   @Test
-  fun `when PerformSync has conflicts then emits SyncConflictDetected`() =
+  fun `when PerformSync has conflicts then emits SyncStarted and SyncConflictDetected`() =
     runTest {
       val conflict =
         SyncConflict(
@@ -63,32 +79,35 @@ class MemosSyncEffectHandlerTest {
 
       val actions = handler(MemosEffect.PerformSync).toList()
 
-      assertEquals(1, actions.size)
-      val action = actions[0] as MemosAction.Sync.SyncConflictDetected
+      assertEquals(2, actions.size)
+      assertTrue(actions[0] is MemosAction.Sync.SyncStarted)
+      val action = actions[1] as MemosAction.Sync.SyncConflictDetected
       assertEquals(1, action.conflicts.size)
     }
 
   @Test
-  fun `when PerformSync fails then emits SyncFailed`() =
+  fun `when PerformSync fails then emits SyncStarted and SyncFailed`() =
     runTest {
       fakeSyncEngine.performSyncResult = SyncResult.Error("Network error")
 
       val actions = handler(MemosEffect.PerformSync).toList()
 
-      assertEquals(1, actions.size)
-      val action = actions[0] as MemosAction.Sync.SyncFailed
+      assertEquals(2, actions.size)
+      assertTrue(actions[0] is MemosAction.Sync.SyncStarted)
+      val action = actions[1] as MemosAction.Sync.SyncFailed
       assertEquals("Network error", action.error)
     }
 
   @Test
-  fun `when PerformSync has no credentials then emits SyncFailed`() =
+  fun `when PerformSync has no credentials then emits SyncStarted and SyncFailed`() =
     runTest {
       fakeSyncEngine.performSyncResult = SyncResult.NoCredentials
 
       val actions = handler(MemosEffect.PerformSync).toList()
 
-      assertEquals(1, actions.size)
-      assertTrue(actions[0] is MemosAction.Sync.SyncFailed)
+      assertEquals(2, actions.size)
+      assertTrue(actions[0] is MemosAction.Sync.SyncStarted)
+      assertTrue(actions[1] is MemosAction.Sync.SyncFailed)
     }
 
   @Test
@@ -204,5 +223,36 @@ class MemosSyncEffectHandlerTest {
       assertEquals(1, actions.size)
       val action = actions[0] as MemosAction.Sync.SyncStatusUpdated
       assertEquals(3, action.status.pendingCount)
+    }
+
+  @Test
+  @OptIn(ExperimentalCoroutinesApi::class)
+  fun `when PerformSync requested repeatedly within debounce window then only latest request performs sync`() =
+    runTest {
+      val debouncePrefs =
+        FakePreferencesRepository(
+          UserPreferences(TimeRangeTab.WEEKS, TimeRangeTab.WEEKS, memosAutoSyncDebounceDuration = 30.seconds),
+        )
+      val debounceHandler =
+        MemosSyncEffectHandler(
+          syncEngine = fakeSyncEngine,
+          syncQueueRepository = fakeSyncQueue,
+          loadSyncDebounceDuration = LoadSyncDebounceDurationUseCase(debouncePrefs),
+        )
+      fakeSyncEngine.performSyncResult = SyncResult.Success(listOf(testMemo))
+
+      val firstRequest = async { debounceHandler(MemosEffect.PerformSync).toList() }
+      advanceTimeBy(10_000)
+      val secondRequest = async { debounceHandler(MemosEffect.PerformSync).toList() }
+      advanceUntilIdle()
+
+      val firstActions = firstRequest.await()
+      val secondActions = secondRequest.await()
+
+      assertTrue(firstActions.isEmpty())
+      assertEquals(2, secondActions.size)
+      assertTrue(secondActions[0] is MemosAction.Sync.SyncStarted)
+      assertTrue(secondActions[1] is MemosAction.Sync.SyncCompleted)
+      assertEquals(1, fakeSyncEngine.performSyncCallCount)
     }
 }

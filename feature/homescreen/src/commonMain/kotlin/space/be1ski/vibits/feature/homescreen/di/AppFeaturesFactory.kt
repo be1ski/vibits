@@ -1,4 +1,5 @@
 package space.be1ski.vibits.feature.homescreen.di
+
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import space.be1ski.vibits.core.platform.date.currentLocalDate
@@ -46,7 +47,11 @@ class AppFeaturesFactory(
       )
 
     val skipCredentials = initialMode == AppMode.OFFLINE || initialMode == AppMode.DEMO
-    val memosFeature = createMemosFeature(memosDependencies, isOfflineMode = skipCredentials)
+    val memosFeature =
+      createMemosFeature(
+        dependencies = memosDependencies,
+        isOfflineMode = skipCredentials,
+      )
 
     val habitsFeature =
       createHabitsFeature(
@@ -62,6 +67,7 @@ class AppFeaturesFactory(
         dependencies = settingsDependencies,
         initialMode = initialMode,
         appDetails = appDetails,
+        initialSyncDebounceSeconds = initialPrefs.memosAutoSyncDebounceDuration.inWholeSeconds.toInt(),
       )
 
     appFeature.launchIn(scope)

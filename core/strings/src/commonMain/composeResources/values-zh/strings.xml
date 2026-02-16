@@ -110,6 +110,7 @@
     <string name="label_selected">已选择</string>
     <string name="label_storage">存储</string>
     <string name="label_success_rate">成功率</string>
+    <string name="label_sync_debounce">自动同步延迟</string>
     <string name="label_theme">主题</string>
     <string name="label_time_day">白天</string>
     <string name="label_time_evening">傍晚</string>
@@ -256,6 +257,7 @@
     <string name="action_keep_local">保留本地</string>
     <string name="action_keep_server">保留服务器</string>
     <string name="format_pending_sync">%1$d 个待同步更改</string>
+    <string name="format_sync_debounce_seconds">%1$d 秒</string>
     <string name="msg_sync_conflict">您的本地更改与服务器冲突。请选择保留哪个版本。</string>
     <string name="msg_sync_failed">同步失败：%1$s</string>
     <string name="msg_syncing">同步中...</string>

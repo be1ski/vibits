@@ -110,6 +110,7 @@
     <string name="label_selected">Выбрана</string>
     <string name="label_storage">Сховішча</string>
     <string name="label_success_rate">Паспяховасць</string>
+    <string name="label_sync_debounce">Затрымка аўтасінхранізацыі</string>
     <string name="label_time_day">Дзень</string>
     <string name="label_time_evening">Вечар</string>
     <string name="label_time_morning">Раніца</string>
@@ -256,6 +257,7 @@
     <string name="action_keep_local">Пакінуць лакальныя</string>
     <string name="action_keep_server">Пакінуць серверныя</string>
     <string name="format_pending_sync">%1$d змяненняў чакае сінхранізацыі</string>
+    <string name="format_sync_debounce_seconds">%1$d сек</string>
     <string name="msg_sync_conflict">Вашы лакальныя змены канфліктуюць з серверам. Выберыце, якую версію захаваць.</string>
     <string name="msg_sync_failed">Памылка сінхранізацыі: %1$s</string>
     <string name="msg_syncing">Сінхранізацыя...</string>

@@ -20,6 +20,8 @@ import space.be1ski.vibits.feature.memos.presentation.effect.MemosEffectHandler
 import space.be1ski.vibits.feature.memos.presentation.effect.MemosLoadEffectHandler
 import space.be1ski.vibits.feature.memos.presentation.effect.MemosSyncEffectHandler
 import space.be1ski.vibits.feature.memos.presentation.effect.MemosWriteEffectHandler
+import space.be1ski.vibits.feature.settings.domain.test.FakePreferencesRepository
+import space.be1ski.vibits.feature.settings.domain.usecase.LoadSyncDebounceDurationUseCase
 import space.be1ski.vibits.feature.sync.domain.test.FakeSyncEngine
 import space.be1ski.vibits.feature.sync.domain.test.FakeSyncQueueRepository
 import kotlin.test.Test
@@ -222,6 +224,7 @@ class MemosEffectHandlerTest {
         MemosSyncEffectHandler(
           syncEngine = FakeSyncEngine(),
           syncQueueRepository = FakeSyncQueueRepository(),
+          loadSyncDebounceDuration = LoadSyncDebounceDurationUseCase(FakePreferencesRepository()),
         ),
     )
   }

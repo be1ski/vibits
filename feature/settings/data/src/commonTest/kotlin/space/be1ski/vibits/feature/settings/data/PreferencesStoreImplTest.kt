@@ -14,6 +14,7 @@ class PreferencesStoreImplTest {
           "ui_posts_time_range_tab" to "QUARTERS",
           "ui_language" to "ENGLISH",
           "ui_theme" to "DARK",
+          "ui_memos_auto_sync_debounce_seconds" to "45",
           "prefs_migrated_v1" to "1",
         ),
       )
@@ -25,6 +26,7 @@ class PreferencesStoreImplTest {
     assertEquals("QUARTERS", result.postsTimeRangeTab)
     assertEquals("ENGLISH", result.language)
     assertEquals("DARK", result.theme)
+    assertEquals(45, result.memosAutoSyncDebounceSeconds)
   }
 
   @Test
@@ -38,6 +40,23 @@ class PreferencesStoreImplTest {
     assertEquals("WEEKS", result.postsTimeRangeTab)
     assertEquals("SYSTEM", result.language)
     assertEquals("SYSTEM", result.theme)
+    assertEquals(5, result.memosAutoSyncDebounceSeconds)
+  }
+
+  @Test
+  fun `when load with invalid debounce value then returns default`() {
+    val store =
+      FakeKeyValueStore(
+        mapOf(
+          "ui_memos_auto_sync_debounce_seconds" to "not_a_number",
+          "prefs_migrated_v1" to "1",
+        ),
+      )
+    val preferencesStore = PreferencesStoreImpl(store)
+
+    val result = preferencesStore.load()
+
+    assertEquals(5, result.memosAutoSyncDebounceSeconds)
   }
 
   @Test
@@ -50,6 +69,7 @@ class PreferencesStoreImplTest {
         postsTimeRangeTab = "MONTHS",
         language = "RUSSIAN",
         theme = "LIGHT",
+        memosAutoSyncDebounceSeconds = 60,
       )
 
     preferencesStore.save(preferences)
@@ -58,6 +78,7 @@ class PreferencesStoreImplTest {
     assertEquals("MONTHS", store.data["ui_posts_time_range_tab"])
     assertEquals("RUSSIAN", store.data["ui_language"])
     assertEquals("LIGHT", store.data["ui_theme"])
+    assertEquals("60", store.data["ui_memos_auto_sync_debounce_seconds"])
   }
 }
 

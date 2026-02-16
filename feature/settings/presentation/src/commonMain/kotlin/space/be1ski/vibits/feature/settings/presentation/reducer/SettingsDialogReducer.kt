@@ -19,6 +19,7 @@ internal val dialogReducer: Reducer<SettingsAction.Dialog, SettingsState, Settin
             selectedLanguage = action.language,
             languageChanged = false,
             selectedTheme = action.theme,
+            selectedSyncDebounceSeconds = action.syncDebounceSeconds,
             isValidating = false,
             validationError = null,
             showResetConfirmation = false,

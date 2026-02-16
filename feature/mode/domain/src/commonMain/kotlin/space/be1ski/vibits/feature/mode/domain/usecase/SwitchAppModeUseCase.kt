@@ -8,10 +8,12 @@ import space.be1ski.vibits.feature.mode.domain.repository.AppModeRepository
 class SwitchAppModeUseCase(
   private val appModeRepository: AppModeRepository,
 ) {
-  operator fun invoke(mode: AppMode) {
+  operator fun invoke(mode: AppMode): Boolean {
     val currentMode = appModeRepository.loadMode()
     if (currentMode != mode) {
       appModeRepository.saveMode(mode)
+      return true
     }
+    return false
   }
 }

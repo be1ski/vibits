@@ -26,8 +26,10 @@ class SettingsModeEffectHandler(
   private fun handleSwitchMode(command: SettingsEffect.Command.SwitchMode): Flow<SettingsAction> =
     actions {
       Log.i(TAG, "Switching mode to ${command.mode}")
-      switchAppMode(command.mode)
-      emit(SettingsAction.Input.ModeSwitched)
+      val changed = switchAppMode(command.mode)
+      if (changed) {
+        emit(SettingsAction.Input.ModeSwitched)
+      }
     }
 
   private fun handleResetApp(): Flow<SettingsAction> =

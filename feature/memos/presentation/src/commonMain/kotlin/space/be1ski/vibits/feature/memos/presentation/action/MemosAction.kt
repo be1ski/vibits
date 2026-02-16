@@ -110,6 +110,8 @@ sealed interface MemosAction : Action {
   sealed interface Sync : MemosAction {
     data object StartSync : Sync
 
+    data object SyncStarted : Sync
+
     data class SyncCompleted(
       val memos: List<Memo>,
     ) : Sync

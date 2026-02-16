@@ -44,12 +44,21 @@ class MemosSyncReducerTest {
   // ========== Sync Actions in Online Mode ==========
 
   @Test
-  fun `when StartSync in online mode then starts syncing and emits PerformSync`() =
+  fun `when StartSync in online mode then emits PerformSync without setting isSyncing`() =
     memosReducer.test(MemosState(isOfflineMode = false)) {
       send(MemosAction.Sync.StartSync)
 
-      assertState { isSyncing && errorMessage == null }
+      assertState { !isSyncing }
       assertCommands(MemosEffect.PerformSync)
+    }
+
+  @Test
+  fun `when SyncStarted then sets isSyncing to true`() =
+    memosReducer.test(MemosState(isOfflineMode = false)) {
+      send(MemosAction.Sync.SyncStarted)
+
+      assertState { isSyncing && errorMessage == null }
+      assertNoEffects()
     }
 
   @Test
