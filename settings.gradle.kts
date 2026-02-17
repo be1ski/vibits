@@ -30,10 +30,10 @@ rootProject.name = "Vibits"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(
-  ":androidApp",
-  ":desktopApp",
-  ":iosApp:framework",
-  ":webApp",
+  ":app:android",
+  ":app:desktop",
+  ":app:ios:framework",
+  ":app:web",
 
   ":feature:homescreen",
 

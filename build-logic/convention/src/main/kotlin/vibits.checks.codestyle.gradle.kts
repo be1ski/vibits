@@ -33,7 +33,7 @@ subprojects {
     extensions.configure<DetektExtension> {
       buildUponDefaultConfig = true
       allRules = true
-      config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
+      config.setFrom(files("$rootDir/build-logic/config/detekt.yml"))
     }
     tasks.withType<Detekt>().configureEach {
       setSource(

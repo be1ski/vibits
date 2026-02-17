@@ -22,10 +22,11 @@ feature/
   onboarding/    — Onboarding flow (domain, domain/testing, data, presentation)
   settings/      — Settings (domain, domain/testing, data, presentation)
   sync/          — Sync engine (domain, domain/testing, data)
-androidApp/      — Android entry point
-desktopApp/      — Desktop entry point
-iosApp/          — iOS wrapper
-webApp/          — Web entry (WASM)
+app/
+  android/       — Android entry point
+  desktop/       — Desktop entry point
+  ios/           — iOS wrapper
+  web/           — Web entry (WASM)
 build-logic/     — Convention plugins (vibits.kmp.*, vibits.checks.*)
 ```
 
@@ -40,7 +41,7 @@ Kotlin sources live under `src/<sourceSet>/kotlin/...`. Platform resources (if a
   - **`presentation`** → `core/*`, own `domain`, other features' `domain`. Never `data` or other features' `presentation`.
   - **`homescreen`** is exempt (DI wiring/coordinator that depends on all layers).
   - **`testing`** modules are exempt (cross-module test fakes).
-- **App modules** (`androidApp`, `desktopApp`, etc.) can depend on anything.
+- **App modules** (`app/android`, `app/desktop`, etc.) can depend on anything.
 
 ## Package Organization Rules
 
@@ -305,8 +306,8 @@ We use [Metro](https://zacsweers.github.io/metro/) for compile-time DI.
 - `./gradlew checkJvm` — run JVM-only checks (Linux-safe).
 - `./gradlew checkIos` — run iOS checks (requires macOS).
 - `./gradlew installGitHooks` — install pre-commit hook that runs `checkAll`.
-- `./gradlew :desktopApp:run` — run the desktop app locally.
-- `./gradlew :androidApp:installDebug` — build and install the Android app on a device/emulator.
+- `./gradlew :app:desktop:run` — run the desktop app locally.
+- `./gradlew :app:android:installDebug` — build and install the Android app on a device/emulator.
 
 ## Coding Style & Naming Conventions
 
@@ -401,7 +402,7 @@ We follow TDD for business logic and aim for high coverage.
 - Desktop-specific tests in `src/desktopTest/kotlin/...`.
 - Test utilities in `core/elm/test` (package `*.test.*`, excluded from coverage).
 - Cross-module test fakes in `<module>/testing/` submodules (e.g., `feature/auth/domain/testing`). Add as `commonTest` dependency: `implementation(projects.feature.auth.domain.testing)`.
-- Android-specific tests belong under `androidApp/src/test` or `androidApp/src/androidTest`.
+- Android-specific tests belong under `app/android/src/test` or `app/android/src/androidTest`.
 - Test names use backticks with `when ... then ...` phrasing.
 - **Hardcode strings in tests.** Use literal string values instead of constants like `PostTags.HABITS_CONFIG`. Tests should verify real behavior with real data, not automatically adjust when constants change.
 
