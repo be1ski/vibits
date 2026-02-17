@@ -25,20 +25,17 @@ Habit tracker powered by [Memos](https://github.com/usememos/memos)
 - `./gradlew checkIos` — iOS checks
 - `./gradlew koverXmlReport` — coverage report
 - `./gradlew screenshotTests` — UI screenshot tests
-- `./gradlew :androidApp:assembleRelease` — Android APK
-- `./gradlew :desktopApp:packageDmg` — macOS DMG
-- `./gradlew :desktopApp:packageMsi` — Windows MSI
-- iOS — Xcode project at `iosApp/vibits/vibits.xcodeproj`
+- `./gradlew :app:android:assembleRelease` — Android APK
+- `./gradlew :app:desktop:packageDmg` — macOS DMG
+- `./gradlew :app:desktop:packageMsi` — Windows MSI
+- iOS — Xcode project at `app/ios/vibits/vibits.xcodeproj`
 
 ## Repo Layout
 ```
 core/         — TEA foundation, UI, strings, platform abstractions
 feature/      — feature modules (auth, habits, memos, sync, settings, onboarding, mode)
 build-logic/  — Gradle convention plugins
-androidApp/   — Android entry point
-desktopApp/   — Desktop entry point
-iosApp/       — iOS wrapper (Xcode project + framework)
-webApp/       — Web entry point
+app/          — Platform entry points (android, desktop, ios, web)
 ```
 
 ## CI/CD

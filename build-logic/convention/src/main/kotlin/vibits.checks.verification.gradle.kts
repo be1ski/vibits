@@ -8,9 +8,9 @@ tasks.register("checkJvm") {
       tasks.findByName("desktopTest")?.let { dependsOn(it) }
     }
   }
-  dependsOn(":androidApp:ktlintCheck", ":androidApp:detekt", ":androidApp:compileDebugKotlin")
-  dependsOn(":desktopApp:ktlintCheck", ":desktopApp:detekt", ":desktopApp:compileKotlinDesktop")
-  dependsOn(":webApp:ktlintCheck", ":webApp:detekt", ":webApp:compileKotlinWasmJs")
+  dependsOn(":app:android:ktlintCheck", ":app:android:detekt", ":app:android:compileDebugKotlin")
+  dependsOn(":app:desktop:ktlintCheck", ":app:desktop:detekt", ":app:desktop:compileKotlinDesktop")
+  dependsOn(":app:web:ktlintCheck", ":app:web:detekt", ":app:web:compileKotlinWasmJs")
 }
 
 tasks.register("checkIos") {
