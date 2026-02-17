@@ -143,20 +143,20 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           APP_VERSION: ${{ needs.resolve-version.outputs.version }}
-        run: ./gradlew :androidApp:assembleRelease -PappVersion=${APP_VERSION#v}
+        run: ./gradlew :app:android:assembleRelease -PappVersion=${APP_VERSION#v}
 
       - name: Rename APK
         env:
           APP_VERSION: ${{ needs.resolve-version.outputs.version }}
         run: |
-          mv androidApp/build/outputs/apk/release/androidApp-release.apk \
-             androidApp/build/outputs/apk/release/Vibits-${APP_VERSION#v}.apk
+          mv app/android/build/outputs/apk/release/android-release.apk \
+             app/android/build/outputs/apk/release/Vibits-${APP_VERSION#v}.apk
 
       - name: Upload APK to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.resolve-version.outputs.version }}
-          files: androidApp/build/outputs/apk/release/Vibits-*.apk
+          files: app/android/build/outputs/apk/release/Vibits-*.apk
 
       - name: Upload to Firebase App Distribution
         env:
@@ -168,7 +168,7 @@ jobs:
           APP_VERSION: ${{ needs.resolve-version.outputs.version }}
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > ${{ runner.temp }}/firebase-sa.json
-          ./gradlew :androidApp:appDistributionUploadRelease -PappVersion=${APP_VERSION#v}
+          ./gradlew :app:android:appDistributionUploadRelease -PappVersion=${APP_VERSION#v}
 
   build-dmg:
     runs-on: macos-latest
@@ -190,13 +190,13 @@ jobs:
       - name: Build DMG
         env:
           APP_VERSION: ${{ needs.resolve-version.outputs.version }}
-        run: ./gradlew :desktopApp:packageDmg -PappVersion=${APP_VERSION#v}
+        run: ./gradlew :app:desktop:packageDmg -PappVersion=${APP_VERSION#v}
 
       - name: Upload DMG to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.resolve-version.outputs.version }}
-          files: desktopApp/build/compose/binaries/main/dmg/*.dmg
+          files: app/desktop/build/compose/binaries/main/dmg/*.dmg
 
   build-msi:
     runs-on: windows-latest
@@ -219,13 +219,13 @@ jobs:
         shell: bash
         env:
           APP_VERSION: ${{ needs.resolve-version.outputs.version }}
-        run: ./gradlew :desktopApp:packageMsi -PappVersion=${APP_VERSION#v}
+        run: ./gradlew :app:desktop:packageMsi -PappVersion=${APP_VERSION#v}
 
       - name: Upload MSI to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.resolve-version.outputs.version }}
-          files: desktopApp/build/compose/binaries/main/msi/*.msi
+          files: app/desktop/build/compose/binaries/main/msi/*.msi
 
   build-web:
     runs-on: ubuntu-latest
@@ -248,20 +248,20 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Build Web Distribution
-        run: ./gradlew :webApp:wasmJsBrowserDistribution
+        run: ./gradlew :app:web:wasmJsBrowserDistribution
 
       - name: Create tarball
         env:
           APP_VERSION: ${{ needs.resolve-version.outputs.version }}
         run: |
-          cd webApp/build/dist/wasmJs
+          cd app/web/build/dist/wasmJs
           tar -czf Vibits-${APP_VERSION#v}-web.tar.gz productionExecutable
 
       - name: Upload Web to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.resolve-version.outputs.version }}
-          files: webApp/build/dist/wasmJs/Vibits-*-web.tar.gz
+          files: app/web/build/dist/wasmJs/Vibits-*-web.tar.gz
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -269,7 +269,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: webApp/build/dist/wasmJs/productionExecutable
+          path: app/web/build/dist/wasmJs/productionExecutable
 
       - name: Deploy to GitHub Pages
         id: deploy
