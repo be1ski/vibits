@@ -198,6 +198,60 @@ jobs:
           tag_name: ${{ needs.resolve-version.outputs.version }}
           files: app/desktop/build/compose/binaries/main/dmg/*.dmg
 
+  update-homebrew:
+    runs-on: ubuntu-latest
+    needs: [build-dmg, resolve-version]
+
+    steps:
+      - name: Update Homebrew Cask
+        env:
+          COMMITTER_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          VERSION: ${{ needs.resolve-version.outputs.version }}
+        run: |
+          APP_VERSION="${VERSION#v}"
+          DMG_URL="https://github.com/be1ski/vibits/releases/download/${VERSION}/Vibits-${APP_VERSION}.dmg"
+
+          curl -sL "$DMG_URL" -o vibits.dmg
+          SHA256=$(shasum -a 256 vibits.dmg | awk '{print $1}')
+          rm vibits.dmg
+
+          git clone "https://x-access-token:${COMMITTER_TOKEN}@github.com/be1ski/homebrew-tap.git" tap
+          cd tap
+          mkdir -p Casks
+
+          cat > Casks/vibits.rb << CASK
+          cask "vibits" do
+            version "$APP_VERSION"
+            sha256 "$SHA256"
+
+            url "https://github.com/be1ski/vibits/releases/download/v\#{version}/Vibits-\#{version}.dmg"
+            name "Vibits"
+            desc "Habit tracker powered by Memos"
+            homepage "https://be1ski.github.io/vibits/"
+
+            depends_on macos: ">= :ventura"
+
+            app "Vibits.app"
+
+            postflight do
+              system "xattr", "-cr", "\#{appdir}/Vibits.app"
+            end
+
+            zap trash: [
+              "~/Library/Application Support/Vibits",
+              "~/Library/Preferences/space.be1ski.vibits.plist",
+            ]
+          end
+          CASK
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Casks/vibits.rb
+          if ! git diff --staged --quiet; then
+            git commit -m "vibits $APP_VERSION"
+            git push
+          fi
+
   build-msi:
     runs-on: windows-latest
     needs: [check-jvm, check-ios, resolve-version]
