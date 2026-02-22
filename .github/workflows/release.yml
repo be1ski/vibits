@@ -224,7 +224,7 @@ jobs:
             version "$APP_VERSION"
             sha256 "$SHA256"
 
-            url "https://github.com/be1ski/vibits/releases/download/v\#{version}/Vibits-\#{version}.dmg"
+            url "https://github.com/be1ski/vibits/releases/download/v#{version}/Vibits-#{version}.dmg"
             name "Vibits"
             desc "Habit tracker powered by Memos"
             homepage "https://be1ski.github.io/vibits/"
@@ -234,7 +234,7 @@ jobs:
             app "Vibits.app"
 
             postflight do
-              system "xattr", "-cr", "\#{appdir}/Vibits.app"
+              system "xattr", "-cr", "#{appdir}/Vibits.app"
             end
 
             zap trash: [
