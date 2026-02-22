@@ -13,6 +13,12 @@ Habit tracker powered by [Memos](https://github.com/usememos/memos)
 - **Modes:** Online (Memos sync) · Offline · Demo
 - **Locales:** 🇬🇧 🇪🇸 🇨🇳 🇮🇳 🇸🇦 🇧🇷 🇷🇺 🇺🇦 🇧🇾 🇰🇿 🇺🇿 🇬🇪 🇦🇿 🇰🇬 🇹🇯 🇷🇴 🇹🇲 🇯🇵 🇩🇪 🇫🇷
 
+## macOS
+
+```sh
+brew install --cask be1ski/tap/vibits
+```
+
 ## Highlights
 - Kotlin Multiplatform with platform entry points for Android, iOS, desktop, and web
 - Compose Multiplatform UI with TEA (Elm Architecture) state management
