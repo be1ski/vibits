@@ -27,7 +27,7 @@ kotlin {
     desktopMain {
       dependencies {
         implementation(libs.kotlinx.coroutines.swing)
-        implementation(libs.ktor.client.cio)
+        implementation(libs.ktor.client.okhttp)
         implementation(libs.slf4j.simple)
       }
     }
