@@ -216,7 +216,7 @@
     <string name="title_choose_starter_habit">Choose a starter habit</string>
     <string name="title_create_day">Create day</string>
     <string name="title_delete_config">Delete config?</string>
-    <string name="title_delete_day">Delete day?</string>
+    <string name="title_delete_day">Delete this day?</string>
     <string name="title_delete_memo">Delete memo?</string>
     <string name="title_edit_config_warning">Edit Existing Config?</string>
     <string name="title_edit_day">Edit day</string>
