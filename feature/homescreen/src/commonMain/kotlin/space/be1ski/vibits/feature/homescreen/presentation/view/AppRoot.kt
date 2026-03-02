@@ -29,6 +29,7 @@ fun AppRoot(
   onFeaturesReady: ((AppFeatures) -> Unit)? = null,
 ) {
   val initialPrefs = remember { dependencies.loadPreferences() }
+  val currentVersion = remember { dependencies.loadAppDetails().version }
   remember { dependencies.localeProvider.configureLocale(initialPrefs.language) }
 
   var appMode by remember { mutableStateOf(dependencies.fixInvalidOnlineMode()) }
@@ -67,6 +68,8 @@ fun AppRoot(
           appTheme = appTheme,
           appLanguage = appLanguage,
           exportService = dependencies.settingsDependencies.exportService,
+          currentVersion = currentVersion,
+          getChangelog = dependencies.getChangelog,
           onResetApp = {
             resetApp(
               dependencies = dependencies,

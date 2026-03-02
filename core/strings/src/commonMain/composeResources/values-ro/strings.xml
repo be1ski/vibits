@@ -3,6 +3,7 @@
     <string name="action_add_first_habit">Adaugă primul tău obicei</string>
     <string name="action_back">Înapoi</string>
     <string name="action_cancel">Anulare</string>
+    <string name="action_changelog_dismiss">OK</string>
     <string name="action_clear">Curăță</string>
     <string name="action_continue">Continuă</string>
     <string name="action_create_new_config">Creează o configurație nouă (recomandat)</string>
@@ -218,6 +219,7 @@
     <string name="time_years">Ani</string>
 
     <!-- Titles -->
+    <string name="title_changelog">Noutăți</string>
     <string name="title_choose_starter_habit">Alege un obicei de început</string>
     <string name="title_create_day">Creează zi</string>
     <string name="title_delete_config">Ștergeți configurația?</string>

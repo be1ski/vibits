@@ -2,6 +2,7 @@
     <!-- Actions -->
     <string name="action_back">Back</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_changelog_dismiss">OK</string>
     <string name="action_clear">Clear</string>
     <string name="action_close">Close</string>
     <string name="action_copied">Copied</string>
@@ -218,6 +219,7 @@
     <string name="time_years">Years</string>
 
     <!-- Titles -->
+    <string name="title_changelog">What's New</string>
     <string name="title_choose_starter_habit">Choose a starter habit</string>
     <string name="title_create_day">Create day</string>
     <string name="title_delete_config">Delete config?</string>

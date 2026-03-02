@@ -17,6 +17,10 @@ import space.be1ski.vibits.core.ui.test.runCompactUiTest
 import space.be1ski.vibits.core.ui.test.runWideUiTest
 import space.be1ski.vibits.core.ui.test.saveScreenshot
 import space.be1ski.vibits.core.ui.theme.VibitsTheme
+import space.be1ski.vibits.feature.changelog.domain.model.ChangelogEntry
+import space.be1ski.vibits.feature.changelog.domain.test.FakeChangelogRepository
+import space.be1ski.vibits.feature.changelog.domain.test.FakeLastSeenVersionStore
+import space.be1ski.vibits.feature.changelog.domain.usecase.GetChangelogUseCase
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.model.CachedActivity
@@ -71,6 +75,8 @@ class AppScreenshotTest {
 
       override fun exportMemos() = ExportResult.Success("/fake")
     }
+
+  private val fakeGetChangelog = GetChangelogUseCase(FakeChangelogRepository(), FakeLastSeenVersionStore())
 
   private val demoMemos: List<Memo> by lazy { generateDemoMemos() }
   private val buildActivityData = BuildActivityDataUseCase(BuildDayDataUseCase())
@@ -177,6 +183,8 @@ class AppScreenshotTest {
     settingsState: SettingsState = SettingsState(),
     darkTheme: Boolean = false,
     wideLayout: Boolean = true,
+    currentVersion: String = "dev",
+    getChangelog: GetChangelogUseCase = fakeGetChangelog,
   ) {
     val features =
       AppFeatures(
@@ -192,6 +200,8 @@ class AppScreenshotTest {
           currentTheme = AppTheme.SYSTEM,
           currentLanguage = AppLanguage.ENGLISH,
           exportService = fakeExportService,
+          currentVersion = currentVersion,
+          getChangelog = getChangelog,
         )
       }
     }
@@ -204,11 +214,31 @@ class AppScreenshotTest {
     habitsState: HabitsState = HabitsState(),
     settingsState: SettingsState = SettingsState(),
     wideLayout: Boolean = true,
+    currentVersion: String = "dev",
+    getChangelog: GetChangelogUseCase = fakeGetChangelog,
   ) {
     val platform = if (wideLayout) "wide" else "compact"
-    setVibitsApp(appState, memosState, habitsState, settingsState, darkTheme = false, wideLayout = wideLayout)
+    setVibitsApp(
+      appState,
+      memosState,
+      habitsState,
+      settingsState,
+      darkTheme = false,
+      wideLayout = wideLayout,
+      currentVersion = currentVersion,
+      getChangelog = getChangelog,
+    )
     saveScreenshot("${platform}_light_$name")
-    setVibitsApp(appState, memosState, habitsState, settingsState, darkTheme = true, wideLayout = wideLayout)
+    setVibitsApp(
+      appState,
+      memosState,
+      habitsState,
+      settingsState,
+      darkTheme = true,
+      wideLayout = wideLayout,
+      currentVersion = currentVersion,
+      getChangelog = getChangelog,
+    )
     saveScreenshot("${platform}_dark_$name")
   }
 
@@ -218,9 +248,24 @@ class AppScreenshotTest {
     memosState: MemosState = MemosState(memos = demoMemos, initialDataLoaded = true),
     habitsState: HabitsState = HabitsState(),
     settingsState: SettingsState = SettingsState(),
+    currentVersion: String = "dev",
+    getChangelog: GetChangelogUseCase = fakeGetChangelog,
   ) {
-    runWideUiTest { captureApp(name, appState, memosState, habitsState, settingsState) }
-    runCompactUiTest { captureApp(name, appState, memosState, habitsState, settingsState, wideLayout = false) }
+    runWideUiTest {
+      captureApp(name, appState, memosState, habitsState, settingsState, currentVersion = currentVersion, getChangelog = getChangelog)
+    }
+    runCompactUiTest {
+      captureApp(
+        name,
+        appState,
+        memosState,
+        habitsState,
+        settingsState,
+        wideLayout = false,
+        currentVersion = currentVersion,
+        getChangelog = getChangelog,
+      )
+    }
   }
 
   private fun habitsAppState(
@@ -291,6 +336,8 @@ class AppScreenshotTest {
         appTheme = AppTheme.SYSTEM,
         appLanguage = AppLanguage.ENGLISH,
         exportService = fakeExportService,
+        currentVersion = "dev",
+        getChangelog = fakeGetChangelog,
         onResetApp = {},
         onThemeChanged = {},
         onLanguageChanged = {},
@@ -548,6 +595,44 @@ class AppScreenshotTest {
       appState = feedAppState(),
       habitsState = HabitsState(showEditConfigWarning = true),
     )
+
+  @Test
+  fun `when changelog dialog shown then captures changelog`() {
+    val entries =
+      listOf(
+        ChangelogEntry(
+          version = "1.2.0",
+          title = "Release 1.2.0",
+          body = "## Highlights\n* **Changelog dialog** on app upgrade\n* Improved sync reliability\n* Fixed habit streak calculation",
+          date = "2026-03-01",
+        ),
+        ChangelogEntry(
+          version = "1.1.0",
+          title = "Release 1.1.0",
+          body = "## Changes\n* Desktop sidebar layout\n* Dark mode improvements\n* Bug fixes",
+          date = "2026-02-15",
+        ),
+      )
+
+    fun freshChangelog() =
+      GetChangelogUseCase(
+        FakeChangelogRepository().apply { releasesResult = Result.success(entries) },
+        FakeLastSeenVersionStore("1.0.0"),
+      )
+    val appState = habitsAppState()
+    runWideUiTest {
+      setVibitsApp(appState, currentVersion = "1.2.0", getChangelog = freshChangelog())
+      saveScreenshot("wide_light_app_changelog")
+      setVibitsApp(appState, darkTheme = true, currentVersion = "1.2.0", getChangelog = freshChangelog())
+      saveScreenshot("wide_dark_app_changelog")
+    }
+    runCompactUiTest {
+      setVibitsApp(appState, wideLayout = false, currentVersion = "1.2.0", getChangelog = freshChangelog())
+      saveScreenshot("compact_light_app_changelog")
+      setVibitsApp(appState, darkTheme = true, wideLayout = false, currentVersion = "1.2.0", getChangelog = freshChangelog())
+      saveScreenshot("compact_dark_app_changelog")
+    }
+  }
 
   @Test
   fun `when sync conflict dialog shown then captures conflict dialog`() =
