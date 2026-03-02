@@ -4,4 +4,5 @@ enum class Screen {
   HABITS,
   STATS,
   FEED,
+  SETTINGS,
 }

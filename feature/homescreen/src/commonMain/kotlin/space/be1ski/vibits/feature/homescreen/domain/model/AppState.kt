@@ -20,6 +20,7 @@ data class AppState(
         Screen.HABITS -> habitsTimeRangeTab
         Screen.STATS -> postsTimeRangeTab
         Screen.FEED -> habitsTimeRangeTab
+        Screen.SETTINGS -> habitsTimeRangeTab
       }
 
   val isDemoMode: Boolean

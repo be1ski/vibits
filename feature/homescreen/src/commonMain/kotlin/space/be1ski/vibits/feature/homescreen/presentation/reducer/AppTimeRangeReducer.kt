@@ -53,6 +53,7 @@ internal val timeRangeReducer: Reducer<AppAction.TimeRange, AppState, AppEffect,
             Screen.STATS ->
               state.copy(periodStartDate = action.today, postsTimeRangeTab = TimeRangeTab.WEEKS)
             Screen.FEED -> state.copy(periodStartDate = action.today)
+            Screen.SETTINGS -> state.copy(periodStartDate = action.today)
           }
         }
       }
