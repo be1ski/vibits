@@ -67,6 +67,7 @@ internal fun rememberScaffoldCallbacks(
           Screen.HABITS -> onAppAction(AppAction.TimeRange.ChangeHabitsTab(appState.habitsTimeRangeTab, newTab))
           Screen.STATS -> onAppAction(AppAction.TimeRange.ChangePostsTab(appState.postsTimeRangeTab, newTab))
           Screen.FEED -> {}
+          Screen.SETTINGS -> {}
         }
       }
     }

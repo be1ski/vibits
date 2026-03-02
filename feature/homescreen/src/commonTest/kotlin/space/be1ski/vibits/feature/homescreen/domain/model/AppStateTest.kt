@@ -51,6 +51,19 @@ class AppStateTest {
   }
 
   @Test
+  fun `when selectedScreen is SETTINGS then currentTimeRangeTab returns habitsTimeRangeTab`() {
+    val state =
+      AppState(
+        selectedScreen = Screen.SETTINGS,
+        habitsTimeRangeTab = TimeRangeTab.MONTHS,
+        postsTimeRangeTab = TimeRangeTab.WEEKS,
+        periodStartDate = testDate,
+      )
+
+    assertEquals(TimeRangeTab.MONTHS, state.currentTimeRangeTab)
+  }
+
+  @Test
   fun `when appMode is DEMO then isDemoMode is true`() {
     val state = AppState(appMode = AppMode.DEMO, periodStartDate = testDate)
 

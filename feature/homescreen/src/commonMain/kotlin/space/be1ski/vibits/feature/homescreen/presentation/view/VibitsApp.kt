@@ -17,7 +17,7 @@ import space.be1ski.vibits.feature.memos.domain.repository.ExportService
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.feature.settings.presentation.view.SettingsDialog
 
-@Suppress("LongParameterList")
+@Suppress("LongParameterList", "LongMethod")
 @Composable
 internal fun VibitsApp(
   features: AppFeatures,
@@ -57,15 +57,19 @@ internal fun VibitsApp(
     onLanguageChanged = onLanguageChanged,
   )
 
-  if (LocalWideLayout.current) {
+  val wideLayout = LocalWideLayout.current
+  if (wideLayout) {
     VibitsDesktopShell(
       features = features,
       appState = appState,
       memosState = memosState,
       habitsState = habitsState,
+      settingsState = settingsState,
       currentLanguage = currentLanguage,
       currentTheme = currentTheme,
       syncDebounceSeconds = settingsState.selectedSyncDebounceSeconds,
+      exportService = exportService,
+      testLogs = testLogs,
     )
   } else {
     VibitsAppScaffold(
@@ -79,7 +83,9 @@ internal fun VibitsApp(
     )
   }
 
-  SettingsDialog(state = settingsState, dispatch = features.settings::send, exportService = exportService, testLogs = testLogs)
+  if (!wideLayout) {
+    SettingsDialog(state = settingsState, dispatch = features.settings::send, exportService = exportService, testLogs = testLogs)
+  }
   MemoCreateDialog(state = memosState, dispatch = features.memos::send)
   MemoEditDialog(state = memosState, dispatch = features.memos::send)
   HabitsDialogs(appState = appState, habitsState = habitsState, dispatch = features.habits::send)

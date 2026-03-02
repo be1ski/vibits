@@ -142,7 +142,7 @@ fun SettingsDialog(
     modifier = Modifier.testTag(SettingsTestTags.SETTINGS_DIALOG),
     title = { Text(stringResource(Res.string.nav_settings)) },
     text = {
-      SettingsDialogBody(state = state, dispatch = dispatch, exportService = exportService)
+      SettingsFormContent(state = state, dispatch = dispatch, exportService = exportService)
     },
     confirmButton = { SettingsDialogConfirmButton(dispatch) },
     dismissButton = { SettingsDialogDismissButton(dispatch) },
@@ -166,7 +166,7 @@ fun SettingsDialog(
 
 @Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable
-private fun SettingsDialogBody(
+internal fun SettingsFormContent(
   state: SettingsState,
   dispatch: (SettingsAction) -> Unit,
   exportService: ExportService,
@@ -500,7 +500,7 @@ private fun SettingsDialogDismissButton(dispatch: (SettingsAction) -> Unit) {
 }
 
 @Composable
-private fun ResetConfirmationDialog(
+internal fun ResetConfirmationDialog(
   onConfirm: () -> Unit,
   onConfirmWithMemos: () -> Unit,
   onDismiss: () -> Unit,
@@ -661,7 +661,7 @@ private fun ResetOptionsDialog(
 }
 
 @Composable
-private fun LogsDialog(
+internal fun LogsDialog(
   onDismiss: () -> Unit,
   initialLogs: List<LogEntry> = Log.logs,
 ) {

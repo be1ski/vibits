@@ -317,6 +317,14 @@ class AppScreenshotTest {
       autoLoaded = true,
     )
 
+  private fun settingsAppState() =
+    AppState(
+      appMode = AppMode.DEMO,
+      selectedScreen = Screen.SETTINGS,
+      periodStartDate = LocalDate(2024, 12, 9),
+      autoLoaded = true,
+    )
+
   private fun habitsStateWithCache(
     range: ActivityRange,
     mode: ActivityMode = ActivityMode.HABITS,
@@ -445,11 +453,34 @@ class AppScreenshotTest {
 
   // region Settings dialogs
 
+  private fun captureSettingsVariants(
+    name: String,
+    settingsState: SettingsState,
+    testLogs: List<LogEntry>? = null,
+  ) {
+    runWideUiTest {
+      captureApp(
+        name,
+        appState = settingsAppState(),
+        settingsState = settingsState,
+        testLogs = testLogs,
+      )
+    }
+    runCompactUiTest {
+      captureApp(
+        name,
+        appState = habitsAppState(),
+        settingsState = settingsState,
+        wideLayout = false,
+        testLogs = testLogs,
+      )
+    }
+  }
+
   @Test
   fun `when settings open in online mode then captures online settings`() =
-    captureAppAllVariants(
+    captureSettingsVariants(
       name = "app_settings_online",
-      appState = habitsAppState(),
       settingsState =
         SettingsState(
           isOpen = true,
@@ -461,17 +492,15 @@ class AppScreenshotTest {
 
   @Test
   fun `when settings open in demo mode then captures demo settings`() =
-    captureAppAllVariants(
+    captureSettingsVariants(
       name = "app_settings_demo",
-      appState = habitsAppState(),
       settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO),
     )
 
   @Test
   fun `when logs dialog open then captures logs`() =
-    captureAppAllVariants(
+    captureSettingsVariants(
       name = "app_settings_logs",
-      appState = habitsAppState(),
       settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO, showLogsDialog = true),
       testLogs =
         listOf(
@@ -485,9 +514,8 @@ class AppScreenshotTest {
 
   @Test
   fun `when reset confirmation open then captures reset dialog`() =
-    captureAppAllVariants(
+    captureSettingsVariants(
       name = "app_settings_reset",
-      appState = habitsAppState(),
       settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO, showResetConfirmation = true),
     )
 

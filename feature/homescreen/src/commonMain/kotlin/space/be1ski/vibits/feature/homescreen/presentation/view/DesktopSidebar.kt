@@ -83,7 +83,7 @@ internal fun DesktopSidebar(
       SidebarHeader(memosState, dispatchMemos)
       SidebarNavigation(appState, onAppAction, onClearSelection, onFeedScrollToTop)
       Spacer(modifier = Modifier.weight(1f))
-      SidebarActions(todayHabits, onOpenTodayEditor, onShowCreateMemoDialog, onSettingsClick)
+      SidebarActions(appState.selectedScreen, todayHabits, onOpenTodayEditor, onShowCreateMemoDialog, onSettingsClick)
     }
   }
 }
@@ -143,6 +143,7 @@ private fun SidebarNavigation(
 
 @Composable
 private fun SidebarActions(
+  selectedScreen: Screen,
   todayHabits: TodayHabits,
   onOpenTodayEditor: () -> Unit,
   onShowCreateMemoDialog: () -> Unit,
@@ -170,7 +171,7 @@ private fun SidebarActions(
     SidebarNavItem(
       icon = Icons.Filled.Settings,
       label = stringResource(Res.string.nav_settings),
-      selected = false,
+      selected = selectedScreen == Screen.SETTINGS,
       testTag = AppShellTestTags.SIDEBAR_SETTINGS,
       onClick = onSettingsClick,
     )
