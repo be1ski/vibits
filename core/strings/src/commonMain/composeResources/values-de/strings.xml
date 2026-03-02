@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">Zugriffstoken</string>
     <string name="label_activity">Aktivität</string>
+    <string name="label_all_habits">Alle</string>
     <string name="label_app_mode">App-Modus</string>
     <string name="label_base_url">Basis-URL</string>
     <string name="label_credentials">Anmeldedaten</string>
@@ -191,6 +192,10 @@
     <string name="mode_quick_online_title">Anmeldedaten gefunden</string>
     <string name="mode_quick_online_desc">Gespeicherte Anmeldedaten erkannt. Diese für schnelle Verbindung verwenden?</string>
     <string name="action_use_saved">Gespeicherte verwenden</string>
+
+    <!-- Menu -->
+    <string name="menu_file">Ablage</string>
+    <string name="menu_view">Darstellung</string>
 
     <!-- Navigation -->
     <string name="nav_feed">Feed</string>

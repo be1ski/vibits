@@ -62,5 +62,9 @@ sealed interface AppAction : Action {
     data class SetPostsListExpanded(
       val expanded: Boolean,
     ) : UI
+
+    data class SetSelectedHabitTag(
+      val tag: String?,
+    ) : UI
   }
 }

@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">Token de acesso</string>
     <string name="label_activity">Atividade</string>
+    <string name="label_all_habits">Todos</string>
     <string name="label_app_mode">Modo do app</string>
     <string name="label_base_url">URL base</string>
     <string name="label_credentials">Credenciais</string>
@@ -191,6 +192,10 @@
     <string name="mode_quick_online_title">Credenciais encontradas</string>
     <string name="mode_quick_online_desc">Credenciais salvas detectadas. Usá-las para conectar rapidamente?</string>
     <string name="action_use_saved">Usar salvas</string>
+
+    <!-- Menu -->
+    <string name="menu_file">Ficheiro</string>
+    <string name="menu_view">Visualização</string>
 
     <!-- Navigation -->
     <string name="nav_feed">Feed</string>

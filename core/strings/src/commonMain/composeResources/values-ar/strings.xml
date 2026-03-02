@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">رمز الوصول</string>
     <string name="label_activity">النشاط</string>
+    <string name="label_all_habits">الكل</string>
     <string name="label_app_mode">وضع التطبيق</string>
     <string name="label_base_url">عنوان URL الأساسي</string>
     <string name="label_credentials">بيانات الاعتماد</string>
@@ -191,6 +192,10 @@
     <string name="mode_quick_online_title">تم العثور على بيانات الاعتماد</string>
     <string name="mode_quick_online_desc">تم اكتشاف بيانات اعتماد محفوظة. استخدامها للاتصال بسرعة؟</string>
     <string name="action_use_saved">استخدام المحفوظة</string>
+
+    <!-- Menu -->
+    <string name="menu_file">ملف</string>
+    <string name="menu_view">عرض</string>
 
     <!-- Navigation -->
     <string name="nav_feed">الرئيسية</string>

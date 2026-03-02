@@ -62,4 +62,5 @@ internal data class ContributionCellState(
   val isToday: Boolean = false,
   val isWeekend: Boolean = false,
   val habitColor: HabitColor? = null,
+  val height: Dp = size,
 )
