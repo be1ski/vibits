@@ -193,6 +193,10 @@
     <string name="mode_quick_online_desc">تم اكتشاف بيانات اعتماد محفوظة. استخدامها للاتصال بسرعة؟</string>
     <string name="action_use_saved">استخدام المحفوظة</string>
 
+    <!-- Menu -->
+    <string name="menu_file">ملف</string>
+    <string name="menu_view">عرض</string>
+
     <!-- Navigation -->
     <string name="nav_feed">الرئيسية</string>
     <string name="nav_habits">العادات</string>

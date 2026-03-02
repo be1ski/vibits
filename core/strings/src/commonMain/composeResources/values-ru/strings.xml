@@ -193,6 +193,10 @@
     <string name="mode_quick_online_desc">Найдены сохранённые данные для входа. Использовать их для быстрого подключения?</string>
     <string name="action_use_saved">Использовать</string>
 
+    <!-- Menu -->
+    <string name="menu_file">Файл</string>
+    <string name="menu_view">Вид</string>
+
     <!-- Navigation -->
     <string name="nav_feed">Лента</string>
     <string name="nav_habits">Привычки</string>

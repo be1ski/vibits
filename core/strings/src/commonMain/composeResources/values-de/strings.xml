@@ -193,6 +193,10 @@
     <string name="mode_quick_online_desc">Gespeicherte Anmeldedaten erkannt. Diese für schnelle Verbindung verwenden?</string>
     <string name="action_use_saved">Gespeicherte verwenden</string>
 
+    <!-- Menu -->
+    <string name="menu_file">Ablage</string>
+    <string name="menu_view">Darstellung</string>
+
     <!-- Navigation -->
     <string name="nav_feed">Feed</string>
     <string name="nav_habits">Gewohnheiten</string>

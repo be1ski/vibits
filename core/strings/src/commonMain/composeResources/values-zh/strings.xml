@@ -193,6 +193,10 @@
     <string name="mode_quick_online_desc">检测到已保存的凭证。使用它们快速连接？</string>
     <string name="action_use_saved">使用已保存</string>
 
+    <!-- Menu -->
+    <string name="menu_file">文件</string>
+    <string name="menu_view">显示</string>
+
     <!-- Navigation -->
     <string name="nav_feed">动态</string>
     <string name="nav_habits">习惯</string>
