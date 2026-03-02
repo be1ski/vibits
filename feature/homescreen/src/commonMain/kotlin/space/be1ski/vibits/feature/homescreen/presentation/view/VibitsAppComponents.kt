@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.platform.date.currentLocalDate
-import space.be1ski.vibits.core.platform.isDesktop
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_refresh
@@ -31,6 +30,7 @@ import space.be1ski.vibits.core.strings.generated.nav_habits
 import space.be1ski.vibits.core.strings.generated.nav_memos
 import space.be1ski.vibits.core.strings.generated.nav_settings
 import space.be1ski.vibits.core.ui.Indent
+import space.be1ski.vibits.core.ui.theme.LocalWideLayout
 import space.be1ski.vibits.feature.homescreen.domain.model.AppState
 import space.be1ski.vibits.feature.homescreen.domain.model.Screen
 import space.be1ski.vibits.feature.homescreen.presentation.action.AppAction
@@ -52,19 +52,20 @@ internal fun MemosHeader(
   theme: AppTheme,
   syncDebounceSeconds: Int,
 ) {
+  val wideLayout = LocalWideLayout.current
   Row(
     modifier = Modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    // Left side: App name + sync dot (on desktop)
+    // Left side: App name + sync dot (on wide layout)
     Row(
       horizontalArrangement = Arrangement.spacedBy(Indent.s),
       verticalAlignment = Alignment.CenterVertically,
     ) {
       Text(stringResource(Res.string.app_name), style = MaterialTheme.typography.headlineSmall)
-      // Show sync dot on desktop (left side) only in online mode
-      if (isDesktop && !memosState.isOfflineMode) {
+      // Show sync dot on wide layout (left side) only in online mode
+      if (wideLayout && !memosState.isOfflineMode) {
         SyncDot(
           syncStatus = memosState.syncStatus,
           isSyncing = memosState.isSyncing,
@@ -72,9 +73,9 @@ internal fun MemosHeader(
         )
       }
     }
-    // Right side: refresh button + sync dot (on mobile) + settings
+    // Right side: refresh button + sync dot (on compact layout) + settings
     Row(horizontalArrangement = Arrangement.spacedBy(Indent.xs), verticalAlignment = Alignment.CenterVertically) {
-      if (isDesktop) {
+      if (wideLayout) {
         IconButton(onClick = { dispatchMemos(MemosAction.Loading.LoadMemos) }) {
           Icon(imageVector = Icons.Filled.Refresh, contentDescription = stringResource(Res.string.action_refresh))
         }

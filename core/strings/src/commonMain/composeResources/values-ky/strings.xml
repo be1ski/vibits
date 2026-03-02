@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">Кирүү токени</string>
     <string name="label_activity">Активдүүлүк</string>
+    <string name="label_all_habits">Баары</string>
     <string name="label_app_mode">Колдонмо режими</string>
     <string name="label_base_url">Base URL</string>
     <string name="label_credentials">Эсеп маалыматы</string>
@@ -191,6 +192,10 @@
     <string name="mode_quick_online_title">Эсеп маалыматтары табылды</string>
     <string name="mode_quick_online_desc">Сакталган эсеп маалыматтары табылды. Аларды тез туташуу үчүн колдонулсунбу?</string>
     <string name="action_use_saved">Сакталганды колдон</string>
+
+    <!-- Menu -->
+    <string name="menu_file">Файл</string>
+    <string name="menu_view">Көрүнүш</string>
 
     <!-- Navigation -->
     <string name="nav_feed">Лента</string>

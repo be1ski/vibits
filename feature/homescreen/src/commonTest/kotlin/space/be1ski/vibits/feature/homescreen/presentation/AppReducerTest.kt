@@ -157,4 +157,22 @@ class AppReducerTest {
       assertState { postsListExpanded }
       assertNoEffects()
     }
+
+  @Test
+  fun `when UI SetSelectedHabitTag then updates selected habit tag`() =
+    appReducer.test(AppState(periodStartDate = testDate)) {
+      send(AppAction.UI.SetSelectedHabitTag("#habits/exercise"))
+
+      assertState { selectedHabitTag == "#habits/exercise" }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when UI SetSelectedHabitTag with null then clears selected habit tag`() =
+    appReducer.test(AppState(periodStartDate = testDate, selectedHabitTag = "#habits/exercise")) {
+      send(AppAction.UI.SetSelectedHabitTag(null))
+
+      assertState { selectedHabitTag == null }
+      assertNoEffects()
+    }
 }

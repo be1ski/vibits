@@ -12,6 +12,7 @@ data class AppState(
   val periodStartDate: LocalDate,
   val autoLoaded: Boolean = false,
   val postsListExpanded: Boolean = false,
+  val selectedHabitTag: String? = null,
 ) {
   val currentTimeRangeTab: TimeRangeTab
     get() =

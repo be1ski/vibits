@@ -83,7 +83,7 @@ object AppColors {
   // Onboarding colors
   val background =
     ColorPair(
-      light = Color(0xFFFAFAFA),
+      light = Color(0xFFF0F2F5),
       dark = Color(0xFF121212),
     )
   val onBackground =
@@ -93,7 +93,7 @@ object AppColors {
     )
   val cardBackground =
     ColorPair(
-      light = Color(0xFFF8FAFC),
+      light = Color(0xFFFFFFFF),
       dark = Color(0xFF1E293B),
     )
   val onCardBackground =
