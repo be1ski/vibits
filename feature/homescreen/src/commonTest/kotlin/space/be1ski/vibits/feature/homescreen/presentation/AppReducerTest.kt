@@ -132,6 +132,17 @@ class AppReducerTest {
     }
 
   @Test
+  fun `when TimeRange ResetToHome on SETTINGS screen then resets only date`() =
+    appReducer.test(AppState(periodStartDate = testDate, selectedScreen = Screen.SETTINGS)) {
+      val today = LocalDate(2024, Month.JANUARY, 1)
+
+      send(AppAction.TimeRange.ResetToHome(today))
+
+      assertState { periodStartDate == today }
+      assertNoEffects()
+    }
+
+  @Test
   fun `when Mode SetAppMode then updates app mode`() =
     appReducer.test(AppState(periodStartDate = testDate)) {
       send(AppAction.Mode.SetAppMode(AppMode.ONLINE))
