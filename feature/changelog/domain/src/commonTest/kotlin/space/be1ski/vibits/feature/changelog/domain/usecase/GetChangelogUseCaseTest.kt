@@ -170,5 +170,47 @@ class GetChangelogUseCaseTest {
     assertEquals(0, compareVersions(listOf(1, 0, 0), listOf(1, 0, 0)))
     assertTrue(compareVersions(listOf(2, 0), listOf(1, 9, 9)) > 0)
     assertEquals(0, compareVersions(listOf(1, 0), listOf(1, 0, 0)))
+    assertTrue(compareVersions(listOf(1, 0, 1), listOf(1, 0)) > 0)
   }
+
+  @Test
+  fun `when upgrade with many releases then sorts newest first`() =
+    runTest {
+      store.setLastSeenVersion("1.0.0")
+      repository.releasesResult =
+        Result.success(
+          listOf(
+            ChangelogEntry("1.1.0", "First", "a", "2026-01-01"),
+            ChangelogEntry("1.3.0", "Third", "c", "2026-03-01"),
+            ChangelogEntry("1.2.0", "Second", "b", "2026-02-01"),
+          ),
+        )
+
+      val result = useCase("1.3.0")
+
+      assertEquals(3, result.size)
+      assertEquals("1.3.0", result[0].version)
+      assertEquals("1.2.0", result[1].version)
+      assertEquals("1.1.0", result[2].version)
+    }
+
+  @Test
+  fun `when release has unparseable version then filters it out`() =
+    runTest {
+      store.setLastSeenVersion("1.0.0")
+      repository.releasesResult =
+        Result.success(
+          listOf(
+            ChangelogEntry("1.1.0", "Valid", "body", "2026-01-01"),
+            ChangelogEntry("nightly-20260201", "Nightly", "nightly", "2026-02-01"),
+            ChangelogEntry("1.2.0", "Also valid", "body", "2026-02-15"),
+          ),
+        )
+
+      val result = useCase("1.2.0")
+
+      assertEquals(2, result.size)
+      assertEquals("1.2.0", result[0].version)
+      assertEquals("1.1.0", result[1].version)
+    }
 }
