@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.ui.theme.LocalWideLayout
+import space.be1ski.vibits.core.utils.logging.LogEntry
 import space.be1ski.vibits.feature.changelog.domain.model.ChangelogEntry
 import space.be1ski.vibits.feature.changelog.domain.usecase.GetChangelogUseCase
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
@@ -25,6 +26,7 @@ internal fun VibitsApp(
   exportService: ExportService,
   currentVersion: String,
   getChangelog: GetChangelogUseCase,
+  testLogs: List<LogEntry>? = null,
   onResetApp: () -> Unit = {},
   onThemeChanged: (AppTheme) -> Unit = {},
   onLanguageChanged: (AppLanguage) -> Unit = {},
@@ -77,7 +79,7 @@ internal fun VibitsApp(
     )
   }
 
-  SettingsDialog(state = settingsState, dispatch = features.settings::send, exportService = exportService)
+  SettingsDialog(state = settingsState, dispatch = features.settings::send, exportService = exportService, testLogs = testLogs)
   MemoCreateDialog(state = memosState, dispatch = features.memos::send)
   MemoEditDialog(state = memosState, dispatch = features.memos::send)
   HabitsDialogs(appState = appState, habitsState = habitsState, dispatch = features.habits::send)

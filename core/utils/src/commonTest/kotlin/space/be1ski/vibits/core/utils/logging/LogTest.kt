@@ -92,13 +92,12 @@ class LogTest {
   }
 
   @Test
-  fun `when export called then timestamp is formatted without T separator`() {
+  fun `when export called then timestamp uses LocalDateTime format`() {
     Log.d("Tag", "Message")
 
     val exported = Log.export()
 
-    // Timestamp should be "YYYY-MM-DD HH:MM:SS.mmm" format (no T, no microseconds)
-    assertTrue(exported.matches(Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} D/Tag: Message""")))
+    assertTrue(exported.matches(Regex("""\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)? D/Tag: Message""")))
   }
 
   @Test
@@ -124,11 +123,12 @@ class LogTest {
   }
 
   @Test
-  fun `when timestamp recorded then is not empty`() {
+  fun `when timestamp recorded then has valid date and time`() {
     Log.d("Tag", "Message")
 
     val entry = Log.logs.first()
-    assertTrue(entry.timestamp.isNotEmpty())
+    assertTrue(entry.timestamp.year > 2000)
+    assertTrue(entry.timestamp.hour in 0..23)
   }
 
   @Test

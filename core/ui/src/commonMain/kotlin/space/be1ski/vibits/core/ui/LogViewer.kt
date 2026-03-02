@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import space.be1ski.vibits.core.platform.logging.LogLevel
 import space.be1ski.vibits.core.utils.logging.LogEntry
 
-private const val LOG_TIMESTAMP_LENGTH = 8
 private val MaxHeight = 400.dp
 private val ItemSpacing = 4.dp
 private val ItemPadding = 6.dp
@@ -80,7 +79,7 @@ private fun LogEntryItem(entry: LogEntry) {
         .background(bgColor, RoundedCornerShape(CornerRadius))
         .padding(ItemPadding),
   ) {
-    val time = entry.timestamp.substringAfter('T').take(LOG_TIMESTAMP_LENGTH)
+    val time = entry.timestamp.time
     val header = "$time ${entry.level.name.first()}/${entry.tag}"
     Text(
       text = header,
