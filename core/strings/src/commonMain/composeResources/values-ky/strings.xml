@@ -3,6 +3,7 @@
     <string name="action_add_first_habit">Биринчи адатты кошуу</string>
     <string name="action_back">Артка</string>
     <string name="action_cancel">Жокко чыгаруу</string>
+    <string name="action_changelog_dismiss">OK</string>
     <string name="action_clear">Тазалоо</string>
     <string name="action_continue">Улантуу</string>
     <string name="action_create_new_config">Жаңы конфигурация түзүү (сунушталат)</string>
@@ -218,6 +219,7 @@
     <string name="time_years">Жылдар</string>
 
     <!-- Titles -->
+    <string name="title_changelog">Жаңылыктар</string>
     <string name="title_choose_starter_habit">Башталгыч адатты тандаңыз</string>
     <string name="title_create_day">Күн түзүү</string>
     <string name="title_delete_config">Конфигди өчүрүү керекпи?</string>

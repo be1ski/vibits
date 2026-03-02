@@ -2,6 +2,7 @@
     <!-- Actions -->
     <string name="action_back">უკან</string>
     <string name="action_cancel">გაუქმება</string>
+    <string name="action_changelog_dismiss">კარგი</string>
     <string name="action_create_new_config">ახალი კონფიგურაციის შექმნა (რეკომენდებულია)</string>
     <string name="action_edit_anyway">მაინც რედაქტირება</string>
     <string name="action_clear">გასუფთავება</string>
@@ -218,6 +219,7 @@
     <string name="time_years">წლები</string>
 
     <!-- Titles -->
+    <string name="title_changelog">სიახლეები</string>
     <string name="title_choose_starter_habit">საწყისი ჩვევის არჩევა</string>
     <string name="title_create_day">დღის შექმნა</string>
     <string name="title_delete_config">წაიშალოს კონფიგურაცია?</string>

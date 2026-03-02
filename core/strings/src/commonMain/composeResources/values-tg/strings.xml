@@ -3,6 +3,7 @@
     <string name="action_add_first_habit">Одати аввалро илова кунед</string>
     <string name="action_back">Бозгашт</string>
     <string name="action_cancel">Бекор кардан</string>
+    <string name="action_changelog_dismiss">OK</string>
     <string name="action_clear">Тоза кардан</string>
     <string name="action_continue">Идома додан</string>
     <string name="action_create_new_config">Эҷоди конфигуратсияи нав (тавсия мешавад)</string>
@@ -218,6 +219,7 @@
     <string name="time_years">Солҳо</string>
 
     <!-- Titles -->
+    <string name="title_changelog">Навигариҳо</string>
     <string name="title_choose_starter_habit">Одати оғозиниро интихоб кунед</string>
     <string name="title_create_day">Эҷоди рӯз</string>
     <string name="title_delete_config">Конфигро нест кунем?</string>

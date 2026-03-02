@@ -21,6 +21,7 @@ import space.be1ski.vibits.core.strings.generated.msg_state_loading
 import space.be1ski.vibits.core.strings.generated.title_state_loading
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.StatePanel
+import space.be1ski.vibits.feature.changelog.domain.usecase.GetChangelogUseCase
 import space.be1ski.vibits.feature.homescreen.di.AppDependencies
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
 import space.be1ski.vibits.feature.memos.domain.repository.ExportService
@@ -67,6 +68,8 @@ internal fun AppContent(
   appTheme: AppTheme,
   appLanguage: AppLanguage,
   exportService: ExportService,
+  currentVersion: String,
+  getChangelog: GetChangelogUseCase,
   onResetApp: () -> Unit,
   onThemeChanged: (AppTheme) -> Unit,
   onLanguageChanged: (AppLanguage) -> Unit,
@@ -86,6 +89,8 @@ internal fun AppContent(
           appTheme = appTheme,
           appLanguage = appLanguage,
           exportService = exportService,
+          currentVersion = currentVersion,
+          getChangelog = getChangelog,
           onResetApp = onResetApp,
           onThemeChanged = onThemeChanged,
           onLanguageChanged = onLanguageChanged,
@@ -97,6 +102,8 @@ internal fun AppContent(
         appTheme = appTheme,
         appLanguage = appLanguage,
         exportService = exportService,
+        currentVersion = currentVersion,
+        getChangelog = getChangelog,
         onResetApp = onResetApp,
         onThemeChanged = onThemeChanged,
         onLanguageChanged = onLanguageChanged,
@@ -105,12 +112,15 @@ internal fun AppContent(
   }
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun AppWithLoadingScreen(
   features: AppFeatures,
   appTheme: AppTheme,
   appLanguage: AppLanguage,
   exportService: ExportService,
+  currentVersion: String,
+  getChangelog: GetChangelogUseCase,
   onResetApp: () -> Unit,
   onThemeChanged: (AppTheme) -> Unit,
   onLanguageChanged: (AppLanguage) -> Unit,
@@ -125,6 +135,8 @@ private fun AppWithLoadingScreen(
       currentTheme = appTheme,
       currentLanguage = appLanguage,
       exportService = exportService,
+      currentVersion = currentVersion,
+      getChangelog = getChangelog,
       onResetApp = onResetApp,
       onThemeChanged = onThemeChanged,
       onLanguageChanged = onLanguageChanged,

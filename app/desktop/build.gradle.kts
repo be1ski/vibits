@@ -32,6 +32,7 @@ compose.desktop {
       )
       packageName = "Vibits"
       packageVersion = appVersion
+      jvmArgs += "-Dmemos.version=$appVersion"
 
       macOS {
         iconFile.set(project.file("src/desktopMain/resources/icon.icns"))

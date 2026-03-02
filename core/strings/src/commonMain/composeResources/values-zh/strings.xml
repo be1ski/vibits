@@ -2,6 +2,7 @@
     <!-- Actions -->
     <string name="action_back">返回</string>
     <string name="action_cancel">取消</string>
+    <string name="action_changelog_dismiss">确定</string>
     <string name="action_create_new_config">创建新配置（推荐）</string>
     <string name="action_edit_anyway">仍然编辑</string>
     <string name="action_clear">清除</string>
@@ -218,6 +219,7 @@
     <string name="time_years">年</string>
 
     <!-- Titles -->
+    <string name="title_changelog">新功能</string>
     <string name="title_choose_starter_habit">选择初始习惯</string>
     <string name="title_create_day">创建日记录</string>
     <string name="title_delete_config">删除配置？</string>

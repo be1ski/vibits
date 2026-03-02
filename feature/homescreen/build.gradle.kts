@@ -15,12 +15,15 @@ kotlin {
     commonMain {
       dependencies {
         api(projects.core.elm)
+        api(projects.core.env)
         api(projects.core.platform)
         api(projects.core.strings)
         api(projects.core.ui)
         api(projects.core.utils)
         api(projects.feature.auth.data)
         api(projects.feature.auth.domain)
+        api(projects.feature.changelog.data)
+        api(projects.feature.changelog.domain)
         api(projects.feature.habits.domain)
         api(projects.feature.habits.presentation)
         api(projects.feature.memos.data)
@@ -57,6 +60,7 @@ kotlin {
     commonTest {
       dependencies {
         implementation(projects.core.elm.test)
+        implementation(projects.feature.changelog.domain.testing)
         implementation(projects.feature.settings.domain.testing)
         implementation(libs.ktor.client.mock)
       }

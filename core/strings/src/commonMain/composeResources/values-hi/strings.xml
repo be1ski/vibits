@@ -2,6 +2,7 @@
     <!-- Actions -->
     <string name="action_back">पीछे</string>
     <string name="action_cancel">रद्द करें</string>
+    <string name="action_changelog_dismiss">ठीक है</string>
     <string name="action_create_new_config">नई कॉन्फ़िगरेशन बनाएँ (अनुशंसित)</string>
     <string name="action_edit_anyway">फिर भी संपादित करें</string>
     <string name="action_clear">साफ़ करें</string>
@@ -218,6 +219,7 @@
     <string name="time_years">वर्ष</string>
 
     <!-- Titles -->
+    <string name="title_changelog">नया क्या है</string>
     <string name="title_choose_starter_habit">शुरुआती आदत चुनें</string>
     <string name="title_create_day">दिन बनाएं</string>
     <string name="title_delete_config">कॉन्फ़िग हटाएं?</string>
