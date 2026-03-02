@@ -3,8 +3,8 @@ package space.be1ski.vibits.feature.homescreen.presentation.view
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import space.be1ski.vibits.core.platform.isDesktop
 import space.be1ski.vibits.core.platform.locale.AppLanguage
+import space.be1ski.vibits.core.ui.theme.LocalIsDesktop
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
 import space.be1ski.vibits.feature.memos.domain.repository.ExportService
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
@@ -37,7 +37,7 @@ internal fun VibitsApp(
     onLanguageChanged = onLanguageChanged,
   )
 
-  if (isDesktop) {
+  if (LocalIsDesktop.current) {
     VibitsDesktopShell(
       features = features,
       appState = appState,

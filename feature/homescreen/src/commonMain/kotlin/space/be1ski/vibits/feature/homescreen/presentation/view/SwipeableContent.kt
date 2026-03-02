@@ -14,9 +14,9 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import space.be1ski.vibits.core.platform.isDesktop
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.date.DateFormatter
+import space.be1ski.vibits.core.ui.theme.LocalIsDesktop
 import space.be1ski.vibits.core.utils.date.quarterIndex
 import space.be1ski.vibits.core.utils.date.startOfWeek
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
@@ -55,6 +55,7 @@ internal fun SwipeableTabContent(
   dispatchMemos: (MemosAction) -> Unit = {},
   feedListState: LazyListState,
 ) {
+  val isDesktop = LocalIsDesktop.current
   if (appState.selectedScreen == Screen.FEED) {
     FeedScreen(
       memos = memosState.memos,
@@ -183,6 +184,7 @@ private fun MemosTabContent(
   onAppAction: (AppAction) -> Unit,
   dateFormatter: DateFormatter,
 ) {
+  val isDesktop = LocalIsDesktop.current
   val memos = memosState.memos
   when (appState.selectedScreen) {
     Screen.HABITS ->

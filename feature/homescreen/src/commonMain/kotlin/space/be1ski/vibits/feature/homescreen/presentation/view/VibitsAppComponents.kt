@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.platform.date.currentLocalDate
-import space.be1ski.vibits.core.platform.isDesktop
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_refresh
@@ -31,6 +30,7 @@ import space.be1ski.vibits.core.strings.generated.nav_habits
 import space.be1ski.vibits.core.strings.generated.nav_memos
 import space.be1ski.vibits.core.strings.generated.nav_settings
 import space.be1ski.vibits.core.ui.Indent
+import space.be1ski.vibits.core.ui.theme.LocalIsDesktop
 import space.be1ski.vibits.feature.homescreen.domain.model.AppState
 import space.be1ski.vibits.feature.homescreen.domain.model.Screen
 import space.be1ski.vibits.feature.homescreen.presentation.action.AppAction
@@ -52,6 +52,7 @@ internal fun MemosHeader(
   theme: AppTheme,
   syncDebounceSeconds: Int,
 ) {
+  val isDesktop = LocalIsDesktop.current
   Row(
     modifier = Modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.SpaceBetween,

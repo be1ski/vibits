@@ -13,7 +13,9 @@ import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.core.elm.test.RecordingFeature
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.mode.AppMode
+import space.be1ski.vibits.core.ui.test.captureMobileInBothThemes
 import space.be1ski.vibits.core.ui.test.runDesktopShellUiTest
+import space.be1ski.vibits.core.ui.test.runMobileUiTest
 import space.be1ski.vibits.core.ui.test.saveScreenshot
 import space.be1ski.vibits.core.ui.test.setThemedContent
 import space.be1ski.vibits.core.ui.theme.VibitsTheme
@@ -249,6 +251,45 @@ class AppScreenshotTest {
   ): HabitsState {
     val (key, cached) = computeCache(demoMemos, range, mode)
     return HabitsState(activityDataCache = extraCache + (key to cached))
+  }
+
+  private fun ComposeUiTest.setVibitsAppMobile(
+    appState: AppState,
+    memosState: MemosState = MemosState(memos = demoMemos, initialDataLoaded = true),
+    habitsState: HabitsState = HabitsState(),
+    settingsState: SettingsState = SettingsState(),
+    darkTheme: Boolean = false,
+  ) {
+    val features =
+      AppFeatures(
+        app = RecordingFeature(appState),
+        memos = RecordingFeature(memosState),
+        habits = RecordingFeature(habitsState),
+        settings = RecordingFeature(settingsState),
+      )
+    setContent {
+      VibitsTheme(darkTheme = darkTheme, isDesktop = false) {
+        VibitsApp(
+          features = features,
+          currentTheme = AppTheme.SYSTEM,
+          currentLanguage = AppLanguage.ENGLISH,
+          exportService = fakeExportService,
+        )
+      }
+    }
+  }
+
+  private fun ComposeUiTest.captureAppMobile(
+    name: String,
+    appState: AppState,
+    memosState: MemosState = MemosState(memos = demoMemos, initialDataLoaded = true),
+    habitsState: HabitsState = HabitsState(),
+    settingsState: SettingsState = SettingsState(),
+  ) {
+    setVibitsAppMobile(appState, memosState, habitsState, settingsState, darkTheme = false)
+    saveScreenshot(name)
+    setVibitsAppMobile(appState, memosState, habitsState, settingsState, darkTheme = true)
+    saveScreenshot("${name}_dark")
   }
 
   // endregion
@@ -647,6 +688,49 @@ class AppScreenshotTest {
       )
 
       onNodeWithTag(FeedTestTags.SYNC_CONFLICT_DIALOG).assertIsDisplayed()
+    }
+
+  // endregion
+
+  // region Mobile screenshots
+
+  @Test
+  fun `when mobile habits week view then captures mobile layout`() =
+    runMobileUiTest {
+      val periodStart = LocalDate(2024, 12, 9)
+      val range = ActivityRange.Week(periodStart)
+      captureAppMobile(
+        name = "app_mobile_habits_week",
+        appState = habitsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = periodStart),
+        habitsState = habitsStateWithCache(range),
+      )
+
+      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
+    }
+
+  @Test
+  fun `when mobile stats week view then captures mobile layout`() =
+    runMobileUiTest {
+      val periodStart = LocalDate(2024, 12, 9)
+      val range = ActivityRange.Week(periodStart)
+      captureAppMobile(
+        name = "app_mobile_stats_week",
+        appState = postsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = periodStart),
+        habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS),
+      )
+
+      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_STATS).assertIsDisplayed()
+    }
+
+  @Test
+  fun `when mobile feed then captures mobile layout`() =
+    runMobileUiTest {
+      captureAppMobile(
+        name = "app_mobile_feed",
+        appState = feedAppState(),
+      )
+
+      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_FEED).assertIsDisplayed()
     }
 
   // endregion

@@ -16,10 +16,16 @@ import javax.imageio.ImageIO
 
 private const val DESKTOP_WIDTH = 900
 private const val DESKTOP_HEIGHT = 700
+private const val MOBILE_WIDTH = 393
+private const val MOBILE_HEIGHT = 852
 
 @OptIn(ExperimentalTestApi::class)
 fun runDesktopShellUiTest(block: suspend DesktopComposeUiTest.() -> Unit) =
   runDesktopComposeUiTest(width = DESKTOP_WIDTH, height = DESKTOP_HEIGHT, block = block)
+
+@OptIn(ExperimentalTestApi::class)
+fun runMobileUiTest(block: suspend DesktopComposeUiTest.() -> Unit) =
+  runDesktopComposeUiTest(width = MOBILE_WIDTH, height = MOBILE_HEIGHT, block = block)
 
 @OptIn(ExperimentalTestApi::class)
 fun ComposeUiTest.setThemedContent(
@@ -34,6 +40,18 @@ fun ComposeUiTest.setThemedContent(
 }
 
 @OptIn(ExperimentalTestApi::class)
+fun ComposeUiTest.setMobileThemedContent(
+  darkTheme: Boolean = false,
+  content: @Composable () -> Unit,
+) {
+  setContent {
+    VibitsTheme(darkTheme = darkTheme, isDesktop = false) {
+      content()
+    }
+  }
+}
+
+@OptIn(ExperimentalTestApi::class)
 fun ComposeUiTest.captureInBothThemes(
   name: String,
   content: @Composable () -> Unit,
@@ -41,6 +59,17 @@ fun ComposeUiTest.captureInBothThemes(
   setThemedContent(darkTheme = false, content = content)
   saveScreenshot(name)
   setThemedContent(darkTheme = true, content = content)
+  saveScreenshot("${name}_dark")
+}
+
+@OptIn(ExperimentalTestApi::class)
+fun ComposeUiTest.captureMobileInBothThemes(
+  name: String,
+  content: @Composable () -> Unit,
+) {
+  setMobileThemedContent(darkTheme = false, content = content)
+  saveScreenshot(name)
+  setMobileThemedContent(darkTheme = true, content = content)
   saveScreenshot("${name}_dark")
 }
 
