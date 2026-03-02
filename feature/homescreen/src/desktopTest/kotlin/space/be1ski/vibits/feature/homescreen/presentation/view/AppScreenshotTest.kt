@@ -11,12 +11,14 @@ import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.core.elm.test.RecordingFeature
 import space.be1ski.vibits.core.platform.locale.AppLanguage
+import space.be1ski.vibits.core.platform.logging.LogLevel
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.core.ui.test.captureAllVariants
 import space.be1ski.vibits.core.ui.test.runCompactUiTest
 import space.be1ski.vibits.core.ui.test.runWideUiTest
 import space.be1ski.vibits.core.ui.test.saveScreenshot
 import space.be1ski.vibits.core.ui.theme.VibitsTheme
+import space.be1ski.vibits.core.utils.logging.LogEntry
 import space.be1ski.vibits.feature.changelog.domain.model.ChangelogEntry
 import space.be1ski.vibits.feature.changelog.domain.test.FakeChangelogRepository
 import space.be1ski.vibits.feature.changelog.domain.test.FakeLastSeenVersionStore
@@ -185,6 +187,7 @@ class AppScreenshotTest {
     wideLayout: Boolean = true,
     currentVersion: String = "dev",
     getChangelog: GetChangelogUseCase = fakeGetChangelog,
+    testLogs: List<LogEntry>? = null,
   ) {
     val features =
       AppFeatures(
@@ -202,6 +205,7 @@ class AppScreenshotTest {
           exportService = fakeExportService,
           currentVersion = currentVersion,
           getChangelog = getChangelog,
+          testLogs = testLogs,
         )
       }
     }
@@ -216,6 +220,7 @@ class AppScreenshotTest {
     wideLayout: Boolean = true,
     currentVersion: String = "dev",
     getChangelog: GetChangelogUseCase = fakeGetChangelog,
+    testLogs: List<LogEntry>? = null,
   ) {
     val platform = if (wideLayout) "wide" else "compact"
     setVibitsApp(
@@ -227,6 +232,7 @@ class AppScreenshotTest {
       wideLayout = wideLayout,
       currentVersion = currentVersion,
       getChangelog = getChangelog,
+      testLogs = testLogs,
     )
     saveScreenshot("${platform}_light_$name")
     setVibitsApp(
@@ -238,6 +244,7 @@ class AppScreenshotTest {
       wideLayout = wideLayout,
       currentVersion = currentVersion,
       getChangelog = getChangelog,
+      testLogs = testLogs,
     )
     saveScreenshot("${platform}_dark_$name")
   }
@@ -250,9 +257,19 @@ class AppScreenshotTest {
     settingsState: SettingsState = SettingsState(),
     currentVersion: String = "dev",
     getChangelog: GetChangelogUseCase = fakeGetChangelog,
+    testLogs: List<LogEntry>? = null,
   ) {
     runWideUiTest {
-      captureApp(name, appState, memosState, habitsState, settingsState, currentVersion = currentVersion, getChangelog = getChangelog)
+      captureApp(
+        name,
+        appState,
+        memosState,
+        habitsState,
+        settingsState,
+        currentVersion = currentVersion,
+        getChangelog = getChangelog,
+        testLogs = testLogs,
+      )
     }
     runCompactUiTest {
       captureApp(
@@ -264,6 +281,7 @@ class AppScreenshotTest {
         wideLayout = false,
         currentVersion = currentVersion,
         getChangelog = getChangelog,
+        testLogs = testLogs,
       )
     }
   }
@@ -454,6 +472,14 @@ class AppScreenshotTest {
       name = "app_settings_logs",
       appState = habitsAppState(),
       settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO, showLogsDialog = true),
+      testLogs =
+        listOf(
+          LogEntry("2024-01-01T10:00:00", LogLevel.INFO, "App", "Application started"),
+          LogEntry("2024-01-01T10:00:01", LogLevel.INFO, "Sync", "Syncing memos..."),
+          LogEntry("2024-01-01T10:00:02", LogLevel.DEBUG, "Network", "GET /api/memos 200 OK"),
+          LogEntry("2024-01-01T10:00:03", LogLevel.WARN, "Cache", "Cache miss for key: habits"),
+          LogEntry("2024-01-01T10:00:04", LogLevel.INFO, "Sync", "Sync complete: 42 memos"),
+        ),
     )
 
   @Test
