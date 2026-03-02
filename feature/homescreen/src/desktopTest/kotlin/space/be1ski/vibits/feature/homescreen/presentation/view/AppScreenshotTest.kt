@@ -7,6 +7,7 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.core.elm.test.RecordingFeature
@@ -474,11 +475,11 @@ class AppScreenshotTest {
       settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO, showLogsDialog = true),
       testLogs =
         listOf(
-          LogEntry("2024-01-01T10:00:00", LogLevel.INFO, "App", "Application started"),
-          LogEntry("2024-01-01T10:00:01", LogLevel.INFO, "Sync", "Syncing memos..."),
-          LogEntry("2024-01-01T10:00:02", LogLevel.DEBUG, "Network", "GET /api/memos 200 OK"),
-          LogEntry("2024-01-01T10:00:03", LogLevel.WARN, "Cache", "Cache miss for key: habits"),
-          LogEntry("2024-01-01T10:00:04", LogLevel.INFO, "Sync", "Sync complete: 42 memos"),
+          LogEntry(LocalDateTime(2024, 1, 1, 10, 0, 0), LogLevel.INFO, "App", "Application started"),
+          LogEntry(LocalDateTime(2024, 1, 1, 10, 0, 1), LogLevel.INFO, "Sync", "Syncing memos..."),
+          LogEntry(LocalDateTime(2024, 1, 1, 10, 0, 2), LogLevel.DEBUG, "Network", "GET /api/memos 200 OK"),
+          LogEntry(LocalDateTime(2024, 1, 1, 10, 0, 3), LogLevel.WARN, "Cache", "Cache miss for key: habits"),
+          LogEntry(LocalDateTime(2024, 1, 1, 10, 0, 4), LogLevel.INFO, "Sync", "Sync complete: 42 memos"),
         ),
     )
 
