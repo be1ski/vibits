@@ -207,7 +207,8 @@ fun checkEmptyModules(violations: MutableList<String>) {
     .forEach { sub ->
       val srcDir = sub.file("src")
       val hasFiles = srcDir.exists() && srcDir.walkTopDown().any { it.isFile }
-      if (!hasFiles) {
+      val hasGeneratedSources = sub.plugins.hasPlugin("vibits.buildconfig")
+      if (!hasFiles && !hasGeneratedSources) {
         violations += "${sub.path} — module has no source files. Remove it from settings.gradle.kts or add source files."
       }
     }

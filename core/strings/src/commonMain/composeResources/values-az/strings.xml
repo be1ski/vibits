@@ -2,6 +2,7 @@
     <!-- Actions -->
     <string name="action_back">Geri</string>
     <string name="action_cancel">Ləğv et</string>
+    <string name="action_changelog_dismiss">OK</string>
     <string name="action_create_new_config">Yeni konfiqurasiya yarat (tövsiyə olunur)</string>
     <string name="action_edit_anyway">Yenə də redaktə et</string>
     <string name="action_clear">Təmizlə</string>
@@ -218,6 +219,7 @@
     <string name="time_years">İllər</string>
 
     <!-- Titles -->
+    <string name="title_changelog">Yeniliklər</string>
     <string name="title_choose_starter_habit">Başlanğıc vərdişi seç</string>
     <string name="title_create_day">Gün yarat</string>
     <string name="title_delete_config">Konfiqurasiyanı silinsin?</string>

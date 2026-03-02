@@ -3,6 +3,7 @@
     <string name="action_add_first_habit">Ilkinji endigi goş</string>
     <string name="action_back">Yza</string>
     <string name="action_cancel">Ýatyr</string>
+    <string name="action_changelog_dismiss">OK</string>
     <string name="action_clear">Arassala</string>
     <string name="action_continue">Dowam et</string>
     <string name="action_create_new_config">Täze konfigurasiýa döretmek (maslahat berilýär)</string>
@@ -218,6 +219,7 @@
     <string name="time_years">Ýyllar</string>
 
     <!-- Titles -->
+    <string name="title_changelog">Täzelikler</string>
     <string name="title_choose_starter_habit">Başlangyç endigi saýla</string>
     <string name="title_create_day">Gün döret</string>
     <string name="title_delete_config">Konfigurasiýany öçürmeli?</string>

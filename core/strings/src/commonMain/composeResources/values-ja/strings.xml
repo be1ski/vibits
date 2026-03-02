@@ -2,6 +2,7 @@
     <!-- Actions -->
     <string name="action_back">戻る</string>
     <string name="action_cancel">キャンセル</string>
+    <string name="action_changelog_dismiss">OK</string>
     <string name="action_create_new_config">新しい設定を作成（推奨）</string>
     <string name="action_edit_anyway">それでも編集</string>
     <string name="action_clear">クリア</string>
@@ -218,6 +219,7 @@
     <string name="time_years">年</string>
 
     <!-- Titles -->
+    <string name="title_changelog">新機能</string>
     <string name="title_choose_starter_habit">最初の習慣を選択</string>
     <string name="title_create_day">日を作成</string>
     <string name="title_delete_config">設定を削除しますか？</string>

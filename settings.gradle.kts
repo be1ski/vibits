@@ -39,6 +39,7 @@ include(
 
   ":core:elm",
   ":core:elm:test",
+  ":core:env",
   ":core:platform",
   ":core:platform:testing",
   ":core:strings",
@@ -49,6 +50,10 @@ include(
   ":feature:auth:domain",
   ":feature:auth:domain:testing",
   ":feature:auth:data",
+
+  ":feature:changelog:domain",
+  ":feature:changelog:domain:testing",
+  ":feature:changelog:data",
 
   ":feature:memos:domain",
   ":feature:memos:domain:testing",

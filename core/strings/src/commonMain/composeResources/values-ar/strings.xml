@@ -2,6 +2,7 @@
     <!-- Actions -->
     <string name="action_back">رجوع</string>
     <string name="action_cancel">إلغاء</string>
+    <string name="action_changelog_dismiss">حسنًا</string>
     <string name="action_create_new_config">إنشاء تكوين جديد (موصى به)</string>
     <string name="action_edit_anyway">تحرير على أي حال</string>
     <string name="action_clear">مسح</string>
@@ -218,6 +219,7 @@
     <string name="time_years">سنوات</string>
 
     <!-- Titles -->
+    <string name="title_changelog">ما الجديد</string>
     <string name="title_choose_starter_habit">اختر عادة البداية</string>
     <string name="title_create_day">إنشاء يوم</string>
     <string name="title_delete_config">حذف الإعدادات؟</string>

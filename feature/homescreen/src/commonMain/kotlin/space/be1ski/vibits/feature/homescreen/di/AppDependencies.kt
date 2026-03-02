@@ -2,6 +2,7 @@ package space.be1ski.vibits.feature.homescreen.di
 
 import dev.zacsweers.metro.Inject
 import space.be1ski.vibits.core.platform.locale.LocaleProvider
+import space.be1ski.vibits.feature.changelog.domain.usecase.GetChangelogUseCase
 import space.be1ski.vibits.feature.habits.di.HabitsDependencies
 import space.be1ski.vibits.feature.homescreen.domain.usecase.LoadAppDetailsUseCase
 import space.be1ski.vibits.feature.memos.di.MemosDependencies
@@ -24,6 +25,7 @@ class AppDependencies(
   val loadPreferences: LoadPreferencesUseCase,
   val fixInvalidOnlineMode: FixInvalidOnlineModeUseCase,
   val saveTimeRangeTab: SaveTimeRangeTabUseCase,
+  val getChangelog: GetChangelogUseCase,
   val loadAppDetails: LoadAppDetailsUseCase,
   val loadAppMode: LoadAppModeUseCase,
   val shouldShowOnboarding: ShouldShowOnboardingUseCase,

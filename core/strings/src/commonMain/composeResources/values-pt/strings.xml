@@ -2,6 +2,7 @@
     <!-- Actions -->
     <string name="action_back">Voltar</string>
     <string name="action_cancel">Cancelar</string>
+    <string name="action_changelog_dismiss">OK</string>
     <string name="action_create_new_config">Criar nova configuração (recomendado)</string>
     <string name="action_edit_anyway">Editar mesmo assim</string>
     <string name="action_clear">Limpar</string>
@@ -218,6 +219,7 @@
     <string name="time_years">Anos</string>
 
     <!-- Titles -->
+    <string name="title_changelog">Novidades</string>
     <string name="title_choose_starter_habit">Escolha um hábito inicial</string>
     <string name="title_create_day">Criar dia</string>
     <string name="title_delete_config">Excluir configuração?</string>

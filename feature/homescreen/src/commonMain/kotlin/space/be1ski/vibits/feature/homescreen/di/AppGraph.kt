@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import space.be1ski.vibits.core.env.BuildConfig
 import space.be1ski.vibits.core.platform.app.AppDetailsProvider
 import space.be1ski.vibits.core.platform.di.AppScope
 import space.be1ski.vibits.core.platform.env.LocalConfigProvider
@@ -23,6 +24,11 @@ import space.be1ski.vibits.feature.auth.data.CredentialsRepositoryImpl
 import space.be1ski.vibits.feature.auth.data.platform.CredentialsStore
 import space.be1ski.vibits.feature.auth.data.platform.createCredentialsStore
 import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
+import space.be1ski.vibits.feature.changelog.data.ChangelogRepositoryImpl
+import space.be1ski.vibits.feature.changelog.data.GitHubReleasesApi
+import space.be1ski.vibits.feature.changelog.data.LastSeenVersionStoreImpl
+import space.be1ski.vibits.feature.changelog.domain.repository.ChangelogRepository
+import space.be1ski.vibits.feature.changelog.domain.repository.LastSeenVersionStore
 import space.be1ski.vibits.feature.memos.data.ConnectionTesterImpl
 import space.be1ski.vibits.feature.memos.data.MemoStorageManagerImpl
 import space.be1ski.vibits.feature.memos.data.ModeAwareMemosRepository
@@ -137,7 +143,18 @@ abstract class AppGraph {
   @SingleIn(AppScope::class)
   fun syncOperationStore(): SyncOperationStore = createSyncOperationStore()
 
+  @Provides
+  @SingleIn(AppScope::class)
+  fun lastSeenVersionStore(): LastSeenVersionStore = LastSeenVersionStoreImpl(createKeyValueStore())
+
+  @Provides
+  @SingleIn(AppScope::class)
+  fun gitHubReleasesApi(httpClient: HttpClient): GitHubReleasesApi = GitHubReleasesApi(httpClient, BuildConfig.RELEASES_URL)
+
   // Repository bindings (explicit @Binds needed for native targets due to KT-75865)
+  @Binds
+  abstract fun bindChangelogRepository(impl: ChangelogRepositoryImpl): ChangelogRepository
+
   @Binds
   abstract fun bindAppModeRepository(impl: AppModeRepositoryImpl): AppModeRepository
 
