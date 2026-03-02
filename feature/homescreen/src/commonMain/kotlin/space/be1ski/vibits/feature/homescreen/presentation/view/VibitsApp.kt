@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import space.be1ski.vibits.core.platform.locale.AppLanguage
+import space.be1ski.vibits.core.ui.date.rememberDateFormatter
 import space.be1ski.vibits.core.ui.theme.LocalWideLayout
 import space.be1ski.vibits.core.utils.logging.LogEntry
 import space.be1ski.vibits.feature.changelog.domain.model.ChangelogEntry
@@ -83,12 +84,14 @@ internal fun VibitsApp(
     )
   }
 
+  val dateFormatter = rememberDateFormatter()
+
   if (!wideLayout) {
     SettingsDialog(state = settingsState, dispatch = features.settings::send, exportService = exportService, testLogs = testLogs)
   }
   MemoCreateDialog(state = memosState, dispatch = features.memos::send)
   MemoEditDialog(state = memosState, dispatch = features.memos::send)
-  HabitsDialogs(appState = appState, habitsState = habitsState, dispatch = features.habits::send)
+  HabitsDialogs(appState = appState, habitsState = habitsState, dateFormatter = dateFormatter, dispatch = features.habits::send)
 
   changelogEntries?.let { entries ->
     ChangelogDialog(
