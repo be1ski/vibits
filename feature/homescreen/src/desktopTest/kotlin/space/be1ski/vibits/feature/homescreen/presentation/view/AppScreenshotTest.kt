@@ -14,6 +14,7 @@ import space.be1ski.vibits.core.elm.test.RecordingFeature
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.core.ui.test.runDesktopShellUiTest
+import space.be1ski.vibits.core.ui.test.runMobileUiTest
 import space.be1ski.vibits.core.ui.test.saveScreenshot
 import space.be1ski.vibits.core.ui.test.setThemedContent
 import space.be1ski.vibits.core.ui.theme.VibitsTheme
@@ -311,7 +312,7 @@ class AppScreenshotTest {
       captureApp(name = "app_habits_week", appState = appState, habitsState = habitsState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_HABITS).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_habits_week", appState = appState, habitsState = habitsState, isDesktop = false)
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
     }
@@ -328,7 +329,7 @@ class AppScreenshotTest {
       captureApp(name = "app_habits_month", appState = appState, habitsState = habitsState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_HABITS).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_habits_month", appState = appState, habitsState = habitsState, isDesktop = false)
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
     }
@@ -345,7 +346,7 @@ class AppScreenshotTest {
       captureApp(name = "app_habits_quarter", appState = appState, habitsState = habitsState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_HABITS).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_habits_quarter", appState = appState, habitsState = habitsState, isDesktop = false)
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
     }
@@ -362,7 +363,7 @@ class AppScreenshotTest {
       captureApp(name = "app_habits_year", appState = appState, habitsState = habitsState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_HABITS).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_habits_year", appState = appState, habitsState = habitsState, isDesktop = false)
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
     }
@@ -383,7 +384,7 @@ class AppScreenshotTest {
       captureApp(name = "app_stats_week", appState = appState, habitsState = habitsState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_STATS).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_stats_week", appState = appState, habitsState = habitsState, isDesktop = false)
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_STATS).assertIsDisplayed()
     }
@@ -400,7 +401,7 @@ class AppScreenshotTest {
       captureApp(name = "app_stats_month", appState = appState, habitsState = habitsState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_STATS).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_stats_month", appState = appState, habitsState = habitsState, isDesktop = false)
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_STATS).assertIsDisplayed()
     }
@@ -418,7 +419,7 @@ class AppScreenshotTest {
       captureApp(name = "app_feed", appState = appState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_FEED).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_feed", appState = appState, isDesktop = false)
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_FEED).assertIsDisplayed()
     }
@@ -433,7 +434,7 @@ class AppScreenshotTest {
       captureApp(name = "app_feed_empty", appState = appState, memosState = memosState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_FEED).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_feed_empty", appState = appState, memosState = memosState, isDesktop = false)
       onNodeWithTag(AppShellTestTags.BOTTOM_NAV_FEED).assertIsDisplayed()
     }
@@ -458,7 +459,7 @@ class AppScreenshotTest {
       captureApp(name = "app_settings_online", appState = appState, settingsState = settingsState)
       onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_settings_online", appState = appState, settingsState = settingsState, isDesktop = false)
       onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
     }
@@ -473,7 +474,7 @@ class AppScreenshotTest {
       captureApp(name = "app_settings_demo", appState = appState, settingsState = settingsState)
       onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_settings_demo", appState = appState, settingsState = settingsState, isDesktop = false)
       onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
     }
@@ -488,7 +489,7 @@ class AppScreenshotTest {
       captureApp(name = "app_settings_logs", appState = appState, settingsState = settingsState)
       onNodeWithTag(SettingsTestTags.LOGS_DIALOG).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_settings_logs", appState = appState, settingsState = settingsState, isDesktop = false)
       onNodeWithTag(SettingsTestTags.LOGS_DIALOG).assertIsDisplayed()
     }
@@ -503,7 +504,7 @@ class AppScreenshotTest {
       captureApp(name = "app_settings_reset", appState = appState, settingsState = settingsState)
       onNodeWithTag(SettingsTestTags.RESET_OPTIONS_DIALOG).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_settings_reset", appState = appState, settingsState = settingsState, isDesktop = false)
       onNodeWithTag(SettingsTestTags.RESET_OPTIONS_DIALOG).assertIsDisplayed()
     }
@@ -550,7 +551,7 @@ class AppScreenshotTest {
       captureApp(name = "app_habit_editor", appState = appState, habitsState = habitsState)
       onNodeWithTag(AppShellTestTags.HABIT_EDITOR_DIALOG).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_habit_editor", appState = appState, habitsState = habitsState, isDesktop = false)
       onNodeWithTag(AppShellTestTags.HABIT_EDITOR_DIALOG).assertIsDisplayed()
     }
@@ -573,7 +574,7 @@ class AppScreenshotTest {
       captureApp(name = "app_habits_config", appState = appState, habitsState = habitsState)
       onNodeWithTag(StatsTestTags.HABITS_CONFIG_DIALOG).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_habits_config", appState = appState, habitsState = habitsState, isDesktop = false)
       onNodeWithTag(StatsTestTags.HABITS_CONFIG_DIALOG).assertIsDisplayed()
     }
@@ -609,7 +610,7 @@ class AppScreenshotTest {
       captureApp(name = "app_habits_delete", appState = appState, habitsState = habitsState)
       onNodeWithTag(StatsTestTags.EMPTY_DELETE_DIALOG).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_habits_delete", appState = appState, habitsState = habitsState, isDesktop = false)
       onNodeWithTag(StatsTestTags.EMPTY_DELETE_DIALOG).assertIsDisplayed()
     }
@@ -647,7 +648,7 @@ class AppScreenshotTest {
       captureApp(name = "app_habits_toggle", appState = appState, habitsState = habitsState)
       onNodeWithTag(StatsTestTags.SINGLE_TOGGLE_DIALOG).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_habits_toggle", appState = appState, habitsState = habitsState, isDesktop = false)
       onNodeWithTag(StatsTestTags.SINGLE_TOGGLE_DIALOG).assertIsDisplayed()
     }
@@ -666,7 +667,7 @@ class AppScreenshotTest {
       captureApp(name = "app_feed_edit_warning", appState = appState, habitsState = habitsState)
       onNodeWithTag(StatsTestTags.EDIT_CONFIG_WARNING_DIALOG).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_feed_edit_warning", appState = appState, habitsState = habitsState, isDesktop = false)
       onNodeWithTag(StatsTestTags.EDIT_CONFIG_WARNING_DIALOG).assertIsDisplayed()
     }
@@ -700,7 +701,7 @@ class AppScreenshotTest {
       captureApp(name = "app_sync_conflict", appState = appState, memosState = memosState)
       onNodeWithTag(FeedTestTags.SYNC_CONFLICT_DIALOG).assertIsDisplayed()
     }
-    runDesktopShellUiTest {
+    runMobileUiTest {
       captureApp(name = "app_sync_conflict", appState = appState, memosState = memosState, isDesktop = false)
       onNodeWithTag(FeedTestTags.SYNC_CONFLICT_DIALOG).assertIsDisplayed()
     }
