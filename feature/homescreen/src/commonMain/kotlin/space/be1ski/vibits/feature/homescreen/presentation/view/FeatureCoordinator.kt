@@ -3,8 +3,10 @@ package space.be1ski.vibits.feature.homescreen.presentation.view
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import space.be1ski.vibits.core.platform.locale.AppLanguage
+import space.be1ski.vibits.core.ui.theme.LocalWideLayout
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.homescreen.domain.model.AppState
+import space.be1ski.vibits.feature.homescreen.domain.model.Screen
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
 import space.be1ski.vibits.feature.homescreen.presentation.action.AppAction
 import space.be1ski.vibits.feature.memos.presentation.action.MemosAction
@@ -49,9 +51,13 @@ internal fun FeatureCoordinator(
   }
 
   // Auto-open settings when credentials required (skip for DEMO/OFFLINE modes)
+  val wideLayout = LocalWideLayout.current
   LaunchedEffect(memosState.credentialsMode, settingsState.isOpen, appState.appMode) {
     val skipCredentialsCheck = appState.skipCredentialsCheck
     if (!skipCredentialsCheck && memosState.credentialsMode && !settingsState.isOpen) {
+      if (wideLayout) {
+        features.app.send(AppAction.Navigation.SelectScreen(Screen.SETTINGS))
+      }
       features.settings.send(
         SettingsAction.Dialog.Open(
           baseUrl = memosState.baseUrl,

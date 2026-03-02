@@ -1,46 +1,72 @@
 package space.be1ski.vibits.feature.homescreen.presentation.view
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.msg_fill_all_fields
 import space.be1ski.vibits.core.ui.Indent
+import space.be1ski.vibits.core.utils.logging.LogEntry
 import space.be1ski.vibits.feature.habits.domain.usecase.EarliestMemoDateUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.IsActivityRangeBeforeUseCase
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.feature.homescreen.domain.model.AppState
 import space.be1ski.vibits.feature.homescreen.domain.model.Screen
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
+import space.be1ski.vibits.feature.homescreen.presentation.action.AppAction
+import space.be1ski.vibits.feature.memos.domain.repository.ExportService
 import space.be1ski.vibits.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.feature.memos.presentation.state.MemosState
 import space.be1ski.vibits.feature.memos.presentation.view.SyncConflictDialog
 import space.be1ski.vibits.feature.memos.presentation.view.SyncLogDialog
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.feature.settings.presentation.action.SettingsAction
+import space.be1ski.vibits.feature.settings.presentation.state.SettingsState
+import space.be1ski.vibits.feature.settings.presentation.view.SettingsPage
 
+private val DESKTOP_CONTENT_MAX_WIDTH = 900.dp
+
+@Suppress("LongMethod")
 @Composable
 internal fun VibitsDesktopShell(
   features: AppFeatures,
   appState: AppState,
   memosState: MemosState,
   habitsState: HabitsState,
+  settingsState: SettingsState,
   currentLanguage: AppLanguage,
   currentTheme: AppTheme,
   syncDebounceSeconds: Int,
+  exportService: ExportService,
+  testLogs: List<LogEntry>? = null,
 ) {
   val shell = rememberAppShellState(features, appState, memosState, habitsState)
+
+  // Sync settings screen ↔ dialog state
+  LaunchedEffect(settingsState.isOpen, appState.selectedScreen) {
+    if (!settingsState.isOpen && appState.selectedScreen == Screen.SETTINGS) {
+      features.app.send(AppAction.Navigation.SelectScreen(Screen.HABITS))
+    }
+    if (settingsState.isOpen && appState.selectedScreen != Screen.SETTINGS) {
+      features.settings.send(SettingsAction.Dialog.Dismiss)
+    }
+  }
 
   Surface(modifier = Modifier.fillMaxSize()) {
     Row(modifier = Modifier.fillMaxSize()) {
@@ -54,6 +80,7 @@ internal fun VibitsDesktopShell(
         onOpenTodayEditor = shell.callbacks.onOpenTodayEditor,
         onShowCreateMemoDialog = shell.callbacks.onShowCreateMemoDialog,
         onSettingsClick = {
+          features.app.send(AppAction.Navigation.SelectScreen(Screen.SETTINGS))
           features.settings.send(
             SettingsAction.Dialog.Open(
               baseUrl = memosState.baseUrl,
@@ -68,12 +95,19 @@ internal fun VibitsDesktopShell(
         dispatchMemos = features.memos::send,
       )
       VerticalDivider()
-      Column(modifier = Modifier.weight(1f).fillMaxSize()) {
+      Box(
+        modifier = Modifier.weight(1f).fillMaxSize(),
+        contentAlignment = Alignment.TopCenter,
+      ) {
         DesktopContent(
+          modifier = Modifier.widthIn(max = DESKTOP_CONTENT_MAX_WIDTH),
           features = features,
           appState = appState,
           memosState = memosState,
           habitsState = habitsState,
+          settingsState = settingsState,
+          exportService = exportService,
+          testLogs = testLogs,
           shell = shell,
         )
       }
@@ -101,14 +135,30 @@ private fun SyncDialogs(
   }
 }
 
+@Suppress("LongMethod", "LongParameterList")
 @Composable
 private fun DesktopContent(
+  modifier: Modifier = Modifier,
   features: AppFeatures,
   appState: AppState,
   memosState: MemosState,
   habitsState: HabitsState,
+  settingsState: SettingsState,
+  exportService: ExportService,
+  testLogs: List<LogEntry>?,
   shell: AppShellState,
 ) {
+  if (appState.selectedScreen == Screen.SETTINGS) {
+    SettingsPage(
+      modifier = modifier.fillMaxSize(),
+      state = settingsState,
+      dispatch = features.settings::send,
+      exportService = exportService,
+      testLogs = testLogs,
+    )
+    return
+  }
+
   val selectedTab = appState.currentTimeRangeTab
   val currentRange = currentRangeForTab(selectedTab, shell.today)
   val earliestDate = remember(memosState.memos) { EarliestMemoDateUseCase(memosState.memos, shell.timeZone) }
@@ -117,7 +167,7 @@ private fun DesktopContent(
   val canGoForward = IsActivityRangeBeforeUseCase(shell.activityRange, currentRange)
 
   Column(
-    modifier = Modifier.padding(horizontal = Indent.m, vertical = Indent.xs).fillMaxSize(),
+    modifier = modifier.fillMaxSize().padding(horizontal = Indent.m, vertical = Indent.xs),
     verticalArrangement = Arrangement.spacedBy(Indent.xs),
   ) {
     val errorText =

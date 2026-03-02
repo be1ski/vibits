@@ -85,6 +85,7 @@ internal fun SwipeableTabContent(
       Screen.HABITS -> appState.habitsTimeRangeTab
       Screen.STATS -> appState.postsTimeRangeTab
       Screen.FEED -> appState.habitsTimeRangeTab
+      Screen.SETTINGS -> appState.habitsTimeRangeTab
     }
 
   // Key the entire pager on selectedTab to force re-initialization when tab changes
@@ -226,6 +227,7 @@ private fun MemosTabContent(
         onPostsListExpandedChange = { onAppAction(AppAction.UI.SetPostsListExpanded(it)) },
       )
     Screen.FEED -> Unit
+    Screen.SETTINGS -> Unit
   }
 }
 
