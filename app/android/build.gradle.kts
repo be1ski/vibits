@@ -31,7 +31,13 @@ android {
     applicationId = "space.be1ski.vibits"
     minSdk = sdkMin
     targetSdk = sdkTarget
-    versionCode = appVersion.replace(".", "").toIntOrNull() ?: 1
+    versionCode =
+      appVersion.split(".").let { parts ->
+        val major = parts.getOrNull(0)?.toIntOrNull() ?: 0
+        val minor = parts.getOrNull(1)?.toIntOrNull() ?: 0
+        val patch = parts.getOrNull(2)?.toIntOrNull() ?: 0
+        major * 10_000 + minor * 100 + patch
+      }
     versionName = appVersion
   }
 
