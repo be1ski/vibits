@@ -40,18 +40,6 @@ fun ComposeUiTest.setThemedContent(
 }
 
 @OptIn(ExperimentalTestApi::class)
-fun ComposeUiTest.setMobileThemedContent(
-  darkTheme: Boolean = false,
-  content: @Composable () -> Unit,
-) {
-  setContent {
-    VibitsTheme(darkTheme = darkTheme, isDesktop = false) {
-      content()
-    }
-  }
-}
-
-@OptIn(ExperimentalTestApi::class)
 fun ComposeUiTest.captureInBothThemes(
   name: String,
   content: @Composable () -> Unit,
@@ -59,17 +47,6 @@ fun ComposeUiTest.captureInBothThemes(
   setThemedContent(darkTheme = false, content = content)
   saveScreenshot(name)
   setThemedContent(darkTheme = true, content = content)
-  saveScreenshot("${name}_dark")
-}
-
-@OptIn(ExperimentalTestApi::class)
-fun ComposeUiTest.captureMobileInBothThemes(
-  name: String,
-  content: @Composable () -> Unit,
-) {
-  setMobileThemedContent(darkTheme = false, content = content)
-  saveScreenshot(name)
-  setMobileThemedContent(darkTheme = true, content = content)
   saveScreenshot("${name}_dark")
 }
 

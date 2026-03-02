@@ -16,7 +16,6 @@ import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.core.ui.test.runDesktopShellUiTest
 import space.be1ski.vibits.core.ui.test.runMobileUiTest
 import space.be1ski.vibits.core.ui.test.saveScreenshot
-import space.be1ski.vibits.core.ui.test.setMobileThemedContent
 import space.be1ski.vibits.core.ui.test.setThemedContent
 import space.be1ski.vibits.core.ui.theme.VibitsTheme
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
@@ -181,6 +180,7 @@ class AppScreenshotTest {
     habitsState: HabitsState = HabitsState(),
     settingsState: SettingsState = SettingsState(),
     darkTheme: Boolean = false,
+    isDesktop: Boolean = true,
   ) {
     val features =
       AppFeatures(
@@ -190,7 +190,7 @@ class AppScreenshotTest {
         settings = RecordingFeature(settingsState),
       )
     setContent {
-      VibitsTheme(darkTheme = darkTheme) {
+      VibitsTheme(darkTheme = darkTheme, isDesktop = isDesktop) {
         VibitsApp(
           features = features,
           currentTheme = AppTheme.SYSTEM,
@@ -207,11 +207,13 @@ class AppScreenshotTest {
     memosState: MemosState = MemosState(memos = demoMemos, initialDataLoaded = true),
     habitsState: HabitsState = HabitsState(),
     settingsState: SettingsState = SettingsState(),
+    isDesktop: Boolean = true,
   ) {
-    setVibitsApp(appState, memosState, habitsState, settingsState, darkTheme = false)
-    saveScreenshot(name)
-    setVibitsApp(appState, memosState, habitsState, settingsState, darkTheme = true)
-    saveScreenshot("${name}_dark")
+    val prefix = if (isDesktop) name else "${name}_mobile"
+    setVibitsApp(appState, memosState, habitsState, settingsState, darkTheme = false, isDesktop = isDesktop)
+    saveScreenshot(prefix)
+    setVibitsApp(appState, memosState, habitsState, settingsState, darkTheme = true, isDesktop = isDesktop)
+    saveScreenshot("${prefix}_dark")
   }
 
   private fun habitsAppState(
@@ -253,840 +255,457 @@ class AppScreenshotTest {
     return HabitsState(activityDataCache = extraCache + (key to cached))
   }
 
-  private fun ComposeUiTest.setVibitsAppMobile(
-    appState: AppState,
-    memosState: MemosState = MemosState(memos = demoMemos, initialDataLoaded = true),
-    habitsState: HabitsState = HabitsState(),
-    settingsState: SettingsState = SettingsState(),
-    darkTheme: Boolean = false,
-  ) {
-    val features =
-      AppFeatures(
-        app = RecordingFeature(appState),
-        memos = RecordingFeature(memosState),
-        habits = RecordingFeature(habitsState),
-        settings = RecordingFeature(settingsState),
-      )
-    setContent {
-      VibitsTheme(darkTheme = darkTheme, isDesktop = false) {
-        VibitsApp(
-          features = features,
-          currentTheme = AppTheme.SYSTEM,
-          currentLanguage = AppLanguage.ENGLISH,
-          exportService = fakeExportService,
-        )
-      }
-    }
-  }
-
-  private fun ComposeUiTest.captureAppMobile(
-    name: String,
-    appState: AppState,
-    memosState: MemosState = MemosState(memos = demoMemos, initialDataLoaded = true),
-    habitsState: HabitsState = HabitsState(),
-    settingsState: SettingsState = SettingsState(),
-  ) {
-    setVibitsAppMobile(appState, memosState, habitsState, settingsState, darkTheme = false)
-    saveScreenshot(name)
-    setVibitsAppMobile(appState, memosState, habitsState, settingsState, darkTheme = true)
-    saveScreenshot("${name}_dark")
-  }
-
   // endregion
 
   // region Loading
 
   @Test
-  fun `when app is loading then captures loading screen`() =
-    runDesktopShellUiTest {
-      val features =
-        AppFeatures(
-          app = RecordingFeature(AppState(appMode = AppMode.DEMO, periodStartDate = today)),
-          memos = RecordingFeature(MemosState(initialDataLoaded = false)),
-          habits = RecordingFeature(HabitsState()),
-          settings = RecordingFeature(SettingsState()),
-        )
-      val content: @Composable () -> Unit = {
-        AppContent(
-          appMode = AppMode.DEMO,
-          showOnboarding = false,
-          featuresState =
-            FeaturesState(
-              modeSelection = RecordingFeature(ModeSelectionState()),
-              onboarding = RecordingFeature(OnboardingState()),
-              app = features,
-            ),
-          appTheme = AppTheme.SYSTEM,
-          appLanguage = AppLanguage.ENGLISH,
-          exportService = fakeExportService,
-          onResetApp = {},
-          onThemeChanged = {},
-          onLanguageChanged = {},
-        )
-      }
+  fun `when app is loading then captures loading screen`() {
+    val features =
+      AppFeatures(
+        app = RecordingFeature(AppState(appMode = AppMode.DEMO, periodStartDate = today)),
+        memos = RecordingFeature(MemosState(initialDataLoaded = false)),
+        habits = RecordingFeature(HabitsState()),
+        settings = RecordingFeature(SettingsState()),
+      )
+    val content: @Composable () -> Unit = {
+      AppContent(
+        appMode = AppMode.DEMO,
+        showOnboarding = false,
+        featuresState =
+          FeaturesState(
+            modeSelection = RecordingFeature(ModeSelectionState()),
+            onboarding = RecordingFeature(OnboardingState()),
+            app = features,
+          ),
+        appTheme = AppTheme.SYSTEM,
+        appLanguage = AppLanguage.ENGLISH,
+        exportService = fakeExportService,
+        onResetApp = {},
+        onThemeChanged = {},
+        onLanguageChanged = {},
+      )
+    }
 
+    runDesktopShellUiTest {
       setThemedContent(darkTheme = false, content = content)
       onNodeWithTag(AppShellTestTags.LOADING_SCREEN).assertIsDisplayed()
       saveScreenshot("app_loading")
 
       setThemedContent(darkTheme = true, content = content)
-      onNodeWithTag(AppShellTestTags.LOADING_SCREEN).assertIsDisplayed()
       saveScreenshot("app_loading_dark")
     }
+  }
 
   // endregion
 
   // region Habits stats
 
   @Test
-  fun `when habits week view then captures week habits`() =
-    runDesktopShellUiTest {
-      val periodStart = LocalDate(2024, 12, 9)
-      val range = ActivityRange.Week(periodStart)
-      captureApp(
-        name = "app_habits_week",
-        appState = habitsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = periodStart),
-        habitsState = habitsStateWithCache(range),
-      )
+  fun `when habits week view then captures week habits`() {
+    val periodStart = LocalDate(2024, 12, 9)
+    val range = ActivityRange.Week(periodStart)
+    val appState = habitsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = periodStart)
+    val habitsState = habitsStateWithCache(range)
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_habits_week", appState = appState, habitsState = habitsState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_HABITS).assertIsDisplayed()
     }
+    runMobileUiTest {
+      captureApp(name = "app_habits_week", appState = appState, habitsState = habitsState, isDesktop = false)
+      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
+    }
+  }
 
   @Test
-  fun `when habits month view then captures month habits`() =
-    runDesktopShellUiTest {
-      val periodStart = LocalDate(2024, 11, 1)
-      val range = ActivityRange.Month(2024, Month.NOVEMBER)
-      captureApp(
-        name = "app_habits_month",
-        appState = habitsAppState(tab = TimeRangeTab.MONTHS, periodStartDate = periodStart),
-        habitsState = habitsStateWithCache(range),
-      )
+  fun `when habits month view then captures month habits`() {
+    val periodStart = LocalDate(2024, 11, 1)
+    val range = ActivityRange.Month(2024, Month.NOVEMBER)
+    val appState = habitsAppState(tab = TimeRangeTab.MONTHS, periodStartDate = periodStart)
+    val habitsState = habitsStateWithCache(range)
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_habits_month", appState = appState, habitsState = habitsState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_HABITS).assertIsDisplayed()
     }
+    runMobileUiTest {
+      captureApp(name = "app_habits_month", appState = appState, habitsState = habitsState, isDesktop = false)
+      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
+    }
+  }
 
   @Test
-  fun `when habits quarter view then captures quarter habits`() =
-    runDesktopShellUiTest {
-      val periodStart = LocalDate(2024, 10, 1)
-      val range = ActivityRange.Quarter(2024, 4)
-      captureApp(
-        name = "app_habits_quarter",
-        appState = habitsAppState(tab = TimeRangeTab.QUARTERS, periodStartDate = periodStart),
-        habitsState = habitsStateWithCache(range),
-      )
+  fun `when habits quarter view then captures quarter habits`() {
+    val periodStart = LocalDate(2024, 10, 1)
+    val range = ActivityRange.Quarter(2024, 4)
+    val appState = habitsAppState(tab = TimeRangeTab.QUARTERS, periodStartDate = periodStart)
+    val habitsState = habitsStateWithCache(range)
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_habits_quarter", appState = appState, habitsState = habitsState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_HABITS).assertIsDisplayed()
     }
+    runMobileUiTest {
+      captureApp(name = "app_habits_quarter", appState = appState, habitsState = habitsState, isDesktop = false)
+      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
+    }
+  }
 
   @Test
-  fun `when habits year view then captures year habits`() =
-    runDesktopShellUiTest {
-      val periodStart = LocalDate(2024, 6, 15)
-      val range = ActivityRange.Year(2024)
-      captureApp(
-        name = "app_habits_year",
-        appState = habitsAppState(tab = TimeRangeTab.YEARS, periodStartDate = periodStart),
-        habitsState = habitsStateWithCache(range),
-      )
+  fun `when habits year view then captures year habits`() {
+    val periodStart = LocalDate(2024, 6, 15)
+    val range = ActivityRange.Year(2024)
+    val appState = habitsAppState(tab = TimeRangeTab.YEARS, periodStartDate = periodStart)
+    val habitsState = habitsStateWithCache(range)
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_habits_year", appState = appState, habitsState = habitsState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_HABITS).assertIsDisplayed()
     }
+    runMobileUiTest {
+      captureApp(name = "app_habits_year", appState = appState, habitsState = habitsState, isDesktop = false)
+      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
+    }
+  }
 
   // endregion
 
   // region Posts stats
 
   @Test
-  fun `when posts week view then captures week posts`() =
-    runDesktopShellUiTest {
-      val periodStart = LocalDate(2024, 12, 9)
-      val range = ActivityRange.Week(periodStart)
-      captureApp(
-        name = "app_stats_week",
-        appState = postsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = periodStart),
-        habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS),
-      )
+  fun `when posts week view then captures week posts`() {
+    val periodStart = LocalDate(2024, 12, 9)
+    val range = ActivityRange.Week(periodStart)
+    val appState = postsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = periodStart)
+    val habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS)
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_stats_week", appState = appState, habitsState = habitsState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_STATS).assertIsDisplayed()
     }
+    runMobileUiTest {
+      captureApp(name = "app_stats_week", appState = appState, habitsState = habitsState, isDesktop = false)
+      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_STATS).assertIsDisplayed()
+    }
+  }
 
   @Test
-  fun `when posts month view then captures month posts`() =
-    runDesktopShellUiTest {
-      val periodStart = LocalDate(2024, 11, 1)
-      val range = ActivityRange.Month(2024, Month.NOVEMBER)
-      captureApp(
-        name = "app_stats_month",
-        appState = postsAppState(tab = TimeRangeTab.MONTHS, periodStartDate = periodStart),
-        habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS),
-      )
+  fun `when posts month view then captures month posts`() {
+    val periodStart = LocalDate(2024, 11, 1)
+    val range = ActivityRange.Month(2024, Month.NOVEMBER)
+    val appState = postsAppState(tab = TimeRangeTab.MONTHS, periodStartDate = periodStart)
+    val habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS)
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_stats_month", appState = appState, habitsState = habitsState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_STATS).assertIsDisplayed()
     }
+    runMobileUiTest {
+      captureApp(name = "app_stats_month", appState = appState, habitsState = habitsState, isDesktop = false)
+      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_STATS).assertIsDisplayed()
+    }
+  }
 
   // endregion
 
   // region Feed
 
   @Test
-  fun `when feed has data then captures feed screen`() =
-    runDesktopShellUiTest {
-      captureApp(
-        name = "app_feed",
-        appState = feedAppState(),
-      )
+  fun `when feed has data then captures feed screen`() {
+    val appState = feedAppState()
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_feed", appState = appState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_FEED).assertIsDisplayed()
     }
+    runMobileUiTest {
+      captureApp(name = "app_feed", appState = appState, isDesktop = false)
+      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_FEED).assertIsDisplayed()
+    }
+  }
 
   @Test
-  fun `when feed is empty then captures empty feed`() =
-    runDesktopShellUiTest {
-      captureApp(
-        name = "app_feed_empty",
-        appState = feedAppState(),
-        memosState = MemosState(memos = emptyList(), initialDataLoaded = true),
-      )
+  fun `when feed is empty then captures empty feed`() {
+    val appState = feedAppState()
+    val memosState = MemosState(memos = emptyList(), initialDataLoaded = true)
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_feed_empty", appState = appState, memosState = memosState)
       onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_FEED).assertIsDisplayed()
     }
+    runMobileUiTest {
+      captureApp(name = "app_feed_empty", appState = appState, memosState = memosState, isDesktop = false)
+      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_FEED).assertIsDisplayed()
+    }
+  }
 
   // endregion
 
   // region Settings dialogs
 
   @Test
-  fun `when settings open in online mode then captures online settings`() =
-    runDesktopShellUiTest {
-      captureApp(
-        name = "app_settings_online",
-        appState = habitsAppState(),
-        settingsState =
-          SettingsState(
-            isOpen = true,
-            appMode = AppMode.ONLINE,
-            editBaseUrl = "https://memos.example.com",
-            editToken = "test-token-123",
-          ),
+  fun `when settings open in online mode then captures online settings`() {
+    val appState = habitsAppState()
+    val settingsState =
+      SettingsState(
+        isOpen = true,
+        appMode = AppMode.ONLINE,
+        editBaseUrl = "https://memos.example.com",
+        editToken = "test-token-123",
       )
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_settings_online", appState = appState, settingsState = settingsState)
       onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
     }
-
-  @Test
-  fun `when settings open in demo mode then captures demo settings`() =
-    runDesktopShellUiTest {
-      captureApp(
-        name = "app_settings_demo",
-        appState = habitsAppState(),
-        settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO),
-      )
-
+    runMobileUiTest {
+      captureApp(name = "app_settings_online", appState = appState, settingsState = settingsState, isDesktop = false)
       onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
     }
+  }
 
   @Test
-  fun `when logs dialog open then captures logs`() =
-    runDesktopShellUiTest {
-      captureApp(
-        name = "app_settings_logs",
-        appState = habitsAppState(),
-        settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO, showLogsDialog = true),
-      )
+  fun `when settings open in demo mode then captures demo settings`() {
+    val appState = habitsAppState()
+    val settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO)
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_settings_demo", appState = appState, settingsState = settingsState)
+      onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
+    }
+    runMobileUiTest {
+      captureApp(name = "app_settings_demo", appState = appState, settingsState = settingsState, isDesktop = false)
+      onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
+    }
+  }
+
+  @Test
+  fun `when logs dialog open then captures logs`() {
+    val appState = habitsAppState()
+    val settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO, showLogsDialog = true)
+
+    runDesktopShellUiTest {
+      captureApp(name = "app_settings_logs", appState = appState, settingsState = settingsState)
       onNodeWithTag(SettingsTestTags.LOGS_DIALOG).assertIsDisplayed()
     }
+    runMobileUiTest {
+      captureApp(name = "app_settings_logs", appState = appState, settingsState = settingsState, isDesktop = false)
+      onNodeWithTag(SettingsTestTags.LOGS_DIALOG).assertIsDisplayed()
+    }
+  }
 
   @Test
-  fun `when reset confirmation open then captures reset dialog`() =
-    runDesktopShellUiTest {
-      captureApp(
-        name = "app_settings_reset",
-        appState = habitsAppState(),
-        settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO, showResetConfirmation = true),
-      )
+  fun `when reset confirmation open then captures reset dialog`() {
+    val appState = habitsAppState()
+    val settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO, showResetConfirmation = true)
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_settings_reset", appState = appState, settingsState = settingsState)
       onNodeWithTag(SettingsTestTags.RESET_OPTIONS_DIALOG).assertIsDisplayed()
     }
+    runMobileUiTest {
+      captureApp(name = "app_settings_reset", appState = appState, settingsState = settingsState, isDesktop = false)
+      onNodeWithTag(SettingsTestTags.RESET_OPTIONS_DIALOG).assertIsDisplayed()
+    }
+  }
 
   // endregion
 
   // region Habit dialogs
 
   @Test
-  fun `when habit editor open then captures editor dialog`() =
-    runDesktopShellUiTest {
-      val editorDay =
-        ContributionDay(
-          date = today,
-          count = 1,
-          totalHabits = 4,
-          completionRatio = 0.25f,
-          habitStatuses =
-            listOf(
-              HabitStatus(tag = "#habits/exercise", label = "Exercise", done = true),
-              HabitStatus(tag = "#habits/water", label = "Water", done = false),
-              HabitStatus(tag = "#habits/reading", label = "Reading", done = false),
-              HabitStatus(tag = "#habits/meditation", label = "Meditation", done = false),
-            ),
-          dailyMemo = null,
-          inRange = true,
-        )
-      val range = ActivityRange.Week(LocalDate(2024, 12, 9))
-      captureApp(
-        name = "app_habit_editor",
-        appState = habitsAppState(),
-        habitsState =
-          habitsStateWithCache(range).copy(
-            editorDay = editorDay,
-            editorConfig = allHabits,
-            editorSelections =
-              mapOf(
-                "#habits/exercise" to true,
-                "#habits/water" to false,
-                "#habits/reading" to false,
-                "#habits/meditation" to false,
-              ),
+  fun `when habit editor open then captures editor dialog`() {
+    val editorDay =
+      ContributionDay(
+        date = today,
+        count = 1,
+        totalHabits = 4,
+        completionRatio = 0.25f,
+        habitStatuses =
+          listOf(
+            HabitStatus(tag = "#habits/exercise", label = "Exercise", done = true),
+            HabitStatus(tag = "#habits/water", label = "Water", done = false),
+            HabitStatus(tag = "#habits/reading", label = "Reading", done = false),
+            HabitStatus(tag = "#habits/meditation", label = "Meditation", done = false),
+          ),
+        dailyMemo = null,
+        inRange = true,
+      )
+    val range = ActivityRange.Week(LocalDate(2024, 12, 9))
+    val appState = habitsAppState()
+    val habitsState =
+      habitsStateWithCache(range).copy(
+        editorDay = editorDay,
+        editorConfig = allHabits,
+        editorSelections =
+          mapOf(
+            "#habits/exercise" to true,
+            "#habits/water" to false,
+            "#habits/reading" to false,
+            "#habits/meditation" to false,
           ),
       )
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_habit_editor", appState = appState, habitsState = habitsState)
       onNodeWithTag(AppShellTestTags.HABIT_EDITOR_DIALOG).assertIsDisplayed()
     }
+    runMobileUiTest {
+      captureApp(name = "app_habit_editor", appState = appState, habitsState = habitsState, isDesktop = false)
+      onNodeWithTag(AppShellTestTags.HABIT_EDITOR_DIALOG).assertIsDisplayed()
+    }
+  }
 
   @Test
-  fun `when config dialog open then captures habits config`() =
-    runDesktopShellUiTest {
-      val range = ActivityRange.Week(LocalDate(2024, 12, 9))
-      captureApp(
-        name = "app_habits_config",
-        appState = habitsAppState(),
-        habitsState =
-          habitsStateWithCache(range).copy(
-            showConfigDialog = true,
-            editingHabits =
-              allHabits.mapIndexed { i, h ->
-                EditableHabit(id = "$i", tag = h.tag, label = h.label, color = h.color)
-              },
-          ),
+  fun `when config dialog open then captures habits config`() {
+    val range = ActivityRange.Week(LocalDate(2024, 12, 9))
+    val appState = habitsAppState()
+    val habitsState =
+      habitsStateWithCache(range).copy(
+        showConfigDialog = true,
+        editingHabits =
+          allHabits.mapIndexed { i, h ->
+            EditableHabit(id = "$i", tag = h.tag, label = h.label, color = h.color)
+          },
       )
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_habits_config", appState = appState, habitsState = habitsState)
       onNodeWithTag(StatsTestTags.HABITS_CONFIG_DIALOG).assertIsDisplayed()
     }
+    runMobileUiTest {
+      captureApp(name = "app_habits_config", appState = appState, habitsState = habitsState, isDesktop = false)
+      onNodeWithTag(StatsTestTags.HABITS_CONFIG_DIALOG).assertIsDisplayed()
+    }
+  }
 
   @Test
-  fun `when delete confirm shown then captures delete dialog`() =
-    runDesktopShellUiTest {
-      val testDay =
-        ContributionDay(
-          date = today,
-          count = 2,
-          totalHabits = 4,
-          completionRatio = 0.5f,
-          habitStatuses =
-            listOf(
-              HabitStatus(tag = "#habits/exercise", label = "Exercise", done = true),
-              HabitStatus(tag = "#habits/water", label = "Water", done = true),
-              HabitStatus(tag = "#habits/reading", label = "Reading", done = false),
-              HabitStatus(tag = "#habits/meditation", label = "Meditation", done = false),
-            ),
-          dailyMemo = null,
-          inRange = true,
-        )
-      val range = ActivityRange.Week(LocalDate(2024, 12, 9))
-      captureApp(
-        name = "app_habits_delete",
-        appState = habitsAppState(),
-        habitsState =
-          habitsStateWithCache(range).copy(
-            showDeleteConfirm = true,
-            editorDay = testDay,
+  fun `when delete confirm shown then captures delete dialog`() {
+    val testDay =
+      ContributionDay(
+        date = today,
+        count = 2,
+        totalHabits = 4,
+        completionRatio = 0.5f,
+        habitStatuses =
+          listOf(
+            HabitStatus(tag = "#habits/exercise", label = "Exercise", done = true),
+            HabitStatus(tag = "#habits/water", label = "Water", done = true),
+            HabitStatus(tag = "#habits/reading", label = "Reading", done = false),
+            HabitStatus(tag = "#habits/meditation", label = "Meditation", done = false),
           ),
+        dailyMemo = null,
+        inRange = true,
+      )
+    val range = ActivityRange.Week(LocalDate(2024, 12, 9))
+    val appState = habitsAppState()
+    val habitsState =
+      habitsStateWithCache(range).copy(
+        showDeleteConfirm = true,
+        editorDay = testDay,
       )
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_habits_delete", appState = appState, habitsState = habitsState)
       onNodeWithTag(StatsTestTags.EMPTY_DELETE_DIALOG).assertIsDisplayed()
     }
+    runMobileUiTest {
+      captureApp(name = "app_habits_delete", appState = appState, habitsState = habitsState, isDesktop = false)
+      onNodeWithTag(StatsTestTags.EMPTY_DELETE_DIALOG).assertIsDisplayed()
+    }
+  }
 
   @Test
-  fun `when single toggle shown then captures toggle dialog`() =
-    runDesktopShellUiTest {
-      val testDay =
-        ContributionDay(
-          date = today,
-          count = 1,
-          totalHabits = 4,
-          completionRatio = 0.25f,
-          habitStatuses =
-            listOf(
-              HabitStatus(tag = "#habits/exercise", label = "Exercise", done = true),
-              HabitStatus(tag = "#habits/water", label = "Water", done = false),
-              HabitStatus(tag = "#habits/reading", label = "Reading", done = false),
-              HabitStatus(tag = "#habits/meditation", label = "Meditation", done = false),
-            ),
-          dailyMemo = null,
-          inRange = true,
-        )
-      val range = ActivityRange.Week(LocalDate(2024, 12, 9))
-      captureApp(
-        name = "app_habits_toggle",
-        appState = habitsAppState(),
-        habitsState =
-          habitsStateWithCache(range).copy(
-            singleToggleDay = testDay,
-            singleToggleHabitTag = "#habits/water",
-            singleToggleHabitLabel = "Water",
-            singleToggleConfig = allHabits,
+  fun `when single toggle shown then captures toggle dialog`() {
+    val testDay =
+      ContributionDay(
+        date = today,
+        count = 1,
+        totalHabits = 4,
+        completionRatio = 0.25f,
+        habitStatuses =
+          listOf(
+            HabitStatus(tag = "#habits/exercise", label = "Exercise", done = true),
+            HabitStatus(tag = "#habits/water", label = "Water", done = false),
+            HabitStatus(tag = "#habits/reading", label = "Reading", done = false),
+            HabitStatus(tag = "#habits/meditation", label = "Meditation", done = false),
           ),
+        dailyMemo = null,
+        inRange = true,
+      )
+    val range = ActivityRange.Week(LocalDate(2024, 12, 9))
+    val appState = habitsAppState()
+    val habitsState =
+      habitsStateWithCache(range).copy(
+        singleToggleDay = testDay,
+        singleToggleHabitTag = "#habits/water",
+        singleToggleHabitLabel = "Water",
+        singleToggleConfig = allHabits,
       )
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_habits_toggle", appState = appState, habitsState = habitsState)
       onNodeWithTag(StatsTestTags.SINGLE_TOGGLE_DIALOG).assertIsDisplayed()
     }
+    runMobileUiTest {
+      captureApp(name = "app_habits_toggle", appState = appState, habitsState = habitsState, isDesktop = false)
+      onNodeWithTag(StatsTestTags.SINGLE_TOGGLE_DIALOG).assertIsDisplayed()
+    }
+  }
 
   // endregion
 
   // region Feed dialogs
 
   @Test
-  fun `when edit config warning shown then captures warning dialog`() =
-    runDesktopShellUiTest {
-      captureApp(
-        name = "app_feed_edit_warning",
-        appState = feedAppState(),
-        habitsState = HabitsState(showEditConfigWarning = true),
-      )
+  fun `when edit config warning shown then captures warning dialog`() {
+    val appState = feedAppState()
+    val habitsState = HabitsState(showEditConfigWarning = true)
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_feed_edit_warning", appState = appState, habitsState = habitsState)
       onNodeWithTag(StatsTestTags.EDIT_CONFIG_WARNING_DIALOG).assertIsDisplayed()
     }
-
-  @Test
-  fun `when sync conflict dialog shown then captures conflict dialog`() =
-    runDesktopShellUiTest {
-      captureApp(
-        name = "app_sync_conflict",
-        appState = feedAppState(),
-        memosState =
-          MemosState(
-            memos = demoMemos,
-            initialDataLoaded = true,
-            showConflictDialog = true,
-            syncConflicts =
-              listOf(
-                SyncConflict(
-                  operation =
-                    SyncOperation(
-                      id = "op1",
-                      type = SyncOperationType.UPDATE,
-                      memoName = demoMemos.first().name,
-                    ),
-                  localMemo = demoMemos.first(),
-                  serverMemo = demoMemos.first(),
-                  conflictType = ConflictType.BOTH_MODIFIED,
-                ),
-              ),
-          ),
-      )
-
-      onNodeWithTag(FeedTestTags.SYNC_CONFLICT_DIALOG).assertIsDisplayed()
-    }
-
-  // endregion
-
-  // region Mobile loading
-
-  @Test
-  fun `when mobile app is loading then captures mobile loading screen`() =
     runMobileUiTest {
-      val features =
-        AppFeatures(
-          app = RecordingFeature(AppState(appMode = AppMode.DEMO, periodStartDate = today)),
-          memos = RecordingFeature(MemosState(initialDataLoaded = false)),
-          habits = RecordingFeature(HabitsState()),
-          settings = RecordingFeature(SettingsState()),
-        )
-      val content: @Composable () -> Unit = {
-        AppContent(
-          appMode = AppMode.DEMO,
-          showOnboarding = false,
-          featuresState =
-            FeaturesState(
-              modeSelection = RecordingFeature(ModeSelectionState()),
-              onboarding = RecordingFeature(OnboardingState()),
-              app = features,
-            ),
-          appTheme = AppTheme.SYSTEM,
-          appLanguage = AppLanguage.ENGLISH,
-          exportService = fakeExportService,
-          onResetApp = {},
-          onThemeChanged = {},
-          onLanguageChanged = {},
-        )
-      }
-
-      setMobileThemedContent(darkTheme = false, content = content)
-      onNodeWithTag(AppShellTestTags.LOADING_SCREEN).assertIsDisplayed()
-      saveScreenshot("app_mobile_loading")
-
-      setMobileThemedContent(darkTheme = true, content = content)
-      onNodeWithTag(AppShellTestTags.LOADING_SCREEN).assertIsDisplayed()
-      saveScreenshot("app_mobile_loading_dark")
-    }
-
-  // endregion
-
-  // region Mobile habits stats
-
-  @Test
-  fun `when mobile habits week view then captures mobile layout`() =
-    runMobileUiTest {
-      val periodStart = LocalDate(2024, 12, 9)
-      val range = ActivityRange.Week(periodStart)
-      captureAppMobile(
-        name = "app_mobile_habits_week",
-        appState = habitsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = periodStart),
-        habitsState = habitsStateWithCache(range),
-      )
-
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
-    }
-
-  @Test
-  fun `when mobile habits month view then captures mobile layout`() =
-    runMobileUiTest {
-      val periodStart = LocalDate(2024, 11, 1)
-      val range = ActivityRange.Month(2024, Month.NOVEMBER)
-      captureAppMobile(
-        name = "app_mobile_habits_month",
-        appState = habitsAppState(tab = TimeRangeTab.MONTHS, periodStartDate = periodStart),
-        habitsState = habitsStateWithCache(range),
-      )
-
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
-    }
-
-  @Test
-  fun `when mobile habits quarter view then captures mobile layout`() =
-    runMobileUiTest {
-      val periodStart = LocalDate(2024, 10, 1)
-      val range = ActivityRange.Quarter(2024, 4)
-      captureAppMobile(
-        name = "app_mobile_habits_quarter",
-        appState = habitsAppState(tab = TimeRangeTab.QUARTERS, periodStartDate = periodStart),
-        habitsState = habitsStateWithCache(range),
-      )
-
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
-    }
-
-  @Test
-  fun `when mobile habits year view then captures mobile layout`() =
-    runMobileUiTest {
-      val periodStart = LocalDate(2024, 6, 15)
-      val range = ActivityRange.Year(2024)
-      captureAppMobile(
-        name = "app_mobile_habits_year",
-        appState = habitsAppState(tab = TimeRangeTab.YEARS, periodStartDate = periodStart),
-        habitsState = habitsStateWithCache(range),
-      )
-
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
-    }
-
-  // endregion
-
-  // region Mobile posts stats
-
-  @Test
-  fun `when mobile posts week view then captures mobile layout`() =
-    runMobileUiTest {
-      val periodStart = LocalDate(2024, 12, 9)
-      val range = ActivityRange.Week(periodStart)
-      captureAppMobile(
-        name = "app_mobile_stats_week",
-        appState = postsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = periodStart),
-        habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS),
-      )
-
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_STATS).assertIsDisplayed()
-    }
-
-  @Test
-  fun `when mobile posts month view then captures mobile layout`() =
-    runMobileUiTest {
-      val periodStart = LocalDate(2024, 11, 1)
-      val range = ActivityRange.Month(2024, Month.NOVEMBER)
-      captureAppMobile(
-        name = "app_mobile_stats_month",
-        appState = postsAppState(tab = TimeRangeTab.MONTHS, periodStartDate = periodStart),
-        habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS),
-      )
-
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_STATS).assertIsDisplayed()
-    }
-
-  // endregion
-
-  // region Mobile feed
-
-  @Test
-  fun `when mobile feed has data then captures mobile layout`() =
-    runMobileUiTest {
-      captureAppMobile(
-        name = "app_mobile_feed",
-        appState = feedAppState(),
-      )
-
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_FEED).assertIsDisplayed()
-    }
-
-  @Test
-  fun `when mobile feed is empty then captures mobile empty feed`() =
-    runMobileUiTest {
-      captureAppMobile(
-        name = "app_mobile_feed_empty",
-        appState = feedAppState(),
-        memosState = MemosState(memos = emptyList(), initialDataLoaded = true),
-      )
-
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_FEED).assertIsDisplayed()
-    }
-
-  // endregion
-
-  // region Mobile settings dialogs
-
-  @Test
-  fun `when mobile settings open in online mode then captures mobile settings`() =
-    runMobileUiTest {
-      captureAppMobile(
-        name = "app_mobile_settings_online",
-        appState = habitsAppState(),
-        settingsState =
-          SettingsState(
-            isOpen = true,
-            appMode = AppMode.ONLINE,
-            editBaseUrl = "https://memos.example.com",
-            editToken = "test-token-123",
-          ),
-      )
-
-      onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
-    }
-
-  @Test
-  fun `when mobile settings open in demo mode then captures mobile settings`() =
-    runMobileUiTest {
-      captureAppMobile(
-        name = "app_mobile_settings_demo",
-        appState = habitsAppState(),
-        settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO),
-      )
-
-      onNodeWithTag(SettingsTestTags.SETTINGS_DIALOG).assertIsDisplayed()
-    }
-
-  @Test
-  fun `when mobile logs dialog open then captures mobile logs`() =
-    runMobileUiTest {
-      captureAppMobile(
-        name = "app_mobile_settings_logs",
-        appState = habitsAppState(),
-        settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO, showLogsDialog = true),
-      )
-
-      onNodeWithTag(SettingsTestTags.LOGS_DIALOG).assertIsDisplayed()
-    }
-
-  @Test
-  fun `when mobile reset confirmation open then captures mobile reset dialog`() =
-    runMobileUiTest {
-      captureAppMobile(
-        name = "app_mobile_settings_reset",
-        appState = habitsAppState(),
-        settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO, showResetConfirmation = true),
-      )
-
-      onNodeWithTag(SettingsTestTags.RESET_OPTIONS_DIALOG).assertIsDisplayed()
-    }
-
-  // endregion
-
-  // region Mobile habit dialogs
-
-  @Test
-  fun `when mobile habit editor open then captures mobile editor dialog`() =
-    runMobileUiTest {
-      val editorDay =
-        ContributionDay(
-          date = today,
-          count = 1,
-          totalHabits = 4,
-          completionRatio = 0.25f,
-          habitStatuses =
-            listOf(
-              HabitStatus(tag = "#habits/exercise", label = "Exercise", done = true),
-              HabitStatus(tag = "#habits/water", label = "Water", done = false),
-              HabitStatus(tag = "#habits/reading", label = "Reading", done = false),
-              HabitStatus(tag = "#habits/meditation", label = "Meditation", done = false),
-            ),
-          dailyMemo = null,
-          inRange = true,
-        )
-      val range = ActivityRange.Week(LocalDate(2024, 12, 9))
-      captureAppMobile(
-        name = "app_mobile_habit_editor",
-        appState = habitsAppState(),
-        habitsState =
-          habitsStateWithCache(range).copy(
-            editorDay = editorDay,
-            editorConfig = allHabits,
-            editorSelections =
-              mapOf(
-                "#habits/exercise" to true,
-                "#habits/water" to false,
-                "#habits/reading" to false,
-                "#habits/meditation" to false,
-              ),
-          ),
-      )
-
-      onNodeWithTag(AppShellTestTags.HABIT_EDITOR_DIALOG).assertIsDisplayed()
-    }
-
-  @Test
-  fun `when mobile config dialog open then captures mobile habits config`() =
-    runMobileUiTest {
-      val range = ActivityRange.Week(LocalDate(2024, 12, 9))
-      captureAppMobile(
-        name = "app_mobile_habits_config",
-        appState = habitsAppState(),
-        habitsState =
-          habitsStateWithCache(range).copy(
-            showConfigDialog = true,
-            editingHabits =
-              allHabits.mapIndexed { i, h ->
-                EditableHabit(id = "$i", tag = h.tag, label = h.label, color = h.color)
-              },
-          ),
-      )
-
-      onNodeWithTag(StatsTestTags.HABITS_CONFIG_DIALOG).assertIsDisplayed()
-    }
-
-  @Test
-  fun `when mobile delete confirm shown then captures mobile delete dialog`() =
-    runMobileUiTest {
-      val testDay =
-        ContributionDay(
-          date = today,
-          count = 2,
-          totalHabits = 4,
-          completionRatio = 0.5f,
-          habitStatuses =
-            listOf(
-              HabitStatus(tag = "#habits/exercise", label = "Exercise", done = true),
-              HabitStatus(tag = "#habits/water", label = "Water", done = true),
-              HabitStatus(tag = "#habits/reading", label = "Reading", done = false),
-              HabitStatus(tag = "#habits/meditation", label = "Meditation", done = false),
-            ),
-          dailyMemo = null,
-          inRange = true,
-        )
-      val range = ActivityRange.Week(LocalDate(2024, 12, 9))
-      captureAppMobile(
-        name = "app_mobile_habits_delete",
-        appState = habitsAppState(),
-        habitsState =
-          habitsStateWithCache(range).copy(
-            showDeleteConfirm = true,
-            editorDay = testDay,
-          ),
-      )
-
-      onNodeWithTag(StatsTestTags.EMPTY_DELETE_DIALOG).assertIsDisplayed()
-    }
-
-  @Test
-  fun `when mobile single toggle shown then captures mobile toggle dialog`() =
-    runMobileUiTest {
-      val testDay =
-        ContributionDay(
-          date = today,
-          count = 1,
-          totalHabits = 4,
-          completionRatio = 0.25f,
-          habitStatuses =
-            listOf(
-              HabitStatus(tag = "#habits/exercise", label = "Exercise", done = true),
-              HabitStatus(tag = "#habits/water", label = "Water", done = false),
-              HabitStatus(tag = "#habits/reading", label = "Reading", done = false),
-              HabitStatus(tag = "#habits/meditation", label = "Meditation", done = false),
-            ),
-          dailyMemo = null,
-          inRange = true,
-        )
-      val range = ActivityRange.Week(LocalDate(2024, 12, 9))
-      captureAppMobile(
-        name = "app_mobile_habits_toggle",
-        appState = habitsAppState(),
-        habitsState =
-          habitsStateWithCache(range).copy(
-            singleToggleDay = testDay,
-            singleToggleHabitTag = "#habits/water",
-            singleToggleHabitLabel = "Water",
-            singleToggleConfig = allHabits,
-          ),
-      )
-
-      onNodeWithTag(StatsTestTags.SINGLE_TOGGLE_DIALOG).assertIsDisplayed()
-    }
-
-  // endregion
-
-  // region Mobile feed dialogs
-
-  @Test
-  fun `when mobile edit config warning shown then captures mobile warning dialog`() =
-    runMobileUiTest {
-      captureAppMobile(
-        name = "app_mobile_feed_edit_warning",
-        appState = feedAppState(),
-        habitsState = HabitsState(showEditConfigWarning = true),
-      )
-
+      captureApp(name = "app_feed_edit_warning", appState = appState, habitsState = habitsState, isDesktop = false)
       onNodeWithTag(StatsTestTags.EDIT_CONFIG_WARNING_DIALOG).assertIsDisplayed()
     }
+  }
 
   @Test
-  fun `when mobile sync conflict dialog shown then captures mobile conflict dialog`() =
-    runMobileUiTest {
-      captureAppMobile(
-        name = "app_mobile_sync_conflict",
-        appState = feedAppState(),
-        memosState =
-          MemosState(
-            memos = demoMemos,
-            initialDataLoaded = true,
-            showConflictDialog = true,
-            syncConflicts =
-              listOf(
-                SyncConflict(
-                  operation =
-                    SyncOperation(
-                      id = "op1",
-                      type = SyncOperationType.UPDATE,
-                      memoName = demoMemos.first().name,
-                    ),
-                  localMemo = demoMemos.first(),
-                  serverMemo = demoMemos.first(),
-                  conflictType = ConflictType.BOTH_MODIFIED,
+  fun `when sync conflict dialog shown then captures conflict dialog`() {
+    val appState = feedAppState()
+    val memosState =
+      MemosState(
+        memos = demoMemos,
+        initialDataLoaded = true,
+        showConflictDialog = true,
+        syncConflicts =
+          listOf(
+            SyncConflict(
+              operation =
+                SyncOperation(
+                  id = "op1",
+                  type = SyncOperationType.UPDATE,
+                  memoName = demoMemos.first().name,
                 ),
-              ),
+              localMemo = demoMemos.first(),
+              serverMemo = demoMemos.first(),
+              conflictType = ConflictType.BOTH_MODIFIED,
+            ),
           ),
       )
 
+    runDesktopShellUiTest {
+      captureApp(name = "app_sync_conflict", appState = appState, memosState = memosState)
       onNodeWithTag(FeedTestTags.SYNC_CONFLICT_DIALOG).assertIsDisplayed()
     }
+    runMobileUiTest {
+      captureApp(name = "app_sync_conflict", appState = appState, memosState = memosState, isDesktop = false)
+      onNodeWithTag(FeedTestTags.SYNC_CONFLICT_DIALOG).assertIsDisplayed()
+    }
+  }
 
   // endregion
 }
