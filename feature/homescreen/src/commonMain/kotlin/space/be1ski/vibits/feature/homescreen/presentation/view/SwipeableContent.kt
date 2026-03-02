@@ -97,7 +97,6 @@ internal fun SwipeableTabContent(
       habitsState = habitsState,
       onHabitsAction = onHabitsAction,
       onAppAction = onAppAction,
-      onMemosAction = dispatchMemos,
       dateFormatter = dateFormatter,
     )
   }
@@ -113,7 +112,6 @@ private fun SwipeablePagerContent(
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit,
   onAppAction: (AppAction) -> Unit,
-  onMemosAction: (MemosAction) -> Unit,
   dateFormatter: DateFormatter,
 ) {
   val activityRange = activityRangeForAppState(appState)
@@ -170,7 +168,6 @@ private fun SwipeablePagerContent(
       habitsState = habitsState,
       onHabitsAction = onHabitsAction,
       onAppAction = onAppAction,
-      onMemosAction = onMemosAction,
       dateFormatter = dateFormatter,
     )
   }
@@ -184,7 +181,6 @@ private fun MemosTabContent(
   habitsState: HabitsState,
   onHabitsAction: (HabitsAction) -> Unit,
   onAppAction: (AppAction) -> Unit,
-  onMemosAction: (MemosAction) -> Unit,
   dateFormatter: DateFormatter,
 ) {
   val memos = memosState.memos
@@ -196,14 +192,17 @@ private fun MemosTabContent(
             memos = memos,
             range = activityRange,
             activityMode = ActivityMode.HABITS,
-            useVerticalScroll = true,
+            useVerticalScroll = !isDesktop,
             enablePullRefresh = false,
             demoMode = appState.isDemoMode,
+            isDesktop = isDesktop,
+            selectedHabitTag = appState.selectedHabitTag,
           ),
         appMode = appState.appMode,
         dateFormatter = dateFormatter,
         habitsState = habitsState,
         onHabitsAction = onHabitsAction,
+        onSelectedHabitTagChange = { onAppAction(AppAction.UI.SetSelectedHabitTag(it)) },
       )
     Screen.STATS ->
       StatsScreen(
@@ -212,10 +211,11 @@ private fun MemosTabContent(
             memos = memos,
             range = activityRange,
             activityMode = ActivityMode.POSTS,
-            useVerticalScroll = true,
+            useVerticalScroll = !isDesktop,
             enablePullRefresh = false,
             demoMode = appState.isDemoMode,
             postsListExpanded = appState.postsListExpanded,
+            isDesktop = isDesktop,
           ),
         appMode = appState.appMode,
         dateFormatter = dateFormatter,
@@ -223,25 +223,7 @@ private fun MemosTabContent(
         onHabitsAction = onHabitsAction,
         onPostsListExpandedChange = { onAppAction(AppAction.UI.SetPostsListExpanded(it)) },
       )
-    Screen.FEED ->
-      FeedScreen(
-        memos = memos,
-        dateFormatter = dateFormatter,
-        activeFilter = memosState.activePostFilter,
-        onFilterChange = { filter -> onMemosAction(MemosAction.Loading.ChangePostFilter(filter)) },
-        isRefreshing = memosState.isLoading,
-        onRefresh = {},
-        enablePullRefresh = !isDesktop,
-        demoMode = appState.isDemoMode,
-        onMemoClick = { memo ->
-          handleMemoClick(
-            memo = memo,
-            memos = memosState.memos,
-            onMemosAction = onMemosAction,
-            onHabitsAction = onHabitsAction,
-          )
-        },
-      )
+    Screen.FEED -> Unit
   }
 }
 

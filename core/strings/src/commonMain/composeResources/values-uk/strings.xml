@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">Токен доступу</string>
     <string name="label_activity">Активність</string>
+    <string name="label_all_habits">Всі</string>
     <string name="label_app_mode">Режим додатку</string>
     <string name="label_base_url">Base URL</string>
     <string name="label_credentials">Облікові дані</string>

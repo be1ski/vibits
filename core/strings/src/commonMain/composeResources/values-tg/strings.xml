@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">Токени дастрасӣ</string>
     <string name="label_activity">Фаъолият</string>
+    <string name="label_all_habits">Ҳама</string>
     <string name="label_app_mode">Режими барнома</string>
     <string name="label_base_url">Base URL</string>
     <string name="label_credentials">Маълумоти ҳисоб</string>

@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">رمز الوصول</string>
     <string name="label_activity">النشاط</string>
+    <string name="label_all_habits">الكل</string>
     <string name="label_app_mode">وضع التطبيق</string>
     <string name="label_base_url">عنوان URL الأساسي</string>
     <string name="label_credentials">بيانات الاعتماد</string>

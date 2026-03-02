@@ -97,6 +97,7 @@
     <!-- Labels -->
     <string name="label_access_token">Токен доступа</string>
     <string name="label_activity">Активность</string>
+    <string name="label_all_habits">Все</string>
     <string name="label_app_mode">Режим приложения</string>
     <string name="label_base_url">URL сервера</string>
     <string name="label_credentials">Данные для входа</string>

@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">Zugriffstoken</string>
     <string name="label_activity">Aktivität</string>
+    <string name="label_all_habits">Alle</string>
     <string name="label_app_mode">App-Modus</string>
     <string name="label_base_url">Basis-URL</string>
     <string name="label_credentials">Anmeldedaten</string>

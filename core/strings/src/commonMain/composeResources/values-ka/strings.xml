@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">წვდომის ტოკენი</string>
     <string name="label_activity">აქტივობა</string>
+    <string name="label_all_habits">ყველა</string>
     <string name="label_app_mode">აპის რეჟიმი</string>
     <string name="label_base_url">Base URL</string>
     <string name="label_credentials">რწმუნებები</string>

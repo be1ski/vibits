@@ -3,6 +3,7 @@ package space.be1ski.vibits.feature.homescreen.presentation.view
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import space.be1ski.vibits.core.platform.isDesktop
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
 import space.be1ski.vibits.feature.memos.domain.repository.ExportService
@@ -36,15 +37,27 @@ internal fun VibitsApp(
     onLanguageChanged = onLanguageChanged,
   )
 
-  VibitsAppScaffold(
-    features = features,
-    appState = appState,
-    memosState = memosState,
-    habitsState = habitsState,
-    currentLanguage = currentLanguage,
-    currentTheme = currentTheme,
-    syncDebounceSeconds = settingsState.selectedSyncDebounceSeconds,
-  )
+  if (isDesktop) {
+    VibitsDesktopShell(
+      features = features,
+      appState = appState,
+      memosState = memosState,
+      habitsState = habitsState,
+      currentLanguage = currentLanguage,
+      currentTheme = currentTheme,
+      syncDebounceSeconds = settingsState.selectedSyncDebounceSeconds,
+    )
+  } else {
+    VibitsAppScaffold(
+      features = features,
+      appState = appState,
+      memosState = memosState,
+      habitsState = habitsState,
+      currentLanguage = currentLanguage,
+      currentTheme = currentTheme,
+      syncDebounceSeconds = settingsState.selectedSyncDebounceSeconds,
+    )
+  }
 
   SettingsDialog(state = settingsState, dispatch = features.settings::send, exportService = exportService)
   MemoCreateDialog(state = memosState, dispatch = features.memos::send)

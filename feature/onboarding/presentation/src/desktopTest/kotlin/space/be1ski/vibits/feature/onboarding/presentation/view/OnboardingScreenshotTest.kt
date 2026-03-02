@@ -4,7 +4,7 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import space.be1ski.vibits.core.ui.test.captureInBothThemes
-import space.be1ski.vibits.core.ui.test.runAppUiTest
+import space.be1ski.vibits.core.ui.test.runDesktopShellUiTest
 import space.be1ski.vibits.core.utils.habits.DemoHabit
 import space.be1ski.vibits.feature.onboarding.domain.model.HabitPreset
 import space.be1ski.vibits.feature.onboarding.presentation.state.OnboardingState
@@ -17,7 +17,7 @@ class OnboardingScreenshotTest {
 
   @Test
   fun `when welcome step then captures welcome screen`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureInBothThemes("onboarding_welcome") {
         OnboardingScreen(
           state = OnboardingState(currentStep = OnboardingStep.Welcome),
@@ -30,7 +30,7 @@ class OnboardingScreenshotTest {
 
   @Test
   fun `when choose preset step then captures preset selection screen`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureInBothThemes("onboarding_choose_preset") {
         OnboardingScreen(
           state =
@@ -48,7 +48,7 @@ class OnboardingScreenshotTest {
 
   @Test
   fun `when habit setup step then captures habit setup screen`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureInBothThemes("onboarding_habit_setup") {
         OnboardingScreen(
           state =
@@ -67,7 +67,7 @@ class OnboardingScreenshotTest {
 
   @Test
   fun `when habit setup has error then captures error state`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureInBothThemes("onboarding_habit_setup_error") {
         OnboardingScreen(
           state =
@@ -87,7 +87,7 @@ class OnboardingScreenshotTest {
 
   @Test
   fun `when success step then captures success screen`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureInBothThemes("onboarding_success") {
         OnboardingScreen(
           state = OnboardingState(currentStep = OnboardingStep.Success),

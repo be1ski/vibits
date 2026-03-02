@@ -91,7 +91,8 @@ fun ChoosePresetScreen(
     Spacer(modifier = Modifier.height(Indent.m))
 
     LazyColumn(
-      verticalArrangement = Arrangement.spacedBy(Indent.s),
+      verticalArrangement = Arrangement.spacedBy(Indent.xs),
+      modifier = Modifier.weight(1f),
     ) {
       items(presets, key = { it.id }) { preset ->
         val localizedName = preset.localizedName()
@@ -104,9 +105,7 @@ fun ChoosePresetScreen(
       }
     }
 
-    Spacer(modifier = Modifier.weight(1f))
-
-    Spacer(modifier = Modifier.height(Indent.m))
+    Spacer(modifier = Modifier.height(Indent.s))
 
     Button(
       onClick = onContinue,

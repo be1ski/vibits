@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">Giriş tokeni</string>
     <string name="label_activity">Işjeňlik</string>
+    <string name="label_all_habits">Hemmesi</string>
     <string name="label_app_mode">Programma režimi</string>
     <string name="label_base_url">Base URL</string>
     <string name="label_credentials">Hasap maglumatlary</string>

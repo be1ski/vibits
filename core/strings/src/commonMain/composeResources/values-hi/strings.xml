@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">एक्सेस टोकन</string>
     <string name="label_activity">गतिविधि</string>
+    <string name="label_all_habits">सभी</string>
     <string name="label_app_mode">ऐप मोड</string>
     <string name="label_base_url">बेस URL</string>
     <string name="label_credentials">क्रेडेंशियल</string>

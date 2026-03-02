@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">访问令牌</string>
     <string name="label_activity">活动</string>
+    <string name="label_all_habits">全部</string>
     <string name="label_app_mode">应用模式</string>
     <string name="label_base_url">服务器地址</string>
     <string name="label_credentials">凭证</string>

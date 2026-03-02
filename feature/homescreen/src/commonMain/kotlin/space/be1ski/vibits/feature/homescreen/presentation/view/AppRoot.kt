@@ -1,6 +1,7 @@
 package space.be1ski.vibits.feature.homescreen.presentation.view
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
@@ -13,10 +14,14 @@ import space.be1ski.vibits.core.ui.platform.theme.rememberSystemDarkTheme
 import space.be1ski.vibits.core.ui.theme.VibitsTheme
 import space.be1ski.vibits.feature.homescreen.di.AppDependencies
 import space.be1ski.vibits.feature.homescreen.di.AppGraph
+import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
 
 @Composable
-fun AppRoot(dependencies: AppDependencies) {
+fun AppRoot(
+  dependencies: AppDependencies,
+  onFeaturesReady: ((AppFeatures) -> Unit)? = null,
+) {
   val initialPrefs = remember { dependencies.loadPreferences() }
   remember { dependencies.localeProvider.configureLocale(initialPrefs.language) }
 
@@ -37,6 +42,10 @@ fun AppRoot(dependencies: AppDependencies) {
       },
       onOnboardingCompleted = { showOnboarding = false },
     )
+
+  LaunchedEffect(featuresState.app) {
+    onFeaturesReady?.invoke(featuresState.app)
+  }
 
   SyncAppMode(featuresState, appMode) { appMode = it }
   ObserveOnboardingCheck(appMode, dependencies) { showOnboarding = it }

@@ -13,7 +13,7 @@ import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.core.elm.test.RecordingFeature
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.mode.AppMode
-import space.be1ski.vibits.core.ui.test.runAppUiTest
+import space.be1ski.vibits.core.ui.test.runDesktopShellUiTest
 import space.be1ski.vibits.core.ui.test.saveScreenshot
 import space.be1ski.vibits.core.ui.test.setThemedContent
 import space.be1ski.vibits.core.ui.theme.VibitsTheme
@@ -257,7 +257,7 @@ class AppScreenshotTest {
 
   @Test
   fun `when app is loading then captures loading screen`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       val features =
         AppFeatures(
           app = RecordingFeature(AppState(appMode = AppMode.DEMO, periodStartDate = today)),
@@ -299,7 +299,7 @@ class AppScreenshotTest {
 
   @Test
   fun `when habits week view then captures week habits`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       val periodStart = LocalDate(2024, 12, 9)
       val range = ActivityRange.Week(periodStart)
       captureApp(
@@ -308,12 +308,12 @@ class AppScreenshotTest {
         habitsState = habitsStateWithCache(range),
       )
 
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
+      onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_HABITS).assertIsDisplayed()
     }
 
   @Test
   fun `when habits month view then captures month habits`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       val periodStart = LocalDate(2024, 11, 1)
       val range = ActivityRange.Month(2024, Month.NOVEMBER)
       captureApp(
@@ -322,12 +322,12 @@ class AppScreenshotTest {
         habitsState = habitsStateWithCache(range),
       )
 
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
+      onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_HABITS).assertIsDisplayed()
     }
 
   @Test
   fun `when habits quarter view then captures quarter habits`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       val periodStart = LocalDate(2024, 10, 1)
       val range = ActivityRange.Quarter(2024, 4)
       captureApp(
@@ -336,12 +336,12 @@ class AppScreenshotTest {
         habitsState = habitsStateWithCache(range),
       )
 
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
+      onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_HABITS).assertIsDisplayed()
     }
 
   @Test
   fun `when habits year view then captures year habits`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       val periodStart = LocalDate(2024, 6, 15)
       val range = ActivityRange.Year(2024)
       captureApp(
@@ -350,7 +350,7 @@ class AppScreenshotTest {
         habitsState = habitsStateWithCache(range),
       )
 
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_HABITS).assertIsDisplayed()
+      onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_HABITS).assertIsDisplayed()
     }
 
   // endregion
@@ -359,7 +359,7 @@ class AppScreenshotTest {
 
   @Test
   fun `when posts week view then captures week posts`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       val periodStart = LocalDate(2024, 12, 9)
       val range = ActivityRange.Week(periodStart)
       captureApp(
@@ -368,12 +368,12 @@ class AppScreenshotTest {
         habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS),
       )
 
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_STATS).assertIsDisplayed()
+      onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_STATS).assertIsDisplayed()
     }
 
   @Test
   fun `when posts month view then captures month posts`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       val periodStart = LocalDate(2024, 11, 1)
       val range = ActivityRange.Month(2024, Month.NOVEMBER)
       captureApp(
@@ -382,7 +382,7 @@ class AppScreenshotTest {
         habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS),
       )
 
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_STATS).assertIsDisplayed()
+      onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_STATS).assertIsDisplayed()
     }
 
   // endregion
@@ -391,25 +391,25 @@ class AppScreenshotTest {
 
   @Test
   fun `when feed has data then captures feed screen`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureApp(
         name = "app_feed",
         appState = feedAppState(),
       )
 
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_FEED).assertIsDisplayed()
+      onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_FEED).assertIsDisplayed()
     }
 
   @Test
   fun `when feed is empty then captures empty feed`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureApp(
         name = "app_feed_empty",
         appState = feedAppState(),
         memosState = MemosState(memos = emptyList(), initialDataLoaded = true),
       )
 
-      onNodeWithTag(AppShellTestTags.BOTTOM_NAV_FEED).assertIsDisplayed()
+      onNodeWithTag(AppShellTestTags.SIDEBAR_NAV_FEED).assertIsDisplayed()
     }
 
   // endregion
@@ -418,7 +418,7 @@ class AppScreenshotTest {
 
   @Test
   fun `when settings open in online mode then captures online settings`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureApp(
         name = "app_settings_online",
         appState = habitsAppState(),
@@ -436,7 +436,7 @@ class AppScreenshotTest {
 
   @Test
   fun `when settings open in demo mode then captures demo settings`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureApp(
         name = "app_settings_demo",
         appState = habitsAppState(),
@@ -448,7 +448,7 @@ class AppScreenshotTest {
 
   @Test
   fun `when logs dialog open then captures logs`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureApp(
         name = "app_settings_logs",
         appState = habitsAppState(),
@@ -460,7 +460,7 @@ class AppScreenshotTest {
 
   @Test
   fun `when reset confirmation open then captures reset dialog`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureApp(
         name = "app_settings_reset",
         appState = habitsAppState(),
@@ -476,7 +476,7 @@ class AppScreenshotTest {
 
   @Test
   fun `when habit editor open then captures editor dialog`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       val editorDay =
         ContributionDay(
           date = today,
@@ -516,7 +516,7 @@ class AppScreenshotTest {
 
   @Test
   fun `when config dialog open then captures habits config`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       val range = ActivityRange.Week(LocalDate(2024, 12, 9))
       captureApp(
         name = "app_habits_config",
@@ -536,7 +536,7 @@ class AppScreenshotTest {
 
   @Test
   fun `when delete confirm shown then captures delete dialog`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       val testDay =
         ContributionDay(
           date = today,
@@ -569,7 +569,7 @@ class AppScreenshotTest {
 
   @Test
   fun `when single toggle shown then captures toggle dialog`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       val testDay =
         ContributionDay(
           date = today,
@@ -608,7 +608,7 @@ class AppScreenshotTest {
 
   @Test
   fun `when edit config warning shown then captures warning dialog`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureApp(
         name = "app_feed_edit_warning",
         appState = feedAppState(),
@@ -620,7 +620,7 @@ class AppScreenshotTest {
 
   @Test
   fun `when sync conflict dialog shown then captures conflict dialog`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureApp(
         name = "app_sync_conflict",
         appState = feedAppState(),

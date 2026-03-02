@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">Kirish tokeni</string>
     <string name="label_activity">Faoliyat</string>
+    <string name="label_all_habits">Hammasi</string>
     <string name="label_app_mode">Ilova rejimi</string>
     <string name="label_base_url">Base URL</string>
     <string name="label_credentials">Hisob ma\'lumotlari</string>

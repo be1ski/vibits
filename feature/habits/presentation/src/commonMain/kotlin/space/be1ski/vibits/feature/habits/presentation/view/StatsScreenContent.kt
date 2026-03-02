@@ -25,7 +25,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -110,19 +110,21 @@ internal fun StatsInfoCard(
         modifier = Modifier.size(36.dp),
       ) {
         Icon(
-          imageVector = Icons.Filled.Settings,
+          imageVector = Icons.Filled.Tune,
           contentDescription = stringResource(Res.string.label_habits_config),
           modifier = Modifier.size(20.dp),
           tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
       }
-      Button(
-        onClick = {
-          val day = derived.todayDay ?: return@Button
-          dispatch(HabitsAction.Editor.OpenEditor(day = day, config = derived.todayConfig))
-        },
-      ) {
-        Text(stringResource(Res.string.action_track))
+      if (!state.isDesktop) {
+        Button(
+          onClick = {
+            val day = derived.todayDay ?: return@Button
+            dispatch(HabitsAction.Editor.OpenEditor(day = day, config = derived.todayConfig))
+          },
+        ) {
+          Text(stringResource(Res.string.action_track))
+        }
       }
     },
   )
@@ -464,6 +466,7 @@ private fun CompactPostRow(
 
 private const val COMPACT_POST_MAX_LENGTH = 50
 private const val MATRIX_CELL_FILL_MS = 220
+private const val MAX_MATRIX_CELL_HEIGHT_DP = 36
 
 @Suppress("LongMethod")
 @Composable
@@ -678,6 +681,198 @@ private fun HabitActivitySection(
   }
 }
 
+@Composable
+internal fun StatsSelectedHabitChart(
+  derived: StatsScreenDerivedState,
+  dispatch: (HabitsAction) -> Unit,
+  selectedHabitTag: String,
+) {
+  val habit = derived.currentHabitsConfig.firstOrNull { it.tag == selectedHabitTag } ?: return
+  val selectionId = "habit:${habit.tag}"
+
+  val onDaySelected =
+    remember(dispatch, selectionId) {
+      { day: ContributionDay -> dispatch(HabitsAction.Selection.SelectDay(day, selectionId)) }
+    }
+  val onClearSelection = remember(dispatch) { { dispatch(HabitsAction.Selection.ClearSelection) } }
+
+  if (derived.showLast7DaysMatrix) {
+    val onSingleHabitToggle =
+      remember(dispatch, derived.currentHabitsConfig) {
+        { day: ContributionDay, habitTag: String, habitLabel: String ->
+          dispatch(
+            HabitsAction.SingleToggle.RequestSingleHabitToggle(day, habitTag, habitLabel, derived.currentHabitsConfig),
+          )
+        }
+      }
+    SingleHabitWeekStrip(
+      days = derived.weekData.lastSevenDays(),
+      habit = habit,
+      compactHeight = derived.useCompactHeight,
+      demoMode = derived.state.demoMode,
+      formatter = derived.dateFormatter,
+      onHabitClick = onSingleHabitToggle,
+    )
+  } else {
+    SelectedHabitGrid(derived, habit, selectionId, onDaySelected, onClearSelection)
+  }
+}
+
+@Composable
+private fun SelectedHabitGrid(
+  derived: StatsScreenDerivedState,
+  habit: HabitConfig,
+  selectionId: String,
+  onDaySelected: (ContributionDay) -> Unit,
+  onClearSelection: () -> Unit,
+) {
+  val habitsState = derived.habitsState
+  val habitWeekData =
+    remember(derived.weekData, habit) {
+      derived.weekData.forHabit(habit)
+    }
+  val selectedDay =
+    remember(habitWeekData.weeks, habit, habitsState.selectedDate) {
+      if (habitsState.activeSelectionId == selectionId) {
+        habitsState.selectedDate?.let { date -> habitWeekData.findDayByDate(date) }
+      } else {
+        null
+      }
+    }
+  val chartScrollState = rememberScrollState()
+  val showTimeline = derived.state.range is ActivityRange.Quarter || derived.state.range is ActivityRange.Year
+  val useCalendarLayout = derived.state.range is ActivityRange.Month
+
+  ContributionGrid(
+    state =
+      ContributionGridState(
+        weekData = habitWeekData,
+        range = derived.state.range,
+        selectedDay = selectedDay,
+        selectedWeekStart = null,
+        isActiveSelection = habitsState.activeSelectionId == selectionId,
+        scrollState = chartScrollState,
+        showWeekdayLegend = derived.showWeekdayLegend && !useCalendarLayout,
+        showAllWeekdayLabels = true,
+        compactHeight = derived.useCompactHeight,
+        showTimeline = showTimeline,
+        calendarLayout = useCalendarLayout,
+        today = derived.today,
+        habitColor = habit.color,
+        demoMode = derived.state.demoMode,
+      ),
+    dateFormatter = derived.dateFormatter,
+    onDaySelected = onDaySelected,
+    onClearSelection = onClearSelection,
+  )
+}
+
+@Composable
+private fun SingleHabitWeekStrip(
+  days: List<ContributionDay>,
+  habit: HabitConfig,
+  compactHeight: Boolean,
+  demoMode: Boolean,
+  formatter: DateFormatter,
+  onHabitClick: (day: ContributionDay, habitTag: String, habitLabel: String) -> Unit,
+) {
+  if (days.isEmpty()) return
+
+  BoxWithConstraints {
+    val labelWidth = HABIT_LABEL_WIDTH
+    val spacing = ChartDimens.spacing(compactHeight)
+    val availableWidth = (maxWidth - labelWidth - spacing).coerceAtLeast(0.dp)
+    val layout =
+      calculateLayout(
+        maxWidth = availableWidth,
+        columns = days.size.coerceAtLeast(1),
+        minColumnSize = ChartDimens.minCell(compactHeight),
+        spacing = spacing,
+      )
+    val cellWidth = layout.columnSize
+    val cellHeight = cellWidth.coerceAtMost(MAX_MATRIX_CELL_HEIGHT_DP.dp)
+
+    Column(verticalArrangement = Arrangement.spacedBy(spacing)) {
+      Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
+        Spacer(modifier = Modifier.width(labelWidth))
+        days.forEach { day ->
+          Box(
+            modifier = Modifier.size(width = cellWidth, height = cellHeight),
+            contentAlignment = Alignment.Center,
+          ) {
+            Text(formatter.dayOfWeekShort(day.date.dayOfWeek), style = MaterialTheme.typography.labelSmall)
+          }
+        }
+      }
+      SingleHabitRow(days, habit, demoMode, cellWidth, cellHeight, labelWidth, spacing, onHabitClick)
+      Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
+        Spacer(modifier = Modifier.width(labelWidth))
+        days.forEach { day ->
+          Box(
+            modifier = Modifier.size(width = cellWidth, height = cellHeight),
+            contentAlignment = Alignment.Center,
+          ) {
+            Text(day.date.day.toString(), style = MaterialTheme.typography.labelSmall)
+          }
+        }
+      }
+    }
+  }
+}
+
+@Suppress("LongParameterList")
+@Composable
+private fun SingleHabitRow(
+  days: List<ContributionDay>,
+  habit: HabitConfig,
+  demoMode: Boolean,
+  cellWidth: androidx.compose.ui.unit.Dp,
+  cellHeight: androidx.compose.ui.unit.Dp,
+  labelWidth: androidx.compose.ui.unit.Dp,
+  spacing: androidx.compose.ui.unit.Dp,
+  onHabitClick: (day: ContributionDay, habitTag: String, habitLabel: String) -> Unit,
+) {
+  val pendingColor = AppColors.inactiveCell.resolve()
+  Row(
+    horizontalArrangement = Arrangement.spacedBy(spacing),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Text(
+      text = habit.localizedLabel(demoMode),
+      style = MaterialTheme.typography.bodySmall,
+      modifier = Modifier.width(labelWidth),
+    )
+    days.forEach { day ->
+      val done = day.habitStatuses.firstOrNull { status -> status.tag == habit.tag }?.done == true
+      val alpha = if (!day.isClickable) DISABLED_CELL_ALPHA else 1f
+      val targetColor =
+        if (done) {
+          androidx.compose.ui.graphics
+            .Color(habit.color.argb)
+        } else {
+          pendingColor
+        }
+      val cellColor by animateColorAsState(
+        targetValue = targetColor.copy(alpha = alpha),
+        animationSpec = tween(durationMillis = MATRIX_CELL_FILL_MS),
+      )
+      Box(
+        modifier =
+          Modifier
+            .size(width = cellWidth, height = cellHeight)
+            .background(cellColor, shape = MaterialTheme.shapes.extraSmall)
+            .then(
+              if (day.isClickable) {
+                Modifier.clickable { onHabitClick(day, habit.tag, habit.label) }
+              } else {
+                Modifier
+              },
+            ),
+      )
+    }
+  }
+}
+
 @Suppress("LongMethod")
 @Composable
 private fun LastSevenDaysMatrix(
@@ -702,12 +897,16 @@ private fun LastSevenDaysMatrix(
         minColumnSize = ChartDimens.minCell(compactHeight),
         spacing = spacing,
       )
-    val cellSize = layout.columnSize
+    val cellWidth = layout.columnSize
+    val cellHeight = cellWidth.coerceAtMost(MAX_MATRIX_CELL_HEIGHT_DP.dp)
     Column(verticalArrangement = Arrangement.spacedBy(spacing)) {
       Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
         Spacer(modifier = Modifier.width(labelWidth))
         days.forEach { day ->
-          Box(modifier = Modifier.size(cellSize), contentAlignment = Alignment.Center) {
+          Box(
+            modifier = Modifier.size(width = cellWidth, height = cellHeight),
+            contentAlignment = Alignment.Center,
+          ) {
             Text(
               formatter.dayOfWeekShort(day.date.dayOfWeek),
               style = MaterialTheme.typography.labelSmall,
@@ -724,6 +923,8 @@ private fun LastSevenDaysMatrix(
           Text(
             text = habit.localizedLabel(demoMode),
             style = MaterialTheme.typography.bodySmall,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             modifier = Modifier.width(labelWidth),
           )
           days.forEach { day ->
@@ -743,7 +944,7 @@ private fun LastSevenDaysMatrix(
             Box(
               modifier =
                 Modifier
-                  .size(cellSize)
+                  .size(width = cellWidth, height = cellHeight)
                   .background(cellColor, shape = MaterialTheme.shapes.extraSmall)
                   .then(
                     if (day.isClickable) {
@@ -759,7 +960,10 @@ private fun LastSevenDaysMatrix(
       Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
         Spacer(modifier = Modifier.width(labelWidth))
         days.forEach { day ->
-          Box(modifier = Modifier.size(cellSize), contentAlignment = Alignment.Center) {
+          Box(
+            modifier = Modifier.size(width = cellWidth, height = cellHeight),
+            contentAlignment = Alignment.Center,
+          ) {
             Text(day.date.day.toString(), style = MaterialTheme.typography.labelSmall)
           }
         }

@@ -6,7 +6,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import space.be1ski.vibits.core.elm.test.RecordingFeature
 import space.be1ski.vibits.core.ui.form.CredentialValidationError
 import space.be1ski.vibits.core.ui.test.captureInBothThemes
-import space.be1ski.vibits.core.ui.test.runAppUiTest
+import space.be1ski.vibits.core.ui.test.runDesktopShellUiTest
 import space.be1ski.vibits.feature.mode.presentation.action.ModeSelectionAction
 import space.be1ski.vibits.feature.mode.presentation.effect.ModeSelectionEffect
 import space.be1ski.vibits.feature.mode.presentation.state.ModeSelectionState
@@ -24,7 +24,7 @@ class ModeSelectionScreenshotTest {
 
   @Test
   fun `when default state then captures mode selection screen`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureInBothThemes("mode_selection_default") { ModeSelectionScreen(createFeature()) }
 
       onNodeWithTag(ModeSelectionTestTags.ONLINE_CARD).assertIsDisplayed()
@@ -32,7 +32,7 @@ class ModeSelectionScreenshotTest {
 
   @Test
   fun `when quick online dialog shown then captures dialog`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureInBothThemes("mode_selection_quick_online_dialog") {
         ModeSelectionScreen(createFeature(ModeSelectionState(showQuickOnlineDialog = true)))
       }
@@ -42,7 +42,7 @@ class ModeSelectionScreenshotTest {
 
   @Test
   fun `when credentials dialog shown then captures dialog`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       captureInBothThemes("mode_selection_credentials_dialog") {
         ModeSelectionScreen(createFeature(ModeSelectionState(showCredentialsDialog = true)))
       }
@@ -52,7 +52,7 @@ class ModeSelectionScreenshotTest {
 
   @Test
   fun `when credentials dialog has error then captures error state`() =
-    runAppUiTest {
+    runDesktopShellUiTest {
       val feature =
         createFeature(
           ModeSelectionState(

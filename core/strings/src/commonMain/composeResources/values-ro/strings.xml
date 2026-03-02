@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">Token de acces</string>
     <string name="label_activity">Activitate</string>
+    <string name="label_all_habits">Toate</string>
     <string name="label_app_mode">Mod aplicație</string>
     <string name="label_base_url">Base URL</string>
     <string name="label_credentials">Credențiale</string>

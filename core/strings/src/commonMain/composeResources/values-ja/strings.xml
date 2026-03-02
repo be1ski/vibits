@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">アクセストークン</string>
     <string name="label_activity">アクティビティ</string>
+    <string name="label_all_habits">すべて</string>
     <string name="label_app_mode">アプリモード</string>
     <string name="label_base_url">ベースURL</string>
     <string name="label_credentials">認証情報</string>

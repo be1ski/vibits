@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">Кирүү токени</string>
     <string name="label_activity">Активдүүлүк</string>
+    <string name="label_all_habits">Баары</string>
     <string name="label_app_mode">Колдонмо режими</string>
     <string name="label_base_url">Base URL</string>
     <string name="label_credentials">Эсеп маалыматы</string>

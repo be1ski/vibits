@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">Giriş tokeni</string>
     <string name="label_activity">Fəaliyyət</string>
+    <string name="label_all_habits">Hamısı</string>
     <string name="label_app_mode">Tətbiq rejimi</string>
     <string name="label_base_url">Base URL</string>
     <string name="label_credentials">Hesab məlumatları</string>

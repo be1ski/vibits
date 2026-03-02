@@ -14,12 +14,12 @@ import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
-private const val APP_WIDTH = 540
-private const val APP_HEIGHT = 1080
+private const val DESKTOP_WIDTH = 900
+private const val DESKTOP_HEIGHT = 700
 
 @OptIn(ExperimentalTestApi::class)
-fun runAppUiTest(block: suspend DesktopComposeUiTest.() -> Unit) =
-  runDesktopComposeUiTest(width = APP_WIDTH, height = APP_HEIGHT, block = block)
+fun runDesktopShellUiTest(block: suspend DesktopComposeUiTest.() -> Unit) =
+  runDesktopComposeUiTest(width = DESKTOP_WIDTH, height = DESKTOP_HEIGHT, block = block)
 
 @OptIn(ExperimentalTestApi::class)
 fun ComposeUiTest.setThemedContent(
