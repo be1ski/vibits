@@ -2,6 +2,7 @@ package space.be1ski.vibits.core.utils.logging
 
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import space.be1ski.vibits.core.platform.logging.LogLevel
@@ -13,7 +14,6 @@ import kotlin.time.Clock
  */
 object Log : SynchronizedObject() {
   private const val MAX_LOGS = 500
-  private const val TIMESTAMP_EXPORT_LENGTH = 23 // "2026-01-31 18:37:14.379"
 
   private val _logs = mutableListOf<LogEntry>()
   val logs: List<LogEntry>
@@ -63,7 +63,7 @@ object Log : SynchronizedObject() {
       Clock.System
         .now()
         .toLocalDateTime(TimeZone.currentSystemDefault())
-    val entry = LogEntry(timestamp.toString(), level, tag, message)
+    val entry = LogEntry(timestamp, level, tag, message)
 
     synchronized(this) {
       _logs.add(0, entry)
@@ -84,18 +84,13 @@ object Log : SynchronizedObject() {
   fun export(): String =
     synchronized(this) {
       _logs.asReversed().joinToString("\n") { entry ->
-        "${formatTimestamp(entry.timestamp)} ${entry.level.name.first()}/${entry.tag}: ${entry.message}"
+        "${entry.timestamp} ${entry.level.name.first()}/${entry.tag}: ${entry.message}"
       }
     }
-
-  private fun formatTimestamp(timestamp: String): String =
-    timestamp
-      .take(TIMESTAMP_EXPORT_LENGTH)
-      .replace('T', ' ')
 }
 
 data class LogEntry(
-  val timestamp: String,
+  val timestamp: LocalDateTime,
   val level: LogLevel,
   val tag: String,
   val message: String,

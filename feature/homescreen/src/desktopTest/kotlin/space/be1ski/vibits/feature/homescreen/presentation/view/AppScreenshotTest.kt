@@ -7,16 +7,19 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.core.elm.test.RecordingFeature
 import space.be1ski.vibits.core.platform.locale.AppLanguage
+import space.be1ski.vibits.core.platform.logging.LogLevel
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.core.ui.test.captureAllVariants
 import space.be1ski.vibits.core.ui.test.runCompactUiTest
 import space.be1ski.vibits.core.ui.test.runWideUiTest
 import space.be1ski.vibits.core.ui.test.saveScreenshot
 import space.be1ski.vibits.core.ui.theme.VibitsTheme
+import space.be1ski.vibits.core.utils.logging.LogEntry
 import space.be1ski.vibits.feature.changelog.domain.model.ChangelogEntry
 import space.be1ski.vibits.feature.changelog.domain.test.FakeChangelogRepository
 import space.be1ski.vibits.feature.changelog.domain.test.FakeLastSeenVersionStore
@@ -185,6 +188,7 @@ class AppScreenshotTest {
     wideLayout: Boolean = true,
     currentVersion: String = "dev",
     getChangelog: GetChangelogUseCase = fakeGetChangelog,
+    testLogs: List<LogEntry>? = null,
   ) {
     val features =
       AppFeatures(
@@ -202,6 +206,7 @@ class AppScreenshotTest {
           exportService = fakeExportService,
           currentVersion = currentVersion,
           getChangelog = getChangelog,
+          testLogs = testLogs,
         )
       }
     }
@@ -216,6 +221,7 @@ class AppScreenshotTest {
     wideLayout: Boolean = true,
     currentVersion: String = "dev",
     getChangelog: GetChangelogUseCase = fakeGetChangelog,
+    testLogs: List<LogEntry>? = null,
   ) {
     val platform = if (wideLayout) "wide" else "compact"
     setVibitsApp(
@@ -227,6 +233,7 @@ class AppScreenshotTest {
       wideLayout = wideLayout,
       currentVersion = currentVersion,
       getChangelog = getChangelog,
+      testLogs = testLogs,
     )
     saveScreenshot("${platform}_light_$name")
     setVibitsApp(
@@ -238,6 +245,7 @@ class AppScreenshotTest {
       wideLayout = wideLayout,
       currentVersion = currentVersion,
       getChangelog = getChangelog,
+      testLogs = testLogs,
     )
     saveScreenshot("${platform}_dark_$name")
   }
@@ -250,9 +258,19 @@ class AppScreenshotTest {
     settingsState: SettingsState = SettingsState(),
     currentVersion: String = "dev",
     getChangelog: GetChangelogUseCase = fakeGetChangelog,
+    testLogs: List<LogEntry>? = null,
   ) {
     runWideUiTest {
-      captureApp(name, appState, memosState, habitsState, settingsState, currentVersion = currentVersion, getChangelog = getChangelog)
+      captureApp(
+        name,
+        appState,
+        memosState,
+        habitsState,
+        settingsState,
+        currentVersion = currentVersion,
+        getChangelog = getChangelog,
+        testLogs = testLogs,
+      )
     }
     runCompactUiTest {
       captureApp(
@@ -264,6 +282,7 @@ class AppScreenshotTest {
         wideLayout = false,
         currentVersion = currentVersion,
         getChangelog = getChangelog,
+        testLogs = testLogs,
       )
     }
   }
@@ -454,6 +473,14 @@ class AppScreenshotTest {
       name = "app_settings_logs",
       appState = habitsAppState(),
       settingsState = SettingsState(isOpen = true, appMode = AppMode.DEMO, showLogsDialog = true),
+      testLogs =
+        listOf(
+          LogEntry(LocalDateTime(2024, 1, 1, 10, 0, 0), LogLevel.INFO, "App", "Application started"),
+          LogEntry(LocalDateTime(2024, 1, 1, 10, 0, 1), LogLevel.INFO, "Sync", "Syncing memos..."),
+          LogEntry(LocalDateTime(2024, 1, 1, 10, 0, 2), LogLevel.DEBUG, "Network", "GET /api/memos 200 OK"),
+          LogEntry(LocalDateTime(2024, 1, 1, 10, 0, 3), LogLevel.WARN, "Cache", "Cache miss for key: habits"),
+          LogEntry(LocalDateTime(2024, 1, 1, 10, 0, 4), LogLevel.INFO, "Sync", "Sync complete: 42 memos"),
+        ),
     )
 
   @Test
