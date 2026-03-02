@@ -209,11 +209,11 @@ class AppScreenshotTest {
     settingsState: SettingsState = SettingsState(),
     isDesktop: Boolean = true,
   ) {
-    val prefix = if (isDesktop) name else "${name}_mobile"
+    val platform = if (isDesktop) "desktop" else "mobile"
     setVibitsApp(appState, memosState, habitsState, settingsState, darkTheme = false, isDesktop = isDesktop)
-    saveScreenshot(prefix)
+    saveScreenshot("$platform/light/$name")
     setVibitsApp(appState, memosState, habitsState, settingsState, darkTheme = true, isDesktop = isDesktop)
-    saveScreenshot("${prefix}_dark")
+    saveScreenshot("$platform/dark/$name")
   }
 
   private fun habitsAppState(
@@ -290,10 +290,10 @@ class AppScreenshotTest {
     runDesktopShellUiTest {
       setThemedContent(darkTheme = false, content = content)
       onNodeWithTag(AppShellTestTags.LOADING_SCREEN).assertIsDisplayed()
-      saveScreenshot("app_loading")
+      saveScreenshot("desktop/light/app_loading")
 
       setThemedContent(darkTheme = true, content = content)
-      saveScreenshot("app_loading_dark")
+      saveScreenshot("desktop/dark/app_loading")
     }
   }
 

@@ -29,7 +29,8 @@ tasks.register("screenshotTests") {
       val dir = subproject.layout.buildDirectory.dir("ui-screenshots").get().asFile
       if (dir.exists()) {
         dir.walkTopDown().filter { it.isFile && it.extension == "png" }.forEach { file ->
-          file.copyTo(File(outputDir, file.name), overwrite = true)
+          val relativePath = file.relativeTo(dir).path
+          file.copyTo(File(outputDir, relativePath), overwrite = true)
         }
       }
     }
