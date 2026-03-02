@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">访问令牌</string>
     <string name="label_activity">活动</string>
+    <string name="label_all_habits">全部</string>
     <string name="label_app_mode">应用模式</string>
     <string name="label_base_url">服务器地址</string>
     <string name="label_credentials">凭证</string>
@@ -191,6 +192,10 @@
     <string name="mode_quick_online_title">找到凭证</string>
     <string name="mode_quick_online_desc">检测到已保存的凭证。使用它们快速连接？</string>
     <string name="action_use_saved">使用已保存</string>
+
+    <!-- Menu -->
+    <string name="menu_file">文件</string>
+    <string name="menu_view">显示</string>
 
     <!-- Navigation -->
     <string name="nav_feed">动态</string>

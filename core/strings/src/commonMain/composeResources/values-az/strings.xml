@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">Giriş tokeni</string>
     <string name="label_activity">Fəaliyyət</string>
+    <string name="label_all_habits">Hamısı</string>
     <string name="label_app_mode">Tətbiq rejimi</string>
     <string name="label_base_url">Base URL</string>
     <string name="label_credentials">Hesab məlumatları</string>
@@ -191,6 +192,10 @@
     <string name="mode_quick_online_title">Etimadnamələr tapıldı</string>
     <string name="mode_quick_online_desc">Saxlanmış etimadnamələr aşkar edildi. Sürətli qoşulmaq üçün onlardan istifadə edilsin?</string>
     <string name="action_use_saved">Saxlanmışdan istifadə et</string>
+
+    <!-- Menu -->
+    <string name="menu_file">Fayl</string>
+    <string name="menu_view">Görünüş</string>
 
     <!-- Navigation -->
     <string name="nav_feed">Lent</string>

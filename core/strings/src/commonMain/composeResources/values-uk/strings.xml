@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">Токен доступу</string>
     <string name="label_activity">Активність</string>
+    <string name="label_all_habits">Всі</string>
     <string name="label_app_mode">Режим додатку</string>
     <string name="label_base_url">Base URL</string>
     <string name="label_credentials">Облікові дані</string>
@@ -191,6 +192,10 @@
     <string name="mode_quick_online_title">Знайдено облікові дані</string>
     <string name="mode_quick_online_desc">Виявлено збережені облікові дані. Використати їх для швидкого підключення?</string>
     <string name="action_use_saved">Використати</string>
+
+    <!-- Menu -->
+    <string name="menu_file">Файл</string>
+    <string name="menu_view">Вигляд</string>
 
     <!-- Navigation -->
     <string name="nav_feed">Стрічка</string>

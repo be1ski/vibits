@@ -97,6 +97,7 @@
     <!-- Labels -->
     <string name="label_access_token">Токен доступа</string>
     <string name="label_activity">Активность</string>
+    <string name="label_all_habits">Все</string>
     <string name="label_app_mode">Режим приложения</string>
     <string name="label_base_url">URL сервера</string>
     <string name="label_credentials">Данные для входа</string>
@@ -191,6 +192,10 @@
     <string name="mode_quick_online_title">Найдены данные для входа</string>
     <string name="mode_quick_online_desc">Найдены сохранённые данные для входа. Использовать их для быстрого подключения?</string>
     <string name="action_use_saved">Использовать</string>
+
+    <!-- Menu -->
+    <string name="menu_file">Файл</string>
+    <string name="menu_view">Вид</string>
 
     <!-- Navigation -->
     <string name="nav_feed">Лента</string>
