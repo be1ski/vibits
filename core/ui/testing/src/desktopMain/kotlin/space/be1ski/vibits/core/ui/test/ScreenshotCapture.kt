@@ -39,9 +39,9 @@ fun ComposeUiTest.captureInBothThemes(
   content: @Composable () -> Unit,
 ) {
   setThemedContent(darkTheme = false, content = content)
-  saveScreenshot("light/$name")
+  saveScreenshot("${name}_light")
   setThemedContent(darkTheme = true, content = content)
-  saveScreenshot("dark/$name")
+  saveScreenshot("${name}_dark")
 }
 
 @OptIn(ExperimentalTestApi::class)
@@ -58,7 +58,6 @@ fun ComposeUiTest.saveScreenshot(scenario: String) {
     g.drawImage(layerImage, 0, 0, null)
   }
   g.dispose()
-  val file = File("build/ui-screenshots/$scenario.png")
-  file.parentFile.mkdirs()
-  ImageIO.write(composite, "png", file)
+  val dir = File("build/ui-screenshots").also { it.mkdirs() }
+  ImageIO.write(composite, "png", File(dir, "$scenario.png"))
 }

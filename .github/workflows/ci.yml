@@ -52,11 +52,7 @@ jobs:
         if: always()
         run: |
           mkdir -p build/ui-screenshots
-          find . -path "*/build/ui-screenshots/*.png" -not -path "./build/*" | while read -r f; do
-            rel="${f#*build/ui-screenshots/}"
-            mkdir -p "build/ui-screenshots/$(dirname "$rel")"
-            cp "$f" "build/ui-screenshots/$rel"
-          done
+          find . -path "*/build/ui-screenshots/*.png" -not -path "./build/*" -exec cp {} build/ui-screenshots/ \;
 
       - name: Visual regression test
         if: always()
