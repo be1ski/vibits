@@ -16,16 +16,10 @@ import javax.imageio.ImageIO
 
 private const val DESKTOP_WIDTH = 900
 private const val DESKTOP_HEIGHT = 700
-private const val MOBILE_WIDTH = 393
-private const val MOBILE_HEIGHT = 852
 
 @OptIn(ExperimentalTestApi::class)
 fun runDesktopShellUiTest(block: suspend DesktopComposeUiTest.() -> Unit) =
   runDesktopComposeUiTest(width = DESKTOP_WIDTH, height = DESKTOP_HEIGHT, block = block)
-
-@OptIn(ExperimentalTestApi::class)
-fun runMobileUiTest(block: suspend DesktopComposeUiTest.() -> Unit) =
-  runDesktopComposeUiTest(width = MOBILE_WIDTH, height = MOBILE_HEIGHT, block = block)
 
 @OptIn(ExperimentalTestApi::class)
 fun ComposeUiTest.setThemedContent(
