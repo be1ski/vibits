@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">アクセストークン</string>
     <string name="label_activity">アクティビティ</string>
+    <string name="label_all_habits">すべて</string>
     <string name="label_app_mode">アプリモード</string>
     <string name="label_base_url">ベースURL</string>
     <string name="label_credentials">認証情報</string>
@@ -191,6 +192,10 @@
     <string name="mode_quick_online_title">認証情報が見つかりました</string>
     <string name="mode_quick_online_desc">保存された認証情報が検出されました。それらを使用して素早く接続しますか？</string>
     <string name="action_use_saved">保存済みを使用</string>
+
+    <!-- Menu -->
+    <string name="menu_file">ファイル</string>
+    <string name="menu_view">表示</string>
 
     <!-- Navigation -->
     <string name="nav_feed">フィード</string>

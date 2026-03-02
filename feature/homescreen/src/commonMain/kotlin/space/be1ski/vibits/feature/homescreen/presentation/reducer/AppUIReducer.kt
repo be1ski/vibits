@@ -16,5 +16,9 @@ internal val uiReducer: Reducer<AppAction.UI, AppState, AppEffect, Nothing> =
       is AppAction.UI.SetPostsListExpanded -> {
         state { state.copy(postsListExpanded = action.expanded) }
       }
+
+      is AppAction.UI.SetSelectedHabitTag -> {
+        state { state.copy(selectedHabitTag = action.tag) }
+      }
     }
   }

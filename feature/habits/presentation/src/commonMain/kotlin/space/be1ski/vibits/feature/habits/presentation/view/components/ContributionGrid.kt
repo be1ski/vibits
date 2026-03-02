@@ -26,14 +26,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.lerp
@@ -70,6 +68,7 @@ import space.be1ski.vibits.core.ui.platform.hoverAware
 import space.be1ski.vibits.core.ui.theme.AppColors
 import space.be1ski.vibits.core.ui.theme.resolve
 import space.be1ski.vibits.core.utils.date.DAYS_IN_WEEK
+import space.be1ski.vibits.feature.habits.domain.model.ActivityWeek
 import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
 
 internal object ChartDimens {
@@ -78,8 +77,6 @@ internal object ChartDimens {
   fun spacing(compact: Boolean): Dp = if (compact) COMPACT_SPACING_DP.dp else REGULAR_SPACING_DP.dp
 
   fun minCell(compact: Boolean): Dp = if (compact) COMPACT_CELL_DP.dp else REGULAR_CELL_DP.dp
-
-  fun maxCell(compact: Boolean): Dp? = if (compact) MAX_COMPACT_CELL_DP.dp else null
 }
 
 private const val LEGEND_WIDTH_DP = 26
@@ -87,12 +84,11 @@ private const val COMPACT_SPACING_DP = 1
 private const val REGULAR_SPACING_DP = 2
 private const val COMPACT_CELL_DP = 7
 private const val REGULAR_CELL_DP = 10
-private const val MAX_COMPACT_CELL_DP = 40
+private const val MAX_CALENDAR_CELL_HEIGHT_DP = 44
 
 private const val HABIT_COLOR_LIGHT_RATIO = 0.3f
 private const val CELL_BORDER_ANIMATION_MS = 140
 private const val CELL_FILL_ANIMATION_MS = 220
-private const val GRID_ENTER_ANIMATION_MS = 220
 
 /**
  * Renders GitHub-style daily activity grid for the provided [state].
@@ -111,16 +107,8 @@ fun ContributionGrid(
   if (!state.isActiveSelection && interaction.tooltip != null) {
     interaction.tooltip = null
   }
-  var animateIn by remember(state.range, state.weekData.weeks, state.calendarLayout) { mutableStateOf(false) }
-  LaunchedEffect(state.range, state.weekData.weeks, state.calendarLayout) { animateIn = true }
-  val contentAlpha by animateFloatAsState(
-    targetValue = if (animateIn) 1f else 0f,
-    animationSpec = tween(durationMillis = GRID_ENTER_ANIMATION_MS),
-  )
   Column(modifier = modifier) {
-    Box(modifier = Modifier.alpha(contentAlpha)) {
-      ContributionGridLayout(state, dateFormatter, onDaySelected, onClearSelection, interaction)
-    }
+    ContributionGridLayout(state, dateFormatter, onDaySelected, onClearSelection, interaction)
     ContributionGridTooltip(state, interaction, onEditRequested, onCreateRequested)
   }
 }
@@ -133,6 +121,7 @@ private class ContributionGridInteractionState {
 
 private data class ContributionGridLayoutState(
   val layout: ChartLayout,
+  val cellHeight: Dp,
   val spacing: Dp,
   val legendWidth: Dp,
   val legendSpacing: Dp,
@@ -187,7 +176,6 @@ private fun ContributionGridContent(
       .coerceAtLeast(1)
   val spacing = ChartDimens.spacing(state.compactHeight)
   val minCell = ChartDimens.minCell(state.compactHeight)
-  val maxCell = ChartDimens.maxCell(state.compactHeight)
   val legendWidth = if (state.showWeekdayLegend) ChartDimens.legendWidth else 0.dp
   val legendSpacing = if (state.showWeekdayLegend) spacing else 0.dp
   val availableWidth = (maxWidth - legendWidth - legendSpacing).coerceAtLeast(0.dp)
@@ -197,7 +185,6 @@ private fun ContributionGridContent(
       columns,
       minColumnSize = minCell,
       spacing = spacing,
-      maxColumnSize = maxCell,
     )
   val timelineLabels =
     remember(state.weekData.weeks, state.range) {
@@ -214,9 +201,11 @@ private fun ContributionGridContent(
         emptyList()
       }
     }
+  val cellHeight = layout.columnSize.coerceAtMost(MAX_CALENDAR_CELL_HEIGHT_DP.dp)
   val layoutState =
     ContributionGridLayoutState(
       layout = layout,
+      cellHeight = cellHeight,
       spacing = spacing,
       legendWidth = legendWidth,
       legendSpacing = legendSpacing,
@@ -240,16 +229,15 @@ private fun CalendarGridLayout(
 ) {
   val spacing = ChartDimens.spacing(state.compactHeight)
   val minCell = ChartDimens.minCell(state.compactHeight)
-  // Calendar layout should fill full width - no max cap
   val layout =
     calculateLayout(
       maxWidth,
       DAYS_IN_WEEK,
       minColumnSize = minCell,
       spacing = spacing,
-      maxColumnSize = null,
     )
   val cellSize = layout.columnSize
+  val cellHeight = cellSize.coerceAtMost(MAX_CALENDAR_CELL_HEIGHT_DP.dp)
 
   Column(
     modifier = Modifier.fillMaxWidth(),
@@ -257,7 +245,7 @@ private fun CalendarGridLayout(
     verticalArrangement = Arrangement.spacedBy(spacing),
   ) {
     // Weekday header row
-    CalendarWeekdayHeader(cellSize, spacing, state.weekendDays)
+    CalendarWeekdayHeader(cellSize, cellHeight, spacing, state.weekendDays)
 
     // Week rows
     state.weekData.weeks.forEach { week ->
@@ -271,6 +259,7 @@ private fun CalendarGridLayout(
                 maxCount = state.weekData.maxDaily,
                 enabled = day.inRange,
                 size = cellSize,
+                height = cellHeight,
                 isSelected = state.selectedDay?.date == day.date,
                 isHovered = interaction.hoveredDate == day.date,
                 isWeekSelected = false,
@@ -301,7 +290,8 @@ private fun CalendarGridLayout(
 
 @Composable
 private fun CalendarWeekdayHeader(
-  cellSize: Dp,
+  cellWidth: Dp,
+  cellHeight: Dp,
   spacing: Dp,
   weekendDays: Set<DayOfWeek>,
 ) {
@@ -330,7 +320,7 @@ private fun CalendarWeekdayHeader(
     weekdays.forEachIndexed { index, dayOfWeek ->
       val isWeekend = dayOfWeek in weekendDays
       Box(
-        modifier = Modifier.size(cellSize),
+        modifier = Modifier.size(width = cellWidth, height = cellHeight),
         contentAlignment = Alignment.Center,
       ) {
         Text(
@@ -366,7 +356,7 @@ private fun ContributionGridWeeks(
   ) {
     if (state.showWeekdayLegend) {
       DayOfWeekLegend(
-        cellSize = layout.columnSize,
+        cellSize = layoutState.cellHeight,
         spacing = spacing,
         showAllLabels = state.showAllWeekdayLabels,
       )
@@ -379,40 +369,52 @@ private fun ContributionGridWeeks(
       horizontalArrangement = Arrangement.spacedBy(spacing),
     ) {
       state.weekData.weeks.forEach { week ->
-        val isWeekSelected = state.selectedWeekStart == week.startDate
-        Column(verticalArrangement = Arrangement.spacedBy(spacing)) {
-          week.days.forEach { day ->
-            ContributionCell(
-              state =
-                ContributionCellState(
-                  day = day,
-                  maxCount = state.weekData.maxDaily,
-                  enabled = day.inRange,
-                  size = layout.columnSize,
-                  isSelected = state.selectedDay?.date == day.date,
-                  isHovered = interaction.hoveredDate == day.date,
-                  isWeekSelected = isWeekSelected,
-                  showDayNumber = state.showDayNumbers,
-                  isToday = state.today == day.date,
-                  habitColor = state.habitColor,
-                ),
-              onClick = { offset ->
-                onDaySelected(day)
-                interaction.tooltip = DayTooltip(day, offset)
-                interaction.suppressClear = true
-              },
-              onHoverChange = { hovering ->
-                interaction.hoveredDate =
-                  if (hovering) {
-                    day.date
-                  } else {
-                    interaction.hoveredDate?.takeIf { it != day.date }
-                  }
-              },
-            )
-          }
-        }
+        WeekColumn(state, week, onDaySelected, interaction, layoutState)
       }
+    }
+  }
+}
+
+@Composable
+private fun WeekColumn(
+  state: ContributionGridState,
+  week: ActivityWeek,
+  onDaySelected: (ContributionDay) -> Unit,
+  interaction: ContributionGridInteractionState,
+  layoutState: ContributionGridLayoutState,
+) {
+  val isWeekSelected = state.selectedWeekStart == week.startDate
+  Column(verticalArrangement = Arrangement.spacedBy(layoutState.spacing)) {
+    week.days.forEach { day ->
+      ContributionCell(
+        state =
+          ContributionCellState(
+            day = day,
+            maxCount = state.weekData.maxDaily,
+            enabled = day.inRange,
+            size = layoutState.layout.columnSize,
+            height = layoutState.cellHeight,
+            isSelected = state.selectedDay?.date == day.date,
+            isHovered = interaction.hoveredDate == day.date,
+            isWeekSelected = isWeekSelected,
+            showDayNumber = state.showDayNumbers,
+            isToday = state.today == day.date,
+            habitColor = state.habitColor,
+          ),
+        onClick = { offset ->
+          onDaySelected(day)
+          interaction.tooltip = DayTooltip(day, offset)
+          interaction.suppressClear = true
+        },
+        onHoverChange = { hovering ->
+          interaction.hoveredDate =
+            if (hovering) {
+              day.date
+            } else {
+              interaction.hoveredDate?.takeIf { it != day.date }
+            }
+        },
+      )
     }
   }
 }
@@ -431,6 +433,7 @@ private fun ContributionGridHeaderRow(
       TimelineRowState(
         labels = layoutState.headerLabels,
         cellSize = layout.columnSize,
+        cellHeight = layoutState.cellHeight,
         contentWidth = layout.contentWidth,
         spacing = layoutState.spacing,
         legendWidth = layoutState.legendWidth,
@@ -455,6 +458,7 @@ private fun ContributionGridTimelineRow(
       TimelineRowState(
         labels = layoutState.timelineLabels,
         cellSize = layout.columnSize,
+        cellHeight = layoutState.cellHeight,
         contentWidth = layout.contentWidth,
         spacing = layoutState.spacing,
         legendWidth = layoutState.legendWidth,
@@ -595,6 +599,7 @@ private fun DayOfWeekLegend(
 private data class TimelineRowState(
   val labels: List<String>,
   val cellSize: Dp,
+  val cellHeight: Dp,
   val contentWidth: Dp,
   val spacing: Dp,
   val legendWidth: Dp,
@@ -625,7 +630,7 @@ private fun TimelineRow(state: TimelineRowState) {
           modifier =
             Modifier
               .width(state.cellSize)
-              .height(state.cellSize + 4.dp),
+              .height(state.cellHeight + 4.dp),
           contentAlignment = Alignment.Center,
         ) {
           if (label.isNotBlank()) {
@@ -749,7 +754,7 @@ private fun ContributionCell(
   Box(
     modifier =
       Modifier
-        .size(state.size)
+        .size(width = state.size, height = state.height)
         .background(color = cellColor, shape = MaterialTheme.shapes.extraSmall)
         .border(width = animatedBorderWidth, color = animatedBorderColor, shape = MaterialTheme.shapes.extraSmall)
         .onGloballyPositioned { coordinates = it }

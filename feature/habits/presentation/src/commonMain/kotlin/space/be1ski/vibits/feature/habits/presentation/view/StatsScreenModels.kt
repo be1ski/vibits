@@ -25,6 +25,8 @@ data class StatsScreenState(
   val enablePullRefresh: Boolean = true,
   val demoMode: Boolean = false,
   val postsListExpanded: Boolean = false,
+  val wideLayout: Boolean = false,
+  val selectedHabitTag: String? = null,
 )
 
 internal data class HabitActivitySectionState(
@@ -53,6 +55,7 @@ internal data class StatsScreenDerivedState(
   val collapseHabits: Boolean,
   val showLast7DaysMatrix: Boolean,
   val showHabitSections: Boolean,
+  val useHabitPicker: Boolean,
   val selectedDay: ContributionDay?,
   val todayConfig: List<HabitConfig>,
   val todayDay: ContributionDay?,

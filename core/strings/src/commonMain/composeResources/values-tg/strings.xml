@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">Токени дастрасӣ</string>
     <string name="label_activity">Фаъолият</string>
+    <string name="label_all_habits">Ҳама</string>
     <string name="label_app_mode">Режими барнома</string>
     <string name="label_base_url">Base URL</string>
     <string name="label_credentials">Маълумоти ҳисоб</string>
@@ -191,6 +192,10 @@
     <string name="mode_quick_online_title">Маълумоти ҳисоб ёфт шуд</string>
     <string name="mode_quick_online_desc">Маълумоти ҳисоби захирашуда ошкор шуд. Барои пайваст шудани зуд истифода бурда шавад?</string>
     <string name="action_use_saved">Захирашударо истифода бур</string>
+
+    <!-- Menu -->
+    <string name="menu_file">Файл</string>
+    <string name="menu_view">Намоиш</string>
 
     <!-- Navigation -->
     <string name="nav_feed">Лента</string>

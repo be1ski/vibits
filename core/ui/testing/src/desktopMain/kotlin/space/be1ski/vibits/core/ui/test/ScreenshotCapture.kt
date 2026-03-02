@@ -14,20 +14,27 @@ import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
-private const val APP_WIDTH = 540
-private const val APP_HEIGHT = 1080
+private const val WIDE_WIDTH = 900
+private const val WIDE_HEIGHT = 700
+private const val COMPACT_WIDTH = 540
+private const val COMPACT_HEIGHT = 1080
 
 @OptIn(ExperimentalTestApi::class)
-fun runAppUiTest(block: suspend DesktopComposeUiTest.() -> Unit) =
-  runDesktopComposeUiTest(width = APP_WIDTH, height = APP_HEIGHT, block = block)
+fun runWideUiTest(block: suspend DesktopComposeUiTest.() -> Unit) =
+  runDesktopComposeUiTest(width = WIDE_WIDTH, height = WIDE_HEIGHT, block = block)
+
+@OptIn(ExperimentalTestApi::class)
+fun runCompactUiTest(block: suspend DesktopComposeUiTest.() -> Unit) =
+  runDesktopComposeUiTest(width = COMPACT_WIDTH, height = COMPACT_HEIGHT, block = block)
 
 @OptIn(ExperimentalTestApi::class)
 fun ComposeUiTest.setThemedContent(
   darkTheme: Boolean = false,
+  wideLayout: Boolean = true,
   content: @Composable () -> Unit,
 ) {
   setContent {
-    VibitsTheme(darkTheme = darkTheme) {
+    VibitsTheme(darkTheme = darkTheme, wideLayout = wideLayout) {
       content()
     }
   }
@@ -36,12 +43,29 @@ fun ComposeUiTest.setThemedContent(
 @OptIn(ExperimentalTestApi::class)
 fun ComposeUiTest.captureInBothThemes(
   name: String,
+  wideLayout: Boolean = true,
   content: @Composable () -> Unit,
 ) {
-  setThemedContent(darkTheme = false, content = content)
-  saveScreenshot(name)
-  setThemedContent(darkTheme = true, content = content)
+  setThemedContent(darkTheme = false, wideLayout = wideLayout, content = content)
+  saveScreenshot("${name}_light")
+  setThemedContent(darkTheme = true, wideLayout = wideLayout, content = content)
   saveScreenshot("${name}_dark")
+}
+
+@OptIn(ExperimentalTestApi::class)
+fun captureAllVariants(
+  name: String,
+  assertions: ComposeUiTest.() -> Unit = {},
+  content: @Composable () -> Unit,
+) {
+  runWideUiTest {
+    captureInBothThemes("wide_$name", wideLayout = true, content = content)
+    assertions()
+  }
+  runCompactUiTest {
+    captureInBothThemes("compact_$name", wideLayout = false, content = content)
+    assertions()
+  }
 }
 
 @OptIn(ExperimentalTestApi::class)

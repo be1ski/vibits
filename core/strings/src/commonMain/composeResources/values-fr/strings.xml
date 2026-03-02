@@ -95,6 +95,7 @@
     <!-- Labels -->
     <string name="label_access_token">Jeton d\'accès</string>
     <string name="label_activity">Activité</string>
+    <string name="label_all_habits">Tous</string>
     <string name="label_app_mode">Mode de l\'app</string>
     <string name="label_base_url">URL de base</string>
     <string name="label_credentials">Identifiants</string>
@@ -191,6 +192,10 @@
     <string name="mode_quick_online_title">Identifiants trouvés</string>
     <string name="mode_quick_online_desc">Identifiants sauvegardés détectés. Les utiliser pour une connexion rapide ?</string>
     <string name="action_use_saved">Utiliser sauvegardés</string>
+
+    <!-- Menu -->
+    <string name="menu_file">Fichier</string>
+    <string name="menu_view">Présentation</string>
 
     <!-- Navigation -->
     <string name="nav_feed">Fil</string>
