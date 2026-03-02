@@ -1,0 +1,17 @@
+coverage:
+  status:
+    patch:
+      default:
+        target: 93%
+
+ignore:
+  - "**/di/**"
+  - "**/view/**"
+  - "**/ui/**"
+  - "**/platform/**"
+  - "**/room/**"
+  - "**/testing/**"
+  - "**/test/**"
+  - "build-logic/**"
+  - "app/**"
+  - "core/env/**"
