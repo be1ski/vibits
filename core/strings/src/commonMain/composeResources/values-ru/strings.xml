@@ -2,7 +2,7 @@
     <!-- Actions -->
     <string name="action_back">Назад</string>
     <string name="action_cancel">Отмена</string>
-    <string name="action_changelog_dismiss">OK</string>
+    <string name="action_changelog_dismiss">Понятно</string>
     <string name="action_clear">Очистить</string>
     <string name="action_close">Закрыть</string>
     <string name="action_copied">Скопировано</string>
@@ -13,11 +13,11 @@
     <string name="action_create_new_config">Создать новую конфигурацию (рекомендуется)</string>
     <string name="action_continue">Продолжить</string>
     <string name="action_delete">Удалить</string>
-    <string name="action_details">Подробности</string>
+    <string name="action_details">Подробнее</string>
     <string name="action_add_first_habit">Добавить первую привычку</string>
-    <string name="action_edit_anyway">Всё равно редактировать</string>
-    <string name="action_go_to_dashboard">Перейти на главную</string>
-    <string name="action_hide_details">Скрыть детали привычки</string>
+    <string name="action_edit_anyway">Редактировать всё равно</string>
+    <string name="action_go_to_dashboard">Перейти на главный экран</string>
+    <string name="action_hide_details">Скрыть подробности привычки</string>
     <string name="action_mark_first_checkin">Сделать первую отметку</string>
     <string name="action_maybe_later">Позже</string>
     <string name="action_next">Далее</string>
@@ -27,19 +27,19 @@
     <string name="action_reset_app">Сбросить приложение</string>
     <string name="action_reset_settings_only">Сбросить только настройки</string>
     <string name="action_reset_with_memos">Сбросить всё (включая воспоминания)</string>
-    <string name="action_restore_from_keychain">Восстановить из Связки ключей</string>
+    <string name="action_restore_from_keychain">Восстановить из «Связки ключей»</string>
     <string name="action_save">Сохранить</string>
-    <string name="action_show_details">Показать детали привычки</string>
+    <string name="action_show_details">Показать подробности привычки</string>
     <string name="action_start_tracking">Начать отслеживание</string>
     <string name="action_track">Отметить</string>
     <string name="action_track_today">Отметить сегодня</string>
     <string name="action_update">Сохранить</string>
-    <string name="action_view_logs">Логи</string>
-    <string name="action_export">Экспортировать</string>
+    <string name="action_view_logs">Открыть логи</string>
+    <string name="action_export">Экспорт</string>
     <string name="action_export_logs">Экспортировать логи</string>
     <string name="action_export_memos">Экспортировать воспоминания</string>
-    <string name="msg_export_success">Экспортировано в %1$s</string>
-    <string name="msg_export_failed">Ошибка экспорта</string>
+    <string name="msg_export_success">Экспорт выполнен: %1$s</string>
+    <string name="msg_export_failed">Не удалось выполнить экспорт</string>
 
     <!-- App -->
     <string name="app_name">Vibits</string>
@@ -54,27 +54,27 @@
     <string name="day_sun">Вс</string>
 
     <!-- Months short -->
-    <string name="month_jan">Янв</string>
-    <string name="month_feb">Фев</string>
-    <string name="month_mar">Мар</string>
-    <string name="month_apr">Апр</string>
-    <string name="month_may">Май</string>
-    <string name="month_jun">Июн</string>
-    <string name="month_jul">Июл</string>
-    <string name="month_aug">Авг</string>
-    <string name="month_sep">Сен</string>
-    <string name="month_oct">Окт</string>
-    <string name="month_nov">Ноя</string>
-    <string name="month_dec">Дек</string>
+    <string name="month_jan">янв</string>
+    <string name="month_feb">фев</string>
+    <string name="month_mar">мар</string>
+    <string name="month_apr">апр</string>
+    <string name="month_may">май</string>
+    <string name="month_jun">июн</string>
+    <string name="month_jul">июл</string>
+    <string name="month_aug">авг</string>
+    <string name="month_sep">сен</string>
+    <string name="month_oct">окт</string>
+    <string name="month_nov">ноя</string>
+    <string name="month_dec">дек</string>
 
     <!-- Format strings -->
     <string name="format_conflicts_detected">Обнаружено конфликтов: %1$d</string>
     <string name="format_active_since">Активно с %1$s</string>
     <string name="format_app_version">Версия: %1$s</string>
-    <string name="format_credentials">Данные для входа: %1$s</string>
+    <string name="format_credentials">Учётные данные: %1$s</string>
     <string name="format_environment">Окружение: %1$s</string>
     <string name="format_habits_progress">Привычек выполнено: %1$d из %2$d</string>
-    <string name="format_memos_db">База Memos: %1$s</string>
+    <string name="format_memos_db">База воспоминаний: %1$s</string>
     <string name="format_offline_storage">Офлайн: %1$s</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d привычек</string>
     <string name="format_tooltip_memos">%1$s: %2$d воспоминаний</string>
@@ -87,22 +87,22 @@
     <string name="format_memos_in_year">%1$d воспоминаний в %2$d</string>
     <string name="action_show_memos">Показать воспоминания</string>
     <string name="action_hide_memos">Скрыть воспоминания</string>
-    <string name="action_write">Написать</string>
+    <string name="action_write">Записать</string>
 
     <!-- Hints -->
-    <string name="hint_add_habits_config">Добавь воспоминание с конфигурацией привычек, чтобы начать отслеживание.</string>
+    <string name="hint_add_habits_config">Добавьте воспоминание с конфигурацией привычек, чтобы начать отслеживание.</string>
     <string name="hint_base_url">https://memos.example.com</string>
     <string name="hint_habit_name">Например: утренняя зарядка</string>
-    <string name="hint_habits_config">Гимнастика | #habits/gym\nЧтение | #habits/reading</string>
-    <string name="hint_write_memo">Напиши воспоминание...</string>
+    <string name="hint_habits_config">Зарядка | #habits/gym\nЧтение | #habits/reading</string>
+    <string name="hint_write_memo">Запишите воспоминание...</string>
 
     <!-- Labels -->
     <string name="label_access_token">Токен доступа</string>
     <string name="label_activity">Активность</string>
     <string name="label_all_habits">Все</string>
     <string name="label_app_mode">Режим приложения</string>
-    <string name="label_base_url">URL сервера</string>
-    <string name="label_credentials">Данные для входа</string>
+    <string name="label_base_url">Адрес сервера</string>
+    <string name="label_credentials">Учётные данные</string>
     <string name="label_demo_mode">Демо-режим</string>
     <string name="label_environment">Окружение</string>
     <string name="label_habits_config">Конфигурация привычек</string>
@@ -110,12 +110,12 @@
     <string name="label_habit_name">Название привычки</string>
     <string name="label_habit_preset_custom">Создать свою</string>
     <string name="label_language">Язык</string>
-    <string name="label_memos_db">База Memos</string>
-    <string name="label_post_filter">Фильтр записей</string>
+    <string name="label_memos_db">База воспоминаний</string>
+    <string name="label_post_filter">Фильтр воспоминаний</string>
     <string name="label_selected">Выбрано</string>
     <string name="label_storage">Хранилище</string>
     <string name="label_success_rate">Процент выполнения</string>
-    <string name="label_sync_debounce">Задержка автосинхронизации</string>
+    <string name="label_sync_debounce">Интервал автосинхронизации</string>
     <string name="label_time_day">День</string>
     <string name="label_time_evening">Вечер</string>
     <string name="label_time_morning">Утро</string>
@@ -130,28 +130,28 @@
     <string name="filter_regular">Обычные</string>
 
     <!-- Messages -->
-    <string name="msg_connection_failed">Ошибка подключения</string>
-    <string name="msg_delete_config_warning">Точно удалить эту конфигурацию? Запись с конфигурацией будет навсегда удалена из твоих воспоминаний.</string>
-    <string name="msg_delete_day_confirm">Привычки не выбраны. Запись за день будет удалена.</string>
-    <string name="msg_delete_day_warning">Точно удалить день? Запись с отметками будет навсегда удалена из твоих воспоминаний.</string>
-    <string name="msg_edit_config_warning">Редактирование этой конфигурации повлияет на все исторические данные. Новые привычки будут отображаться как «не выполнено» для прошлых дней.</string>
-    <string name="msg_edit_config_warning_detail">Лучшее решение: создай новую конфигурацию. Исторические данные сохранят старую конфигурацию, а новые данные будут использовать новую.</string>
-    <string name="msg_empty_state_no_habits">Создай привычку, чтобы начать отслеживание офлайн.</string>
-    <string name="msg_fill_all_fields">Заполни все поля</string>
-    <string name="msg_habit_name_required">Нужно название привычки</string>
-    <string name="msg_habit_setup">Придумай осмысленное название для своей привычки.</string>
-    <string name="msg_no_habits_tracked">Привычки не отслежены</string>
-    <string name="msg_no_habits_yet">Пока нет привычек.</string>
-    <string name="msg_no_logs">Логов пока нет</string>
+    <string name="msg_connection_failed">Не удалось подключиться</string>
+    <string name="msg_delete_config_warning">Удалить эту конфигурацию? Запись с конфигурацией будет безвозвратно удалена из воспоминаний.</string>
+    <string name="msg_delete_day_confirm">Привычки не выбраны. Запись за этот день будет удалена.</string>
+    <string name="msg_delete_day_warning">Удалить этот день? Запись с отметками будет безвозвратно удалена из воспоминаний.</string>
+    <string name="msg_edit_config_warning">Изменение этой конфигурации повлияет на все исторические данные. Для прошлых дней новые привычки будут показаны как «не выполнено».</string>
+    <string name="msg_edit_config_warning_detail">Рекомендуется создать новую конфигурацию. Исторические данные сохранят старую конфигурацию, а новые — будут использовать новую.</string>
+    <string name="msg_empty_state_no_habits">Создайте привычку, чтобы начать офлайн-отслеживание.</string>
+    <string name="msg_fill_all_fields">Заполните все поля</string>
+    <string name="msg_habit_name_required">Укажите название привычки</string>
+    <string name="msg_habit_setup">Придумайте понятное название для привычки.</string>
+    <string name="msg_no_habits_tracked">Нет отмеченных привычек</string>
+    <string name="msg_no_habits_yet">Привычек пока нет.</string>
+    <string name="msg_no_logs">Логов пока нет.</string>
     <string name="msg_no_memos_yet">За этот период воспоминаний нет.</string>
-    <string name="msg_reset_confirm">Точно сбросить приложение? Все данные будут удалены.</string>
-    <string name="msg_reset_choose_option">Выбери вариант сброса:</string>
-    <string name="msg_select_habit">Выбери хотя бы одну привычку.</string>
+    <string name="msg_reset_confirm">Сбросить приложение? Все данные будут удалены.</string>
+    <string name="msg_reset_choose_option">Выберите вариант сброса:</string>
+    <string name="msg_select_habit">Выберите хотя бы одну привычку.</string>
     <string name="msg_mark_done_confirm">Отметить «%1$s» как выполненную за %2$s?</string>
-    <string name="msg_mark_not_done_confirm">Снять отметку с «%1$s» за %2$s?</string>
-    <string name="msg_offline_onboarding_success">Всё готово. Сделай первую отметку сегодня.</string>
-    <string name="msg_offline_onboarding_welcome">Отслеживай привычки локально на твоём устройстве. Аккаунт не нужен.</string>
-    <string name="msg_restart_required">Перезапусти приложение, чтобы применить язык</string>
+    <string name="msg_mark_not_done_confirm">Снять отметку «%1$s» за %2$s?</string>
+    <string name="msg_offline_onboarding_success">Готово. Сделайте первую отметку сегодня.</string>
+    <string name="msg_offline_onboarding_welcome">Отслеживайте привычки локально на устройстве. Аккаунт не нужен.</string>
+    <string name="msg_restart_required">Перезапустите приложение, чтобы применить выбранный язык</string>
 
     <!-- Language selection -->
     <string name="language_system">Системный</string>
@@ -178,21 +178,21 @@
 
     <!-- Theme selection -->
     <string name="label_theme">Тема</string>
-    <string name="theme_system">Системная</string>
+    <string name="theme_system">Как в системе</string>
     <string name="theme_light">Светлая</string>
     <string name="theme_dark">Тёмная</string>
 
     <!-- Mode selection -->
-    <string name="mode_select_title">Выбери режим</string>
-    <string name="mode_select_subtitle">Как ты хочешь использовать приложение?</string>
+    <string name="mode_select_title">Выберите режим</string>
+    <string name="mode_select_subtitle">Как вы хотите использовать приложение?</string>
     <string name="mode_online_title">Онлайн</string>
-    <string name="mode_online_desc">Подключись к серверу Memos для полной синхронизации</string>
+    <string name="mode_online_desc">Подключение к серверу Memos для полной синхронизации</string>
     <string name="mode_offline_title">Офлайн</string>
-    <string name="mode_offline_desc">Данные хранятся локально без подключения к серверу</string>
+    <string name="mode_offline_desc">Хранение данных локально без подключения к серверу</string>
     <string name="mode_demo_title">Демо</string>
-    <string name="mode_demo_desc">Попробуй приложение с примерными данными</string>
-    <string name="mode_quick_online_title">Найдены данные для входа</string>
-    <string name="mode_quick_online_desc">Найдены сохранённые данные для входа. Использовать их для быстрого подключения?</string>
+    <string name="mode_demo_desc">Попробуйте приложение на демонстрационных данных</string>
+    <string name="mode_quick_online_title">Найдены учётные данные</string>
+    <string name="mode_quick_online_desc">Найдены сохранённые учётные данные. Использовать их для быстрого подключения?</string>
     <string name="action_use_saved">Использовать</string>
 
     <!-- Menu -->
@@ -206,7 +206,7 @@
     <string name="nav_settings">Настройки</string>
 
     <!-- Privacy -->
-    <string name="privacy_hidden_content">Скрытое содержимое</string>
+    <string name="privacy_hidden_content">Скрытый контент</string>
     <string name="privacy_hidden_habit">Скрытая привычка</string>
 
     <!-- Time periods -->
@@ -221,52 +221,52 @@
 
     <!-- Titles -->
     <string name="title_changelog">Что нового</string>
-    <string name="title_choose_starter_habit">Выбери начальную привычку</string>
-    <string name="title_create_day">Создать день</string>
+    <string name="title_choose_starter_habit">Выберите привычку для старта</string>
+    <string name="title_create_day">Добавить отметки</string>
     <string name="title_delete_config">Удалить конфигурацию?</string>
     <string name="title_delete_day">Удалить день?</string>
     <string name="title_delete_memo">Удалить воспоминание?</string>
     <string name="title_edit_config_warning">Редактировать существующую конфигурацию?</string>
-    <string name="title_edit_day">Изменить день</string>
+    <string name="title_edit_day">Изменить отметки</string>
     <string name="title_edit_memo">Редактировать воспоминание</string>
     <string name="title_empty_state_no_habits">Привычек пока нет</string>
-    <string name="title_habit_setup">Настрой привычку</string>
+    <string name="title_habit_setup">Настройте привычку</string>
     <string name="title_logs">Логи (%1$d)</string>
     <string name="title_sync_logs">Логи синхронизации (%1$d)</string>
-    <string name="title_new_memo">Новое воспоминание</string>
-    <string name="title_offline_onboarding_success">Отличная работа!</string>
+    <string name="title_new_memo">Создать воспоминание</string>
+    <string name="title_offline_onboarding_success">Отлично!</string>
     <string name="title_offline_onboarding_welcome">Офлайн-режим готов</string>
     <string name="title_mark_done">Отметить как выполнено?</string>
     <string name="title_mark_not_done">Снять отметку?</string>
-    <string name="title_update_day">Изменить день</string>
+    <string name="title_update_day">Изменить отметки</string>
 
     <!-- Demo habits -->
     <string name="demo_habit_exercise">Зарядка</string>
     <string name="demo_habit_reading">Чтение</string>
     <string name="demo_habit_meditation">Медитация</string>
     <string name="demo_habit_water">Пить воду</string>
-    <string name="demo_habit_learning">Учиться</string>
+    <string name="demo_habit_learning">Учёба</string>
     <string name="demo_habit_walking">10К шагов</string>
     <string name="demo_habit_no_sugar">Без сахара</string>
     <string name="demo_habit_early_sleep">Сон до 23:00</string>
 
     <!-- State panels -->
-    <string name="msg_connection_failed_hint">Проверьте URL и токен доступа, затем попробуйте снова.</string>
-    <string name="msg_credentials_stored_locally">Ваши учётные данные надёжно хранятся на этом устройстве.</string>
+    <string name="msg_connection_failed_hint">Проверьте адрес сервера и токен доступа, затем попробуйте ещё раз.</string>
+    <string name="msg_credentials_stored_locally">Учётные данные надёжно хранятся на этом устройстве.</string>
     <string name="msg_feed_empty_all">Воспоминания появятся здесь после создания.</string>
-    <string name="msg_feed_empty_filtered">Нет воспоминаний по этому фильтру.</string>
-    <string name="msg_logs_empty_hint">Журналы появляются по мере синхронизации и обработки данных.</string>
-    <string name="msg_state_loading">Подготовка привычек и воспоминаний…</string>
-    <string name="title_feed_empty">Здесь пока пусто</string>
+    <string name="msg_feed_empty_filtered">По этому фильтру воспоминаний нет.</string>
+    <string name="msg_logs_empty_hint">Логи появляются по мере синхронизации и обработки данных.</string>
+    <string name="msg_state_loading">Подготавливаем привычки и воспоминания…</string>
+    <string name="title_feed_empty">Пока пусто</string>
     <string name="title_state_loading">Загрузка данных</string>
 
-    <!-- Sync -->
+    <!-- Sync state panel -->
     <string name="action_sync">Синхронизировать</string>
-    <string name="action_keep_local">Оставить локальные</string>
-    <string name="action_keep_server">Оставить серверные</string>
-    <string name="format_pending_sync">В очереди синхронизации: %1$d</string>
-    <string name="format_sync_debounce_seconds">%1$d сек</string>
-    <string name="msg_sync_conflict">Твои локальные изменения конфликтуют с сервером. Выбери, какую версию сохранить.</string>
+    <string name="action_keep_local">Оставить локальную</string>
+    <string name="action_keep_server">Оставить серверную</string>
+    <string name="format_pending_sync">Ожидают отправки: %1$d</string>
+    <string name="format_sync_debounce_seconds">%1$d с</string>
+    <string name="msg_sync_conflict">Локальные изменения конфликтуют с сервером. Выберите, какую версию оставить.</string>
     <string name="msg_sync_failed">Ошибка синхронизации: %1$s</string>
     <string name="msg_syncing">Синхронизация...</string>
     <string name="title_sync_conflict">Конфликт синхронизации</string>

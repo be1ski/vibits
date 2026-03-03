@@ -59,7 +59,7 @@ import space.be1ski.vibits.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.feature.memos.presentation.state.MemosState
 import space.be1ski.vibits.feature.memos.presentation.view.SyncDot
 
-private val SIDEBAR_WIDTH = 240.dp
+private val SIDEBAR_WIDTH = 256.dp
 
 @Suppress("LongParameterList")
 @Composable
@@ -250,11 +250,16 @@ private fun SidebarNavItem(
     Icon(icon, contentDescription = null, modifier = Modifier.size(20.dp), tint = contentColor)
     Text(
       label,
-      style = MaterialTheme.typography.bodyMedium,
-      fontWeight = if (selected || accent) FontWeight.SemiBold else FontWeight.Normal,
+      style = if (accent) MaterialTheme.typography.bodySmall else MaterialTheme.typography.bodyMedium,
+      fontWeight =
+        when {
+          selected -> FontWeight.SemiBold
+          accent -> FontWeight.Medium
+          else -> FontWeight.Normal
+        },
       color = contentColor,
-      maxLines = 1,
-      overflow = TextOverflow.Ellipsis,
+      maxLines = if (accent) 2 else 1,
+      overflow = if (accent) TextOverflow.Clip else TextOverflow.Ellipsis,
     )
   }
 }
