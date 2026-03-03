@@ -6,9 +6,27 @@ import space.be1ski.vibits.core.platform.mode.AppMode
 sealed interface ModeSelectionAction : Action {
   /** Stored credentials detection actions. */
   sealed interface StoredCredentials : ModeSelectionAction {
-    data object Found : StoredCredentials
+    val isKeychainAvailable: Boolean
 
-    data object NotFound : StoredCredentials
+    data class Found(
+      override val isKeychainAvailable: Boolean,
+    ) : StoredCredentials
+
+    data class NotFound(
+      override val isKeychainAvailable: Boolean,
+    ) : StoredCredentials
+  }
+
+  /** Keychain restore actions. */
+  sealed interface Keychain : ModeSelectionAction {
+    data object Restore : Keychain
+
+    data class Loaded(
+      val baseUrl: String,
+      val token: String,
+    ) : Keychain
+
+    data object NotFound : Keychain
   }
 
   /** Quick online dialog actions. */

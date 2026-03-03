@@ -27,6 +27,7 @@
     <string name="action_reset_app">Tətbiqi sıfırla</string>
     <string name="action_reset_settings_only">Yalnız tənzimləmələri sıfırla</string>
     <string name="action_reset_with_memos">Hər şeyi sıfırla (xatirələr daxil)</string>
+    <string name="action_restore_from_keychain">Açar zəncirindən bərpa et</string>
     <string name="action_save">Saxla</string>
     <string name="action_show_details">Detalları göstər</string>
     <string name="action_start_tracking">İzləməyə başla</string>

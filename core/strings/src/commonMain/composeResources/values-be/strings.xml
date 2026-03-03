@@ -27,6 +27,7 @@
     <string name="action_reset_app">Скінуць праграму</string>
     <string name="action_reset_settings_only">Скінуць толькі налады</string>
     <string name="action_reset_with_memos">Скінуць усё (уключна з успамінамі)</string>
+    <string name="action_restore_from_keychain">Аднавіць з Звязкі ключоў</string>
     <string name="action_save">Захаваць</string>
     <string name="action_show_details">Паказаць дэталі</string>
     <string name="action_start_tracking">Пачаць адсочванне</string>

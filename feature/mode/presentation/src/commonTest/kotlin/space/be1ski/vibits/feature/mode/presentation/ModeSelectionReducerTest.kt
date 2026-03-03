@@ -207,18 +207,36 @@ class ModeSelectionReducerTest {
   @Test
   fun `when StoredCredentials Found then sets flag and shows quick online dialog`() =
     modeSelectionReducer.test(ModeSelectionState()) {
-      send(ModeSelectionAction.StoredCredentials.Found)
+      send(ModeSelectionAction.StoredCredentials.Found(isKeychainAvailable = false))
 
-      assertState { hasStoredCredentials && showQuickOnlineDialog }
+      assertState { hasStoredCredentials && showQuickOnlineDialog && !isKeychainAvailable }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when StoredCredentials Found with keychain then sets keychainAvailable`() =
+    modeSelectionReducer.test(ModeSelectionState()) {
+      send(ModeSelectionAction.StoredCredentials.Found(isKeychainAvailable = true))
+
+      assertState { hasStoredCredentials && showQuickOnlineDialog && isKeychainAvailable }
       assertNoEffects()
     }
 
   @Test
   fun `when StoredCredentials NotFound then clears flag`() =
     modeSelectionReducer.test(ModeSelectionState(hasStoredCredentials = true)) {
-      send(ModeSelectionAction.StoredCredentials.NotFound)
+      send(ModeSelectionAction.StoredCredentials.NotFound(isKeychainAvailable = false))
 
-      assertState { !hasStoredCredentials }
+      assertState { !hasStoredCredentials && !isKeychainAvailable }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when StoredCredentials NotFound with keychain then sets keychainAvailable`() =
+    modeSelectionReducer.test(ModeSelectionState()) {
+      send(ModeSelectionAction.StoredCredentials.NotFound(isKeychainAvailable = true))
+
+      assertState { !hasStoredCredentials && isKeychainAvailable }
       assertNoEffects()
     }
 
@@ -258,5 +276,37 @@ class ModeSelectionReducerTest {
 
       assertState { !showQuickOnlineDialog }
       assertCommandCount(1)
+    }
+
+  @Test
+  fun `when Keychain Restore then starts validating and loads from keychain`() =
+    modeSelectionReducer.test(ModeSelectionState(showCredentialsDialog = true)) {
+      send(ModeSelectionAction.Keychain.Restore)
+
+      assertState { isValidating && error == null }
+      assertCommands(Command.LoadFromKeychain)
+    }
+
+  @Test
+  fun `when Keychain Loaded then fills credentials and stops validating`() =
+    modeSelectionReducer.test(ModeSelectionState(isValidating = true)) {
+      send(ModeSelectionAction.Keychain.Loaded(baseUrl = "https://memos.example.com", token = "secret-token"))
+
+      assertState {
+        baseUrl == "https://memos.example.com" &&
+          token == "secret-token" &&
+          !isValidating &&
+          error == null
+      }
+      assertNoEffects()
+    }
+
+  @Test
+  fun `when Keychain NotFound then stops validating and shows error`() =
+    modeSelectionReducer.test(ModeSelectionState(isValidating = true)) {
+      send(ModeSelectionAction.Keychain.NotFound)
+
+      assertState { !isValidating && error == CredentialValidationError.CONNECTION_FAILED }
+      assertNoEffects()
     }
 }

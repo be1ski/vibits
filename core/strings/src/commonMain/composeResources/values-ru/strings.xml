@@ -27,6 +27,7 @@
     <string name="action_reset_app">Сбросить приложение</string>
     <string name="action_reset_settings_only">Сбросить только настройки</string>
     <string name="action_reset_with_memos">Сбросить всё (включая воспоминания)</string>
+    <string name="action_restore_from_keychain">Восстановить из Связки ключей</string>
     <string name="action_save">Сохранить</string>
     <string name="action_show_details">Показать детали привычки</string>
     <string name="action_start_tracking">Начать отслеживание</string>

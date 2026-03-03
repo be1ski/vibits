@@ -27,6 +27,7 @@
     <string name="action_reset_app">アプリをリセット</string>
     <string name="action_reset_settings_only">設定のみをリセット</string>
     <string name="action_reset_with_memos">すべてをリセット（思い出を含む）</string>
+    <string name="action_restore_from_keychain">キーチェーンから復元</string>
     <string name="action_save">保存</string>
     <string name="action_show_details">詳細を表示</string>
     <string name="action_start_tracking">記録を開始</string>

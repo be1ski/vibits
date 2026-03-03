@@ -27,6 +27,7 @@
     <string name="action_reset_app">إعادة تعيين التطبيق</string>
     <string name="action_reset_settings_only">إعادة تعيين الإعدادات فقط</string>
     <string name="action_reset_with_memos">إعادة تعيين كل شيء (بما في ذلك الذكريات)</string>
+    <string name="action_restore_from_keychain">استعادة من سلسلة المفاتيح</string>
     <string name="action_save">حفظ</string>
     <string name="action_show_details">عرض التفاصيل</string>
     <string name="action_start_tracking">بدء التتبع</string>

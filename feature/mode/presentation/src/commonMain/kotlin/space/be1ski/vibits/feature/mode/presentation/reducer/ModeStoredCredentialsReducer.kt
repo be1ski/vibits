@@ -12,11 +12,22 @@ internal val storedCredentialsReducer:
   reducer { action, state ->
     when (action) {
       is ModeSelectionAction.StoredCredentials.Found -> {
-        state { state.copy(hasStoredCredentials = true, showQuickOnlineDialog = true) }
+        state {
+          state.copy(
+            hasStoredCredentials = true,
+            showQuickOnlineDialog = true,
+            isKeychainAvailable = action.isKeychainAvailable,
+          )
+        }
       }
 
       is ModeSelectionAction.StoredCredentials.NotFound -> {
-        state { state.copy(hasStoredCredentials = false) }
+        state {
+          state.copy(
+            hasStoredCredentials = false,
+            isKeychainAvailable = action.isKeychainAvailable,
+          )
+        }
       }
     }
   }

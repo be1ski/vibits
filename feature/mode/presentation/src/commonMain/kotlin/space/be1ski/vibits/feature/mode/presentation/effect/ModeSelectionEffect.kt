@@ -27,6 +27,8 @@ sealed interface ModeSelectionEffect {
       val token: String,
     ) : Credentials
 
+    data object LoadFromKeychain : Credentials
+
     data class SaveMode(
       val mode: AppMode,
     ) : Mode

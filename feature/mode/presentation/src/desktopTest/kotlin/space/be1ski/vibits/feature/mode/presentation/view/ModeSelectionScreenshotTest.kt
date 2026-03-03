@@ -61,4 +61,20 @@ class ModeSelectionScreenshotTest {
         ),
       )
     }
+
+  @Test
+  fun `when credentials dialog with keychain available then captures keychain button`() =
+    captureAllVariants(
+      "mode_selection_credentials_keychain",
+      assertions = { onNodeWithTag(ModeSelectionTestTags.CREDENTIALS_DIALOG).assertIsDisplayed() },
+    ) {
+      ModeSelectionScreen(
+        createFeature(
+          ModeSelectionState(
+            showCredentialsDialog = true,
+            isKeychainAvailable = true,
+          ),
+        ),
+      )
+    }
 }

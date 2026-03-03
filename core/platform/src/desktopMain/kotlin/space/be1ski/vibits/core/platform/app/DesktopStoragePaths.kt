@@ -22,8 +22,6 @@ object DesktopStoragePaths {
 
   fun databasePath(): String = appDataDir().resolve("memos.db").toString()
 
-  fun localConfigPath(): String = appDataDir().resolve("local.properties").toString()
-
   fun environmentLabel(): String = environmentSuffix().ifBlank { "prod" }
 
   private fun appDataDir(): Path {

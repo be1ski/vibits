@@ -27,6 +27,7 @@
     <string name="action_reset_app">Reset app</string>
     <string name="action_reset_settings_only">Reset settings only</string>
     <string name="action_reset_with_memos">Reset everything (including memos)</string>
+    <string name="action_restore_from_keychain">Restore from Keychain</string>
     <string name="action_save">Save</string>
     <string name="action_show_details">Show habit details</string>
     <string name="action_start_tracking">Start tracking</string>
