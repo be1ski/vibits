@@ -112,6 +112,23 @@ class ContributionGridTimelineTest {
   }
 
   @Test
+  fun `when year range and two weeks fall in first 7 days of quarter then label appears once`() {
+    // 2026: Jan 1 is Thu → week Mon Dec 29 has inRange from Jan 1 (day 1),
+    // next week Mon Jan 5 has inRange from Jan 5 (day 5) — both ≤ 7
+    val weeks =
+      listOf(
+        week(LocalDate(2025, 12, 29), inRangeFrom = LocalDate(2026, 1, 1)),
+        week(LocalDate(2026, 1, 5), inRangeFrom = LocalDate(2026, 1, 5)),
+        week(LocalDate(2026, 1, 12), inRangeFrom = LocalDate(2026, 1, 12)),
+      )
+    val labels = buildTimelineLabels(weeks, ActivityRange.Year(2026), formatter)
+
+    assertEquals("1", labels[0])
+    assertEquals("", labels[1])
+    assertEquals("", labels[2])
+  }
+
+  @Test
   fun `when month range starts mid-week then first label uses in-range month`() {
     // Nov 2024: first week starts Mon Oct 28, but Nov 1 is first in-range
     val weeks =
