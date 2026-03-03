@@ -19,15 +19,7 @@ internal fun buildTimelineLabels(
     val start = week.inRangeDate()
     when (range) {
       is ActivityRange.Week -> formatter.monthInitial(start.month)
-      is ActivityRange.Month -> {
-        val prev = weeks.getOrNull(index - 1)?.inRangeDate()
-        if (prev == null || prev.month != start.month || prev.year != start.year) {
-          formatter.monthInitial(start.month)
-        } else {
-          ""
-        }
-      }
-      is ActivityRange.Quarter -> {
+      is ActivityRange.Month, is ActivityRange.Quarter -> {
         val prev = weeks.getOrNull(index - 1)?.inRangeDate()
         if (prev == null || prev.month != start.month || prev.year != start.year) {
           formatter.monthInitial(start.month)
@@ -36,7 +28,8 @@ internal fun buildTimelineLabels(
         }
       }
       is ActivityRange.Year -> {
-        if (isQuarterStart(start)) {
+        val prev = weeks.getOrNull(index - 1)?.inRangeDate()
+        if (isQuarterStart(start) && (prev == null || !isQuarterStart(prev))) {
           quarterIndex(start.month).toString()
         } else {
           ""
