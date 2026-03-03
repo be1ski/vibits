@@ -263,7 +263,7 @@ private fun CalendarGridLayout(
                 isSelected = state.selectedDay?.date == day.date,
                 isHovered = interaction.hoveredDate == day.date,
                 isWeekSelected = false,
-                showDayNumber = true,
+                showDayNumber = day.inRange,
                 isToday = state.today == day.date,
                 isWeekend = isWeekend,
                 habitColor = state.habitColor,
