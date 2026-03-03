@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -45,6 +47,8 @@ import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_refresh
 import space.be1ski.vibits.core.strings.generated.action_track_today
 import space.be1ski.vibits.core.strings.generated.app_name
+import space.be1ski.vibits.core.strings.generated.format_habits_progress
+import space.be1ski.vibits.core.strings.generated.label_habits_config
 import space.be1ski.vibits.core.strings.generated.nav_feed
 import space.be1ski.vibits.core.strings.generated.nav_habits
 import space.be1ski.vibits.core.strings.generated.nav_memos
@@ -71,6 +75,7 @@ internal fun DesktopSidebar(
   onClearSelection: () -> Unit,
   onFeedScrollToTop: () -> Unit,
   onOpenTodayEditor: () -> Unit,
+  onOpenConfigDialog: () -> Unit,
   onShowCreateMemoDialog: () -> Unit,
   onSettingsClick: () -> Unit,
   dispatchMemos: (MemosAction) -> Unit,
@@ -83,7 +88,7 @@ internal fun DesktopSidebar(
       SidebarHeader(memosState, dispatchMemos)
       SidebarNavigation(appState, onAppAction, onClearSelection, onFeedScrollToTop)
       Spacer(modifier = Modifier.weight(1f))
-      SidebarActions(appState.selectedScreen, todayHabits, onOpenTodayEditor, onShowCreateMemoDialog, onSettingsClick)
+      SidebarActions(appState.selectedScreen, todayHabits, onOpenTodayEditor, onOpenConfigDialog, onShowCreateMemoDialog, onSettingsClick)
     }
   }
 }
@@ -146,25 +151,41 @@ private fun SidebarActions(
   selectedScreen: Screen,
   todayHabits: TodayHabits,
   onOpenTodayEditor: () -> Unit,
+  onOpenConfigDialog: () -> Unit,
   onShowCreateMemoDialog: () -> Unit,
   onSettingsClick: () -> Unit,
 ) {
   Column(verticalArrangement = Arrangement.spacedBy(Indent.x3s)) {
     if (todayHabits.config.isNotEmpty() && todayHabits.day != null) {
+      val done = todayHabits.day.habitStatuses.count { it.done }
+      val total = todayHabits.day.habitStatuses.size
       SidebarNavItem(
         icon = Icons.Filled.AddTask,
         label = stringResource(Res.string.action_track_today),
+        subtitle = if (total > 0) stringResource(Res.string.format_habits_progress, done, total) else null,
         selected = false,
         accent = true,
         testTag = AppShellTestTags.SIDEBAR_TRACK_TODAY,
         onClick = onOpenTodayEditor,
+        trailingIcon = {
+          IconButton(
+            onClick = onOpenConfigDialog,
+            modifier = Modifier.size(32.dp),
+          ) {
+            Icon(
+              imageVector = Icons.Filled.Tune,
+              contentDescription = stringResource(Res.string.label_habits_config),
+              modifier = Modifier.size(18.dp),
+              tint = MaterialTheme.colorScheme.primary,
+            )
+          }
+        },
       )
     }
     SidebarNavItem(
       icon = Icons.Filled.Edit,
       label = stringResource(Res.string.title_new_memo),
       selected = false,
-      accent = true,
       testTag = AppShellTestTags.SIDEBAR_NEW_MEMO,
       onClick = onShowCreateMemoDialog,
     )
@@ -217,6 +238,8 @@ private fun SidebarNavItem(
   testTag: String,
   onClick: () -> Unit,
   accent: Boolean = false,
+  subtitle: String? = null,
+  trailingIcon: @Composable (() -> Unit)? = null,
 ) {
   var hovered by remember { mutableStateOf(false) }
   val shape = RoundedCornerShape(Indent.xs)
@@ -248,6 +271,22 @@ private fun SidebarNavItem(
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Icon(icon, contentDescription = null, modifier = Modifier.size(20.dp), tint = contentColor)
+    SidebarNavItemLabel(label, subtitle, accent, selected, contentColor)
+    if (trailingIcon != null) {
+      trailingIcon()
+    }
+  }
+}
+
+@Composable
+private fun RowScope.SidebarNavItemLabel(
+  label: String,
+  subtitle: String?,
+  accent: Boolean,
+  selected: Boolean,
+  contentColor: Color,
+) {
+  Column(modifier = Modifier.weight(1f)) {
     Text(
       label,
       style = if (accent) MaterialTheme.typography.bodySmall else MaterialTheme.typography.bodyMedium,
@@ -261,5 +300,14 @@ private fun SidebarNavItem(
       maxLines = if (accent) 2 else 1,
       overflow = if (accent) TextOverflow.Clip else TextOverflow.Ellipsis,
     )
+    if (subtitle != null) {
+      Text(
+        subtitle,
+        style = MaterialTheme.typography.labelSmall,
+        color = contentColor.copy(alpha = 0.7f),
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+      )
+    }
   }
 }

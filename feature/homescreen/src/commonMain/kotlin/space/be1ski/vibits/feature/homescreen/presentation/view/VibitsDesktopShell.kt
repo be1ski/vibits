@@ -78,6 +78,13 @@ internal fun VibitsDesktopShell(
         onClearSelection = shell.callbacks.onClearSelection,
         onFeedScrollToTop = shell.callbacks.onFeedScrollToTop,
         onOpenTodayEditor = shell.callbacks.onOpenTodayEditor,
+        onOpenConfigDialog = {
+          features.habits.send(
+            space.be1ski.vibits.feature.habits.presentation.action.HabitsAction.Config.OpenConfigDialog(
+              shell.todayHabits.config,
+            ),
+          )
+        },
         onShowCreateMemoDialog = shell.callbacks.onShowCreateMemoDialog,
         onSettingsClick = {
           features.app.send(AppAction.Navigation.SelectScreen(Screen.SETTINGS))

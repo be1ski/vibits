@@ -37,6 +37,10 @@ sealed interface HabitsEffect {
     val name: String,
   ) : Memo
 
+  data class SaveConfig(
+    val content: String,
+  ) : Memo
+
   data object RefreshMemos : Refresh
 
   data class RunPrewarmAllRanges(

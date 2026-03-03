@@ -94,7 +94,7 @@ internal fun StatsInfoCard(
   val isHabitsMode = state.activityMode == ActivityMode.HABITS
   val hasTodayConfig = derived.todayConfig.isNotEmpty()
 
-  if (!isHabitsMode || !hasTodayConfig) return
+  if (!isHabitsMode || !hasTodayConfig || state.wideLayout) return
 
   val todayStatuses = derived.todayDay?.habitStatuses.orEmpty()
   val todayDone = todayStatuses.count { it.done }

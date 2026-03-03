@@ -4,9 +4,11 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.atStartOfDayIn
 import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.usecase.SaveDailyHabitMemoUseCase
+import space.be1ski.vibits.feature.habits.domain.usecase.SaveHabitsConfigMemoUseCase
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
@@ -26,7 +28,8 @@ class HabitsMemoEffectHandlerTest {
 
   private fun createHandler(repository: MemosRepository = FakeMemosRepository()): HabitsMemoEffectHandler {
     val saveDailyUseCase = SaveDailyHabitMemoUseCase(repository)
-    return HabitsMemoEffectHandler(repository, saveDailyUseCase)
+    val saveConfigUseCase = SaveHabitsConfigMemoUseCase(repository)
+    return HabitsMemoEffectHandler(repository, saveDailyUseCase, saveConfigUseCase)
   }
 
   // ========== ToggleDailyHabit Tests ==========
@@ -281,6 +284,75 @@ class HabitsMemoEffectHandlerTest {
       val action = actions[0]
       assertIs<HabitsAction.Response.MemoOperationFailed>(action)
       assertEquals("Delete failed", action.error)
+    }
+
+  // ========== SaveConfig Tests ==========
+
+  @Test
+  fun `when SaveConfig with no existing config then emits MemoCreated`() =
+    runTest {
+      val expectedMemo = Memo(name = "memos/config", content = "#habits/config\nExercise | #habits/exercise")
+      val repository =
+        FakeMemosRepository().apply {
+          cachedMemosResult = emptyList()
+          createMemoResult = Result.success(expectedMemo)
+        }
+      val handler = createHandler(repository)
+      val effect = HabitsEffect.SaveConfig("#habits/config\nExercise | #habits/exercise")
+
+      val actions = handler(effect).toList()
+
+      assertEquals(1, actions.size)
+      assertIs<HabitsAction.Response.MemoCreated>(actions[0])
+    }
+
+  @Test
+  fun `when SaveConfig with today config existing then emits MemoUpdated`() =
+    runTest {
+      val timeZone = kotlinx.datetime.TimeZone.currentSystemDefault()
+      val todayInstant =
+        space.be1ski.vibits.core.platform.date
+          .currentLocalDate()
+          .atStartOfDayIn(timeZone) + kotlin.time.Duration.parse("12h")
+      val existingConfig =
+        Memo(
+          name = "memos/existing-config",
+          content = "#habits/config\nExercise | #habits/exercise",
+          createTime = todayInstant,
+        )
+      val updatedMemo =
+        Memo(name = "memos/existing-config", content = "#habits/config\nExercise | #habits/exercise\nReading | #habits/reading")
+      val repository =
+        FakeMemosRepository().apply {
+          cachedMemosResult = listOf(existingConfig)
+          updateMemoResult = Result.success(updatedMemo)
+        }
+      val handler = createHandler(repository)
+      val effect = HabitsEffect.SaveConfig("#habits/config\nExercise | #habits/exercise\nReading | #habits/reading")
+
+      val actions = handler(effect).toList()
+
+      assertEquals(1, actions.size)
+      assertIs<HabitsAction.Response.MemoUpdated>(actions[0])
+    }
+
+  @Test
+  fun `when SaveConfig fails then emits MemoOperationFailed`() =
+    runTest {
+      val repository =
+        FakeMemosRepository().apply {
+          cachedMemosResult = emptyList()
+          createMemoResult = Result.failure(Exception("Save failed"))
+        }
+      val handler = createHandler(repository)
+      val effect = HabitsEffect.SaveConfig("#habits/config\nExercise | #habits/exercise")
+
+      val actions = handler(effect).toList()
+
+      assertEquals(1, actions.size)
+      val action = actions[0]
+      assertIs<HabitsAction.Response.MemoOperationFailed>(action)
+      assertEquals("Save failed", action.error)
     }
 
   // ========== Cancellation Tests ==========

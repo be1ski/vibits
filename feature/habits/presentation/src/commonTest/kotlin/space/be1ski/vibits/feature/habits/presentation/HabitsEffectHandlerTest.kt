@@ -6,6 +6,7 @@ import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
 import space.be1ski.vibits.feature.habits.domain.usecase.SaveDailyHabitMemoUseCase
+import space.be1ski.vibits.feature.habits.domain.usecase.SaveHabitsConfigMemoUseCase
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.effect.HabitsActivityEffectHandler
 import space.be1ski.vibits.feature.habits.presentation.effect.HabitsEffect
@@ -392,6 +393,7 @@ class HabitsEffectHandlerTest {
         HabitsMemoEffectHandler(
           memosRepository = repository,
           saveDailyHabitMemo = SaveDailyHabitMemoUseCase(repository),
+          saveHabitsConfigMemo = SaveHabitsConfigMemoUseCase(repository),
         ),
       refreshHandler =
         HabitsRefreshEffectHandler(
