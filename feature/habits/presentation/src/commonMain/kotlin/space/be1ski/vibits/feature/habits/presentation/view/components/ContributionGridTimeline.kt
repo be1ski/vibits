@@ -16,11 +16,11 @@ internal fun buildTimelineLabels(
     return emptyList()
   }
   return weeks.mapIndexed { index, week ->
-    val start = week.startDate
+    val start = week.inRangeDate()
     when (range) {
       is ActivityRange.Week -> formatter.monthInitial(start.month)
       is ActivityRange.Month -> {
-        val prev = weeks.getOrNull(index - 1)?.startDate
+        val prev = weeks.getOrNull(index - 1)?.inRangeDate()
         if (prev == null || prev.month != start.month || prev.year != start.year) {
           formatter.monthInitial(start.month)
         } else {
@@ -28,7 +28,7 @@ internal fun buildTimelineLabels(
         }
       }
       is ActivityRange.Quarter -> {
-        val prev = weeks.getOrNull(index - 1)?.startDate
+        val prev = weeks.getOrNull(index - 1)?.inRangeDate()
         if (prev == null || prev.month != start.month || prev.year != start.year) {
           formatter.monthInitial(start.month)
         } else {
@@ -45,6 +45,8 @@ internal fun buildTimelineLabels(
     }
   }
 }
+
+private fun ActivityWeek.inRangeDate(): LocalDate = days.firstOrNull { it.inRange }?.date ?: startDate
 
 private const val QUARTER_START_DAY_LIMIT = 7
 
