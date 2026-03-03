@@ -27,6 +27,7 @@
     <string name="action_reset_app">აპის გადატვირთვა</string>
     <string name="action_reset_settings_only">მხოლოდ პარამეტრების გადაყენება</string>
     <string name="action_reset_with_memos">ყველაფრის გადაყენება (მოგონებების ჩათვლით)</string>
+    <string name="action_restore_from_keychain">აღდგენა გასაღებების ჯაჭვიდან</string>
     <string name="action_save">შენახვა</string>
     <string name="action_show_details">დეტალების ჩვენება</string>
     <string name="action_start_tracking">თვალთვალის დაწყება</string>

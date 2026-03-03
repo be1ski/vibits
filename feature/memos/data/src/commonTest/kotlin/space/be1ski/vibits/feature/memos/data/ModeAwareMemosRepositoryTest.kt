@@ -512,4 +512,8 @@ private class FakeCredentialsRepository : CredentialsRepository {
   override fun load() = Credentials("", "")
 
   override fun save(credentials: Credentials) = Unit
+
+  override fun loadFromSecureStorage(): Credentials? = null
+
+  override fun isSecureStorageAvailable(): Boolean = false
 }

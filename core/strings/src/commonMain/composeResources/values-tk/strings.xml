@@ -26,6 +26,7 @@
     <string name="action_reset_app">Programany täzele</string>
     <string name="action_reset_settings_only">Diňe sazlamalary täzeden düzmek</string>
     <string name="action_reset_with_memos">Ählisini täzeden düzmek (ýatlamalar bilen)</string>
+    <string name="action_restore_from_keychain">Açar zynjyryndan dikelt</string>
     <string name="action_save">Sakla</string>
     <string name="action_show_details">Jikme-jiklikleri görkez</string>
     <string name="action_start_tracking">Yzarlamagy başla</string>

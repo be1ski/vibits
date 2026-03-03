@@ -26,6 +26,7 @@
     <string name="action_reset_app">Барқарор кардани барнома</string>
     <string name="action_reset_settings_only">Танҳо танзимотро барқарор кардан</string>
     <string name="action_reset_with_memos">Ҳамаро барқарор кардан (хотираҳоро низ)</string>
+    <string name="action_restore_from_keychain">Барқарор аз Занҷираи калидҳо</string>
     <string name="action_save">Захира кардан</string>
     <string name="action_show_details">Нишон додани тафсилот</string>
     <string name="action_start_tracking">Назоратро оғоз кардан</string>

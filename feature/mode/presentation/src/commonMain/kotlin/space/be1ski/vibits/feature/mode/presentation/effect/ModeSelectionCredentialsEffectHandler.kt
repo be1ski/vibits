@@ -9,6 +9,7 @@ import space.be1ski.vibits.feature.auth.domain.model.Credentials
 import space.be1ski.vibits.feature.auth.domain.model.isFilled
 import space.be1ski.vibits.feature.auth.domain.usecase.InitializeCredentialsFromEnvUseCase
 import space.be1ski.vibits.feature.auth.domain.usecase.LoadCredentialsUseCase
+import space.be1ski.vibits.feature.auth.domain.usecase.LoadKeychainCredentialsUseCase
 import space.be1ski.vibits.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.vibits.feature.memos.domain.repository.ConnectionTester
 import space.be1ski.vibits.feature.mode.presentation.action.ModeSelectionAction
@@ -19,6 +20,7 @@ class ModeSelectionCredentialsEffectHandler(
   private val connectionTester: ConnectionTester,
   private val initializeCredentialsFromEnv: InitializeCredentialsFromEnvUseCase,
   private val loadCredentials: LoadCredentialsUseCase,
+  private val loadKeychainCredentials: LoadKeychainCredentialsUseCase,
   private val saveCredentials: SaveCredentialsUseCase,
 ) : EffectHandler<ModeSelectionEffect.Command.Credentials, ModeSelectionAction> {
   override fun invoke(command: ModeSelectionEffect.Command.Credentials): Flow<ModeSelectionAction> =
@@ -28,31 +30,34 @@ class ModeSelectionCredentialsEffectHandler(
       ModeSelectionEffect.Command.UseStoredCredentialsWithValidation -> handleUseStoredCredentials()
       is ModeSelectionEffect.Command.ValidateCredentials -> handleValidateCredentials(command)
       is ModeSelectionEffect.Command.SaveCredentials -> handleSaveCredentials(command)
+      ModeSelectionEffect.Command.LoadFromKeychain -> handleLoadFromKeychain()
     }
 
   private fun handleInitializeFromLocalConfig(): Flow<ModeSelectionAction> =
     actions {
       initializeCredentialsFromEnv()
+      val keychainAvailable = loadKeychainCredentials.isAvailable()
       // After initialization, check if credentials were loaded
       val credentials = loadCredentials()
       if (credentials.isFilled) {
         Log.d(TAG, "Stored credentials found after initialization")
-        emit(ModeSelectionAction.StoredCredentials.Found)
+        emit(ModeSelectionAction.StoredCredentials.Found(isKeychainAvailable = keychainAvailable))
       } else {
         Log.d(TAG, "No stored credentials after initialization")
-        emit(ModeSelectionAction.StoredCredentials.NotFound)
+        emit(ModeSelectionAction.StoredCredentials.NotFound(isKeychainAvailable = keychainAvailable))
       }
     }
 
   private fun handleCheckStoredCredentials(): Flow<ModeSelectionAction> =
     actions {
+      val keychainAvailable = loadKeychainCredentials.isAvailable()
       val credentials = loadCredentials()
       if (credentials.isFilled) {
         Log.d(TAG, "Stored credentials found")
-        emit(ModeSelectionAction.StoredCredentials.Found)
+        emit(ModeSelectionAction.StoredCredentials.Found(isKeychainAvailable = keychainAvailable))
       } else {
         Log.d(TAG, "No stored credentials")
-        emit(ModeSelectionAction.StoredCredentials.NotFound)
+        emit(ModeSelectionAction.StoredCredentials.NotFound(isKeychainAvailable = keychainAvailable))
       }
     }
 
@@ -79,5 +84,17 @@ class ModeSelectionCredentialsEffectHandler(
     actions {
       Log.d(TAG, "Saving credentials")
       saveCredentials(Credentials(command.baseUrl, command.token))
+    }
+
+  private fun handleLoadFromKeychain(): Flow<ModeSelectionAction> =
+    actions {
+      val credentials = loadKeychainCredentials()
+      if (credentials != null) {
+        Log.d(TAG, "Keychain credentials loaded: baseUrl=${credentials.baseUrl.maskUrl()}")
+        emit(ModeSelectionAction.Keychain.Loaded(baseUrl = credentials.baseUrl, token = credentials.token))
+      } else {
+        Log.d(TAG, "No keychain credentials found")
+        emit(ModeSelectionAction.Keychain.NotFound)
+      }
     }
 }

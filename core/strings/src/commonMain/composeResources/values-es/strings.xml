@@ -27,6 +27,7 @@
     <string name="action_reset_app">Restablecer app</string>
     <string name="action_reset_settings_only">Restablecer solo la configuración</string>
     <string name="action_reset_with_memos">Restablecer todo (incluidos los recuerdos)</string>
+    <string name="action_restore_from_keychain">Restaurar desde Llavero</string>
     <string name="action_save">Guardar</string>
     <string name="action_show_details">Mostrar detalles</string>
     <string name="action_start_tracking">Comenzar seguimiento</string>

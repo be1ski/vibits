@@ -27,6 +27,7 @@
     <string name="action_reset_app">Қолданбаны қалпына келтіру</string>
     <string name="action_reset_settings_only">Тек баптауларды қалпына келтіру</string>
     <string name="action_reset_with_memos">Бәрін қалпына келтіру (естеліктерді қоса)</string>
+    <string name="action_restore_from_keychain">Кілттер тізбегінен қалпына келтіру</string>
     <string name="action_save">Сақтау</string>
     <string name="action_show_details">Мәліметтерді көрсету</string>
     <string name="action_start_tracking">Бақылауды бастау</string>

@@ -38,6 +38,7 @@ import space.be1ski.vibits.core.elm.Feature
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_cancel
+import space.be1ski.vibits.core.strings.generated.action_restore_from_keychain
 import space.be1ski.vibits.core.strings.generated.action_save
 import space.be1ski.vibits.core.strings.generated.action_use_saved
 import space.be1ski.vibits.core.strings.generated.mode_demo_desc
@@ -187,37 +188,7 @@ private fun CredentialsSetupDialog(
     onDismissRequest = { if (!state.isValidating) dispatch(ModeSelectionAction.Dialog.Dismiss) },
     modifier = Modifier.testTag(ModeSelectionTestTags.CREDENTIALS_DIALOG),
     title = { Text(stringResource(Res.string.mode_online_title)) },
-    text = {
-      Column(verticalArrangement = Arrangement.spacedBy(Indent.s)) {
-        CredentialFields(
-          baseUrl = state.baseUrl,
-          token = state.token,
-          onBaseUrlChange = { dispatch(ModeSelectionAction.Input.UpdateBaseUrl(it)) },
-          onTokenChange = { dispatch(ModeSelectionAction.Input.UpdateToken(it)) },
-          enabled = !state.isValidating,
-        )
-        if (state.error != null) {
-          Text(
-            text = credentialValidationErrorMessage(state.error),
-            color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodySmall,
-          )
-          if (state.error == CredentialValidationError.CONNECTION_FAILED) {
-            Text(
-              text = stringResource(Res.string.msg_connection_failed_hint),
-              style = MaterialTheme.typography.bodySmall,
-              color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-          }
-        } else {
-          Text(
-            stringResource(Res.string.msg_credentials_stored_locally),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-          )
-        }
-      }
-    },
+    text = { CredentialsSetupDialogContent(state = state, dispatch = dispatch) },
     confirmButton = {
       Button(onClick = { dispatch(ModeSelectionAction.Validation.Submit) }, enabled = !state.isValidating) {
         if (state.isValidating) {
@@ -237,6 +208,50 @@ private fun CredentialsSetupDialog(
       }
     },
   )
+}
+
+@Composable
+private fun CredentialsSetupDialogContent(
+  state: ModeSelectionState,
+  dispatch: (ModeSelectionAction) -> Unit,
+) {
+  Column(verticalArrangement = Arrangement.spacedBy(Indent.s)) {
+    CredentialFields(
+      baseUrl = state.baseUrl,
+      token = state.token,
+      onBaseUrlChange = { dispatch(ModeSelectionAction.Input.UpdateBaseUrl(it)) },
+      onTokenChange = { dispatch(ModeSelectionAction.Input.UpdateToken(it)) },
+      enabled = !state.isValidating,
+    )
+    if (state.error != null) {
+      Text(
+        text = credentialValidationErrorMessage(state.error),
+        color = MaterialTheme.colorScheme.error,
+        style = MaterialTheme.typography.bodySmall,
+      )
+      if (state.error == CredentialValidationError.CONNECTION_FAILED) {
+        Text(
+          text = stringResource(Res.string.msg_connection_failed_hint),
+          style = MaterialTheme.typography.bodySmall,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+      }
+    } else {
+      Text(
+        stringResource(Res.string.msg_credentials_stored_locally),
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+      )
+    }
+    if (state.isKeychainAvailable) {
+      TextButton(
+        onClick = { dispatch(ModeSelectionAction.Keychain.Restore) },
+        enabled = !state.isValidating,
+      ) {
+        Text(stringResource(Res.string.action_restore_from_keychain))
+      }
+    }
+  }
 }
 
 @Composable

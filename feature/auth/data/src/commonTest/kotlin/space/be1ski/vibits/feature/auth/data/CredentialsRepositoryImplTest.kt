@@ -53,4 +53,36 @@ class CredentialsRepositoryImplTest {
 
     assertEquals(LocalCredentials(baseUrl = longUrl, token = "token"), store.stored)
   }
+
+  @Test
+  fun `when loadFromSecureStorage with credentials then returns them`() {
+    val store =
+      FakeCredentialsStore(
+        secureStorageCredentials = LocalCredentials(baseUrl = "https://keychain.com", token = "keychain-token"),
+      )
+    val repository = CredentialsRepositoryImpl(store)
+
+    val result = repository.loadFromSecureStorage()
+
+    assertEquals(Credentials(baseUrl = "https://keychain.com", token = "keychain-token"), result)
+  }
+
+  @Test
+  fun `when loadFromSecureStorage without credentials then returns null`() {
+    val store = FakeCredentialsStore()
+    val repository = CredentialsRepositoryImpl(store)
+
+    val result = repository.loadFromSecureStorage()
+
+    assertEquals(null, result)
+  }
+
+  @Test
+  fun `when isSecureStorageAvailable then delegates to store`() {
+    val available = FakeCredentialsStore(secureStorageAvailable = true)
+    val unavailable = FakeCredentialsStore(secureStorageAvailable = false)
+
+    assertEquals(true, CredentialsRepositoryImpl(available).isSecureStorageAvailable())
+    assertEquals(false, CredentialsRepositoryImpl(unavailable).isSecureStorageAvailable())
+  }
 }

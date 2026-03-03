@@ -14,5 +14,6 @@ val modeSelectionReducer: Reducer<ModeSelectionAction, ModeSelectionState, ModeS
       is ModeSelectionAction.Input -> inputReducer(action, state)
       is ModeSelectionAction.Validation -> validationReducer(action, state)
       is ModeSelectionAction.Selection -> selectionReducer(action, state)
+      is ModeSelectionAction.Keychain -> keychainReducer(action, state)
     }
   }

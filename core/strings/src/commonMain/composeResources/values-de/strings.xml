@@ -27,6 +27,7 @@
     <string name="action_reset_app">App zurücksetzen</string>
     <string name="action_reset_settings_only">Nur Einstellungen zurücksetzen</string>
     <string name="action_reset_with_memos">Alles zurücksetzen (einschließlich Erinnerungen)</string>
+    <string name="action_restore_from_keychain">Aus Schlüsselbund wiederherstellen</string>
     <string name="action_save">Speichern</string>
     <string name="action_show_details">Details anzeigen</string>
     <string name="action_start_tracking">Tracking starten</string>

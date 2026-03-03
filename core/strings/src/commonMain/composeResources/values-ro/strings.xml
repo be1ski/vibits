@@ -26,6 +26,7 @@
     <string name="action_reset_app">Resetare aplicație</string>
     <string name="action_reset_settings_only">Resetează doar setările</string>
     <string name="action_reset_with_memos">Resetează totul (inclusiv memoriile)</string>
+    <string name="action_restore_from_keychain">Restaurare din Portchei</string>
     <string name="action_save">Salvează</string>
     <string name="action_show_details">Arată detalii</string>
     <string name="action_start_tracking">Începe urmărirea</string>

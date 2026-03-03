@@ -6,4 +6,8 @@ interface CredentialsRepository {
   fun load(): Credentials
 
   fun save(credentials: Credentials)
+
+  fun loadFromSecureStorage(): Credentials?
+
+  fun isSecureStorageAvailable(): Boolean
 }

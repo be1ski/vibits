@@ -6,6 +6,10 @@ interface CredentialsStore {
   fun load(): LocalCredentials
 
   fun save(credentials: LocalCredentials)
+
+  fun loadFromSecureStorage(): LocalCredentials? = null
+
+  fun isSecureStorageAvailable(): Boolean = false
 }
 
 expect fun createCredentialsStore(): CredentialsStore
