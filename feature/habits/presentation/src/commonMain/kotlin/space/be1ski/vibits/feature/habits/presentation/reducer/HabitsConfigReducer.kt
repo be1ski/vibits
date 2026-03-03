@@ -52,7 +52,7 @@ internal val configReducer: Reducer<HabitsAction.Config, HabitsState, HabitsEffe
         } else {
           val content = buildHabitsConfigContentFromList(validHabits)
           state { state.copy(isLoading = true) }
-          command(HabitsEffect.CreateMemo(content))
+          command(HabitsEffect.SaveConfig(content))
         }
       }
     }
