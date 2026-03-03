@@ -27,6 +27,7 @@
     <string name="action_reset_app">Ilovani tiklash</string>
     <string name="action_reset_settings_only">Faqat sozlamalarni tiklash</string>
     <string name="action_reset_with_memos">Hammasini tiklash (xotiralarni ham)</string>
+    <string name="action_restore_from_keychain">Kalit zanjirisidan tiklash</string>
     <string name="action_save">Saqlash</string>
     <string name="action_show_details">Tafsilotlarni ko'rsatish</string>
     <string name="action_start_tracking">Kuzatuvni boshlash</string>

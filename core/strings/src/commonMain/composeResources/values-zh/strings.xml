@@ -27,6 +27,7 @@
     <string name="action_reset_app">重置应用</string>
     <string name="action_reset_settings_only">仅重置设置</string>
     <string name="action_reset_with_memos">重置所有内容（包括回忆）</string>
+    <string name="action_restore_from_keychain">从钥匙串恢复</string>
     <string name="action_save">保存</string>
     <string name="action_show_details">显示详情</string>
     <string name="action_start_tracking">开始记录</string>

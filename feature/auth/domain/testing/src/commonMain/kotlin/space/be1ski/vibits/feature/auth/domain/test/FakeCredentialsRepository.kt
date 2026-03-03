@@ -5,6 +5,8 @@ import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
 
 class FakeCredentialsRepository(
   initial: Credentials = Credentials(baseUrl = "", token = ""),
+  private val secureStorageCredentials: Credentials? = null,
+  private val secureStorageAvailable: Boolean = false,
 ) : CredentialsRepository {
   var stored: Credentials = initial
     private set
@@ -17,4 +19,8 @@ class FakeCredentialsRepository(
     stored = credentials
     saveCount += 1
   }
+
+  override fun loadFromSecureStorage(): Credentials? = secureStorageCredentials
+
+  override fun isSecureStorageAvailable(): Boolean = secureStorageAvailable
 }

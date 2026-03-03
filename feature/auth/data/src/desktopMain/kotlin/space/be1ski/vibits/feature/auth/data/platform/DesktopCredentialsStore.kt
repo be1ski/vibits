@@ -12,24 +12,19 @@ internal class DesktopCredentialsStore : CredentialsStore {
   private val prefs = Preferences.userRoot().node(service)
 
   override fun load(): LocalCredentials {
-    if (isMacOs) {
-      val keychain = MacOsKeychainCredentials.load(service)
-      if (keychain != null) return keychain
-    }
     val baseUrl = prefs.get("base_url", "").trim()
     val token = prefs.get("token", "").trim()
     return LocalCredentials(baseUrl = baseUrl, token = token)
   }
 
   override fun save(credentials: LocalCredentials) {
-    if (isMacOs && MacOsKeychainCredentials.save(service, credentials)) {
-      prefs.remove("base_url")
-      prefs.remove("token")
-      return
-    }
     prefs.put("base_url", credentials.baseUrl)
     prefs.put("token", credentials.token)
   }
+
+  override fun loadFromSecureStorage(): LocalCredentials? = if (isMacOs) MacOsKeychainCredentials.load(service) else null
+
+  override fun isSecureStorageAvailable(): Boolean = isMacOs
 }
 
 actual fun createCredentialsStore(): CredentialsStore = DesktopCredentialsStore()

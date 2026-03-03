@@ -27,6 +27,7 @@
     <string name="action_reset_app">ऐप रीसेट करें</string>
     <string name="action_reset_settings_only">केवल सेटिंग्स रीसेट करें</string>
     <string name="action_reset_with_memos">सब कुछ रीसेट करें (यादों सहित)</string>
+    <string name="action_restore_from_keychain">कीचेन से पुनर्स्थापित करें</string>
     <string name="action_save">सेव करें</string>
     <string name="action_show_details">विवरण दिखाएं</string>
     <string name="action_start_tracking">ट्रैकिंग शुरू करें</string>

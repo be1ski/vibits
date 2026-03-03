@@ -27,6 +27,7 @@
     <string name="action_reset_app">Redefinir app</string>
     <string name="action_reset_settings_only">Redefinir apenas as configurações</string>
     <string name="action_reset_with_memos">Redefinir tudo (incluindo memórias)</string>
+    <string name="action_restore_from_keychain">Restaurar do Porta-chaves</string>
     <string name="action_save">Salvar</string>
     <string name="action_show_details">Mostrar detalhes</string>
     <string name="action_start_tracking">Iniciar rastreamento</string>

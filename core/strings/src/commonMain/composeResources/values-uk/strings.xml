@@ -27,6 +27,7 @@
     <string name="action_reset_app">Скинути додаток</string>
     <string name="action_reset_settings_only">Скинути лише налаштування</string>
     <string name="action_reset_with_memos">Скинути все (включно зі спогадами)</string>
+    <string name="action_restore_from_keychain">Відновити з В'язки ключів</string>
     <string name="action_save">Зберегти</string>
     <string name="action_show_details">Показати деталі</string>
     <string name="action_start_tracking">Почати відстеження</string>

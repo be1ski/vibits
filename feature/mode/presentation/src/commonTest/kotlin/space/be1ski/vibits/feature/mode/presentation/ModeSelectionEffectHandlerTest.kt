@@ -3,6 +3,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.feature.auth.domain.test.FakeCredentialsRepository
+import space.be1ski.vibits.feature.auth.domain.usecase.LoadKeychainCredentialsUseCase
 import space.be1ski.vibits.feature.auth.domain.usecase.SaveCredentialsUseCase
 import space.be1ski.vibits.feature.mode.domain.test.FakeAppModeRepository
 import space.be1ski.vibits.feature.mode.domain.usecase.SaveAppModeUseCase
@@ -82,7 +83,7 @@ class ModeSelectionEffectHandlerTest {
 
       val actions = handler(Command.InitializeFromLocalConfig).toList()
 
-      assertEquals(listOf(ModeSelectionAction.StoredCredentials.Found), actions)
+      assertEquals(listOf(ModeSelectionAction.StoredCredentials.Found(isKeychainAvailable = false)), actions)
     }
 
   @Test
@@ -96,7 +97,18 @@ class ModeSelectionEffectHandlerTest {
 
       val actions = handler(Command.InitializeFromLocalConfig).toList()
 
-      assertEquals(listOf(ModeSelectionAction.StoredCredentials.NotFound), actions)
+      assertEquals(listOf(ModeSelectionAction.StoredCredentials.NotFound(isKeychainAvailable = false)), actions)
+    }
+
+  @Test
+  fun `when InitializeFromLocalConfig then passes keychain availability`() =
+    runTest {
+      val credentialsRepo = FakeCredentialsRepository(secureStorageAvailable = true)
+      val handler = createHandler(credentialsRepository = credentialsRepo)
+
+      val actions = handler(Command.InitializeFromLocalConfig).toList()
+
+      assertEquals(listOf(ModeSelectionAction.StoredCredentials.NotFound(isKeychainAvailable = true)), actions)
     }
 
   @Test
@@ -114,7 +126,7 @@ class ModeSelectionEffectHandlerTest {
 
       val actions = handler(Command.CheckStoredCredentials).toList()
 
-      assertEquals(listOf(ModeSelectionAction.StoredCredentials.Found), actions)
+      assertEquals(listOf(ModeSelectionAction.StoredCredentials.Found(isKeychainAvailable = false)), actions)
     }
 
   @Test
@@ -125,7 +137,7 @@ class ModeSelectionEffectHandlerTest {
 
       val actions = handler(Command.CheckStoredCredentials).toList()
 
-      assertEquals(listOf(ModeSelectionAction.StoredCredentials.NotFound), actions)
+      assertEquals(listOf(ModeSelectionAction.StoredCredentials.NotFound(isKeychainAvailable = false)), actions)
     }
 
   @Test
@@ -164,6 +176,37 @@ class ModeSelectionEffectHandlerTest {
       assertEquals(listOf(ModeSelectionAction.Validation.Failed), actions)
     }
 
+  @Test
+  fun `when LoadFromKeychain with credentials then emits KeychainLoaded`() =
+    runTest {
+      val credentialsRepo =
+        FakeCredentialsRepository(
+          secureStorageCredentials =
+            space.be1ski.vibits.feature.auth.domain.model.Credentials(
+              baseUrl = "https://keychain.com",
+              token = "keychain-token",
+            ),
+        )
+      val handler = createHandler(credentialsRepository = credentialsRepo)
+
+      val actions = handler(Command.LoadFromKeychain).toList()
+
+      assertEquals(
+        listOf(ModeSelectionAction.Keychain.Loaded(baseUrl = "https://keychain.com", token = "keychain-token")),
+        actions,
+      )
+    }
+
+  @Test
+  fun `when LoadFromKeychain without credentials then emits KeychainNotFound`() =
+    runTest {
+      val handler = createHandler()
+
+      val actions = handler(Command.LoadFromKeychain).toList()
+
+      assertEquals(listOf(ModeSelectionAction.Keychain.NotFound), actions)
+    }
+
   private fun createHandler(
     connectionResult: Result<Unit> = Result.success(Unit),
     credentialsRepository: FakeCredentialsRepository = FakeCredentialsRepository(),
@@ -187,6 +230,7 @@ class ModeSelectionEffectHandlerTest {
           loadCredentials =
             space.be1ski.vibits.feature.auth.domain.usecase
               .LoadCredentialsUseCase(credentialsRepository),
+          loadKeychainCredentials = LoadKeychainCredentialsUseCase(credentialsRepository),
           saveCredentials = SaveCredentialsUseCase(credentialsRepository),
         ),
       modeHandler =

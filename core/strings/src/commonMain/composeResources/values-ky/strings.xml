@@ -26,6 +26,7 @@
     <string name="action_reset_app">Колдонмону баштапкыга кайтаруу</string>
     <string name="action_reset_settings_only">Жөн гана жөндөөлөрдү калыбына келтирүү</string>
     <string name="action_reset_with_memos">Баарын калыбына келтирүү (эстеликтерди коштоп)</string>
+    <string name="action_restore_from_keychain">Ачкычтар чынжырынан калыбына келтирүү</string>
     <string name="action_save">Сактоо</string>
     <string name="action_show_details">Деталдарды көрсөтүү</string>
     <string name="action_start_tracking">Көзөмөлдөөнү баштоо</string>

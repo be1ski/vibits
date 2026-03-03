@@ -29,4 +29,12 @@ class CredentialsRepositoryImpl(
     Log.i(TAG, "save() baseUrl='${trimmed.baseUrl.maskUrl()}'")
     credentialsStore.save(LocalCredentials(baseUrl = trimmed.baseUrl, token = trimmed.token))
   }
+
+  override fun loadFromSecureStorage(): Credentials? {
+    val local = credentialsStore.loadFromSecureStorage() ?: return null
+    Log.i(TAG, "loadFromSecureStorage() baseUrl='${local.baseUrl.maskUrl()}'")
+    return Credentials(baseUrl = local.baseUrl, token = local.token)
+  }
+
+  override fun isSecureStorageAvailable(): Boolean = credentialsStore.isSecureStorageAvailable()
 }

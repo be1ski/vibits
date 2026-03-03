@@ -24,6 +24,7 @@ fun createModeSelectionFeature(
             connectionTester = dependencies.connectionTester,
             initializeCredentialsFromEnv = dependencies.initializeCredentialsFromEnv,
             loadCredentials = dependencies.loadCredentials,
+            loadKeychainCredentials = dependencies.loadKeychainCredentials,
             saveCredentials = dependencies.saveCredentials,
           ),
         modeHandler =
