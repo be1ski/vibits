@@ -47,5 +47,6 @@ app/          — Platform entry points (android, desktop, ios, web)
 ## CI/CD
 CI runs `checkJvm` (Linux) and `checkIos` (macOS). [Release workflow](https://github.com/be1ski/vibits/actions/workflows/release.yml) builds and publishes in parallel:
 - **Android APK** → GitHub Releases + Firebase App Distribution
-- **macOS DMG / Windows MSI** → GitHub Releases
+- **macOS DMG** → GitHub Releases + Homebrew
+- **Windows MSI** → GitHub Releases
 - **Web** → GitHub Releases + GitHub Pages
