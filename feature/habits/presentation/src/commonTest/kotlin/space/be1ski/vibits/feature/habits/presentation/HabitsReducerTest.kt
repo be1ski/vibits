@@ -472,7 +472,7 @@ class HabitsReducerTest {
     }
 
   @Test
-  fun `when SaveConfigDialog then emits CreateMemo with config content`() =
+  fun `when SaveConfigDialog then emits SaveConfig with config content`() =
     habitsReducer.test(
       HabitsState(
         editingHabits = listOf(EditableHabit("habit_1", "#habits/exercise", "Exercise", HabitColor(0xFF0000L))),
@@ -481,7 +481,7 @@ class HabitsReducerTest {
       send(HabitsAction.Config.SaveConfigDialog)
 
       assertState { isLoading }
-      assertHasCommand<HabitsEffect.CreateMemo>()
+      assertHasCommand<HabitsEffect.SaveConfig>()
     }
 
   @Test
@@ -498,7 +498,7 @@ class HabitsReducerTest {
     ) {
       send(HabitsAction.Config.SaveConfigDialog)
 
-      val effect = assertHasCommand<HabitsEffect.CreateMemo>()
+      val effect = assertHasCommand<HabitsEffect.SaveConfig>()
       assertEquals(true, effect.content.contains("Exercise"))
       assertEquals(true, effect.content.contains("Reading"))
       assertEquals(false, effect.content.contains("habit_2"))
@@ -637,7 +637,7 @@ class HabitsReducerTest {
     }
 
   @Test
-  fun `when SaveConfigDialog without existing memo then creates new config`() =
+  fun `when SaveConfigDialog without existing memo then saves config with dedup`() =
     habitsReducer.test(
       HabitsState(
         showConfigDialog = true,
@@ -651,7 +651,7 @@ class HabitsReducerTest {
       send(HabitsAction.Config.SaveConfigDialog)
 
       assertState { isLoading }
-      assertHasCommand<HabitsEffect.CreateMemo>()
+      assertHasCommand<HabitsEffect.SaveConfig>()
     }
 
   @Test

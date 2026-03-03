@@ -5,8 +5,10 @@ import space.be1ski.vibits.core.elm.EffectHandler
 import space.be1ski.vibits.core.elm.actions
 import space.be1ski.vibits.core.utils.coroutines.runSuspendCatching
 import space.be1ski.vibits.core.utils.logging.Log
+import space.be1ski.vibits.feature.habits.domain.model.SaveConfigMemoResult
 import space.be1ski.vibits.feature.habits.domain.model.SaveDailyMemoResult
 import space.be1ski.vibits.feature.habits.domain.usecase.SaveDailyHabitMemoUseCase
+import space.be1ski.vibits.feature.habits.domain.usecase.SaveHabitsConfigMemoUseCase
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.memos.domain.model.isConfigTag
 import space.be1ski.vibits.feature.memos.domain.repository.MemosRepository
@@ -16,6 +18,7 @@ private const val TAG = "HabitsMemoEffect"
 class HabitsMemoEffectHandler(
   private val memosRepository: MemosRepository,
   private val saveDailyHabitMemo: SaveDailyHabitMemoUseCase,
+  private val saveHabitsConfigMemo: SaveHabitsConfigMemoUseCase,
 ) : EffectHandler<HabitsEffect.Memo, HabitsAction> {
   override fun invoke(effect: HabitsEffect.Memo): Flow<HabitsAction> =
     when (effect) {
@@ -23,6 +26,7 @@ class HabitsMemoEffectHandler(
       is HabitsEffect.CreateMemo -> handleCreateMemo(effect)
       is HabitsEffect.UpdateMemo -> handleUpdateMemo(effect)
       is HabitsEffect.DeleteMemo -> handleDeleteMemo(effect)
+      is HabitsEffect.SaveConfig -> handleSaveConfig(effect)
     }
 
   private fun handleToggleDailyHabit(effect: HabitsEffect.ToggleDailyHabit): Flow<HabitsAction> =
@@ -104,5 +108,24 @@ class HabitsMemoEffectHandler(
           Log.e(TAG, "Failed to delete habit memo", error)
           emit(HabitsAction.Response.MemoOperationFailed(error.message ?: "Failed to delete memo"))
         }
+    }
+
+  private fun handleSaveConfig(effect: HabitsEffect.SaveConfig): Flow<HabitsAction> =
+    actions {
+      Log.d(TAG, "Saving config memo (dedup)")
+      when (val result = saveHabitsConfigMemo(effect.content)) {
+        is SaveConfigMemoResult.Created -> {
+          Log.d(TAG, "Config memo created: ${result.memo.name}")
+          emit(HabitsAction.Response.MemoCreated(result.memo))
+        }
+        is SaveConfigMemoResult.Updated -> {
+          Log.d(TAG, "Config memo updated: ${result.memo.name}")
+          emit(HabitsAction.Response.MemoUpdated(result.memo))
+        }
+        is SaveConfigMemoResult.Error -> {
+          Log.e(TAG, "Failed to save config memo: ${result.message}", result.exception)
+          emit(HabitsAction.Response.MemoOperationFailed(result.message))
+        }
+      }
     }
 }
