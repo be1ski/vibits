@@ -104,6 +104,31 @@ class DesktopStoragePathsTest {
   }
 
   @Test
+  fun `when localConfigPath called then returns path ending with local properties`() {
+    val path = DesktopStoragePaths.localConfigPath()
+
+    assertTrue(path.endsWith("local.properties"))
+  }
+
+  @Test
+  fun `when environment is set then localConfigPath includes environment in path`() {
+    System.setProperty(envProperty, "test")
+
+    val path = DesktopStoragePaths.localConfigPath()
+
+    assertTrue(path.contains("Memos-test"))
+  }
+
+  @Test
+  fun `when no environment set then localConfigPath includes prod in path`() {
+    System.clearProperty(envProperty)
+
+    val path = DesktopStoragePaths.localConfigPath()
+
+    assertTrue(path.contains("Memos-prod"))
+  }
+
+  @Test
   fun `when databasePath called then uses OS-specific app data directory`() {
     val path = DesktopStoragePaths.databasePath()
     val osName = System.getProperty("os.name").lowercase()
