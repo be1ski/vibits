@@ -11,12 +11,12 @@ internal val responseReducer: Reducer<HabitsAction.Response, HabitsState, Habits
   reducer { action, state ->
     when (action) {
       is HabitsAction.Response.MemoCreated, is HabitsAction.Response.MemoUpdated -> {
-        state { state.resetAfterOperation().copy(showConfigDialog = false, editingHabits = emptyList()) }
+        state { state.resetAfterOperation().copy(showConfigDialog = false, editingHabits = emptyList(), needsCacheRefresh = true) }
         command(HabitsEffect.RefreshMemos)
       }
 
       is HabitsAction.Response.MemoDeleted -> {
-        state { state.resetAfterOperation().copy(showDeleteConfirm = false) }
+        state { state.resetAfterOperation().copy(showDeleteConfirm = false, needsCacheRefresh = true) }
         command(HabitsEffect.RefreshMemos)
       }
 
