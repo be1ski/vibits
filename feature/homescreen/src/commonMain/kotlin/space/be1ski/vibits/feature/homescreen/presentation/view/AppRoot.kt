@@ -23,6 +23,7 @@ import space.be1ski.vibits.feature.settings.domain.model.AppTheme
 
 private val DESKTOP_BREAKPOINT = 900.dp
 
+@Suppress("LongMethod")
 @Composable
 fun AppRoot(
   dependencies: AppDependencies,
@@ -37,6 +38,7 @@ fun AppRoot(
   var appLanguage by remember { mutableStateOf(initialPrefs.language) }
   var featuresVersion by remember { mutableIntStateOf(0) }
   var showOnboarding by remember { mutableStateOf(false) }
+  var justFinishedOnboarding by remember { mutableStateOf(false) }
 
   val darkTheme = resolveDarkTheme(appTheme)
   val featuresState =
@@ -47,7 +49,10 @@ fun AppRoot(
         featuresVersion++
         appMode = it
       },
-      onOnboardingCompleted = { showOnboarding = false },
+      onOnboardingCompleted = {
+        showOnboarding = false
+        justFinishedOnboarding = true
+      },
     )
 
   LaunchedEffect(featuresState.app) {
@@ -64,6 +69,7 @@ fun AppRoot(
         AppContent(
           appMode = appMode,
           showOnboarding = showOnboarding,
+          justFinishedOnboarding = justFinishedOnboarding,
           featuresState = featuresState,
           appTheme = appTheme,
           appLanguage = appLanguage,

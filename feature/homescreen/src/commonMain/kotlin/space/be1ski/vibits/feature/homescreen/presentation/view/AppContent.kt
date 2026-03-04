@@ -64,6 +64,7 @@ internal fun ObserveOnboardingCheck(
 internal fun AppContent(
   appMode: AppMode,
   showOnboarding: Boolean,
+  justFinishedOnboarding: Boolean,
   featuresState: FeaturesState,
   appTheme: AppTheme,
   appLanguage: AppLanguage,
@@ -86,6 +87,7 @@ internal fun AppContent(
       } else {
         AppWithLoadingScreen(
           features = featuresState.app,
+          justFinishedOnboarding = justFinishedOnboarding,
           appTheme = appTheme,
           appLanguage = appLanguage,
           exportService = exportService,
@@ -99,6 +101,7 @@ internal fun AppContent(
     AppMode.ONLINE, AppMode.DEMO -> {
       AppWithLoadingScreen(
         features = featuresState.app,
+        justFinishedOnboarding = justFinishedOnboarding,
         appTheme = appTheme,
         appLanguage = appLanguage,
         exportService = exportService,
@@ -116,6 +119,7 @@ internal fun AppContent(
 @Composable
 private fun AppWithLoadingScreen(
   features: AppFeatures,
+  justFinishedOnboarding: Boolean,
   appTheme: AppTheme,
   appLanguage: AppLanguage,
   exportService: ExportService,
@@ -132,6 +136,7 @@ private fun AppWithLoadingScreen(
   } else {
     VibitsApp(
       features = features,
+      justFinishedOnboarding = justFinishedOnboarding,
       currentTheme = appTheme,
       currentLanguage = appLanguage,
       exportService = exportService,
