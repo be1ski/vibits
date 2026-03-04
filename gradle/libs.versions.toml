@@ -10,6 +10,7 @@ firebaseBom = "34.10.0"
 googleServices = "4.4.4"
 firebaseAppDistribution = "5.2.1"
 composeMaterial3 = "1.9.0"
+compottie = "2.0.3"
 composeMaterialIconsExtended = "1.7.3"
 composeMultiplatform = "1.10.1"
 coreKtx = "1.17.0"
@@ -49,6 +50,9 @@ compose-material-icons-extended = { group = "org.jetbrains.compose.material", na
 compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "composeMaterial3" }
 compose-multiplatform-plugin = { group = "org.jetbrains.compose", name = "compose-gradle-plugin", version.ref = "composeMultiplatform" }
 compose-resources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "composeMultiplatform" }
+compottie = { group = "io.github.alexzhirkevich", name = "compottie", version.ref = "compottie" }
+compottie-dot = { group = "io.github.alexzhirkevich", name = "compottie-dot", version.ref = "compottie" }
+compottie-resources = { group = "io.github.alexzhirkevich", name = "compottie-resources", version.ref = "compottie" }
 compose-runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "composeMultiplatform" }
 compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "composeMultiplatform" }
 compose-ui-test = { group = "org.jetbrains.compose.ui", name = "ui-test", version.ref = "composeMultiplatform" }

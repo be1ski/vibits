@@ -94,7 +94,14 @@ internal fun DesktopSidebar(
       SidebarHeader(memosState, dispatchMemos)
       SidebarNavigation(appState, onAppAction, onClearSelection, onFeedScrollToTop)
       Spacer(modifier = Modifier.weight(1f))
-      SidebarActions(appState.selectedScreen, todayHabits, onOpenTodayEditor, onOpenConfigDialog, onShowCreateMemoDialog, onSettingsClick)
+      SidebarActions(
+        selectedScreen = appState.selectedScreen,
+        todayHabits = todayHabits,
+        onOpenTodayEditor = onOpenTodayEditor,
+        onOpenConfigDialog = onOpenConfigDialog,
+        onShowCreateMemoDialog = onShowCreateMemoDialog,
+        onSettingsClick = onSettingsClick,
+      )
     }
   }
 }
