@@ -27,6 +27,7 @@ import space.be1ski.vibits.feature.settings.presentation.view.SettingsDialog
 @Composable
 internal fun VibitsApp(
   features: AppFeatures,
+  justFinishedOnboarding: Boolean = false,
   currentTheme: AppTheme,
   currentLanguage: AppLanguage,
   exportService: ExportService,
@@ -48,7 +49,7 @@ internal fun VibitsApp(
   val todayHabits = rememberTodayHabits(habitsTimeline, memosState.memos, timeZone, today)
 
   var celebrationAnimation by remember { mutableStateOf<CelebrationAnimation?>(null) }
-  val allJustCompleted = rememberAllHabitsJustCompleted(todayHabits)
+  val allJustCompleted = rememberAllHabitsJustCompleted(todayHabits, justFinishedOnboarding)
   LaunchedEffect(allJustCompleted) {
     if (allJustCompleted) celebrationAnimation = CelebrationAnimation.Confetti
   }

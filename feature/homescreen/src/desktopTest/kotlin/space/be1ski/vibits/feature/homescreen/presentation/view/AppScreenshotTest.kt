@@ -354,6 +354,7 @@ class AppScreenshotTest {
       AppContent(
         appMode = AppMode.DEMO,
         showOnboarding = false,
+        justFinishedOnboarding = false,
         featuresState =
           FeaturesState(
             modeSelection = RecordingFeature(ModeSelectionState()),

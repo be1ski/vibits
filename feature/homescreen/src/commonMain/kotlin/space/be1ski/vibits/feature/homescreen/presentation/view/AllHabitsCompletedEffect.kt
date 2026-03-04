@@ -12,10 +12,14 @@ internal fun shouldTriggerCelebration(
 ): Boolean = currentlyAllDone && previouslyAllDone == false
 
 @Composable
-internal fun rememberAllHabitsJustCompleted(todayHabits: TodayHabits): Boolean {
+internal fun rememberAllHabitsJustCompleted(
+  todayHabits: TodayHabits,
+  celebrateImmediately: Boolean = false,
+): Boolean {
   val allDone = todayHabits.day?.let { it.totalHabits > 0 && it.count == it.totalHabits } ?: false
 
-  var previouslyAllDone by remember { mutableStateOf<Boolean?>(null) }
+  val initialValue = if (celebrateImmediately) false else null
+  var previouslyAllDone by remember { mutableStateOf<Boolean?>(initialValue) }
   val justCompleted = shouldTriggerCelebration(previouslyAllDone, allDone)
   previouslyAllDone = allDone
 
