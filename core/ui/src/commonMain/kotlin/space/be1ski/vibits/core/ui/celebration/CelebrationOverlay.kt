@@ -1,14 +1,11 @@
 package space.be1ski.vibits.core.ui.celebration
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
@@ -21,7 +18,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import vibits.core.ui.generated.resources.Res
 
 private const val OVERLAY_ALPHA = 0.6f
-private const val FADE_OUT_DURATION_MS = 300
+private const val FADE_OUT_START = 0.85f
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
@@ -42,16 +39,22 @@ fun CelebrationOverlay(
   }
 
   val animatedProgress by animateLottieCompositionAsState(composition)
-  val overlayAlpha = remember { Animatable(OVERLAY_ALPHA) }
 
   if (frozenProgress == null) {
     LaunchedEffect(animatedProgress) {
       if (animatedProgress == 1f) {
-        overlayAlpha.animateTo(0f, animationSpec = tween(FADE_OUT_DURATION_MS))
         onFinished()
       }
     }
   }
+
+  val currentAlpha =
+    when {
+      frozenProgress != null -> OVERLAY_ALPHA
+      animatedProgress > FADE_OUT_START ->
+        OVERLAY_ALPHA * (1f - animatedProgress) / (1f - FADE_OUT_START)
+      else -> OVERLAY_ALPHA
+    }
 
   Box(Modifier.fillMaxSize()) {
     Image(
@@ -61,7 +64,7 @@ fun CelebrationOverlay(
           progress = { frozenProgress ?: animatedProgress },
         ),
       contentDescription = null,
-      modifier = Modifier.fillMaxSize().alpha(overlayAlpha.value),
+      modifier = Modifier.fillMaxSize().alpha(currentAlpha),
       contentScale = ContentScale.Crop,
     )
   }
