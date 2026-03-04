@@ -38,7 +38,6 @@ fun CelebrationOverlay(
   }
 
   val animatedProgress by animateLottieCompositionAsState(composition)
-  val progress = frozenProgress ?: animatedProgress
 
   if (frozenProgress == null) {
     LaunchedEffect(animatedProgress) {
@@ -53,7 +52,7 @@ fun CelebrationOverlay(
       painter =
         rememberLottiePainter(
           composition = composition,
-          progress = { progress },
+          progress = { frozenProgress ?: animatedProgress },
         ),
       contentDescription = null,
       modifier = Modifier.fillMaxSize().alpha(OVERLAY_ALPHA),
