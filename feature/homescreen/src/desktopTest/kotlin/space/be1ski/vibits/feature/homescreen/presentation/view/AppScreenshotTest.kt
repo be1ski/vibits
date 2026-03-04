@@ -746,6 +746,18 @@ class AppScreenshotTest {
     habitsState: HabitsState,
     wideLayout: Boolean = true,
   ) {
+    // Preload Lottie composition (cold .lottie ZIP extraction is slow)
+    setContent {
+      CelebrationOverlay(
+        animation = CelebrationAnimation.Confetti,
+        onFinished = {},
+        frozenProgress = CELEBRATION_SCREENSHOT_PROGRESS,
+      )
+    }
+    @Suppress("BlockingMethodInNonBlockingContext")
+    Thread.sleep(LOTTIE_LOAD_DELAY_MS)
+    waitForIdle()
+
     for (darkTheme in listOf(false, true)) {
       val theme = if (darkTheme) "dark" else "light"
       val features =
@@ -772,8 +784,6 @@ class AppScreenshotTest {
           )
         }
       }
-      @Suppress("BlockingMethodInNonBlockingContext")
-      Thread.sleep(LOTTIE_LOAD_DELAY_MS)
       waitForIdle()
       saveScreenshot("${platform}_${theme}_app_celebration_confetti")
     }
