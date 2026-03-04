@@ -62,6 +62,7 @@ import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 
 private const val CELEBRATION_SCREENSHOT_PROGRESS = 0.4f
+private const val LOTTIE_LOAD_DELAY_MS = 2000L
 
 @OptIn(ExperimentalTestApi::class)
 class AppScreenshotTest {
@@ -771,6 +772,9 @@ class AppScreenshotTest {
           )
         }
       }
+      @Suppress("BlockingMethodInNonBlockingContext")
+      Thread.sleep(LOTTIE_LOAD_DELAY_MS)
+      waitForIdle()
       saveScreenshot("${platform}_${theme}_app_celebration_confetti")
     }
   }
