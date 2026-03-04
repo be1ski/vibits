@@ -3,13 +3,16 @@ package space.be1ski.vibits.feature.mode.presentation.view
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.PhoneAndroid
@@ -32,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.elm.Feature
@@ -57,6 +61,7 @@ import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.form.CredentialFields
 import space.be1ski.vibits.core.ui.form.CredentialValidationError
 import space.be1ski.vibits.core.ui.form.credentialValidationErrorMessage
+import space.be1ski.vibits.core.ui.theme.LocalWideLayout
 import space.be1ski.vibits.feature.mode.presentation.action.ModeSelectionAction
 import space.be1ski.vibits.feature.mode.presentation.effect.ModeSelectionEffect
 import space.be1ski.vibits.feature.mode.presentation.state.ModeSelectionState
@@ -67,6 +72,8 @@ fun ModeSelectionScreen(
 ) {
   val state by feature.state.collectAsState()
   val dispatch: (ModeSelectionAction) -> Unit = feature::send
+
+  val wideLayout = LocalWideLayout.current
 
   Surface(
     modifier = Modifier.fillMaxSize(),
@@ -90,39 +97,11 @@ fun ModeSelectionScreen(
       )
       Spacer(modifier = Modifier.height(Indent.l))
 
-      ModeCard(
-        icon = Icons.Outlined.Cloud,
-        title = stringResource(Res.string.mode_online_title),
-        description = stringResource(Res.string.mode_online_desc),
-        isPrimary = true,
-        onClick = { dispatch(ModeSelectionAction.Dialog.Show) },
-        modifier = Modifier.testTag(ModeSelectionTestTags.ONLINE_CARD),
-        buttonTag = ModeSelectionTestTags.ONLINE_BUTTON,
-      )
-
-      Spacer(modifier = Modifier.height(Indent.m))
-
-      ModeCard(
-        icon = Icons.Outlined.PhoneAndroid,
-        title = stringResource(Res.string.mode_offline_title),
-        description = stringResource(Res.string.mode_offline_desc),
-        isPrimary = false,
-        onClick = { dispatch(ModeSelectionAction.Selection.SelectMode(AppMode.OFFLINE)) },
-        modifier = Modifier.testTag(ModeSelectionTestTags.OFFLINE_CARD),
-        buttonTag = ModeSelectionTestTags.OFFLINE_BUTTON,
-      )
-
-      Spacer(modifier = Modifier.height(Indent.m))
-
-      ModeCard(
-        icon = Icons.Outlined.PlayCircle,
-        title = stringResource(Res.string.mode_demo_title),
-        description = stringResource(Res.string.mode_demo_desc),
-        isPrimary = false,
-        onClick = { dispatch(ModeSelectionAction.Selection.SelectMode(AppMode.DEMO)) },
-        modifier = Modifier.testTag(ModeSelectionTestTags.DEMO_CARD),
-        buttonTag = ModeSelectionTestTags.DEMO_BUTTON,
-      )
+      if (wideLayout) {
+        DesktopModeSelection(dispatch = dispatch)
+      } else {
+        MobileModeSelection(dispatch = dispatch)
+      }
     }
   }
 
@@ -255,6 +234,125 @@ private fun CredentialsSetupDialogContent(
 }
 
 @Composable
+private fun DesktopModeSelection(dispatch: (ModeSelectionAction) -> Unit) {
+  Row(
+    modifier = Modifier.widthIn(max = DESKTOP_MAX_WIDTH).height(IntrinsicSize.Min),
+    horizontalArrangement = Arrangement.spacedBy(Indent.m),
+  ) {
+    DesktopModeCard(
+      icon = Icons.Outlined.Cloud,
+      title = stringResource(Res.string.mode_online_title),
+      description = stringResource(Res.string.mode_online_desc),
+      isPrimary = true,
+      onClick = { dispatch(ModeSelectionAction.Dialog.Show) },
+      modifier = Modifier.weight(1f).fillMaxHeight().testTag(ModeSelectionTestTags.ONLINE_CARD),
+    )
+    DesktopModeCard(
+      icon = Icons.Outlined.PhoneAndroid,
+      title = stringResource(Res.string.mode_offline_title),
+      description = stringResource(Res.string.mode_offline_desc),
+      isPrimary = false,
+      onClick = { dispatch(ModeSelectionAction.Selection.SelectMode(AppMode.OFFLINE)) },
+      modifier = Modifier.weight(1f).fillMaxHeight().testTag(ModeSelectionTestTags.OFFLINE_CARD),
+    )
+    DesktopModeCard(
+      icon = Icons.Outlined.PlayCircle,
+      title = stringResource(Res.string.mode_demo_title),
+      description = stringResource(Res.string.mode_demo_desc),
+      isPrimary = false,
+      onClick = { dispatch(ModeSelectionAction.Selection.SelectMode(AppMode.DEMO)) },
+      modifier = Modifier.weight(1f).fillMaxHeight().testTag(ModeSelectionTestTags.DEMO_CARD),
+    )
+  }
+}
+
+@Composable
+private fun DesktopModeCard(
+  icon: ImageVector,
+  title: String,
+  description: String,
+  isPrimary: Boolean,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  OutlinedCard(
+    onClick = onClick,
+    modifier = modifier,
+    colors =
+      if (isPrimary) {
+        CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = CARD_HIGHLIGHT_ALPHA))
+      } else {
+        CardDefaults.outlinedCardColors()
+      },
+    border =
+      if (isPrimary) {
+        BorderStroke(CARD_BORDER_WIDTH, MaterialTheme.colorScheme.primary.copy(alpha = CARD_BORDER_ALPHA))
+      } else {
+        CardDefaults.outlinedCardBorder()
+      },
+  ) {
+    Column(
+      modifier = Modifier.fillMaxSize().padding(Indent.l),
+      horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+      Icon(
+        imageVector = icon,
+        contentDescription = null,
+        modifier = Modifier.size(DESKTOP_ICON_SIZE),
+        tint = if (isPrimary) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+      )
+      Spacer(modifier = Modifier.height(Indent.s))
+      Text(
+        text = title,
+        style = MaterialTheme.typography.titleMedium,
+        textAlign = TextAlign.Center,
+      )
+      Spacer(modifier = Modifier.weight(1f))
+      Text(
+        text = description,
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textAlign = TextAlign.Center,
+        minLines = DESKTOP_DESCRIPTION_MIN_LINES,
+      )
+    }
+  }
+}
+
+@Composable
+private fun MobileModeSelection(dispatch: (ModeSelectionAction) -> Unit) {
+  ModeCard(
+    icon = Icons.Outlined.Cloud,
+    title = stringResource(Res.string.mode_online_title),
+    description = stringResource(Res.string.mode_online_desc),
+    isPrimary = true,
+    onClick = { dispatch(ModeSelectionAction.Dialog.Show) },
+    modifier = Modifier.testTag(ModeSelectionTestTags.ONLINE_CARD),
+    buttonTag = ModeSelectionTestTags.ONLINE_BUTTON,
+  )
+  Spacer(modifier = Modifier.height(Indent.m))
+  ModeCard(
+    icon = Icons.Outlined.PhoneAndroid,
+    title = stringResource(Res.string.mode_offline_title),
+    description = stringResource(Res.string.mode_offline_desc),
+    isPrimary = false,
+    onClick = { dispatch(ModeSelectionAction.Selection.SelectMode(AppMode.OFFLINE)) },
+    modifier = Modifier.testTag(ModeSelectionTestTags.OFFLINE_CARD),
+    buttonTag = ModeSelectionTestTags.OFFLINE_BUTTON,
+  )
+  Spacer(modifier = Modifier.height(Indent.m))
+  ModeCard(
+    icon = Icons.Outlined.PlayCircle,
+    title = stringResource(Res.string.mode_demo_title),
+    description = stringResource(Res.string.mode_demo_desc),
+    isPrimary = false,
+    onClick = { dispatch(ModeSelectionAction.Selection.SelectMode(AppMode.DEMO)) },
+    modifier = Modifier.testTag(ModeSelectionTestTags.DEMO_CARD),
+    buttonTag = ModeSelectionTestTags.DEMO_BUTTON,
+  )
+}
+
+@Composable
 private fun ModeCard(
   icon: ImageVector,
   title: String,
@@ -316,3 +414,6 @@ private fun ModeCard(
 private const val CARD_HIGHLIGHT_ALPHA = 0.15f
 private const val CARD_BORDER_ALPHA = 0.5f
 private val CARD_BORDER_WIDTH = 1.5.dp
+private val DESKTOP_MAX_WIDTH = 700.dp
+private val DESKTOP_ICON_SIZE = 36.dp
+private const val DESKTOP_DESCRIPTION_MIN_LINES = 2
