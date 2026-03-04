@@ -18,12 +18,14 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import vibits.core.ui.generated.resources.Res
 
 private const val OVERLAY_ALPHA = 0.6f
+private const val FADE_OUT_START = 0.8f
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun CelebrationOverlay(
   animation: CelebrationAnimation?,
   onFinished: () -> Unit,
+  frozenProgress: Float? = null,
 ) {
   if (animation == null) return
 
@@ -36,13 +38,23 @@ fun CelebrationOverlay(
     }
   }
 
-  val progress by animateLottieCompositionAsState(composition)
+  val animatedProgress by animateLottieCompositionAsState(composition)
+  val progress = frozenProgress ?: animatedProgress
 
-  LaunchedEffect(progress) {
-    if (progress == 1f) {
-      onFinished()
+  if (frozenProgress == null) {
+    LaunchedEffect(animatedProgress) {
+      if (animatedProgress == 1f) {
+        onFinished()
+      }
     }
   }
+
+  val fadeAlpha =
+    if (frozenProgress == null && progress > FADE_OUT_START) {
+      OVERLAY_ALPHA * (1f - progress) / (1f - FADE_OUT_START)
+    } else {
+      OVERLAY_ALPHA
+    }
 
   Box(Modifier.fillMaxSize()) {
     Image(
@@ -52,7 +64,7 @@ fun CelebrationOverlay(
           progress = { progress },
         ),
       contentDescription = null,
-      modifier = Modifier.fillMaxSize().alpha(OVERLAY_ALPHA),
+      modifier = Modifier.fillMaxSize().alpha(fadeAlpha),
       contentScale = ContentScale.Crop,
     )
   }

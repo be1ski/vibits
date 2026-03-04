@@ -14,6 +14,8 @@ import space.be1ski.vibits.core.elm.test.RecordingFeature
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.logging.LogLevel
 import space.be1ski.vibits.core.platform.mode.AppMode
+import space.be1ski.vibits.core.ui.celebration.CelebrationAnimation
+import space.be1ski.vibits.core.ui.celebration.CelebrationOverlay
 import space.be1ski.vibits.core.ui.test.captureAllVariants
 import space.be1ski.vibits.core.ui.test.runCompactUiTest
 import space.be1ski.vibits.core.ui.test.runWideUiTest
@@ -58,6 +60,8 @@ import space.be1ski.vibits.feature.sync.domain.model.SyncOperationType
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
+
+private const val CELEBRATION_SCREENSHOT_PROGRESS = 0.4f
 
 @OptIn(ExperimentalTestApi::class)
 class AppScreenshotTest {
@@ -716,6 +720,60 @@ class AppScreenshotTest {
             ),
         ),
     )
+
+  // endregion
+
+  // region Celebration
+
+  @Test
+  fun `when all habits completed then captures confetti celebration`() {
+    val periodStart = LocalDate(2024, 12, 9)
+    val range = ActivityRange.Week(periodStart)
+    val appState = habitsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = periodStart)
+    val habitsState = habitsStateWithCache(range)
+    runWideUiTest {
+      captureCelebration("wide", appState, habitsState)
+    }
+    runCompactUiTest {
+      captureCelebration("compact", appState, habitsState, wideLayout = false)
+    }
+  }
+
+  private fun ComposeUiTest.captureCelebration(
+    platform: String,
+    appState: AppState,
+    habitsState: HabitsState,
+    wideLayout: Boolean = true,
+  ) {
+    for (darkTheme in listOf(false, true)) {
+      val theme = if (darkTheme) "dark" else "light"
+      val features =
+        AppFeatures(
+          app = RecordingFeature(appState),
+          memos = RecordingFeature(MemosState(memos = demoMemos, initialDataLoaded = true)),
+          habits = RecordingFeature(habitsState),
+          settings = RecordingFeature(SettingsState()),
+        )
+      setContent {
+        VibitsTheme(darkTheme = darkTheme, wideLayout = wideLayout) {
+          VibitsApp(
+            features = features,
+            currentTheme = AppTheme.SYSTEM,
+            currentLanguage = AppLanguage.ENGLISH,
+            exportService = fakeExportService,
+            currentVersion = "dev",
+            getChangelog = fakeGetChangelog,
+          )
+          CelebrationOverlay(
+            animation = CelebrationAnimation.Confetti,
+            onFinished = {},
+            frozenProgress = CELEBRATION_SCREENSHOT_PROGRESS,
+          )
+        }
+      }
+      saveScreenshot("${platform}_${theme}_app_celebration_confetti")
+    }
+  }
 
   // endregion
 }
