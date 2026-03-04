@@ -7,12 +7,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlinx.datetime.TimeZone
+import space.be1ski.vibits.core.platform.date.currentLocalDate
 import space.be1ski.vibits.core.platform.locale.AppLanguage
+import space.be1ski.vibits.core.ui.celebration.CelebrationAnimation
+import space.be1ski.vibits.core.ui.celebration.CelebrationOverlay
 import space.be1ski.vibits.core.ui.date.rememberDateFormatter
 import space.be1ski.vibits.core.ui.theme.LocalWideLayout
 import space.be1ski.vibits.core.utils.logging.LogEntry
 import space.be1ski.vibits.feature.changelog.domain.model.ChangelogEntry
 import space.be1ski.vibits.feature.changelog.domain.usecase.GetChangelogUseCase
+import space.be1ski.vibits.feature.habits.presentation.view.components.rememberHabitsConfigTimeline
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
 import space.be1ski.vibits.feature.memos.domain.repository.ExportService
 import space.be1ski.vibits.feature.settings.domain.model.AppTheme
@@ -22,6 +27,7 @@ import space.be1ski.vibits.feature.settings.presentation.view.SettingsDialog
 @Composable
 internal fun VibitsApp(
   features: AppFeatures,
+  justFinishedOnboarding: Boolean = false,
   currentTheme: AppTheme,
   currentLanguage: AppLanguage,
   exportService: ExportService,
@@ -36,6 +42,17 @@ internal fun VibitsApp(
   val memosState by features.memos.state.collectAsState()
   val habitsState by features.habits.state.collectAsState()
   val settingsState by features.settings.state.collectAsState()
+
+  val timeZone = remember { TimeZone.currentSystemDefault() }
+  val today = currentLocalDate()
+  val habitsTimeline = rememberHabitsConfigTimeline(memosState.memos)
+  val todayHabits = rememberTodayHabits(habitsTimeline, memosState.memos, timeZone, today)
+
+  var celebrationAnimation by remember { mutableStateOf<CelebrationAnimation?>(null) }
+  val allJustCompleted = rememberAllHabitsJustCompleted(todayHabits, justFinishedOnboarding)
+  LaunchedEffect(allJustCompleted) {
+    if (allJustCompleted) celebrationAnimation = CelebrationAnimation.Confetti
+  }
 
   var changelogEntries by remember { mutableStateOf<List<ChangelogEntry>?>(null) }
 
@@ -99,4 +116,9 @@ internal fun VibitsApp(
       onDismiss = { changelogEntries = null },
     )
   }
+
+  CelebrationOverlay(
+    animation = celebrationAnimation,
+    onFinished = { celebrationAnimation = null },
+  )
 }

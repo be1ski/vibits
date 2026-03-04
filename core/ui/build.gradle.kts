@@ -14,6 +14,9 @@ kotlin {
         implementation(libs.compose.material3)
         implementation(libs.compose.runtime)
         implementation(libs.compose.ui)
+        implementation(libs.compottie)
+        implementation(libs.compottie.dot)
+        implementation(libs.compottie.resources)
         implementation(libs.kotlinx.datetime)
       }
     }
