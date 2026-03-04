@@ -1,5 +1,10 @@
 package space.be1ski.vibits.feature.homescreen.presentation.view
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -220,11 +226,27 @@ private fun SidebarHeader(
         onClick = { dispatchMemos(MemosAction.Sync.ShowSyncLogDialog) },
       )
     }
-    IconButton(onClick = { dispatchMemos(MemosAction.Loading.LoadMemos) }) {
+    val isRefreshing = memosState.isLoading || memosState.isSyncing
+    val infiniteTransition = rememberInfiniteTransition()
+    val rotationAngle by infiniteTransition.animateFloat(
+      initialValue = 0f,
+      targetValue = 360f,
+      animationSpec =
+        infiniteRepeatable(
+          animation = tween(durationMillis = 1000, easing = LinearEasing),
+        ),
+    )
+    IconButton(
+      onClick = { dispatchMemos(MemosAction.Loading.LoadMemos) },
+      enabled = !isRefreshing,
+    ) {
       Icon(
         imageVector = Icons.Filled.Refresh,
         contentDescription = stringResource(Res.string.action_refresh),
-        modifier = Modifier.size(20.dp),
+        modifier =
+          Modifier
+            .size(20.dp)
+            .graphicsLayer { rotationZ = if (isRefreshing) rotationAngle else 0f },
       )
     }
   }
