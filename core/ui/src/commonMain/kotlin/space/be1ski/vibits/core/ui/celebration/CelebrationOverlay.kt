@@ -1,11 +1,17 @@
 package space.be1ski.vibits.core.ui.celebration
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
@@ -18,7 +24,6 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import vibits.core.ui.generated.resources.Res
 
 private const val OVERLAY_ALPHA = 0.6f
-private const val FADE_OUT_START = 0.8f
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
@@ -27,45 +32,47 @@ fun CelebrationOverlay(
   onFinished: () -> Unit,
   frozenProgress: Float? = null,
 ) {
-  if (animation == null) return
+  var lastAnimation by remember { mutableStateOf(animation) }
+  if (animation != null) lastAnimation = animation
 
-  val composition by rememberLottieComposition {
-    when (animation) {
-      CelebrationAnimation.Confetti ->
-        LottieCompositionSpec.DotLottie(
-          Res.readBytes("files/confetti.lottie"),
-        )
-    }
-  }
+  AnimatedVisibility(
+    visible = animation != null,
+    enter = EnterTransition.None,
+    exit = fadeOut(),
+  ) {
+    val anim = lastAnimation ?: return@AnimatedVisibility
 
-  val animatedProgress by animateLottieCompositionAsState(composition)
-  val progress = frozenProgress ?: animatedProgress
-
-  if (frozenProgress == null) {
-    LaunchedEffect(animatedProgress) {
-      if (animatedProgress == 1f) {
-        onFinished()
+    val composition by rememberLottieComposition {
+      when (anim) {
+        CelebrationAnimation.Confetti ->
+          LottieCompositionSpec.DotLottie(
+            Res.readBytes("files/confetti.lottie"),
+          )
       }
     }
-  }
 
-  val fadeAlpha =
-    if (frozenProgress == null && progress > FADE_OUT_START) {
-      OVERLAY_ALPHA * (1f - progress) / (1f - FADE_OUT_START)
-    } else {
-      OVERLAY_ALPHA
+    val animatedProgress by animateLottieCompositionAsState(composition)
+    val progress = frozenProgress ?: animatedProgress
+
+    if (frozenProgress == null) {
+      LaunchedEffect(animatedProgress) {
+        if (animatedProgress == 1f) {
+          onFinished()
+        }
+      }
     }
 
-  Box(Modifier.fillMaxSize()) {
-    Image(
-      painter =
-        rememberLottiePainter(
-          composition = composition,
-          progress = { progress },
-        ),
-      contentDescription = null,
-      modifier = Modifier.fillMaxSize().alpha(fadeAlpha),
-      contentScale = ContentScale.Crop,
-    )
+    Box(Modifier.fillMaxSize()) {
+      Image(
+        painter =
+          rememberLottiePainter(
+            composition = composition,
+            progress = { progress },
+          ),
+        contentDescription = null,
+        modifier = Modifier.fillMaxSize().alpha(OVERLAY_ALPHA),
+        contentScale = ContentScale.Crop,
+      )
+    }
   }
 }
