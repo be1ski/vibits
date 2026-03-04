@@ -61,7 +61,7 @@ import kotlin.test.Test
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 
-private const val CELEBRATION_SCREENSHOT_PROGRESS = 0.4f
+private const val CELEBRATION_SCREENSHOT_PROGRESS = 0.25f
 private const val LOTTIE_LOAD_DELAY_MS = 2000L
 
 @OptIn(ExperimentalTestApi::class)
@@ -740,24 +740,13 @@ class AppScreenshotTest {
     }
   }
 
+  @Suppress("BlockingMethodInNonBlockingContext")
   private fun ComposeUiTest.captureCelebration(
     platform: String,
     appState: AppState,
     habitsState: HabitsState,
     wideLayout: Boolean = true,
   ) {
-    // Preload Lottie composition (cold .lottie ZIP extraction is slow)
-    setContent {
-      CelebrationOverlay(
-        animation = CelebrationAnimation.Confetti,
-        onFinished = {},
-        frozenProgress = CELEBRATION_SCREENSHOT_PROGRESS,
-      )
-    }
-    @Suppress("BlockingMethodInNonBlockingContext")
-    Thread.sleep(LOTTIE_LOAD_DELAY_MS)
-    waitForIdle()
-
     for (darkTheme in listOf(false, true)) {
       val theme = if (darkTheme) "dark" else "light"
       val features =
@@ -784,6 +773,7 @@ class AppScreenshotTest {
           )
         }
       }
+      Thread.sleep(LOTTIE_LOAD_DELAY_MS)
       waitForIdle()
       saveScreenshot("${platform}_${theme}_app_celebration_confetti")
     }
