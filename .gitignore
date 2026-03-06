@@ -27,3 +27,6 @@ xcuserdata/
 /.ralph/
 /fix_plan.md
 /fix_results.md
+hero/node_modules/
+hero/_hero.html
+hero/hero.webp

@@ -1,0 +1,36 @@
+name: Update Hero Image
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-hero:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Download hero.webp from latest release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download --repo "${{ github.repository }}" \
+            --pattern "hero.webp" \
+            --output .github/hero.webp \
+            --clobber
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .github/hero.webp
+          if git diff --staged --quiet; then
+            echo "Hero image unchanged, skipping commit"
+          else
+            git commit -m "Update hero image from latest release"
+            git push
+          fi
