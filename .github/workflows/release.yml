@@ -81,43 +81,66 @@ jobs:
             echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
           fi
 
-  check-jvm:
+  await-ci:
     runs-on: ubuntu-latest
     needs: [resolve-version]
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v5
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-
-      - name: Run checks
-        run: xvfb-run ./gradlew checkJvm
-
-      - name: Collect and package screenshots
+      - name: Wait for CI on main to pass
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Waiting for CI workflow on main to succeed..."
+          for i in $(seq 1 60); do
+            RUN_JSON=$(gh run list \
+              --repo "${{ github.repository }}" \
+              --workflow CI \
+              --branch main \
+              --limit 1 \
+              --json status,conclusion,databaseId)
+
+            STATUS=$(echo "$RUN_JSON" | jq -r '.[0].status')
+            CONCLUSION=$(echo "$RUN_JSON" | jq -r '.[0].conclusion')
+            RUN_ID=$(echo "$RUN_JSON" | jq -r '.[0].databaseId')
+
+            echo "CI run $RUN_ID: status=$STATUS conclusion=$CONCLUSION (attempt $i/60)"
+
+            if [ "$STATUS" = "completed" ]; then
+              if [ "$CONCLUSION" = "success" ]; then
+                echo "CI_RUN_ID=$RUN_ID" >> $GITHUB_ENV
+                echo "CI passed!"
+                exit 0
+              else
+                echo "::error::CI on main failed with conclusion: $CONCLUSION"
+                exit 1
+              fi
+            fi
+
+            sleep 30
+          done
+          echo "::error::Timed out waiting for CI on main (30 minutes)"
+          exit 1
+
+      - name: Download screenshots from CI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APP_VERSION: ${{ needs.resolve-version.outputs.version }}
         run: |
-          mkdir -p build/ui-screenshots
-          find . -path "*/build/ui-screenshots/*.png" -exec cp {} build/ui-screenshots/ \;
-          cd build && zip -r Vibits-${APP_VERSION#v}-screenshots.zip ui-screenshots/
+          gh run download "$CI_RUN_ID" \
+            --repo "${{ github.repository }}" \
+            --name ui-screenshots \
+            --dir ui-screenshots
+          zip -r "Vibits-${APP_VERSION#v}-screenshots.zip" ui-screenshots/
 
       - name: Upload screenshots to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.resolve-version.outputs.version }}
-          files: build/Vibits-*-screenshots.zip
+          files: Vibits-*-screenshots.zip
 
   generate-hero:
     runs-on: ubuntu-latest
-    needs: [check-jvm, resolve-version]
+    needs: [await-ci, resolve-version]
 
     steps:
       - name: Checkout
@@ -155,29 +178,9 @@ jobs:
           tag_name: ${{ needs.resolve-version.outputs.version }}
           files: hero/hero.webp
 
-  check-ios:
-    runs-on: macos-latest
-    needs: [resolve-version]
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v5
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-
-      - name: Run iOS checks
-        run: ./gradlew checkIos
-
   build-apk:
     runs-on: ubuntu-latest
-    needs: [check-jvm, check-ios, resolve-version]
+    needs: [await-ci, resolve-version]
 
     steps:
       - name: Checkout
@@ -231,7 +234,7 @@ jobs:
 
   build-dmg:
     runs-on: macos-latest
-    needs: [check-jvm, check-ios, resolve-version]
+    needs: [await-ci, resolve-version]
 
     steps:
       - name: Checkout
@@ -313,7 +316,7 @@ jobs:
 
   build-msi:
     runs-on: windows-latest
-    needs: [check-jvm, check-ios, resolve-version]
+    needs: [await-ci, resolve-version]
 
     steps:
       - name: Checkout
@@ -342,7 +345,7 @@ jobs:
 
   build-web:
     runs-on: ubuntu-latest
-    needs: [check-jvm, check-ios, resolve-version]
+    needs: [await-ci, resolve-version]
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
