@@ -107,7 +107,6 @@ internal fun SwipeableTabContent(
   }
 }
 
-@Suppress("LongMethod")
 @Composable
 private fun SwipeablePagerContent(
   memosState: MemosState,
