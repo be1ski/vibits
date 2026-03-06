@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import io.github.alexzhirkevich.compottie.DotLottie
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
@@ -56,7 +57,7 @@ fun CelebrationOverlay(
       else -> OVERLAY_ALPHA
     }
 
-  Box(Modifier.fillMaxSize()) {
+  Box(Modifier.fillMaxSize().then(if (composition != null) Modifier.testTag(CELEBRATION_OVERLAY_TEST_TAG) else Modifier)) {
     Image(
       painter =
         rememberLottiePainter(
@@ -69,3 +70,5 @@ fun CelebrationOverlay(
     )
   }
 }
+
+const val CELEBRATION_OVERLAY_TEST_TAG = "celebration_overlay"
