@@ -80,7 +80,12 @@ class AppScreenshotTest {
   private val waterConfig = HabitConfig(tag = "#habits/water", label = "Water", color = HabitColor(0xFF2196F3))
   private val readingConfig = HabitConfig(tag = "#habits/reading", label = "Reading", color = HabitColor(0xFFFF9800))
   private val meditationConfig = HabitConfig(tag = "#habits/meditation", label = "Meditation", color = HabitColor(0xFF9C27B0))
-  private val allHabits = listOf(exerciseConfig, waterConfig, readingConfig, meditationConfig)
+  private val walkingConfig = HabitConfig(tag = "#habits/walking", label = "Walking", color = HabitColor(0xFF00BCD4))
+  private val learningConfig = HabitConfig(tag = "#habits/learning", label = "Learning", color = HabitColor(0xFFE91E63))
+  private val noSugarConfig = HabitConfig(tag = "#habits/no_sugar", label = "No Sugar", color = HabitColor(0xFFF44336))
+  private val earlySleepConfig = HabitConfig(tag = "#habits/early_sleep", label = "Early Sleep", color = HabitColor(0xFF607D8B))
+  private val allHabits =
+    listOf(waterConfig, exerciseConfig, readingConfig, meditationConfig, walkingConfig, learningConfig, noSugarConfig, earlySleepConfig)
 
   private val fakeExportService =
     object : ExportService {
@@ -116,7 +121,7 @@ class AppScreenshotTest {
     var cursor = configDate
     while (cursor <= today) {
       val completedHabits =
-        allHabits.filter { rng.nextFloat() < 0.75f }
+        allHabits.filter { rng.nextFloat() < 0.55f }
       if (completedHabits.isNotEmpty()) {
         val dayStr = cursor.toString()
         val content =

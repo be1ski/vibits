@@ -123,7 +123,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          sparse-checkout: hero
+          sparse-checkout: .github/hero
 
       - name: Download screenshots from release
         env:
@@ -133,10 +133,10 @@ jobs:
           gh release download "$APP_VERSION" \
             --repo "${{ github.repository }}" \
             --pattern "*-screenshots.zip" \
-            --dir hero
+            --dir .github/hero
 
       - name: Extract screenshots
-        run: unzip -o hero/*-screenshots.zip -d hero
+        run: unzip -o .github/hero/*-screenshots.zip -d .github/hero
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -144,7 +144,7 @@ jobs:
           node-version: '24'
 
       - name: Install dependencies and render
-        working-directory: hero
+        working-directory: .github/hero
         run: |
           npm install
           node render.mjs
@@ -153,7 +153,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.resolve-version.outputs.version }}
-          files: hero/hero.webp
+          files: .github/hero/hero.webp
 
   check-ios:
     runs-on: macos-latest
