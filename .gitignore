@@ -27,8 +27,8 @@ xcuserdata/
 /.ralph/
 /fix_plan.md
 /fix_results.md
-hero/node_modules/
-hero/package-lock.json
-hero/ui-screenshots/
-hero/_hero.html
-hero/hero.webp
+.github/hero/node_modules/
+.github/hero/package-lock.json
+.github/hero/ui-screenshots/
+.github/hero/_hero.html
+.github/hero/hero.webp
