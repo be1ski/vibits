@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -469,7 +470,6 @@ private fun ContributionGridTimelineRow(
   )
 }
 
-@Suppress("CyclomaticComplexMethod")
 @Composable
 private fun ContributionGridTooltip(
   state: ContributionGridState,
@@ -499,50 +499,73 @@ private fun ContributionGridTooltip(
     popupPositionProvider = positionProvider,
     onDismissRequest = { interaction.tooltip = null },
   ) {
-    Column(
-      modifier =
-        Modifier
-          .background(MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.small)
-          .padding(horizontal = 8.dp, vertical = 6.dp),
-    ) {
-      val tooltipText =
-        if (tooltip.day.totalHabits > 0) {
-          stringResource(Res.string.format_tooltip_habits, tooltip.day.date, tooltip.day.count, tooltip.day.totalHabits)
-        } else {
-          stringResource(Res.string.format_tooltip_memos, tooltip.day.date, tooltip.day.count)
-        }
-      Text(tooltipText, style = MaterialTheme.typography.labelMedium)
-      if (tooltip.day.totalHabits > 0) {
-        Column(modifier = Modifier.padding(top = 6.dp)) {
-          tooltip.day.habitStatuses.forEach { status ->
-            val color =
-              if (status.done) {
-                MaterialTheme.colorScheme.primary
-              } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
-              }
-            val prefix = if (status.done) "\u2713 " else "\u2022 "
-            Text("$prefix${status.label}", color = color, style = MaterialTheme.typography.labelSmall)
-          }
-        }
+    TooltipContent(
+      day = tooltip.day,
+      isFuture = state.today != null && tooltip.day.date > state.today,
+      demoMode = state.demoMode,
+      onEditRequested = onEditRequested,
+      onCreateRequested = onCreateRequested,
+    )
+  }
+}
+
+@Composable
+private fun TooltipContent(
+  day: ContributionDay,
+  isFuture: Boolean,
+  demoMode: Boolean,
+  onEditRequested: ((ContributionDay) -> Unit)?,
+  onCreateRequested: ((ContributionDay) -> Unit)?,
+) {
+  Column(
+    modifier =
+      Modifier
+        .background(MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.small)
+        .padding(horizontal = 8.dp, vertical = 6.dp),
+  ) {
+    val tooltipText =
+      if (day.totalHabits > 0) {
+        stringResource(Res.string.format_tooltip_habits, day.date, day.count, day.totalHabits)
+      } else {
+        stringResource(Res.string.format_tooltip_memos, day.date, day.count)
       }
-      val isFuture = state.today != null && tooltip.day.date > state.today
-      if (!isFuture && (onEditRequested != null || onCreateRequested != null)) {
-        tooltip.day.dailyMemo?.let {
-          onEditRequested?.let { callback ->
-            TextButton(onClick = { callback(tooltip.day) }) {
-              Text(stringResource(Res.string.title_edit_day))
-            }
-          }
-        } ?: run {
-          if (tooltip.day.totalHabits > 0 && tooltip.day.inRange && !state.demoMode) {
-            onCreateRequested?.let { callback ->
-              TextButton(onClick = { callback(tooltip.day) }) {
-                Text(stringResource(Res.string.title_create_day))
-              }
-            }
-          }
-        }
+    Text(tooltipText, style = MaterialTheme.typography.labelMedium)
+    TooltipHabitStatuses(day)
+    TooltipActionButtons(day, isFuture, demoMode, onEditRequested, onCreateRequested)
+  }
+}
+
+@Composable
+private fun TooltipHabitStatuses(day: ContributionDay) {
+  if (day.totalHabits <= 0) return
+  Column(modifier = Modifier.padding(top = 6.dp)) {
+    day.habitStatuses.forEach { status ->
+      val color = if (status.done) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+      val prefix = if (status.done) "\u2713 " else "\u2022 "
+      Text("$prefix${status.label}", color = color, style = MaterialTheme.typography.labelSmall)
+    }
+  }
+}
+
+@Composable
+private fun TooltipActionButtons(
+  day: ContributionDay,
+  isFuture: Boolean,
+  demoMode: Boolean,
+  onEditRequested: ((ContributionDay) -> Unit)?,
+  onCreateRequested: ((ContributionDay) -> Unit)?,
+) {
+  if (isFuture || (onEditRequested == null && onCreateRequested == null)) return
+  if (day.dailyMemo != null) {
+    onEditRequested?.let { callback ->
+      TextButton(onClick = { callback(day) }) {
+        Text(stringResource(Res.string.title_edit_day))
+      }
+    }
+  } else if (day.totalHabits > 0 && day.inRange && !demoMode) {
+    onCreateRequested?.let { callback ->
+      TextButton(onClick = { callback(day) }) {
+        Text(stringResource(Res.string.title_create_day))
       }
     }
   }
@@ -666,7 +689,6 @@ internal data class ChartLayout(
 /**
  * Renders an individual activity cell.
  */
-@Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable
 private fun ContributionCell(
   state: ContributionCellState,
@@ -674,10 +696,39 @@ private fun ContributionCell(
   onHoverChange: ((Boolean) -> Unit)?,
 ) {
   var coordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
+  val cellColor = rememberCellColor(state)
+  val border = rememberCellBorder(state)
+
+  Box(
+    modifier =
+      Modifier
+        .size(width = state.size, height = state.height)
+        .background(color = cellColor, shape = MaterialTheme.shapes.extraSmall)
+        .border(width = border.width.value, color = border.color.value, shape = MaterialTheme.shapes.extraSmall)
+        .onGloballyPositioned { coordinates = it }
+        .then(if (onHoverChange != null) Modifier.hoverAware(onHoverChange) else Modifier)
+        .then(cellClickModifier(onClick, state.enabled) { coordinates }),
+    contentAlignment = Alignment.Center,
+  ) {
+    if (state.showDayNumber) {
+      Text(
+        state.day.date.day
+          .toString(),
+        style = MaterialTheme.typography.labelSmall,
+        color = if (state.day.inRange) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+      )
+    }
+  }
+}
+
+@Composable
+private fun rememberCellColor(state: ContributionCellState): Color {
   val defaultStartColor = AppColors.habitGradientStart.resolve()
   val defaultEndColor = AppColors.habitGradientEnd.resolve()
   val inactiveCellColor = AppColors.inactiveCell.resolve()
   val disabledCellColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+  val todayOverlay = AppColors.todayHighlight.resolve()
+  val weekendOverlay = Color.Black.copy(alpha = WEEKEND_CELL_ALPHA)
   val (startColor, endColor) =
     remember(state.habitColor, defaultStartColor, defaultEndColor) {
       if (state.habitColor != null) {
@@ -689,52 +740,40 @@ private fun ContributionCell(
       }
     }
   val targetRatio =
-    if (!state.enabled) {
-      0f
-    } else if (state.day.totalHabits > 0) {
-      state.day.completionRatio
-    } else if (state.maxCount > 0) {
-      state.day.count.toFloat() / state.maxCount.toFloat()
-    } else {
-      0f
+    when {
+      !state.enabled -> 0f
+      state.day.totalHabits > 0 -> state.day.completionRatio
+      state.maxCount > 0 -> state.day.count.toFloat() / state.maxCount.toFloat()
+      else -> 0f
     }
   val animatedRatio by animateFloatAsState(
     targetValue = targetRatio.coerceIn(0f, 1f),
     animationSpec = tween(durationMillis = CELL_FILL_ANIMATION_MS),
   )
 
-  // Apply subtle highlight for today and weekends
-  val todayOverlay = AppColors.todayHighlight.resolve()
-  val weekendOverlay = Color.Black.copy(alpha = WEEKEND_CELL_ALPHA)
-
   fun applyOverlays(color: Color): Color {
-    if (!state.enabled) return color
-    val weekendApplied =
-      if (state.isWeekend) {
-        color.compositeOver(weekendOverlay)
-      } else {
-        color
-      }
-    return if (state.isToday) {
-      weekendApplied.compositeOver(todayOverlay)
-    } else {
-      weekendApplied
-    }
+    val weekendApplied = if (state.isWeekend) color.compositeOver(weekendOverlay) else color
+    return if (state.isToday) weekendApplied.compositeOver(todayOverlay) else weekendApplied
   }
-  val cellColor =
-    if (!state.enabled) {
-      disabledCellColor
-    } else if (animatedRatio <= 0f) {
-      applyOverlays(inactiveCellColor)
-    } else {
-      applyOverlays(lerp(startColor, endColor, animatedRatio))
-    }
 
+  return when {
+    !state.enabled -> disabledCellColor
+    animatedRatio <= 0f -> applyOverlays(inactiveCellColor)
+    else -> applyOverlays(lerp(startColor, endColor, animatedRatio))
+  }
+}
+
+private data class CellBorderState(
+  val color: State<Color>,
+  val width: State<Dp>,
+)
+
+@Composable
+private fun rememberCellBorder(state: ContributionCellState): CellBorderState {
   val borderColor =
     when {
       state.isSelected -> MaterialTheme.colorScheme.primary
-      state.isHovered -> MaterialTheme.colorScheme.outlineVariant
-      state.isWeekSelected -> MaterialTheme.colorScheme.outlineVariant
+      state.isHovered || state.isWeekSelected -> MaterialTheme.colorScheme.outlineVariant
       else -> Color.Transparent
     }
   val borderWidth =
@@ -743,55 +782,25 @@ private fun ContributionCell(
       state.isHovered || state.isWeekSelected -> Indent.x5s
       else -> 0.dp
     }
-  val animatedBorderColor by animateColorAsState(
-    targetValue = borderColor,
-    animationSpec = tween(durationMillis = CELL_BORDER_ANIMATION_MS),
-  )
-  val animatedBorderWidth by animateDpAsState(
-    targetValue = borderWidth,
-    animationSpec = tween(durationMillis = CELL_BORDER_ANIMATION_MS),
-  )
-  Box(
-    modifier =
-      Modifier
-        .size(width = state.size, height = state.height)
-        .background(color = cellColor, shape = MaterialTheme.shapes.extraSmall)
-        .border(width = animatedBorderWidth, color = animatedBorderColor, shape = MaterialTheme.shapes.extraSmall)
-        .onGloballyPositioned { coordinates = it }
-        .then(
-          if (onHoverChange != null) {
-            Modifier.hoverAware(onHoverChange)
-          } else {
-            Modifier
-          },
-        ).then(
-          if (onClick != null && state.enabled) {
-            Modifier.clickable {
-              val coords = coordinates
-              if (coords != null) {
-                val position = coords.positionInWindow()
-                val offset = IntOffset(position.x.toInt(), (position.y + coords.size.height).toInt())
-                onClick.invoke(offset)
-              }
-            }
-          } else {
-            Modifier
-          },
-        ),
-    contentAlignment = Alignment.Center,
-  ) {
-    if (state.showDayNumber) {
-      Text(
-        state.day.date.day
-          .toString(),
-        style = MaterialTheme.typography.labelSmall,
-        color =
-          if (state.day.inRange) {
-            MaterialTheme.colorScheme.onSurface
-          } else {
-            MaterialTheme.colorScheme.onSurfaceVariant
-          },
-      )
-    }
-  }
+  val animatedColor = animateColorAsState(borderColor, tween(durationMillis = CELL_BORDER_ANIMATION_MS))
+  val animatedWidth = animateDpAsState(borderWidth, tween(durationMillis = CELL_BORDER_ANIMATION_MS))
+  return CellBorderState(animatedColor, animatedWidth)
 }
+
+private fun cellClickModifier(
+  onClick: ((IntOffset) -> Unit)?,
+  enabled: Boolean,
+  coordinates: () -> LayoutCoordinates?,
+): Modifier =
+  if (onClick != null && enabled) {
+    Modifier.clickable {
+      val coords = coordinates()
+      if (coords != null) {
+        val position = coords.positionInWindow()
+        val offset = IntOffset(position.x.toInt(), (position.y + coords.size.height).toInt())
+        onClick.invoke(offset)
+      }
+    }
+  } else {
+    Modifier
+  }

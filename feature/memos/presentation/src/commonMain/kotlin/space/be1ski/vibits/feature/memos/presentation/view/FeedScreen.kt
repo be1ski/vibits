@@ -65,7 +65,6 @@ import space.be1ski.vibits.feature.memos.domain.usecase.FilterMemosByTypeUseCase
 /**
  * Feed tab showing the raw memos list.
  */
-@Suppress("LongMethod", "CyclomaticComplexMethod")
 @OptIn(androidx.compose.material.ExperimentalMaterialApi::class)
 @Composable
 fun FeedScreen(
@@ -79,125 +78,171 @@ fun FeedScreen(
   listState: LazyListState = rememberLazyListState(),
 ) {
   var memoToDelete by remember { mutableStateOf<Memo?>(null) }
-  val timeZone = TimeZone.currentSystemDefault()
   val pullRefreshState = rememberPullRefreshState(isRefreshing, callbacks.onRefresh)
-  val containerModifier =
-    if (enablePullRefresh) {
-      Modifier.pullRefresh(pullRefreshState)
-    } else {
-      Modifier
-    }
-
   val filteredMemos = FilterMemosByTypeUseCase(memos, activeFilter)
 
   Column(modifier = Modifier.fillMaxSize().testTag(FeedTestTags.FEED_SCREEN)) {
-    Column(modifier = Modifier.padding(horizontal = Indent.s, vertical = Indent.s)) {
-      SegmentedSelector(
-        label = stringResource(Res.string.label_post_filter),
-        options = listOf(PostFilter.ALL, PostFilter.CONFIG, PostFilter.HABIT_TRACKING, PostFilter.REGULAR),
-        selected = activeFilter,
-        onSelect = callbacks.onFilterChange,
-        optionLabel = { filter ->
-          when (filter) {
-            PostFilter.ALL -> stringResource(Res.string.filter_all)
-            PostFilter.CONFIG -> stringResource(Res.string.filter_config)
-            PostFilter.HABIT_TRACKING -> stringResource(Res.string.filter_habit_tracking)
-            PostFilter.REGULAR -> stringResource(Res.string.filter_regular)
-          }
-        },
-      )
-    }
-
-    Box(
-      modifier =
-        Modifier
-          .fillMaxSize()
-          .then(containerModifier),
-    ) {
-      if (filteredMemos.isEmpty()) {
-        FeedEmptyState(
-          isFiltered = activeFilter != PostFilter.ALL,
-          modifier = Modifier.align(Alignment.Center).padding(horizontal = Indent.xl),
-        )
-      } else {
-        LazyColumn(state = listState, verticalArrangement = Arrangement.spacedBy(Indent.s)) {
-          items(filteredMemos) { memo ->
-            Card(
-              modifier =
-                Modifier
-                  .fillMaxWidth()
-                  .clickable { callbacks.onMemoClick(memo) },
-            ) {
-              Row(
-                modifier = Modifier.padding(start = 0.dp, top = Indent.s, bottom = Indent.s, end = Indent.xs),
-                verticalAlignment = Alignment.Top,
-              ) {
-                PostTypeIndicator(memo = memo)
-                Column(
-                  modifier = Modifier.weight(1f).padding(start = Indent.s),
-                  verticalArrangement = Arrangement.spacedBy(Indent.x2s),
-                ) {
-                  MemoCardContent(
-                    memo = memo,
-                    allMemos = memos,
-                    dateFormatter = dateFormatter,
-                    timeZone = timeZone,
-                    demoMode = demoMode,
-                  )
-                }
-                if (callbacks.onDeleteMemo != null && memo.canDeleteFromFeed) {
-                  IconButton(
-                    onClick = { memoToDelete = memo },
-                    modifier = Modifier.size(36.dp),
-                  ) {
-                    Icon(
-                      imageVector = Icons.Filled.Delete,
-                      contentDescription = stringResource(Res.string.action_delete),
-                      modifier = Modifier.size(18.dp),
-                      tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      if (enablePullRefresh) {
-        PullRefreshIndicator(
-          refreshing = isRefreshing,
-          state = pullRefreshState,
-          modifier = Modifier.align(Alignment.TopCenter),
-        )
-      }
-    }
+    FeedFilterSelector(activeFilter, callbacks.onFilterChange)
+    FeedContent(
+      filteredMemos = filteredMemos,
+      allMemos = memos,
+      activeFilter = activeFilter,
+      dateFormatter = dateFormatter,
+      demoMode = demoMode,
+      callbacks = callbacks,
+      listState = listState,
+      enablePullRefresh = enablePullRefresh,
+      isRefreshing = isRefreshing,
+      pullRefreshState = pullRefreshState,
+      onDeleteRequest = { memoToDelete = it },
+    )
   }
 
-  memoToDelete?.let { memo ->
-    AlertDialog(
-      onDismissRequest = { memoToDelete = null },
-      title = { Text(stringResource(Res.string.title_delete_memo)) },
-      confirmButton = {
-        Button(
-          onClick = {
-            callbacks.onDeleteMemo?.invoke(memo)
-            memoToDelete = null
-          },
-          colors =
-            ButtonDefaults.buttonColors(
-              containerColor = MaterialTheme.colorScheme.error,
-            ),
-        ) {
-          Text(stringResource(Res.string.action_delete))
-        }
-      },
-      dismissButton = {
-        TextButton(onClick = { memoToDelete = null }) {
-          Text(stringResource(Res.string.action_cancel))
+  FeedDeleteConfirmation(
+    memo = memoToDelete,
+    onConfirm = {
+      callbacks.onDeleteMemo?.invoke(it)
+      memoToDelete = null
+    },
+    onDismiss = { memoToDelete = null },
+  )
+}
+
+@Composable
+private fun FeedFilterSelector(
+  activeFilter: PostFilter,
+  onFilterChange: (PostFilter) -> Unit,
+) {
+  Column(modifier = Modifier.padding(horizontal = Indent.s, vertical = Indent.s)) {
+    SegmentedSelector(
+      label = stringResource(Res.string.label_post_filter),
+      options = listOf(PostFilter.ALL, PostFilter.CONFIG, PostFilter.HABIT_TRACKING, PostFilter.REGULAR),
+      selected = activeFilter,
+      onSelect = onFilterChange,
+      optionLabel = { filter ->
+        when (filter) {
+          PostFilter.ALL -> stringResource(Res.string.filter_all)
+          PostFilter.CONFIG -> stringResource(Res.string.filter_config)
+          PostFilter.HABIT_TRACKING -> stringResource(Res.string.filter_habit_tracking)
+          PostFilter.REGULAR -> stringResource(Res.string.filter_regular)
         }
       },
     )
   }
+}
+
+@Suppress("LongParameterList")
+@OptIn(androidx.compose.material.ExperimentalMaterialApi::class)
+@Composable
+private fun FeedContent(
+  filteredMemos: List<Memo>,
+  allMemos: List<Memo>,
+  activeFilter: PostFilter,
+  dateFormatter: DateFormatter,
+  demoMode: Boolean,
+  callbacks: FeedCallbacks,
+  listState: LazyListState,
+  enablePullRefresh: Boolean,
+  isRefreshing: Boolean,
+  pullRefreshState: androidx.compose.material.pullrefresh.PullRefreshState,
+  onDeleteRequest: (Memo) -> Unit,
+) {
+  val timeZone = TimeZone.currentSystemDefault()
+  val containerModifier = if (enablePullRefresh) Modifier.pullRefresh(pullRefreshState) else Modifier
+  Box(modifier = Modifier.fillMaxSize().then(containerModifier)) {
+    if (filteredMemos.isEmpty()) {
+      FeedEmptyState(
+        isFiltered = activeFilter != PostFilter.ALL,
+        modifier = Modifier.align(Alignment.Center).padding(horizontal = Indent.xl),
+      )
+    } else {
+      LazyColumn(state = listState, verticalArrangement = Arrangement.spacedBy(Indent.s)) {
+        items(filteredMemos) { memo ->
+          FeedMemoCard(
+            memo = memo,
+            allMemos = allMemos,
+            dateFormatter = dateFormatter,
+            timeZone = timeZone,
+            demoMode = demoMode,
+            canDelete = callbacks.onDeleteMemo != null && memo.canDeleteFromFeed,
+            onClick = { callbacks.onMemoClick(memo) },
+            onDelete = { onDeleteRequest(memo) },
+          )
+        }
+      }
+    }
+    if (enablePullRefresh) {
+      PullRefreshIndicator(
+        refreshing = isRefreshing,
+        state = pullRefreshState,
+        modifier = Modifier.align(Alignment.TopCenter),
+      )
+    }
+  }
+}
+
+@Suppress("LongParameterList")
+@Composable
+private fun FeedMemoCard(
+  memo: Memo,
+  allMemos: List<Memo>,
+  dateFormatter: DateFormatter,
+  timeZone: TimeZone,
+  demoMode: Boolean,
+  canDelete: Boolean,
+  onClick: () -> Unit,
+  onDelete: () -> Unit,
+) {
+  Card(modifier = Modifier.fillMaxWidth().clickable(onClick = onClick)) {
+    Row(
+      modifier = Modifier.padding(start = 0.dp, top = Indent.s, bottom = Indent.s, end = Indent.xs),
+      verticalAlignment = Alignment.Top,
+    ) {
+      PostTypeIndicator(memo = memo)
+      Column(
+        modifier = Modifier.weight(1f).padding(start = Indent.s),
+        verticalArrangement = Arrangement.spacedBy(Indent.x2s),
+      ) {
+        MemoCardContent(memo = memo, allMemos = allMemos, dateFormatter = dateFormatter, timeZone = timeZone, demoMode = demoMode)
+      }
+      if (canDelete) {
+        IconButton(onClick = onDelete, modifier = Modifier.size(36.dp)) {
+          Icon(
+            imageVector = Icons.Filled.Delete,
+            contentDescription = stringResource(Res.string.action_delete),
+            modifier = Modifier.size(18.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+          )
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun FeedDeleteConfirmation(
+  memo: Memo?,
+  onConfirm: (Memo) -> Unit,
+  onDismiss: () -> Unit,
+) {
+  if (memo == null) return
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = { Text(stringResource(Res.string.title_delete_memo)) },
+    confirmButton = {
+      Button(
+        onClick = { onConfirm(memo) },
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+      ) {
+        Text(stringResource(Res.string.action_delete))
+      }
+    },
+    dismissButton = {
+      TextButton(onClick = onDismiss) {
+        Text(stringResource(Res.string.action_cancel))
+      }
+    },
+  )
 }
 
 @Composable

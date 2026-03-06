@@ -52,22 +52,18 @@ internal fun EmptyDeleteDialog(
   )
 }
 
-@Suppress("ReturnCount")
 @Composable
 internal fun SingleHabitToggleDialog(
   derived: StatsScreenDerivedState,
   dispatch: (HabitsAction) -> Unit,
 ) {
   val habitsState = derived.habitsState
-  val day = habitsState.singleToggleDay ?: return
-  val habitLabel = habitsState.singleToggleHabitLabel ?: return
-  val habitTag = habitsState.singleToggleHabitTag ?: return
-
-  if (!habitsState.showSingleToggleConfirm) {
-    return
-  }
+  val day = habitsState.singleToggleDay
+  val habitTag = habitsState.singleToggleHabitTag
+  if (!habitsState.showSingleToggleConfirm || day == null || habitTag == null) return
 
   val demoMode = derived.state.demoMode
+  val habitLabel = habitsState.singleToggleHabitLabel.orEmpty()
   val habitConfig = habitsState.singleToggleConfig.firstOrNull { it.tag == habitTag }
   val displayLabel = habitConfig?.localizedLabel(demoMode) ?: habitLabel
   val isCurrentlyDone = day.habitStatuses.firstOrNull { it.tag == habitTag }?.done == true
