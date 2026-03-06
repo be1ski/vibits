@@ -1,5 +1,5 @@
 {
-  "canvas": { "width": 1400, "height": 700 },
+  "canvas": { "width": 1400, "height": 800 },
   "devices": [
     {
       "id": "desktop-1",
@@ -7,7 +7,7 @@
       "theme": "light",
       "screenshot": "wide_light_app_habits_week.png",
       "screenWidth": 380,
-      "position": { "top": -20, "left": 30 },
+      "position": { "top": 30, "left": 60 },
       "rotate": -4,
       "zIndex": 1
     },
@@ -17,7 +17,7 @@
       "theme": "dark",
       "screenshot": "wide_dark_app_feed.png",
       "screenWidth": 400,
-      "position": { "top": -10, "right": 60 },
+      "position": { "top": 40, "right": 90 },
       "rotate": 5,
       "zIndex": 1
     },
@@ -27,7 +27,7 @@
       "theme": "dark",
       "screenshot": "wide_dark_app_habits_year.png",
       "screenWidth": 460,
-      "position": { "top": 30, "left": 420 },
+      "position": { "top": 80, "left": 420 },
       "rotate": 2,
       "zIndex": 2
     },
@@ -37,7 +37,7 @@
       "theme": "light",
       "screenshot": "wide_light_app_stats_month.png",
       "screenWidth": 420,
-      "position": { "bottom": -40, "left": 140 },
+      "position": { "bottom": 20, "left": 170 },
       "rotate": 6,
       "zIndex": 3
     },
@@ -47,7 +47,7 @@
       "theme": "dark",
       "screenshot": "wide_dark_app_habits_quarter.png",
       "screenWidth": 580,
-      "position": { "top": 140, "left": 280 },
+      "position": { "top": 190, "left": 280 },
       "rotate": -2,
       "zIndex": 4
     },
@@ -57,7 +57,7 @@
       "theme": "dark",
       "screenshot": "compact_dark_app_habits_week.png",
       "bodyWidth": 155,
-      "position": { "top": 50, "left": 15 },
+      "position": { "top": 100, "left": 50 },
       "rotate": -12,
       "zIndex": 6
     },
@@ -67,7 +67,7 @@
       "theme": "light",
       "screenshot": "compact_light_app_habits_year.png",
       "bodyWidth": 148,
-      "position": { "top": 280, "left": 105 },
+      "position": { "top": 330, "left": 130 },
       "rotate": 7,
       "zIndex": 7
     },
@@ -77,7 +77,7 @@
       "theme": "dark",
       "screenshot": "compact_dark_app_habits_month.png",
       "bodyWidth": 140,
-      "position": { "top": 60, "left": 620 },
+      "position": { "top": 110, "left": 620 },
       "rotate": -5,
       "zIndex": 6
     },
@@ -87,7 +87,7 @@
       "theme": "light",
       "screenshot": "compact_light_app_feed.png",
       "bodyWidth": 155,
-      "position": { "top": 240, "right": 120 },
+      "position": { "top": 290, "right": 150 },
       "rotate": 10,
       "zIndex": 7
     },
@@ -97,7 +97,7 @@
       "theme": "dark",
       "screenshot": "compact_dark_app_habits_quarter.png",
       "bodyWidth": 150,
-      "position": { "top": 30, "right": 15 },
+      "position": { "top": 80, "right": 50 },
       "rotate": 8,
       "zIndex": 6
     },
@@ -107,7 +107,7 @@
       "theme": "light",
       "screenshot": "compact_light_app_habit_editor.png",
       "bodyWidth": 145,
-      "position": { "bottom": -20, "right": 45 },
+      "position": { "bottom": 30, "right": 80 },
       "rotate": -9,
       "zIndex": 5
     }
