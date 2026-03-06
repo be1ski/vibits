@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   update-hero:
@@ -23,14 +24,25 @@ jobs:
             --output .github/hero.webp \
             --clobber
 
-      - name: Commit and push
+      - name: Create PR if changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .github/hero.webp
           if git diff --staged --quiet; then
-            echo "Hero image unchanged, skipping commit"
+            echo "Hero image unchanged, skipping"
           else
+            BRANCH="update-hero-image"
+            git checkout -b "$BRANCH"
             git commit -m "Update hero image from latest release"
-            git push
+            git push -f origin "$BRANCH"
+            if ! gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number' | grep -q .; then
+              gh pr create \
+                --title "Update hero image" \
+                --body "Auto-generated from latest release hero.webp" \
+                --head "$BRANCH"
+              gh pr merge --auto --squash --delete-branch
+            fi
           fi
