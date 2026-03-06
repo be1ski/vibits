@@ -270,4 +270,11 @@
     <string name="msg_sync_failed">Помилка синхронізації: %1$s</string>
     <string name="msg_syncing">Синхронізація...</string>
     <string name="title_sync_conflict">Конфлікт синхронізації</string>
+    <!-- Update -->
+    <string name="label_update_available">Доступна v%1$s</string>
+    <string name="action_upgrade">Оновити</string>
+    <string name="label_upgrading">Оновлення…</string>
+    <string name="action_restart_to_update">Перезапустити</string>
+    <string name="label_upgrade_failed">Помилка оновлення</string>
+    <string name="action_retry">Повторити</string>
 </resources>

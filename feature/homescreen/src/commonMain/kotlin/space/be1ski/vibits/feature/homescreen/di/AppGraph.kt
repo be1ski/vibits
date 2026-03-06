@@ -12,6 +12,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import space.be1ski.vibits.core.env.BuildConfig
 import space.be1ski.vibits.core.platform.app.AppDetailsProvider
+import space.be1ski.vibits.core.platform.app.AppUpdater
 import space.be1ski.vibits.core.platform.di.AppScope
 import space.be1ski.vibits.core.platform.env.LocalConfigProvider
 import space.be1ski.vibits.core.platform.env.createLocalConfigProvider
@@ -27,7 +28,9 @@ import space.be1ski.vibits.feature.auth.domain.repository.CredentialsRepository
 import space.be1ski.vibits.feature.changelog.data.ChangelogRepositoryImpl
 import space.be1ski.vibits.feature.changelog.data.GitHubReleasesApi
 import space.be1ski.vibits.feature.changelog.data.LastSeenVersionStoreImpl
+import space.be1ski.vibits.feature.changelog.data.platform.createInstallationSource
 import space.be1ski.vibits.feature.changelog.domain.repository.ChangelogRepository
+import space.be1ski.vibits.feature.changelog.domain.repository.InstallationSource
 import space.be1ski.vibits.feature.changelog.domain.repository.LastSeenVersionStore
 import space.be1ski.vibits.feature.memos.data.ConnectionTesterImpl
 import space.be1ski.vibits.feature.memos.data.MemoStorageManagerImpl
@@ -150,6 +153,14 @@ abstract class AppGraph {
   @Provides
   @SingleIn(AppScope::class)
   fun gitHubReleasesApi(httpClient: HttpClient): GitHubReleasesApi = GitHubReleasesApi(httpClient, BuildConfig.RELEASES_URL)
+
+  @Provides
+  @SingleIn(AppScope::class)
+  fun installationSource(): InstallationSource = createInstallationSource()
+
+  @Provides
+  @SingleIn(AppScope::class)
+  fun appUpdater(): AppUpdater = AppUpdater()
 
   // Repository bindings (explicit @Binds needed for native targets due to KT-75865)
   @Binds

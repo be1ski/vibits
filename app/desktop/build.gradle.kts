@@ -50,5 +50,6 @@ compose.desktop {
 tasks.matching { it.name == "run" || it.name == "desktopRun" }.configureEach {
   doFirst {
     (this as? JavaExec)?.systemProperty("vibits.env", "dev")
+    (this as? JavaExec)?.systemProperty("memos.version", appVersion)
   }
 }

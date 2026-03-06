@@ -270,4 +270,11 @@
     <string name="msg_sync_failed">فشلت المزامنة: %1$s</string>
     <string name="msg_syncing">جارٍ المزامنة...</string>
     <string name="title_sync_conflict">تعارض المزامنة</string>
+    <!-- Update -->
+    <string name="label_update_available">v%1$s متاح</string>
+    <string name="action_upgrade">تحديث</string>
+    <string name="label_upgrading">جارٍ التحديث…</string>
+    <string name="action_restart_to_update">إعادة التشغيل للتحديث</string>
+    <string name="label_upgrade_failed">فشل التحديث</string>
+    <string name="action_retry">إعادة المحاولة</string>
 </resources>

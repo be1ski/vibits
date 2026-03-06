@@ -270,4 +270,11 @@
     <string name="msg_sync_failed">同期に失敗しました：%1$s</string>
     <string name="msg_syncing">同期中...</string>
     <string name="title_sync_conflict">同期の競合</string>
+    <!-- Update -->
+    <string name="label_update_available">v%1$s が利用可能</string>
+    <string name="action_upgrade">アップグレード</string>
+    <string name="label_upgrading">アップグレード中…</string>
+    <string name="action_restart_to_update">再起動して更新</string>
+    <string name="label_upgrade_failed">アップグレード失敗</string>
+    <string name="action_retry">再試行</string>
 </resources>

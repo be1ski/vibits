@@ -13,4 +13,5 @@ object AppShellTestTags {
   const val SIDEBAR_TRACK_TODAY = "desktop_track_today"
   const val SIDEBAR_NEW_MEMO = "desktop_new_memo"
   const val SIDEBAR_SETTINGS = "desktop_settings"
+  const val SIDEBAR_UPDATE_PILL = "desktop_update_pill"
 }

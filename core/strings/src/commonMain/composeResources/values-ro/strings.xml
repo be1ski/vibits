@@ -270,4 +270,11 @@
     <string name="msg_sync_failed">Sincronizare eșuată: %1$s</string>
     <string name="msg_syncing">Sincronizare...</string>
     <string name="title_sync_conflict">Conflict de sincronizare</string>
+    <!-- Update -->
+    <string name="label_update_available">v%1$s disponibilă</string>
+    <string name="action_upgrade">Actualizare</string>
+    <string name="label_upgrading">Se actualizează…</string>
+    <string name="action_restart_to_update">Reporniți pentru actualizare</string>
+    <string name="label_upgrade_failed">Actualizare eșuată</string>
+    <string name="action_retry">Reîncercați</string>
 </resources>

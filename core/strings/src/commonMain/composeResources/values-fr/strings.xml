@@ -270,4 +270,11 @@
     <string name="msg_sync_failed">Échec de la synchronisation : %1$s</string>
     <string name="msg_syncing">Synchronisation...</string>
     <string name="title_sync_conflict">Conflit de synchronisation</string>
+    <!-- Update -->
+    <string name="label_update_available">v%1$s disponible</string>
+    <string name="action_upgrade">Mettre à jour</string>
+    <string name="label_upgrading">Mise à jour…</string>
+    <string name="action_restart_to_update">Redémarrer pour mettre à jour</string>
+    <string name="label_upgrade_failed">Échec de la mise à jour</string>
+    <string name="action_retry">Réessayer</string>
 </resources>
