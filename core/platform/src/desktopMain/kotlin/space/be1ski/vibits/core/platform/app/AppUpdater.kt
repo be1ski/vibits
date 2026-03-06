@@ -8,11 +8,16 @@ actual class AppUpdater {
   actual suspend fun upgrade(): Boolean =
     withContext(Dispatchers.IO) {
       try {
-        val process =
+        val update =
+          ProcessBuilder("brew", "update")
+            .redirectErrorStream(true)
+            .start()
+        update.waitFor()
+        val upgrade =
           ProcessBuilder("brew", "upgrade", "--cask", "vibits")
             .redirectErrorStream(true)
             .start()
-        process.waitFor() == 0
+        upgrade.waitFor() == 0
       } catch (_: Exception) {
         false
       }
