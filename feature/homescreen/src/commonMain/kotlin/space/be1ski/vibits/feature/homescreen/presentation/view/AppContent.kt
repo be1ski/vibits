@@ -14,22 +14,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import org.jetbrains.compose.resources.stringResource
-import space.be1ski.vibits.core.platform.app.AppUpdater
-import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.msg_state_loading
 import space.be1ski.vibits.core.strings.generated.title_state_loading
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.StatePanel
-import space.be1ski.vibits.feature.changelog.domain.usecase.CheckForUpdateUseCase
-import space.be1ski.vibits.feature.changelog.domain.usecase.GetChangelogUseCase
 import space.be1ski.vibits.feature.homescreen.di.AppDependencies
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
-import space.be1ski.vibits.feature.memos.domain.repository.ExportService
 import space.be1ski.vibits.feature.mode.presentation.view.ModeSelectionScreen
 import space.be1ski.vibits.feature.onboarding.presentation.view.OnboardingScreen
-import space.be1ski.vibits.feature.settings.domain.model.AppTheme
 
 @Composable
 internal fun SyncAppMode(
@@ -61,23 +55,14 @@ internal fun ObserveOnboardingCheck(
   }
 }
 
-@Suppress("LongParameterList")
 @Composable
 internal fun AppContent(
   appMode: AppMode,
   showOnboarding: Boolean,
   justFinishedOnboarding: Boolean,
   featuresState: FeaturesState,
-  appTheme: AppTheme,
-  appLanguage: AppLanguage,
-  exportService: ExportService,
-  currentVersion: String,
-  getChangelog: GetChangelogUseCase,
-  checkForUpdate: CheckForUpdateUseCase? = null,
-  appUpdater: AppUpdater? = null,
-  onResetApp: () -> Unit,
-  onThemeChanged: (AppTheme) -> Unit,
-  onLanguageChanged: (AppLanguage) -> Unit,
+  config: AppContentConfig,
+  callbacks: AppContentCallbacks,
 ) {
   when (appMode) {
     AppMode.NOT_SELECTED -> ModeSelectionScreen(feature = featuresState.modeSelection)
@@ -92,52 +77,27 @@ internal fun AppContent(
         AppWithLoadingScreen(
           features = featuresState.app,
           justFinishedOnboarding = justFinishedOnboarding,
-          appTheme = appTheme,
-          appLanguage = appLanguage,
-          exportService = exportService,
-          currentVersion = currentVersion,
-          getChangelog = getChangelog,
-          checkForUpdate = checkForUpdate,
-          appUpdater = appUpdater,
-          onResetApp = onResetApp,
-          onThemeChanged = onThemeChanged,
-          onLanguageChanged = onLanguageChanged,
+          config = config,
+          callbacks = callbacks,
         )
       }
     AppMode.ONLINE, AppMode.DEMO -> {
       AppWithLoadingScreen(
         features = featuresState.app,
         justFinishedOnboarding = justFinishedOnboarding,
-        appTheme = appTheme,
-        appLanguage = appLanguage,
-        exportService = exportService,
-        currentVersion = currentVersion,
-        getChangelog = getChangelog,
-        checkForUpdate = checkForUpdate,
-        appUpdater = appUpdater,
-        onResetApp = onResetApp,
-        onThemeChanged = onThemeChanged,
-        onLanguageChanged = onLanguageChanged,
+        config = config,
+        callbacks = callbacks,
       )
     }
   }
 }
 
-@Suppress("LongParameterList")
 @Composable
 private fun AppWithLoadingScreen(
   features: AppFeatures,
   justFinishedOnboarding: Boolean,
-  appTheme: AppTheme,
-  appLanguage: AppLanguage,
-  exportService: ExportService,
-  currentVersion: String,
-  getChangelog: GetChangelogUseCase,
-  checkForUpdate: CheckForUpdateUseCase?,
-  appUpdater: AppUpdater?,
-  onResetApp: () -> Unit,
-  onThemeChanged: (AppTheme) -> Unit,
-  onLanguageChanged: (AppLanguage) -> Unit,
+  config: AppContentConfig,
+  callbacks: AppContentCallbacks,
 ) {
   val memosState by features.memos.state.collectAsState()
 
@@ -147,16 +107,8 @@ private fun AppWithLoadingScreen(
     VibitsApp(
       features = features,
       justFinishedOnboarding = justFinishedOnboarding,
-      currentTheme = appTheme,
-      currentLanguage = appLanguage,
-      exportService = exportService,
-      currentVersion = currentVersion,
-      getChangelog = getChangelog,
-      checkForUpdate = checkForUpdate,
-      appUpdater = appUpdater,
-      onResetApp = onResetApp,
-      onThemeChanged = onThemeChanged,
-      onLanguageChanged = onLanguageChanged,
+      config = config,
+      callbacks = callbacks,
     )
   }
 }

@@ -10,9 +10,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
-import space.be1ski.vibits.core.platform.app.AppUpdater
 import space.be1ski.vibits.core.platform.date.currentLocalDate
-import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.ui.celebration.CelebrationAnimation
 import space.be1ski.vibits.core.ui.celebration.CelebrationOverlay
 import space.be1ski.vibits.core.ui.date.rememberDateFormatter
@@ -20,30 +18,18 @@ import space.be1ski.vibits.core.ui.theme.LocalWideLayout
 import space.be1ski.vibits.core.utils.logging.LogEntry
 import space.be1ski.vibits.feature.changelog.domain.model.ChangelogEntry
 import space.be1ski.vibits.feature.changelog.domain.model.UpdateAvailability
-import space.be1ski.vibits.feature.changelog.domain.usecase.CheckForUpdateUseCase
-import space.be1ski.vibits.feature.changelog.domain.usecase.GetChangelogUseCase
 import space.be1ski.vibits.feature.habits.presentation.view.components.rememberHabitsConfigTimeline
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
-import space.be1ski.vibits.feature.memos.domain.repository.ExportService
-import space.be1ski.vibits.feature.settings.domain.model.AppTheme
 import space.be1ski.vibits.feature.settings.presentation.view.SettingsDialog
 
-@Suppress("LongParameterList", "LongMethod")
+@Suppress("LongMethod")
 @Composable
 internal fun VibitsApp(
   features: AppFeatures,
   justFinishedOnboarding: Boolean = false,
-  currentTheme: AppTheme,
-  currentLanguage: AppLanguage,
-  exportService: ExportService,
-  currentVersion: String,
-  getChangelog: GetChangelogUseCase,
-  checkForUpdate: CheckForUpdateUseCase? = null,
-  appUpdater: AppUpdater? = null,
+  config: AppContentConfig,
+  callbacks: AppContentCallbacks = AppContentCallbacks({}, {}, {}),
   testLogs: List<LogEntry>? = null,
-  onResetApp: () -> Unit = {},
-  onThemeChanged: (AppTheme) -> Unit = {},
-  onLanguageChanged: (AppLanguage) -> Unit = {},
 ) {
   val appState by features.app.state.collectAsState()
   val memosState by features.memos.state.collectAsState()
@@ -67,15 +53,16 @@ internal fun VibitsApp(
   var upgradeState by remember { mutableStateOf(UpgradeState.IDLE) }
 
   LaunchedEffect(Unit) {
-    val entries = getChangelog(currentVersion)
+    val entries = config.getChangelog(config.currentVersion)
     if (entries.isNotEmpty()) {
       changelogEntries = entries
     }
   }
 
   LaunchedEffect(Unit) {
+    val checkForUpdate = config.checkForUpdate
     if (checkForUpdate != null) {
-      updateAvailability = checkForUpdate(currentVersion)
+      updateAvailability = checkForUpdate(config.currentVersion)
     }
   }
 
@@ -84,11 +71,9 @@ internal fun VibitsApp(
     appState = appState,
     memosState = memosState,
     settingsState = settingsState,
-    currentLanguage = currentLanguage,
-    currentTheme = currentTheme,
-    onResetApp = onResetApp,
-    onThemeChanged = onThemeChanged,
-    onLanguageChanged = onLanguageChanged,
+    currentLanguage = config.appLanguage,
+    currentTheme = config.appTheme,
+    callbacks = callbacks,
   )
 
   val wideLayout = LocalWideLayout.current
@@ -99,14 +84,15 @@ internal fun VibitsApp(
       memosState = memosState,
       habitsState = habitsState,
       settingsState = settingsState,
-      currentLanguage = currentLanguage,
-      currentTheme = currentTheme,
+      currentLanguage = config.appLanguage,
+      currentTheme = config.appTheme,
       syncDebounceSeconds = settingsState.selectedSyncDebounceSeconds,
-      exportService = exportService,
+      exportService = config.exportService,
       testLogs = testLogs,
       updateAvailability = updateAvailability,
       upgradeState = upgradeState,
       onUpgrade = {
+        val appUpdater = config.appUpdater
         if (appUpdater != null) {
           upgradeState = UpgradeState.UPGRADING
           coroutineScope.launch {
@@ -114,7 +100,7 @@ internal fun VibitsApp(
           }
         }
       },
-      onRestart = { appUpdater?.restart() },
+      onRestart = { config.appUpdater?.restart() },
     )
   } else {
     VibitsAppScaffold(
@@ -122,8 +108,8 @@ internal fun VibitsApp(
       appState = appState,
       memosState = memosState,
       habitsState = habitsState,
-      currentLanguage = currentLanguage,
-      currentTheme = currentTheme,
+      currentLanguage = config.appLanguage,
+      currentTheme = config.appTheme,
       syncDebounceSeconds = settingsState.selectedSyncDebounceSeconds,
     )
   }
@@ -131,7 +117,7 @@ internal fun VibitsApp(
   val dateFormatter = rememberDateFormatter()
 
   if (!wideLayout) {
-    SettingsDialog(state = settingsState, dispatch = features.settings::send, exportService = exportService, testLogs = testLogs)
+    SettingsDialog(state = settingsState, dispatch = features.settings::send, exportService = config.exportService, testLogs = testLogs)
   }
   MemoCreateDialog(state = memosState, dispatch = features.memos::send)
   MemoEditDialog(state = memosState, dispatch = features.memos::send)

@@ -804,7 +804,13 @@ private fun SingleHabitWeekStrip(
           }
         }
       }
-      SingleHabitRow(days, habit, demoMode, cellWidth, cellHeight, labelWidth, spacing, onHabitClick)
+      SingleHabitRow(
+        days = days,
+        habit = habit,
+        demoMode = demoMode,
+        dimensions = HabitRowDimensions(cellWidth, cellHeight, labelWidth, spacing),
+        onHabitClick = onHabitClick,
+      )
       Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
         Spacer(modifier = Modifier.width(labelWidth))
         days.forEach { day ->
@@ -820,27 +826,23 @@ private fun SingleHabitWeekStrip(
   }
 }
 
-@Suppress("LongParameterList")
 @Composable
 private fun SingleHabitRow(
   days: List<ContributionDay>,
   habit: HabitConfig,
   demoMode: Boolean,
-  cellWidth: androidx.compose.ui.unit.Dp,
-  cellHeight: androidx.compose.ui.unit.Dp,
-  labelWidth: androidx.compose.ui.unit.Dp,
-  spacing: androidx.compose.ui.unit.Dp,
+  dimensions: HabitRowDimensions,
   onHabitClick: (day: ContributionDay, habitTag: String, habitLabel: String) -> Unit,
 ) {
   val pendingColor = AppColors.inactiveCell.resolve()
   Row(
-    horizontalArrangement = Arrangement.spacedBy(spacing),
+    horizontalArrangement = Arrangement.spacedBy(dimensions.spacing),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Text(
       text = habit.localizedLabel(demoMode),
       style = MaterialTheme.typography.bodySmall,
-      modifier = Modifier.width(labelWidth),
+      modifier = Modifier.width(dimensions.labelWidth),
     )
     days.forEach { day ->
       val done = day.habitStatuses.firstOrNull { status -> status.tag == habit.tag }?.done == true
@@ -859,7 +861,7 @@ private fun SingleHabitRow(
       Box(
         modifier =
           Modifier
-            .size(width = cellWidth, height = cellHeight)
+            .size(width = dimensions.cellWidth, height = dimensions.cellHeight)
             .background(cellColor, shape = MaterialTheme.shapes.extraSmall)
             .then(
               if (day.isClickable) {
