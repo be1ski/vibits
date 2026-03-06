@@ -44,6 +44,7 @@ kotlin {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
   compilerOptions {
+    allWarningsAsErrors.set(true)
     freeCompilerArgs.add("-Xexpect-actual-classes")
   }
 }
