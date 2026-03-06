@@ -16,6 +16,7 @@ import space.be1ski.vibits.core.ui.celebration.CelebrationAnimation
 import space.be1ski.vibits.core.ui.celebration.CelebrationOverlay
 import space.be1ski.vibits.core.ui.date.rememberDateFormatter
 import space.be1ski.vibits.core.ui.theme.LocalWideLayout
+import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.core.utils.logging.LogEntry
 import space.be1ski.vibits.feature.changelog.domain.model.ChangelogEntry
 import space.be1ski.vibits.feature.changelog.domain.model.UpdateAvailability
@@ -162,6 +163,8 @@ private class AppUpdateState(
   val onRestart: () -> Unit,
 )
 
+private const val APP_UPDATER_TAG = "AppUpdater"
+
 @Composable
 private fun rememberUpdateState(config: AppContentConfig): AppUpdateState {
   var updateAvailability by remember { mutableStateOf<UpdateAvailability?>(null) }
@@ -183,7 +186,16 @@ private fun rememberUpdateState(config: AppContentConfig): AppUpdateState {
       if (appUpdater != null) {
         upgradeState = UpgradeState.UPGRADING
         coroutineScope.launch {
-          upgradeState = if (appUpdater.upgrade()) UpgradeState.DONE else UpgradeState.FAILED
+          val success = appUpdater.upgrade()
+          if (!success) {
+            val logs = appUpdater.lastUpgradeLogs()
+            if (logs.isEmpty()) {
+              Log.e(APP_UPDATER_TAG, "Upgrade failed with no diagnostic logs")
+            } else {
+              logs.forEach { line -> Log.e(APP_UPDATER_TAG, line) }
+            }
+          }
+          upgradeState = if (success) UpgradeState.DONE else UpgradeState.FAILED
         }
       }
     },
