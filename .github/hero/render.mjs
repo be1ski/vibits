@@ -166,7 +166,7 @@ const { width, height } = config.canvas;
 const tmpHtml = path.join(__dirname, '_hero.html');
 writeFileSync(tmpHtml, html);
 
-const browser = await puppeteer.launch();
+const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
 const page = await browser.newPage();
 await page.setViewport({ width, height, deviceScaleFactor: 2 });
 await page.goto(`file://${tmpHtml}`, { waitUntil: 'networkidle0' });
