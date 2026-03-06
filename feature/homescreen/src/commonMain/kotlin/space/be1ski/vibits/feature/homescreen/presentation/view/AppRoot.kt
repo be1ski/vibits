@@ -23,35 +23,24 @@ import space.be1ski.vibits.feature.settings.domain.model.AppTheme
 
 private val DESKTOP_BREAKPOINT = 900.dp
 
-@Suppress("LongMethod")
 @Composable
 fun AppRoot(
   dependencies: AppDependencies,
   onFeaturesReady: ((AppFeatures) -> Unit)? = null,
 ) {
-  val initialPrefs = remember { dependencies.loadPreferences() }
-  val currentVersion = remember { dependencies.loadAppDetails().version }
-  remember { dependencies.localeProvider.configureLocale(initialPrefs.language) }
-
-  var appMode by remember { mutableStateOf(dependencies.fixInvalidOnlineMode()) }
-  var appTheme by remember { mutableStateOf(initialPrefs.theme) }
-  var appLanguage by remember { mutableStateOf(initialPrefs.language) }
-  var featuresVersion by remember { mutableIntStateOf(0) }
-  var showOnboarding by remember { mutableStateOf(false) }
-  var justFinishedOnboarding by remember { mutableStateOf(false) }
-
-  val darkTheme = resolveDarkTheme(appTheme)
+  val rootState = rememberAppRootState(dependencies)
+  val darkTheme = resolveDarkTheme(rootState.appTheme)
   val featuresState =
     rememberFeaturesState(
       dependencies = dependencies,
-      featuresVersion = featuresVersion,
+      featuresVersion = rootState.featuresVersion,
       onModeSelected = {
-        featuresVersion++
-        appMode = it
+        rootState.featuresVersion++
+        rootState.appMode = it
       },
       onOnboardingCompleted = {
-        showOnboarding = false
-        justFinishedOnboarding = true
+        rootState.showOnboarding = false
+        rootState.justFinishedOnboarding = true
       },
     )
 
@@ -59,49 +48,82 @@ fun AppRoot(
     onFeaturesReady?.invoke(featuresState.app)
   }
 
-  SyncAppMode(featuresState, appMode) { appMode = it }
-  ObserveOnboardingCheck(appMode, dependencies) { showOnboarding = it }
+  SyncAppMode(featuresState, rootState.appMode) { rootState.appMode = it }
+  ObserveOnboardingCheck(rootState.appMode, dependencies) { rootState.showOnboarding = it }
 
   BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
     val wideLayout = maxWidth >= DESKTOP_BREAKPOINT
-    key(appLanguage) {
+    key(rootState.appLanguage) {
       VibitsTheme(darkTheme = darkTheme, wideLayout = wideLayout) {
         AppContent(
-          appMode = appMode,
-          showOnboarding = showOnboarding,
-          justFinishedOnboarding = justFinishedOnboarding,
+          appMode = rootState.appMode,
+          showOnboarding = rootState.showOnboarding,
+          justFinishedOnboarding = rootState.justFinishedOnboarding,
           featuresState = featuresState,
-          config =
-            AppContentConfig(
-              appTheme = appTheme,
-              appLanguage = appLanguage,
-              exportService = dependencies.settingsDependencies.exportService,
-              currentVersion = currentVersion,
-              getChangelog = dependencies.getChangelog,
-              checkForUpdate = dependencies.checkForUpdate,
-              appUpdater = dependencies.appUpdater,
-            ),
-          callbacks =
-            AppContentCallbacks(
-              onResetApp = {
-                resetApp(
-                  dependencies = dependencies,
-                  onThemeReset = { appTheme = AppTheme.SYSTEM },
-                  onLanguageReset = { appLanguage = AppLanguage.SYSTEM },
-                  onVersionIncrement = { featuresVersion++ },
-                  onModeReset = { appMode = AppMode.NOT_SELECTED },
-                  onOnboardingReset = { showOnboarding = false },
-                )
-              },
-              onThemeChanged = { appTheme = it },
-              onLanguageChanged = {
-                dependencies.localeProvider.configureLocale(it)
-                appLanguage = it
-              },
-            ),
+          config = rootState.buildConfig(dependencies),
+          callbacks = rootState.buildCallbacks(dependencies),
         )
       }
     }
+  }
+}
+
+private class AppRootState(
+  initialMode: AppMode,
+  initialTheme: AppTheme,
+  initialLanguage: AppLanguage,
+  val currentVersion: String,
+) {
+  var appMode by mutableStateOf(initialMode)
+  var appTheme by mutableStateOf(initialTheme)
+  var appLanguage by mutableStateOf(initialLanguage)
+  var featuresVersion by mutableIntStateOf(0)
+  var showOnboarding by mutableStateOf(false)
+  var justFinishedOnboarding by mutableStateOf(false)
+
+  fun buildConfig(dependencies: AppDependencies) =
+    AppContentConfig(
+      appTheme = appTheme,
+      appLanguage = appLanguage,
+      exportService = dependencies.settingsDependencies.exportService,
+      currentVersion = currentVersion,
+      getChangelog = dependencies.getChangelog,
+      checkForUpdate = dependencies.checkForUpdate,
+      appUpdater = dependencies.appUpdater,
+    )
+
+  fun buildCallbacks(dependencies: AppDependencies) =
+    AppContentCallbacks(
+      onResetApp = {
+        resetApp(
+          dependencies = dependencies,
+          onThemeReset = { appTheme = AppTheme.SYSTEM },
+          onLanguageReset = { appLanguage = AppLanguage.SYSTEM },
+          onVersionIncrement = { featuresVersion++ },
+          onModeReset = { appMode = AppMode.NOT_SELECTED },
+          onOnboardingReset = { showOnboarding = false },
+        )
+      },
+      onThemeChanged = { appTheme = it },
+      onLanguageChanged = {
+        dependencies.localeProvider.configureLocale(it)
+        appLanguage = it
+      },
+    )
+}
+
+@Composable
+private fun rememberAppRootState(dependencies: AppDependencies): AppRootState {
+  val initialPrefs = remember { dependencies.loadPreferences() }
+  val currentVersion = remember { dependencies.loadAppDetails().version }
+  remember { dependencies.localeProvider.configureLocale(initialPrefs.language) }
+  return remember {
+    AppRootState(
+      initialMode = dependencies.fixInvalidOnlineMode(),
+      initialTheme = initialPrefs.theme,
+      initialLanguage = initialPrefs.language,
+      currentVersion = currentVersion,
+    )
   }
 }
 
