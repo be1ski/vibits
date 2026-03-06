@@ -468,7 +468,6 @@ private const val COMPACT_POST_MAX_LENGTH = 50
 private const val MATRIX_CELL_FILL_MS = 220
 private const val MAX_MATRIX_CELL_HEIGHT_DP = 36
 
-@Suppress("LongMethod")
 @Composable
 internal fun StatsMainChart(
   derived: StatsScreenDerivedState,
@@ -488,24 +487,7 @@ internal fun StatsMainChart(
     return
   }
 
-  val habitsState = derived.habitsState
-  val chartScrollState = rememberScrollState()
-
-  val onDaySelected =
-    remember(dispatch, state.activityMode, derived.weekData.weeks) {
-      { day: ContributionDay ->
-        dispatch(HabitsAction.Selection.SelectDay(day, "main"))
-        if (state.activityMode == ActivityMode.POSTS) {
-          val week =
-            derived.weekData.weeks.firstOrNull { week ->
-              week.days.any { it.date == day.date }
-            }
-          if (week != null) {
-            dispatch(HabitsAction.Selection.SelectWeek(week))
-          }
-        }
-      }
-    }
+  val onDaySelected = rememberOnDaySelected(dispatch, state, derived)
   val onClearSelection = remember(dispatch) { { dispatch(HabitsAction.Selection.ClearSelection) } }
   val onEditRequested =
     remember(dispatch, derived.habitsConfigTimeline) {
@@ -516,48 +498,90 @@ internal fun StatsMainChart(
     }
 
   if (derived.showLast7DaysMatrix) {
-    val onSingleHabitToggle =
-      remember(dispatch, derived.currentHabitsConfig) {
-        { day: ContributionDay, habitTag: String, habitLabel: String ->
-          dispatch(HabitsAction.SingleToggle.RequestSingleHabitToggle(day, habitTag, habitLabel, derived.currentHabitsConfig))
+    StatsMainChartMatrix(derived, dispatch)
+  } else {
+    StatsMainChartGrid(derived, onDaySelected, onClearSelection, onEditRequested)
+  }
+}
+
+@Composable
+private fun rememberOnDaySelected(
+  dispatch: (HabitsAction) -> Unit,
+  state: StatsScreenState,
+  derived: StatsScreenDerivedState,
+): (ContributionDay) -> Unit =
+  remember(dispatch, state.activityMode, derived.weekData.weeks) {
+    { day: ContributionDay ->
+      dispatch(HabitsAction.Selection.SelectDay(day, "main"))
+      if (state.activityMode == ActivityMode.POSTS) {
+        val week =
+          derived.weekData.weeks.firstOrNull { week ->
+            week.days.any { it.date == day.date }
+          }
+        if (week != null) {
+          dispatch(HabitsAction.Selection.SelectWeek(week))
         }
       }
-    LastSevenDaysMatrix(
-      days = derived.weekData.lastSevenDays(),
-      habits = derived.currentHabitsConfig,
-      compactHeight = derived.useCompactHeight,
-      demoMode = state.demoMode,
-      formatter = derived.dateFormatter,
-      onHabitClick = onSingleHabitToggle,
-    )
-  } else {
-    val showTimeline = state.range is ActivityRange.Quarter || state.range is ActivityRange.Year
-    val useCalendarLayout = state.range is ActivityRange.Month
-    ContributionGrid(
-      state =
-        ContributionGridState(
-          weekData = derived.weekData,
-          range = state.range,
-          selectedDay = if (habitsState.activeSelectionId == "main") derived.selectedDay else null,
-          selectedWeekStart =
-            if (state.activityMode == ActivityMode.POSTS) habitsState.selectedWeek?.startDate else null,
-          isActiveSelection = habitsState.activeSelectionId == "main",
-          scrollState = chartScrollState,
-          showWeekdayLegend = derived.showWeekdayLegend && !useCalendarLayout,
-          showAllWeekdayLabels = true,
-          compactHeight = derived.useCompactHeight,
-          showTimeline = showTimeline,
-          calendarLayout = useCalendarLayout,
-          today = derived.today,
-          demoMode = state.demoMode,
-        ),
-      dateFormatter = derived.dateFormatter,
-      onDaySelected = onDaySelected,
-      onClearSelection = onClearSelection,
-      onEditRequested = onEditRequested,
-      onCreateRequested = onEditRequested,
-    )
+    }
   }
+
+@Composable
+private fun StatsMainChartMatrix(
+  derived: StatsScreenDerivedState,
+  dispatch: (HabitsAction) -> Unit,
+) {
+  val onSingleHabitToggle =
+    remember(dispatch, derived.currentHabitsConfig) {
+      { day: ContributionDay, habitTag: String, habitLabel: String ->
+        dispatch(HabitsAction.SingleToggle.RequestSingleHabitToggle(day, habitTag, habitLabel, derived.currentHabitsConfig))
+      }
+    }
+  LastSevenDaysMatrix(
+    days = derived.weekData.lastSevenDays(),
+    habits = derived.currentHabitsConfig,
+    compactHeight = derived.useCompactHeight,
+    demoMode = derived.state.demoMode,
+    formatter = derived.dateFormatter,
+    onHabitClick = onSingleHabitToggle,
+  )
+}
+
+@Composable
+private fun StatsMainChartGrid(
+  derived: StatsScreenDerivedState,
+  onDaySelected: (ContributionDay) -> Unit,
+  onClearSelection: () -> Unit,
+  onEditRequested: (ContributionDay) -> Unit,
+) {
+  val state = derived.state
+  val habitsState = derived.habitsState
+  val chartScrollState = rememberScrollState()
+  val showTimeline = state.range is ActivityRange.Quarter || state.range is ActivityRange.Year
+  val useCalendarLayout = state.range is ActivityRange.Month
+  ContributionGrid(
+    state =
+      ContributionGridState(
+        weekData = derived.weekData,
+        range = state.range,
+        selectedDay = if (habitsState.activeSelectionId == "main") derived.selectedDay else null,
+        selectedWeekStart =
+          if (state.activityMode == ActivityMode.POSTS) habitsState.selectedWeek?.startDate else null,
+        isActiveSelection = habitsState.activeSelectionId == "main",
+        scrollState = chartScrollState,
+        showWeekdayLegend = derived.showWeekdayLegend && !useCalendarLayout,
+        showAllWeekdayLabels = true,
+        compactHeight = derived.useCompactHeight,
+        showTimeline = showTimeline,
+        calendarLayout = useCalendarLayout,
+        today = derived.today,
+        demoMode = state.demoMode,
+      ),
+    dateFormatter = derived.dateFormatter,
+    onDaySelected = onDaySelected,
+    onClearSelection = onClearSelection,
+    onEditRequested = onEditRequested,
+    onCreateRequested = onEditRequested,
+  )
 }
 
 @Composable

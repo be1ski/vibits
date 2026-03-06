@@ -43,7 +43,6 @@ import space.be1ski.vibits.feature.settings.presentation.view.SettingsPage
 
 private val DESKTOP_CONTENT_MAX_WIDTH = 900.dp
 
-@Suppress("LongMethod")
 @Composable
 internal fun VibitsDesktopShell(
   features: AppFeatures,
@@ -63,15 +62,7 @@ internal fun VibitsDesktopShell(
 ) {
   val shell = rememberAppShellState(features, appState, memosState, habitsState)
 
-  // Sync settings screen ↔ dialog state
-  LaunchedEffect(settingsState.isOpen, appState.selectedScreen) {
-    if (!settingsState.isOpen && appState.selectedScreen == Screen.SETTINGS) {
-      features.app.send(AppAction.Navigation.SelectScreen(Screen.HABITS))
-    }
-    if (settingsState.isOpen && appState.selectedScreen != Screen.SETTINGS) {
-      features.settings.send(SettingsAction.Dialog.Dismiss)
-    }
-  }
+  SettingsSyncEffect(features, settingsState, appState)
 
   Surface(modifier = Modifier.fillMaxSize()) {
     Row(modifier = Modifier.fillMaxSize()) {
@@ -82,31 +73,14 @@ internal fun VibitsDesktopShell(
         onAppAction = features.app::send,
         dispatchMemos = features.memos::send,
         callbacks =
-          SidebarCallbacks(
-            onClearSelection = shell.callbacks.onClearSelection,
-            onFeedScrollToTop = shell.callbacks.onFeedScrollToTop,
-            onOpenTodayEditor = shell.callbacks.onOpenTodayEditor,
-            onOpenConfigDialog = {
-              features.habits.send(
-                space.be1ski.vibits.feature.habits.presentation.action.HabitsAction.Config.OpenConfigDialog(
-                  shell.todayHabits.config,
-                ),
-              )
-            },
-            onShowCreateMemoDialog = shell.callbacks.onShowCreateMemoDialog,
-            onSettingsClick = {
-              features.app.send(AppAction.Navigation.SelectScreen(Screen.SETTINGS))
-              features.settings.send(
-                SettingsAction.Dialog.Open(
-                  baseUrl = memosState.baseUrl,
-                  token = memosState.token,
-                  appMode = appState.appMode,
-                  language = currentLanguage,
-                  theme = currentTheme,
-                  syncDebounceSeconds = syncDebounceSeconds,
-                ),
-              )
-            },
+          rememberDesktopSidebarCallbacks(
+            shell = shell,
+            features = features,
+            memosState = memosState,
+            appState = appState,
+            currentLanguage = currentLanguage,
+            currentTheme = currentTheme,
+            syncDebounceSeconds = syncDebounceSeconds,
             onUpgrade = onUpgrade,
             onRestart = onRestart,
           ),
@@ -137,6 +111,64 @@ internal fun VibitsDesktopShell(
 }
 
 @Composable
+private fun SettingsSyncEffect(
+  features: AppFeatures,
+  settingsState: SettingsState,
+  appState: AppState,
+) {
+  LaunchedEffect(settingsState.isOpen, appState.selectedScreen) {
+    if (!settingsState.isOpen && appState.selectedScreen == Screen.SETTINGS) {
+      features.app.send(AppAction.Navigation.SelectScreen(Screen.HABITS))
+    }
+    if (settingsState.isOpen && appState.selectedScreen != Screen.SETTINGS) {
+      features.settings.send(SettingsAction.Dialog.Dismiss)
+    }
+  }
+}
+
+@Suppress("LongParameterList")
+@Composable
+private fun rememberDesktopSidebarCallbacks(
+  shell: AppShellState,
+  features: AppFeatures,
+  memosState: MemosState,
+  appState: AppState,
+  currentLanguage: AppLanguage,
+  currentTheme: AppTheme,
+  syncDebounceSeconds: Int,
+  onUpgrade: () -> Unit,
+  onRestart: () -> Unit,
+): SidebarCallbacks =
+  SidebarCallbacks(
+    onClearSelection = shell.callbacks.onClearSelection,
+    onFeedScrollToTop = shell.callbacks.onFeedScrollToTop,
+    onOpenTodayEditor = shell.callbacks.onOpenTodayEditor,
+    onOpenConfigDialog = {
+      features.habits.send(
+        space.be1ski.vibits.feature.habits.presentation.action.HabitsAction.Config.OpenConfigDialog(
+          shell.todayHabits.config,
+        ),
+      )
+    },
+    onShowCreateMemoDialog = shell.callbacks.onShowCreateMemoDialog,
+    onSettingsClick = {
+      features.app.send(AppAction.Navigation.SelectScreen(Screen.SETTINGS))
+      features.settings.send(
+        SettingsAction.Dialog.Open(
+          baseUrl = memosState.baseUrl,
+          token = memosState.token,
+          appMode = appState.appMode,
+          language = currentLanguage,
+          theme = currentTheme,
+          syncDebounceSeconds = syncDebounceSeconds,
+        ),
+      )
+    },
+    onUpgrade = onUpgrade,
+    onRestart = onRestart,
+  )
+
+@Composable
 private fun SyncDialogs(
   memosState: MemosState,
   dispatchMemos: (MemosAction) -> Unit,
@@ -154,7 +186,7 @@ private fun SyncDialogs(
   }
 }
 
-@Suppress("LongMethod", "LongParameterList")
+@Suppress("LongParameterList")
 @Composable
 private fun DesktopContent(
   modifier: Modifier = Modifier,
