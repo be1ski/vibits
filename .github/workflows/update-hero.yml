@@ -21,6 +21,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           sparse-checkout: .github/hero
+          token: ${{ secrets.HERO_PAT }}
 
       - name: Find CI run
         env:
@@ -67,7 +68,7 @@ jobs:
 
       - name: Create PR if changed
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.HERO_PAT }}
         run: |
           cp .github/hero/hero.webp .github/hero.webp
           git config user.name "github-actions[bot]"
