@@ -128,7 +128,7 @@ jobs:
         run: |
           gh run download "$CI_RUN_ID" \
             --repo "${{ github.repository }}" \
-            --name ui-screenshots \
+            --name release-screenshots \
             --dir ui-screenshots
           zip -r "Vibits-${APP_VERSION#v}-screenshots.zip" ui-screenshots/
 
