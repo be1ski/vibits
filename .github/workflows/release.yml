@@ -128,8 +128,10 @@ jobs:
         run: |
           gh run download "$CI_RUN_ID" \
             --repo "${{ github.repository }}" \
-            --name release-screenshots \
-            --dir ui-screenshots
+            --name ui-screenshots \
+            --dir ci-artifacts
+          mkdir -p ui-screenshots
+          find ci-artifacts -name "*.png" -not -path "*/__reg__/*" -not -path "*/1_diff/*" -not -path "*/1_expected/*" -exec cp {} ui-screenshots/ \;
           zip -r "Vibits-${APP_VERSION#v}-screenshots.zip" ui-screenshots/
 
       - name: Upload screenshots to Release
