@@ -5,6 +5,7 @@ package space.be1ski.vibits.feature.homescreen.presentation.view
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -14,6 +15,7 @@ import space.be1ski.vibits.core.elm.test.RecordingFeature
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.logging.LogLevel
 import space.be1ski.vibits.core.platform.mode.AppMode
+import space.be1ski.vibits.core.ui.celebration.CELEBRATION_OVERLAY_TEST_TAG
 import space.be1ski.vibits.core.ui.celebration.CelebrationAnimation
 import space.be1ski.vibits.core.ui.celebration.CelebrationOverlay
 import space.be1ski.vibits.core.ui.test.captureAllVariants
@@ -65,7 +67,7 @@ import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 
 private const val CELEBRATION_SCREENSHOT_PROGRESS = 0.25f
-private const val LOTTIE_LOAD_DELAY_MS = 2000L
+private const val LOTTIE_LOAD_TIMEOUT_MS = 5000L
 
 @OptIn(ExperimentalTestApi::class)
 class AppScreenshotTest {
@@ -798,7 +800,9 @@ class AppScreenshotTest {
           )
         }
       }
-      Thread.sleep(LOTTIE_LOAD_DELAY_MS)
+      waitUntil(timeoutMillis = LOTTIE_LOAD_TIMEOUT_MS) {
+        onAllNodesWithTag(CELEBRATION_OVERLAY_TEST_TAG).fetchSemanticsNodes().isNotEmpty()
+      }
       waitForIdle()
       saveScreenshot("${platform}_${theme}_app_celebration_confetti")
     }
