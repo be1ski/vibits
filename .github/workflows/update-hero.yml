@@ -15,14 +15,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Download hero.webp from latest release
+      - name: Download hero image from latest release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release download --repo "${{ github.repository }}" \
-            --pattern "hero.webp" \
-            --output .github/hero.webp \
+            --pattern "*-hero.webp" \
+            --dir /tmp/hero \
             --clobber
+          mv /tmp/hero/*-hero.webp .github/hero.webp
 
       - name: Create PR if changed
         env:

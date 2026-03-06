@@ -174,11 +174,16 @@ jobs:
           npm install
           node render.mjs
 
+      - name: Rename hero image
+        env:
+          APP_VERSION: ${{ needs.resolve-version.outputs.version }}
+        run: mv .github/hero/hero.webp ".github/hero/Vibits-${APP_VERSION#v}-hero.webp"
+
       - name: Upload hero image to release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.resolve-version.outputs.version }}
-          files: .github/hero/hero.webp
+          files: .github/hero/Vibits-*-hero.webp
 
   build-apk:
     runs-on: ubuntu-latest
