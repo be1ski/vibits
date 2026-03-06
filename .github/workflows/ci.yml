@@ -54,14 +54,6 @@ jobs:
           mkdir -p build/ui-screenshots
           find . -path "*/build/ui-screenshots/*.png" -not -path "./build/*" -exec cp {} build/ui-screenshots/ \;
 
-      - name: Upload screenshots for release
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: release-screenshots
-          path: build/ui-screenshots/
-          retention-days: 7
-
       - name: Visual regression test
         if: always()
         uses: reg-viz/reg-actions@v3
