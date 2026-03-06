@@ -23,8 +23,11 @@ import space.be1ski.vibits.core.ui.test.saveScreenshot
 import space.be1ski.vibits.core.ui.theme.VibitsTheme
 import space.be1ski.vibits.core.utils.logging.LogEntry
 import space.be1ski.vibits.feature.changelog.domain.model.ChangelogEntry
+import space.be1ski.vibits.feature.changelog.domain.model.UpdateAvailability
 import space.be1ski.vibits.feature.changelog.domain.test.FakeChangelogRepository
+import space.be1ski.vibits.feature.changelog.domain.test.FakeInstallationSource
 import space.be1ski.vibits.feature.changelog.domain.test.FakeLastSeenVersionStore
+import space.be1ski.vibits.feature.changelog.domain.usecase.CheckForUpdateUseCase
 import space.be1ski.vibits.feature.changelog.domain.usecase.GetChangelogUseCase
 import space.be1ski.vibits.feature.habits.domain.model.ActivityMode
 import space.be1ski.vibits.feature.habits.domain.model.ActivityRange
@@ -193,6 +196,7 @@ class AppScreenshotTest {
     wideLayout: Boolean = true,
     currentVersion: String = "dev",
     getChangelog: GetChangelogUseCase = fakeGetChangelog,
+    checkForUpdate: CheckForUpdateUseCase? = null,
     testLogs: List<LogEntry>? = null,
   ) {
     val features =
@@ -211,6 +215,7 @@ class AppScreenshotTest {
           exportService = fakeExportService,
           currentVersion = currentVersion,
           getChangelog = getChangelog,
+          checkForUpdate = checkForUpdate,
           testLogs = testLogs,
         )
       }
@@ -226,6 +231,7 @@ class AppScreenshotTest {
     wideLayout: Boolean = true,
     currentVersion: String = "dev",
     getChangelog: GetChangelogUseCase = fakeGetChangelog,
+    checkForUpdate: CheckForUpdateUseCase? = null,
     testLogs: List<LogEntry>? = null,
   ) {
     val platform = if (wideLayout) "wide" else "compact"
@@ -238,6 +244,7 @@ class AppScreenshotTest {
       wideLayout = wideLayout,
       currentVersion = currentVersion,
       getChangelog = getChangelog,
+      checkForUpdate = checkForUpdate,
       testLogs = testLogs,
     )
     saveScreenshot("${platform}_light_$name")
@@ -250,6 +257,7 @@ class AppScreenshotTest {
       wideLayout = wideLayout,
       currentVersion = currentVersion,
       getChangelog = getChangelog,
+      checkForUpdate = checkForUpdate,
       testLogs = testLogs,
     )
     saveScreenshot("${platform}_dark_$name")
@@ -776,6 +784,32 @@ class AppScreenshotTest {
       Thread.sleep(LOTTIE_LOAD_DELAY_MS)
       waitForIdle()
       saveScreenshot("${platform}_${theme}_app_celebration_confetti")
+    }
+  }
+
+  // endregion
+
+  // region Update pill
+
+  @Test
+  fun `when update available then captures update pill`() {
+    val fakeCheckForUpdate =
+      CheckForUpdateUseCase(
+        FakeChangelogRepository().apply {
+          releasesResult =
+            Result.success(
+              listOf(ChangelogEntry("2.0.0", "Major Update", "New features", "2026-03-01")),
+            )
+        },
+        FakeInstallationSource(homebrew = true),
+      )
+    runWideUiTest {
+      captureApp(
+        "app_update_pill",
+        appState = habitsAppState(),
+        currentVersion = "1.0.0",
+        checkForUpdate = fakeCheckForUpdate,
+      )
     }
   }
 

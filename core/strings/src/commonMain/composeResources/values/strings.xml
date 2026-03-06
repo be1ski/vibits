@@ -270,4 +270,11 @@
     <string name="msg_sync_failed">Sync failed: %1$s</string>
     <string name="msg_syncing">Syncing...</string>
     <string name="title_sync_conflict">Sync conflict</string>
+    <!-- Update -->
+    <string name="label_update_available">v%1$s available</string>
+    <string name="action_upgrade">Upgrade</string>
+    <string name="label_upgrading">Upgrading…</string>
+    <string name="action_restart_to_update">Restart to update</string>
+    <string name="label_upgrade_failed">Upgrade failed</string>
+    <string name="action_retry">Retry</string>
 </resources>

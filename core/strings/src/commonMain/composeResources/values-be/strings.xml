@@ -270,4 +270,11 @@
     <string name="msg_sync_failed">Памылка сінхранізацыі: %1$s</string>
     <string name="msg_syncing">Сінхранізацыя...</string>
     <string name="title_sync_conflict">Канфлікт сінхранізацыі</string>
+    <!-- Update -->
+    <string name="label_update_available">Даступна v%1$s</string>
+    <string name="action_upgrade">Абнавіць</string>
+    <string name="label_upgrading">Абнаўленне…</string>
+    <string name="action_restart_to_update">Перазапусціць</string>
+    <string name="label_upgrade_failed">Памылка абнаўлення</string>
+    <string name="action_retry">Паўтарыць</string>
 </resources>

@@ -270,4 +270,11 @@
     <string name="msg_sync_failed">Synchronisierung fehlgeschlagen: %1$s</string>
     <string name="msg_syncing">Synchronisiere...</string>
     <string name="title_sync_conflict">Synchronisierungskonflikt</string>
+    <!-- Update -->
+    <string name="label_update_available">v%1$s verfügbar</string>
+    <string name="action_upgrade">Aktualisieren</string>
+    <string name="label_upgrading">Aktualisierung…</string>
+    <string name="action_restart_to_update">Neu starten zum Aktualisieren</string>
+    <string name="label_upgrade_failed">Aktualisierung fehlgeschlagen</string>
+    <string name="action_retry">Erneut versuchen</string>
 </resources>

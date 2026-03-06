@@ -270,4 +270,11 @@
     <string name="msg_sync_failed">Ҳамоҳангсозӣ ноком шуд: %1$s</string>
     <string name="msg_syncing">Ҳамоҳангсозӣ...</string>
     <string name="title_sync_conflict">Ихтилофи ҳамоҳангсозӣ</string>
+    <!-- Update -->
+    <string name="label_update_available">v%1$s дастрас аст</string>
+    <string name="action_upgrade">Навсозӣ</string>
+    <string name="label_upgrading">Навсозӣ…</string>
+    <string name="action_restart_to_update">Барои навсозӣ аз нав оғоз кунед</string>
+    <string name="label_upgrade_failed">Навсозӣ нашуд</string>
+    <string name="action_retry">Такрор</string>
 </resources>

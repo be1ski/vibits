@@ -3,6 +3,8 @@ package space.be1ski.vibits.feature.changelog.domain.usecase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
 import space.be1ski.vibits.feature.changelog.domain.model.ChangelogEntry
+import space.be1ski.vibits.feature.changelog.domain.model.compareVersions
+import space.be1ski.vibits.feature.changelog.domain.model.parseVersion
 import space.be1ski.vibits.feature.changelog.domain.test.FakeChangelogRepository
 import space.be1ski.vibits.feature.changelog.domain.test.FakeLastSeenVersionStore
 import kotlin.test.Test

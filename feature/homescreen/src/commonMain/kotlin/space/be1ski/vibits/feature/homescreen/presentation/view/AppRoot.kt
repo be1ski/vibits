@@ -76,6 +76,8 @@ fun AppRoot(
           exportService = dependencies.settingsDependencies.exportService,
           currentVersion = currentVersion,
           getChangelog = dependencies.getChangelog,
+          checkForUpdate = dependencies.checkForUpdate,
+          appUpdater = dependencies.appUpdater,
           onResetApp = {
             resetApp(
               dependencies = dependencies,

@@ -23,6 +23,7 @@ import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.msg_fill_all_fields
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.utils.logging.LogEntry
+import space.be1ski.vibits.feature.changelog.domain.model.UpdateAvailability
 import space.be1ski.vibits.feature.habits.domain.usecase.EarliestMemoDateUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.IsActivityRangeBeforeUseCase
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
@@ -55,6 +56,10 @@ internal fun VibitsDesktopShell(
   syncDebounceSeconds: Int,
   exportService: ExportService,
   testLogs: List<LogEntry>? = null,
+  updateAvailability: UpdateAvailability? = null,
+  upgradeState: UpgradeState = UpgradeState.IDLE,
+  onUpgrade: () -> Unit = {},
+  onRestart: () -> Unit = {},
 ) {
   val shell = rememberAppShellState(features, appState, memosState, habitsState)
 
@@ -100,6 +105,10 @@ internal fun VibitsDesktopShell(
           )
         },
         dispatchMemos = features.memos::send,
+        updateAvailability = updateAvailability,
+        upgradeState = upgradeState,
+        onUpgrade = onUpgrade,
+        onRestart = onRestart,
       )
       VerticalDivider()
       Box(
