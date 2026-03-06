@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -51,10 +52,16 @@ import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.platform.date.currentLocalDate
 import space.be1ski.vibits.core.strings.generated.Res
 import space.be1ski.vibits.core.strings.generated.action_refresh
+import space.be1ski.vibits.core.strings.generated.action_restart_to_update
+import space.be1ski.vibits.core.strings.generated.action_retry
 import space.be1ski.vibits.core.strings.generated.action_track_today
+import space.be1ski.vibits.core.strings.generated.action_upgrade
 import space.be1ski.vibits.core.strings.generated.app_name
 import space.be1ski.vibits.core.strings.generated.format_habits_progress
 import space.be1ski.vibits.core.strings.generated.label_habits_config
+import space.be1ski.vibits.core.strings.generated.label_update_available
+import space.be1ski.vibits.core.strings.generated.label_upgrade_failed
+import space.be1ski.vibits.core.strings.generated.label_upgrading
 import space.be1ski.vibits.core.strings.generated.nav_feed
 import space.be1ski.vibits.core.strings.generated.nav_habits
 import space.be1ski.vibits.core.strings.generated.nav_memos
@@ -62,6 +69,7 @@ import space.be1ski.vibits.core.strings.generated.nav_settings
 import space.be1ski.vibits.core.strings.generated.title_new_memo
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.platform.hoverAware
+import space.be1ski.vibits.feature.changelog.domain.model.UpdateAvailability
 import space.be1ski.vibits.feature.homescreen.domain.model.AppState
 import space.be1ski.vibits.feature.homescreen.domain.model.Screen
 import space.be1ski.vibits.feature.homescreen.presentation.action.AppAction
@@ -85,6 +93,10 @@ internal fun DesktopSidebar(
   onShowCreateMemoDialog: () -> Unit,
   onSettingsClick: () -> Unit,
   dispatchMemos: (MemosAction) -> Unit,
+  updateAvailability: UpdateAvailability? = null,
+  upgradeState: UpgradeState = UpgradeState.IDLE,
+  onUpgrade: () -> Unit = {},
+  onRestart: () -> Unit = {},
 ) {
   Surface(
     modifier = Modifier.width(SIDEBAR_WIDTH).fillMaxHeight(),
@@ -94,6 +106,14 @@ internal fun DesktopSidebar(
       SidebarHeader(memosState, dispatchMemos)
       SidebarNavigation(appState, onAppAction, onClearSelection, onFeedScrollToTop)
       Spacer(modifier = Modifier.weight(1f))
+      if (updateAvailability != null) {
+        UpdatePill(
+          updateAvailability = updateAvailability,
+          upgradeState = upgradeState,
+          onUpgrade = onUpgrade,
+          onRestart = onRestart,
+        )
+      }
       SidebarActions(
         selectedScreen = appState.selectedScreen,
         todayHabits = todayHabits,
@@ -336,6 +356,85 @@ private fun RowScope.SidebarNavItemLabel(
         color = contentColor.copy(alpha = 0.7f),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
+      )
+    }
+  }
+}
+
+@Composable
+private fun UpdatePill(
+  updateAvailability: UpdateAvailability,
+  upgradeState: UpgradeState,
+  onUpgrade: () -> Unit,
+  onRestart: () -> Unit,
+) {
+  val shape = RoundedCornerShape(Indent.xs)
+  Row(
+    modifier =
+      Modifier
+        .fillMaxWidth()
+        .clip(shape)
+        .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f), shape)
+        .testTag(AppShellTestTags.SIDEBAR_UPDATE_PILL)
+        .padding(horizontal = Indent.s, vertical = Indent.xs),
+    horizontalArrangement = Arrangement.spacedBy(Indent.xs),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    UpdatePillContent(updateAvailability, upgradeState, onUpgrade, onRestart)
+  }
+}
+
+@Composable
+private fun RowScope.UpdatePillContent(
+  updateAvailability: UpdateAvailability,
+  upgradeState: UpgradeState,
+  onUpgrade: () -> Unit,
+  onRestart: () -> Unit,
+) {
+  when (upgradeState) {
+    UpgradeState.IDLE -> {
+      Text(
+        stringResource(Res.string.label_update_available, updateAvailability.latestVersion),
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+        modifier = Modifier.weight(1f),
+      )
+      if (updateAvailability.isHomebrewInstallation) {
+        Text(
+          stringResource(Res.string.action_upgrade),
+          style = MaterialTheme.typography.labelSmall,
+          color = MaterialTheme.colorScheme.primary,
+          modifier = Modifier.clickable(onClick = onUpgrade),
+        )
+      }
+    }
+    UpgradeState.UPGRADING -> {
+      CircularProgressIndicator(modifier = Modifier.size(14.dp), strokeWidth = 2.dp)
+      Text(
+        stringResource(Res.string.label_upgrading),
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+      )
+    }
+    UpgradeState.DONE ->
+      Text(
+        stringResource(Res.string.action_restart_to_update),
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.clickable(onClick = onRestart),
+      )
+    UpgradeState.FAILED -> {
+      Text(
+        stringResource(Res.string.label_upgrade_failed),
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.error,
+        modifier = Modifier.weight(1f),
+      )
+      Text(
+        stringResource(Res.string.action_retry),
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.clickable(onClick = onUpgrade),
       )
     }
   }

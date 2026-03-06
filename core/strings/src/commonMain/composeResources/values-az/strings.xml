@@ -270,4 +270,11 @@
     <string name="msg_sync_failed">Sinxronizasiya uğursuz oldu: %1$s</string>
     <string name="msg_syncing">Sinxronizasiya edilir...</string>
     <string name="title_sync_conflict">Sinxronizasiya ziddiyyəti</string>
+    <!-- Update -->
+    <string name="label_update_available">v%1$s mövcuddur</string>
+    <string name="action_upgrade">Yeniləmək</string>
+    <string name="label_upgrading">Yenilənir…</string>
+    <string name="action_restart_to_update">Yeniləmək üçün yenidən başladın</string>
+    <string name="label_upgrade_failed">Yeniləmə uğursuz oldu</string>
+    <string name="action_retry">Yenidən cəhd</string>
 </resources>

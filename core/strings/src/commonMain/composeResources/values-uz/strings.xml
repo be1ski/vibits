@@ -270,4 +270,11 @@
     <string name="msg_sync_failed">Sinxronlash muvaffaqiyatsiz: %1$s</string>
     <string name="msg_syncing">Sinxronlanmoqda...</string>
     <string name="title_sync_conflict">Sinxronlash ziddiyati</string>
+    <!-- Update -->
+    <string name="label_update_available">v%1$s mavjud</string>
+    <string name="action_upgrade">Yangilash</string>
+    <string name="label_upgrading">Yangilanmoqda…</string>
+    <string name="action_restart_to_update">Yangilash uchun qayta ishga tushiring</string>
+    <string name="label_upgrade_failed">Yangilash xatosi</string>
+    <string name="action_retry">Qayta urinish</string>
 </resources>

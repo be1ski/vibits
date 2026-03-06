@@ -270,4 +270,11 @@
     <string name="msg_sync_failed">Синхрондау сәтсіз аяқталды: %1$s</string>
     <string name="msg_syncing">Синхрондалуда...</string>
     <string name="title_sync_conflict">Синхрондау қайшылығы</string>
+    <!-- Update -->
+    <string name="label_update_available">v%1$s қол жетімді</string>
+    <string name="action_upgrade">Жаңарту</string>
+    <string name="label_upgrading">Жаңартылуда…</string>
+    <string name="action_restart_to_update">Жаңарту үшін қайта іске қосу</string>
+    <string name="label_upgrade_failed">Жаңарту сәтсіз</string>
+    <string name="action_retry">Қайталау</string>
 </resources>

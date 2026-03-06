@@ -6,8 +6,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
+import space.be1ski.vibits.core.platform.app.AppUpdater
 import space.be1ski.vibits.core.platform.date.currentLocalDate
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.ui.celebration.CelebrationAnimation
@@ -16,6 +19,8 @@ import space.be1ski.vibits.core.ui.date.rememberDateFormatter
 import space.be1ski.vibits.core.ui.theme.LocalWideLayout
 import space.be1ski.vibits.core.utils.logging.LogEntry
 import space.be1ski.vibits.feature.changelog.domain.model.ChangelogEntry
+import space.be1ski.vibits.feature.changelog.domain.model.UpdateAvailability
+import space.be1ski.vibits.feature.changelog.domain.usecase.CheckForUpdateUseCase
 import space.be1ski.vibits.feature.changelog.domain.usecase.GetChangelogUseCase
 import space.be1ski.vibits.feature.habits.presentation.view.components.rememberHabitsConfigTimeline
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
@@ -33,6 +38,8 @@ internal fun VibitsApp(
   exportService: ExportService,
   currentVersion: String,
   getChangelog: GetChangelogUseCase,
+  checkForUpdate: CheckForUpdateUseCase? = null,
+  appUpdater: AppUpdater? = null,
   testLogs: List<LogEntry>? = null,
   onResetApp: () -> Unit = {},
   onThemeChanged: (AppTheme) -> Unit = {},
@@ -48,6 +55,7 @@ internal fun VibitsApp(
   val habitsTimeline = rememberHabitsConfigTimeline(memosState.memos)
   val todayHabits = rememberTodayHabits(habitsTimeline, memosState.memos, timeZone, today)
 
+  val coroutineScope = rememberCoroutineScope()
   var celebrationAnimation by remember { mutableStateOf<CelebrationAnimation?>(null) }
   val allJustCompleted = rememberAllHabitsJustCompleted(todayHabits, justFinishedOnboarding)
   LaunchedEffect(allJustCompleted) {
@@ -55,11 +63,19 @@ internal fun VibitsApp(
   }
 
   var changelogEntries by remember { mutableStateOf<List<ChangelogEntry>?>(null) }
+  var updateAvailability by remember { mutableStateOf<UpdateAvailability?>(null) }
+  var upgradeState by remember { mutableStateOf(UpgradeState.IDLE) }
 
   LaunchedEffect(Unit) {
     val entries = getChangelog(currentVersion)
     if (entries.isNotEmpty()) {
       changelogEntries = entries
+    }
+  }
+
+  LaunchedEffect(Unit) {
+    if (checkForUpdate != null) {
+      updateAvailability = checkForUpdate(currentVersion)
     }
   }
 
@@ -88,6 +104,17 @@ internal fun VibitsApp(
       syncDebounceSeconds = settingsState.selectedSyncDebounceSeconds,
       exportService = exportService,
       testLogs = testLogs,
+      updateAvailability = updateAvailability,
+      upgradeState = upgradeState,
+      onUpgrade = {
+        if (appUpdater != null) {
+          upgradeState = UpgradeState.UPGRADING
+          coroutineScope.launch {
+            upgradeState = if (appUpdater.upgrade()) UpgradeState.DONE else UpgradeState.FAILED
+          }
+        }
+      },
+      onRestart = { appUpdater?.restart() },
     )
   } else {
     VibitsAppScaffold(

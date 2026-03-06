@@ -270,4 +270,11 @@
     <string name="msg_sync_failed">同步失败：%1$s</string>
     <string name="msg_syncing">同步中...</string>
     <string name="title_sync_conflict">同步冲突</string>
+    <!-- Update -->
+    <string name="label_update_available">v%1$s 可用</string>
+    <string name="action_upgrade">升级</string>
+    <string name="label_upgrading">升级中…</string>
+    <string name="action_restart_to_update">重启以更新</string>
+    <string name="label_upgrade_failed">升级失败</string>
+    <string name="action_retry">重试</string>
 </resources>

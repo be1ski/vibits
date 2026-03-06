@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import org.jetbrains.compose.resources.stringResource
+import space.be1ski.vibits.core.platform.app.AppUpdater
 import space.be1ski.vibits.core.platform.locale.AppLanguage
 import space.be1ski.vibits.core.platform.mode.AppMode
 import space.be1ski.vibits.core.strings.generated.Res
@@ -21,6 +22,7 @@ import space.be1ski.vibits.core.strings.generated.msg_state_loading
 import space.be1ski.vibits.core.strings.generated.title_state_loading
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.core.ui.StatePanel
+import space.be1ski.vibits.feature.changelog.domain.usecase.CheckForUpdateUseCase
 import space.be1ski.vibits.feature.changelog.domain.usecase.GetChangelogUseCase
 import space.be1ski.vibits.feature.homescreen.di.AppDependencies
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
@@ -71,6 +73,8 @@ internal fun AppContent(
   exportService: ExportService,
   currentVersion: String,
   getChangelog: GetChangelogUseCase,
+  checkForUpdate: CheckForUpdateUseCase? = null,
+  appUpdater: AppUpdater? = null,
   onResetApp: () -> Unit,
   onThemeChanged: (AppTheme) -> Unit,
   onLanguageChanged: (AppLanguage) -> Unit,
@@ -93,6 +97,8 @@ internal fun AppContent(
           exportService = exportService,
           currentVersion = currentVersion,
           getChangelog = getChangelog,
+          checkForUpdate = checkForUpdate,
+          appUpdater = appUpdater,
           onResetApp = onResetApp,
           onThemeChanged = onThemeChanged,
           onLanguageChanged = onLanguageChanged,
@@ -107,6 +113,8 @@ internal fun AppContent(
         exportService = exportService,
         currentVersion = currentVersion,
         getChangelog = getChangelog,
+        checkForUpdate = checkForUpdate,
+        appUpdater = appUpdater,
         onResetApp = onResetApp,
         onThemeChanged = onThemeChanged,
         onLanguageChanged = onLanguageChanged,
@@ -125,6 +133,8 @@ private fun AppWithLoadingScreen(
   exportService: ExportService,
   currentVersion: String,
   getChangelog: GetChangelogUseCase,
+  checkForUpdate: CheckForUpdateUseCase?,
+  appUpdater: AppUpdater?,
   onResetApp: () -> Unit,
   onThemeChanged: (AppTheme) -> Unit,
   onLanguageChanged: (AppLanguage) -> Unit,
@@ -142,6 +152,8 @@ private fun AppWithLoadingScreen(
       exportService = exportService,
       currentVersion = currentVersion,
       getChangelog = getChangelog,
+      checkForUpdate = checkForUpdate,
+      appUpdater = appUpdater,
       onResetApp = onResetApp,
       onThemeChanged = onThemeChanged,
       onLanguageChanged = onLanguageChanged,
