@@ -37,6 +37,7 @@ import space.be1ski.vibits.feature.memos.domain.model.PostFilter
 import space.be1ski.vibits.feature.memos.domain.usecase.ClassifyPostTypeUseCase
 import space.be1ski.vibits.feature.memos.presentation.action.MemosAction
 import space.be1ski.vibits.feature.memos.presentation.state.MemosState
+import space.be1ski.vibits.feature.memos.presentation.view.FeedCallbacks
 import space.be1ski.vibits.feature.memos.presentation.view.FeedScreen
 import space.be1ski.vibits.feature.settings.domain.model.TimeRangeTab
 
@@ -61,20 +62,22 @@ internal fun SwipeableTabContent(
       memos = memosState.memos,
       dateFormatter = dateFormatter,
       activeFilter = memosState.activePostFilter,
-      onFilterChange = { filter -> dispatchMemos(MemosAction.Loading.ChangePostFilter(filter)) },
       isRefreshing = memosState.isLoading,
-      onRefresh = {},
       enablePullRefresh = !wideLayout,
       demoMode = appState.isDemoMode,
-      onMemoClick = { memo ->
-        handleMemoClick(
-          memo = memo,
-          memos = memosState.memos,
-          onMemosAction = dispatchMemos,
-          onHabitsAction = onHabitsAction,
-        )
-      },
-      onDeleteMemo = { memo -> dispatchMemos(MemosAction.Crud.DeleteMemo(memo.name)) },
+      callbacks =
+        FeedCallbacks(
+          onFilterChange = { filter -> dispatchMemos(MemosAction.Loading.ChangePostFilter(filter)) },
+          onMemoClick = { memo ->
+            handleMemoClick(
+              memo = memo,
+              memos = memosState.memos,
+              onMemosAction = dispatchMemos,
+              onHabitsAction = onHabitsAction,
+            )
+          },
+          onDeleteMemo = { memo -> dispatchMemos(MemosAction.Crud.DeleteMemo(memo.name)) },
+        ),
       listState = feedListState,
     )
     return

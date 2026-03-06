@@ -79,24 +79,16 @@ import space.be1ski.vibits.feature.memos.presentation.view.SyncDot
 
 private val SIDEBAR_WIDTH = 256.dp
 
-@Suppress("LongParameterList")
 @Composable
 internal fun DesktopSidebar(
   appState: AppState,
   todayHabits: TodayHabits,
   memosState: MemosState,
   onAppAction: (AppAction) -> Unit,
-  onClearSelection: () -> Unit,
-  onFeedScrollToTop: () -> Unit,
-  onOpenTodayEditor: () -> Unit,
-  onOpenConfigDialog: () -> Unit,
-  onShowCreateMemoDialog: () -> Unit,
-  onSettingsClick: () -> Unit,
   dispatchMemos: (MemosAction) -> Unit,
+  callbacks: SidebarCallbacks,
   updateAvailability: UpdateAvailability? = null,
   upgradeState: UpgradeState = UpgradeState.IDLE,
-  onUpgrade: () -> Unit = {},
-  onRestart: () -> Unit = {},
 ) {
   Surface(
     modifier = Modifier.width(SIDEBAR_WIDTH).fillMaxHeight(),
@@ -104,23 +96,23 @@ internal fun DesktopSidebar(
   ) {
     Column(modifier = Modifier.padding(Indent.s)) {
       SidebarHeader(memosState, dispatchMemos)
-      SidebarNavigation(appState, onAppAction, onClearSelection, onFeedScrollToTop)
+      SidebarNavigation(appState, onAppAction, callbacks.onClearSelection, callbacks.onFeedScrollToTop)
       Spacer(modifier = Modifier.weight(1f))
       if (updateAvailability != null) {
         UpdatePill(
           updateAvailability = updateAvailability,
           upgradeState = upgradeState,
-          onUpgrade = onUpgrade,
-          onRestart = onRestart,
+          onUpgrade = callbacks.onUpgrade,
+          onRestart = callbacks.onRestart,
         )
       }
       SidebarActions(
         selectedScreen = appState.selectedScreen,
         todayHabits = todayHabits,
-        onOpenTodayEditor = onOpenTodayEditor,
-        onOpenConfigDialog = onOpenConfigDialog,
-        onShowCreateMemoDialog = onShowCreateMemoDialog,
-        onSettingsClick = onSettingsClick,
+        onOpenTodayEditor = callbacks.onOpenTodayEditor,
+        onOpenConfigDialog = callbacks.onOpenConfigDialog,
+        onShowCreateMemoDialog = callbacks.onShowCreateMemoDialog,
+        onSettingsClick = callbacks.onSettingsClick,
       )
     }
   }

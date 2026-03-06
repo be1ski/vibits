@@ -65,25 +65,22 @@ import space.be1ski.vibits.feature.memos.domain.usecase.FilterMemosByTypeUseCase
 /**
  * Feed tab showing the raw memos list.
  */
-@Suppress("LongParameterList", "LongMethod", "CyclomaticComplexMethod")
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 @OptIn(androidx.compose.material.ExperimentalMaterialApi::class)
 @Composable
 fun FeedScreen(
   memos: List<Memo>,
   dateFormatter: DateFormatter,
   activeFilter: PostFilter = PostFilter.ALL,
-  onFilterChange: (PostFilter) -> Unit = {},
   isRefreshing: Boolean = false,
-  onRefresh: () -> Unit = {},
   enablePullRefresh: Boolean = true,
-  onMemoClick: (Memo) -> Unit = {},
-  onDeleteMemo: ((Memo) -> Unit)? = null,
   demoMode: Boolean = false,
+  callbacks: FeedCallbacks = FeedCallbacks(),
   listState: LazyListState = rememberLazyListState(),
 ) {
   var memoToDelete by remember { mutableStateOf<Memo?>(null) }
   val timeZone = TimeZone.currentSystemDefault()
-  val pullRefreshState = rememberPullRefreshState(isRefreshing, onRefresh)
+  val pullRefreshState = rememberPullRefreshState(isRefreshing, callbacks.onRefresh)
   val containerModifier =
     if (enablePullRefresh) {
       Modifier.pullRefresh(pullRefreshState)
@@ -99,7 +96,7 @@ fun FeedScreen(
         label = stringResource(Res.string.label_post_filter),
         options = listOf(PostFilter.ALL, PostFilter.CONFIG, PostFilter.HABIT_TRACKING, PostFilter.REGULAR),
         selected = activeFilter,
-        onSelect = onFilterChange,
+        onSelect = callbacks.onFilterChange,
         optionLabel = { filter ->
           when (filter) {
             PostFilter.ALL -> stringResource(Res.string.filter_all)
@@ -129,7 +126,7 @@ fun FeedScreen(
               modifier =
                 Modifier
                   .fillMaxWidth()
-                  .clickable { onMemoClick(memo) },
+                  .clickable { callbacks.onMemoClick(memo) },
             ) {
               Row(
                 modifier = Modifier.padding(start = 0.dp, top = Indent.s, bottom = Indent.s, end = Indent.xs),
@@ -148,7 +145,7 @@ fun FeedScreen(
                     demoMode = demoMode,
                   )
                 }
-                if (onDeleteMemo != null && memo.canDeleteFromFeed) {
+                if (callbacks.onDeleteMemo != null && memo.canDeleteFromFeed) {
                   IconButton(
                     onClick = { memoToDelete = memo },
                     modifier = Modifier.size(36.dp),
@@ -183,7 +180,7 @@ fun FeedScreen(
       confirmButton = {
         Button(
           onClick = {
-            onDeleteMemo?.invoke(memo)
+            callbacks.onDeleteMemo?.invoke(memo)
             memoToDelete = null
           },
           colors =
