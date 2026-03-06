@@ -80,35 +80,38 @@ internal fun VibitsDesktopShell(
         todayHabits = shell.todayHabits,
         memosState = memosState,
         onAppAction = features.app::send,
-        onClearSelection = shell.callbacks.onClearSelection,
-        onFeedScrollToTop = shell.callbacks.onFeedScrollToTop,
-        onOpenTodayEditor = shell.callbacks.onOpenTodayEditor,
-        onOpenConfigDialog = {
-          features.habits.send(
-            space.be1ski.vibits.feature.habits.presentation.action.HabitsAction.Config.OpenConfigDialog(
-              shell.todayHabits.config,
-            ),
-          )
-        },
-        onShowCreateMemoDialog = shell.callbacks.onShowCreateMemoDialog,
-        onSettingsClick = {
-          features.app.send(AppAction.Navigation.SelectScreen(Screen.SETTINGS))
-          features.settings.send(
-            SettingsAction.Dialog.Open(
-              baseUrl = memosState.baseUrl,
-              token = memosState.token,
-              appMode = appState.appMode,
-              language = currentLanguage,
-              theme = currentTheme,
-              syncDebounceSeconds = syncDebounceSeconds,
-            ),
-          )
-        },
         dispatchMemos = features.memos::send,
+        callbacks =
+          SidebarCallbacks(
+            onClearSelection = shell.callbacks.onClearSelection,
+            onFeedScrollToTop = shell.callbacks.onFeedScrollToTop,
+            onOpenTodayEditor = shell.callbacks.onOpenTodayEditor,
+            onOpenConfigDialog = {
+              features.habits.send(
+                space.be1ski.vibits.feature.habits.presentation.action.HabitsAction.Config.OpenConfigDialog(
+                  shell.todayHabits.config,
+                ),
+              )
+            },
+            onShowCreateMemoDialog = shell.callbacks.onShowCreateMemoDialog,
+            onSettingsClick = {
+              features.app.send(AppAction.Navigation.SelectScreen(Screen.SETTINGS))
+              features.settings.send(
+                SettingsAction.Dialog.Open(
+                  baseUrl = memosState.baseUrl,
+                  token = memosState.token,
+                  appMode = appState.appMode,
+                  language = currentLanguage,
+                  theme = currentTheme,
+                  syncDebounceSeconds = syncDebounceSeconds,
+                ),
+              )
+            },
+            onUpgrade = onUpgrade,
+            onRestart = onRestart,
+          ),
         updateAvailability = updateAvailability,
         upgradeState = upgradeState,
-        onUpgrade = onUpgrade,
-        onRestart = onRestart,
       )
       VerticalDivider()
       Box(

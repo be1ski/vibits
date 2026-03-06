@@ -210,12 +210,16 @@ class AppScreenshotTest {
       VibitsTheme(darkTheme = darkTheme, wideLayout = wideLayout) {
         VibitsApp(
           features = features,
-          currentTheme = AppTheme.SYSTEM,
-          currentLanguage = AppLanguage.ENGLISH,
-          exportService = fakeExportService,
-          currentVersion = currentVersion,
-          getChangelog = getChangelog,
-          checkForUpdate = checkForUpdate,
+          config =
+            AppContentConfig(
+              appTheme = AppTheme.SYSTEM,
+              appLanguage = AppLanguage.ENGLISH,
+              exportService = fakeExportService,
+              currentVersion = currentVersion,
+              getChangelog = getChangelog,
+              checkForUpdate = checkForUpdate,
+              appUpdater = null,
+            ),
           testLogs = testLogs,
         )
       }
@@ -374,14 +378,22 @@ class AppScreenshotTest {
             onboarding = RecordingFeature(OnboardingState()),
             app = features,
           ),
-        appTheme = AppTheme.SYSTEM,
-        appLanguage = AppLanguage.ENGLISH,
-        exportService = fakeExportService,
-        currentVersion = "dev",
-        getChangelog = fakeGetChangelog,
-        onResetApp = {},
-        onThemeChanged = {},
-        onLanguageChanged = {},
+        config =
+          AppContentConfig(
+            appTheme = AppTheme.SYSTEM,
+            appLanguage = AppLanguage.ENGLISH,
+            exportService = fakeExportService,
+            currentVersion = "dev",
+            getChangelog = fakeGetChangelog,
+            checkForUpdate = null,
+            appUpdater = null,
+          ),
+        callbacks =
+          AppContentCallbacks(
+            onResetApp = {},
+            onThemeChanged = {},
+            onLanguageChanged = {},
+          ),
       )
     }
   }
@@ -768,11 +780,16 @@ class AppScreenshotTest {
         VibitsTheme(darkTheme = darkTheme, wideLayout = wideLayout) {
           VibitsApp(
             features = features,
-            currentTheme = AppTheme.SYSTEM,
-            currentLanguage = AppLanguage.ENGLISH,
-            exportService = fakeExportService,
-            currentVersion = "dev",
-            getChangelog = fakeGetChangelog,
+            config =
+              AppContentConfig(
+                appTheme = AppTheme.SYSTEM,
+                appLanguage = AppLanguage.ENGLISH,
+                exportService = fakeExportService,
+                currentVersion = "dev",
+                getChangelog = fakeGetChangelog,
+                checkForUpdate = null,
+                appUpdater = null,
+              ),
           )
           CelebrationOverlay(
             animation = CelebrationAnimation.Confetti,

@@ -71,28 +71,34 @@ fun AppRoot(
           showOnboarding = showOnboarding,
           justFinishedOnboarding = justFinishedOnboarding,
           featuresState = featuresState,
-          appTheme = appTheme,
-          appLanguage = appLanguage,
-          exportService = dependencies.settingsDependencies.exportService,
-          currentVersion = currentVersion,
-          getChangelog = dependencies.getChangelog,
-          checkForUpdate = dependencies.checkForUpdate,
-          appUpdater = dependencies.appUpdater,
-          onResetApp = {
-            resetApp(
-              dependencies = dependencies,
-              onThemeReset = { appTheme = AppTheme.SYSTEM },
-              onLanguageReset = { appLanguage = AppLanguage.SYSTEM },
-              onVersionIncrement = { featuresVersion++ },
-              onModeReset = { appMode = AppMode.NOT_SELECTED },
-              onOnboardingReset = { showOnboarding = false },
-            )
-          },
-          onThemeChanged = { appTheme = it },
-          onLanguageChanged = {
-            dependencies.localeProvider.configureLocale(it)
-            appLanguage = it
-          },
+          config =
+            AppContentConfig(
+              appTheme = appTheme,
+              appLanguage = appLanguage,
+              exportService = dependencies.settingsDependencies.exportService,
+              currentVersion = currentVersion,
+              getChangelog = dependencies.getChangelog,
+              checkForUpdate = dependencies.checkForUpdate,
+              appUpdater = dependencies.appUpdater,
+            ),
+          callbacks =
+            AppContentCallbacks(
+              onResetApp = {
+                resetApp(
+                  dependencies = dependencies,
+                  onThemeReset = { appTheme = AppTheme.SYSTEM },
+                  onLanguageReset = { appLanguage = AppLanguage.SYSTEM },
+                  onVersionIncrement = { featuresVersion++ },
+                  onModeReset = { appMode = AppMode.NOT_SELECTED },
+                  onOnboardingReset = { showOnboarding = false },
+                )
+              },
+              onThemeChanged = { appTheme = it },
+              onLanguageChanged = {
+                dependencies.localeProvider.configureLocale(it)
+                appLanguage = it
+              },
+            ),
         )
       }
     }
