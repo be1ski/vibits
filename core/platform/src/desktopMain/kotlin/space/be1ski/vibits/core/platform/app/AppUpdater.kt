@@ -20,15 +20,12 @@ actual class AppUpdater {
 
   actual fun restart() {
     try {
-      val command =
-        ProcessHandle
-          .current()
-          .info()
-          .command()
-          .orElse(null)
-      if (command != null) {
-        ProcessBuilder(command).start()
-      }
+      val info = ProcessHandle.current().info()
+      val command = info.command().orElse(null) ?: return
+      val arguments = info.arguments().orElse(null)
+      val fullCommand =
+        if (arguments != null) listOf(command) + arguments.toList() else listOf(command)
+      ProcessBuilder(fullCommand).start()
     } finally {
       exitProcess(0)
     }
