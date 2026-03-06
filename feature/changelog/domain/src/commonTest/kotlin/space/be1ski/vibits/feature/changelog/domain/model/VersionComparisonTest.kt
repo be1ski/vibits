@@ -65,4 +65,19 @@ class VersionComparisonTest {
   fun `when compareVersions with patch difference then detects correctly`() {
     assertTrue(compareVersions(listOf(1, 0, 1), listOf(1, 0)) > 0)
   }
+
+  @Test
+  fun `when parseVersion with single zero then returns list`() {
+    assertEquals(listOf(0), parseVersion("0"))
+  }
+
+  @Test
+  fun `when compareVersions with single element lists then compares correctly`() {
+    assertTrue(compareVersions(listOf(2), listOf(1)) > 0)
+  }
+
+  @Test
+  fun `when compareVersions with empty padded parts equal then returns zero`() {
+    assertEquals(0, compareVersions(listOf(1), listOf(1, 0, 0)))
+  }
 }

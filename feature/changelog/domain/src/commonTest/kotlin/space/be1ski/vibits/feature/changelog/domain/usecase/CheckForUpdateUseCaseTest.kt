@@ -118,6 +118,31 @@ class CheckForUpdateUseCaseTest {
     }
 
   @Test
+  fun `when current version is unparseable then returns null`() =
+    runTest {
+      repository.releasesResult =
+        Result.success(
+          listOf(ChangelogEntry("2.0.0", "Release", "body", "2026-01-01")),
+        )
+
+      assertNull(useCase("invalid-version"))
+    }
+
+  @Test
+  fun `when all releases have unparseable versions then returns null`() =
+    runTest {
+      repository.releasesResult =
+        Result.success(
+          listOf(
+            ChangelogEntry("beta1", "Beta", "body", "2026-01-01"),
+            ChangelogEntry("rc-2", "RC", "body", "2026-01-15"),
+          ),
+        )
+
+      assertNull(useCase("1.0.0"))
+    }
+
+  @Test
   fun `when multiple releases then picks the latest`() =
     runTest {
       repository.releasesResult =
