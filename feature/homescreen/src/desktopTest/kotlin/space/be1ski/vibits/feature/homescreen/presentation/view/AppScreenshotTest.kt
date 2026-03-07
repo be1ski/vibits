@@ -501,6 +501,7 @@ class AppScreenshotTest {
   private fun captureSettingsVariants(
     name: String,
     settingsState: SettingsState,
+    hero: Boolean = false,
     testLogs: List<LogEntry>? = null,
   ) {
     runWideUiTest {
@@ -508,6 +509,7 @@ class AppScreenshotTest {
         name,
         appState = settingsAppState(),
         settingsState = settingsState,
+        hero = hero,
         testLogs = testLogs,
       )
     }
@@ -517,6 +519,7 @@ class AppScreenshotTest {
         appState = habitsAppState(),
         settingsState = settingsState,
         wideLayout = false,
+        hero = hero,
         testLogs = testLogs,
       )
     }
@@ -526,6 +529,7 @@ class AppScreenshotTest {
   fun `when settings open in online mode then captures online settings`() =
     captureSettingsVariants(
       name = "app_settings_online",
+      hero = true,
       settingsState =
         SettingsState(
           isOpen = true,
