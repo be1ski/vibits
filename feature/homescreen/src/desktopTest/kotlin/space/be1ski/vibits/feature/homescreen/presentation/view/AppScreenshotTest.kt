@@ -85,8 +85,8 @@ class AppScreenshotTest {
   private val earlySleepConfig = HabitConfig(tag = "#habits/early_sleep", label = "Early Sleep", color = HabitColor(0xFF607D8B))
   private val allHabits =
     listOf(
-      meditationConfig,
       waterConfig,
+      meditationConfig,
       exerciseConfig,
       readingConfig,
       walkingConfig,
