@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
@@ -19,8 +20,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import java.io.File
 
-private val PURPLE_DOT = Color(124, 58, 237, (0.45f * 255).toInt())
-private val BLUE_DOT = Color(59, 130, 246, (0.5f * 255).toInt())
+private fun purpleDot(variant: HeroVariant) =
+  Color(124, 58, 237, if (variant == HeroVariant.DARK) (0.45f * 255).toInt() else (0.3f * 255).toInt())
+
+private fun blueDot(variant: HeroVariant) =
+  Color(59, 130, 246, if (variant == HeroVariant.DARK) (0.5f * 255).toInt() else (0.35f * 255).toInt())
 
 private val MACBOOK_SHADOW_ELEVATION = 24.dp
 private val MACBOOK_SHADOW_SHAPE = RoundedCornerShape(10.dp)
@@ -111,54 +115,85 @@ private fun computeLayout(
 }
 
 @Composable
+private fun HeroDots(
+  config: HeroConfig,
+  variant: HeroVariant,
+) {
+  for (dot in config.dots) {
+    val dotColor =
+      if (dot.color == "purple") purpleDot(variant) else blueDot(variant)
+    val x =
+      dot.left?.dp
+        ?: (config.canvas.width.dp - dot.right!!.dp - dot.size.dp)
+    Box(
+      Modifier
+        .offset(x, dot.top.dp)
+        .size(dot.size.dp)
+        .clip(CircleShape)
+        .background(dotColor),
+    )
+  }
+}
+
+@Composable
+private fun HeroDevices(layout: HeroLayout) {
+  for (dl in layout.deviceLayouts) {
+    Box(
+      modifier =
+        Modifier
+          .offset(dl.offsetX, dl.offsetY)
+          .graphicsLayer {
+            rotationZ = dl.device.rotate.toFloat()
+          }.shadow(dl.shadowElevation, dl.shadowShape),
+    ) {
+      when (dl.device.type) {
+        "macbook" ->
+          MacbookFrame(
+            screenshot = dl.screenshot,
+            screenWidth = dl.device.screenWidth!!.dp,
+            theme = dl.device.theme,
+          )
+        "iphone" ->
+          IphoneFrame(
+            screenshot = dl.screenshot,
+            bodyWidth = dl.device.bodyWidth!!.dp,
+            theme = dl.device.theme,
+          )
+      }
+    }
+  }
+}
+
+@Composable
 fun HeroCanvas(
   screenshotsDir: File,
   heroDir: File,
+  variant: HeroVariant = HeroVariant.DARK,
 ) {
   val config = heroConfig
   val layout = remember { computeLayout(config, screenshotsDir, heroDir) }
-
-  Box(Modifier.size(config.canvas.width.dp, config.canvas.height.dp)) {
-    // Decorative dots
-    for (dot in config.dots) {
-      val dotColor = if (dot.color == "purple") PURPLE_DOT else BLUE_DOT
-      val x =
-        dot.left?.dp
-          ?: (config.canvas.width.dp - dot.right!!.dp - dot.size.dp)
-      Box(
-        Modifier
-          .offset(x, dot.top.dp)
-          .size(dot.size.dp)
-          .clip(CircleShape)
-          .background(dotColor),
-      )
+  val (bgStart, bgEnd) =
+    when (variant) {
+      HeroVariant.DARK -> Color(0xFF0D1117) to Color(0xFF161B22)
+      HeroVariant.LIGHT -> Color(0xFFFFFFFF) to Color(0xFFF6F8FA)
+    }
+  val glow =
+    when (variant) {
+      HeroVariant.DARK -> Color(0x18_7C3AED)
+      HeroVariant.LIGHT -> Color(0x10_7C3AED)
     }
 
-    // Devices sorted by zIndex
-    for (dl in layout.deviceLayouts) {
-      Box(
-        modifier =
-          Modifier
-            .offset(dl.offsetX, dl.offsetY)
-            .graphicsLayer {
-              rotationZ = dl.device.rotate.toFloat()
-            }.shadow(dl.shadowElevation, dl.shadowShape),
-      ) {
-        when (dl.device.type) {
-          "macbook" ->
-            MacbookFrame(
-              screenshot = dl.screenshot,
-              screenWidth = dl.device.screenWidth!!.dp,
-              theme = dl.device.theme,
-            )
-          "iphone" ->
-            IphoneFrame(
-              screenshot = dl.screenshot,
-              bodyWidth = dl.device.bodyWidth!!.dp,
-              theme = dl.device.theme,
-            )
-        }
-      }
-    }
+  Box(
+    Modifier
+      .size(config.canvas.width.dp, config.canvas.height.dp)
+      .background(Brush.verticalGradient(listOf(bgStart, bgEnd)))
+      .background(
+        Brush.radialGradient(
+          colors = listOf(glow, Color.Transparent),
+        ),
+      ),
+  ) {
+    HeroDots(config, variant)
+    HeroDevices(layout)
   }
 }

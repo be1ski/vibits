@@ -1,5 +1,7 @@
 package space.be1ski.vibits.core.ui.test.hero
 
+enum class HeroVariant { LIGHT, DARK }
+
 data class HeroCanvasSize(
   val width: Int,
   val height: Int,
