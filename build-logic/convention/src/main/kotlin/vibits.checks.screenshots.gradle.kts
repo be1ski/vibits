@@ -25,11 +25,16 @@ tasks.register("screenshotTests") {
   doLast {
     outputDir.deleteRecursively()
     outputDir.mkdirs()
+    val heroCandidates = File(outputDir, "hero-candidates.txt")
     subprojects.forEach { subproject ->
       val dir = subproject.layout.buildDirectory.dir("ui-screenshots").get().asFile
       if (dir.exists()) {
         dir.walkTopDown().filter { it.isFile && it.extension == "png" }.forEach { file ->
           file.copyTo(File(outputDir, file.name), overwrite = true)
+        }
+        val subCandidates = File(dir, "hero-candidates.txt")
+        if (subCandidates.exists()) {
+          heroCandidates.appendText(subCandidates.readText())
         }
       }
     }

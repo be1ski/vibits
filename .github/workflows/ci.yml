@@ -54,6 +54,23 @@ jobs:
           mkdir -p build/ui-screenshots
           find . -path "*/build/ui-screenshots/*.png" -not -path "./build/*" -exec cp {} build/ui-screenshots/ \;
 
+      - name: Collect hero candidates manifest
+        if: always()
+        run: |
+          FILES=$(find . -path "*/build/ui-screenshots/hero-candidates.txt" -not -path "./build/*")
+          if [ -n "$FILES" ]; then
+            cat $FILES > build/ui-screenshots/hero-candidates.txt
+          fi
+
+      - name: Upload hero candidates
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: hero-candidates
+          path: build/ui-screenshots/hero-candidates.txt
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Visual regression test
         if: always()
         uses: reg-viz/reg-actions@v3
