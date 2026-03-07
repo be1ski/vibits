@@ -122,6 +122,15 @@ val heroConfig =
           rotate = 10,
           zIndex = 7,
         ),
+        HeroDevice(
+          id = "phone-5",
+          type = "iphone",
+          scenario = "app_habits_week",
+          bodyWidth = 150,
+          position = HeroPosition(bottom = 20, left = 520),
+          rotate = -6,
+          zIndex = 5,
+        ),
       ),
     dots =
       listOf(
