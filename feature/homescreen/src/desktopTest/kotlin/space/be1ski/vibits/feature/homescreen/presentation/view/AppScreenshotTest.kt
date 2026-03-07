@@ -121,7 +121,7 @@ class AppScreenshotTest {
     var cursor = configDate
     while (cursor <= today) {
       val completedHabits =
-        allHabits.filter { rng.nextFloat() < 0.55f }
+        allHabits.filter { rng.nextFloat() < 0.5f }
       if (completedHabits.isNotEmpty()) {
         val dayStr = cursor.toString()
         val content =

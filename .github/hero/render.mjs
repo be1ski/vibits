@@ -17,17 +17,25 @@ const candidateFilenames = readFileSync(manifestPath, 'utf8')
 
 const typeToLayout = { macbook: 'wide', iphone: 'compact' };
 const sorted = [...candidateFilenames].sort();
-const used = new Set();
+const usedFiles = new Set();
+const usedByLayout = { wide: new Set(), compact: new Set() };
 
 for (const device of config.devices) {
-  const prefix = `${typeToLayout[device.type]}_${device.theme}_`;
-  const match = sorted.find(f => f.startsWith(prefix) && !used.has(f));
+  const layout = typeToLayout[device.type];
+  const prefix = `${layout}_${device.theme}_`;
+  const scenario = f => f.slice(prefix.length);
+  const used = usedByLayout[layout];
+  let match = sorted.find(f => f.startsWith(prefix) && !usedFiles.has(f) && !used.has(scenario(f)));
+  if (!match) {
+    match = sorted.find(f => f.startsWith(prefix) && !usedFiles.has(f));
+  }
   if (!match) {
     console.error(`No hero candidate for ${device.id} (${prefix}*)`);
     process.exit(1);
   }
   device.screenshot = match;
-  used.add(match);
+  usedFiles.add(match);
+  used.add(scenario(match));
 }
 
 const missing = config.devices
