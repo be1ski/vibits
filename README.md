@@ -5,7 +5,11 @@
 [![Release](https://img.shields.io/github/v/release/be1ski/vibits)](https://github.com/be1ski/vibits/releases/latest)
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://be1ski.github.io/vibits/)
 
-![Vibits](https://raw.githubusercontent.com/be1ski/vibits/hero/hero.webp)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/be1ski/vibits/hero/hero-dark.webp">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/be1ski/vibits/hero/hero-light.webp">
+  <img alt="Vibits" src="https://raw.githubusercontent.com/be1ski/vibits/hero/hero-dark.webp">
+</picture>
 
 Habit tracker powered by [Memos](https://github.com/usememos/memos)
 

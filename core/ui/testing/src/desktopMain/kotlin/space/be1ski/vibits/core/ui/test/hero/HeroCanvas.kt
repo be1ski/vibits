@@ -27,8 +27,11 @@ private val MACBOOK_SHADOW_SHAPE = RoundedCornerShape(10.dp)
 private val IPHONE_SHADOW_ELEVATION = 20.dp
 private val IPHONE_SHADOW_SHAPE = RoundedCornerShape(24.dp)
 
+private const val FOREGROUND_Z_THRESHOLD = 4
+
 private data class DeviceLayout(
   val device: HeroDevice,
+  val theme: String,
   val screenshot: ImageBitmap,
   val offsetX: Dp,
   val offsetY: Dp,
@@ -42,6 +45,7 @@ private data class HeroLayout(
 
 private fun assignScreenshots(
   config: HeroConfig,
+  variant: HeroVariant,
   heroDir: File,
 ): Map<String, String> {
   val manifest = File(heroDir, "hero-candidates.txt")
@@ -50,9 +54,17 @@ private fun assignScreenshots(
   val candidates = manifest.readLines().filter { it.isNotBlank() }.toSet()
   require(candidates.isNotEmpty()) { "No hero candidates listed in $manifest" }
 
+  val oppositeTheme =
+    when (variant) {
+      HeroVariant.DARK -> HeroVariant.LIGHT.theme
+      HeroVariant.LIGHT -> HeroVariant.DARK.theme
+    }
+
   return config.devices.associate { device ->
     val layout = if (device.type == "macbook") "wide" else "compact"
-    val filename = "${layout}_${device.theme}_${device.scenario}.png"
+    val theme =
+      if (device.zIndex >= FOREGROUND_Z_THRESHOLD) variant.theme else oppositeTheme
+    val filename = "${layout}_${theme}_${device.scenario}.png"
     require(filename in candidates) {
       "Missing screenshot for ${device.id}: $filename"
     }
@@ -60,12 +72,25 @@ private fun assignScreenshots(
   }
 }
 
+private fun deviceTheme(
+  device: HeroDevice,
+  variant: HeroVariant,
+): String {
+  val oppositeTheme =
+    when (variant) {
+      HeroVariant.DARK -> HeroVariant.LIGHT.theme
+      HeroVariant.LIGHT -> HeroVariant.DARK.theme
+    }
+  return if (device.zIndex >= FOREGROUND_Z_THRESHOLD) variant.theme else oppositeTheme
+}
+
 private fun computeLayout(
   config: HeroConfig,
+  variant: HeroVariant,
   screenshotsDir: File,
   heroDir: File,
 ): HeroLayout {
-  val assignments = assignScreenshots(config, heroDir)
+  val assignments = assignScreenshots(config, variant, heroDir)
 
   val deviceLayouts =
     config.devices.sortedBy { it.zIndex }.map { device ->
@@ -99,6 +124,7 @@ private fun computeLayout(
 
       DeviceLayout(
         device = device,
+        theme = deviceTheme(device, variant),
         screenshot = screenshot,
         offsetX = offsetX,
         offsetY = offsetY,
@@ -111,54 +137,63 @@ private fun computeLayout(
 }
 
 @Composable
+private fun HeroDots(config: HeroConfig) {
+  for (dot in config.dots) {
+    val dotColor = if (dot.color == "purple") PURPLE_DOT else BLUE_DOT
+    val x =
+      dot.left?.dp
+        ?: (config.canvas.width.dp - dot.right!!.dp - dot.size.dp)
+    Box(
+      Modifier
+        .offset(x, dot.top.dp)
+        .size(dot.size.dp)
+        .clip(CircleShape)
+        .background(dotColor),
+    )
+  }
+}
+
+@Composable
+private fun HeroDevices(layout: HeroLayout) {
+  for (dl in layout.deviceLayouts) {
+    Box(
+      modifier =
+        Modifier
+          .offset(dl.offsetX, dl.offsetY)
+          .graphicsLayer {
+            rotationZ = dl.device.rotate.toFloat()
+          }.shadow(dl.shadowElevation, dl.shadowShape),
+    ) {
+      when (dl.device.type) {
+        "macbook" ->
+          MacbookFrame(
+            screenshot = dl.screenshot,
+            screenWidth = dl.device.screenWidth!!.dp,
+            theme = dl.theme,
+          )
+        "iphone" ->
+          IphoneFrame(
+            screenshot = dl.screenshot,
+            bodyWidth = dl.device.bodyWidth!!.dp,
+            theme = dl.theme,
+          )
+      }
+    }
+  }
+}
+
+@Composable
 fun HeroCanvas(
   screenshotsDir: File,
   heroDir: File,
+  variant: HeroVariant,
 ) {
   val config = heroConfig
-  val layout = remember { computeLayout(config, screenshotsDir, heroDir) }
+  val layout =
+    remember(variant) { computeLayout(config, variant, screenshotsDir, heroDir) }
 
   Box(Modifier.size(config.canvas.width.dp, config.canvas.height.dp)) {
-    // Decorative dots
-    for (dot in config.dots) {
-      val dotColor = if (dot.color == "purple") PURPLE_DOT else BLUE_DOT
-      val x =
-        dot.left?.dp
-          ?: (config.canvas.width.dp - dot.right!!.dp - dot.size.dp)
-      Box(
-        Modifier
-          .offset(x, dot.top.dp)
-          .size(dot.size.dp)
-          .clip(CircleShape)
-          .background(dotColor),
-      )
-    }
-
-    // Devices sorted by zIndex
-    for (dl in layout.deviceLayouts) {
-      Box(
-        modifier =
-          Modifier
-            .offset(dl.offsetX, dl.offsetY)
-            .graphicsLayer {
-              rotationZ = dl.device.rotate.toFloat()
-            }.shadow(dl.shadowElevation, dl.shadowShape),
-      ) {
-        when (dl.device.type) {
-          "macbook" ->
-            MacbookFrame(
-              screenshot = dl.screenshot,
-              screenWidth = dl.device.screenWidth!!.dp,
-              theme = dl.device.theme,
-            )
-          "iphone" ->
-            IphoneFrame(
-              screenshot = dl.screenshot,
-              bodyWidth = dl.device.bodyWidth!!.dp,
-              theme = dl.device.theme,
-            )
-        }
-      }
-    }
+    HeroDots(config)
+    HeroDevices(layout)
   }
 }
