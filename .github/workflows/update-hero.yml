@@ -55,18 +55,83 @@ jobs:
             -not -path "*/1_expected/*" \
             -exec cp {} .github/hero/ui-screenshots/ \;
 
+      - name: Download hero candidates manifest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh run download "$CI_RUN_ID" \
+            --repo "${{ github.repository }}" \
+            --name hero-candidates \
+            --dir ci-hero-manifest || echo "No hero manifest found"
+          if [ -f ci-hero-manifest/hero-candidates.txt ]; then
+            cp ci-hero-manifest/hero-candidates.txt .github/hero/ui-screenshots/hero-candidates.txt
+          fi
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '24'
 
-      - name: Render hero image
+      - name: Install renderer dependencies
         working-directory: .github/hero
+        run: npm install
+
+      - name: Check if hero inputs changed
+        id: check
         run: |
-          npm install
-          node render.mjs
+          MANIFEST=".github/hero/ui-screenshots/hero-candidates.txt"
+          if [ ! -f "$MANIFEST" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          SCREENSHOTS_DIR=".github/hero/ui-screenshots"
+          # Hash all render inputs: manifest, candidate PNGs, config, renderer, dependencies
+          {
+            sort "$MANIFEST"
+            sort "$MANIFEST" | while read -r f; do
+              if [ -f "$SCREENSHOTS_DIR/$f" ]; then
+                sha256sum "$SCREENSHOTS_DIR/$f"
+              fi
+            done
+            sha256sum .github/hero/config.json
+            sha256sum .github/hero/render.mjs
+            sha256sum .github/hero/package.json
+            sha256sum .github/hero/package-lock.json
+          } | sha256sum | cut -d' ' -f1 > /tmp/hero-hash-new.txt
+          echo "hash=$(cat /tmp/hero-hash-new.txt)" >> $GITHUB_OUTPUT
+          echo "skip=false" >> $GITHUB_OUTPUT
+
+      - name: Restore previous hash
+        if: steps.check.outputs.skip != 'true'
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: /tmp/hero-hash.txt
+          key: hero-hash-${{ github.run_id }}
+          restore-keys: hero-hash-
+
+      - name: Compare hashes
+        if: steps.check.outputs.skip != 'true'
+        id: compare
+        run: |
+          PREV_HASH=""
+          if [ -f /tmp/hero-hash.txt ]; then
+            PREV_HASH=$(cat /tmp/hero-hash.txt)
+          fi
+          if [ -n "$PREV_HASH" ] && [ "$PREV_HASH" = "${{ steps.check.outputs.hash }}" ]; then
+            echo "Hero candidates unchanged, skipping"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Render hero image
+        if: steps.check.outputs.skip != 'true' && steps.compare.outputs.skip != 'true'
+        working-directory: .github/hero
+        run: node render.mjs
 
       - name: Create PR if changed
+        if: steps.check.outputs.skip != 'true' && steps.compare.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.HERO_PAT }}
         run: |
@@ -89,3 +154,14 @@ jobs:
               gh pr merge --auto --squash --delete-branch
             fi
           fi
+
+      - name: Cache new hash
+        if: steps.check.outputs.skip != 'true' && steps.compare.outputs.skip != 'true'
+        run: cp /tmp/hero-hash-new.txt /tmp/hero-hash.txt
+
+      - name: Save hash cache
+        if: steps.check.outputs.skip != 'true' && steps.compare.outputs.skip != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: /tmp/hero-hash.txt
+          key: hero-hash-${{ github.run_id }}

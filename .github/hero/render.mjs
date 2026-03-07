@@ -6,12 +6,36 @@ import path from 'path';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const config = JSON.parse(readFileSync(path.join(__dirname, 'config.json'), 'utf8'));
 
+// Load hero candidates and assign screenshots dynamically
+const manifestPath = path.join(__dirname, 'ui-screenshots', 'hero-candidates.txt');
+if (!existsSync(manifestPath)) {
+  console.error('Missing hero-candidates.txt manifest');
+  process.exit(1);
+}
+const candidateFilenames = readFileSync(manifestPath, 'utf8')
+  .trim().split('\n').filter(Boolean);
+
+const typeToLayout = { macbook: 'wide', iphone: 'compact' };
+const sorted = [...candidateFilenames].sort();
+const used = new Set();
+
+for (const device of config.devices) {
+  const prefix = `${typeToLayout[device.type]}_${device.theme}_`;
+  const match = sorted.find(f => f.startsWith(prefix) && !used.has(f));
+  if (!match) {
+    console.error(`No hero candidate for ${device.id} (${prefix}*)`);
+    process.exit(1);
+  }
+  device.screenshot = match;
+  used.add(match);
+}
+
 const missing = config.devices
   .map(d => d.screenshot)
   .filter(s => !existsSync(path.join(__dirname, 'ui-screenshots', s)));
 
 if (missing.length > 0) {
-  console.error('Missing screenshots:\n  ' + missing.join('\n  '));
+  console.error('Missing screenshot files:\n  ' + missing.join('\n  '));
   process.exit(1);
 }
 
