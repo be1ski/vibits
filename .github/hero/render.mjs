@@ -109,7 +109,7 @@ const html = `<!DOCTYPE html>
   body {
     width: ${config.canvas.width}px;
     height: ${config.canvas.height}px;
-    background: #fafafc;
+    background: transparent;
     position: relative;
     overflow: hidden;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
@@ -206,7 +206,8 @@ await page.screenshot({
   path: path.join(__dirname, 'hero.webp'),
   type: 'webp',
   quality: 90,
-  clip: { x: 0, y: 0, width, height }
+  clip: { x: 0, y: 0, width, height },
+  omitBackground: true
 });
 await browser.close();
 unlinkSync(tmpHtml);
