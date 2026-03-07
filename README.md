@@ -5,7 +5,7 @@
 [![Release](https://img.shields.io/github/v/release/be1ski/vibits)](https://github.com/be1ski/vibits/releases/latest)
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://be1ski.github.io/vibits/)
 
-![Vibits](.github/hero.webp)
+![Vibits](https://raw.githubusercontent.com/be1ski/vibits/hero/hero.webp)
 
 Habit tracker powered by [Memos](https://github.com/usememos/memos)
 

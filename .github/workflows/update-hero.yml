@@ -9,7 +9,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   update-hero:
@@ -81,6 +80,11 @@ jobs:
         run: |
           MANIFEST=".github/hero/ui-screenshots/hero-candidates.txt"
           if [ ! -f "$MANIFEST" ]; then
+            HERO_EXISTS=$(git ls-remote --heads origin hero | wc -l | tr -d ' ')
+            if [ "$HERO_EXISTS" = "0" ]; then
+              echo "::error::Hero branch does not exist and no manifest available to render it"
+              exit 1
+            fi
             echo "skip=true" >> $GITHUB_OUTPUT
             exit 0
           fi
@@ -118,7 +122,11 @@ jobs:
           if [ -f /tmp/hero-hash.txt ]; then
             PREV_HASH=$(cat /tmp/hero-hash.txt)
           fi
-          if [ -n "$PREV_HASH" ] && [ "$PREV_HASH" = "${{ steps.check.outputs.hash }}" ]; then
+          HERO_EXISTS=$(git ls-remote --heads origin hero | wc -l | tr -d ' ')
+          if [ "$HERO_EXISTS" = "0" ]; then
+            echo "Hero branch missing, must publish"
+            echo "skip=false" >> $GITHUB_OUTPUT
+          elif [ -n "$PREV_HASH" ] && [ "$PREV_HASH" = "${{ steps.check.outputs.hash }}" ]; then
             echo "Hero candidates unchanged, skipping"
             echo "skip=true" >> $GITHUB_OUTPUT
           else
@@ -130,41 +138,21 @@ jobs:
         working-directory: .github/hero
         run: node render.mjs
 
-      - name: Create PR if changed
+      - name: Publish to hero branch
         if: steps.check.outputs.skip != 'true' && steps.compare.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.HERO_PAT }}
         run: |
-          cp .github/hero/hero.webp .github/hero.webp
+          cp .github/hero/hero.webp /tmp/hero.webp
           git config user.name "automatedcolleague"
           git config user.email "automatedcolleague@users.noreply.github.com"
-          git add .github/hero.webp
-          if git diff --staged --quiet; then
-            echo "Hero image unchanged, skipping"
-          else
-            BRANCH="update-hero-image"
-            git checkout -b "$BRANCH"
-            git commit -m "Update hero image"
-            git push -f origin "$BRANCH"
-            if ! gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number' | grep -q .; then
-              CI_COMMIT=$(gh run view "$CI_RUN_ID" --repo "${{ github.repository }}" \
-                --json headSha,displayTitle --jq '"[`\(.headSha[0:7])`](../commit/\(.headSha)) \(.displayTitle)"')
-              MANIFEST=".github/hero/ui-screenshots/hero-candidates.txt"
-              CANDIDATES=""
-              if [ -f "$MANIFEST" ]; then
-                CANDIDATES=$(sed 's/\.png$//' "$MANIFEST" | sed 's/^/- `/' | sed 's/$/`/')
-              fi
-              PR_BODY=$(printf "Triggered by CI run [#%s](../actions/runs/%s) for %s." "$CI_RUN_ID" "$CI_RUN_ID" "$CI_COMMIT")
-              if [ -n "$CANDIDATES" ]; then
-                PR_BODY=$(printf "%s\n\n**Screenshots used:**\n%s" "$PR_BODY" "$CANDIDATES")
-              fi
-              gh pr create \
-                --title "Update hero image" \
-                --body "$PR_BODY" \
-                --head "$BRANCH"
-              gh pr merge --auto --squash --delete-branch
-            fi
-          fi
+          git checkout --orphan hero
+          git reset --hard
+          git clean -fdx
+          mv /tmp/hero.webp hero.webp
+          git add hero.webp
+          git commit -m "Update hero image"
+          git push -f origin hero
 
       - name: Cache new hash
         if: steps.check.outputs.skip != 'true' && steps.compare.outputs.skip != 'true'
