@@ -65,19 +65,6 @@ fun ComposeUiTest.setThemedContent(
 }
 
 @OptIn(ExperimentalTestApi::class)
-fun ComposeUiTest.captureInBothThemes(
-  name: String,
-  wideLayout: Boolean = true,
-  hero: Boolean = false,
-  content: @Composable () -> Unit,
-) {
-  setThemedContent(darkTheme = false, wideLayout = wideLayout, content = content)
-  saveScreenshot("${name}_light", hero = hero)
-  setThemedContent(darkTheme = true, wideLayout = wideLayout, content = content)
-  saveScreenshot("${name}_dark", hero = hero)
-}
-
-@OptIn(ExperimentalTestApi::class)
 fun captureAllVariants(
   name: String,
   hero: Boolean = false,
@@ -121,7 +108,7 @@ fun ComposeUiTest.saveScreenshot(
   val file = File(dir, "$scenario.png")
   ImageIO.write(composite, "png", file)
   if (hero) {
-    val heroDir = File(dir, "hero").also { it.mkdirs() }
-    file.copyTo(File(heroDir, file.name), overwrite = true)
+    val heroDir = File("build/hero").also { it.mkdirs() }
+    File(heroDir, "hero-candidates.txt").appendText("${file.name}\n")
   }
 }

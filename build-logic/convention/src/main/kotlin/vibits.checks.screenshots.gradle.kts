@@ -1,4 +1,5 @@
 val outputDir: File = rootProject.layout.buildDirectory.dir("ui-screenshots").get().asFile
+val heroDir: File = rootProject.layout.buildDirectory.dir("hero").get().asFile
 
 // Screenshot PNGs are side-effects of desktopTest not declared as task outputs,
 // so Gradle's build cache doesn't restore them. Disable caching unconditionally
@@ -25,20 +26,22 @@ tasks.register("screenshotTests") {
   doLast {
     outputDir.deleteRecursively()
     outputDir.mkdirs()
-    val heroDir = File(outputDir, "hero").also { it.mkdirs() }
+    heroDir.mkdirs()
+    val heroCandidates = mutableSetOf<String>()
     subprojects.forEach { subproject ->
       val dir = subproject.layout.buildDirectory.dir("ui-screenshots").get().asFile
       if (dir.exists()) {
         dir.listFiles().orEmpty().filter { it.isFile && it.extension == "png" }.forEach { file ->
           file.copyTo(File(outputDir, file.name), overwrite = true)
         }
-        val subHeroDir = File(dir, "hero")
-        if (subHeroDir.exists()) {
-          subHeroDir.listFiles().orEmpty().filter { it.isFile && it.extension == "png" }.forEach { file ->
-            file.copyTo(File(heroDir, file.name), overwrite = true)
-          }
-        }
       }
+      val manifest = File(subproject.layout.buildDirectory.dir("hero").get().asFile, "hero-candidates.txt")
+      if (manifest.exists()) {
+        heroCandidates += manifest.readLines().filter { it.isNotBlank() }
+      }
+    }
+    if (heroCandidates.isNotEmpty()) {
+      File(heroDir, "hero-candidates.txt").writeText(heroCandidates.sorted().joinToString("\n") + "\n")
     }
   }
 }
