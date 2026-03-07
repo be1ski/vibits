@@ -15,5 +15,6 @@ plugins {
   id("vibits.checks.coverage")
   id("vibits.checks.githooks")
   id("vibits.checks.screenshots")
+  id("vibits.checks.hero")
   id("vibits.checks.verification")
 }

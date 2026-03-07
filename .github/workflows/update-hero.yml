@@ -19,131 +19,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          sparse-checkout: .github/hero
           token: ${{ secrets.HERO_PAT }}
 
-      - name: Find CI run
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_run" ]; then
-            echo "CI_RUN_ID=${{ github.event.workflow_run.id }}" >> $GITHUB_ENV
-          else
-            RUN_ID=$(gh run list \
-              --repo "${{ github.repository }}" \
-              --workflow CI \
-              --branch main \
-              --status success \
-              --limit 1 \
-              --json databaseId --jq '.[0].databaseId')
-            echo "CI_RUN_ID=$RUN_ID" >> $GITHUB_ENV
-          fi
-
-      - name: Download screenshots from CI
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh run download "$CI_RUN_ID" \
-            --repo "${{ github.repository }}" \
-            --name ui-screenshots \
-            --dir ci-artifacts
-          mkdir -p .github/hero/ui-screenshots
-          find ci-artifacts -name "*.png" \
-            -not -path "*/__reg__/*" \
-            -not -path "*/1_diff/*" \
-            -not -path "*/1_expected/*" \
-            -exec cp {} .github/hero/ui-screenshots/ \;
-
-      - name: Download hero candidates manifest
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh run download "$CI_RUN_ID" \
-            --repo "${{ github.repository }}" \
-            --name hero-candidates \
-            --dir ci-hero-manifest || echo "No hero manifest found"
-          if [ -f ci-hero-manifest/hero-candidates.txt ]; then
-            cp ci-hero-manifest/hero-candidates.txt .github/hero/ui-screenshots/hero-candidates.txt
-          fi
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Set up JDK
+        uses: actions/setup-java@v4
         with:
-          node-version: '24'
+          distribution: 'temurin'
+          java-version: '21'
 
-      - name: Install renderer dependencies
-        working-directory: .github/hero
-        run: npm install
-
-      - name: Check if hero inputs changed
-        id: check
-        run: |
-          MANIFEST=".github/hero/ui-screenshots/hero-candidates.txt"
-          if [ ! -f "$MANIFEST" ]; then
-            HERO_EXISTS=$(git ls-remote --heads origin hero | wc -l | tr -d ' ')
-            if [ "$HERO_EXISTS" = "0" ]; then
-              echo "::error::Hero branch does not exist and no manifest available to render it"
-              exit 1
-            fi
-            echo "skip=true" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          SCREENSHOTS_DIR=".github/hero/ui-screenshots"
-          # Hash all render inputs: manifest, candidate PNGs, config, renderer, dependencies
-          {
-            sort "$MANIFEST"
-            sort "$MANIFEST" | while read -r f; do
-              if [ -f "$SCREENSHOTS_DIR/$f" ]; then
-                sha256sum "$SCREENSHOTS_DIR/$f"
-              fi
-            done
-            sha256sum .github/hero/config.json
-            sha256sum .github/hero/render.mjs
-            sha256sum .github/hero/package.json
-            sha256sum .github/hero/package-lock.json
-          } | sha256sum | cut -d' ' -f1 > /tmp/hero-hash-new.txt
-          echo "hash=$(cat /tmp/hero-hash-new.txt)" >> $GITHUB_OUTPUT
-          echo "skip=false" >> $GITHUB_OUTPUT
-
-      - name: Restore previous hash
-        if: steps.check.outputs.skip != 'true'
-        id: cache
-        uses: actions/cache/restore@v5
-        with:
-          path: /tmp/hero-hash.txt
-          key: hero-hash-${{ github.run_id }}
-          restore-keys: hero-hash-
-
-      - name: Compare hashes
-        if: steps.check.outputs.skip != 'true'
-        id: compare
-        run: |
-          PREV_HASH=""
-          if [ -f /tmp/hero-hash.txt ]; then
-            PREV_HASH=$(cat /tmp/hero-hash.txt)
-          fi
-          HERO_EXISTS=$(git ls-remote --heads origin hero | wc -l | tr -d ' ')
-          if [ "$HERO_EXISTS" = "0" ]; then
-            echo "Hero branch missing, must publish"
-            echo "skip=false" >> $GITHUB_OUTPUT
-          elif [ -n "$PREV_HASH" ] && [ "$PREV_HASH" = "${{ steps.check.outputs.hash }}" ]; then
-            echo "Hero candidates unchanged, skipping"
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Render hero image
-        if: steps.check.outputs.skip != 'true' && steps.compare.outputs.skip != 'true'
-        working-directory: .github/hero
-        run: node render.mjs
+      - name: Generate hero image
+        run: xvfb-run ./gradlew generateHeroImage
 
       - name: Publish to hero branch
-        if: steps.check.outputs.skip != 'true' && steps.compare.outputs.skip != 'true'
-        env:
-          GH_TOKEN: ${{ secrets.HERO_PAT }}
         run: |
-          cp .github/hero/hero.webp /tmp/hero.webp
+          cp build/hero/hero.webp /tmp/hero.webp
           git config user.name "automatedcolleague"
           git config user.email "automatedcolleague@users.noreply.github.com"
           git checkout --orphan hero
@@ -153,14 +42,3 @@ jobs:
           git add hero.webp
           git commit -m "Update hero image"
           git push -f origin hero
-
-      - name: Cache new hash
-        if: steps.check.outputs.skip != 'true' && steps.compare.outputs.skip != 'true'
-        run: cp /tmp/hero-hash-new.txt /tmp/hero-hash.txt
-
-      - name: Save hash cache
-        if: steps.check.outputs.skip != 'true' && steps.compare.outputs.skip != 'true'
-        uses: actions/cache/save@v5
-        with:
-          path: /tmp/hero-hash.txt
-          key: hero-hash-${{ github.run_id }}

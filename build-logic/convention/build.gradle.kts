@@ -28,5 +28,6 @@ dependencies {
   implementation(libs.ksp.plugin)
   implementation(libs.ktlint.plugin)
   implementation(libs.metro.plugin)
+  implementation(libs.node.gradle.plugin)
   implementation(libs.room.plugin)
 }
