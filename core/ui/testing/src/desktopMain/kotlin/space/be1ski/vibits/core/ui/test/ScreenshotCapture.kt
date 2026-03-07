@@ -18,8 +18,8 @@ private const val WIDE_WIDTH = 900
 private const val WIDE_HEIGHT = 700
 private const val COMPACT_WIDTH = 540
 private const val COMPACT_HEIGHT = 1080
-private const val HERO_WIDTH = 2800
-private const val HERO_HEIGHT = 1600
+private const val HERO_WIDTH = 5600
+private const val HERO_HEIGHT = 3200
 
 @OptIn(ExperimentalTestApi::class)
 fun runWideUiTest(block: suspend DesktopComposeUiTest.() -> Unit) =
@@ -47,8 +47,19 @@ fun ComposeUiTest.saveHeroImage() {
     g.drawImage(layerImage, 0, 0, null)
   }
   g.dispose()
+
+  val targetW = composite.width / 2
+  val targetH = composite.height / 2
+  val downscaled = BufferedImage(targetW, targetH, BufferedImage.TYPE_INT_ARGB)
+  val dg: Graphics2D = downscaled.createGraphics()
+  dg.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION, java.awt.RenderingHints.VALUE_INTERPOLATION_BICUBIC)
+  dg.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
+  dg.setRenderingHint(java.awt.RenderingHints.KEY_RENDERING, java.awt.RenderingHints.VALUE_RENDER_QUALITY)
+  dg.drawImage(composite, 0, 0, targetW, targetH, null)
+  dg.dispose()
+
   val dir = File("build/hero").also { it.mkdirs() }
-  ImageIO.write(composite, "png", File(dir, "hero.png"))
+  ImageIO.write(downscaled, "png", File(dir, "hero.png"))
 }
 
 @OptIn(ExperimentalTestApi::class)

@@ -18,7 +18,7 @@ class HeroImageTest {
     val root = File(buildDir)
     runHeroUiTest {
       setContent {
-        CompositionLocalProvider(LocalDensity provides Density(2f)) {
+        CompositionLocalProvider(LocalDensity provides Density(4f)) {
           HeroCanvas(
             screenshotsDir = File(root, "ui-screenshots"),
             heroDir = File(root, "hero"),
