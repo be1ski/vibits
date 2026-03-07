@@ -1,6 +1,3 @@
-import hero.HeroImageRenderer
-
-val screenshotsDir = rootProject.layout.buildDirectory.dir("ui-screenshots")
 val buildHeroDir = rootProject.layout.buildDirectory.dir("hero")
 
 tasks.register("generateHeroImage") {
@@ -8,16 +5,37 @@ tasks.register("generateHeroImage") {
   description = "Generate hero.webp from screenshot tests"
   dependsOn("screenshotTests")
 
-  inputs.dir(screenshotsDir)
-  outputs.file(buildHeroDir.map { it.file("hero.webp") })
+  subprojects {
+    tasks.findByName("heroDesktopTest")?.let { dependsOn(it) }
+  }
 
   notCompatibleWithConfigurationCache("reads files at execution time")
 
   doLast {
-    val renderer = HeroImageRenderer(
-      screenshotsDir = screenshotsDir.get().asFile,
-      outputFile = buildHeroDir.get().asFile.resolve("hero.webp"),
-    )
-    renderer.render()
+    val heroPng = subprojects
+      .map { File(it.layout.buildDirectory.get().asFile, "hero/hero.png") }
+      .firstOrNull { it.exists() }
+    requireNotNull(heroPng) { "hero.png not found in any subproject build directory" }
+
+    val outputDir = buildHeroDir.get().asFile
+    outputDir.mkdirs()
+    val heroWebp = File(outputDir, "hero.webp")
+
+    val cwebpSuccess = try {
+      val process = ProcessBuilder(
+        "cwebp", "-q", "90", "-alpha_q", "100",
+        heroPng.absolutePath, "-o", heroWebp.absolutePath,
+      ).redirectErrorStream(true).start()
+      process.waitFor() == 0
+    } catch (_: Exception) {
+      false
+    }
+
+    if (cwebpSuccess) {
+      println("Done: ${heroWebp.name}")
+    } else {
+      heroPng.copyTo(File(outputDir, "hero.png"), overwrite = true)
+      println("Warning: cwebp not found, saved as hero.png")
+    }
   }
 }
