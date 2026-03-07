@@ -136,8 +136,8 @@ jobs:
           GH_TOKEN: ${{ secrets.HERO_PAT }}
         run: |
           cp .github/hero/hero.webp .github/hero.webp
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "automatedcolleague"
+          git config user.email "automatedcolleague@users.noreply.github.com"
           git add .github/hero.webp
           if git diff --staged --quiet; then
             echo "Hero image unchanged, skipping"
