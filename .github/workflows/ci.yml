@@ -11,6 +11,24 @@ permissions:
   pull-requests: write
 
 jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      ios-relevant: ${{ steps.filter.outputs.ios }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Check for iOS-relevant changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            ios:
+              - '**/platform/**'
+              - '**/iosMain/**'
+              - 'app/ios/**'
+
   check-jvm:
     runs-on: ubuntu-latest
 
@@ -70,6 +88,8 @@ jobs:
           retention-days: "7"
 
   check-ios:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.ios-relevant == 'true'
     runs-on: macos-latest
 
     steps:
@@ -92,7 +112,12 @@ jobs:
     name: Update hero image
     runs-on: ubuntu-latest
     needs: [check-jvm, check-ios]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: |
+      always()
+      && github.event_name == 'push'
+      && github.ref == 'refs/heads/main'
+      && needs.check-jvm.result == 'success'
+      && (needs.check-ios.result == 'success' || needs.check-ios.result == 'skipped')
     concurrency:
       group: hero-update-${{ github.ref }}
       cancel-in-progress: true

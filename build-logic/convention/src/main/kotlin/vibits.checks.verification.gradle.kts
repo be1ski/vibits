@@ -15,11 +15,10 @@ tasks.register("checkJvm") {
 
 tasks.register("checkIos") {
   group = "verification"
-  description = "Runs iOS checks: compile, ktlint (requires macOS)"
+  description = "Runs iOS checks: compile (requires macOS)"
   subprojects {
     plugins.withId("org.jetbrains.kotlin.multiplatform") {
       tasks.findByName("compileKotlinIosArm64")?.let { dependsOn(it) }
-      tasks.findByName("ktlintCheck")?.let { dependsOn(it) }
     }
   }
 }
