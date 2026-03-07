@@ -14,11 +14,15 @@ import kotlin.test.Test
 class HeroImageTest {
   @Test
   fun `generate hero image`() {
-    val screenshotsDir = System.getProperty("hero.screenshotsDir") ?: return
+    val buildDir = System.getProperty("hero.buildDir") ?: return
+    val root = File(buildDir)
     runHeroUiTest {
       setContent {
         CompositionLocalProvider(LocalDensity provides Density(2f)) {
-          HeroCanvas(screenshotsDir = File(screenshotsDir))
+          HeroCanvas(
+            screenshotsDir = File(root, "ui-screenshots"),
+            heroDir = File(root, "hero"),
+          )
         }
       }
       saveHeroImage()

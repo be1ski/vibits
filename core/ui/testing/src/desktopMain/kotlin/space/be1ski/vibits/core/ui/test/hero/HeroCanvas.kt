@@ -42,18 +42,13 @@ private data class HeroLayout(
 
 private fun assignScreenshots(
   config: HeroConfig,
-  screenshotsDir: File,
+  heroDir: File,
 ): Map<String, String> {
-  val heroDir = File(screenshotsDir, "hero")
-  require(heroDir.exists()) { "Missing hero screenshots directory: $heroDir" }
+  val manifest = File(heroDir, "hero-candidates.txt")
+  require(manifest.exists()) { "Missing hero-candidates.txt in $heroDir" }
 
-  val candidates =
-    heroDir
-      .listFiles()
-      .orEmpty()
-      .filter { it.isFile && it.extension == "png" }
-      .map { it.name }
-  require(candidates.isNotEmpty()) { "No hero candidate screenshots in $heroDir" }
+  val candidates = manifest.readLines().filter { it.isNotBlank() }
+  require(candidates.isNotEmpty()) { "No hero candidates listed in $manifest" }
 
   val sorted = candidates.sorted()
   val typeToLayout = mapOf("macbook" to "wide", "iphone" to "compact")
@@ -90,16 +85,16 @@ private fun assignScreenshots(
 private fun computeLayout(
   config: HeroConfig,
   screenshotsDir: File,
+  heroDir: File,
 ): HeroLayout {
-  val assignments = assignScreenshots(config, screenshotsDir)
-  val heroDir = File(screenshotsDir, "hero")
+  val assignments = assignScreenshots(config, heroDir)
 
   val deviceLayouts =
     config.devices.sortedBy { it.zIndex }.map { device ->
       val fileName = requireNotNull(assignments[device.id])
       val screenshot =
         org.jetbrains.skia.Image
-          .makeFromEncoded(File(heroDir, fileName).readBytes())
+          .makeFromEncoded(File(screenshotsDir, fileName).readBytes())
           .toComposeImageBitmap()
       val aspectRatio = screenshot.width.toFloat() / screenshot.height.toFloat()
 
@@ -138,9 +133,12 @@ private fun computeLayout(
 }
 
 @Composable
-fun HeroCanvas(screenshotsDir: File) {
+fun HeroCanvas(
+  screenshotsDir: File,
+  heroDir: File,
+) {
   val config = heroConfig
-  val layout = remember { computeLayout(config, screenshotsDir) }
+  val layout = remember { computeLayout(config, screenshotsDir, heroDir) }
 
   Box(Modifier.size(config.canvas.width.dp, config.canvas.height.dp)) {
     // Decorative dots

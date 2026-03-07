@@ -106,9 +106,8 @@ tasks.register<Test>("heroDesktopTest") {
   classpath = files(dt.map { it.classpath.files })
   filter.includeTestsMatching("*.HeroImageTest")
   systemProperty(
-    "hero.screenshotsDir",
+    "hero.buildDir",
     rootProject.layout.buildDirectory
-      .dir("ui-screenshots")
       .get()
       .asFile
       .absolutePath,
