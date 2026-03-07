@@ -1,9 +1,7 @@
 name: Update hero image
 
 on:
-  workflow_run:
-    workflows: [CI]
-    types: [completed]
+  push:
     branches: [main]
 
 permissions:
@@ -16,7 +14,6 @@ concurrency:
 jobs:
   update-hero:
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success'
 
     steps:
       - name: Checkout
