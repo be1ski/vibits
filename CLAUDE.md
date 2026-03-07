@@ -88,7 +88,7 @@ Actions split into sealed subtypes (one per sub-reducer). Sub-reducers are `inte
 
 ## Git & PRs
 
-- All changes via PRs, never commit to main. `git fetch origin main` + rebase before starting.
+- All changes via PRs, never commit to main. **ALWAYS** `git fetch origin main && git rebase origin/main` before first commit on any branch. This is mandatory — never skip it, even if you think the branch is up to date.
 - Squash merge: `gh pr merge --auto --squash --delete-branch`
 - PR updates: push new commits to the same branch (don't recreate PRs). Amend + force-push only when explicitly asked.
 - Commit messages: imperative, concise, English. No claude.ai session links.

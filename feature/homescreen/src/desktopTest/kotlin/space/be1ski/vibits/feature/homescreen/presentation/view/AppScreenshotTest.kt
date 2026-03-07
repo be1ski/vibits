@@ -85,7 +85,7 @@ class AppScreenshotTest {
   private val noSugarConfig = HabitConfig(tag = "#habits/no_sugar", label = "No Sugar", color = HabitColor(0xFFF44336))
   private val earlySleepConfig = HabitConfig(tag = "#habits/early_sleep", label = "Early Sleep", color = HabitColor(0xFF607D8B))
   private val allHabits =
-    listOf(waterConfig, exerciseConfig, readingConfig, meditationConfig, walkingConfig, learningConfig, noSugarConfig, earlySleepConfig)
+    listOf(meditationConfig, waterConfig, exerciseConfig, readingConfig, walkingConfig, learningConfig, noSugarConfig, earlySleepConfig)
 
   private val fakeExportService =
     object : ExportService {
@@ -121,7 +121,7 @@ class AppScreenshotTest {
     var cursor = configDate
     while (cursor <= today) {
       val completedHabits =
-        allHabits.filter { rng.nextFloat() < 0.55f }
+        allHabits.filter { rng.nextFloat() < 0.5f }
       if (completedHabits.isNotEmpty()) {
         val dayStr = cursor.toString()
         val content =
@@ -240,6 +240,7 @@ class AppScreenshotTest {
     habitsState: HabitsState = HabitsState(),
     settingsState: SettingsState = SettingsState(),
     wideLayout: Boolean = true,
+    hero: Boolean = false,
     currentVersion: String = "dev",
     getChangelog: GetChangelogUseCase = fakeGetChangelog,
     checkForUpdate: CheckForUpdateUseCase? = null,
@@ -258,7 +259,7 @@ class AppScreenshotTest {
       checkForUpdate = checkForUpdate,
       testLogs = testLogs,
     )
-    saveScreenshot("${platform}_light_$name")
+    saveScreenshot("${platform}_light_$name", hero = hero)
     setVibitsApp(
       appState,
       memosState,
@@ -271,7 +272,7 @@ class AppScreenshotTest {
       checkForUpdate = checkForUpdate,
       testLogs = testLogs,
     )
-    saveScreenshot("${platform}_dark_$name")
+    saveScreenshot("${platform}_dark_$name", hero = hero)
   }
 
   private fun captureAppAllVariants(
@@ -280,6 +281,7 @@ class AppScreenshotTest {
     memosState: MemosState = MemosState(memos = demoMemos, initialDataLoaded = true),
     habitsState: HabitsState = HabitsState(),
     settingsState: SettingsState = SettingsState(),
+    hero: Boolean = false,
     currentVersion: String = "dev",
     getChangelog: GetChangelogUseCase = fakeGetChangelog,
     testLogs: List<LogEntry>? = null,
@@ -291,6 +293,7 @@ class AppScreenshotTest {
         memosState,
         habitsState,
         settingsState,
+        hero = hero,
         currentVersion = currentVersion,
         getChangelog = getChangelog,
         testLogs = testLogs,
@@ -304,6 +307,7 @@ class AppScreenshotTest {
         habitsState,
         settingsState,
         wideLayout = false,
+        hero = hero,
         currentVersion = currentVersion,
         getChangelog = getChangelog,
         testLogs = testLogs,
@@ -415,7 +419,7 @@ class AppScreenshotTest {
     val range = ActivityRange.Week(periodStart)
     val appState = habitsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = periodStart)
     val habitsState = habitsStateWithCache(range)
-    captureAppAllVariants(name = "app_habits_week", appState = appState, habitsState = habitsState)
+    captureAppAllVariants(name = "app_habits_week", appState = appState, habitsState = habitsState, hero = true)
   }
 
   @Test
@@ -424,7 +428,7 @@ class AppScreenshotTest {
     val range = ActivityRange.Month(2024, Month.NOVEMBER)
     val appState = habitsAppState(tab = TimeRangeTab.MONTHS, periodStartDate = periodStart)
     val habitsState = habitsStateWithCache(range)
-    captureAppAllVariants(name = "app_habits_month", appState = appState, habitsState = habitsState)
+    captureAppAllVariants(name = "app_habits_month", appState = appState, habitsState = habitsState, hero = true)
   }
 
   @Test
@@ -433,7 +437,7 @@ class AppScreenshotTest {
     val range = ActivityRange.Quarter(2024, 4)
     val appState = habitsAppState(tab = TimeRangeTab.QUARTERS, periodStartDate = periodStart)
     val habitsState = habitsStateWithCache(range)
-    captureAppAllVariants(name = "app_habits_quarter", appState = appState, habitsState = habitsState)
+    captureAppAllVariants(name = "app_habits_quarter", appState = appState, habitsState = habitsState, hero = true)
   }
 
   @Test
@@ -442,7 +446,7 @@ class AppScreenshotTest {
     val range = ActivityRange.Year(2024)
     val appState = habitsAppState(tab = TimeRangeTab.YEARS, periodStartDate = periodStart)
     val habitsState = habitsStateWithCache(range)
-    captureAppAllVariants(name = "app_habits_year", appState = appState, habitsState = habitsState)
+    captureAppAllVariants(name = "app_habits_year", appState = appState, habitsState = habitsState, hero = true)
   }
 
   // endregion
@@ -455,7 +459,7 @@ class AppScreenshotTest {
     val range = ActivityRange.Week(periodStart)
     val appState = postsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = periodStart)
     val habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS)
-    captureAppAllVariants(name = "app_stats_week", appState = appState, habitsState = habitsState)
+    captureAppAllVariants(name = "app_stats_week", appState = appState, habitsState = habitsState, hero = true)
   }
 
   @Test
@@ -464,7 +468,7 @@ class AppScreenshotTest {
     val range = ActivityRange.Month(2024, Month.NOVEMBER)
     val appState = postsAppState(tab = TimeRangeTab.MONTHS, periodStartDate = periodStart)
     val habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS)
-    captureAppAllVariants(name = "app_stats_month", appState = appState, habitsState = habitsState)
+    captureAppAllVariants(name = "app_stats_month", appState = appState, habitsState = habitsState, hero = true)
   }
 
   // endregion
@@ -472,7 +476,7 @@ class AppScreenshotTest {
   // region Feed
 
   @Test
-  fun `when feed has data then captures feed screen`() = captureAppAllVariants(name = "app_feed", appState = feedAppState())
+  fun `when feed has data then captures feed screen`() = captureAppAllVariants(name = "app_feed", appState = feedAppState(), hero = true)
 
   @Test
   fun `when feed is empty then captures empty feed`() =
@@ -578,6 +582,7 @@ class AppScreenshotTest {
     captureAppAllVariants(
       name = "app_habit_editor",
       appState = habitsAppState(),
+      hero = true,
       habitsState =
         habitsStateWithCache(range).copy(
           editorDay = editorDay,
