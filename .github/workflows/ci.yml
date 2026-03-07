@@ -112,6 +112,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
 
+      - name: Install cwebp
+        run: sudo apt-get install -y webp
+
       - name: Generate hero image
         run: xvfb-run ./gradlew generateHeroImage
 

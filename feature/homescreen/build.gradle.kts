@@ -96,3 +96,23 @@ kotlin {
     }
   }
 }
+
+tasks.register<Test>("heroDesktopTest") {
+  group = "hero"
+  description = "Generate hero image via Compose test"
+  val dt = tasks.named<Test>("desktopTest")
+  dependsOn(dt)
+  testClassesDirs = files(dt.map { it.testClassesDirs.files })
+  classpath = files(dt.map { it.classpath.files })
+  filter.includeTestsMatching("*.HeroImageTest")
+  systemProperty(
+    "hero.screenshotsDir",
+    rootProject.layout.buildDirectory
+      .dir("ui-screenshots")
+      .get()
+      .asFile
+      .absolutePath,
+  )
+  outputs.upToDateWhen { false }
+  mustRunAfter(rootProject.tasks.named("screenshotTests"))
+}
