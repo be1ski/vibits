@@ -44,32 +44,43 @@ fun ComposeUiTest.setThemedContent(
 fun ComposeUiTest.captureInBothThemes(
   name: String,
   wideLayout: Boolean = true,
+  hero: Boolean = false,
   content: @Composable () -> Unit,
 ) {
   setThemedContent(darkTheme = false, wideLayout = wideLayout, content = content)
-  saveScreenshot("${name}_light")
+  saveScreenshot("${name}_light", hero = hero)
   setThemedContent(darkTheme = true, wideLayout = wideLayout, content = content)
-  saveScreenshot("${name}_dark")
+  saveScreenshot("${name}_dark", hero = hero)
 }
 
 @OptIn(ExperimentalTestApi::class)
 fun captureAllVariants(
   name: String,
+  hero: Boolean = false,
   assertions: ComposeUiTest.() -> Unit = {},
   content: @Composable () -> Unit,
 ) {
   runWideUiTest {
-    captureInBothThemes("wide_$name", wideLayout = true, content = content)
+    setThemedContent(darkTheme = false, wideLayout = true, content = content)
+    saveScreenshot("wide_light_$name", hero = hero)
+    setThemedContent(darkTheme = true, wideLayout = true, content = content)
+    saveScreenshot("wide_dark_$name", hero = hero)
     assertions()
   }
   runCompactUiTest {
-    captureInBothThemes("compact_$name", wideLayout = false, content = content)
+    setThemedContent(darkTheme = false, wideLayout = false, content = content)
+    saveScreenshot("compact_light_$name", hero = hero)
+    setThemedContent(darkTheme = true, wideLayout = false, content = content)
+    saveScreenshot("compact_dark_$name", hero = hero)
     assertions()
   }
 }
 
 @OptIn(ExperimentalTestApi::class)
-fun ComposeUiTest.saveScreenshot(scenario: String) {
+fun ComposeUiTest.saveScreenshot(
+  scenario: String,
+  hero: Boolean = false,
+) {
   waitForIdle()
   val roots = onAllNodes(isRoot())
   val firstImage = roots[0].captureToImage().toAwtImage()
@@ -84,4 +95,7 @@ fun ComposeUiTest.saveScreenshot(scenario: String) {
   g.dispose()
   val dir = File("build/ui-screenshots").also { it.mkdirs() }
   ImageIO.write(composite, "png", File(dir, "$scenario.png"))
+  if (hero) {
+    File(dir, "hero-candidates.txt").appendText("$scenario.png\n")
+  }
 }
