@@ -89,7 +89,7 @@ jobs:
 
   check-ios:
     needs: detect-changes
-    if: github.event_name == 'push' || needs.detect-changes.outputs.ios-relevant == 'true'
+    if: needs.detect-changes.outputs.ios-relevant == 'true'
     runs-on: macos-latest
 
     steps:
