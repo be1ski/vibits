@@ -2,7 +2,7 @@ val buildHeroDir = rootProject.layout.buildDirectory.dir("hero")
 
 tasks.register("generateHeroImage") {
   group = "hero"
-  description = "Generate hero.webp from screenshot tests"
+  description = "Generate hero.webp variants from screenshot tests"
   dependsOn("screenshotTests")
 
   subprojects {
@@ -12,30 +12,37 @@ tasks.register("generateHeroImage") {
   notCompatibleWithConfigurationCache("reads files at execution time")
 
   doLast {
-    val heroPng = subprojects
-      .map { File(it.layout.buildDirectory.get().asFile, "hero/hero.png") }
-      .firstOrNull { it.exists() }
-    requireNotNull(heroPng) { "hero.png not found in any subproject build directory" }
+    val heroPngs = subprojects
+      .flatMap { sub ->
+        val heroDir = File(sub.layout.buildDirectory.get().asFile, "hero")
+        heroDir.listFiles()?.filter { it.name.startsWith("hero-") && it.extension == "png" }
+          ?: emptyList()
+      }
+    require(heroPngs.isNotEmpty()) { "No hero-*.png files found in any subproject build directory" }
 
     val outputDir = buildHeroDir.get().asFile
     outputDir.mkdirs()
-    val heroWebp = File(outputDir, "hero.webp")
 
-    val cwebpSuccess = try {
-      val process = ProcessBuilder(
-        "cwebp", "-q", "90", "-alpha_q", "100",
-        heroPng.absolutePath, "-o", heroWebp.absolutePath,
-      ).redirectErrorStream(true).start()
-      process.waitFor() == 0
-    } catch (_: Exception) {
-      false
-    }
+    for (heroPng in heroPngs) {
+      val baseName = heroPng.nameWithoutExtension
+      val heroWebp = File(outputDir, "$baseName.webp")
 
-    if (cwebpSuccess) {
-      println("Done: ${heroWebp.name}")
-    } else {
-      heroPng.copyTo(File(outputDir, "hero.png"), overwrite = true)
-      println("Warning: cwebp not found, saved as hero.png")
+      val cwebpSuccess = try {
+        val process = ProcessBuilder(
+          "cwebp", "-q", "90", "-alpha_q", "100",
+          heroPng.absolutePath, "-o", heroWebp.absolutePath,
+        ).redirectErrorStream(true).start()
+        process.waitFor() == 0
+      } catch (_: Exception) {
+        false
+      }
+
+      if (cwebpSuccess) {
+        println("Done: ${heroWebp.name}")
+      } else {
+        heroPng.copyTo(File(outputDir, heroPng.name), overwrite = true)
+        println("Warning: cwebp not found, saved as ${heroPng.name}")
+      }
     }
   }
 }

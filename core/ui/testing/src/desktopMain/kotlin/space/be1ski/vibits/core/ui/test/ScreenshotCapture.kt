@@ -34,7 +34,7 @@ fun runHeroUiTest(block: suspend DesktopComposeUiTest.() -> Unit) =
   runDesktopComposeUiTest(width = HERO_WIDTH, height = HERO_HEIGHT, block = block)
 
 @OptIn(ExperimentalTestApi::class)
-fun ComposeUiTest.saveHeroImage() {
+fun ComposeUiTest.saveHeroImage(suffix: String = "") {
   waitForIdle()
   val roots = onAllNodes(isRoot())
   val firstImage = roots[0].captureToImage().toAwtImage()
@@ -58,8 +58,9 @@ fun ComposeUiTest.saveHeroImage() {
   dg.drawImage(composite, 0, 0, targetW, targetH, null)
   dg.dispose()
 
+  val filename = if (suffix.isEmpty()) "hero.png" else "hero-$suffix.png"
   val dir = File("build/hero").also { it.mkdirs() }
-  ImageIO.write(downscaled, "png", File(dir, "hero.png"))
+  ImageIO.write(downscaled, "png", File(dir, filename))
 }
 
 @OptIn(ExperimentalTestApi::class)

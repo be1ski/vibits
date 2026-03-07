@@ -1,5 +1,13 @@
 package space.be1ski.vibits.core.ui.test.hero
 
+enum class HeroVariant {
+  LIGHT,
+  DARK,
+  ;
+
+  val theme: String get() = name.lowercase()
+}
+
 data class HeroCanvasSize(
   val width: Int,
   val height: Int,
@@ -15,7 +23,6 @@ data class HeroPosition(
 data class HeroDevice(
   val id: String,
   val type: String,
-  val theme: String,
   val scenario: String,
   val screenWidth: Int? = null,
   val bodyWidth: Int? = null,
@@ -46,7 +53,6 @@ val heroConfig =
         HeroDevice(
           id = "desktop-4",
           type = "macbook",
-          theme = "dark",
           scenario = "app_habits_week",
           screenWidth = 580,
           position = HeroPosition(top = 190, left = 280),
@@ -56,7 +62,6 @@ val heroConfig =
         HeroDevice(
           id = "desktop-3",
           type = "macbook",
-          theme = "dark",
           scenario = "app_habits_month",
           screenWidth = 460,
           position = HeroPosition(top = 80, left = 420),
@@ -66,7 +71,6 @@ val heroConfig =
         HeroDevice(
           id = "desktop-1",
           type = "macbook",
-          theme = "light",
           scenario = "app_feed",
           screenWidth = 380,
           position = HeroPosition(top = 30, left = 60),
@@ -76,7 +80,6 @@ val heroConfig =
         HeroDevice(
           id = "desktop-2",
           type = "macbook",
-          theme = "dark",
           scenario = "app_stats_week",
           screenWidth = 400,
           position = HeroPosition(top = 40, right = 90),
@@ -86,7 +89,6 @@ val heroConfig =
         HeroDevice(
           id = "phone-1",
           type = "iphone",
-          theme = "dark",
           scenario = "app_habits_year",
           bodyWidth = 155,
           position = HeroPosition(top = 100, left = 50),
@@ -96,7 +98,6 @@ val heroConfig =
         HeroDevice(
           id = "phone-2",
           type = "iphone",
-          theme = "light",
           scenario = "app_feed",
           bodyWidth = 148,
           position = HeroPosition(top = 330, left = 130),
@@ -106,7 +107,6 @@ val heroConfig =
         HeroDevice(
           id = "phone-3",
           type = "iphone",
-          theme = "dark",
           scenario = "app_habit_editor",
           bodyWidth = 140,
           position = HeroPosition(top = 110, left = 620),
@@ -116,7 +116,6 @@ val heroConfig =
         HeroDevice(
           id = "phone-4",
           type = "iphone",
-          theme = "light",
           scenario = "app_habits_quarter",
           bodyWidth = 155,
           position = HeroPosition(top = 290, right = 150),
