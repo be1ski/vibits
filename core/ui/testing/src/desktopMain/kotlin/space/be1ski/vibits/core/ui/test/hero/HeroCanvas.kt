@@ -47,39 +47,17 @@ private fun assignScreenshots(
   val manifest = File(heroDir, "hero-candidates.txt")
   require(manifest.exists()) { "Missing hero-candidates.txt in $heroDir" }
 
-  val candidates = manifest.readLines().filter { it.isNotBlank() }
+  val candidates = manifest.readLines().filter { it.isNotBlank() }.toSet()
   require(candidates.isNotEmpty()) { "No hero candidates listed in $manifest" }
 
-  val sorted = candidates.sorted()
-  val typeToLayout = mapOf("macbook" to "wide", "iphone" to "compact")
-  val usedFiles = mutableSetOf<String>()
-  val usedByLayout =
-    mutableMapOf(
-      "wide" to mutableSetOf<String>(),
-      "compact" to mutableSetOf<String>(),
-    )
-  val result = mutableMapOf<String, String>()
-
-  for (device in config.devices) {
-    val layout = typeToLayout.getValue(device.type)
-    val prefix = "${layout}_${device.theme}_"
-    val used = usedByLayout.getValue(layout)
-
-    var match =
-      sorted.firstOrNull { f ->
-        f.startsWith(prefix) && f !in usedFiles && f.removePrefix(prefix) !in used
-      }
-    if (match == null) {
-      match = sorted.firstOrNull { f -> f.startsWith(prefix) && f !in usedFiles }
+  return config.devices.associate { device ->
+    val layout = if (device.type == "macbook") "wide" else "compact"
+    val filename = "${layout}_${device.theme}_${device.scenario}.png"
+    require(filename in candidates) {
+      "Missing screenshot for ${device.id}: $filename"
     }
-    requireNotNull(match) { "No hero candidate for ${device.id} ($prefix*)" }
-
-    result[device.id] = match
-    usedFiles.add(match)
-    used.add(match.removePrefix(prefix))
+    device.id to filename
   }
-
-  return result
 }
 
 private fun computeLayout(
