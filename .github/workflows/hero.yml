@@ -1,0 +1,92 @@
+name: Update hero image
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hero-update
+  cancel-in-progress: true
+
+jobs:
+  update-hero:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.HERO_PAT }}
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Install cwebp
+        run: sudo apt-get install -y webp
+
+      - name: Generate hero image
+        run: xvfb-run ./gradlew generateHeroImage
+
+      - name: Compare hero hash
+        id: compare
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          NEW_FILE="build/hero/hero.webp"
+          if [ ! -f "$NEW_FILE" ]; then
+            echo "Missing generated file: $NEW_FILE"
+            exit 1
+          fi
+
+          OLD_HASH="none"
+          if git fetch --depth=1 origin hero:refs/remotes/origin/hero 2>/dev/null; then
+            if git cat-file -e origin/hero:hero.webp 2>/dev/null; then
+              git show origin/hero:hero.webp > /tmp/old-hero.webp
+              OLD_HASH="$(sha256sum /tmp/old-hero.webp | cut -d' ' -f1)"
+            fi
+          fi
+
+          NEW_HASH="$(sha256sum "$NEW_FILE" | cut -d' ' -f1)"
+
+          echo "new_hash=$NEW_HASH" >> "$GITHUB_OUTPUT"
+          echo "old_hash=$OLD_HASH" >> "$GITHUB_OUTPUT"
+
+          if [ "$NEW_HASH" = "$OLD_HASH" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Hero image unchanged, skip publish"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Hero image changed, publish required"
+          fi
+
+      - name: Publish hero branch
+        if: steps.compare.outputs.changed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cp build/hero/hero.webp /tmp/hero.webp
+          git config user.name "automatedcolleague"
+          git config user.email "automatedcolleague@users.noreply.github.com"
+
+          git checkout --orphan hero
+          git reset --hard
+          git clean -fdx
+
+          mv /tmp/hero.webp hero.webp
+          git add hero.webp
+          git commit -m "chore(hero): update hero.webp (${GITHUB_SHA::7})"
+          git push -f origin hero

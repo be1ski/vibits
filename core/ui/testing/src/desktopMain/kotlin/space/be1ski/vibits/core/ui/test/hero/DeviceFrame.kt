@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
@@ -113,6 +114,7 @@ private fun MacbookScreen(
         contentDescription = null,
         modifier = Modifier.width(innerW).height(imgH),
         contentScale = ContentScale.FillBounds,
+        filterQuality = FilterQuality.High,
       )
     }
   }
@@ -184,6 +186,7 @@ fun IphoneFrame(
           .height(imgH)
           .clip(RoundedCornerShape(IPHONE_INNER_CORNER)),
       contentScale = ContentScale.FillBounds,
+      filterQuality = FilterQuality.High,
     )
   }
 }
