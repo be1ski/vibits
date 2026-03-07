@@ -104,7 +104,7 @@ jobs:
       - name: Restore previous hash
         if: steps.check.outputs.skip != 'true'
         id: cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: /tmp/hero-hash.txt
           key: hero-hash-${{ github.run_id }}
@@ -161,7 +161,7 @@ jobs:
 
       - name: Save hash cache
         if: steps.check.outputs.skip != 'true' && steps.compare.outputs.skip != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: /tmp/hero-hash.txt
           key: hero-hash-${{ github.run_id }}
