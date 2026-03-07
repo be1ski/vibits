@@ -79,7 +79,7 @@ jobs:
           image-directory-path: "./build/ui-screenshots"
           artifact-name: "ui-screenshots"
           comment-report-format: "summarized"
-          outdated-comment-action: "minimize"
+          outdated-comment-action: "update"
           enable-antialias: "true"
           retention-days: "7"
 
