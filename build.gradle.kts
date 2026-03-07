@@ -19,10 +19,3 @@ plugins {
   id("vibits.checks.verification")
 }
 
-// node-gradle plugin adds a project-level Ivy repository (nodejs.org),
-// which with PREFER_PROJECT causes Gradle to skip settings repositories.
-// Re-declare them here so all dependencies (e.g. kover-jvm-agent) resolve.
-repositories {
-  google()
-  mavenCentral()
-}
