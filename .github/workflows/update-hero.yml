@@ -147,9 +147,20 @@ jobs:
             git commit -m "Update hero image"
             git push -f origin "$BRANCH"
             if ! gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number' | grep -q .; then
+              CI_COMMIT=$(gh run view "$CI_RUN_ID" --repo "${{ github.repository }}" \
+                --json headSha,displayTitle --jq '"[`\(.headSha[0:7])`](../commit/\(.headSha)) \(.displayTitle)"')
+              MANIFEST=".github/hero/ui-screenshots/hero-candidates.txt"
+              CANDIDATES=""
+              if [ -f "$MANIFEST" ]; then
+                CANDIDATES=$(sed 's/\.png$//' "$MANIFEST" | sed 's/^/- `/' | sed 's/$/`/')
+              fi
+              PR_BODY=$(printf "Triggered by CI run [#%s](../actions/runs/%s) for %s." "$CI_RUN_ID" "$CI_RUN_ID" "$CI_COMMIT")
+              if [ -n "$CANDIDATES" ]; then
+                PR_BODY=$(printf "%s\n\n**Screenshots used:**\n%s" "$PR_BODY" "$CANDIDATES")
+              fi
               gh pr create \
                 --title "Update hero image" \
-                --body "Auto-generated from latest CI screenshots." \
+                --body "$PR_BODY" \
                 --head "$BRANCH"
               gh pr merge --auto --squash --delete-branch
             fi
