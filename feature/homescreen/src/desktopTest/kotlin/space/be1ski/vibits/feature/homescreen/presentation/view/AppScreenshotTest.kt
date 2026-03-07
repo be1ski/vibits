@@ -85,7 +85,7 @@ class AppScreenshotTest {
   private val noSugarConfig = HabitConfig(tag = "#habits/no_sugar", label = "No Sugar", color = HabitColor(0xFFF44336))
   private val earlySleepConfig = HabitConfig(tag = "#habits/early_sleep", label = "Early Sleep", color = HabitColor(0xFF607D8B))
   private val allHabits =
-    listOf(waterConfig, exerciseConfig, readingConfig, meditationConfig, walkingConfig, learningConfig, noSugarConfig, earlySleepConfig)
+    listOf(exerciseConfig, waterConfig, readingConfig, meditationConfig, walkingConfig, learningConfig, noSugarConfig, earlySleepConfig)
 
   private val fakeExportService =
     object : ExportService {
