@@ -81,7 +81,7 @@ jobs:
             echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
           fi
 
-  await-ci:
+  await-main-checks:
     runs-on: ubuntu-latest
     needs: [resolve-version]
 
@@ -142,7 +142,7 @@ jobs:
 
   build-apk:
     runs-on: ubuntu-latest
-    needs: [await-ci, resolve-version]
+    needs: [await-main-checks, resolve-version]
 
     steps:
       - name: Checkout
@@ -196,7 +196,7 @@ jobs:
 
   build-dmg:
     runs-on: macos-latest
-    needs: [await-ci, resolve-version]
+    needs: [await-main-checks, resolve-version]
 
     steps:
       - name: Checkout
@@ -278,7 +278,7 @@ jobs:
 
   build-msi:
     runs-on: windows-latest
-    needs: [await-ci, resolve-version]
+    needs: [await-main-checks, resolve-version]
 
     steps:
       - name: Checkout
@@ -307,7 +307,7 @@ jobs:
 
   build-web:
     runs-on: ubuntu-latest
-    needs: [await-ci, resolve-version]
+    needs: [await-main-checks, resolve-version]
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
