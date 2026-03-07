@@ -19,7 +19,6 @@ datetime = "0.7.1"
 detekt = "1.23.8"
 kover = "0.9.7"
 metro = "0.11.2"
-nodeGradle = "7.1.0"
 kotlin = "2.3.10"
 ksp = "2.3.6"
 ktor = "3.4.1"
@@ -80,7 +79,6 @@ ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.r
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 material-components = { group = "com.google.android.material", name = "material", version.ref = "material" }
 metro-plugin = { group = "dev.zacsweers.metro", name = "gradle-plugin", version.ref = "metro" }
-node-gradle-plugin = { group = "com.github.node-gradle", name = "gradle-node-plugin", version.ref = "nodeGradle" }
 room-plugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
@@ -96,6 +94,5 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
-node-gradle = { id = "com.github.node-gradle.node", version.ref = "nodeGradle" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 firebase-appdistribution = { id = "com.google.firebase.appdistribution", version.ref = "firebaseAppDistribution" }

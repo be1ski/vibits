@@ -27,9 +27,4 @@ xcuserdata/
 /.ralph/
 /fix_plan.md
 /fix_results.md
-.github/hero/node_modules/
-.github/hero/package-lock.json
-.github/hero/ui-screenshots/
-.github/hero/_hero.html
-.github/hero/hero.webp
 app/android/google-services.json

@@ -28,7 +28,7 @@ jobs:
           java-version: '21'
 
       - name: Generate hero image
-        run: xvfb-run ./gradlew generateHeroImage
+        run: ./gradlew generateHeroImage
 
       - name: Publish to hero branch
         run: |

@@ -94,8 +94,10 @@ fun ComposeUiTest.saveScreenshot(
   }
   g.dispose()
   val dir = File("build/ui-screenshots").also { it.mkdirs() }
-  ImageIO.write(composite, "png", File(dir, "$scenario.png"))
+  val file = File(dir, "$scenario.png")
+  ImageIO.write(composite, "png", file)
   if (hero) {
-    File(dir, "hero-candidates.txt").appendText("$scenario.png\n")
+    val heroDir = File(dir, "hero").also { it.mkdirs() }
+    file.copyTo(File(heroDir, file.name), overwrite = true)
   }
 }
