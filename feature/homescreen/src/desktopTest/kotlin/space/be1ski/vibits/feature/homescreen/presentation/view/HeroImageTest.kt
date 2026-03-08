@@ -6,6 +6,7 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.unit.Density
 import space.be1ski.vibits.core.ui.test.hero.HeroCanvas
 import space.be1ski.vibits.core.ui.test.hero.HeroVariant
+import space.be1ski.vibits.core.ui.test.hero.heroConfig
 import space.be1ski.vibits.core.ui.test.runHeroUiTest
 import space.be1ski.vibits.core.ui.test.saveHeroImage
 import java.io.File
@@ -19,7 +20,6 @@ class HeroImageTest {
     val root = File(buildDir)
     val screenshotsDir = File(root, "ui-screenshots")
     val heroDir = File(root, "hero")
-
     for (variant in HeroVariant.entries) {
       runHeroUiTest {
         setContent {
@@ -28,6 +28,7 @@ class HeroImageTest {
               screenshotsDir = screenshotsDir,
               heroDir = heroDir,
               variant = variant,
+              config = heroConfig,
             )
           }
         }

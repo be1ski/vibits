@@ -1,4 +1,5 @@
 val buildHeroDir = rootProject.layout.buildDirectory.dir("hero")
+val publishedHeroPngNames = setOf("hero-dark.png", "hero-light.png")
 
 tasks.register("generateHeroImage") {
   group = "hero"
@@ -15,13 +16,21 @@ tasks.register("generateHeroImage") {
     val heroPngs = subprojects
       .flatMap { sub ->
         val heroDir = File(sub.layout.buildDirectory.get().asFile, "hero")
-        heroDir.listFiles()?.filter { it.name.startsWith("hero-") && it.extension == "png" }
+        heroDir.listFiles()?.filter { it.extension == "png" && it.name in publishedHeroPngNames }
           ?: emptyList()
       }
-    require(heroPngs.isNotEmpty()) { "No hero-*.png files found in any subproject build directory" }
+    require(heroPngs.isNotEmpty()) {
+      "No published hero PNG files found. Expected: ${publishedHeroPngNames.joinToString(", ")}"
+    }
 
     val outputDir = buildHeroDir.get().asFile
     outputDir.mkdirs()
+    delete(
+      fileTree(outputDir) {
+        include("hero-*.webp")
+        include("hero-*.png")
+      },
+    )
 
     for (heroPng in heroPngs) {
       val baseName = heroPng.nameWithoutExtension
