@@ -160,7 +160,7 @@ jobs:
           NEW_HASH="$(cat build/hero/hero-dark.webp build/hero/hero-light.webp | sha256sum | cut -d' ' -f1)"
 
           OLD_HASH="none"
-          if git fetch --depth=1 origin hero:refs/remotes/origin/hero 2>/dev/null; then
+          if git fetch origin hero:refs/remotes/origin/hero 2>/dev/null; then
             if git cat-file -e origin/hero:hero-dark.webp 2>/dev/null && git cat-file -e origin/hero:hero-light.webp 2>/dev/null; then
               git show origin/hero:hero-dark.webp > /tmp/old-hero-dark.webp
               git show origin/hero:hero-light.webp > /tmp/old-hero-light.webp
@@ -185,17 +185,42 @@ jobs:
         run: |
           set -euo pipefail
 
-          cp build/hero/hero-dark.webp /tmp/hero-dark.webp
-          cp build/hero/hero-light.webp /tmp/hero-light.webp
           git config user.name "automatedcolleague"
           git config user.email "automatedcolleague@users.noreply.github.com"
 
-          git checkout --orphan hero
-          git reset --hard
-          git clean -fdx
+          # Checkout existing hero branch, or create orphan if first time
+          if git rev-parse --verify refs/remotes/origin/hero >/dev/null 2>&1; then
+            git checkout -B hero origin/hero
+          else
+            git checkout --orphan hero
+            git reset --hard
+            git clean -fdx
+          fi
 
-          mv /tmp/hero-dark.webp hero-dark.webp
-          mv /tmp/hero-light.webp hero-light.webp
+          # Update images
+          cp build/hero/hero-dark.webp hero-dark.webp
+          cp build/hero/hero-light.webp hero-light.webp
           git add hero-dark.webp hero-light.webp
-          git commit -m "chore(hero): update hero images (${GITHUB_SHA::7})"
+          git commit -m "Update hero images (${GITHUB_SHA::7})"
+
+          # Prune: squash commits older than 7 days into a single root
+          CUTOFF=$(date -d '7 days ago' +%s)
+          OLDEST_RECENT=$(git log --reverse --format='%H %at' | while read hash ts; do
+            if [ "$ts" -ge "$CUTOFF" ]; then echo "$hash"; break; fi
+          done)
+
+          if [ -n "$OLDEST_RECENT" ] && [ "$OLDEST_RECENT" != "$(git rev-list --max-parents=0 HEAD)" ]; then
+            # Create new orphan root from OLDEST_RECENT's tree
+            TREE=$(git rev-parse "${OLDEST_RECENT}^{tree}")
+            DATE=$(git log -1 --format="%aI" "$OLDEST_RECENT")
+            MSG=$(git log -1 --format="%s" "$OLDEST_RECENT")
+            NEW_ROOT=$(GIT_AUTHOR_DATE="$DATE" GIT_COMMITTER_DATE="$DATE" git commit-tree "$TREE" -m "$MSG")
+
+            if [ "$OLDEST_RECENT" = "$(git rev-parse HEAD)" ]; then
+              git reset --hard "$NEW_ROOT"
+            else
+              git rebase --onto "$NEW_ROOT" "$OLDEST_RECENT"
+            fi
+          fi
+
           git push -f origin hero
