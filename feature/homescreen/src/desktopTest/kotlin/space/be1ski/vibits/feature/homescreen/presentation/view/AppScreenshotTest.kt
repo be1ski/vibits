@@ -105,7 +105,7 @@ class AppScreenshotTest {
 
   private val fakeGetChangelog = GetChangelogUseCase(FakeChangelogRepository(), FakeLastSeenVersionStore())
 
-  private val demoMemos: List<Memo> by lazy { generateDemoMemos() }
+  private val demoMemos: List<Memo> by lazy { generateDemoMemos().sortedByDescending { it.createTime } }
   private val buildActivityData = BuildActivityDataUseCase(BuildDayDataUseCase())
 
   // region Demo data generation
