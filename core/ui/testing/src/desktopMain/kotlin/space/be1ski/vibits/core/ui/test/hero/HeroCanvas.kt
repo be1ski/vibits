@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.unit.Dp
@@ -81,24 +82,25 @@ private fun overlapRatio(
   return overlapArea / backArea
 }
 
+private val PAIR_SUFFIX_REGEX = Regex("-(desktop|mobile)-(front|back)$")
+
 private fun pairKeyFor(
   id: String,
-): String? =
-  when {
-    id.endsWith("-front") -> id.removeSuffix("-front")
-    id.endsWith("-back") -> id.removeSuffix("-back")
-    else -> null
-  }
+): String? {
+  val match = PAIR_SUFFIX_REGEX.find(id) ?: return null
+  return id.removeRange(match.range)
+}
 
 private fun validatePairOverlaps(deviceLayouts: List<DeviceLayout>) {
   val pairs = mutableMapOf<String, PairLayouts>()
   deviceLayouts.forEach { layout ->
     val key = pairKeyFor(layout.device.id) ?: return@forEach
     val current = pairs[key] ?: PairLayouts()
+    val id = layout.device.id
     pairs[key] =
       when {
-        layout.device.id.endsWith("-front") -> current.copy(front = layout)
-        layout.device.id.endsWith("-back") -> current.copy(back = layout)
+        id.endsWith("-front") -> current.copy(front = layout)
+        id.endsWith("-back") -> current.copy(back = layout)
         else -> current
       }
   }
@@ -246,6 +248,9 @@ private fun HeroDevices(layout: HeroLayout) {
           .graphicsLayer {
             rotationZ = dl.device.rotate.toFloat()
             alpha = dl.device.alpha
+            if (dl.device.alpha < 1f) {
+              compositingStrategy = CompositingStrategy.Offscreen
+            }
           }.shadow(dl.shadowElevation, dl.shadowShape),
     ) {
       when (dl.device.type) {
