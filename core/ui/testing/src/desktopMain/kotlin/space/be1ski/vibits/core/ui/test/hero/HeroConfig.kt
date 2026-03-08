@@ -115,7 +115,6 @@ val heroConfig =
           screenWidth = 260,
           position = HeroPosition(bottom = 34, left = 60),
           rotate = 2,
-          alpha = 0.9f,
           zIndex = 5,
         ),
         HeroDevice(
