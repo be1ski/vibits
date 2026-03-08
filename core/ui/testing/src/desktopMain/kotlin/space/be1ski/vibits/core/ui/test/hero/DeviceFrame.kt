@@ -30,10 +30,6 @@ private val TRAFFIC_YELLOW = Color(0xFFFEBC2E)
 private val TRAFFIC_GREEN = Color(0xFF28C840)
 
 private val BORDER_W = 3.dp
-private val TITLEBAR_H = 26.dp
-private val DOT_SIZE = 9.dp
-private val DOT_GAP = 7.dp
-private val DOT_PAD_LEFT = 11.dp
 private val BASE_OVERHANG = 5.dp
 private val BASE_HEIGHT = 11.dp
 private val HINGE_INSET = 20.dp
@@ -78,6 +74,14 @@ private fun MacbookScreen(
   bgColor: Color,
   titlebarColor: Color,
 ) {
+  // Scale titlebar elements proportionally to screen width
+  // Real MacBook: 12px dots, 22px titlebar on ~1440px screen
+  val scale = innerW / 1440.dp
+  val titlebarH = 22.dp * scale
+  val dotSize = 12.dp * scale
+  val dotGap = 8.dp * scale
+  val dotPadLeft = 14.dp * scale
+
   Box(
     modifier =
       Modifier
@@ -98,16 +102,16 @@ private fun MacbookScreen(
         modifier =
           Modifier
             .fillMaxWidth()
-            .height(TITLEBAR_H)
+            .height(titlebarH)
             .background(titlebarColor),
         verticalAlignment = Alignment.CenterVertically,
       ) {
-        Spacer(Modifier.width(DOT_PAD_LEFT))
-        Box(Modifier.size(DOT_SIZE).clip(CircleShape).background(TRAFFIC_RED))
-        Spacer(Modifier.width(DOT_GAP))
-        Box(Modifier.size(DOT_SIZE).clip(CircleShape).background(TRAFFIC_YELLOW))
-        Spacer(Modifier.width(DOT_GAP))
-        Box(Modifier.size(DOT_SIZE).clip(CircleShape).background(TRAFFIC_GREEN))
+        Spacer(Modifier.width(dotPadLeft))
+        Box(Modifier.size(dotSize).clip(CircleShape).background(TRAFFIC_RED))
+        Spacer(Modifier.width(dotGap))
+        Box(Modifier.size(dotSize).clip(CircleShape).background(TRAFFIC_YELLOW))
+        Spacer(Modifier.width(dotGap))
+        Box(Modifier.size(dotSize).clip(CircleShape).background(TRAFFIC_GREEN))
       }
       Image(
         bitmap = screenshot,
@@ -152,7 +156,9 @@ fun macbookSize(
   val innerW = screenWidth.dp - BORDER_W * 2
   val imgH = innerW / screenshotAspectRatio
   val totalW = screenWidth.dp + BASE_OVERHANG * 2
-  val totalH = BORDER_W * 2 + TITLEBAR_H + imgH + BASE_HEIGHT + HINGE_HEIGHT
+  val scale = innerW / 1440.dp
+  val titlebarH = 22.dp * scale
+  val totalH = BORDER_W * 2 + titlebarH + imgH + BASE_HEIGHT + HINGE_HEIGHT
   return totalW to totalH
 }
 
