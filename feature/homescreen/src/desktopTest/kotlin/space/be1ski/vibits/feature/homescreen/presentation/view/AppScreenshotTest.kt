@@ -50,6 +50,7 @@ import space.be1ski.vibits.feature.homescreen.domain.model.Screen
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
 import space.be1ski.vibits.feature.memos.domain.model.ExportResult
 import space.be1ski.vibits.feature.memos.domain.model.Memo
+import space.be1ski.vibits.feature.memos.domain.model.PostFilter
 import space.be1ski.vibits.feature.memos.domain.repository.ExportService
 import space.be1ski.vibits.feature.memos.presentation.state.MemosState
 import space.be1ski.vibits.feature.mode.presentation.state.ModeSelectionState
@@ -471,6 +472,15 @@ class AppScreenshotTest {
   }
 
   @Test
+  fun `when posts week view expanded then captures week posts with memos`() {
+    val periodStart = LocalDate(2024, 12, 9)
+    val range = ActivityRange.Week(periodStart)
+    val appState = postsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = periodStart).copy(postsListExpanded = true)
+    val habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS)
+    captureAppAllVariants(name = "app_memos_week_expanded", appState = appState, habitsState = habitsState, hero = true)
+  }
+
+  @Test
   fun `when posts month view then captures month posts`() {
     val periodStart = LocalDate(2024, 11, 1)
     val range = ActivityRange.Month(2024, Month.NOVEMBER)
@@ -494,6 +504,15 @@ class AppScreenshotTest {
 
   @Test
   fun `when feed has data then captures feed screen`() = captureAppAllVariants(name = "app_feed", appState = feedAppState(), hero = true)
+
+  @Test
+  fun `when feed tracking filter then captures tracking feed`() =
+    captureAppAllVariants(
+      name = "app_feed_tracking",
+      appState = feedAppState(),
+      memosState = MemosState(memos = demoMemos, initialDataLoaded = true, activePostFilter = PostFilter.HABIT_TRACKING),
+      hero = true,
+    )
 
   @Test
   fun `when feed is empty then captures empty feed`() =

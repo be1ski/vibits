@@ -5,31 +5,30 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.jetbrains.skia.FilterBlurMode
+import org.jetbrains.skia.MaskFilter
 import java.io.File
 
 private val PURPLE_DOT = Color(124, 58, 237, (0.45f * 255).toInt())
 private val BLUE_DOT = Color(59, 130, 246, (0.5f * 255).toInt())
 
-private val MACBOOK_FOREGROUND_SHADOW_ELEVATION = 24.dp
-private val MACBOOK_BACKGROUND_SHADOW_ELEVATION = 14.dp
-private val MACBOOK_SHADOW_SHAPE = RoundedCornerShape(10.dp)
-private val IPHONE_FOREGROUND_SHADOW_ELEVATION = 20.dp
-private val IPHONE_BACKGROUND_SHADOW_ELEVATION = 12.dp
-private val IPHONE_SHADOW_SHAPE = RoundedCornerShape(24.dp)
-
 private const val FOREGROUND_Z_THRESHOLD = 4
+private const val SHADOW_BLUR_RADIUS = 20f
+private const val SHADOW_OFFSET_Y = 6f
+private const val SHADOW_ALPHA = 0.55f
 
 private data class DeviceLayout(
   val device: HeroDevice,
@@ -39,8 +38,6 @@ private data class DeviceLayout(
   val offsetY: Dp,
   val width: Dp,
   val height: Dp,
-  val shadowElevation: Dp,
-  val shadowShape: RoundedCornerShape,
 )
 
 private data class HeroLayout(
@@ -187,22 +184,6 @@ private fun computeLayout(
         pos.top?.dp
           ?: (config.canvas.height.dp - pos.bottom!!.dp - devH)
 
-      val (shadowElevation, shadowShape) =
-        when (device.type) {
-          "macbook" ->
-            if (device.zIndex >= FOREGROUND_Z_THRESHOLD) {
-              MACBOOK_FOREGROUND_SHADOW_ELEVATION to MACBOOK_SHADOW_SHAPE
-            } else {
-              MACBOOK_BACKGROUND_SHADOW_ELEVATION to MACBOOK_SHADOW_SHAPE
-            }
-          else ->
-            if (device.zIndex >= FOREGROUND_Z_THRESHOLD) {
-              IPHONE_FOREGROUND_SHADOW_ELEVATION to IPHONE_SHADOW_SHAPE
-            } else {
-              IPHONE_BACKGROUND_SHADOW_ELEVATION to IPHONE_SHADOW_SHAPE
-            }
-        }
-
       DeviceLayout(
         device = device,
         theme = deviceTheme(device, variant),
@@ -211,8 +192,6 @@ private fun computeLayout(
         offsetY = offsetY,
         width = devW,
         height = devH,
-        shadowElevation = shadowElevation,
-        shadowShape = shadowShape,
       )
     }
 
@@ -245,7 +224,26 @@ private fun HeroDevices(layout: HeroLayout) {
         Modifier
           .offset(dl.offsetX, dl.offsetY)
           .graphicsLayer { rotationZ = dl.device.rotate.toFloat() }
-          .shadow(dl.shadowElevation, dl.shadowShape),
+          .drawBehind {
+            drawIntoCanvas { canvas ->
+              val paint =
+                Paint().also { p ->
+                  p.color = Color.Black.copy(alpha = SHADOW_ALPHA)
+                  p.asFrameworkPaint().maskFilter =
+                    MaskFilter.makeBlur(FilterBlurMode.NORMAL, SHADOW_BLUR_RADIUS)
+                }
+              val r = (if (dl.device.type == "macbook") 10.dp else 24.dp).toPx()
+              canvas.drawRoundRect(
+                left = 0f,
+                top = SHADOW_OFFSET_Y,
+                right = size.width,
+                bottom = size.height + SHADOW_OFFSET_Y,
+                radiusX = r,
+                radiusY = r,
+                paint = paint,
+              )
+            }
+          },
     ) {
       when (dl.device.type) {
         "macbook" ->
