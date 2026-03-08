@@ -26,9 +26,9 @@ private val PURPLE_DOT = Color(124, 58, 237, (0.45f * 255).toInt())
 private val BLUE_DOT = Color(59, 130, 246, (0.5f * 255).toInt())
 
 private const val FOREGROUND_Z_THRESHOLD = 4
-private const val SHADOW_BLUR_RADIUS = 20f
-private const val SHADOW_OFFSET_Y = 6f
-private const val SHADOW_ALPHA = 0.55f
+private const val SHADOW_BLUR_RADIUS = 32f
+private const val SHADOW_OFFSET_Y = 8f
+private const val SHADOW_ALPHA = 0.3f
 
 private data class DeviceLayout(
   val device: HeroDevice,
