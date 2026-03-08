@@ -28,7 +28,6 @@ data class HeroDevice(
   val bodyWidth: Int? = null,
   val position: HeroPosition,
   val rotate: Int,
-  val alpha: Float = 1f,
   val zIndex: Int,
 )
 
@@ -67,7 +66,6 @@ val heroConfig =
           bodyWidth = 168,
           position = HeroPosition(top = -22, right = 610),
           rotate = 17,
-          alpha = 0.8f,
           zIndex = 2,
         ),
         HeroDevice(
@@ -86,7 +84,7 @@ val heroConfig =
           screenWidth = 340,
           position = HeroPosition(top = 70, right = 100),
           rotate = 6,
-          alpha = 0.78f,
+
           zIndex = 1,
         ),
         HeroDevice(
@@ -105,7 +103,7 @@ val heroConfig =
           screenWidth = 370,
           position = HeroPosition(top = 12, left = 110),
           rotate = 0,
-          alpha = 0.78f,
+
           zIndex = 1,
         ),
         HeroDevice(
@@ -124,7 +122,7 @@ val heroConfig =
           bodyWidth = 144,
           position = HeroPosition(top = 316, left = 30),
           rotate = 15,
-          alpha = 0.78f,
+
           zIndex = 2,
         ),
         HeroDevice(
@@ -134,7 +132,7 @@ val heroConfig =
           screenWidth = 275,
           position = HeroPosition(bottom = 37, right = 560),
           rotate = -3,
-          alpha = 0.74f,
+
           zIndex = 2,
         ),
         HeroDevice(
