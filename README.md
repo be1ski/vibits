@@ -35,6 +35,7 @@ brew install --cask be1ski/tap/vibits
 - `./gradlew checkIos` — iOS checks
 - `./gradlew koverXmlReport` — coverage report
 - `./gradlew screenshotTests` — UI screenshot tests
+- `./gradlew generateHeroImage` — hero image generation
 - `./gradlew :app:android:assembleRelease` — Android APK
 - `./gradlew :app:desktop:packageDmg` — macOS DMG
 - `./gradlew :app:desktop:packageMsi` — Windows MSI

@@ -12,6 +12,7 @@ Kotlin Multiplatform habit tracker powered by Memos. Compose Multiplatform UI, M
 ./gradlew :feature:<name>:presentation:desktopTest  # Module tests
 ./gradlew koverXmlReport                            # Coverage → build/reports/kover/report.xml
 ./gradlew screenshotTests                           # UI screenshots → build/ui-screenshots/
+./gradlew generateHeroImage                         # Hero image → build/hero/hero-{dark,light}.webp
 ```
 
 ## Structure
