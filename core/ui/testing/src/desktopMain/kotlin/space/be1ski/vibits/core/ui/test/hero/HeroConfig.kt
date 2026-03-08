@@ -133,7 +133,7 @@ val heroConfig =
           type = "macbook",
           scenario = "app_memos_year",
           screenWidth = 275,
-          position = HeroPosition(bottom = 37, right = 630),
+          position = HeroPosition(bottom = 37, right = 560),
           rotate = -3,
           alpha = 0.74f,
           zIndex = 2,
