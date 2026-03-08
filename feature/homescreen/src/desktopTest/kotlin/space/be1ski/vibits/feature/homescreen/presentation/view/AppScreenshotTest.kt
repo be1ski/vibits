@@ -467,7 +467,7 @@ class AppScreenshotTest {
     val range = ActivityRange.Week(periodStart)
     val appState = postsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = periodStart)
     val habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS)
-    captureAppAllVariants(name = "app_stats_week", appState = appState, habitsState = habitsState, hero = true)
+    captureAppAllVariants(name = "app_memos_week", appState = appState, habitsState = habitsState, hero = true)
   }
 
   @Test
@@ -476,7 +476,16 @@ class AppScreenshotTest {
     val range = ActivityRange.Month(2024, Month.NOVEMBER)
     val appState = postsAppState(tab = TimeRangeTab.MONTHS, periodStartDate = periodStart)
     val habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS)
-    captureAppAllVariants(name = "app_stats_month", appState = appState, habitsState = habitsState, hero = true)
+    captureAppAllVariants(name = "app_memos_month", appState = appState, habitsState = habitsState, hero = true)
+  }
+
+  @Test
+  fun `when posts year view then captures year posts`() {
+    val periodStart = LocalDate(2024, 1, 1)
+    val range = ActivityRange.Year(2024)
+    val appState = postsAppState(tab = TimeRangeTab.YEARS, periodStartDate = periodStart)
+    val habitsState = habitsStateWithCache(range, mode = ActivityMode.POSTS)
+    captureAppAllVariants(name = "app_memos_year", appState = appState, habitsState = habitsState, hero = true)
   }
 
   // endregion

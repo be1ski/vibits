@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.unit.Dp
@@ -22,9 +23,11 @@ import java.io.File
 private val PURPLE_DOT = Color(124, 58, 237, (0.45f * 255).toInt())
 private val BLUE_DOT = Color(59, 130, 246, (0.5f * 255).toInt())
 
-private val MACBOOK_SHADOW_ELEVATION = 24.dp
+private val MACBOOK_FOREGROUND_SHADOW_ELEVATION = 24.dp
+private val MACBOOK_BACKGROUND_SHADOW_ELEVATION = 14.dp
 private val MACBOOK_SHADOW_SHAPE = RoundedCornerShape(10.dp)
-private val IPHONE_SHADOW_ELEVATION = 20.dp
+private val IPHONE_FOREGROUND_SHADOW_ELEVATION = 20.dp
+private val IPHONE_BACKGROUND_SHADOW_ELEVATION = 12.dp
 private val IPHONE_SHADOW_SHAPE = RoundedCornerShape(24.dp)
 
 private const val FOREGROUND_Z_THRESHOLD = 4
@@ -35,6 +38,8 @@ private data class DeviceLayout(
   val screenshot: ImageBitmap,
   val offsetX: Dp,
   val offsetY: Dp,
+  val width: Dp,
+  val height: Dp,
   val shadowElevation: Dp,
   val shadowShape: RoundedCornerShape,
 )
@@ -42,6 +47,73 @@ private data class DeviceLayout(
 private data class HeroLayout(
   val deviceLayouts: List<DeviceLayout>,
 )
+
+private data class PairLayouts(
+  val front: DeviceLayout? = null,
+  val back: DeviceLayout? = null,
+)
+
+private data class Rect(
+  val left: Float,
+  val top: Float,
+  val right: Float,
+  val bottom: Float,
+)
+
+private fun DeviceLayout.toRect(): Rect =
+  Rect(
+    left = offsetX.value,
+    top = offsetY.value,
+    right = offsetX.value + width.value,
+    bottom = offsetY.value + height.value,
+  )
+
+private fun overlapRatio(
+  front: DeviceLayout,
+  back: DeviceLayout,
+): Float {
+  val f = front.toRect()
+  val b = back.toRect()
+  val overlapW = (minOf(f.right, b.right) - maxOf(f.left, b.left)).coerceAtLeast(0f)
+  val overlapH = (minOf(f.bottom, b.bottom) - maxOf(f.top, b.top)).coerceAtLeast(0f)
+  val overlapArea = overlapW * overlapH
+  val backArea = (b.right - b.left) * (b.bottom - b.top)
+  if (backArea <= 0f) return 0f
+  return overlapArea / backArea
+}
+
+private val PAIR_SUFFIX_REGEX = Regex("-(desktop|mobile)-(front|back)$")
+
+private fun pairKeyFor(
+  id: String,
+): String? {
+  val match = PAIR_SUFFIX_REGEX.find(id) ?: return null
+  return id.removeRange(match.range)
+}
+
+private fun validatePairOverlaps(deviceLayouts: List<DeviceLayout>) {
+  val pairs = mutableMapOf<String, PairLayouts>()
+  deviceLayouts.forEach { layout ->
+    val key = pairKeyFor(layout.device.id) ?: return@forEach
+    val current = pairs[key] ?: PairLayouts()
+    val id = layout.device.id
+    pairs[key] =
+      when {
+        id.endsWith("-front") -> current.copy(front = layout)
+        id.endsWith("-back") -> current.copy(back = layout)
+        else -> current
+      }
+  }
+
+  pairs.forEach { (key, pair) ->
+    val front = pair.front ?: return@forEach
+    val back = pair.back ?: return@forEach
+    val ratio = overlapRatio(front, back)
+    require(ratio <= 0.5f) {
+      "Pair overlap for $key is ${(ratio * 100).toInt()}%, expected <= 50%"
+    }
+  }
+}
 
 private fun assignScreenshots(
   config: HeroConfig,
@@ -118,8 +190,18 @@ private fun computeLayout(
 
       val (shadowElevation, shadowShape) =
         when (device.type) {
-          "macbook" -> MACBOOK_SHADOW_ELEVATION to MACBOOK_SHADOW_SHAPE
-          else -> IPHONE_SHADOW_ELEVATION to IPHONE_SHADOW_SHAPE
+          "macbook" ->
+            if (device.zIndex >= FOREGROUND_Z_THRESHOLD) {
+              MACBOOK_FOREGROUND_SHADOW_ELEVATION to MACBOOK_SHADOW_SHAPE
+            } else {
+              MACBOOK_BACKGROUND_SHADOW_ELEVATION to MACBOOK_SHADOW_SHAPE
+            }
+          else ->
+            if (device.zIndex >= FOREGROUND_Z_THRESHOLD) {
+              IPHONE_FOREGROUND_SHADOW_ELEVATION to IPHONE_SHADOW_SHAPE
+            } else {
+              IPHONE_BACKGROUND_SHADOW_ELEVATION to IPHONE_SHADOW_SHAPE
+            }
         }
 
       DeviceLayout(
@@ -128,11 +210,14 @@ private fun computeLayout(
         screenshot = screenshot,
         offsetX = offsetX,
         offsetY = offsetY,
+        width = devW,
+        height = devH,
         shadowElevation = shadowElevation,
         shadowShape = shadowShape,
       )
     }
 
+  validatePairOverlaps(deviceLayouts)
   return HeroLayout(deviceLayouts = deviceLayouts)
 }
 
@@ -162,6 +247,10 @@ private fun HeroDevices(layout: HeroLayout) {
           .offset(dl.offsetX, dl.offsetY)
           .graphicsLayer {
             rotationZ = dl.device.rotate.toFloat()
+            alpha = dl.device.alpha
+            if (dl.device.alpha < 1f) {
+              compositingStrategy = CompositingStrategy.Offscreen
+            }
           }.shadow(dl.shadowElevation, dl.shadowShape),
     ) {
       when (dl.device.type) {
@@ -187,10 +276,10 @@ fun HeroCanvas(
   screenshotsDir: File,
   heroDir: File,
   variant: HeroVariant,
+  config: HeroConfig = heroConfig,
 ) {
-  val config = heroConfig
   val layout =
-    remember(variant) { computeLayout(config, variant, screenshotsDir, heroDir) }
+    remember(variant, config) { computeLayout(config, variant, screenshotsDir, heroDir) }
 
   Box(Modifier.size(config.canvas.width.dp, config.canvas.height.dp)) {
     HeroDots(config)
