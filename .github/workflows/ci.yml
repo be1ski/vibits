@@ -185,6 +185,10 @@ jobs:
         run: |
           set -euo pipefail
 
+          # Save generated images before branch switch cleans the working tree
+          cp build/hero/hero-dark.webp /tmp/hero-dark.webp
+          cp build/hero/hero-light.webp /tmp/hero-light.webp
+
           git config user.name "automatedcolleague"
           git config user.email "automatedcolleague@users.noreply.github.com"
 
@@ -198,8 +202,8 @@ jobs:
           fi
 
           # Update images
-          cp build/hero/hero-dark.webp hero-dark.webp
-          cp build/hero/hero-light.webp hero-light.webp
+          mv /tmp/hero-dark.webp hero-dark.webp
+          mv /tmp/hero-light.webp hero-light.webp
           git add hero-dark.webp hero-light.webp
           git commit -m "Update hero images (${GITHUB_SHA::7})"
 
