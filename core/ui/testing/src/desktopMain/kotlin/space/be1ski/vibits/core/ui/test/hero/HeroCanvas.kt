@@ -13,7 +13,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.unit.Dp
@@ -245,13 +244,8 @@ private fun HeroDevices(layout: HeroLayout) {
       modifier =
         Modifier
           .offset(dl.offsetX, dl.offsetY)
-          .graphicsLayer {
-            rotationZ = dl.device.rotate.toFloat()
-            alpha = dl.device.alpha
-            if (dl.device.alpha < 1f) {
-              compositingStrategy = CompositingStrategy.Offscreen
-            }
-          }.shadow(dl.shadowElevation, dl.shadowShape),
+          .graphicsLayer { rotationZ = dl.device.rotate.toFloat() }
+          .shadow(dl.shadowElevation, dl.shadowShape),
     ) {
       when (dl.device.type) {
         "macbook" ->
