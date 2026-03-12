@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Check for iOS-relevant changes
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v4
         id: filter
         with:
           filters: |
