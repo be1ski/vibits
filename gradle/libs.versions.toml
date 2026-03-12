@@ -2,7 +2,7 @@
 activityCompose = "1.13.0"
 atomicfu = "0.31.0"
 appcompat = "1.7.1"
-ktlint = "14.1.0"
+ktlint = "14.2.0"
 ktlintLib = "1.7.1"
 agp = "9.1.0"
 composeBom = "2026.03.00"
