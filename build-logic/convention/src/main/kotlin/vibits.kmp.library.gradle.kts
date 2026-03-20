@@ -8,7 +8,7 @@ val buildConfig = the<org.gradle.accessors.dm.LibrariesForBuildConfig>()
 val libs = the<org.gradle.accessors.dm.LibrariesForLibs>()
 
 kotlin {
-  androidLibrary {
+  android {
     namespace = project.androidNamespace()
     compileSdk = buildConfig.versions.compileSdk.get().toInt()
     minSdk = buildConfig.versions.minSdk.get().toInt()

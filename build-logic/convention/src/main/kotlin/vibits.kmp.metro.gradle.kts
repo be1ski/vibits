@@ -1,4 +1,4 @@
 plugins {
-  id("org.jetbrains.kotlin.multiplatform") apply false
+  id("org.jetbrains.kotlin.multiplatform")
   id("dev.zacsweers.metro")
 }

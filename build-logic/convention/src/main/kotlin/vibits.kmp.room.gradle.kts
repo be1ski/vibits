@@ -1,5 +1,5 @@
 plugins {
-  id("org.jetbrains.kotlin.multiplatform") apply false
+  id("org.jetbrains.kotlin.multiplatform")
   id("com.google.devtools.ksp")
   id("androidx.room")
 }
