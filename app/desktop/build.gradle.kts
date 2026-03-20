@@ -13,7 +13,7 @@ kotlin {
     val desktopMain by getting {
       dependencies {
         implementation(compose.desktop.currentOs)
-        implementation(compose.components.resources)
+        implementation(libs.compose.resources)
         implementation(libs.kotlinx.coroutines.swing)
         implementation(project(":core:strings"))
         implementation(project(":feature:homescreen"))
