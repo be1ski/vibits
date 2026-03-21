@@ -51,5 +51,11 @@ tasks.matching { it.name == "run" || it.name == "desktopRun" }.configureEach {
   doFirst {
     (this as? JavaExec)?.systemProperty("vibits.env", "dev")
     (this as? JavaExec)?.systemProperty("memos.version", appVersion)
+    if (org.gradle.internal.os.OperatingSystem
+        .current()
+        .isMacOsX
+    ) {
+      (this as? JavaExec)?.jvmArgs("-Xdock:icon=${project.file("src/desktopMain/resources/icon.icns").absolutePath}")
+    }
   }
 }
