@@ -1,0 +1,31 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- White background -->
+  <rect width="1024" height="1024" fill="#ffffff"/>
+
+  <!--
+    Safe area: 100px gutter → 824×824 content area at (100, 100)
+    4×4 staircase grid: cell=174, gap=34 → 4*174+3*34=696+102=798 ≈ 824 area
+    offset: (100 + (824-798)/2) = 113px
+  -->
+
+  <!-- Row 0: cols 2, 3 -->
+  <rect x="529" y="113" width="174" height="174" rx="38" fill="#EDE9FE"/>
+  <rect x="737" y="113" width="174" height="174" rx="38" fill="#F5F3FF"/>
+
+  <!-- Row 1: cols 1, 2, 3 -->
+  <rect x="321" y="321" width="174" height="174" rx="38" fill="#C084FC"/>
+  <rect x="529" y="321" width="174" height="174" rx="38" fill="#DDD6FE"/>
+  <rect x="737" y="321" width="174" height="174" rx="38" fill="#EDE9FE"/>
+
+  <!-- Row 2: cols 0, 1, 2, 3 -->
+  <rect x="113" y="529" width="174" height="174" rx="38" fill="#9333EA"/>
+  <rect x="321" y="529" width="174" height="174" rx="38" fill="#A855F7"/>
+  <rect x="529" y="529" width="174" height="174" rx="38" fill="#C084FC"/>
+  <rect x="737" y="529" width="174" height="174" rx="38" fill="#DDD6FE"/>
+
+  <!-- Row 3: cols 0, 1, 2, 3 -->
+  <rect x="113" y="737" width="174" height="174" rx="38" fill="#6D28D9"/>
+  <rect x="321" y="737" width="174" height="174" rx="38" fill="#7C3AED"/>
+  <rect x="529" y="737" width="174" height="174" rx="38" fill="#9333EA"/>
+  <rect x="737" y="737" width="174" height="174" rx="38" fill="#A855F7"/>
+</svg>
