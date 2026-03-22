@@ -681,8 +681,8 @@ private fun HabitActivitySection(
     }
   val chartScrollState = rememberScrollState()
   val weekdayPerformance =
-    remember(state.baseWeekData.weeks, state.habit.tag) {
-      WeekdayStatsSelector(state.baseWeekData, state.habit.tag)
+    remember(habitWeekData.weeks, state.habit.tag) {
+      WeekdayStatsSelector(habitWeekData, state.habit.tag)
     }
 
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs), modifier = Modifier.padding(top = Indent.s)) {
@@ -777,8 +777,8 @@ private fun SelectedHabitGrid(
   val showTimeline = derived.state.range is ActivityRange.Quarter || derived.state.range is ActivityRange.Year
   val useCalendarLayout = derived.state.range is ActivityRange.Month
   val weekdayPerformance =
-    remember(derived.weekData.weeks, habit.tag) {
-      WeekdayStatsSelector(derived.weekData, habit.tag)
+    remember(habitWeekData.weeks, habit.tag) {
+      WeekdayStatsSelector(habitWeekData, habit.tag)
     }
 
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
