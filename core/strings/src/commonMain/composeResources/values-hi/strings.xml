@@ -147,7 +147,7 @@
     <string name="msg_no_habits_yet">अभी तक कोई आदत कॉन्फ़िगर नहीं।</string>
     <string name="msg_no_logs">अभी कोई लॉग नहीं</string>
     <string name="msg_no_memos_yet">इस अवधि में कोई मेमो नहीं।</string>
-    <string name="msg_not_enough_data_for_trends">रुझान दिखाने के लिए पर्याप्त डेटा नहीं है</string>
+    <string name="msg_not_enough_data_for_trends">कार्यदिवस के पैटर्न देखने के लिए अधिक सप्ताह ट्रैक करें</string>
     <string name="msg_reset_confirm">क्या आप वाकई ऐप रीसेट करना चाहते हैं? सभी डेटा हटा दिया जाएगा।</string>
     <string name="msg_reset_choose_option">रीसेट विकल्प चुनें:</string>
     <string name="msg_select_habit">कम से कम एक आदत चुनें।</string>

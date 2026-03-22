@@ -147,7 +147,7 @@
     <string name="msg_no_habits_yet">ჩვევები ჯერ არ არის კონფიგურირებული.</string>
     <string name="msg_no_logs">ლოგები ჯერ არ არის</string>
     <string name="msg_no_memos_yet">ამ პერიოდში ჩანაწერები არ არის.</string>
-    <string name="msg_not_enough_data_for_trends">ტრენდების საჩვენებლად არასაკმარისი მონაცემი</string>
+    <string name="msg_not_enough_data_for_trends">კვირის დღეების შაბლონების სანახავად მეტი კვირა გაატარეთ</string>
     <string name="msg_reset_confirm">დარწმუნებული ხართ, რომ გსურთ აპის გადატვირთვა? ყველა მონაცემი წაიშლება.</string>
     <string name="msg_reset_choose_option">აირჩიეთ გადაყენების ვარიანტი:</string>
     <string name="msg_select_habit">აირჩიეთ მინიმუმ ერთი ჩვევა.</string>

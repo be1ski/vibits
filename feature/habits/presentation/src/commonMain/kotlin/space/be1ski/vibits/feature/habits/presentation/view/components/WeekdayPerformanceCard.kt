@@ -42,6 +42,7 @@ import space.be1ski.vibits.core.strings.generated.format_weekday_completion_rate
 import space.be1ski.vibits.core.strings.generated.label_weekday_performance
 import space.be1ski.vibits.core.strings.generated.msg_not_enough_data_for_trends
 import space.be1ski.vibits.core.ui.Indent
+import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.habits.presentation.state.WeekdayPerformanceCardState
 import space.be1ski.vibits.feature.habits.presentation.state.WeekdayPerformanceStats
 import space.be1ski.vibits.feature.habits.presentation.view.StatsTestTags
@@ -58,6 +59,7 @@ private const val PERCENT_FACTOR = 100
 @Composable
 internal fun WeekdayPerformanceCard(
   state: WeekdayPerformanceCardState,
+  habitColor: HabitColor,
   modifier: Modifier = Modifier,
 ) {
   val dayLabels =
@@ -80,6 +82,7 @@ internal fun WeekdayPerformanceCard(
       WeekdayBarsWithAvgLine(
         stats = state.stats,
         dayLabels = dayLabels,
+        accentColor = Color(habitColor.argb),
         averageCompletionRate =
           checkNotNull(state.averageCompletionRate) {
             "averageCompletionRate must be non-null when hasSufficientData is true"
@@ -101,9 +104,10 @@ internal fun WeekdayPerformanceCard(
 private fun WeekdayBarsWithAvgLine(
   stats: List<WeekdayPerformanceStats>,
   dayLabels: List<String>,
+  accentColor: Color,
   averageCompletionRate: Float,
 ) {
-  val accent = MaterialTheme.colorScheme.primary
+  val accent = accentColor
   val muted = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
   val neutral = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
   val avgLineColor = MaterialTheme.colorScheme.outline

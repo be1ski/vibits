@@ -147,7 +147,7 @@
     <string name="msg_no_habits_yet">لم يتم تكوين عادات بعد.</string>
     <string name="msg_no_logs">لا توجد سجلات بعد</string>
     <string name="msg_no_memos_yet">لا توجد مذكرات في هذه الفترة.</string>
-    <string name="msg_not_enough_data_for_trends">بيانات غير كافية لإظهار الاتجاهات</string>
+    <string name="msg_not_enough_data_for_trends">تتبع المزيد من الأسابيع لعرض أنماط أيام الأسبوع</string>
     <string name="msg_reset_confirm">هل أنت متأكد من إعادة تعيين التطبيق؟ سيتم مسح جميع البيانات.</string>
     <string name="msg_reset_choose_option">اختر خيار إعادة التعيين:</string>
     <string name="msg_select_habit">اختر عادة واحدة على الأقل.</string>

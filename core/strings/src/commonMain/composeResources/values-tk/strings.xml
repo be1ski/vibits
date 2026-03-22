@@ -147,7 +147,7 @@
     <string name="msg_no_habits_yet">Endikler heniz düzülmedi.</string>
     <string name="msg_no_logs">Loglar heniz ýok</string>
     <string name="msg_no_memos_yet">Bu döwürde bellik ýok.</string>
-    <string name="msg_not_enough_data_for_trends">Tendensiýalary görkezmek üçin ýeterlik maglumat ýok</string>
+    <string name="msg_not_enough_data_for_trends">Hepdäniň günleriniň yzygiderliligini görmek üçin köp hepdäni yzarlaň</string>
     <string name="msg_offline_onboarding_success">Hemme zat taýýar. Şu gün ilkinji belligi goýuň.</string>
     <string name="msg_offline_onboarding_welcome">Endikleri enjamyňyzda ýerli yzarlaň. Hasap gerek däl.</string>
     <string name="msg_reset_confirm">Programmany täzeden başlamak isleýärsiňizmi? Ähli maglumatlar öçüriler.</string>

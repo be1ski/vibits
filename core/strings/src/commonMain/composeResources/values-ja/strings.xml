@@ -147,7 +147,7 @@
     <string name="msg_no_habits_yet">まだ習慣が設定されていません。</string>
     <string name="msg_no_logs">ログがありません</string>
     <string name="msg_no_memos_yet">この期間にメモがありません。</string>
-    <string name="msg_not_enough_data_for_trends">トレンドを表示するためのデータが不足しています</string>
+    <string name="msg_not_enough_data_for_trends">曜日のパターンを確認するには、さらに数週間記録してください</string>
     <string name="msg_reset_confirm">アプリをリセットしますか？すべてのデータが削除されます。</string>
     <string name="msg_reset_choose_option">リセットオプションを選択：</string>
     <string name="msg_select_habit">少なくとも1つの習慣を選択してください。</string>

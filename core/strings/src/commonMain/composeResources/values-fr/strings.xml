@@ -147,7 +147,7 @@
     <string name="msg_no_habits_yet">Aucune habitude configurée pour l\'instant.</string>
     <string name="msg_no_logs">Aucun journal pour l\'instant</string>
     <string name="msg_no_memos_yet">Aucune note pour cette période.</string>
-    <string name="msg_not_enough_data_for_trends">Données insuffisantes pour les tendances</string>
+    <string name="msg_not_enough_data_for_trends">Suis plus de semaines pour voir les tendances par jour de la semaine</string>
     <string name="msg_reset_confirm">Êtes-vous sûr de vouloir réinitialiser l\'app ? Toutes les données seront supprimées.</string>
     <string name="msg_reset_choose_option">Choisissez l option de réinitialisation :</string>
     <string name="msg_select_habit">Sélectionnez au moins une habitude.</string>

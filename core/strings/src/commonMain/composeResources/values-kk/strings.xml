@@ -146,7 +146,7 @@
     <string name="msg_no_habits_yet">Әдеттер әлі бапталмаған.</string>
     <string name="msg_no_logs">Логтар әлі жоқ</string>
     <string name="msg_no_memos_yet">Бұл кезеңде жазбалар жоқ.</string>
-    <string name="msg_not_enough_data_for_trends">Тенденцияларды көрсету үшін деректер жеткіліксіз</string>
+    <string name="msg_not_enough_data_for_trends">Апта күндерінің үлгілерін көру үшін көбірек апта бақылаңыз</string>
     <string name="msg_reset_confirm">Қолданбаны қалпына келтіргіңіз келе ме? Барлық деректер жойылады.</string>
     <string name="msg_reset_choose_option">Қалпына келтіру нұсқасын таңдаңыз:</string>
     <string name="msg_select_habit">Кем дегенде бір әдетті таңдаңыз.</string>

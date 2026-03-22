@@ -147,7 +147,7 @@
     <string name="msg_no_habits_yet">Nenhum hábito configurado ainda.</string>
     <string name="msg_no_logs">Sem logs ainda</string>
     <string name="msg_no_memos_yet">Sem notas neste período.</string>
-    <string name="msg_not_enough_data_for_trends">Dados insuficientes para as tendências</string>
+    <string name="msg_not_enough_data_for_trends">Registe mais semanas para ver os padrões por dia da semana</string>
     <string name="msg_reset_confirm">Tem certeza de que deseja redefinir o app? Todos os dados serão apagados.</string>
     <string name="msg_reset_choose_option">Escolha a opção de redefinição:</string>
     <string name="msg_select_habit">Selecione pelo menos um hábito.</string>

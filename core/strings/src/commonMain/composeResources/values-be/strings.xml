@@ -146,7 +146,7 @@
     <string name="msg_no_habits_yet">Звычкі яшчэ не наладжаны.</string>
     <string name="msg_no_logs">Логаў пакуль няма</string>
     <string name="msg_no_memos_yet">Няма нататак за гэты перыяд.</string>
-    <string name="msg_not_enough_data_for_trends">Недастаткова даных для паказу тэндэнцый</string>
+    <string name="msg_not_enough_data_for_trends">Сачыце больш тыдняў, каб убачыць заканамернасці па днях тыдня</string>
     <string name="msg_reset_confirm">Вы ўпэўнены, што хочаце скінуць праграму? Усе даныя будуць выдалены.</string>
     <string name="msg_reset_choose_option">Абярыце варыянт скіду:</string>
     <string name="msg_select_habit">Абярыце хаця б адну звычку.</string>

@@ -147,7 +147,7 @@
     <string name="msg_no_habits_yet">Noch keine Gewohnheiten konfiguriert.</string>
     <string name="msg_no_logs">Noch keine Protokolle</string>
     <string name="msg_no_memos_yet">Keine Notizen in diesem Zeitraum.</string>
-    <string name="msg_not_enough_data_for_trends">Nicht genug Daten für Trends</string>
+    <string name="msg_not_enough_data_for_trends">Verfolge mehr Wochen, um Wochentag-Muster zu sehen</string>
     <string name="msg_reset_confirm">Sind Sie sicher, dass Sie die App zurücksetzen möchten? Alle Daten werden gelöscht.</string>
     <string name="msg_reset_choose_option">Zurücksetzungsoption wählen:</string>
     <string name="msg_select_habit">Wählen Sie mindestens eine Gewohnheit aus.</string>

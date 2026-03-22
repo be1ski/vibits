@@ -146,7 +146,7 @@
     <string name="msg_no_habits_yet">Привычек пока нет.</string>
     <string name="msg_no_logs">Логов пока нет.</string>
     <string name="msg_no_memos_yet">За этот период воспоминаний нет.</string>
-    <string name="msg_not_enough_data_for_trends">Недостаточно данных для анализа</string>
+    <string name="msg_not_enough_data_for_trends">Отслеживайте больше недель для анализа по дням недели</string>
     <string name="msg_reset_confirm">Сбросить приложение? Все данные будут удалены.</string>
     <string name="msg_reset_choose_option">Выберите вариант сброса:</string>
     <string name="msg_select_habit">Выберите хотя бы одну привычку.</string>

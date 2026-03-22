@@ -147,7 +147,7 @@
     <string name="msg_no_habits_yet">Odatlar hali sozlanmagan.</string>
     <string name="msg_no_logs">Loglar hali yo\'q</string>
     <string name="msg_no_memos_yet">Bu davrda eslatmalar yo\'q.</string>
-    <string name="msg_not_enough_data_for_trends">Tendensiyalarni ko'rsatish uchun yetarli ma'lumot yo'q</string>
+    <string name="msg_not_enough_data_for_trends">Hafta kunlari naqshlarini ko'rish uchun ko'proq haftalar kuzating</string>
     <string name="msg_reset_confirm">Ilovani tiklamoqchimisiz? Barcha ma\'lumotlar o\'chiriladi.</string>
     <string name="msg_reset_choose_option">Tiklash variantini tanlang:</string>
     <string name="msg_select_habit">Kamida bitta odatni tanlang.</string>

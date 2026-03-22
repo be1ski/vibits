@@ -799,7 +799,7 @@ private fun SelectedHabitGrid(
       onDaySelected = onDaySelected,
       onClearSelection = onClearSelection,
     )
-    WeekdayPerformanceCard(weekdayPerformance)
+    WeekdayPerformanceCard(weekdayPerformance, habit.color)
   }
 }
 

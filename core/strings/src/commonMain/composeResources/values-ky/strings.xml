@@ -147,7 +147,7 @@
     <string name="msg_no_habits_yet">Адаттар али тууралangan эмес.</string>
     <string name="msg_no_logs">Логдор али жок</string>
     <string name="msg_no_memos_yet">Бул мезгилде жазуулар жок.</string>
-    <string name="msg_not_enough_data_for_trends">Тенденцияларды көрсөтүү үчүн жетиштүү маалымат жок</string>
+    <string name="msg_not_enough_data_for_trends">Жума күндөрүнүн үлгүлөрүн көрүү үчүн дагы бир нече жума жазылыңыз</string>
     <string name="msg_offline_onboarding_success">Баары даяр. Бүгүн биринчи белгини коюңуз.</string>
     <string name="msg_offline_onboarding_welcome">Адаттарды түзмөгүңүздө жергиликтүү көзөмөлдөңүз. Эсеп керек эмес.</string>
     <string name="msg_reset_confirm">Колдонмону баштапкыга кайтаргыңыз келеби? Бардык маалыматтар өчүрүлөт.</string>

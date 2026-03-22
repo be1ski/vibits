@@ -147,7 +147,7 @@
     <string name="msg_no_habits_yet">Niciun obicei configurat încă.</string>
     <string name="msg_no_logs">Niciun log încă</string>
     <string name="msg_no_memos_yet">Nicio notă în această perioadă.</string>
-    <string name="msg_not_enough_data_for_trends">Date insuficiente pentru tendințe</string>
+    <string name="msg_not_enough_data_for_trends">Urmărește mai multe săptămâni pentru a vedea tiparele pe zile</string>
     <string name="msg_offline_onboarding_success">Totul este gata. Marchează prima verificare astăzi.</string>
     <string name="msg_offline_onboarding_welcome">Urmărește obiceiurile local pe dispozitivul tău. Nu este nevoie de cont.</string>
     <string name="msg_reset_confirm">Sunteți sigur că doriți să resetați aplicația? Toate datele vor fi șterse.</string>

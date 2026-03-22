@@ -147,7 +147,7 @@
     <string name="msg_no_habits_yet">尚未配置任何习惯。</string>
     <string name="msg_no_logs">暂无日志</string>
     <string name="msg_no_memos_yet">该时期暂无备忘。</string>
-    <string name="msg_not_enough_data_for_trends">数据不足以显示趋势</string>
+    <string name="msg_not_enough_data_for_trends">追踪更多周数以查看工作日规律</string>
     <string name="msg_reset_confirm">确定要重置应用吗？所有数据将被清除。</string>
     <string name="msg_reset_choose_option">选择重置选项：</string>
     <string name="msg_select_habit">请至少选择一个习惯。</string>
