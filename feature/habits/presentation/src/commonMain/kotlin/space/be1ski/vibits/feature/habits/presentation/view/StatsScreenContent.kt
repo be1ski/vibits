@@ -680,10 +680,6 @@ private fun HabitActivitySection(
       state.selectedDate?.let { date -> habitWeekData.findDayByDate(date) }
     }
   val chartScrollState = rememberScrollState()
-  val weekdayPerformance =
-    remember(habitWeekData.weeks, state.habit.tag) {
-      WeekdayStatsSelector(habitWeekData, state.habit.tag)
-    }
 
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs), modifier = Modifier.padding(top = Indent.s)) {
     Text(state.habit.localizedLabel(state.demoMode), style = MaterialTheme.typography.titleSmall)
@@ -711,9 +707,6 @@ private fun HabitActivitySection(
       onDaySelected = onDaySelected,
       onClearSelection = onClearSelection,
     )
-    if (state.range is ActivityRange.Month) {
-      WeekdayPerformanceCard(weekdayPerformance)
-    }
   }
 }
 
