@@ -48,7 +48,10 @@ class CheckForUpdateUseCase(
         .onFailure { Log.e(TAG, "Failed to fetch releases", it) }
         .getOrNull() ?: return null
 
-    return releases
+    val isHomebrew = installationSource.isHomebrew()
+    val candidateReleases = if (isHomebrew) releases.filter { entry -> entry.hasDmgAsset } else releases
+
+    return candidateReleases
       .mapNotNull { entry ->
         parseVersion(entry.version)?.let { parsed -> entry.version to parsed }
       }.maxByOrNull { (_, parsed) ->

@@ -108,13 +108,91 @@ class CheckForUpdateUseCaseTest {
       val homebrewUseCase = CheckForUpdateUseCase(repository, homebrewSource)
       repository.releasesResult =
         Result.success(
-          listOf(ChangelogEntry("2.0.0", "Release", "body", "2026-01-01")),
+          listOf(ChangelogEntry("2.0.0", "Release", "body", "2026-01-01", hasDmgAsset = true)),
         )
 
       val result = homebrewUseCase("1.0.0")
 
       assertNotNull(result)
       assertTrue(result.isHomebrewInstallation)
+    }
+
+  @Test
+  fun `when homebrew and latest release has no dmg asset then returns null`() =
+    runTest {
+      val homebrewSource = FakeInstallationSource(homebrew = true)
+      val homebrewUseCase = CheckForUpdateUseCase(repository, homebrewSource)
+      repository.releasesResult =
+        Result.success(
+          listOf(ChangelogEntry("2.0.0", "Release", "body", "2026-01-01", hasDmgAsset = false)),
+        )
+
+      assertNull(homebrewUseCase("1.0.0"))
+    }
+
+  @Test
+  fun `when homebrew and latest release has dmg asset then returns update`() =
+    runTest {
+      val homebrewSource = FakeInstallationSource(homebrew = true)
+      val homebrewUseCase = CheckForUpdateUseCase(repository, homebrewSource)
+      repository.releasesResult =
+        Result.success(
+          listOf(ChangelogEntry("2.0.0", "Release", "body", "2026-01-01", hasDmgAsset = true)),
+        )
+
+      val result = homebrewUseCase("1.0.0")
+
+      assertNotNull(result)
+      assertEquals("2.0.0", result.latestVersion)
+    }
+
+  @Test
+  fun `when homebrew and latest overall release has no dmg asset then falls back to latest release with dmg`() =
+    runTest {
+      val homebrewSource = FakeInstallationSource(homebrew = true)
+      val homebrewUseCase = CheckForUpdateUseCase(repository, homebrewSource)
+      repository.releasesResult =
+        Result.success(
+          listOf(
+            ChangelogEntry("2.0.0", "Newest without DMG", "body", "2026-02-01", hasDmgAsset = false),
+            ChangelogEntry("1.5.0", "Latest with DMG", "body", "2026-01-15", hasDmgAsset = true),
+          ),
+        )
+
+      val result = homebrewUseCase("1.0.0")
+
+      assertNotNull(result)
+      assertEquals("1.5.0", result.latestVersion)
+    }
+
+  @Test
+  fun `when homebrew and no dmg-backed release is newer than current then returns null`() =
+    runTest {
+      val homebrewSource = FakeInstallationSource(homebrew = true)
+      val homebrewUseCase = CheckForUpdateUseCase(repository, homebrewSource)
+      repository.releasesResult =
+        Result.success(
+          listOf(
+            ChangelogEntry("2.0.0", "Newest without DMG", "body", "2026-02-01", hasDmgAsset = false),
+            ChangelogEntry("1.5.0", "Latest with DMG", "body", "2026-01-15", hasDmgAsset = true),
+          ),
+        )
+
+      assertNull(homebrewUseCase("1.5.0"))
+    }
+
+  @Test
+  fun `when not homebrew and latest release has no dmg asset then still returns update`() =
+    runTest {
+      repository.releasesResult =
+        Result.success(
+          listOf(ChangelogEntry("2.0.0", "Release", "body", "2026-01-01", hasDmgAsset = false)),
+        )
+
+      val result = useCase("1.0.0")
+
+      assertNotNull(result)
+      assertEquals("2.0.0", result.latestVersion)
     }
 
   @Test
