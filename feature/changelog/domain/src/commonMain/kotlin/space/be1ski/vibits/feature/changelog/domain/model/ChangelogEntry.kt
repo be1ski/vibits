@@ -5,4 +5,5 @@ data class ChangelogEntry(
   val title: String,
   val body: String,
   val date: String,
+  val hasDmgAsset: Boolean = false,
 )

@@ -15,6 +15,7 @@ class ChangelogRepositoryImpl(
         title = dto.name.ifBlank { dto.tagName },
         body = dto.body,
         date = dto.publishedAt.substringBefore("T"),
+        hasDmgAsset = dto.assets.any { asset -> asset.name.endsWith(".dmg") },
       )
     }
 }

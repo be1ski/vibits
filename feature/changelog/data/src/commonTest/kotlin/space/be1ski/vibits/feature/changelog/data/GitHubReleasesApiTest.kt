@@ -53,7 +53,8 @@ class GitHubReleasesApiTest {
             "tag_name": "v1.2.0",
             "name": "Release 1.2.0",
             "body": "## Changes\n* Added feature X",
-            "published_at": "2026-02-15T12:00:00Z"
+            "published_at": "2026-02-15T12:00:00Z",
+            "assets": [{"name": "app.dmg"}]
           },
           {
             "tag_name": "v1.1.0",
@@ -81,6 +82,32 @@ class GitHubReleasesApiTest {
       assertEquals("## Changes\n* Added feature X", result[0].body)
       assertEquals("2026-02-15T12:00:00Z", result[0].publishedAt)
       assertEquals("v1.1.0", result[1].tagName)
+      assertEquals(1, result[0].assets.size)
+      assertEquals("app.dmg", result[0].assets[0].name)
+    }
+
+  @Test
+  fun `when release has no assets field then assets is empty`() =
+    runTest {
+      val json = """
+        [
+          {
+            "tag_name": "v1.0.0",
+            "name": "Release",
+            "body": "body",
+            "published_at": "2026-01-01T00:00:00Z"
+          }
+        ]
+      """.trimIndent()
+      val client = clientWithHandler {
+        respond(
+          content = json,
+          headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
+        )
+      }
+      val api = GitHubReleasesApi(client, TEST_RELEASES_URL)
+      val result = api.getReleases()
+      assertTrue(result[0].assets.isEmpty())
     }
 
   @Test
