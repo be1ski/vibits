@@ -130,7 +130,7 @@ internal fun rememberSuccessRateIfNeeded(
 ): Float? {
   val isHabitsScreen = appState.selectedScreen == Screen.HABITS
   val hasHabits = remember(habitsTimeline) { habitsTimeline.lastOrNull()?.habits?.isNotEmpty() == true }
-  val shouldCalculate = isHabitsScreen && hasHabits
+  val shouldCalculate = isHabitsScreen && hasHabits && appState.selectedHabitTag == null
   return if (shouldCalculate) {
     val cachedData =
       habitsState.getActivityData(

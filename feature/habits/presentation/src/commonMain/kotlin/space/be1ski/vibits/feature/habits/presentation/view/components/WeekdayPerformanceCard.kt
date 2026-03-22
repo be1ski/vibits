@@ -170,7 +170,7 @@ private fun WeekdayBarsNoHighlight(
   Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
     stats.forEachIndexed { index, stat ->
       WeekdayBar(
-        stat = stat,
+        stat = stat.copy(completionRate = null),
         label = dayLabels[index],
         accentColor = neutral,
         neutralColor = neutral,
