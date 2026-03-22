@@ -55,7 +55,7 @@ tasks.matching { it.name == "run" || it.name == "desktopRun" }.configureEach {
         .current()
         .isMacOsX
     ) {
-      (this as? JavaExec)?.jvmArgs("-Xdock:icon=${project.file("src/desktopMain/resources/icon.icns").absolutePath}")
+      (this as? JavaExec)?.jvmArgs("-Xdock:icon=${project.file("src/desktopMain/resources/icon_dock.png").absolutePath}")
     }
   }
 }
