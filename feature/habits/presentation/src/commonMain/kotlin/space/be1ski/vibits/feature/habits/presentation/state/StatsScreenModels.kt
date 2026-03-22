@@ -1,4 +1,5 @@
-package space.be1ski.vibits.feature.habits.presentation.view
+package space.be1ski.vibits.feature.habits.presentation.state
+
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import space.be1ski.vibits.core.ui.date.DateFormatter
@@ -10,7 +11,6 @@ import space.be1ski.vibits.feature.habits.domain.model.HabitColor
 import space.be1ski.vibits.feature.habits.domain.model.HabitConfig
 import space.be1ski.vibits.feature.habits.domain.model.HabitsConfigEntry
 import space.be1ski.vibits.feature.habits.domain.model.SuccessRate
-import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
 import space.be1ski.vibits.feature.memos.domain.model.Memo
 
 /**
