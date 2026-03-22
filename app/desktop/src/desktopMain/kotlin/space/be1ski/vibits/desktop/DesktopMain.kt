@@ -70,6 +70,7 @@ fun main() {
 }
 
 private fun setDockIcon() {
+  if (System.getProperty("vibits.env") != "dev") return
   if (!Taskbar.isTaskbarSupported()) return
   val taskbar = Taskbar.getTaskbar()
   if (taskbar.isSupported(Taskbar.Feature.ICON_IMAGE)) {
