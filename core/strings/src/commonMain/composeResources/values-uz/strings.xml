@@ -86,6 +86,7 @@
     <string name="action_write">Yozish</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d odat</string>
     <string name="format_tooltip_memos">%1$s: %2$d ta eslatma</string>
+    <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
     <string name="hint_add_habits_config">Kuzatuvni boshlash uchun odatlar konfiguratsiyasini qo\'shing.</string>
@@ -121,6 +122,7 @@
     <string name="label_time_night">Tun</string>
     <string name="label_today">Bugun</string>
     <string name="label_version">Versiya</string>
+    <string name="label_weekday_performance">Kunlar bo'yicha faoliyat</string>
 
     <!-- Filter options -->
     <string name="filter_all">Hammasi</string>
@@ -145,6 +147,7 @@
     <string name="msg_no_habits_yet">Odatlar hali sozlanmagan.</string>
     <string name="msg_no_logs">Loglar hali yo\'q</string>
     <string name="msg_no_memos_yet">Bu davrda eslatmalar yo\'q.</string>
+    <string name="msg_not_enough_data_for_trends">Tendensiyalarni ko'rsatish uchun yetarli ma'lumot yo'q</string>
     <string name="msg_reset_confirm">Ilovani tiklamoqchimisiz? Barcha ma\'lumotlar o\'chiriladi.</string>
     <string name="msg_reset_choose_option">Tiklash variantini tanlang:</string>
     <string name="msg_select_habit">Kamida bitta odatni tanlang.</string>

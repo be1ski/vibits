@@ -86,6 +86,7 @@
     <string name="action_write">Schreiben</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d Gewohnheiten</string>
     <string name="format_tooltip_memos">%1$s: %2$d Notizen</string>
+    <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
     <string name="hint_add_habits_config">Fügen Sie eine Gewohnheits-Konfigurationsnotiz hinzu, um mit dem Tracking zu beginnen.</string>
@@ -121,6 +122,7 @@
     <string name="label_time_night">Nacht</string>
     <string name="label_today">Heute</string>
     <string name="label_version">Version</string>
+    <string name="label_weekday_performance">Leistung nach Wochentag</string>
 
     <!-- Filter options -->
     <string name="filter_all">Alle</string>
@@ -145,6 +147,7 @@
     <string name="msg_no_habits_yet">Noch keine Gewohnheiten konfiguriert.</string>
     <string name="msg_no_logs">Noch keine Protokolle</string>
     <string name="msg_no_memos_yet">Keine Notizen in diesem Zeitraum.</string>
+    <string name="msg_not_enough_data_for_trends">Nicht genug Daten für Trends</string>
     <string name="msg_reset_confirm">Sind Sie sicher, dass Sie die App zurücksetzen möchten? Alle Daten werden gelöscht.</string>
     <string name="msg_reset_choose_option">Zurücksetzungsoption wählen:</string>
     <string name="msg_select_habit">Wählen Sie mindestens eine Gewohnheit aus.</string>

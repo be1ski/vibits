@@ -86,6 +86,7 @@
     <string name="action_write">写</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d 习惯</string>
     <string name="format_tooltip_memos">%1$s: %2$d 条备忘</string>
+    <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
     <string name="hint_add_habits_config">添加习惯配置备忘以开始跟踪。</string>
@@ -121,6 +122,7 @@
     <string name="label_time_night">夜晚</string>
     <string name="label_today">今天</string>
     <string name="label_version">版本</string>
+    <string name="label_weekday_performance">按星期表现</string>
 
     <!-- Filter options -->
     <string name="filter_all">全部</string>
@@ -145,6 +147,7 @@
     <string name="msg_no_habits_yet">尚未配置任何习惯。</string>
     <string name="msg_no_logs">暂无日志</string>
     <string name="msg_no_memos_yet">该时期暂无备忘。</string>
+    <string name="msg_not_enough_data_for_trends">数据不足以显示趋势</string>
     <string name="msg_reset_confirm">确定要重置应用吗？所有数据将被清除。</string>
     <string name="msg_reset_choose_option">选择重置选项：</string>
     <string name="msg_select_habit">请至少选择一个习惯。</string>

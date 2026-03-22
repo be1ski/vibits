@@ -86,6 +86,7 @@
     <string name="action_write">წერა</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d ჩვევა</string>
     <string name="format_tooltip_memos">%1$s: %2$d ჩანაწერი</string>
+    <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
     <string name="hint_add_habits_config">დაამატეთ ჩვევების კონფიგურაცია თვალყურის დევნებისთვის.</string>
@@ -121,6 +122,7 @@
     <string name="label_time_night">ღამე</string>
     <string name="label_today">დღეს</string>
     <string name="label_version">ვერსია</string>
+    <string name="label_weekday_performance">შესრულება დღის მიხედვით</string>
 
     <!-- Filter options -->
     <string name="filter_all">ყველა</string>
@@ -145,6 +147,7 @@
     <string name="msg_no_habits_yet">ჩვევები ჯერ არ არის კონფიგურირებული.</string>
     <string name="msg_no_logs">ლოგები ჯერ არ არის</string>
     <string name="msg_no_memos_yet">ამ პერიოდში ჩანაწერები არ არის.</string>
+    <string name="msg_not_enough_data_for_trends">ტრენდების საჩვენებლად არასაკმარისი მონაცემი</string>
     <string name="msg_reset_confirm">დარწმუნებული ხართ, რომ გსურთ აპის გადატვირთვა? ყველა მონაცემი წაიშლება.</string>
     <string name="msg_reset_choose_option">აირჩიეთ გადაყენების ვარიანტი:</string>
     <string name="msg_select_habit">აირჩიეთ მინიმუმ ერთი ჩვევა.</string>

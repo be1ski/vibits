@@ -86,6 +86,7 @@
     <string name="action_write">Жазуу</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d адат</string>
     <string name="format_tooltip_memos">%1$s: %2$d жазуу</string>
+    <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
     <string name="hint_add_habits_config">Көзөмөлдөөнү баштоо үчүн адаттар конфигурациясын кошуңуз.</string>
@@ -121,6 +122,7 @@
     <string name="label_time_night">Түн</string>
     <string name="label_today">Бүгүн</string>
     <string name="label_version">Версия</string>
+    <string name="label_weekday_performance">Күндөр боюнча аткаруу</string>
 
     <!-- Filter options -->
     <string name="filter_all">Баары</string>
@@ -145,6 +147,7 @@
     <string name="msg_no_habits_yet">Адаттар али тууралangan эмес.</string>
     <string name="msg_no_logs">Логдор али жок</string>
     <string name="msg_no_memos_yet">Бул мезгилде жазуулар жок.</string>
+    <string name="msg_not_enough_data_for_trends">Тенденцияларды көрсөтүү үчүн жетиштүү маалымат жок</string>
     <string name="msg_offline_onboarding_success">Баары даяр. Бүгүн биринчи белгини коюңуз.</string>
     <string name="msg_offline_onboarding_welcome">Адаттарды түзмөгүңүздө жергиликтүү көзөмөлдөңүз. Эсеп керек эмес.</string>
     <string name="msg_reset_confirm">Колдонмону баштапкыга кайтаргыңыз келеби? Бардык маалыматтар өчүрүлөт.</string>

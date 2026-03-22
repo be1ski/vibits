@@ -86,6 +86,7 @@
     <string name="action_write">Ýaz</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d endik</string>
     <string name="format_tooltip_memos">%1$s: %2$d bellik</string>
+    <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
     <string name="hint_add_habits_config">Yzarlamagy başlamak üçin endikler konfigurasiýasyny goşuň.</string>
@@ -121,6 +122,7 @@
     <string name="label_time_night">Gije</string>
     <string name="label_today">Şu gün</string>
     <string name="label_version">Wersiýa</string>
+    <string name="label_weekday_performance">Günler boýunça ýerine ýetiriş</string>
 
     <!-- Filter options -->
     <string name="filter_all">Hemmesi</string>
@@ -145,6 +147,7 @@
     <string name="msg_no_habits_yet">Endikler heniz düzülmedi.</string>
     <string name="msg_no_logs">Loglar heniz ýok</string>
     <string name="msg_no_memos_yet">Bu döwürde bellik ýok.</string>
+    <string name="msg_not_enough_data_for_trends">Tendensiýalary görkezmek üçin ýeterlik maglumat ýok</string>
     <string name="msg_offline_onboarding_success">Hemme zat taýýar. Şu gün ilkinji belligi goýuň.</string>
     <string name="msg_offline_onboarding_welcome">Endikleri enjamyňyzda ýerli yzarlaň. Hasap gerek däl.</string>
     <string name="msg_reset_confirm">Programmany täzeden başlamak isleýärsiňizmi? Ähli maglumatlar öçüriler.</string>

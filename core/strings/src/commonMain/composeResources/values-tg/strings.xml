@@ -86,6 +86,7 @@
     <string name="action_write">Навиштан</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d одат</string>
     <string name="format_tooltip_memos">%1$s: %2$d ёддошт</string>
+    <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
     <string name="hint_add_habits_config">Барои оғоз кардани пайгирӣ конфигуратсияи одатҳоро илова кунед.</string>
@@ -121,6 +122,7 @@
     <string name="label_time_night">Шаб</string>
     <string name="label_today">Имрӯз</string>
     <string name="label_version">Версия</string>
+    <string name="label_weekday_performance">Фаъолият аз рӯи рӯзҳо</string>
 
     <!-- Filter options -->
     <string name="filter_all">Ҳама</string>
@@ -145,6 +147,7 @@
     <string name="msg_no_habits_yet">Одатҳо ҳанӯз танзим нашудаанд.</string>
     <string name="msg_no_logs">Логҳо ҳанӯз нестанд</string>
     <string name="msg_no_memos_yet">Дар ин давра ёддоштҳо нестанд.</string>
+    <string name="msg_not_enough_data_for_trends">Маълумот барои нишон додани тамоюлҳо кофӣ нест</string>
     <string name="msg_offline_onboarding_success">Ҳама чиз тайёр аст. Имрӯз қайди аввалинро гузоред.</string>
     <string name="msg_offline_onboarding_welcome">Одатҳоро дар дастгоҳи худ маҳаллӣ назорат кунед. Ҳисоб зарур нест.</string>
     <string name="msg_reset_confirm">Шумо мутмаин ҳастед, ки мехоҳед барномаро барқарор кунед? Ҳамаи маълумот нест мешавад.</string>

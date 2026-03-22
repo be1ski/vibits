@@ -88,6 +88,7 @@
     <string name="action_write">Write</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d habits</string>
     <string name="format_tooltip_memos">%1$s: %2$d memos</string>
+    <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
     <string name="hint_add_habits_config">Add a habits config memo to start tracking.</string>
@@ -122,6 +123,7 @@
     <string name="label_time_night">Night</string>
     <string name="label_today">Today</string>
     <string name="label_version">Version</string>
+    <string name="label_weekday_performance">Performance by Day</string>
 
     <!-- Filter options -->
     <string name="filter_all">All</string>
@@ -144,6 +146,7 @@
     <string name="msg_no_habits_yet">No habits configured yet.</string>
     <string name="msg_no_logs">No logs yet</string>
     <string name="msg_no_memos_yet">No memos in this period.</string>
+    <string name="msg_not_enough_data_for_trends">Not enough data to show trends</string>
     <string name="msg_offline_onboarding_success">You're all set. Track your first check-in today.</string>
     <string name="msg_offline_onboarding_welcome">Track habits locally on your device. No account needed.</string>
     <string name="msg_reset_confirm">Are you sure you want to reset the app? This will clear all data.</string>

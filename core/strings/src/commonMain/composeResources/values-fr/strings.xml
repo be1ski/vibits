@@ -86,6 +86,7 @@
     <string name="action_write">Écrire</string>
     <string name="format_tooltip_habits">%1$s : %2$d/%3$d habitudes</string>
     <string name="format_tooltip_memos">%1$s : %2$d notes</string>
+    <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
     <string name="hint_add_habits_config">Ajoutez une note de configuration d\'habitudes pour commencer le suivi.</string>
@@ -121,6 +122,7 @@
     <string name="label_time_night">Nuit</string>
     <string name="label_today">Aujourd\'hui</string>
     <string name="label_version">Version</string>
+    <string name="label_weekday_performance">Performance par jour</string>
 
     <!-- Filter options -->
     <string name="filter_all">Tous</string>
@@ -145,6 +147,7 @@
     <string name="msg_no_habits_yet">Aucune habitude configurée pour l\'instant.</string>
     <string name="msg_no_logs">Aucun journal pour l\'instant</string>
     <string name="msg_no_memos_yet">Aucune note pour cette période.</string>
+    <string name="msg_not_enough_data_for_trends">Données insuffisantes pour les tendances</string>
     <string name="msg_reset_confirm">Êtes-vous sûr de vouloir réinitialiser l\'app ? Toutes les données seront supprimées.</string>
     <string name="msg_reset_choose_option">Choisissez l option de réinitialisation :</string>
     <string name="msg_select_habit">Sélectionnez au moins une habitude.</string>

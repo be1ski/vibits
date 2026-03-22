@@ -86,6 +86,7 @@
     <string name="action_write">Жазу</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d әдет</string>
     <string name="format_tooltip_memos">%1$s: %2$d жазба</string>
+    <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
     <string name="hint_add_habits_config">Бақылауды бастау үшін әдеттер конфигурациясын қосыңыз.</string>
@@ -120,6 +121,7 @@
     <string name="label_time_night">Түн</string>
     <string name="label_today">Бүгін</string>
     <string name="label_version">Нұсқа</string>
+    <string name="label_weekday_performance">Күндер бойынша белсенділік</string>
 
     <!-- Filter options -->
     <string name="filter_all">Барлығы</string>
@@ -144,6 +146,7 @@
     <string name="msg_no_habits_yet">Әдеттер әлі бапталмаған.</string>
     <string name="msg_no_logs">Логтар әлі жоқ</string>
     <string name="msg_no_memos_yet">Бұл кезеңде жазбалар жоқ.</string>
+    <string name="msg_not_enough_data_for_trends">Тенденцияларды көрсету үшін деректер жеткіліксіз</string>
     <string name="msg_reset_confirm">Қолданбаны қалпына келтіргіңіз келе ме? Барлық деректер жойылады.</string>
     <string name="msg_reset_choose_option">Қалпына келтіру нұсқасын таңдаңыз:</string>
     <string name="msg_select_habit">Кем дегенде бір әдетті таңдаңыз.</string>

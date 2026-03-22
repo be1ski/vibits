@@ -86,6 +86,7 @@
     <string name="action_write">Escrever</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d hábitos</string>
     <string name="format_tooltip_memos">%1$s: %2$d notas</string>
+    <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
     <string name="hint_add_habits_config">Adicione uma nota de configuração de hábitos para começar a rastrear.</string>
@@ -121,6 +122,7 @@
     <string name="label_time_night">Noite</string>
     <string name="label_today">Hoje</string>
     <string name="label_version">Versão</string>
+    <string name="label_weekday_performance">Desempenho por dia</string>
 
     <!-- Filter options -->
     <string name="filter_all">Todos</string>
@@ -145,6 +147,7 @@
     <string name="msg_no_habits_yet">Nenhum hábito configurado ainda.</string>
     <string name="msg_no_logs">Sem logs ainda</string>
     <string name="msg_no_memos_yet">Sem notas neste período.</string>
+    <string name="msg_not_enough_data_for_trends">Dados insuficientes para as tendências</string>
     <string name="msg_reset_confirm">Tem certeza de que deseja redefinir o app? Todos os dados serão apagados.</string>
     <string name="msg_reset_choose_option">Escolha a opção de redefinição:</string>
     <string name="msg_select_habit">Selecione pelo menos um hábito.</string>

@@ -86,6 +86,7 @@
     <string name="action_write">Напісаць</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d звычак</string>
     <string name="format_tooltip_memos">%1$s: %2$d нататак</string>
+    <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
     <string name="hint_add_habits_config">Дадайце нататку з канфігурацыяй звычак, каб пачаць адсочванне.</string>
@@ -120,6 +121,7 @@
     <string name="label_time_night">Ноч</string>
     <string name="label_today">Сёння</string>
     <string name="label_version">Версія</string>
+    <string name="label_weekday_performance">Актыўнасць па днях</string>
 
     <!-- Filter options -->
     <string name="filter_all">Усе</string>
@@ -144,6 +146,7 @@
     <string name="msg_no_habits_yet">Звычкі яшчэ не наладжаны.</string>
     <string name="msg_no_logs">Логаў пакуль няма</string>
     <string name="msg_no_memos_yet">Няма нататак за гэты перыяд.</string>
+    <string name="msg_not_enough_data_for_trends">Недастаткова даных для паказу тэндэнцый</string>
     <string name="msg_reset_confirm">Вы ўпэўнены, што хочаце скінуць праграму? Усе даныя будуць выдалены.</string>
     <string name="msg_reset_choose_option">Абярыце варыянт скіду:</string>
     <string name="msg_select_habit">Абярыце хаця б адну звычку.</string>

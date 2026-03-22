@@ -86,6 +86,7 @@
     <string name="action_write">Yaz</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d vərdiş</string>
     <string name="format_tooltip_memos">%1$s: %2$d qeyd</string>
+    <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
     <string name="hint_add_habits_config">İzləməyə başlamaq üçün vərdiş konfiqurasiyası əlavə edin.</string>
@@ -121,6 +122,7 @@
     <string name="label_time_night">Gecə</string>
     <string name="label_today">Bu gün</string>
     <string name="label_version">Versiya</string>
+    <string name="label_weekday_performance">Günlərə görə fəaliyyət</string>
 
     <!-- Filter options -->
     <string name="filter_all">Hamısı</string>
@@ -145,6 +147,7 @@
     <string name="msg_no_habits_yet">Vərdişlər hələ tənzimlənməyib.</string>
     <string name="msg_no_logs">Loglar hələ yoxdur</string>
     <string name="msg_no_memos_yet">Bu dövrdə qeyd yoxdur.</string>
+    <string name="msg_not_enough_data_for_trends">Tendensiyalar üçün kifayət qədər məlumat yoxdur</string>
     <string name="msg_reset_confirm">Tətbiqi sıfırlamaq istədiyinizə əminsiniz? Bütün məlumatlar silinəcək.</string>
     <string name="msg_reset_choose_option">Sıfırlama variantını seçin:</string>
     <string name="msg_select_habit">Ən azı bir vərdiş seçin.</string>
