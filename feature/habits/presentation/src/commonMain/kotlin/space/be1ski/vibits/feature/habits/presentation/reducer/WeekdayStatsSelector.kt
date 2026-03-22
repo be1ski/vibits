@@ -23,12 +23,17 @@ internal object WeekdayStatsSelector {
     val rates =
       byWeekday.mapValues { (_, days) ->
         if (days.isEmpty()) {
-          0f
+          null
         } else {
           days.count { day -> day.habitStatuses.any { it.tag == habitTag && it.done } }.toFloat() / days.size
         }
       }
-    val (isBest, isWorst) = if (hasSufficientData) resolveHighlights(rates) else Pair(null, null)
+    val (isBest, isWorst) =
+      if (hasSufficientData) {
+        resolveHighlights(rates.mapValues { requireNotNull(it.value) })
+      } else {
+        Pair(null, null)
+      }
     val stats =
       DayOfWeek.entries.map { dow ->
         WeekdayPerformanceStats(
@@ -40,7 +45,7 @@ internal object WeekdayStatsSelector {
       }
     val averageCompletionRate =
       if (hasSufficientData) {
-        rates.values.average().toFloat()
+        rates.values.filterNotNull().average().toFloat()
       } else {
         null
       }

@@ -167,7 +167,12 @@ private fun WeekdayBar(
 ) {
   var targetHeight by remember { mutableStateOf(BAR_MIN_HEIGHT) }
   LaunchedEffect(stat.completionRate) {
-    targetHeight = (BAR_MAX_HEIGHT * stat.completionRate).coerceAtLeast(BAR_MIN_HEIGHT)
+    targetHeight =
+      if (stat.completionRate != null) {
+        (BAR_MAX_HEIGHT * stat.completionRate).coerceAtLeast(BAR_MIN_HEIGHT)
+      } else {
+        BAR_MIN_HEIGHT
+      }
   }
   val barHeight by animateDpAsState(targetValue = targetHeight, animationSpec = tween(BAR_ANIM_MS))
 
@@ -200,10 +205,12 @@ private fun WeekdayBar(
       style = MaterialTheme.typography.labelSmall,
       color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
-    Text(
-      text = stringResource(Res.string.format_weekday_completion_rate, (stat.completionRate * PERCENT_FACTOR).roundToInt()),
-      style = MaterialTheme.typography.labelSmall,
-      color = MaterialTheme.colorScheme.onSurfaceVariant,
-    )
+    if (stat.completionRate != null) {
+      Text(
+        text = stringResource(Res.string.format_weekday_completion_rate, (stat.completionRate * PERCENT_FACTOR).roundToInt()),
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+      )
+    }
   }
 }

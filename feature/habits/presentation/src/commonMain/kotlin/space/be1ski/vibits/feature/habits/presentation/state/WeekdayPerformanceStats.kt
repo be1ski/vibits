@@ -4,7 +4,7 @@ import kotlinx.datetime.DayOfWeek
 
 internal data class WeekdayPerformanceStats(
   val dayOfWeek: DayOfWeek,
-  val completionRate: Float, // 0.0–1.0
+  val completionRate: Float?, // null = no observations; 0.0–1.0 otherwise
   val isBest: Boolean,
   val isWorst: Boolean,
 ) {

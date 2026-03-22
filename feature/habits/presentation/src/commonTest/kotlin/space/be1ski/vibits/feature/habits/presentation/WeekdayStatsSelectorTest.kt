@@ -130,6 +130,27 @@ class WeekdayStatsSelectorTest {
     assertNull(result.averageCompletionRate)
   }
 
+  @Test
+  fun `when weekday has zero observations then completionRate is null`() {
+    // Mon-Wed have 2 observations each; Thu-Sun are pre-config (no habit status) → 0 observations.
+    val w1 =
+      listOf(obs(date(1), true), obs(date(2), true), obs(date(3), true)) +
+        listOf(date(4), date(5), date(6), date(7)).map { preConfigDay(it) }
+    val w2 =
+      listOf(obs(date(8), false), obs(date(9), false), obs(date(10), false)) +
+        listOf(date(11), date(12), date(13), date(14)).map { preConfigDay(it) }
+    val result = WeekdayStatsSelector(summaryOf(w1, w2), tag)
+    assertFalse(result.hasSufficientData)
+    val rates = result.stats.associate { it.dayOfWeek to it.completionRate }
+    assertEquals(0.5f, rates[DayOfWeek.MONDAY])
+    assertEquals(0.5f, rates[DayOfWeek.TUESDAY])
+    assertEquals(0.5f, rates[DayOfWeek.WEDNESDAY])
+    assertNull(rates[DayOfWeek.THURSDAY])
+    assertNull(rates[DayOfWeek.FRIDAY])
+    assertNull(rates[DayOfWeek.SATURDAY])
+    assertNull(rates[DayOfWeek.SUNDAY])
+  }
+
   // ── Observation filtering ────────────────────────────────────────────────────
 
   @Test
