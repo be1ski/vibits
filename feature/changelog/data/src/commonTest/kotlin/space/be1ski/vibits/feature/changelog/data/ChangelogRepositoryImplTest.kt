@@ -42,6 +42,7 @@ class ChangelogRepositoryImplTest {
       assertEquals("Release 1.2.0", result[0].title)
       assertEquals("## Changes\n* Feature X", result[0].body)
       assertEquals("2026-02-15", result[0].date)
+      assertEquals(false, result[0].hasDmgAsset)
     }
 
   @Test
@@ -68,6 +69,32 @@ class ChangelogRepositoryImplTest {
       val result = repository.getReleases()
 
       assertEquals("v1.0.0", result[0].title)
+    }
+
+  @Test
+  fun `when release has dmg asset then hasDmgAsset is true`() =
+    runTest {
+      val json = """
+        [
+          {
+            "tag_name": "v1.2.0",
+            "name": "Release 1.2.0",
+            "body": "body",
+            "published_at": "2026-02-15T12:00:00Z",
+            "assets": [
+              {"name": "Vibits-1.2.0.dmg"},
+              {"name": "Vibits-1.2.0.zip"}
+            ]
+          }
+        ]
+      """.trimIndent()
+      val client =
+        HttpClient(MockEngine { respond(json, headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())) }) {
+          install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+      val repository = ChangelogRepositoryImpl(GitHubReleasesApi(client, "https://api.github.com/repos/test/repo/releases"))
+      val result = repository.getReleases()
+      assertEquals(true, result[0].hasDmgAsset)
     }
 
   @Test

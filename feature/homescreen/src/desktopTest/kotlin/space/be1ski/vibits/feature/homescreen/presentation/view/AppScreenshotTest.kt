@@ -869,7 +869,7 @@ class AppScreenshotTest {
         FakeChangelogRepository().apply {
           releasesResult =
             Result.success(
-              listOf(ChangelogEntry("2.0.0", "Major Update", "New features", "2026-03-01")),
+              listOf(ChangelogEntry("2.0.0", "Major Update", "New features", "2026-03-01", hasDmgAsset = true)),
             )
         },
         FakeInstallationSource(homebrew = true),
