@@ -27,8 +27,8 @@ import space.be1ski.vibits.feature.habits.domain.usecase.ExtractHabitsConfigUseC
 import space.be1ski.vibits.feature.habits.domain.usecase.NavigateActivityRangeUseCase
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
+import space.be1ski.vibits.feature.habits.presentation.state.StatsScreenState
 import space.be1ski.vibits.feature.habits.presentation.view.StatsScreen
-import space.be1ski.vibits.feature.habits.presentation.view.StatsScreenState
 import space.be1ski.vibits.feature.homescreen.domain.model.AppState
 import space.be1ski.vibits.feature.homescreen.domain.model.Screen
 import space.be1ski.vibits.feature.homescreen.presentation.action.AppAction

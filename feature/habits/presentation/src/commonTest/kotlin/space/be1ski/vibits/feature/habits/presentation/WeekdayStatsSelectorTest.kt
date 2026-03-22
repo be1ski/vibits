@@ -15,7 +15,6 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class WeekdayStatsSelectorTest {
-
   private val tag = "#habits/test"
 
   // ── Ordering ────────────────────────────────────────────────────────────────
@@ -32,10 +31,11 @@ class WeekdayStatsSelectorTest {
   @Test
   fun `completion rate is calculated correctly per weekday`() {
     // Week1: all done. Week2: Mon and Wed done, rest not done.
-    val summary = twoWeeks(
-      List(7) { true },
-      listOf(true, false, true, false, false, false, false),
-    )
+    val summary =
+      twoWeeks(
+        List(7) { true },
+        listOf(true, false, true, false, false, false, false),
+      )
     val result = WeekdayStatsSelector(summary, tag)
     assertTrue(result.hasSufficientData)
     val rates = result.stats.associate { it.dayOfWeek to it.completionRate }
@@ -165,10 +165,11 @@ class WeekdayStatsSelectorTest {
   @Test
   fun `when sufficient data then averageCompletionRate equals arithmetic mean of weekday rates`() {
     // Week1: all done (1.0). Week2: Mon, Wed, Fri, Sun done; Tue, Thu, Sat not done.
-    val summary = twoWeeks(
-      List(7) { true },
-      listOf(true, false, true, false, true, false, true),
-    )
+    val summary =
+      twoWeeks(
+        List(7) { true },
+        listOf(true, false, true, false, true, false, true),
+      )
     // Mon=1.0, Tue=0.5, Wed=1.0, Thu=0.5, Fri=1.0, Sat=0.5, Sun=1.0
     val expectedAvg = (1.0 + 0.5 + 1.0 + 0.5 + 1.0 + 0.5 + 1.0) / 7.0
     val result = WeekdayStatsSelector(summary, tag)
@@ -183,64 +184,75 @@ class WeekdayStatsSelectorTest {
   // date(1) = Mon 2024-01-01, date(2) = Tue 2024-01-02, etc.
   private fun date(dayOfMonth: Int) = LocalDate(2024, 1, dayOfMonth)
 
-  private fun obs(date: LocalDate, done: Boolean): ContributionDay = ContributionDay(
-    date = date,
-    count = if (done) 1 else 0,
-    totalHabits = 1,
-    completionRatio = if (done) 1f else 0f,
-    habitStatuses = listOf(HabitStatus(tag = tag, label = "Test", done = done)),
-    dailyMemo = null,
-    inRange = true,
-    isClickable = true,
-  )
+  private fun obs(
+    date: LocalDate,
+    done: Boolean,
+  ): ContributionDay =
+    ContributionDay(
+      date = date,
+      count = if (done) 1 else 0,
+      totalHabits = 1,
+      completionRatio = if (done) 1f else 0f,
+      habitStatuses = listOf(HabitStatus(tag = tag, label = "Test", done = done)),
+      dailyMemo = null,
+      inRange = true,
+      isClickable = true,
+    )
 
-  private fun outOfRange(date: LocalDate): ContributionDay = ContributionDay(
-    date = date,
-    count = 1,
-    totalHabits = 1,
-    completionRatio = 1f,
-    habitStatuses = listOf(HabitStatus(tag = tag, label = "Test", done = true)),
-    dailyMemo = null,
-    inRange = false,
-    isClickable = false,
-  )
+  private fun outOfRange(date: LocalDate): ContributionDay =
+    ContributionDay(
+      date = date,
+      count = 1,
+      totalHabits = 1,
+      completionRatio = 1f,
+      habitStatuses = listOf(HabitStatus(tag = tag, label = "Test", done = true)),
+      dailyMemo = null,
+      inRange = false,
+      isClickable = false,
+    )
 
-  private fun futureDay(date: LocalDate): ContributionDay = ContributionDay(
-    date = date,
-    count = 0,
-    totalHabits = 1,
-    completionRatio = 0f,
-    habitStatuses = emptyList(),
-    dailyMemo = null,
-    inRange = true,
-    isClickable = false,
-  )
+  private fun futureDay(date: LocalDate): ContributionDay =
+    ContributionDay(
+      date = date,
+      count = 0,
+      totalHabits = 1,
+      completionRatio = 0f,
+      habitStatuses = emptyList(),
+      dailyMemo = null,
+      inRange = true,
+      isClickable = false,
+    )
 
-  private fun preConfigDay(date: LocalDate): ContributionDay = ContributionDay(
-    date = date,
-    count = 0,
-    totalHabits = 0,
-    completionRatio = 0f,
-    habitStatuses = emptyList(), // habit not in config yet
-    dailyMemo = null,
-    inRange = true,
-    isClickable = true,
-  )
+  private fun preConfigDay(date: LocalDate): ContributionDay =
+    ContributionDay(
+      date = date,
+      count = 0,
+      totalHabits = 0,
+      completionRatio = 0f,
+      habitStatuses = emptyList(), // habit not in config yet
+      dailyMemo = null,
+      inRange = true,
+      isClickable = true,
+    )
 
   private fun summaryOf(vararg weeks: List<ContributionDay>): ActivitySummary =
     ActivitySummary(
-      weeks = weeks.mapIndexed { i, days ->
-        ActivityWeek(
-          startDate = days.first().date,
-          days = days,
-          weeklyCount = days.count { it.count > 0 },
-        )
-      },
+      weeks =
+        weeks.mapIndexed { i, days ->
+          ActivityWeek(
+            startDate = days.first().date,
+            days = days,
+            weeklyCount = days.count { it.count > 0 },
+          )
+        },
       maxDaily = 1,
       maxWeekly = 7,
     )
 
-  private fun twoWeeks(week1Done: List<Boolean>, week2Done: List<Boolean>): ActivitySummary {
+  private fun twoWeeks(
+    week1Done: List<Boolean>,
+    week2Done: List<Boolean>,
+  ): ActivitySummary {
     // Week 1: Mon 2024-01-01 to Sun 2024-01-07
     // Week 2: Mon 2024-01-08 to Sun 2024-01-14
     val w1 = week1Done.mapIndexed { i, done -> obs(date(1 + i), done) }

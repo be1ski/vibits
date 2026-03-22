@@ -20,6 +20,7 @@ import space.be1ski.vibits.core.strings.generated.title_delete_day
 import space.be1ski.vibits.core.strings.generated.title_mark_done
 import space.be1ski.vibits.core.strings.generated.title_mark_not_done
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.feature.habits.presentation.state.StatsScreenDerivedState
 import space.be1ski.vibits.feature.habits.presentation.view.components.localizedLabel
 
 @Composable
