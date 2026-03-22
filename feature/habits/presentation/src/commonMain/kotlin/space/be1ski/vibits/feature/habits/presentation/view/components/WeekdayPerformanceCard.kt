@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
@@ -43,6 +44,7 @@ import space.be1ski.vibits.core.strings.generated.msg_not_enough_data_for_trends
 import space.be1ski.vibits.core.ui.Indent
 import space.be1ski.vibits.feature.habits.presentation.state.WeekdayPerformanceCardState
 import space.be1ski.vibits.feature.habits.presentation.state.WeekdayPerformanceStats
+import space.be1ski.vibits.feature.habits.presentation.view.StatsTestTags
 import kotlin.math.roundToInt
 
 private val BAR_MAX_HEIGHT = 64.dp
@@ -69,7 +71,7 @@ internal fun WeekdayPerformanceCard(
       stringResource(Res.string.day_sun),
     )
 
-  Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
+  Column(modifier = modifier.testTag(StatsTestTags.WEEKDAY_PERFORMANCE_CARD), verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
     Text(
       text = stringResource(Res.string.label_weekday_performance),
       style = MaterialTheme.typography.titleSmall,

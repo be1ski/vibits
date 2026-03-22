@@ -4,7 +4,9 @@ package space.be1ski.vibits.feature.habits.presentation.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -216,6 +218,9 @@ private fun StatsScreenContent(
       StatsWeeklyChart(derived, dispatch)
       StatsCollapsiblePosts(derived, state.postsListExpanded, onPostsListExpandedChange)
       StatsHabitSections(derived, dispatch)
+    }
+    if (!state.wideLayout && state.useVerticalScroll) {
+      Spacer(Modifier.height(Indent.x5l + Indent.m))
     }
   }
 }

@@ -6,7 +6,9 @@ import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performScrollTo
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
@@ -45,6 +47,7 @@ import space.be1ski.vibits.feature.habits.domain.usecase.ExtractHabitsConfigUseC
 import space.be1ski.vibits.feature.habits.presentation.state.ActivityCacheKey
 import space.be1ski.vibits.feature.habits.presentation.state.EditableHabit
 import space.be1ski.vibits.feature.habits.presentation.state.HabitsState
+import space.be1ski.vibits.feature.habits.presentation.view.StatsTestTags
 import space.be1ski.vibits.feature.homescreen.domain.model.AppState
 import space.be1ski.vibits.feature.homescreen.domain.model.Screen
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
@@ -106,6 +109,38 @@ class AppScreenshotTest {
   private val fakeGetChangelog = GetChangelogUseCase(FakeChangelogRepository(), FakeLastSeenVersionStore())
 
   private val demoMemos: List<Memo> by lazy { generateDemoMemos().sortedByDescending { it.createTime } }
+
+  // Single-habit memos (exercise only) — used for compact weekday card tests so the habit section
+  // is short enough to show the full WeekdayPerformanceCard (including labels) in the viewport.
+  private val singleHabitMemos: List<Memo> by lazy {
+    val rng = kotlin.random.Random(42)
+    val configContent =
+      buildString {
+        appendLine("#habits/config")
+        appendLine()
+        appendLine("${exerciseConfig.label} | ${exerciseConfig.tag} | #${exerciseConfig.color.argb.toString(16).takeLast(6).uppercase()}")
+      }
+    val memos = mutableListOf<Memo>()
+    memos.add(Memo(name = "memos/1", content = configContent, createTime = configInstant))
+    var id = 2
+    var cursor = configDate
+    while (cursor <= today) {
+      if (rng.nextFloat() < 0.7f) {
+        val dayOffset = cursor.toEpochDays() - configDate.toEpochDays()
+        memos.add(
+          Memo(
+            name = "memos/$id",
+            content = "#habits/daily $cursor\n\n${exerciseConfig.tag}",
+            createTime = configInstant + dayOffset.days + 8.hours,
+          ),
+        )
+        id++
+      }
+      cursor = LocalDate.fromEpochDays(cursor.toEpochDays() + 1)
+    }
+    memos.sortedByDescending { it.createTime }
+  }
+
   private val buildActivityData = BuildActivityDataUseCase(BuildDayDataUseCase())
 
   // region Demo data generation
@@ -369,6 +404,11 @@ class AppScreenshotTest {
   ): HabitsState {
     val (key, cached) = computeCache(demoMemos, range, mode)
     return HabitsState(activityDataCache = extraCache + (key to cached))
+  }
+
+  private fun habitsStateWithSingleHabitCache(range: ActivityRange): HabitsState {
+    val (key, cached) = computeCache(singleHabitMemos, range, ActivityMode.HABITS)
+    return HabitsState(activityDataCache = mapOf(key to cached))
   }
 
   // endregion
@@ -890,37 +930,67 @@ class AppScreenshotTest {
 
   @Test
   fun `weekday performance card with sufficient data`() {
-    val range = ActivityRange.Quarter(2024, 4)
-    val habitsState = habitsStateWithCache(range)
-    captureAppAllVariants(
-      name = "weekday_performance_card_quarter",
-      appState = habitsAppState(tab = TimeRangeTab.QUARTERS, periodStartDate = LocalDate(2024, 10, 1)),
-      habitsState = habitsState,
-    )
+    val quarterRange = ActivityRange.Quarter(2024, 4)
+    val quarterAppState = habitsAppState(tab = TimeRangeTab.QUARTERS, periodStartDate = LocalDate(2024, 10, 1))
+    // Wide: habit picker with exercise selected → SelectedHabitGrid shows the card.
+    runWideUiTest {
+      captureApp(
+        "weekday_performance_card_quarter",
+        appState = quarterAppState.copy(selectedHabitTag = "#habits/exercise"),
+        habitsState = habitsStateWithCache(quarterRange),
+      )
+    }
+    // Compact: single-habit state; scroll to the card so the FAB doesn't obscure the labels.
+    runCompactUiTest {
+      val singleHabitState = habitsStateWithSingleHabitCache(quarterRange)
+      setVibitsApp(quarterAppState, habitsState = singleHabitState, wideLayout = false)
+      onAllNodesWithTag(StatsTestTags.WEEKDAY_PERFORMANCE_CARD).onFirst().performScrollTo()
+      saveScreenshot("compact_light_weekday_performance_card_quarter")
+      setVibitsApp(quarterAppState, habitsState = singleHabitState, darkTheme = true, wideLayout = false)
+      onAllNodesWithTag(StatsTestTags.WEEKDAY_PERFORMANCE_CARD).onFirst().performScrollTo()
+      saveScreenshot("compact_dark_weekday_performance_card_quarter")
+    }
   }
 
   @Test
   fun `weekday performance card with insufficient data`() {
-    val monday = LocalDate(2024, 12, 9)
-    val range = ActivityRange.Week(monday)
-    val habitsState = habitsStateWithCache(range)
-    captureAppAllVariants(
-      name = "weekday_performance_card_insufficient",
-      appState = habitsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = monday),
-      habitsState = habitsState,
-    )
+    // Jan 2025 is beyond demo data — each weekday has 0 observations, hasSufficientData = false.
+    // Month range (not Week) ensures showLast7DaysMatrix = false so the card renders.
+    val monthRange = ActivityRange.Month(2025, Month.JANUARY)
+    val monthAppState = habitsAppState(tab = TimeRangeTab.MONTHS, periodStartDate = LocalDate(2025, 1, 1))
+    // Wide: habit picker with exercise selected → SelectedHabitGrid shows the card with insufficient state.
+    runWideUiTest {
+      captureApp(
+        "weekday_performance_card_insufficient",
+        appState = monthAppState.copy(selectedHabitTag = "#habits/exercise"),
+        habitsState = habitsStateWithCache(monthRange),
+      )
+    }
+    // Compact: single-habit state; scroll to the card so the FAB doesn't obscure the labels.
+    runCompactUiTest {
+      val singleHabitState = habitsStateWithSingleHabitCache(monthRange)
+      setVibitsApp(monthAppState, habitsState = singleHabitState, wideLayout = false)
+      onAllNodesWithTag(StatsTestTags.WEEKDAY_PERFORMANCE_CARD).onFirst().performScrollTo()
+      saveScreenshot("compact_light_weekday_performance_card_insufficient")
+      setVibitsApp(monthAppState, habitsState = singleHabitState, darkTheme = true, wideLayout = false)
+      onAllNodesWithTag(StatsTestTags.WEEKDAY_PERFORMANCE_CARD).onFirst().performScrollTo()
+      saveScreenshot("compact_dark_weekday_performance_card_insufficient")
+    }
   }
 
   @Test
   fun `weekday performance card in selected habit view`() {
+    // Wide-only: habit picker + selected habit grid only exists in wide layout.
     val range = ActivityRange.Quarter(2024, 4)
     val habitsState = habitsStateWithCache(range)
-    captureAppAllVariants(
-      name = "weekday_performance_card_selected_habit",
-      appState = habitsAppState(tab = TimeRangeTab.QUARTERS, periodStartDate = LocalDate(2024, 10, 1))
-        .copy(selectedHabitTag = "#habits/exercise"),
-      habitsState = habitsState,
-    )
+    runWideUiTest {
+      captureApp(
+        "weekday_performance_card_selected_habit",
+        appState = habitsAppState(tab = TimeRangeTab.QUARTERS, periodStartDate = LocalDate(2024, 10, 1))
+          .copy(selectedHabitTag = "#habits/exercise"),
+        habitsState = habitsState,
+      )
+    }
   }
 
   // endregion
