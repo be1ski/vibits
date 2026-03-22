@@ -885,4 +885,43 @@ class AppScreenshotTest {
   }
 
   // endregion
+
+  // region Weekday performance card
+
+  @Test
+  fun `weekday performance card with sufficient data`() {
+    val range = ActivityRange.Quarter(2024, 4)
+    val habitsState = habitsStateWithCache(range)
+    captureAppAllVariants(
+      name = "weekday_performance_card_quarter",
+      appState = habitsAppState(tab = TimeRangeTab.QUARTERS, periodStartDate = LocalDate(2024, 10, 1)),
+      habitsState = habitsState,
+    )
+  }
+
+  @Test
+  fun `weekday performance card with insufficient data`() {
+    val monday = LocalDate(2024, 12, 9)
+    val range = ActivityRange.Week(monday)
+    val habitsState = habitsStateWithCache(range)
+    captureAppAllVariants(
+      name = "weekday_performance_card_insufficient",
+      appState = habitsAppState(tab = TimeRangeTab.WEEKS, periodStartDate = monday),
+      habitsState = habitsState,
+    )
+  }
+
+  @Test
+  fun `weekday performance card in selected habit view`() {
+    val range = ActivityRange.Quarter(2024, 4)
+    val habitsState = habitsStateWithCache(range)
+    captureAppAllVariants(
+      name = "weekday_performance_card_selected_habit",
+      appState = habitsAppState(tab = TimeRangeTab.QUARTERS, periodStartDate = LocalDate(2024, 10, 1))
+        .copy(selectedHabitTag = "#habits/exercise"),
+      habitsState = habitsState,
+    )
+  }
+
+  // endregion
 }
