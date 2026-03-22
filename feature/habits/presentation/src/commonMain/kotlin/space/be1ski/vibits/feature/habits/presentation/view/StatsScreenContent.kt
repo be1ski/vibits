@@ -76,9 +76,14 @@ import space.be1ski.vibits.feature.habits.domain.model.lastSevenDays
 import space.be1ski.vibits.feature.habits.domain.usecase.ExtractHabitsConfigUseCase
 import space.be1ski.vibits.feature.habits.domain.usecase.FilterPostsUseCase
 import space.be1ski.vibits.feature.habits.presentation.action.HabitsAction
+import space.be1ski.vibits.feature.habits.presentation.reducer.WeekdayStatsSelector
+import space.be1ski.vibits.feature.habits.presentation.state.HabitActivitySectionState
+import space.be1ski.vibits.feature.habits.presentation.state.StatsScreenDerivedState
+import space.be1ski.vibits.feature.habits.presentation.state.StatsScreenState
 import space.be1ski.vibits.feature.habits.presentation.view.components.ChartDimens
 import space.be1ski.vibits.feature.habits.presentation.view.components.ContributionGrid
 import space.be1ski.vibits.feature.habits.presentation.view.components.ContributionGridState
+import space.be1ski.vibits.feature.habits.presentation.view.components.WeekdayPerformanceCard
 import space.be1ski.vibits.feature.habits.presentation.view.components.WeeklyBarChart
 import space.be1ski.vibits.feature.habits.presentation.view.components.WeeklyBarChartState
 import space.be1ski.vibits.feature.habits.presentation.view.components.calculateLayout
@@ -675,6 +680,10 @@ private fun HabitActivitySection(
       state.selectedDate?.let { date -> habitWeekData.findDayByDate(date) }
     }
   val chartScrollState = rememberScrollState()
+  val weekdayPerformance =
+    remember(state.baseWeekData.weeks, state.habit.tag) {
+      WeekdayStatsSelector(state.baseWeekData, state.habit.tag)
+    }
 
   Column(verticalArrangement = Arrangement.spacedBy(Indent.xs), modifier = Modifier.padding(top = Indent.s)) {
     Text(state.habit.localizedLabel(state.demoMode), style = MaterialTheme.typography.titleSmall)
@@ -702,6 +711,7 @@ private fun HabitActivitySection(
       onDaySelected = onDaySelected,
       onClearSelection = onClearSelection,
     )
+    WeekdayPerformanceCard(weekdayPerformance)
   }
 }
 
@@ -766,29 +776,36 @@ private fun SelectedHabitGrid(
   val chartScrollState = rememberScrollState()
   val showTimeline = derived.state.range is ActivityRange.Quarter || derived.state.range is ActivityRange.Year
   val useCalendarLayout = derived.state.range is ActivityRange.Month
+  val weekdayPerformance =
+    remember(derived.weekData.weeks, habit.tag) {
+      WeekdayStatsSelector(derived.weekData, habit.tag)
+    }
 
-  ContributionGrid(
-    state =
-      ContributionGridState(
-        weekData = habitWeekData,
-        range = derived.state.range,
-        selectedDay = selectedDay,
-        selectedWeekStart = null,
-        isActiveSelection = habitsState.activeSelectionId == selectionId,
-        scrollState = chartScrollState,
-        showWeekdayLegend = derived.showWeekdayLegend && !useCalendarLayout,
-        showAllWeekdayLabels = true,
-        compactHeight = derived.useCompactHeight,
-        showTimeline = showTimeline,
-        calendarLayout = useCalendarLayout,
-        today = derived.today,
-        habitColor = habit.color,
-        demoMode = derived.state.demoMode,
-      ),
-    dateFormatter = derived.dateFormatter,
-    onDaySelected = onDaySelected,
-    onClearSelection = onClearSelection,
-  )
+  Column(verticalArrangement = Arrangement.spacedBy(Indent.xs)) {
+    ContributionGrid(
+      state =
+        ContributionGridState(
+          weekData = habitWeekData,
+          range = derived.state.range,
+          selectedDay = selectedDay,
+          selectedWeekStart = null,
+          isActiveSelection = habitsState.activeSelectionId == selectionId,
+          scrollState = chartScrollState,
+          showWeekdayLegend = derived.showWeekdayLegend && !useCalendarLayout,
+          showAllWeekdayLabels = true,
+          compactHeight = derived.useCompactHeight,
+          showTimeline = showTimeline,
+          calendarLayout = useCalendarLayout,
+          today = derived.today,
+          habitColor = habit.color,
+          demoMode = derived.state.demoMode,
+        ),
+      dateFormatter = derived.dateFormatter,
+      onDaySelected = onDaySelected,
+      onClearSelection = onClearSelection,
+    )
+    WeekdayPerformanceCard(weekdayPerformance)
+  }
 }
 
 @Composable
