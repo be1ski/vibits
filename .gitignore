@@ -28,3 +28,4 @@ xcuserdata/
 /fix_plan.md
 /fix_results.md
 app/android/google-services.json
+.worktrees/
