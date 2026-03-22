@@ -940,15 +940,17 @@ class AppScreenshotTest {
         habitsState = habitsStateWithCache(quarterRange),
       )
     }
-    // Compact: single-habit state; scroll to the card so the FAB doesn't obscure the labels.
+    // Compact: card is only shown for month range; use November which has sufficient observations.
+    val monthRange = ActivityRange.Month(2024, Month.NOVEMBER)
+    val monthAppState = habitsAppState(tab = TimeRangeTab.MONTHS, periodStartDate = LocalDate(2024, 11, 1))
     runCompactUiTest {
-      val singleHabitState = habitsStateWithSingleHabitCache(quarterRange)
-      setVibitsApp(quarterAppState, habitsState = singleHabitState, wideLayout = false)
+      val singleHabitState = habitsStateWithSingleHabitCache(monthRange)
+      setVibitsApp(monthAppState, habitsState = singleHabitState, wideLayout = false)
       onAllNodesWithTag(StatsTestTags.WEEKDAY_PERFORMANCE_CARD).onFirst().performScrollTo()
-      saveScreenshot("compact_light_weekday_performance_card_quarter")
-      setVibitsApp(quarterAppState, habitsState = singleHabitState, darkTheme = true, wideLayout = false)
+      saveScreenshot("compact_light_weekday_performance_card_month")
+      setVibitsApp(monthAppState, habitsState = singleHabitState, darkTheme = true, wideLayout = false)
       onAllNodesWithTag(StatsTestTags.WEEKDAY_PERFORMANCE_CARD).onFirst().performScrollTo()
-      saveScreenshot("compact_dark_weekday_performance_card_quarter")
+      saveScreenshot("compact_dark_weekday_performance_card_month")
     }
   }
 

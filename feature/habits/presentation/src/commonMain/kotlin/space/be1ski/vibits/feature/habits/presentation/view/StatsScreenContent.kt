@@ -711,7 +711,9 @@ private fun HabitActivitySection(
       onDaySelected = onDaySelected,
       onClearSelection = onClearSelection,
     )
-    WeekdayPerformanceCard(weekdayPerformance)
+    if (state.range is ActivityRange.Month) {
+      WeekdayPerformanceCard(weekdayPerformance)
+    }
   }
 }
 
