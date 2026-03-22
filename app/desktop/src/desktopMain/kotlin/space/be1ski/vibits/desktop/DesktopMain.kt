@@ -18,15 +18,12 @@ import space.be1ski.vibits.feature.homescreen.domain.model.Screen
 import space.be1ski.vibits.feature.homescreen.presentation.AppFeatures
 import space.be1ski.vibits.feature.homescreen.presentation.view.AppRoot
 import java.awt.Dimension
-import java.awt.Taskbar
-import javax.imageio.ImageIO
 
 private const val MIN_WINDOW_WIDTH = 640
 private const val MIN_WINDOW_HEIGHT = 480
 private val POSTS_LIST_HEIGHT = 200.dp
 
 fun main() {
-  setDockIcon()
   return application {
     val dependencies = AppGraph.createAppDependencies()
     var features by remember { mutableStateOf<AppFeatures?>(null) }
@@ -66,16 +63,5 @@ fun main() {
         onFeaturesReady = { features = it },
       )
     }
-  }
-}
-
-private fun setDockIcon() {
-  if (!Taskbar.isTaskbarSupported()) return
-  val taskbar = Taskbar.getTaskbar()
-  if (taskbar.isSupported(Taskbar.Feature.ICON_IMAGE)) {
-    object {}
-      .javaClass
-      .getResourceAsStream("/icon_dock.png")
-      ?.use { taskbar.iconImage = ImageIO.read(it) }
   }
 }
