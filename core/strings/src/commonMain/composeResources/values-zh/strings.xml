@@ -86,6 +86,7 @@
     <string name="action_write">写</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d 习惯</string>
     <string name="format_tooltip_memos">%1$s: %2$d 条备忘</string>
+    <string name="format_weekday_avg_rate">均 %1$d%%</string>
     <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
@@ -122,7 +123,7 @@
     <string name="label_time_night">夜晚</string>
     <string name="label_today">今天</string>
     <string name="label_version">版本</string>
-    <string name="label_weekday_performance">按星期表现</string>
+    <string name="label_weekday_performance">按星期分析</string>
 
     <!-- Filter options -->
     <string name="filter_all">全部</string>

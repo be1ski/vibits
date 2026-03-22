@@ -88,6 +88,7 @@
     <string name="action_write">Write</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d habits</string>
     <string name="format_tooltip_memos">%1$s: %2$d memos</string>
+    <string name="format_weekday_avg_rate">Avg %1$d%%</string>
     <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
@@ -123,7 +124,7 @@
     <string name="label_time_night">Night</string>
     <string name="label_today">Today</string>
     <string name="label_version">Version</string>
-    <string name="label_weekday_performance">Performance by Day</string>
+    <string name="label_weekday_performance">By Weekday</string>
 
     <!-- Filter options -->
     <string name="filter_all">All</string>

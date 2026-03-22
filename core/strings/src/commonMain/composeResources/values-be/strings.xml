@@ -86,6 +86,7 @@
     <string name="action_write">Напісаць</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d звычак</string>
     <string name="format_tooltip_memos">%1$s: %2$d нататак</string>
+    <string name="format_weekday_avg_rate">Сярэд. %1$d%%</string>
     <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
@@ -121,7 +122,7 @@
     <string name="label_time_night">Ноч</string>
     <string name="label_today">Сёння</string>
     <string name="label_version">Версія</string>
-    <string name="label_weekday_performance">Актыўнасць па днях</string>
+    <string name="label_weekday_performance">Па днях тыдня</string>
 
     <!-- Filter options -->
     <string name="filter_all">Усе</string>

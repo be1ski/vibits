@@ -21,7 +21,7 @@ class WeekdayStatsSelectorTest {
 
   @Test
   fun `stats are returned in Mon to Sun order`() {
-    val summary = twoWeeks(List(7) { true }, List(7) { true })
+    val summary = fourWeeks(List(7) { true }, List(7) { true })
     val result = WeekdayStatsSelector(summary, tag)
     assertEquals(DayOfWeek.entries, result.stats.map { it.dayOfWeek })
   }
@@ -30,9 +30,9 @@ class WeekdayStatsSelectorTest {
 
   @Test
   fun `completion rate is calculated correctly per weekday`() {
-    // Week1: all done. Week2: Mon and Wed done, rest not done.
+    // Odd weeks: all done. Even weeks: Mon and Wed done, rest not done.
     val summary =
-      twoWeeks(
+      fourWeeks(
         List(7) { true },
         listOf(true, false, true, false, false, false, false),
       )
@@ -48,12 +48,12 @@ class WeekdayStatsSelectorTest {
     assertEquals(0.5f, rates[DayOfWeek.SUNDAY])
   }
 
-  // ── Best/worst identification ─────────────────────────────────────────────────
+  // ── Best identification ────────────────────────────────────────────────────
 
   @Test
   fun `best day is correctly identified when single clear winner`() {
-    // Mon: 2/2=1.0. All others: 1/2=0.5.
-    val summary = twoWeeks(List(7) { true }, listOf(true, false, false, false, false, false, false))
+    // Odd weeks: all done. Even weeks: only Mon done → Mon=1.0, others=0.5.
+    val summary = fourWeeks(List(7) { true }, listOf(true, false, false, false, false, false, false))
     val result = WeekdayStatsSelector(summary, tag)
     assertTrue(result.hasSufficientData)
     val best = result.stats.filter { it.isBest }
@@ -61,72 +61,43 @@ class WeekdayStatsSelectorTest {
     assertEquals(DayOfWeek.MONDAY, best.single().dayOfWeek)
   }
 
-  @Test
-  fun `worst day is correctly identified when single clear loser`() {
-    // Mon: 0/2=0.0. All others: 1/2=0.5 or better.
-    val summary = twoWeeks(List(7) { true }, listOf(false, true, true, true, true, true, true))
-    val result = WeekdayStatsSelector(summary, tag)
-    assertTrue(result.hasSufficientData)
-    val worst = result.stats.filter { it.isWorst }
-    assertEquals(1, worst.size)
-    assertEquals(DayOfWeek.MONDAY, worst.single().dayOfWeek)
-  }
-
   // ── Tie-breaking ─────────────────────────────────────────────────────────────
 
   @Test
   fun `when two days tie for best then neither is marked isBest`() {
-    // Mon and Tue: 1.0. All others: 0.5.
-    val summary = twoWeeks(List(7) { true }, listOf(true, true, false, false, false, false, false))
+    // Odd weeks: all done. Even weeks: Mon and Tue done → Mon=Tue=1.0, others=0.5.
+    val summary = fourWeeks(List(7) { true }, listOf(true, true, false, false, false, false, false))
     val result = WeekdayStatsSelector(summary, tag)
     assertTrue(result.hasSufficientData)
     assertFalse(result.stats.any { it.isBest })
   }
 
   @Test
-  fun `when two days tie for worst then neither is marked isWorst`() {
-    // Mon and Tue: 0.0. All others: 0.5 or better.
-    val summary = twoWeeks(List(7) { true }, listOf(false, false, true, true, true, true, true))
+  fun `when all days have equal non-zero rate then no best`() {
+    val summary = fourWeeks(List(7) { true }, List(7) { true })
     val result = WeekdayStatsSelector(summary, tag)
     assertTrue(result.hasSufficientData)
-    assertFalse(result.stats.any { it.isWorst })
+    assertFalse(result.stats.any { it.isBest })
   }
 
   @Test
-  fun `when all days have equal non-zero rate then no highlights`() {
-    val summary = twoWeeks(List(7) { true }, List(7) { true })
+  fun `when all days have zero rate then no best`() {
+    val summary = fourWeeks(List(7) { false }, List(7) { false })
     val result = WeekdayStatsSelector(summary, tag)
     assertTrue(result.hasSufficientData)
-    assertFalse(result.stats.any { it.isBest || it.isWorst })
-  }
-
-  @Test
-  fun `when all days have zero rate then no highlights`() {
-    val summary = twoWeeks(List(7) { false }, List(7) { false })
-    val result = WeekdayStatsSelector(summary, tag)
-    assertTrue(result.hasSufficientData)
-    assertFalse(result.stats.any { it.isBest || it.isWorst })
-  }
-
-  // ── Invariant ─────────────────────────────────────────────────────────────────
-
-  @Test
-  fun `no entry has both isBest and isWorst true`() {
-    val summary = twoWeeks(List(7) { true }, listOf(true, false, true, false, true, false, true))
-    val result = WeekdayStatsSelector(summary, tag)
-    assertTrue(result.stats.none { it.isBest && it.isWorst })
+    assertFalse(result.stats.any { it.isBest })
   }
 
   // ── Insufficient data ────────────────────────────────────────────────────────
 
   @Test
-  fun `when any weekday has fewer than 2 observations then hasSufficientData is false and no highlights`() {
+  fun `when any weekday has fewer than 4 observations then hasSufficientData is false and no best`() {
     // Only 1 week of data → each weekday has 1 observation.
     val week = listOf(date(1), date(2), date(3), date(4), date(5), date(6), date(7))
     val summary = summaryOf(week.map { obs(it, true) })
     val result = WeekdayStatsSelector(summary, tag)
     assertFalse(result.hasSufficientData)
-    assertFalse(result.stats.any { it.isBest || it.isWorst })
+    assertFalse(result.stats.any { it.isBest })
     assertNull(result.averageCompletionRate)
   }
 
@@ -185,9 +156,9 @@ class WeekdayStatsSelectorTest {
 
   @Test
   fun `when sufficient data then averageCompletionRate equals arithmetic mean of weekday rates`() {
-    // Week1: all done (1.0). Week2: Mon, Wed, Fri, Sun done; Tue, Thu, Sat not done.
+    // Odd weeks: all done. Even weeks: Mon, Wed, Fri, Sun done; Tue, Thu, Sat not done.
     val summary =
-      twoWeeks(
+      fourWeeks(
         List(7) { true },
         listOf(true, false, true, false, true, false, true),
       )
@@ -270,14 +241,16 @@ class WeekdayStatsSelectorTest {
       maxWeekly = 7,
     )
 
-  private fun twoWeeks(
-    week1Done: List<Boolean>,
-    week2Done: List<Boolean>,
+  // Repeats two patterns over 4 weeks to satisfy MIN_OBSERVATIONS = 4.
+  // Week 1: Mon 2024-01-01–07, Week 2: Jan 08–14, Week 3: Jan 15–21, Week 4: Jan 22–28.
+  private fun fourWeeks(
+    oddDone: List<Boolean>,
+    evenDone: List<Boolean>,
   ): ActivitySummary {
-    // Week 1: Mon 2024-01-01 to Sun 2024-01-07
-    // Week 2: Mon 2024-01-08 to Sun 2024-01-14
-    val w1 = week1Done.mapIndexed { i, done -> obs(date(1 + i), done) }
-    val w2 = week2Done.mapIndexed { i, done -> obs(date(8 + i), done) }
-    return summaryOf(w1, w2)
+    val w1 = oddDone.mapIndexed { i, done -> obs(date(1 + i), done) }
+    val w2 = evenDone.mapIndexed { i, done -> obs(date(8 + i), done) }
+    val w3 = oddDone.mapIndexed { i, done -> obs(date(15 + i), done) }
+    val w4 = evenDone.mapIndexed { i, done -> obs(date(22 + i), done) }
+    return summaryOf(w1, w2, w3, w4)
   }
 }

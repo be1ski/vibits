@@ -24,10 +24,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import space.be1ski.vibits.core.strings.generated.Res
@@ -38,6 +38,7 @@ import space.be1ski.vibits.core.strings.generated.day_sun
 import space.be1ski.vibits.core.strings.generated.day_thu
 import space.be1ski.vibits.core.strings.generated.day_tue
 import space.be1ski.vibits.core.strings.generated.day_wed
+import space.be1ski.vibits.core.strings.generated.format_weekday_avg_rate
 import space.be1ski.vibits.core.strings.generated.format_weekday_completion_rate
 import space.be1ski.vibits.core.strings.generated.label_weekday_performance
 import space.be1ski.vibits.core.strings.generated.msg_not_enough_data_for_trends
@@ -52,6 +53,7 @@ private val BAR_MAX_HEIGHT = 64.dp
 private val BAR_MIN_HEIGHT = 2.dp
 private val BAR_CONTAINER_WIDTH = 24.dp
 private val BAR_WIDTH = 16.dp
+private val AVG_LEGEND_LINE_WIDTH = 12.dp
 private const val BAR_ANIM_MS = 320
 private const val COLOR_ANIM_MS = 180
 private const val PERCENT_FACTOR = 100
@@ -107,34 +109,53 @@ private fun WeekdayBarsWithAvgLine(
   accentColor: Color,
   averageCompletionRate: Float,
 ) {
-  val accent = accentColor
-  val muted = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
   val neutral = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
   val avgLineColor = MaterialTheme.colorScheme.outline
 
-  Box(modifier = Modifier.fillMaxWidth()) {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-      stats.forEachIndexed { index, stat ->
-        WeekdayBar(
-          stat = stat,
-          label = dayLabels[index],
-          accentColor = accent,
-          mutedColor = muted,
-          neutralColor = neutral,
-          withHighlight = true,
+  Column {
+    Box(modifier = Modifier.fillMaxWidth()) {
+      Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+        stats.forEachIndexed { index, stat ->
+          WeekdayBar(
+            stat = stat,
+            label = dayLabels[index],
+            accentColor = accentColor,
+            neutralColor = neutral,
+            showPercentage = true,
+          )
+        }
+      }
+      val avgFraction = averageCompletionRate.coerceIn(0f, 1f)
+      Canvas(modifier = Modifier.matchParentSize()) {
+        val barMaxPx = BAR_MAX_HEIGHT.toPx()
+        val lineY = barMaxPx * (1f - avgFraction)
+        drawLine(
+          color = avgLineColor,
+          start = Offset(0f, lineY),
+          end = Offset(size.width, lineY),
+          strokeWidth = 1.dp.toPx(),
+          pathEffect = PathEffect.dashPathEffect(floatArrayOf(6.dp.toPx(), 4.dp.toPx()), 0f),
         )
       }
     }
-    val avgFraction = averageCompletionRate.coerceIn(0f, 1f)
-    Canvas(modifier = Modifier.matchParentSize()) {
-      val barMaxPx = BAR_MAX_HEIGHT.toPx()
-      val lineY = barMaxPx * (1f - avgFraction)
-      drawLine(
+    Spacer(Modifier.height(Indent.x3s))
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(Indent.x2s),
+    ) {
+      Canvas(modifier = Modifier.size(width = AVG_LEGEND_LINE_WIDTH, height = 1.dp)) {
+        drawLine(
+          color = avgLineColor,
+          start = Offset(0f, 0f),
+          end = Offset(size.width, 0f),
+          strokeWidth = 1.dp.toPx(),
+          pathEffect = PathEffect.dashPathEffect(floatArrayOf(6.dp.toPx(), 4.dp.toPx()), 0f),
+        )
+      }
+      Text(
+        text = stringResource(Res.string.format_weekday_avg_rate, (averageCompletionRate * PERCENT_FACTOR).roundToInt()),
+        style = MaterialTheme.typography.labelSmall,
         color = avgLineColor,
-        start = Offset(0f, lineY),
-        end = Offset(size.width, lineY),
-        strokeWidth = 1.dp.toPx(),
-        pathEffect = PathEffect.dashPathEffect(floatArrayOf(6.dp.toPx(), 4.dp.toPx()), 0f),
       )
     }
   }
@@ -152,9 +173,8 @@ private fun WeekdayBarsNoHighlight(
         stat = stat,
         label = dayLabels[index],
         accentColor = neutral,
-        mutedColor = neutral,
         neutralColor = neutral,
-        withHighlight = false,
+        showPercentage = false,
       )
     }
   }
@@ -165,9 +185,8 @@ private fun WeekdayBar(
   stat: WeekdayPerformanceStats,
   label: String,
   accentColor: Color,
-  mutedColor: Color,
   neutralColor: Color,
-  withHighlight: Boolean,
+  showPercentage: Boolean,
 ) {
   var targetHeight by remember { mutableStateOf(BAR_MIN_HEIGHT) }
   LaunchedEffect(stat.completionRate) {
@@ -180,12 +199,7 @@ private fun WeekdayBar(
   }
   val barHeight by animateDpAsState(targetValue = targetHeight, animationSpec = tween(BAR_ANIM_MS))
 
-  val targetColor =
-    when {
-      withHighlight && stat.isBest -> accentColor
-      withHighlight && stat.isWorst -> mutedColor
-      else -> neutralColor
-    }
+  val targetColor = if (stat.isBest) accentColor else neutralColor
   val barColor by animateColorAsState(targetValue = targetColor, animationSpec = tween(COLOR_ANIM_MS))
 
   Column(
@@ -209,7 +223,7 @@ private fun WeekdayBar(
       style = MaterialTheme.typography.labelSmall,
       color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
-    if (stat.completionRate != null) {
+    if (showPercentage && stat.completionRate != null) {
       Text(
         text = stringResource(Res.string.format_weekday_completion_rate, (stat.completionRate * PERCENT_FACTOR).roundToInt()),
         style = MaterialTheme.typography.labelSmall,

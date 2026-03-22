@@ -6,7 +6,7 @@ import space.be1ski.vibits.feature.habits.domain.model.ContributionDay
 import space.be1ski.vibits.feature.habits.presentation.state.WeekdayPerformanceCardState
 import space.be1ski.vibits.feature.habits.presentation.state.WeekdayPerformanceStats
 
-private const val MIN_OBSERVATIONS = 2
+private const val MIN_OBSERVATIONS = 4
 
 internal object WeekdayStatsSelector {
   operator fun invoke(
@@ -28,19 +28,13 @@ internal object WeekdayStatsSelector {
           days.count { day -> day.habitStatuses.any { it.tag == habitTag && it.done } }.toFloat() / days.size
         }
       }
-    val (isBest, isWorst) =
-      if (hasSufficientData) {
-        resolveHighlights(rates.mapValues { requireNotNull(it.value) })
-      } else {
-        Pair(null, null)
-      }
+    val bestDay = if (hasSufficientData) resolveBest(rates.mapValues { requireNotNull(it.value) }) else null
     val stats =
       DayOfWeek.entries.map { dow ->
         WeekdayPerformanceStats(
           dayOfWeek = dow,
           completionRate = rates.getValue(dow),
-          isBest = dow == isBest,
-          isWorst = dow == isWorst,
+          isBest = dow == bestDay,
         )
       }
     val averageCompletionRate =
@@ -61,21 +55,12 @@ internal object WeekdayStatsSelector {
       isClickable &&
       habitStatuses.any { it.tag == habitTag }
 
-  private fun resolveHighlights(rates: Map<DayOfWeek, Float>): Pair<DayOfWeek?, DayOfWeek?> {
-    val maxRate = rates.values.maxOrNull() ?: 0f
-    val minRate = rates.values.minOrNull() ?: 0f
-    val best =
-      if (rates.values.count { it == maxRate } == 1) {
-        rates.entries.first { it.value == maxRate }.key
-      } else {
-        null
-      }
-    val worst =
-      if (rates.values.count { it == minRate } == 1) {
-        rates.entries.first { it.value == minRate }.key
-      } else {
-        null
-      }
-    return if (best == worst) Pair(null, null) else Pair(best, worst)
+  private fun resolveBest(rates: Map<DayOfWeek, Float>): DayOfWeek? {
+    val maxRate = rates.values.maxOrNull() ?: return null
+    return if (rates.values.count { it == maxRate } == 1) {
+      rates.entries.first { it.value == maxRate }.key
+    } else {
+      null
+    }
   }
 }

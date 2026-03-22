@@ -86,6 +86,7 @@
     <string name="action_write">Yaz</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d vərdiş</string>
     <string name="format_tooltip_memos">%1$s: %2$d qeyd</string>
+    <string name="format_weekday_avg_rate">Ort. %1$d%%</string>
     <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
@@ -122,7 +123,7 @@
     <string name="label_time_night">Gecə</string>
     <string name="label_today">Bu gün</string>
     <string name="label_version">Versiya</string>
-    <string name="label_weekday_performance">Günlərə görə fəaliyyət</string>
+    <string name="label_weekday_performance">Həftə günü üzrə</string>
 
     <!-- Filter options -->
     <string name="filter_all">Hamısı</string>

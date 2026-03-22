@@ -78,6 +78,7 @@
     <string name="format_offline_storage">Офлайн: %1$s</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d привычек</string>
     <string name="format_tooltip_memos">%1$s: %2$d воспоминаний</string>
+    <string name="format_weekday_avg_rate">Ср. %1$d%%</string>
     <string name="format_weekday_completion_rate">%1$d%%</string>
     <string name="format_quarter_label">К%1$d %2$d</string>
     <string name="format_memos_count">%1$d воспоминаний</string>
@@ -123,7 +124,7 @@
     <string name="label_time_night">Ночь</string>
     <string name="label_today">Сегодня</string>
     <string name="label_version">Версия</string>
-    <string name="label_weekday_performance">Активность по дням</string>
+    <string name="label_weekday_performance">По дням недели</string>
 
     <!-- Filter options -->
     <string name="filter_all">Все</string>

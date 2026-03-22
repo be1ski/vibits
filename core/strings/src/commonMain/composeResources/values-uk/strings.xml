@@ -86,6 +86,7 @@
     <string name="action_write">Написати</string>
     <string name="format_tooltip_habits">%1$s: %2$d/%3$d звичок</string>
     <string name="format_tooltip_memos">%1$s: %2$d нотаток</string>
+    <string name="format_weekday_avg_rate">Сер. %1$d%%</string>
     <string name="format_weekday_completion_rate">%1$d%%</string>
 
     <!-- Hints -->
@@ -121,7 +122,7 @@
     <string name="label_time_night">Ніч</string>
     <string name="label_today">Сьогодні</string>
     <string name="label_version">Версія</string>
-    <string name="label_weekday_performance">Активність за днями</string>
+    <string name="label_weekday_performance">За днями тижня</string>
 
     <!-- Filter options -->
     <string name="filter_all">Всі</string>
