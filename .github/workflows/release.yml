@@ -346,7 +346,7 @@ jobs:
           files: app/web/build/dist/wasmJs/Vibits-*-web.tar.gz
 
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
