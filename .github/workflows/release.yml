@@ -136,7 +136,7 @@ jobs:
           zip -r "Vibits-${APP_VERSION#v}-screenshots.zip" ui-screenshots/
 
       - name: Upload screenshots to Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ needs.resolve-version.outputs.version }}
           files: Vibits-*-screenshots.zip
@@ -181,7 +181,7 @@ jobs:
              app/android/build/outputs/apk/release/Vibits-${APP_VERSION#v}.apk
 
       - name: Upload APK to Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ needs.resolve-version.outputs.version }}
           files: app/android/build/outputs/apk/release/Vibits-*.apk
@@ -221,7 +221,7 @@ jobs:
         run: ./gradlew :app:desktop:packageDmg -PappVersion=${APP_VERSION#v}
 
       - name: Upload DMG to Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ needs.resolve-version.outputs.version }}
           files: app/desktop/build/compose/binaries/main/dmg/*.dmg
@@ -304,7 +304,7 @@ jobs:
         run: ./gradlew :app:desktop:packageMsi -PappVersion=${APP_VERSION#v}
 
       - name: Upload MSI to Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ needs.resolve-version.outputs.version }}
           files: app/desktop/build/compose/binaries/main/msi/*.msi
@@ -340,7 +340,7 @@ jobs:
           tar -czf Vibits-${APP_VERSION#v}-web.tar.gz productionExecutable
 
       - name: Upload Web to Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ needs.resolve-version.outputs.version }}
           files: app/web/build/dist/wasmJs/Vibits-*-web.tar.gz
