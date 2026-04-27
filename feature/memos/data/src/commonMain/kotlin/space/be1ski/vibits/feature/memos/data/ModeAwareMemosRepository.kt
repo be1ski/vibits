@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.memos.data
 
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.core.platform.di.AppScope
@@ -18,7 +19,8 @@ private const val TAG = SyncLogTags.MODE_AWARE_REPO
 
 @Inject
 @SingleIn(AppScope::class)
-class ModeAwareMemosRepository(
+@ContributesBinding(AppScope::class)
+internal class ModeAwareMemosRepository(
   private val appModeRepository: AppModeRepository,
   private val onlineRepository: OnlineMemosRepository,
   private val offlineRepository: OfflineMemosRepository,

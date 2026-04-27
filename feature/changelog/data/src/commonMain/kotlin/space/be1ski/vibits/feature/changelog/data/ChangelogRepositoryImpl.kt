@@ -1,11 +1,16 @@
 package space.be1ski.vibits.feature.changelog.data
 
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import space.be1ski.vibits.core.platform.di.AppScope
 import space.be1ski.vibits.feature.changelog.domain.model.ChangelogEntry
 import space.be1ski.vibits.feature.changelog.domain.repository.ChangelogRepository
 
 @Inject
-class ChangelogRepositoryImpl(
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
+internal class ChangelogRepositoryImpl(
   private val api: GitHubReleasesApi,
 ) : ChangelogRepository {
   override suspend fun getReleases(): List<ChangelogEntry> =

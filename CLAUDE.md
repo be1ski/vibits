@@ -57,7 +57,8 @@ Actions split into sealed subtypes (one per sub-reducer). Sub-reducers are `inte
 
 ## DI (Metro)
 
-- `@Inject` for auto-created classes, `@Provides` only for platform-specific, `@Binds` for interface bindings
+- `@Inject` for auto-created classes, `@Provides` only for platform-specific
+- `@ContributesBinding(AppScope::class)` on the impl for in-scope interface bindings; keep `*Impl` classes `internal` (the convention plugin enables `generateContributionProviders`, so the graph never references the concrete type). `@Binds` only for graph-internal bindings that can't be contributed
 - `@SingleIn(AppScope::class)` for singletons
 - Use cases: stateless → `object` + `operator fun invoke`; with deps → `@Inject class` + `operator fun invoke`
 - `fun interface` for single-method DI interfaces (NOT for repos, multi-method, or expect/actual)

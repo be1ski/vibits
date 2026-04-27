@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.settings.data
 
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.core.platform.di.AppScope
@@ -17,7 +18,8 @@ private const val TAG = "Preferences"
 
 @Inject
 @SingleIn(AppScope::class)
-class PreferencesRepositoryImpl(
+@ContributesBinding(AppScope::class)
+internal class PreferencesRepositoryImpl(
   private val preferencesStore: PreferencesStore,
 ) : PreferencesRepository {
   override fun load(): UserPreferences {

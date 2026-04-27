@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.sync.data
 
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +21,8 @@ import space.be1ski.vibits.feature.sync.domain.repository.SyncQueueRepository
 @Suppress("TooManyFunctions")
 @Inject
 @SingleIn(AppScope::class)
-class SyncQueueRepositoryImpl(
+@ContributesBinding(AppScope::class)
+internal class SyncQueueRepositoryImpl(
   private val store: SyncOperationStore,
 ) : SyncQueueRepository {
   /** Mutex to ensure thread-safe operations on the sync queue. */

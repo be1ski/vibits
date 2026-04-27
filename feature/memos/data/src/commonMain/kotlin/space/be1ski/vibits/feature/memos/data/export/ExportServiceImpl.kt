@@ -1,7 +1,10 @@
 package space.be1ski.vibits.feature.memos.data.export
 
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.json.Json
+import space.be1ski.vibits.core.platform.di.AppScope
 import space.be1ski.vibits.core.platform.export.FileExporter
 import space.be1ski.vibits.core.utils.logging.Log
 import space.be1ski.vibits.feature.memos.data.offline.OfflineMemosFileDto
@@ -11,7 +14,9 @@ import space.be1ski.vibits.feature.memos.domain.repository.ExportService
 import kotlin.time.Clock
 
 @Inject
-class ExportServiceImpl(
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
+internal class ExportServiceImpl(
   private val fileExporter: FileExporter,
   private val offlineMemoStorage: OfflineMemoStorage,
   private val clock: Clock = Clock.System,

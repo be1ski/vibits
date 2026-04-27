@@ -1,5 +1,6 @@
 package space.be1ski.vibits.feature.auth.data
 
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import space.be1ski.vibits.core.platform.di.AppScope
@@ -14,7 +15,8 @@ private const val TAG = "Credentials"
 
 @Inject
 @SingleIn(AppScope::class)
-class CredentialsRepositoryImpl(
+@ContributesBinding(AppScope::class)
+internal class CredentialsRepositoryImpl(
   private val credentialsStore: CredentialsStore,
 ) : CredentialsRepository {
   override fun load(): Credentials {

@@ -33,6 +33,13 @@
       ]
     },
     {
+      "description": "Allow Metro RC versions (still excludes alpha/beta/SNAPSHOT)",
+      "matchPackageNames": [
+        "/^dev\\.zacsweers\\.metro/"
+      ],
+      "allowedVersions": "!/(-compat|-alpha|-beta|SNAPSHOT)/"
+    },
+    {
       "description": "Group Kotlin dependencies",
       "groupName": "kotlin",
       "matchPackageNames": [
