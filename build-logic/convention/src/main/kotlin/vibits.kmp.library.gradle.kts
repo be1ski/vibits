@@ -26,7 +26,7 @@ kotlin {
     browser()
   }
 
-  iosX64()
+  // CMP 1.11 removed the iosX64 (Intel simulator) target; Kotlin deprecated Apple x86_64.
   iosArm64()
   iosSimulatorArm64()
 

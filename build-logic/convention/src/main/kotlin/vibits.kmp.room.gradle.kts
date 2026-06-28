@@ -12,7 +12,7 @@ room {
 
 dependencies {
   val roomCompiler = libs.androidx.room.compiler
-  listOf("kspAndroid", "kspDesktop", "kspIosArm64", "kspIosSimulatorArm64", "kspIosX64").forEach {
+  listOf("kspAndroid", "kspDesktop", "kspIosArm64", "kspIosSimulatorArm64").forEach {
     add(it, roomCompiler)
   }
 }
