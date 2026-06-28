@@ -7,7 +7,7 @@ import androidx.compose.ui.test.DesktopComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.isRoot
-import androidx.compose.ui.test.runDesktopComposeUiTest
+import androidx.compose.ui.test.v2.runDesktopComposeUiTest
 import space.be1ski.vibits.core.ui.theme.VibitsTheme
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
