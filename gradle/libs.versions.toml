@@ -27,7 +27,7 @@ material = "1.14.0"
 room = "2.8.4"
 serialization = "1.11.0"
 slf4j = "2.0.18"
-sqliteBundled = "2.6.2"
+sqliteBundled = "2.7.0"
 
 [libraries]
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
