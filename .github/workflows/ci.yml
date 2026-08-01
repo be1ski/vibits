@@ -51,6 +51,9 @@ jobs:
       - name: Run checks
         run: xvfb-run ./gradlew checkJvm
 
+      - name: Check Android release dependencies
+        run: ./gradlew :app:android:checkReleaseAarMetadata
+
       - name: Generate coverage report
         run: ./gradlew koverXmlReport
 
