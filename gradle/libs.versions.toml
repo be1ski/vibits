@@ -24,10 +24,10 @@ ksp = "2.3.11"
 ktor = "3.5.2"
 lifecycleRuntimeKtx = "2.11.0"
 material = "1.14.0"
-room = "2.8.4"
+room = "2.8.5"
 serialization = "1.11.0"
 slf4j = "2.0.19"
-sqliteBundled = "2.7.0"
+sqliteBundled = "2.7.1"
 
 [libraries]
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
