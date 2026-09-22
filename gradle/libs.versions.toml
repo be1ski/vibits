@@ -26,7 +26,7 @@ lifecycleRuntimeKtx = "2.11.0"
 material = "1.14.0"
 room = "2.8.5"
 serialization = "1.11.0"
-slf4j = "2.0.19"
+slf4j = "2.0.20"
 sqliteBundled = "2.7.1"
 
 [libraries]
