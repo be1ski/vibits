@@ -39,7 +39,7 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v6
         with:
-          java-version: '21.0.13+9.0.LTS'
+          java-version: '27.0.1+1'
           distribution: 'temurin'
 
       - name: Decode google-services.json
@@ -102,7 +102,7 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v6
         with:
-          java-version: '21.0.13+9.0.LTS'
+          java-version: '27.0.1+1'
           distribution: 'temurin'
 
       - name: Setup Gradle
@@ -134,7 +134,7 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v6
         with:
-          java-version: '21.0.13+9.0.LTS'
+          java-version: '27.0.1+1'
           distribution: 'temurin'
 
       - name: Setup Gradle
