@@ -37,7 +37,7 @@ class MemosApi(
     pageSize: Int,
     pageToken: String?,
   ): ListMemosResponseDto {
-    val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/v1/memos"
+    val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/memos"
     Log.i(TAG, "GET $fullUrl")
     return runSuspendCatching {
       val response: ListMemosResponseDto =
@@ -63,7 +63,7 @@ class MemosApi(
     name: String,
     content: String,
   ): MemoDto {
-    val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/v1/$name"
+    val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/$name"
     Log.i(TAG, "PATCH $fullUrl")
     return runSuspendCatching {
       val response: MemoDto =
@@ -86,7 +86,7 @@ class MemosApi(
     token: String,
     content: String,
   ): MemoDto {
-    val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/v1/memos"
+    val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/memos"
     Log.i(TAG, "POST $fullUrl")
     return runSuspendCatching {
       val response: MemoDto =
@@ -108,7 +108,7 @@ class MemosApi(
     token: String,
     name: String,
   ) {
-    val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/v1/$name"
+    val fullUrl = "${baseUrl.normalizeBaseUrl()}/api/$name"
     Log.i(TAG, "DELETE $fullUrl")
     runSuspendCatching {
       httpClient.delete(fullUrl) {

@@ -29,7 +29,7 @@ class MemosApiTest {
           assertEquals("50", request.url.parameters["pageSize"])
           assertEquals("50", request.url.parameters["limit"])
           assertEquals("next", request.url.parameters["pageToken"])
-          assertTrue(request.url.toString().startsWith("https://example.com/api/v1/memos"))
+          assertTrue(request.url.toString().startsWith("https://example.com/api/memos"))
           respond(
             content = """{"memos":[]}""",
             headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
@@ -74,6 +74,7 @@ class MemosApiTest {
           assertEquals(HttpMethod.Patch, request.method)
           assertEquals("Bearer token", request.headers[HttpHeaders.Authorization])
           assertEquals("content", request.url.parameters["updateMask"])
+          assertEquals("/api/memos/1", request.url.encodedPath)
           assertTrue(bodyText(request).contains("\"content\":\"Updated\""))
           respond(
             content = """{"name":"memos/1","content":"Updated","updateTime":"2024-02-01T00:00:00Z"}""",
@@ -98,6 +99,7 @@ class MemosApiTest {
           assertEquals(HttpMethod.Post, request.method)
           assertEquals("Bearer token", request.headers[HttpHeaders.Authorization])
           assertTrue(bodyText(request).contains("\"content\":\"Created\""))
+          assertEquals("/api/memos", request.url.encodedPath)
           respond(
             content = """{"name":"memos/2","content":"Created","createTime":"2024-03-01T00:00:00Z"}""",
             headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
@@ -118,6 +120,7 @@ class MemosApiTest {
       val client =
         clientWithHandler { request ->
           assertEquals(HttpMethod.Delete, request.method)
+          assertEquals("/api/memos/3", request.url.encodedPath)
           assertEquals("Bearer token", request.headers[HttpHeaders.Authorization])
           respond("")
         }
