@@ -74,6 +74,16 @@
       "matchPackageNames": [
         "/^com.google.firebase/"
       ]
+    },
+    {
+      "description": "Stay on JDK 21: detekt 1.23 fails on JDK 25+",
+      "matchDepNames": [
+        "java-jdk"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
     }
   ]
 }
