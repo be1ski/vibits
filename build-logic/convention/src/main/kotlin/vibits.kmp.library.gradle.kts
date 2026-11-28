@@ -10,7 +10,12 @@ val libs = the<org.gradle.accessors.dm.LibrariesForLibs>()
 kotlin {
   android {
     namespace = project.androidNamespace()
-    compileSdk = buildConfig.versions.compileSdk.get().toInt()
+    compileSdk {
+      version =
+        release(buildConfig.versions.compileSdk.get().toInt()) {
+          minorApiLevel = buildConfig.versions.compileSdkMinor.get().toInt()
+        }
+    }
     minSdk = buildConfig.versions.minSdk.get().toInt()
     // Required for Compose Multiplatform resources to work with the new KMP Android plugin
     androidResources.enable = true
