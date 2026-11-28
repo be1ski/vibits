@@ -67,6 +67,34 @@ class MemosApiTest {
     }
 
   @Test
+  fun `when listMemos returns a comment then drops it`() =
+    runTest {
+      val client =
+        clientWithHandler {
+          respond(
+            content =
+              """
+              {"memos":[
+                {"name":"memos/1","content":"#habits/daily"},
+                {"name":"memos/2","content":"comment","parent":"memos/1"}
+              ]}
+              """.trimIndent(),
+            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
+          )
+        }
+
+      val response =
+        MemosApi(client).listMemos(
+          baseUrl = "https://example.com",
+          token = "token",
+          pageSize = 20,
+          pageToken = null,
+        )
+
+      assertEquals(listOf("memos/1"), response.memos.map { it.name })
+    }
+
+  @Test
   fun `when updateMemo then sends patch with body`() =
     runTest {
       val client =
