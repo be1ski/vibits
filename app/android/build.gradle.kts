@@ -13,6 +13,10 @@ val sdkCompile =
   buildConfig.versions.compileSdk
     .get()
     .toInt()
+val sdkCompileMinor =
+  buildConfig.versions.compileSdkMinor
+    .get()
+    .toInt()
 val sdkMin =
   buildConfig.versions.minSdk
     .get()
@@ -25,7 +29,7 @@ val javaVersion = JavaVersion.toVersion(buildConfig.versions.java.get())
 
 android {
   namespace = "space.be1ski.vibits.android"
-  compileSdk = sdkCompile
+  compileSdk { version = release(sdkCompile) { minorApiLevel = sdkCompileMinor } }
 
   defaultConfig {
     applicationId = "space.be1ski.vibits"
