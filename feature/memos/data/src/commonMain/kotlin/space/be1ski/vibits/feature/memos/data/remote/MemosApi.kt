@@ -50,8 +50,11 @@ class MemosApi(
               parameter("pageToken", pageToken)
             }
           }.body()
-      Log.i(TAG, "GET $fullUrl -> OK, ${response.memos.size} memos")
-      response
+      // Memos 26.11.2+ lists comments as memos with a parent. Its `parent == null` filter
+      // is rejected by 26.10.0–26.11.1, so comments are dropped here instead.
+      val memos = response.memos.filter { it.parent.isNullOrEmpty() }
+      Log.i(TAG, "GET $fullUrl -> OK, ${memos.size} memos")
+      response.copy(memos = memos)
     }.onFailure { e ->
       Log.e(TAG, "GET $fullUrl -> FAILED", e)
     }.getOrThrow()

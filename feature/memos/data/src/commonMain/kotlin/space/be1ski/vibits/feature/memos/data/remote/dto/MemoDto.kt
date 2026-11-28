@@ -9,4 +9,5 @@ data class MemoDto(
   val content: String = "",
   @SerialName("createTime") val createTime: String? = null,
   @SerialName("updateTime") val updateTime: String? = null,
+  val parent: String? = null,
 )
